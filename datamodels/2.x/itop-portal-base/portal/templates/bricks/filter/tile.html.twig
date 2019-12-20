@@ -1,0 +1,48 @@
+{# itop-portal-base/portal/templates/bricks/filter/tile.html.twig #}
+{# Filter brick tile layout #}
+
+{% if brick.GetTargetBrickClass == 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick' %}
+    {% set sTargetBrickUrl = app['url_generator'].generate('p_browse_brick_mode', {'sBrickId': brick.GetTargetBrickId, 'sBrowseMode': brick.GetTargetBrickTab}) %}
+{% elseif brick.GetTargetBrickClass == 'Combodo\\iTop\\Portal\\Brick\\ManageBrick' %}
+    {% set sTargetBrickUrl = app['url_generator'].generate('p_manage_brick', {'sBrickId': brick.GetTargetBrickId, 'sGroupingTab': brick.GetTargetBrickTab}) %}
+{% endif %}
+
+<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
+	{% block pTileWrapper %}
+		<a href="#" class="tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
+			<div class="tile_decoration">
+				<span class="icon {{ brick.GetDecorationClassHome }}"></span>
+
+			</div>
+			<div class="tile_body">
+				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
+				{% if brick.HasDescription %}
+					<div class="tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
+				{% endif %}
+				<div class="tile_filterbox">
+					<form method="post" action="{{ sTargetBrickUrl }}" class="form-inline">
+						<div class="form-group">
+							<input type="text" class="form-control" name="sSearchValue" placeholder="{{ brick.GetSearchPlaceholderValue|dict_s }}" />
+						</div>
+						<input type="hidden" name="sDataLoading" value="{{ constant('\\Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}" />
+						<button type="submit" class="btn btn-primary">
+							<span class="{{ brick.GetSearchSubmitClass }}"></span>
+							{{ brick.GetSearchSubmitLabel|dict_s }}
+						</button>
+					</form>
+				</div>
+			</div>
+		</a>
+	{% endblock %}
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    // Preventing click on tile to scroll up
+	    $('#brick-{{ brick.GetId }}').on('click', function(oEvent){
+	        if(oEvent.target.type !== 'submit'){
+                oEvent.preventDefault();
+			}
+		});
+	});
+</script>

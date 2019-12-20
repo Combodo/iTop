@@ -127,7 +127,7 @@ $aOperations = array(
 	// Rewrite the full CaseLog on an existing UserRequest with id=1, setting date and user (optional)
 	array(
 		'operation' => 'core/update',
-		'comment' => 'Synchronization from ServiceFirst', // comment recorded in the change tracking log
+		'comment' => 'Synchronization from Client A', // comment recorded in the change tracking log
 		'class' => 'UserRequest',
 		'key' => 'SELECT UserRequest WHERE id=1',
 		'output_fields' => 'id, friendlyname, title',

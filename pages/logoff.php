@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -41,41 +42,59 @@ if ($operation == 'do_logoff')
 	exit;
 }
 
-if ($bPortal)
-{
-	$sUrl .= 'portal/';
-}
-else
-{
-	$sUrl .= 'pages/UI.php';
-}
 if (isset($_SESSION['auth_user']))
 {
 	$sAuthUser = $_SESSION['auth_user'];
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 
-$sLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 LoginWebPage::ResetSession();
-switch($sLoginMode)
-{
-	case 'cas':
-	$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
-	if (empty($sCASLogoutUrl))
-	{
-		$sCASLogoutUrl = $sUrl;
-	}
-	utils::InitCASClient();					
-	phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
-	break;
-}
-$oPage = LoginWebPage::NewLoginWebPage();
-$oPage->no_cache();
-$oPage->DisplayLoginHeader();
-$oPage->add("<div id=\"login\">\n");
-$oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
 
-$oPage->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
-$oPage->add("</div>\n");
-$oPage->output();
-?>
+$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
+if ($bLoginDebug)
+{
+	IssueLog::Info("---------------------------------");
+	if (isset($sAuthUser))
+	{
+		IssueLog::Info("--> Logout user: [$sAuthUser]");
+	}
+	else
+	{
+		IssueLog::Info("--> Logout");
+	}
+	$sSessionLog = session_id().' '.utils::GetSessionLog();
+	IssueLog::Info("SESSION: $sSessionLog");
+}
+
+$aPluginList = LoginWebPage::GetLoginPluginList('iLogoutExtension');
+
+/** @var iLogoutExtension $oLogoutExtension */
+foreach ($aPluginList as $oLogoutExtension)
+{
+	if ($bLoginDebug)
+	{
+		$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+		if ($sCurrSessionLog != $sSessionLog)
+		{
+			$sSessionLog = $sCurrSessionLog;
+			IssueLog::Info("SESSION: $sSessionLog");
+		}
+		IssueLog::Info("Logout call: ".get_class($oLogoutExtension));
+	}
+
+	$oLogoutExtension->LogoutAction();
+}
+
+if ($bLoginDebug)
+{
+	$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+	if ($sCurrSessionLog != $sSessionLog)
+	{
+		$sSessionLog = $sCurrSessionLog;
+		IssueLog::Info("SESSION: $sSessionLog");
+	}
+	IssueLog::Info("--> Display logout page");
+}
+
+$oPage = LoginWebPage::NewLoginWebPage();
+$oPage->DisplayLogoutPage($bPortal);

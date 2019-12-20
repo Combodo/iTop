@@ -95,6 +95,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Kapcsolattartó (személy)',
 	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Szervezeti egység',
+	'Class:User/Attribute:org_id+' => 'A társult személy szervezete',
 	'Class:User/Attribute:last_name' => 'Családnév',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Keresztnév',
@@ -117,7 +119,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'Bejelentkezési névnek egyedinek kell lennie - "%1s" már létezik.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Legalább egy profilt a felhasználóhoz kell rendelni.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
@@ -328,7 +330,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'BooleanLabel:yes' => 'Igen',
 	'BooleanLabel:no' => 'Nem',
-    'UI:Login:Title' => 'iTop login~~',
+	'UI:Login:Title' => 'iTop login~~',
 	'Menu:WelcomeMenu' => 'Üdvözlöm', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Üdvözlöm', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -403,7 +405,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
-	
+
 	'UI:SearchToggle' => 'Keresés',
 	'UI:ClickToCreateNew' => 'Új %1$s létrehozása',
 	'UI:SearchFor_Class' => '%1$s objektumok keresése',
@@ -423,7 +425,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Az átmeneti fájl nem írható. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Feltöltés megállt a fájl kiterjesztés miatt. (Eredeti fájl név = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Fájl feltöltés sikertelen ismeretlen hiba miatt. (Hibakód = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Hiba: a következő paramétert meg kell adni ennél a műveletnél: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
 	'UI:Error:3ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s és %3$s.',
@@ -441,6 +443,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hiba: érvénytelen stimulus "%1$s" a következő objektum %2$s következő állapotában "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Számossága',
 	'UI:GroupBy:Count+' => '',
@@ -507,6 +511,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -543,6 +548,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Login' => 'Belépés az iTop alkalmazásba',
 	'UI:Login:Error:AccessRestricted' => 'iTop hozzáférés korlátozva. Kérem forduljon az iTop adminisztrátorhoz!',
 	'UI:Login:Error:AccessAdmin' => 'Adminisztrátori hozzáférés korlátozott. Kérem forduljon az iTop adminisztrátorhoz!',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- válasszon ki egyet --',
 	'UI:CSVImport:MappingNotApplicable' => '-- mező figyelmen kívül hagyása --',
 	'UI:CSVImport:NoData' => 'Üres mező..., kérem agyjon meg adatot!',
@@ -600,7 +608,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Kérem adja meg az összes mezőre az összerendelési szabályokat.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Kérem adjon eg legalább egy keresési kritériumot',
-	'UI:CSVImport:Encoding' => 'Karakter kódolása',	
+	'UI:CSVImport:Encoding' => 'Karakter kódolása',
 	'UI:UniversalSearchTitle' => 'iTop - Univerzális kereső',
 	'UI:UniversalSearch:Error' => 'Hiba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Keresendő osztály kiválasztása:',
@@ -670,6 +678,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:RunQuery:MoreInfo' => 'Több információ a lekérdezésről: ',
 	'UI:RunQuery:DevelopedQuery' => 'Újraírt lekérdező értékelés: ',
 	'UI:RunQuery:SerializedFilter' => 'Szerializált szűrő: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'A lekérdezés futtatása közben a következő hiba jelentkezett: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -691,7 +703,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Schema:Label' => 'Cimke',
 	'UI:Schema:Label+' => '',
 	'UI:Schema:Type' => 'Típus',
-	
+
 	'UI:Schema:Type+' => '',
 	'UI:Schema:Origin' => 'Származás',
 	'UI:Schema:Origin+' => '',
@@ -781,7 +793,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Automatikus frissítés sikeretelen: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Automatikusan lesznek frissítve (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objektumok / kapcsolatok hivatkoznak erre: %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objektumok / kapcsolatok hivatkoznak törlendő objektumokra',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objektumok / kapcsolatok hivatkoznak törlendő objektumokra',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Adatbázis integritás ellenőrzés szükséges. Néhány hivatkozás megszüntetésre kerül.',
 	'UI:Delete:Consequence+' => '',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Az objektum törlése nem engedélyezett. Részletes magyarázat a következő sorokban.',
@@ -830,7 +842,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:FatalErrorMessage' => 'Fatális hiba, iTop nem tudja a működését folytatni',
 	'UI:Error_Details' => 'Hiba: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop felhasználó menedzsmet - osztály nézet',
+	'UI:PageTitle:ClassProjections' => 'iTop felhasználó menedzsmet - osztály nézet',
 	'UI:PageTitle:ProfileProjections' => 'iTop felhasználó menedzsmet - profil nézet',
 	'UI:UserManagement:Class' => 'Osztály',
 	'UI:UserManagement:Class+' => '',
@@ -869,10 +881,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:GrantMatrix' => 'Jogosutlsági mátrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Kapcsolat %1$s és %2$s között',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Kapcsolat %1$s és %2$s között',
-	
+
 	'Menu:AdminTools' => 'Adminisztrációs eszközök', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Változás menedzsment',
 	'UI:ChangeManagementMenu+' => '',
@@ -888,28 +901,28 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastruktúra objetumok típusok szerint',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastruktúra objetumok státuszok szerint',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Konfiguráció menedzsment dashboard',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Konfigurációs elemek státusz szerint',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Konfigurációs elemek típus szerint',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Konfiguráció menedzsment dashboard',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Konfigurációs elemek státusz szerint',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Konfigurációs elemek típus szerint',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Igény menedzsment dashboard',
-'UI-RequestManagementOverview-RequestByService' => 'Felhasználói kérések szolgáltatásonként',
-'UI-RequestManagementOverview-RequestByPriority' => 'Felhasználói kérések prioritás szerint',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Felhasználói kérések, amelyek még nem lettek felelőshöz rendelve',
+	'UI:RequestMgmtMenuOverview:Title' => 'Igény menedzsment dashboard',
+	'UI-RequestManagementOverview-RequestByService' => 'Felhasználói kérések szolgáltatásonként',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Felhasználói kérések prioritás szerint',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Felhasználói kérések, amelyek még nem lettek felelőshöz rendelve',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Incidens menedzsment dashboard',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidensek szolgáltatásonként',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidensek prioritás szerint',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidensek, amelyek még nem lettek felelőshöz rendelve',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Incidens menedzsment dashboard',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidensek szolgáltatásonként',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidensek prioritás szerint',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidensek, amelyek még nem lettek felelőshöz rendelve',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Változás menedzsment dashboard',
-'UI-ChangeManagementOverview-ChangeByType' => 'Változások típusonként',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Változások, amelyek még nem lettek felelőshöz rendelve',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Változások által okozott leállási idő',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Változás menedzsment dashboard',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Változások típusonként',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Változások, amelyek még nem lettek felelőshöz rendelve',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Változások által okozott leállási idő',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Szolgáltatás menedszment dashboard',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'A következő 30 napban lejáró ügyfél szerződések',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'A következő 30 napban lejáró szállítói szerződések',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Szolgáltatás menedszment dashboard',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'A következő 30 napban lejáró ügyfél szerződések',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'A következő 30 napban lejáró szállítói szerződések',
 
 	'UI:ContactsMenu' => 'Kapcsolattartók',
 	'UI:ContactsMenu+' => '',
@@ -920,13 +933,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Adatmodell', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Értesítések', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '<span class="hilite">Értesítések</span> beállítása',
@@ -962,19 +975,19 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Menu:AuditCategories' => 'Audit kategóriák', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit kategóriák', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Adat adminisztráció', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Univerzális keresés', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'Felhasználó menedzsment', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -996,9 +1009,9 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Download-CSV' => 'Download %1$s~~',
 
 	'UI:DeadlineMissedBy_duration' => 'Elmulsztva %1$s által',
-	'UI:Deadline_LessThan1Min' => '< 1 perc',		
-	'UI:Deadline_Minutes' => '%1$d perc',			
-	'UI:Deadline_Hours_Minutes' => '%1$dóra %2$dperc',			
+	'UI:Deadline_LessThan1Min' => '< 1 perc',
+	'UI:Deadline_Minutes' => '%1$d perc',
+	'UI:Deadline_Hours_Minutes' => '%1$dóra %2$dperc',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$nap %2$dóra %3$dperc',
 	'UI:Help' => 'Segítség',
 	'UI:PasswordConfirm' => '(Jóváhagyás)',
@@ -1050,8 +1063,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Portal:ChangeMyPassword' => 'Jelszó változtatás',
 	'Portal:Disconnect' => 'Kilépés',
 	'Portal:OpenRequests' => 'Nyitott kéréseim',
-	'Portal:ClosedRequests'  => 'My closed requests',
-	'Portal:ResolvedRequests'  => 'Megoldott kéréseim',
+	'Portal:ClosedRequests' => 'My closed requests',
+	'Portal:ResolvedRequests' => 'Megoldott kéréseim',
 	'Portal:SelectService' => 'Válasszon szolgáltatást a katalógusból:',
 	'Portal:PleaseSelectOneService' => 'Kérem válasszon egy szolgáltatást',
 	'Portal:SelectSubcategoryFrom_Service' => 'Válassza ki a %1$s szolgáltatás alkategóriáját:',
@@ -1070,7 +1083,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Portal:RemoveAttachment' => 'Csatolmány eltávolítása',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Csatolmányok: #%1$d a %2$s (%3$s) hibajegyhez',
 	'Portal:SelectRequestTemplate' => 'Select a template for %1$s~~',
-	'Enum:Undefined' => 'Nem meghatározott',	
+	'Enum:Undefined' => 'Nem meghatározott',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s nap %2$s óra %3$s perc %4$s másodperc',
 	'UI:ModifyAllPageTitle' => 'Összes módosítása',
 	'UI:Modify_N_ObjectsOf_Class' => '%2$s osztály %1$d objketumainak módosítása',
@@ -1082,7 +1095,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:BulkModifyStatus' => 'Művelet',
 	'UI:BulkModifyStatus+' => '',
 	'UI:BulkModifyErrors' => 'Hibák (ha vannak)',
-	'UI:BulkModifyErrors+' => '',	
+	'UI:BulkModifyErrors+' => '',
 	'UI:BulkModifyStatusOk' => 'OK',
 	'UI:BulkModifyStatusError' => 'Hiba',
 	'UI:BulkModifyStatusModified' => 'Módosítva',
@@ -1176,8 +1189,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'UI:DashboardEdit:Layout' => 'Layout~~',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties~~',
-	'UI:DashboardEdit:Dashlets' => 'Available Dashlets~~',	
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties~~',	
+	'UI:DashboardEdit:Dashlets' => 'Available Dashlets~~',
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties~~',
 
 	'UI:Form:Property' => 'Property~~',
 	'UI:Form:Value' => 'Value~~',
@@ -1288,7 +1301,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
@@ -1310,7 +1323,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...~~',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut~~',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list~~',
@@ -1360,7 +1373,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-		
+
 	'UI:Button:Remove' => 'Remove~~',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
@@ -1373,13 +1386,13 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'Data~~',	
-	
+	'UI:About:RemoteExtensionSource' => 'Data~~',
+
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
 	'UI:LoginAgain' => 'Login again~~',
 	'UI:StayOnThePage' => 'Stay on this page~~',
-	
+
 	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
 	'ExcelExporter:ExportButton' => 'Export~~',
@@ -1399,16 +1412,16 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
-	
+
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version~~',
-	
+
 	'UI:BrowseInlineImages' => 'Browse images...~~',
 	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
-	
+
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
@@ -1417,6 +1430,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1458,20 +1472,20 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
 
 	// - Criteria operators
 	//   - Default widget

@@ -2,8 +2,8 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2019 Combodo SARL
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -33,37 +33,34 @@
 
 
 Dict::Add('EN US', 'English', 'English', array(
-'Menu:ServiceManagement' => 'Service Management',
-'Menu:ServiceManagement+' => 'Service Management Overview',
-'Menu:Service:Overview' => 'Overview',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+	'Menu:ServiceManagement' => 'Service Management',
+	'Menu:ServiceManagement+' => 'Service Management Overview',
+	'Menu:Service:Overview' => 'Overview',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
 
-'Menu:ProviderContract' => 'Provider contracts',
-'Menu:ProviderContract+' => 'Provider contracts',
-'Menu:CustomerContract' => 'Customer contracts',
-'Menu:CustomerContract+' => 'Customer contracts',
-'Menu:ServiceSubcategory' => 'Service subcategories',
-'Menu:ServiceSubcategory+' => 'Service subcategories',
-'Menu:Service' => 'Services',
-'Menu:Service+' => 'Services',
-'Menu:ServiceElement' => 'Sevice elements',
-'Menu:ServiceElement+' => 'Sevice elements',
-'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'Service Level Agreements',
-'Menu:SLT' => 'SLTs',
-'Menu:SLT+' => 'Service Level Targets',
-'Menu:DeliveryModel' => 'Delivery models',
-'Menu:DeliveryModel+' => 'Delivery models',
-'Menu:ServiceFamily' => 'Service families',
-'Menu:ServiceFamily+' => 'Service families',
-'Menu:Procedure' => 'Procedures catalog',
-'Menu:Procedure+' => 'All procedures catalog',
-
-
-
+	'Menu:ProviderContract' => 'Provider contracts',
+	'Menu:ProviderContract+' => 'Provider contracts',
+	'Menu:CustomerContract' => 'Customer contracts',
+	'Menu:CustomerContract+' => 'Customer contracts',
+	'Menu:ServiceSubcategory' => 'Service subcategories',
+	'Menu:ServiceSubcategory+' => 'Service subcategories',
+	'Menu:Service' => 'Services',
+	'Menu:Service+' => 'Services',
+	'Menu:ServiceElement' => 'Sevice elements',
+	'Menu:ServiceElement+' => 'Sevice elements',
+	'Menu:SLA' => 'SLAs',
+	'Menu:SLA+' => 'Service Level Agreements',
+	'Menu:SLT' => 'SLTs',
+	'Menu:SLT+' => 'Service Level Targets',
+	'Menu:DeliveryModel' => 'Delivery models',
+	'Menu:DeliveryModel+' => 'Delivery models',
+	'Menu:ServiceFamily' => 'Service families',
+	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:Procedure' => 'Procedures catalog',
+	'Menu:Procedure+' => 'All procedures catalog',
 ));
 
 //
@@ -74,7 +71,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
-
 ));
 
 

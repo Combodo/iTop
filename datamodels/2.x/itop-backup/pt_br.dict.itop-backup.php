@@ -24,7 +24,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'bkp-week-days' => 'Backups ocorrerão <b>cada %1$s a %2$s</b>',
 	'bkp-retention' => 'No máximo <b>%1$d arquivos de backup serão mantidos</b> no diretório destino.',
 	'bkp-next-to-delete' => 'Será deletado quando ocorrer o próximo backup (veja a configuração de "retention_count")',
-	'bkp-table-file' => 'Arquivo', 
+	'bkp-table-file' => 'Arquivo',
 	'bkp-table-file+' => 'Apenas arquivos com a extensão .zip são considerados arquivos de backup',
 	'bkp-table-size' => 'Tamanho',
 	'bkp-table-size+' => '',

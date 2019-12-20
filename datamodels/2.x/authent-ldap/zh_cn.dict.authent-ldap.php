@@ -2,6 +2,7 @@
 /**
  * Localized data
  *
+ * @author    Robert Deng <denglx@gmail.com>
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
@@ -35,4 +36,6 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserLDAP' => 'LDAP 用户',
 	'Class:UserLDAP+' => '用户身份由LDAP 认证',
+	'Class:UserLDAP/Attribute:password' => '密码',
+	'Class:UserLDAP/Attribute:password+' => '用于验证用户身份的字符串',
 ));

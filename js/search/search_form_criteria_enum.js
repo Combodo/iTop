@@ -42,6 +42,16 @@ $(function()
 		{
 			var me = this;
 
+			// when the allowed valued indexes has  sequentially & numerical keys, they are passed has an array which break some further code, let's enforce them as an object.
+			if (Array.isArray(this.options.field.allowed_values.values))
+			{
+				var arrayValues = this.options.field.allowed_values.values;
+				this.options.field.allowed_values.values = {};
+				for (var i = 0; i < arrayValues.length; i++) {
+					this.options.field.allowed_values.values[i] = arrayValues[i];
+				}
+			}
+
 			this._super();
 			this.element.addClass('search_form_criteria_enum');
 		},
@@ -130,7 +140,7 @@ $(function()
 			var sFilterPlaceholder = (this._hasAutocompleteAllowedValues()) ? Dict.S('UI:Search:Value:Search:Placeholder') : Dict.S('UI:Search:Value:Filter:Placeholder');
 			var oFilterElem = $('<div></div>')
 				.addClass('sf_filter')
-				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fa fa-times"></span></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fas fa-times"></span></span>')
 				.appendTo(oOpContentElem);
 
 			// - Values wrapper
@@ -207,7 +217,7 @@ $(function()
 			// DOM elements
 			// - Filter
 			oFilterElem.find('.sff_input_wrapper')
-				.append('<span class="sff_picto sff_filter fa fa-filter"></span>');
+				.append('<span class="sff_picto sff_filter fas fa-filter"></span>');
 
 			// - Allowed values
 			var aSortedValues = this._sortValuesByLabel(this._getPreloadedAllowedValues());
@@ -294,7 +304,7 @@ $(function()
 
 			// - Add search dialog button
 			oFilterElem
-				.append('<button type="button" class="sff_search_dialog"><span class=" fa fa-search"></span></button>')
+				.append('<button type="button" class="sff_search_dialog"><span class=" fas fa-search"></span></button>')
 				.addClass('sf_with_buttons');
 
 			// - Prepare "selected" values area

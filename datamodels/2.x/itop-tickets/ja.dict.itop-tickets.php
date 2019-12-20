@@ -54,7 +54,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => '個人ログ',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => '連絡先',
+	'Class:Ticket/Attribute:contacts_list' => '連絡先',
 	'Class:Ticket/Attribute:contacts_list+' => '',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CI',
 	'Class:Ticket/Attribute:functionalcis_list+' => '',

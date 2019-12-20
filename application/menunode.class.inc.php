@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Construction and display of the application's main menu
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -201,7 +194,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param $aExtraParams
 	 * @throws DictExceptionMissingString
 	 */
@@ -217,7 +210,7 @@ class ApplicationMenu
 		{
 			if (!self::CanDisplayMenu($aMenu)) { continue; }
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
-			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'">'.$oMenuNode->GetTitle().'</h3>');
+			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
 			$oPage->AddToMenu('<ul>');
 			$aChildren = self::GetChildren($aMenu['index']);
@@ -270,7 +263,7 @@ EOF
 
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
@@ -284,21 +277,39 @@ EOF
 		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
 		foreach($aMenus as $aMenu)
 		{
+			if (!self::CanDisplayMenu($aMenu))
+			{
+				continue;
+			}
 			$index = $aMenu['index'];
 			$oMenu = self::GetMenuNode($index);
 			if ($oMenu->IsEnabled())
 			{
 				$aChildren = self::GetChildren($index);
-				$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
+				$aCSSClasses = array('navigation-menu-item');
+				if (count($aChildren) > 0)
+				{
+					$aCSSClasses[] = 'submenu';
+				}
 				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
+				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" class="'.implode(' ', $aCSSClasses).'" data-menu-id="'.$oMenu->GetMenuID().'">';
 				if ($sHyperlink != '')
 				{
-					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+					$sLinkTarget = '';
+					if ($oMenu->IsHyperLinkInNewWindow())
+					{
+						$sLinkTarget .= ' target="_blank"';
+					}
+					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
+					$sTitle = $oMenu->GetTitle();
+					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
 				}
 				else
 				{
-					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
+					$sItemHtml .= $oMenu->GetTitle();
 				}
+				$sItemHtml .= '</li>';
+				$oPage->AddToMenu($sItemHtml);
 				if ($iActiveMenu == $index)
 				{
 					$bActive = true;
@@ -599,12 +610,23 @@ abstract class MenuNode
 
 	/**
 	 * @param $aExtraParams
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams(utils::GetAbsoluteUrlAppRoot().'pages/UI.php', $aExtraParams);
+	}
+
+	/**
+	 * @return bool true if the link should be opened in a new window
+	 * @since 2.7.0 N°1283
+	 */
+	public function IsHyperLinkInNewWindow()
+	{
+		return false;
 	}
 	
 	/**
@@ -966,7 +988,7 @@ class SearchMenuNode extends MenuNode
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
+		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
 
 		$oSearch = new DBObjectSearch($this->sClass);
 		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
@@ -989,8 +1011,12 @@ class WebPageMenuNode extends MenuNode
 	 */
 	protected $sHyperlink;
 
+	/** @var bool */
+	protected $bIsLinkInNewWindow;
+
 	/**
 	 * Create a menu item that points to any web page (not only UI.php)
+	 *
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sHyperlink URL to the page to load. Use relative URL if you want to keep the application portable !
 	 * @param integer $iParentIndex ID of the parent menu
@@ -999,12 +1025,17 @@ class WebPageMenuNode extends MenuNode
 	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @param string $sEnableStimulus
+	 * @param bool $bIsLinkInNewWindow for the {@link WebPageMenuNode::IsHyperLinkInNewWindow} method
 	 */
-	public function __construct($sMenuId, $sHyperlink, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	public function __construct(
+		$sMenuId, $sHyperlink, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null,
+		$iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bIsLinkInNewWindow = false
+	)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sHyperlink = $sHyperlink;
 		$this->aReflectionProperties['url'] = $sHyperlink;
+		$this->bIsLinkInNewWindow = $bIsLinkInNewWindow;
 	}
 
 	/**
@@ -1015,6 +1046,11 @@ class WebPageMenuNode extends MenuNode
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
+	}
+
+	public function IsHyperLinkInNewWindow()
+	{
+		return $this->bIsLinkInNewWindow;
 	}
 
 	/**

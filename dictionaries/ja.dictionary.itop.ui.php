@@ -95,6 +95,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '連絡先(人物)',
 	'Class:User/Attribute:contactid+' => 'ビジネスデータから抽出した個人の詳細',
+	'Class:User/Attribute:org_id' => '組織',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'ラストネーム',
 	'Class:User/Attribute:last_name+' => '対応する連絡先の名前',
 	'Class:User/Attribute:first_name' => 'ファーストネーム',
@@ -117,7 +119,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
@@ -328,7 +330,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'BooleanLabel:yes' => 'はい',
 	'BooleanLabel:no' => 'いいえ',
-    'UI:Login:Title' => 'iTop login~~',
+	'UI:Login:Title' => 'iTop login~~',
 	'Menu:WelcomeMenu' => 'ようこそ', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'ようこそ', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -403,7 +405,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
-	
+
 	'UI:SearchToggle' => '検索（トグル↓↑)',
 	'UI:ClickToCreateNew' => '新規 %1$s を作成',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
@@ -423,7 +425,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:CannotWriteToTmp_Dir' => '一時ファイルをディスクに書き込めません。upload_tmp_dir = "%1$s"',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'extensionにより、アップロードを停止しました。(オリジナルのファイル名は"%1$s"です)。',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'ファイルのアップロードに失敗しました。原因は不明(エラーコード: "%1$s")です。',
-	
+
 	'UI:Error:1ParametersMissing' => 'エラー: この操作には下記のパラメータを指定する必要があります：%1$s',
 	'UI:Error:2ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s , %2$s',
 	'UI:Error:3ParametersMissing' => 'エラー：この操作には、下記のパラメータを指定する必要があります：%1$s, %2$s, %3$s',
@@ -441,6 +443,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'エラー：状態"%3$s"のオブジェクト%2$s上の無効なスティミュラス"%1$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
@@ -507,6 +511,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -543,6 +548,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:Login' => 'iTopへ入る',
 	'UI:Login:Error:AccessRestricted' => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
 	'UI:Login:Error:AccessAdmin' => '管理者権限をもつユーザにアクセスが制限されています。iTop管理者に問い合わせしてください。',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- 選択ください --',
 	'UI:CSVImport:MappingNotApplicable' => '--このフィールドを無視する --',
 	'UI:CSVImport:NoData' => '空のデータセット..., データを提供してください。',
@@ -600,7 +608,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'すべてのフィールドのマッピングを選択してください。',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => '少なくとも1つ以上の検索条件を選択してください。',
-	'UI:CSVImport:Encoding' => '文字エンコーディング',	
+	'UI:CSVImport:Encoding' => '文字エンコーディング',
 	'UI:UniversalSearchTitle' => 'iTop - ユニバーサル検索',
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
@@ -670,6 +678,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:MoreInfo' => 'クエリに関する追加情報',
 	'UI:RunQuery:DevelopedQuery' => 'クエリ式の再開発',
 	'UI:RunQuery:SerializedFilter' => 'シリアライズされたフィルタ：',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'クエリ: %1$s 実行時にエラーが発生しました',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -691,7 +703,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Schema:Label' => 'ラベル',
 	'UI:Schema:Label+' => '属性のラベル',
 	'UI:Schema:Type' => '型',
-	
+
 	'UI:Schema:Type+' => '属性のデータ型',
 	'UI:Schema:Origin' => 'オリジン',
 	'UI:Schema:Origin+' => 'この属性が定義されているベースクラス',
@@ -781,7 +793,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => '自動的に更新されるべきですが、しかし: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => '自動的に更新されます。(reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$dオブジェクト/リンクは%2$sを参照しています。',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$dオブジェクト/リンクは削除されるオブジェクトを参照しています。',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$dオブジェクト/リンクは削除されるオブジェクトを参照しています。',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'データベースの整合性を確保するために、いくつかの参照を削除する必要があります。',
 	'UI:Delete:Consequence+' => '行われます。',
 	'UI:Delete:SorryDeletionNotAllowed' => '申し訳ありませんが、あなたは、このオブジェクトを削除する権限がありません、上記の詳細な説明を参照してください。',
@@ -830,7 +842,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop ユーザ管理 - クラスプロジェクション',
+	'UI:PageTitle:ClassProjections' => 'iTop ユーザ管理 - クラスプロジェクション',
 	'UI:PageTitle:ProfileProjections' => 'iTop ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
@@ -869,10 +881,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:GrantMatrix' => '権限マトリクス',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s と %2$s間のリンク',
 	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s と %2$s 間のリンク',
-	
+
 	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',
@@ -888,28 +901,28 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'タイプ別のインフラ',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '状態別のインフラ',
 
-'UI:ConfigMgmtMenuOverview:Title' => '構成管理ダッシュボード',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '状態別構成項目(CI)',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'タイプ別構成項目(CI)',
+	'UI:ConfigMgmtMenuOverview:Title' => '構成管理ダッシュボード',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '状態別構成項目(CI)',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'タイプ別構成項目(CI)',
 
-'UI:RequestMgmtMenuOverview:Title' => '要求管理ダッシュボード',
-'UI-RequestManagementOverview-RequestByService' => 'サービス別要求',
-'UI-RequestManagementOverview-RequestByPriority' => '優先度別要求',
-'UI-RequestManagementOverview-RequestUnassigned' => 'エージェントへ未割り当て要求',
+	'UI:RequestMgmtMenuOverview:Title' => '要求管理ダッシュボード',
+	'UI-RequestManagementOverview-RequestByService' => 'サービス別要求',
+	'UI-RequestManagementOverview-RequestByPriority' => '優先度別要求',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'エージェントへ未割り当て要求',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'インシデント管理ダッシュボード',
-'UI-IncidentManagementOverview-IncidentByService' => 'サービス別インシデント',
-'UI-IncidentManagementOverview-IncidentByPriority' => '優先度別インシデント',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'エージェントへ未割り当てインシデント',
+	'UI:IncidentMgmtMenuOverview:Title' => 'インシデント管理ダッシュボード',
+	'UI-IncidentManagementOverview-IncidentByService' => 'サービス別インシデント',
+	'UI-IncidentManagementOverview-IncidentByPriority' => '優先度別インシデント',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'エージェントへ未割り当てインシデント',
 
-'UI:ChangeMgmtMenuOverview:Title' => '変更管理ダッシュボード',
-'UI-ChangeManagementOverview-ChangeByType' => 'タイプ別変更内容',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'エージェントへ未割り当て変更内容',
-'UI-ChangeManagementOverview-ChangeWithOutage' => '変更に伴う停止',
+	'UI:ChangeMgmtMenuOverview:Title' => '変更管理ダッシュボード',
+	'UI-ChangeManagementOverview-ChangeByType' => 'タイプ別変更内容',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'エージェントへ未割り当て変更内容',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => '変更に伴う停止',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'サービス管理ダッシュボード',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => '30日以内に契約更新が必要な顧客',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => '30日以内に契約更新が必要なプロバイダ',
+	'UI:ServiceMgmtMenuOverview:Title' => 'サービス管理ダッシュボード',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => '30日以内に契約更新が必要な顧客',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => '30日以内に契約更新が必要なプロバイダ',
 
 	'UI:ContactsMenu' => '連絡先',
 	'UI:ContactsMenu+' => '連絡先',
@@ -920,13 +933,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Menu:CSVImportMenu' => 'CSV インポート', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '一括作成/一括更新', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'データモデル', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'データモデル概要', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'エクスポート', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '通知の設定', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '<span class="hilite">通知</span>の設定',
@@ -963,19 +976,19 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AuditCategories' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => '監査カテゴリ', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'クエリ実行', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => '任意のクエリを実行', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'クエリのフレーズブック', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'クエリのフレーズブック', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'データ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'データ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => '全検索', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => '何か...検索', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'ユーザ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'ユーザ管理', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -997,9 +1010,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Download-CSV' => 'ダウンロード-CSV %1$s',
 
 	'UI:DeadlineMissedBy_duration' => '%1$s によって消去されました。',
-	'UI:Deadline_LessThan1Min' => ' < 1分',		
-	'UI:Deadline_Minutes' => '%1$d 分',			
-	'UI:Deadline_Hours_Minutes' => '%1$d時間%2$d分',			
+	'UI:Deadline_LessThan1Min' => ' < 1分',
+	'UI:Deadline_Minutes' => '%1$d 分',
+	'UI:Deadline_Hours_Minutes' => '%1$d時間%2$d分',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d日%2$d時間%3$d分',
 	'UI:Help' => 'ヘルプ',
 	'UI:PasswordConfirm' => '(確認)',
@@ -1051,8 +1064,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:ChangeMyPassword' => 'パスワードを変更',
 	'Portal:Disconnect' => '切断する',
 	'Portal:OpenRequests' => '担当のオープン中の要求',
-	'Portal:ClosedRequests'  => '担当のクローズした要求',
-	'Portal:ResolvedRequests'  => '担当の解決済み要求',
+	'Portal:ClosedRequests' => '担当のクローズした要求',
+	'Portal:ResolvedRequests' => '担当の解決済み要求',
 	'Portal:SelectService' => 'カタログからサービスを選択してください：',
 	'Portal:PleaseSelectOneService' => 'サービスを1つ選んでください',
 	'Portal:SelectSubcategoryFrom_Service' => 'サービス%1$sのサブカテゴリを選んでください:',
@@ -1071,7 +1084,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:RemoveAttachment' => ' 添付を削除 ',
 	'Portal:Attachment_No_To_Ticket_Name' => '$2$s ($3$s)への添付 #%1$d',
 	'Portal:SelectRequestTemplate' => 'Select a template for %1$s のテンプレートを選択',
-	'Enum:Undefined' => '未定義',	
+	'Enum:Undefined' => '未定義',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s 日 %2$s 時 %3$s 分 %4$s 秒',
 	'UI:ModifyAllPageTitle' => '全てを修正',
 	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$Sの%1$dオブジェクトを修正',
@@ -1083,7 +1096,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:BulkModifyStatus' => '操作',
 	'UI:BulkModifyStatus+' => '操作の状態',
 	'UI:BulkModifyErrors' => 'エラー (もしあれば)',
-	'UI:BulkModifyErrors+' => '修正を出来ないようにしているエラー',	
+	'UI:BulkModifyErrors+' => '修正を出来ないようにしているエラー',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'エラー',
 	'UI:BulkModifyStatusModified' => '修正',
@@ -1177,8 +1190,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'UI:DashboardEdit:Layout' => 'レイアウト',
 	'UI:DashboardEdit:Properties' => 'ダッシュボードプロパティ',
-	'UI:DashboardEdit:Dashlets' => '利用可能なダッシュレット',	
-	'UI:DashboardEdit:DashletProperties' => 'ダッシュレットプロパティ',	
+	'UI:DashboardEdit:Dashlets' => '利用可能なダッシュレット',
+	'UI:DashboardEdit:DashletProperties' => 'ダッシュレットプロパティ',
 
 	'UI:Form:Property' => 'プロパティ',
 	'UI:Form:Value' => '値',
@@ -1289,7 +1302,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
@@ -1311,7 +1324,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'ショートカットを作成',
 	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
 	'UI:ShortcutListDlg:Title' => 'このリストのショートカットを作成',
@@ -1361,7 +1374,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-		
+
 	'UI:Button:Remove' => 'Remove~~',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
@@ -1374,13 +1387,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'Data~~',	
-	
+	'UI:About:RemoteExtensionSource' => 'Data~~',
+
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
 	'UI:LoginAgain' => 'Login again~~',
 	'UI:StayOnThePage' => 'Stay on this page~~',
-	
+
 	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
 	'ExcelExporter:ExportButton' => 'Export~~',
@@ -1400,16 +1413,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
-	
+
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version~~',
-	
+
 	'UI:BrowseInlineImages' => 'Browse images...~~',
 	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
-	
+
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
@@ -1418,6 +1431,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1459,20 +1473,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
 
 	// - Criteria operators
 	//   - Default widget

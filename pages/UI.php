@@ -1,30 +1,21 @@
 <?php
-
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Main page of iTop
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -125,10 +116,12 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 
 /**
  * Displays the details of an object
- * @param $oP WebPage Page for the output
- * @param $sClass string The name of the class of the object
- * @param $oObj DBObject The object to display
- * @param $id mixed Identifier of the object (name or ID)
+ *
+ * @param WebPage $oP Page for the output
+ * @param string $sClass The name of the class of the object
+ * @param \cmdbAbstractObject $oObj The object to display
+ * @param mixed $id Identifier of the object (name or ID)
+ *
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  * @throws \SecurityException
@@ -635,7 +628,7 @@ try
 					$sPageId = "ui-global-search";
 					$sLabel = Dict::S('UI:SearchResultsTitle');
 					$sDescription = Dict::S('UI:SearchResultsTitle+');
-					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
+					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
@@ -819,6 +812,7 @@ EOF
 					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
 					'origin' => 'console'
 				);
+				// 3rd - prefill API
 				$oObjToClone->PrefillForm('creation_from_0',$aPrefillFormParam);
 
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
@@ -921,13 +915,12 @@ EOF
 				{
 					try
 					{
-						CMDBSource::Query('START TRANSACTION');
 						if (!empty($aErrors))
 						{
 							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 						}
+						// Transactions are now handled in DBUpdate
 						$oObj->DBUpdate();
-						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'ok';
 					}
@@ -935,7 +928,6 @@ EOF
 					{
 						// Found issues, explain and give the user a second chance
 						//
-						CMDBSource::Query('ROLLBACK');
 						$bDisplayDetails = false;
 						$aIssues = $e->getIssues();
 						$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
@@ -944,7 +936,6 @@ EOF
 					}
 					catch (DeleteException $e)
 					{
-						CMDBSource::Query('ROLLBACK');
 						// Say two things:
 						// - 1) Don't be afraid nothing was modified
 						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
@@ -1079,8 +1070,9 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
+		$aWarnings = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -1101,6 +1093,11 @@ EOF
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
 				if ($sTargetState != '')
 				{
+					$sOrigState = utils::ReadPostedParam('obj_state_orig', '');
+					if ($sTargetState != $sOrigState)
+					{
+						$aWarnings[] = 'State changed';
+					}
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}
 			}
@@ -1113,7 +1110,7 @@ EOF
 
 			try
 			{
-				if (!empty($aErrors))
+				if (!empty($aErrors) || !empty($aWarnings))
 				{
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 				}
@@ -1149,7 +1146,15 @@ EOF
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
-				$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+				if (!empty($aIssues))
+				{
+					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+				}
+				if (!empty($aWarnings))
+				{
+					$sWarnings = implode(', ', $aWarnings);
+					$oP->AddHeaderMessage($sWarnings, 'message_info');
+				}
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
 				$oP->add("</div>\n");
 			}
@@ -1829,7 +1834,7 @@ catch(CoreException $e)
 			}
 		}
 
-		IssueLog::Error($e->getMessage());
+		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getTraceAsString());
 	}
 
 	// For debugging only

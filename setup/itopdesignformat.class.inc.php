@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2017 Combodo SARL
+// Copyright (C) 2014-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,10 +16,14 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
  * The datamodel is supplied as a loaded DOMDocument and modified in-place.
- * 
+ *
+ * To test migration methods check {@link \Combodo\iTop\Test\UnitTest\Setup\TestForITopDesignFormatClass}
+ *
  * Usage:
  * 
  * $oDocument = new DOMDocument();
@@ -34,9 +38,6 @@
  *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
-
-define('ITOP_DESIGN_LATEST_VERSION', '1.6'); // iTop >= 2.6.0
- 
 class iTopDesignFormat
 {
 	protected static $aVersions = array(
@@ -79,6 +80,12 @@ class iTopDesignFormat
 		'1.6' => array(
 			'previous' => '1.5',
 			'go_to_previous' => 'From16To15',
+			'next' => '1.7',
+			'go_to_next' => 'From16To17',
+		),
+		'1.7' => array(
+			'previous' => '1.6',
+			'go_to_previous' => 'From17To16',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -114,7 +121,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Error',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 		$this->bStatus = false;
 	}
@@ -127,7 +134,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Warning',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -139,7 +146,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Info',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -201,7 +208,9 @@ class iTopDesignFormat
 	 * Test the conversion without altering the DOM
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success	 
 	 */
 	public function CheckConvert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -216,7 +225,9 @@ class iTopDesignFormat
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success, False if errors have been encountered (still the DOM may be altered!)
 	 */
 	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -258,7 +269,8 @@ class iTopDesignFormat
 	 * 	 
 	 * @param string $sFrom The source format version
 	 * @param string $sTo The desired format version
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
 	 */
 	protected function DoConvert($sFrom, $sTo, $oFactory = null)
 	{
@@ -662,6 +674,34 @@ class iTopDesignFormat
 		// Remove uniqueness rules nodes
 		//
 		$sPath = "/itop_design/classes/class/properties/uniqueness_rules";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From16To17($oFactory)
+	{
+		// nothing changed !
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To16($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
+		$this->RemoveNodeFromXPath($sPath);
+		
+		// -- 2314 : remove "themes" nodes
+		$sPath = "/itop_design/branding/themes";
 		$this->RemoveNodeFromXPath($sPath);
 	}
 

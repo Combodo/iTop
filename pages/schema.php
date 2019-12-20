@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Presentation of the data model
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once('../approot.inc.php');
@@ -233,7 +226,7 @@ function DisplayClassesList($oPage, $sContext)
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
     $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><br/><input type=\"text\" id=\"search-model\" autofocus=\"autofocus\"/>");
-    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fa fa-times-circle\"></i></div>");
+    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fas fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
 		<<<EOF
@@ -498,7 +491,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 EOF
         );
         $oPage->add_ready_script(
-            <<<EOF
+            <<<JS
 
 var data = $sData;
 var dataref = $sDataReferencing;
@@ -721,9 +714,9 @@ field.filter(function(d) {
 			.style("opacity","1");
 		divD3.style("left", (d3.event.pageX - 7*d['tooltip_data']['class'].length/2) + "px");
 		divD3.style("top", (d3.event.pageY - 65) + "px");
-		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fa fa-caret-left"></i> '
+		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fas fa-caret-left"></i> '
 		 			+  ( (d.related_position < 0) ? d['tooltip_data']['to_remote'] : d['tooltip_data']['to_me'] ) +  '</span><span id="tooltipD3_right"> <br/>'
-		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fa fa-caret-right"></i></span>');
+		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fas fa-caret-right"></i></span>');
 	})
 	.on('mouseout',function(d){
 		divD3.transition()
@@ -760,7 +753,7 @@ field.filter(function(d) {
     .attr("xlink:href", function(d, i) { return d.icon })
 	.attr("transform", "translate(-12, -24)");
 			
-EOF
+JS
         );
     }
     catch(Exception $e)

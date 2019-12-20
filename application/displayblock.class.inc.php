@@ -1,26 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * DisplayBlock and derived class
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/webpage.class.inc.php');
@@ -91,7 +85,7 @@ class DisplayBlock
 	{
 		$oDummyFilter = new DBObjectSearch($oSet->GetClass());
 		$aKeys = array();
-		$oSet->OptimizeColumnLoad(array('id')); // No need to load all the columns just to get the id
+		$oSet->OptimizeColumnLoad(array($oSet->GetClassAlias() => array())); // No need to load all the columns just to get the id
 		while($oObject = $oSet->Fetch())
 		{
 			$aKeys[] = $oObject->GetKey();	
@@ -500,7 +494,10 @@ class DisplayBlock
 				}
 				$aAttribs =array(
 					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array('label'=> Dict::S('UI:GroupBy:'.$sAggregationFunction), 'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr))
+					'value' => array(
+						'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
+						'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
+					),
 				);
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
@@ -699,7 +696,7 @@ class DisplayBlock
 							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
 							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
 							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
+							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png',
 						));
 
 						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
@@ -1172,16 +1169,26 @@ EOF
 		}
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$sFilter = addslashes(str_replace('"', "'", $this->m_oFilter->serialize())); // Used either for asynchronous or auto_reload
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+			// Used either for asynchronous or auto_reload
+			// does a json_encode twice to get a string usable as function parameter
+			$sFilterBefore = $this->m_oFilter->serialize();
+			$sFilter = json_encode($sFilterBefore);
+			$sExtraParams = json_encode(json_encode($aExtraParams));
 
-			$oPage->add_script('if (typeof window.oAutoReloadBlock == "undefined") {
-				    window.oAutoReloadBlock = {};
-				}
-				if (typeof window.oAutoReloadBlock[\''.$sId.'\'] != "undefined") {
-				    clearInterval(window.oAutoReloadBlock[\''.$sId.'\']);
-				}
-				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \"'.$sFilter.'\", \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+			$oPage->add_script(
+				<<<JS
+if (typeof window.oAutoReloadBlock == "undefined") {
+    window.oAutoReloadBlock = {};
+}
+if (typeof window.oAutoReloadBlock['$sId'] != "undefined") {
+    clearInterval(window.oAutoReloadBlock['$sId']);
+}
+
+window.oAutoReloadBlock['$sId'] = setInterval(function() {
+	ReloadBlock('$sId', '{$this->m_sStyle}', $sFilter, $sExtraParams);
+}, '$iReloadInterval');
+JS
+			);
 		}
 
 		return $sHtml;
@@ -1719,6 +1726,7 @@ class MenuBlock extends DisplayBlock
 					*/
 				}
 				$this->AddMenuSeparator($aActions);
+				/** @var \iApplicationUIExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 				{
 					$oSet->Rewind();
@@ -1814,6 +1822,7 @@ class MenuBlock extends DisplayBlock
 		}
 		
 		$this->AddMenuSeparator($aActions);
+		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oSet->Rewind();
@@ -1871,11 +1880,11 @@ class MenuBlock extends DisplayBlock
 		{
 			if (count($aFavoriteActions) > 0)
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 			else
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 
 			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
@@ -1883,7 +1892,8 @@ class MenuBlock extends DisplayBlock
 			if ($this->m_sStyle == 'details')
 			{
 				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}\"";
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fa fa-search\" onclick='$sSearchAction'></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class',
+						MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fas fa-search\" onclick='$sSearchAction'></span></div>";
 			}
 
 
@@ -1894,7 +1904,8 @@ class MenuBlock extends DisplayBlock
             }
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
 			{
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fa fa-refresh\" onclick=\"$sRefreshAction\"></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'),
+						ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fas fa-sync\" onclick=\"$sRefreshAction\"></span></div>";
 			}
 
 

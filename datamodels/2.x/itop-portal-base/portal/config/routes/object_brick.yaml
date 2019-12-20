@@ -1,0 +1,94 @@
+# Copyright (C) 2010-2018 Combodo SARL
+#
+#  This file is part of iTop.
+#
+#  iTop is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  iTop is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+p_object_create:
+  path: '/object/create/{sObjectClass}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
+
+p_object_create_from_factory:
+  path: '/object/create-from-factory/{sObjectClass}/{sObjectId}/{sEncodedMethodName}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::CreateFromFactoryAction'
+
+p_object_edit:
+  path: '/object/edit/{sObjectClass}/{sObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::EditAction'
+
+p_object_view:
+  path: '/object/view/{sObjectClass}/{sObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewAction'
+
+p_object_apply_stimulus:
+  path: '/object/apply-stimulus/{sStimulusCode}/{sObjectClass}/{sObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ApplyStimulusAction'
+
+p_object_search_from_attribute:
+  path: '/object/search/from-attribute/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchFromAttributeAction'
+    sHostObjectClass: ~
+    sHostObjectId: ~
+
+p_object_search_autocomplete:
+  path: '/object/search/autocomplete/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchAutocompleteAction'
+    sHostObjectClass: ~
+    sHostObjectId: ~
+
+# This one has the same path pattern as p_object_search_from_attribute and p_object_search_autocomplete
+# It is used to render search URL dynamically without knowing the route name
+#
+# Warning: It has NO default controller!
+p_object_search_generic:
+  path: '/object/search/{sMode}/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
+  defaults:
+    sMode: '-sMode-'
+    sHostObjectClass: ~
+    sHostObjectId: ~
+
+p_object_get_information_json:
+  path: '/object/get-information/json'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationAsJsonAction'
+
+p_object_document_display:
+  path: '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::DocumentAction'
+    sOperation: 'display'
+
+p_object_document_download:
+  path: '/object/document/download/{sObjectClass}/{sObjectId}/{sObjectField}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::DocumentAction'
+    sOperation: 'download'
+
+p_object_attachment_add:
+  path: '/object/attachment/add'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
+
+p_object_attachment_download:
+  path: '/object/attachment/download/{sAttachmentId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
+    sOperation: 'download'

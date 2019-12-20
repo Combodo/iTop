@@ -73,7 +73,7 @@ abstract class ModuleInstallerAPI
     public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
     {
     }
-	
+
 	/**
 	 * Helper to complete the renaming of a class
 	 * The renaming is made in the datamodel definition, but the name has to be changed in the DB as well	 	 
@@ -143,7 +143,7 @@ abstract class ModuleInstallerAPI
 						{
 							$sColType = $aFields[0]['Type'];
 							// Note: the parsing should rely on str_getcsv (requires PHP 5.3) to cope with escaped string
-							if (preg_match("/^enum\(\'(.*)\'\)$/", $sColType, $aMatches))
+							if (preg_match("/^enum\('(.*)'\)$/", $sColType, $aMatches))
 							{
 								$aCurrentValues = explode("','", $aMatches[1]);
 							}
@@ -276,4 +276,5 @@ abstract class ModuleInstallerAPI
 		CMDBSource::CacheReset($sOrigTable);
 		CMDBSource::CacheReset($sDstTable);
 	}
+
 }

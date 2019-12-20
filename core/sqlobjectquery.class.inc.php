@@ -363,11 +363,11 @@ class SQLObjectQuery extends SQLQuery
 				$sCountFields = implode(', ', $aCountFields);
 				// Count can be limited for performance reason, in this case the total amount is not important,
 				// we only need to know if the number of entries is greater than a certain amount.
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
 			}
 			else
 			{
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
 			}
 		}
 		else

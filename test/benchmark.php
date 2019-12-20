@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Page designed to help in benchmarkink the scalability of itop
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once('../approot.inc.php');
@@ -46,13 +39,11 @@ class BenchmarkDataCreation
 
 	var $m_aStatsByClass = array();
 
+	/** @var \CMDBChange $m_oChange */
 	var $m_oChange;
 	public function __construct()
 	{
-		$this->m_oChange = MetaModel::NewObject("CMDBChange");
-		$this->m_oChange->Set("date", time());
-		$this->m_oChange->Set("userinfo", "Benchmark setup");
-		$iChangeId = $this->m_oChange->DBInsertNoReload();
+		CMDBObject::SetTrackInfo('Benchmark setup');
 	}
 
 	public function PlanStructure($iPlannedContacts, $iPlannedContracts)
@@ -154,7 +145,7 @@ class BenchmarkDataCreation
 			$oMyObject->Set($sProp, $value);
 		}
 
-		$iId = $oMyObject->DBInsertTrackedNoReload($this->m_oChange, true /* skip security */);
+		$iId = $oMyObject->DBInsertNoReload();
 
 		$sClassId = "$sClass ($sClassDesc)";
 		$this->m_aCreatedByDesc[$sClassId][] = $iId;

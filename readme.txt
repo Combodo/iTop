@@ -27,6 +27,11 @@ iTop also offers mass import tools and web services to integrate with your IT
    
  
 ## Releases
+### Version 2.7
+ - [Changes since the previous version](https://wiki.openitop.org/doku.php?id=2_7_0:release:change_log)
+ - [New features](https://wiki.openitop.org/doku.php?id=2_7_0:release:2_7_whats_new)
+ - [Migration notes](https://wiki.openitop.org/doku.php?id=2_7_0:install:260_to_270_migration_notes)
+
 ### Version 2.6
  - [Changes since the previous version](https://wiki.openitop.org/doku.php?id=2_6_0:release:change_log)
  - [New features](https://wiki.openitop.org/doku.php?id=2_6_0:release:2_6_whats_new)
@@ -43,4 +48,3 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Changes since the previous version](https://wiki.openitop.org/doku.php?id=2_4_0:release:change_log)
  - [New features](https://wiki.openitop.org/doku.php?id=2_4_0:release:2_4_whats_new)
  - [Migration notes](https://wiki.openitop.org/doku.php?id=2_4_0:install:230_to_240_migration_notes)
- 

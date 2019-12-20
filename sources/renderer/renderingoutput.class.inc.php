@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Renderer;
 
@@ -27,6 +28,7 @@ namespace Combodo\iTop\Renderer;
 class RenderingOutput
 {
 	protected $sHtml;
+	protected $aMetadata;
 	protected $sJsInline;
 	protected $aJsFiles;
 	protected $sCssInline;
@@ -36,6 +38,7 @@ class RenderingOutput
 	public function __construct()
 	{
 		$this->sHtml = '';
+		$this->aMetadata = array();
 		$this->sJsInline = '';
 		$this->aJsFiles = array();
 		$this->sCssInline = '';
@@ -50,6 +53,15 @@ class RenderingOutput
 	public function GetHtml()
 	{
 		return $this->sHtml;
+	}
+
+	/**
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public function GetMetadata()
+	{
+		return $this->aMetadata;
 	}
 
 	/**
@@ -107,6 +119,38 @@ class RenderingOutput
 	public function AddHtml($sHtml, $bEncodeHtmlEntities = false)
 	{
 		$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
+		return $this;
+	}
+
+	/**
+	 * Add a metadata identified by $sName.
+	 *
+	 * @param string $sName
+	 * @param string $sValue
+	 *
+	 * @return $this
+	 * @since 2.7.0
+	 */
+	public function AddMetadata($sName, $sValue)
+	{
+		$this->aMetadata[$sName] = $sValue;
+		return $this;
+	}
+
+	/**
+	 * Remove the metadata identified by $sName
+	 *
+	 * @param string $sName
+	 *
+	 * @return $this
+	 * @since 2.7.0
+	 */
+	public function RemoveMetadata($sName)
+	{
+		if (in_array($sName, $this->aMetadata))
+		{
+			unset($this->aJsFiles[$sName]);
+		}
 		return $this;
 	}
 

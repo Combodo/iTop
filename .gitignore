@@ -3,6 +3,9 @@
 /toolkit
 /env-*
 
+# maintenance mode (N°2240)
+/.maintenance
+
 # listing prevention in conf directory
 /conf/**
 !/conf/.htaccess
@@ -38,7 +41,8 @@ test/vendor/*
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/*
 
-
+#phpdocumentor temp file
+ast.dump
 
 # CMake
 cmake-build-*/

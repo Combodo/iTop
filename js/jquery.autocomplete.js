@@ -349,7 +349,10 @@
 								$input.val( words.join(options.multipleSeparator) + (words.length ? options.multipleSeparator : "") );
 							}
 							else {
-								$input.val( "" );
+								// N°532
+								// do NOT clear the typed text when the value does not match one of the possible values, but clear the
+								// actual underlying value so that the input field gets marked as "invalid" if it is mandatory.
+								// $input.val("");
 								$input.trigger("result", null);
 							}
 						}
@@ -491,7 +494,7 @@
 		autoFill: false,
 		width: 0,
 		multiple: false,
-		multipleSeparator: " ",
+		multipleSeparator: ", ",
 		inputFocus: true,
 		clickFire: false,
 		highlight: function(value, term) {
@@ -508,15 +511,10 @@
 		var length = 0;
 
 		function matchSubset(s, sub) {
-			if (!options.matchCase)
-				if (typeof s.normalize === 'function'){
-					s = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-	            	sub = sub.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");					
-				}
-				else {
-					s = ie_normalize(s.toLowerCase());
-	            	sub = ie_normalize(sub.toLowerCase());										
-				}
+			if (!options.matchCase){
+				s = s.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+                sub = sub.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+			}
 			var i = s.indexOf(sub);
 			if (options.matchContains === "word"){
 				i = s.toLowerCase().search("\\b" + sub.toLowerCase());
@@ -524,23 +522,6 @@
 			if (i === -1) return false;
 			return i === 0 || options.matchContains;
 		};
-		
-		function ie_normalize(s)
-		{
-			//Cheap replacement for normalize on IE. Works only on a (small) subset of what's possible in unicode
-		    var r = s.toLowerCase();
-		    r = r.replace(new RegExp(/[àáâãäå]/g),"a");
-		    r = r.replace(new RegExp(/æ/g),"ae");
-		    r = r.replace(new RegExp(/ç/g),"c");
-		    r = r.replace(new RegExp(/[èéêë]/g),"e");
-		    r = r.replace(new RegExp(/[ìíîï]/g),"i");
-		    r = r.replace(new RegExp(/ñ/g),"n");                
-		    r = r.replace(new RegExp(/[òóôõö]/g),"o");
-		    r = r.replace(new RegExp(/œ/g),"oe");
-		    r = r.replace(new RegExp(/[ùúûü]/g),"u");
-		    r = r.replace(new RegExp(/[ýÿ]/g),"y");
-		    return r;			
-		}
 		
 		function add(q, value) {
 			if (length > options.cacheLength){
@@ -775,6 +756,8 @@
 				var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
 				if ( formatted === false )
 					continue;
+				// Escape dangerous characters to prevent XSS vulnerabilities
+				formatted = formatted.replace('&', '&amp;').replace('"', '&quot;').replace('>', '&gt;').replace('<', '&lt;');
 				var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
 				$.data(li, "ac_data", data[i]);
 			}
@@ -829,7 +812,7 @@
 			show: function() {
 				var offset = $(input).offset();
 				element.css({
-					width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
+					'min-width': typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
 					top: offset.top + input.offsetHeight,
 					left: offset.left
 				}).show();

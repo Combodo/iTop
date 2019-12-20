@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -8517,4 +8517,19 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
+  <branding >
+    <themes>
+      <theme id="light-grey" _delta="define">
+        <variables>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+      </theme> 
+    </themes>
+  </branding>
 </itop_design>

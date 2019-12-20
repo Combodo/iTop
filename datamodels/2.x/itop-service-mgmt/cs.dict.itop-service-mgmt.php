@@ -33,37 +33,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-'Menu:ServiceManagement' => 'Správa služeb',
-'Menu:ServiceManagement+' => 'Přehled správy služeb',
-'Menu:Service:Overview' => 'Přehled',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Smlouvy podle úrovně služeb',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Smlouvy podle stavu',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Smlouvy končící během 30 dní',
+	'Menu:ServiceManagement' => 'Správa služeb',
+	'Menu:ServiceManagement+' => 'Přehled správy služeb',
+	'Menu:Service:Overview' => 'Přehled',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Smlouvy podle úrovně služeb',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Smlouvy podle stavu',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Smlouvy končící během 30 dní',
 
-'Menu:ProviderContract' => 'Smlouvy s poskytovateli',
-'Menu:ProviderContract+' => 'Smlouvy s poskytovateli',
-'Menu:CustomerContract' => 'Smlouvy se zákazníky',
-'Menu:CustomerContract+' => 'Smlouvy se zákazníky',
-'Menu:ServiceSubcategory' => 'Podkategorie služeb',
-'Menu:ServiceSubcategory+' => 'Podkategorie služeb',
-'Menu:Service' => 'Služby',
-'Menu:Service+' => 'Služby',
-'Menu:ServiceElement' => 'Prvky služby',
-'Menu:ServiceElement+' => 'Prvky služby',
-'Menu:SLA' => 'SLA - dohody o úrovních služeb',
-'Menu:SLA+' => 'Dohody o úrovních služeb',
-'Menu:SLT' => 'SLT - cíle úrovní služeb',
-'Menu:SLT+' => 'Cíle úrovní služeb',
-'Menu:DeliveryModel' => 'Modely poskytování služeb',
-'Menu:DeliveryModel+' => 'Modely poskytování služeb',
-'Menu:ServiceFamily' => 'Balíčky (kategorie) služeb',
-'Menu:ServiceFamily+' => 'Balíčky (kategorie) služeb',
-'Menu:Procedure' => 'Katalog postupů',
-'Menu:Procedure+' => 'Katalog všech postupů',
-
-
-
+	'Menu:ProviderContract' => 'Smlouvy s poskytovateli',
+	'Menu:ProviderContract+' => 'Smlouvy s poskytovateli',
+	'Menu:CustomerContract' => 'Smlouvy se zákazníky',
+	'Menu:CustomerContract+' => 'Smlouvy se zákazníky',
+	'Menu:ServiceSubcategory' => 'Podkategorie služeb',
+	'Menu:ServiceSubcategory+' => 'Podkategorie služeb',
+	'Menu:Service' => 'Služby',
+	'Menu:Service+' => 'Služby',
+	'Menu:ServiceElement' => 'Prvky služby',
+	'Menu:ServiceElement+' => 'Prvky služby',
+	'Menu:SLA' => 'SLA - dohody o úrovních služeb',
+	'Menu:SLA+' => 'Dohody o úrovních služeb',
+	'Menu:SLT' => 'SLT - cíle úrovní služeb',
+	'Menu:SLT+' => 'Cíle úrovní služeb',
+	'Menu:DeliveryModel' => 'Modely poskytování služeb',
+	'Menu:DeliveryModel+' => 'Modely poskytování služeb',
+	'Menu:ServiceFamily' => 'Balíčky (kategorie) služeb',
+	'Menu:ServiceFamily+' => 'Balíčky (kategorie) služeb',
+	'Menu:Procedure' => 'Katalog postupů',
+	'Menu:Procedure+' => 'Katalog všech postupů',
 ));
 
 //
@@ -74,7 +71,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model poskytování služeb',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Název modelu poskytování služeb',
-
 ));
 
 

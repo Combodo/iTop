@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.6.1',
+	'itop-tickets/2.7.0',
 	array(
 		// Identification
 		//
@@ -50,22 +50,14 @@ class TicketsInstaller extends ModuleInstallerAPI
 	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 		// Delete all Triggers corresponding to a no more valid class
+		CMDBObject::SetTrackInfo('Uninstallation');
 		$oSearch = new DBObjectSearch('TriggerOnObject');
 		$oSet = new DBObjectSet($oSearch);
-		$oChange = null;
 		while($oTrigger = $oSet->Fetch())
 		{
 			if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
 			{
-				if ($oChange == null)
-				{
-					// Create the change for its first use
-					$oChange = new CMDBChange;
-					$oChange->Set("date", time());
-					$oChange->Set("userinfo", "Uninstallation");
-					$oChange->DBInsert();
-				}
-				$oTrigger->DBDeleteTracked($oChange);
+				$oTrigger->DBDelete();
 			}
 		}
 	}

@@ -79,10 +79,13 @@ abstract class HTMLSanitizer
 
 /**
  * Dummy HTMLSanitizer which does nothing at all!
+ *
  * Can be used if HTML Sanitization is not important
  * (for example when importing "safe" data during an on-boarding)
  * and performance is at stake
  *
+ * **Warning** : this won't filter HTML inserted in iTop at all, so this is a great security issue !
+ * Also, the InlineImage objects processing won't be called.
  */
 class HTMLNullSanitizer extends HTMLSanitizer
 {
@@ -203,6 +206,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'q' => array(),
 		'hr' => array('style'),
 		'pre' => array(),
+		'center' => array(),
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -237,16 +241,24 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
 		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
 		if (!array_key_exists('href', self::$aAttrsWhiteList))
 		{
 			// Regular urls
 			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
+
 			// Mailto urls
 			$sMailtoPattern = '(mailto:(' . utils::GetConfig()->Get('email_validation_pattern') . ')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
 
-			$sPattern = $sUrlPattern . '|' . $sMailtoPattern;
+			// Notification placeholders
+			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
+			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
+			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
+
+			$sPattern = $sUrlPattern . '|' . $sMailtoPattern . '|' . $sPlaceholderPattern;
 			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
 			self::$aAttrsWhiteList['href'] = $sPattern;
 		}
@@ -261,7 +273,9 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
 		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
 		// therefore we have to do the transformation upfront
-		$sHTML = preg_replace('@<o:p>\s*</o:p>@', '<br>', $sHTML);
+		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
+		// Replace badly encoded non breaking space
+		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		

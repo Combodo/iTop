@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -28,7 +28,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:WelcomeMenu+' => 'Welcome to iTop',
 	'Menu:WelcomeMenuPage' => 'Welcome',
 	'Menu:WelcomeMenuPage+' => 'Welcome to iTop',
-	'Menu:AdminTools' => 'Admin tools',
+	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Administration tools',
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
 	'Menu:DataModelMenu' => 'Data Model',
@@ -55,6 +55,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserAccountsMenu+' => 'User Accounts',
 	'Menu:UserAccountsMenu:Title' => 'User Accounts',
 	'Menu:MyShortcuts' => 'My Shortcuts',
+	'Menu:UserManagement' => 'User Management',
+	'Menu:Queries' => 'Queries',
+	'Menu:Configuration' => 'Configuration',
 ));
 
 //
@@ -82,4 +85,13 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu',
 	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu',
+	'Class:ResourceSystemMenu+' => '',
 ));

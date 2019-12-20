@@ -91,7 +91,19 @@ class SQLUnionQuery extends SQLQuery
 		throw new Exception(__class__.'::'.__function__.'Not implemented !');
 	}
 
-	// Interface, build the SQL query
+	/**
+	 * Interface, build the SQL query
+	 *
+	 * @param array $aOrderBy
+	 * @param array $aArgs
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 * @param bool $bGetCount
+	 * @param bool $bBeautifulQuery
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
 	public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false)
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
@@ -101,34 +113,39 @@ class SQLUnionQuery extends SQLQuery
 		foreach ($this->aQueries as $oSQLQuery)
 		{
 			// Render SELECTS without orderby/limit/count
+			/** @var \SQLObjectQuery $oSQLQuery */
 			$aSelects[] = $oSQLQuery->RenderSelect(array(), $aArgs, 0, 0, false, $bBeautifulQuery);
 		}
 		if ($iLimitCount > 0)
 		{
+			$sLimitStart = '(';
 			$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
+			$sLimitEnd = ')';
 		}
 		else
 		{
+			$sLimitStart = '';
 			$sLimit = '';
+			$sLimitEnd = '';
 		}
 
 		if ($bGetCount)
 		{
-			$sSelects = '('.implode(" $sLimit)$sLineSep UNION$sLineSep(", $aSelects)." $sLimit)";
-			$sFrom = "($sLineSep$sSelects$sLineSep) as __selects__";
-			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep) AS _union_tatooine_";
+			$sSelects = "({$sLimitStart}".implode(" {$sLimit}{$sLimitEnd}{$sLineSep} UNION{$sLineSep} {$sLimitStart}", $aSelects)." {$sLimit}{$sLimitEnd})";
+			$sFrom = "({$sLineSep}{$sSelects}{$sLineSep}) as __selects__";
+			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM {$sFrom}{$sLineSep}) AS _union_alderaan_";
 		}
 		else
 		{
 			$sOrderBy = $this->aQueries[0]->RenderOrderByClause($aOrderBy);
 			if (!empty($sOrderBy))
 			{
-				$sOrderBy = "ORDER BY $sOrderBy$sLineSep $sLimit";
-				$sSQL = '('.implode(")$sLineSep UNION$sLineSep (", $aSelects).')'.$sLineSep.$sOrderBy;
+				$sOrderBy = "ORDER BY {$sOrderBy}{$sLineSep} {$sLimit}";
+				$sSQL = implode(" {$sLineSep} UNION{$sLineSep} ", $aSelects).$sLineSep.$sOrderBy;
 			}
 			else
 			{
-				$sSQL = '('.implode(" $sLimit)$sLineSep UNION$sLineSep (", $aSelects)." $sLimit)";
+				$sSQL = $sLimitStart.implode(" {$sLimit}{$sLimitEnd} {$sLineSep} UNION{$sLineSep} {$sLimitStart}", $aSelects)." {$sLimit}{$sLimitEnd}";
 			}
 		}
 		return $sSQL;

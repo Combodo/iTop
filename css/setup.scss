@@ -1,0 +1,308 @@
+/*!
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/////////
+// Colors
+$content-border-color: #CBD2D9 !default;
+$default-font-color: #1A202C !default;
+$legend-border-color: #718096 !default;
+$link-default-color: #1c94c4 !default;
+$link-hover-color: #EA7D1E !default;
+
+///////////////////////
+// Messages to the user
+$message-default-border-color: #4A5568 !default;
+$message-default-text-color: #1A202C !default;
+$message-default-bg-color: #F7FAFC !default;
+
+$message-valid-border-color: #48BB78 !default;
+$message-valid-text-color: #276749 !default;
+$message-valid-bg-color: #F0FFF4 !default;
+
+$message-warning-border-color: #ED8936 !default;
+$message-warning-text-color: #C05621 !default;
+$message-warning-bg-color: #FFFAF0 !default;
+
+$message-error-border-color: #E53E3E !default;
+$message-error-text-color: #C53030 !default;
+$message-error-bg-color: #FFF5F5 !default;
+
+// Compilation progress bar
+$progress-bar-color: #000000 !default;
+$progress-bar-ongoing-1-bg-color: #FBD38D !default;
+$progress-bar-ongoing-2-bg-color: #FEEBC8 !default;
+$progress-bar-error-bg-color: #F56565 !default;
+
+/* Helpers classes */
+.center {
+	text-align: center;
+}
+
+/* Animations */
+@keyframes progress_bar_color_ongoing {
+	from { background-color: $progress-bar-ongoing-1-bg-color; }
+	to { background-color: $progress-bar-ongoing-2-bg-color; }
+}
+@-webkit-keyframes bg-pan-left {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+@keyframes bg-pan-left {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Theme */
+body {
+    background-color: #eee;
+    color: $default-font-color;
+    margin: 0;
+    padding: 0;
+    font-size: 10pt;
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    overflow-y: auto;
+}
+h1 {
+	color: #555555;
+	font-size: 16pt;
+}
+h2 {
+	color: $default-font-color;
+	font-size: 14pt;
+}
+h3 {
+	color: #1C94C4;
+	font-size: 12pt;
+	font-weight: bold;
+}
+a{
+    color: $link-default-color;
+    text-decoration: none;
+    &:hover{
+        color: $link-hover-color;
+    }
+}
+
+#header {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #fff;
+    height: 54px;
+    border: 3px solid $content-border-color;
+    border-bottom: none;
+
+	img {
+		border: 0;
+		vertical-align: middle;
+		margin-right: 20px;
+	}
+	h1 {
+		vertical-align: middle;
+		height: 54px;
+		noline-height: 54px;
+		margin: 0;
+	}
+}
+#setup {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 3px solid $content-border-color;
+    border-top: none;
+}
+
+
+
+.next {
+    width: 100%;
+    text-align: right;
+}
+.v-spacer {
+    padding-top: 1em;
+}
+button {
+    margin-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+p.info {
+    padding-left: 50px;
+    background: url(../images/info-mid.png) no-repeat left -5px;
+    min-height: 48px;
+}
+p.ok {
+    padding-left: 50px;
+    background: url(../images/clean-mid.png) no-repeat left -8px;
+    min-height: 48px;
+}
+p.warning {
+    padding-left: 50px;
+    background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
+    min-height: 48px;
+}
+p.error {
+    padding-left: 50px;
+    background: url(../images/stop-mid.png) no-repeat left -5px;
+    min-height: 48px;
+}
+td.label {
+    text-align: left;
+}
+label.read-only {
+    color: #666;
+    cursor: text;
+}
+td.input {
+    text-align: left;
+}
+table.formTable {
+    border: 0;
+    cellpadding: 2px;
+    cellspacing: 0;
+}
+.wizlabel, .wizinput {
+    color: #000;
+    font-size: 10pt;
+}
+.wizhelp {
+    color: #333;
+    font-size: 8pt;
+}
+#progress {
+    border: none;
+    width: 210px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    margin: 5px;
+    box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.06) !important;
+    border-radius: 2px;
+    background-color: #EDF2F7 !important;
+    
+    .progress{
+		color: $progress-bar-color !important; /* !important to overload jQuery UI style */
+        background-image: linear-gradient(270deg, $progress-bar-ongoing-1-bg-color 50%, $progress-bar-ongoing-2-bg-color 55%, $progress-bar-ongoing-1-bg-color 80%) !important; /* !important to overload jQuery UI style */
+        animation: bg-pan-left 3s infinite both;
+        background-size: 600% 100%;
+        border-radius: inherit;
+        &.progress-error{
+            background-image: none !important;
+            background-color: $progress-bar-error-bg-color !important; /* !important to overload jQuery UI style */
+			animation: none;
+        }
+    }
+}
+h3.clickable {
+    background: url(../images/plus.gif) no-repeat left;
+    padding-left:16px;
+    cursor: hand;
+}
+h3.clickable.open {
+    background: url(../images/minus.gif) no-repeat left;
+    padding-left:16px;
+    cursor: hand;
+}
+.message{
+    color: $message-default-text-color;
+    background-color: $message-default-bg-color;
+    border-left: 4px solid $message-default-border-color;
+    padding: 10px;
+
+    &.message-valid{
+        color: $message-valid-text-color;
+        background-color: $message-valid-bg-color;
+        border-color: $message-valid-border-color;
+    }
+    &.message-warning{
+        color: $message-warning-text-color;
+        background-color: $message-warning-bg-color;
+        border-color: $message-warning-border-color;
+    }
+    &.message-error{
+        color: $message-error-text-color;
+        background-color: $message-error-bg-color;
+        border-color: $message-error-border-color;
+    }
+    >.message-title {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+}
+.text-valid{
+    color:$message-valid-text-color
+}
+.text-warning{
+    color:$message-warning-text-color
+}
+.text-error{
+    color:$message-error-text-color
+}
+
+fieldset{
+    border: none;
+    padding: 0;
+    margin: 30px 0 0 0;
+    
+    > legend{
+        margin-top: 25px;
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+        width: 100%;
+		color: #3C3C3C;
+        font-size: 12pt;
+		font-weight: bold;
+		border-bottom: 1px solid #D2D2D2;
+    }
+}
+
+#details{
+    >.message{
+        margin-bottom: 6px;
+        
+        &:last-of-type{
+            margin-bottom: 0;
+        }
+    }
+}
+.module-selection-banner{
+    img{
+        max-height: 48px;
+    }
+}
+.module-selection-body{
+    height: 28em;
+    overflow: auto;
+    box-shadow: inset 0 2px 4px 0
+    rgba(0,0,0,.06) !important;
+    background-color: #F7FAFC;
+    padding: 10px;
+}
+

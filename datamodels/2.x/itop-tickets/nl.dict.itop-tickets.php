@@ -73,7 +73,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Privélog',
 	'Class:Ticket/Attribute:private_log+' => 'Interne commentaar',
-    'Class:Ticket/Attribute:contacts_list' => 'Contacten',
+	'Class:Ticket/Attribute:contacts_list' => 'Contacten',
 	'Class:Ticket/Attribute:contacts_list+' => 'Alle contacten gerelateerd aan dit ticket',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Alle configuratie-items die impact hebben op dit ticket',

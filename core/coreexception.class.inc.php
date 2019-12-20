@@ -183,6 +183,30 @@ class CoreCannotSaveObjectException extends CoreException
 	}
 }
 
+/**
+ * @since 2.7.0 N°2555
+ */
+class CorePortalInvalidActionRuleException extends CoreException
+{
+
+}
+
+/**
+ * @since 2.7.0 N°2555
+ */
+class CoreOqlException extends CoreException
+{
+
+}
+
+/**
+ * @since 2.7.0 N°2555
+ */
+class CoreOqlMultipleResultsForbiddenException extends CoreOqlException
+{
+
+}
+
 class CoreWarning extends CoreException
 {
 }
@@ -211,5 +235,15 @@ class ArchivedObjectException extends CoreException
  * @since 2.7.0
  */
 class InvalidConfigParamException extends CoreException
+{
+}
+
+
+/**
+ * Throwned when the password is not valid
+ *
+ * @since 2.7.0
+ */
+class InvalidPasswordAttributeOneWayPassword extends CoreException
 {
 }

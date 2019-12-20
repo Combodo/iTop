@@ -1,0 +1,11 @@
+{% if wrap is not defined -%}
+    {% set wrap = 'notice' %}
+{%- endif -%}
+{% if hidden_by is not defined -%}
+    {# Do not display @api if @api-advanced is also present #}
+    {%- set hidden_by = {"api" : "api-advanced"} -%}
+{%- endif %}
+
+{%- for tagName,tags in structure.tags if tagName in wrapTags and (hidden_by[tagName] is not defined or structure.tags[hidden_by[tagName]] is not defined) %}
+ <wrap {{wrap}}>{{tagName}}</wrap>
+{% endfor %}

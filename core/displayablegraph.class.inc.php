@@ -265,7 +265,7 @@ class DisplayableNode extends GraphNode
 	/**
 	 * Retrieves the list of neighbour nodes, in the given direction: 'up' or 'down'
 	 * @param bool $bDirectionDown
-	 * @return multitype:NULL
+	 * @return mixed|NULL
 	 */
 	protected function GetNextNodes($bDirectionDown = true)
 	{
@@ -1418,16 +1418,24 @@ class DisplayableGraph extends SimpleGraph
 		}
 		return $aContextDefs;
 	}
-	
+
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
+	 *
 	 * @param WebPage $oP
-	 * @param hash $aResults
+	 * @param array $aResults
 	 * @param string $sRelation
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
+	 * @param string $sObjClass
+	 * @param int $iObjKey
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array(), $sObjClass = null, $iObjKey = null, $sContextKey, $aContextParams = array())
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array())
 	{	
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
@@ -1446,7 +1454,7 @@ class DisplayableGraph extends SimpleGraph
 <<<EOF
  <div id="ds_flash" class="search_box">
 	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fa fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
 	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
 		);

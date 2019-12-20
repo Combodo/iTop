@@ -15,6 +15,7 @@ $(function()
 			'endpoint': null,
 			'init_opened': false,
 			'auto_submit': true,
+			'show_obsolete_data' : true,
 			'search': {
 				'base_oql': '',
 				'class_name': null,
@@ -325,6 +326,12 @@ $(function()
 			{
 				this.element.addClass('no_auto_submit');
 			}
+			// - Show obsolete data option
+			if(this.options.show_obsolete_data === false)
+			{
+				this.element.addClass('hide_obsolete_data');
+			}
+
 			// - Message area
 			this.elements.message_area = this.element.find('.sf_message');
 			this._cleanMessageArea();
@@ -390,7 +397,7 @@ $(function()
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fa fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part
@@ -401,7 +408,7 @@ $(function()
 			var oFilterElem = $('<div></div>')
 				.addClass('sf_filter')
 				.addClass('sfm_filter')
-				.append('<span class="sff_input_wrapper"><input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fas fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
 				.appendTo(oContentElem);
 
 			// - Lists container
@@ -658,9 +665,9 @@ $(function()
 				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
-			var sButtonIcon = (this.options.auto_submit === true) ? 'fa-refresh' : 'fa-search';
+			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync' : 'fas fa-search';
 			var oButtonElem = $('<div class="sfb_header"></div>')
-				.append('<a class="fa fa-fw ' + sButtonIcon + '" title="' + sButtonText + '" href="#"></a>')
+				.append('<a class="fa-fw ' + sButtonIcon + '" title="' + sButtonText + '" href="#"></a>')
 				.appendTo(this.elements.submit_button);
 
 			// Bind events
@@ -751,7 +758,7 @@ $(function()
 			// Make placeholder if nothing yet
 			if(oResultAreaElem.html() === '')
 			{
-				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button">' + Dict.S('UI:Button:Search') + '<span class="fa fa-search"></span></button></p></div>');
+				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button">' + Dict.S('UI:Button:Search') + '<span class="fas fa-search"></span></button></p></div>');
 				oResultAreaElem.find('button').on('click', function(){
 					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();

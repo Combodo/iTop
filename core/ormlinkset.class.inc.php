@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 require_once('dbobjectiterator.php');
 
@@ -107,6 +108,10 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		}
 	}
 
+	/**
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 */
 	public function GetFilter()
 	{
 		return clone $this->oOriginalSet->GetFilter();
@@ -115,9 +120,10 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	/**
 	 * Specify the subset of attributes to load (for each class of objects) before performing the SQL query for retrieving the rows from the DB
 	 *
-	 * @param hash $aAttToLoad Format: alias => array of attribute_codes
+	 * @param array $aAttToLoad Format: alias => array of attribute_codes
 	 *
 	 * @return void
+	 * @throws \CoreException
 	 */
 	public function OptimizeColumnLoad($aAttToLoad)
 	{
@@ -182,6 +188,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
         }
 	}
 
+	/**
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
 	protected function LoadOriginalIds()
 	{
 		if ($this->aOriginalObjects === null)
@@ -217,7 +228,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * Note: After calling this method, the set cursor will be at the end of the set. You might want to rewind it.
+	 *
 	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	protected function GetArrayOfIndex()
 	{
@@ -289,6 +305,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * The total number of objects in the collection
 	 *
 	 * @return int
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function Count()
 	{
@@ -300,7 +319,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	/**
 	 * Position the cursor to the given 0-based position
 	 *
-	 * @param $iPosition
+	 * @param int $iPosition
+	 *
 	 * @throws Exception
 	 * @internal param int $iRow
 	 */
@@ -324,6 +344,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * Fetch the object at the current position in the collection and move the cursor to the next position.
 	 *
 	 * @return DBObject|null The fetched object or null when at the end
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function Fetch()
 	{
@@ -340,8 +363,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * Return the current element
+	 *
 	 * @link http://php.net/manual/en/iterator.current.php
 	 * @return mixed Can return any type.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 */
 	public function current()
 	{
@@ -371,8 +400,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * Move forward to next element
+	 *
 	 * @link http://php.net/manual/en/iterator.next.php
 	 * @return void Any returned value is ignored.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function next()
 	{
@@ -411,9 +444,13 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * Checks if current position is valid
+	 *
 	 * @link http://php.net/manual/en/iterator.valid.php
 	 * @return boolean The return value will be casted to boolean and then evaluated.
 	 * Returns true on success or false on failure.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function valid()
 	{
@@ -426,8 +463,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * Rewind the Iterator to the first element
+	 *
 	 * @link http://php.net/manual/en/iterator.rewind.php
 	 * @return void Any returned value is ignored.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function rewind()
 	{
@@ -439,6 +480,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
         reset($this->aModified);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function HasDelta()
 	{
 		return $this->bHasDelta;
@@ -446,7 +490,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * This method has been designed specifically for AttributeLinkedSet:Equals and as such it assumes that the passed argument is a clone of this.
-	 * @param ormLinkSet $oFellow
+	 *
+	 * @param \ormLinkSet $oFellow
+	 *
 	 * @return bool|null
 	 * @throws Exception
 	 */
@@ -473,6 +519,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		return $bRet;
 	}
 
+	/**
+	 * @param \iDBObjectSetIterator $oFellow
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function UpdateFromCompleteList(iDBObjectSetIterator $oFellow)
 	{
 		if ($oFellow === $this)
@@ -511,7 +563,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$this->aPreserved = ($this->aOriginalObjects === null) ? array() : $this->aOriginalObjects;
 			$this->bHasDelta = false;
 
-			/** @var AttributeLinkedSet $oAttDef */
+			/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
 			$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
 			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 			$sAdditionalKey = null;
@@ -520,6 +572,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 				$sAdditionalKey = $oAttDef->GetExtKeyToRemote();
 			}
 			// Compare both collections by iterating the whole sets, order them, a build a fingerprint based on meaningful data (what make the difference)
+			/** @var \DBObject $oLink */
 			$oComparator = new DBObjectSetComparator($this, $oFellow, array($sExtKeyToMe), $sAdditionalKey);
 			$aChanges = $oComparator->GetDifferences();
 			foreach ($aChanges['added'] as $oLink)
@@ -562,10 +615,21 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 	/**
 	 * @param DBObject $oHostObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DBWrite(DBObject $oHostObject)
 	{
-		/** @var AttributeLinkedSet $oAttDef */
+		/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef(get_class($oHostObject), $this->sAttCode);
 		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 		$sExtKeyToRemote = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote() : 'n/a';
@@ -718,13 +782,24 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$oMtx->Unlock();
 	}
 
+	/**
+	 * @param bool $bShowObsolete
+	 *
+	 * @return \DBObjectSet
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
 	public function ToDBObjectSet($bShowObsolete = true)
 	{
+		/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
 		$oLinkSearch = $this->GetFilter();
 		if ($oAttDef->IsIndirect())
 		{
 			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+			/** @var \AttributeExternalKey $oLinkingAttDef */
 			$oLinkingAttDef = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToRemote);
 			$sTargetClass = $oLinkingAttDef->GetTargetClass();
 			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass))
@@ -745,6 +820,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		{
 			$oLinkSet->AddObjectArray($this->aAdded);
 		}
+
 		return $oLinkSet;
 	}
 }

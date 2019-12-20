@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Class iTopWebPage
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
@@ -46,6 +39,14 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryIcon;
 	protected $oCtx;
 
+	/**
+	 * iTopWebPage constructor.
+	 *
+	 * @param string $sTitle
+	 * @param bool $bPrintable
+	 *
+	 * @throws \Exception
+	 */
 	public function __construct($sTitle, $bPrintable = false)
 	{
 		parent::__construct($sTitle, $bPrintable);
@@ -69,7 +70,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_sMenu = "";
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
-		$this->add_header("Content-type: text/html; charset=utf-8");
+		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
@@ -77,7 +78,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
-		$this->add_linked_stylesheet("../css/font-awesome/css/font-awesome.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/v4-shims.min.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -149,6 +151,9 @@ EOF
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function IsMenuPaneVisible()
 	{
 		$bLeftPaneOpen = true;
@@ -171,6 +176,9 @@ EOF
 		return $bLeftPaneOpen;
 	}
 
+	/**
+	 *
+	 */
 	protected function PrepareLayout()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
@@ -237,7 +245,14 @@ EOF;
 
 		// Time picker additional options
 		$sUserLang = Dict::GetUserLanguage();
-		$sTimePickerLang = json_encode(Dict::S('INTERNAL:JQuery-DatePicker:LangCode', $sUserLang));
+		$sUserLangShort = strtolower(
+			substr($sUserLang, 0, 2)
+		);
+		// PR #40 :  we are picking correct values for specific cases in dict files
+		// some languages are using codes like zh-CN or pt-BR
+		$sTimePickerLang = json_encode(
+			Dict::S('INTERNAL:JQuery-DatePicker:LangCode', $sUserLangShort)
+		);
 		$aPickerOptions['showOn'] = '';
 		$aPickerOptions['buttonImage'] = null;
 		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
@@ -257,7 +272,7 @@ EOF;
 			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
 		}
 		$this->add_script(
-			<<< EOF
+			<<< JS
 	function GetUserLanguage()
 	{
 		return $sTimePickerLang;
@@ -292,12 +307,12 @@ EOF;
 				});
 		});
 	}
-EOF
+JS
 		);
 
 		// Attribute set tooltip on items
 		$this->add_ready_script(
-			<<<EOF
+			<<<JS
 	$('.attribute-set-item').each(function(){
 		// Encoding only title as the content is already sanitized by the HTML attribute.
         var sLabel = $('<div/>').text($(this).attr('data-label')).html();
@@ -324,20 +339,20 @@ EOF
 	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
 	    });
 	});
-EOF
+JS
 		);
 		// Make image attributes zoomable
 		$this->add_ready_script(
-<<<EOF
+			<<<JS
 		$('.view-image img').each(function(){
 			$(this).attr('href', $(this).attr('src'))
 		})
 		.magnificPopup({type: 'image', closeOnContentClick: true });
-EOF
+JS
 		);
 
 		$this->add_init_script(
-			<<< EOF
+			<<< JS
 	try
 	{
 		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
@@ -447,11 +462,11 @@ EOF
 		// Do something with the error !
 		alert(err);
 	}
-EOF
+JS
 		);
 
 		$this->add_ready_script(
-			<<< EOF
+			<<< JS
 	
 	// Adjust initial size
 	$('.v-resizable').each( function()
@@ -612,7 +627,7 @@ EOF
 			});
 		}
 	});
-EOF
+JS
 		);
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 		/*
@@ -623,7 +638,7 @@ EOF
 
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
-			<<<EOF
+			<<<JS
 //		// for JQuery history
 //		function history_callback(hash)
 //		{
@@ -693,7 +708,7 @@ EOF
 		{
 			$('.ui-layout-center, .ui-layout-north, .ui-layout-south').css({display: 'block'});
 		}
-EOF
+JS
 		);
 	}
 
@@ -728,11 +743,22 @@ EOF
 		$this->sBreadCrumbEntryIcon = null;
 	}
 
+	/**
+	 * @param string $sHtml
+	 */
 	public function AddToMenu($sHtml)
 	{
 		$this->m_sMenu .= $sHtml;
 	}
 
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function GetSiloSelectionForm()
 	{
 		// List of visible Organizations
@@ -793,6 +819,9 @@ EOF
 		return $sHtml;
 	}
 
+	/**
+	 * @throws \DictExceptionMissingString
+	 */
 	public function DisplayMenu()
 	{
 		// Display the menu
@@ -808,6 +837,8 @@ EOF
 	protected function InitNewsroom()
 	{
 		$sNewsroomInitialImage = '';
+		$aProviderParams = array();
+
 		if (MetaModel::GetConfig()->Get('newsroom_enabled') !== false)
 	 	{
 			$oUser = UserRights::GetUserObject();
@@ -815,30 +846,31 @@ EOF
 			 * @var iNewsroomProvider[] $aProviders
 			 */
 			$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-			$aProviderParams = array();
 			foreach($aProviders as $oProvider)
 			{
 				$oProvider->SetConfig(MetaModel::GetConfig());
-				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
-			if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
-			{
-				$aProviderParams[] = array(
-					'label' => $oProvider->GetLabel(),
-					'fetch_url' => $oProvider->GetFetchURL(),
-					'view_all_url' => $oProvider->GetViewAllURL(),
-					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
-					'placeholders' => $oProvider->GetPlaceholders(),
-					'ttl' => $oProvider->GetTTL(),
-				);
+				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider),true);
+				if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
+				{
+					$aProviderParams[] = array(
+						'label' => $oProvider->GetLabel(),
+						'fetch_url' => $oProvider->GetFetchURL(),
+						'view_all_url' => $oProvider->GetViewAllURL(),
+						'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
+						'placeholders' => $oProvider->GetPlaceholders(),
+						'ttl' => $oProvider->GetTTL(),
+					);
+				}
 			}
 		}
+		// Show newsroom only if there are some providers
 		if (count($aProviderParams) > 0)
 		{
-			$sImageUrl= '../images/newsroom_menu.png';
-			$sPlaceholderImageUrl= '../images/newsroom-message.svg';
+			$sImageUrl= 'fas fa-comment-dots';
+			$sPlaceholderImageUrl= 'far fa-envelope';
 			$aParams = array(
-				'image_url' => $sImageUrl,
-				'placeholder_image_url' => $sPlaceholderImageUrl,
+				'image_icon' => $sImageUrl,
+				'placeholder_image_icon' => $sPlaceholderImageUrl,
 				'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 				'providers' => $aProviderParams,
 				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
@@ -854,20 +886,17 @@ EOF
 	$('#top-left-newsroom-cell').newsroom_menu($sParams);
 EOF
 			);
-			$sNewsroomInitialImage = '<img style="opacity:0.4" src="../images/newsroom_menu.png">';
+			$sNewsroomInitialImage = '<i style="opacity:0.4" class="top-right-icon fas fa-comment-dots"></i>';
 		}
-		else
-		{
-			// No newsroom menu at all
-		}
-	}
-	// else no newsroom menu
-	return $sNewsroomInitialImage;
+		// else no newsroom menu
+		return $sNewsroomInitialImage;
 	}
 
 
 	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
+	 *
+	 * @throws \Exception
 	 */
 	public function output()
 	{
@@ -946,8 +975,8 @@ EOF
 				$sNewEntry = json_encode(array(
 					'id' => $this->sBreadCrumbEntryId,
 					'url' => $this->sBreadCrumbEntryUrl,
-					'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'),
-					'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'),
+					'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, self::PAGES_CHARSET),
+					'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, self::PAGES_CHARSET),
 					'icon' => $this->sBreadCrumbEntryIcon,
 				));
 			}
@@ -980,8 +1009,9 @@ EOF
 		$sHtml .= "<head>\n";
 		// Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
 		$sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
-		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
+		$sPageCharset = self::PAGES_CHARSET;
+		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=$sPageCharset\" />\n";
+		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, $sPageCharset)."</title>\n";
 		$sHtml .= $this->get_base_tag();
 		// Stylesheets MUST be loaded before any scripts otherwise
 		// jQuery scripts may face some spurious problems (like failing on a 'reload')
@@ -1100,16 +1130,18 @@ EOF
 		{
 			$sBodyClass = 'printable-version';
 		}
-		$sHtml .= "<body class=\"$sBodyClass\">\n";
+		$sHtml .= "<body class=\"$sBodyClass\" data-gui-type=\"backoffice\">\n";
 		if ($this->IsPrintableVersion())
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";
 			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable',
 					'<img src="../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
 			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
-			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8').'</button>';
+			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES,
+					self::PAGES_CHARSET).'</button>';
 			$sHtml .= '&nbsp;';
-			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8').'</button>';
+			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES,
+					self::PAGES_CHARSET).'</button>';
 			$sHtml .= '&nbsp;';
 
 			$sDefaultResolution = '27.7cm';
@@ -1147,7 +1179,7 @@ EOF;
 		}
 
 		// Render the text of the global search form
-		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
+		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
 		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
 		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
 
@@ -1171,7 +1203,7 @@ EOF;
 			{
 				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
 			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/on-off-menu.png\"><ul>";
+			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-power-off\"></i><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
@@ -1202,7 +1234,7 @@ EOF;
 				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
 				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
 
-				$sIcon = '<span class="fa fa-lock fa-1x"></span>';
+				$sIcon = '<span class="fas fa-lock fa-1x"></span>';
 				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
 			}
 			elseif (UserRights::CanBrowseArchive())
@@ -1248,8 +1280,8 @@ EOF;
 				$sIcon =
 					<<<EOF
 <span class="fa-stack fa-sm">
-  <i class="fa fa-pencil fa-flip-horizontal fa-stack-1x"></i>
-  <i class="fa fa-ban fa-stack-2x text-danger"></i>
+  <i class="fas fa-pencil-alt fa-flip-horizontal fa-stack-1x"></i>
+  <i class="fas fa-ban fa-stack-2x text-danger"></i>
 </span>
 EOF;
 
@@ -1266,7 +1298,7 @@ EOF;
 			{
 				$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
 				$sHtmlMessage = $aMessage['message'];
-				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, 'UTF-8').'"' : '';
+				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, self::PAGES_CHARSET).'"' : '';
 				$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
 			}
 
@@ -1297,9 +1329,11 @@ EOF;
 			$sHtml .= '<!-- Beginning of the left pane -->';
 			$sHtml .= ' <div class="ui-layout-north">';
 			$sHtml .= ' <div id="header-logo">';
-			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES,
-					'UTF-8').'"><img src="'.$sDisplayIcon.'" title="'.htmlentities($sVersionString, ENT_QUOTES,
-					'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'
+				.htmlentities($sIconUrl, ENT_QUOTES, self::PAGES_CHARSET)
+				.'"><img src="'.$sDisplayIcon.'" title="'
+				.htmlentities($sVersionString, ENT_QUOTES, self::PAGES_CHARSET)
+				.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';
 			if (!MetaModel::GetConfig()->Get('demo_mode'))
@@ -1331,10 +1365,10 @@ EOF;
 			$sHtml .= ' <table id="top-bar-table">';
 			$sHtml .= ' <tr>';
 			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
-			$sHtml .= ' <img src="../images/menu.png">';
+			$sHtml .= ' <i class="fas fa-bars"></i>';
 			$sHtml .= ' </td>';
 			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><img src="../images/home.png"></a>';
+			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><i class="fas fa-home"></i></a>';
 			$sHtml .= ' </td>';
 			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
 			$sHtml .= ' </td>';
@@ -1344,8 +1378,8 @@ EOF;
 			$sHtml .= ' <td id="top-bar-table-search">';
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
 			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
-			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
+			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><i class="top-right-icon fa-flip-horizontal fas fa-search"></i><input type="hidden" name="operation" value="full_text"/></div></div></td>';
+			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank" title="'.Dict::S('UI:Help').'"><i class="top-right-icon fas fa-question-circle"></i></a></td>';
 			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
 			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
 			$sHtml .= '     </tr></table></form></div>';
@@ -1400,9 +1434,12 @@ EOF;
 		{
 			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
 			{
+				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
+				// The last trace we got is in R-007989. Do not remove this without checking before with the concerned parties if it is still used!
 				if (@is_readable(APPROOT.'lib/MPDF/mpdf.php'))
 				{
 					require_once(APPROOT.'lib/MPDF/mpdf.php');
+					/** @noinspection PhpUndefinedClassInspection Check above comment */
 					$oMPDF = new mPDF('c');
 					$oMPDF->mirroMargins = false;
 					if ($this->a_base['href'] != '')
@@ -1429,21 +1466,46 @@ EOF;
 		ExecutionKPI::ReportStats();
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sPrefix
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
+	 * @param string $sHtml
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
 		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 *
+	 * @return mixed|string
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
 		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 *
+	 * @return mixed|string
+	 */
 	public function SetCurrentTab($sTabLabel = '')
 	{
 		return $this->m_oTabs->SetCurrentTab($sTabLabel);
@@ -1468,11 +1530,20 @@ EOF;
 		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetCurrentTab()
 	{
 		return $this->m_oTabs->GetCurrentTab();
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 * @param string|null $sTabContainer
+	 *
+	 * @return mixed|void
+	 */
 	public function RemoveTab($sTabLabel, $sTabContainer = null)
 	{
 		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
@@ -1480,6 +1551,9 @@ EOF;
 
 	/**
 	 * Finds the tab whose title matches a given pattern
+	 *
+	 * @param string $sPattern
+	 * @param string|null $sTabContainer
 	 *
 	 * @return mixed The name of the tab as a string or false if not found
 	 */
@@ -1493,12 +1567,21 @@ EOF;
 	 * DOES NOT WORK: apparently in the *old* version of jquery
 	 * that we are using this is not supported... TO DO upgrade
 	 * the whole jquery bundle...
+	 *
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
 	 */
 	public function SelectTab($sTabContainer, $sTabLabel)
 	{
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
 	}
 
+	/**
+	 * @param string $sHtml
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function add($sHtml)
 	{
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
@@ -1564,15 +1647,21 @@ EOF;
 
 	/**
 	 * Set the message to be displayed in the 'app-banner' section at the top of the page
+	 *
+	 * @param string $sHtmlMessage
 	 */
 	public function SetMessage($sHtmlMessage)
 	{
-		$sHtmlIcon = '<span class="fa fa-comment fa-1x"></span>';
+		$sHtmlIcon = '<span class="fas fa-comment fa-1x"></span>';
 		$this->AddApplicationMessage($sHtmlMessage, $sHtmlIcon);
 	}
 
 	/**
 	 * Add message to be displayed in the 'app-banner' section at the top of the page
+	 *
+	 * @param string $sHtmlMessage
+	 * @param string|null $sHtmlIcon
+	 * @param string|null $sTip
 	 */
 	public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
 	{
@@ -1593,6 +1682,7 @@ EOF;
 	 * @param string $sContent
 	 * @param string $sCssClasses CSS classes to add to the container
 	 *
+	 * @throws \Exception
 	 * @since 2.6
 	 */
 	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
@@ -1605,6 +1695,8 @@ EOF
 
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 *
+	 * @param string $sScript
 	 *
 	 * @return void
 	 */

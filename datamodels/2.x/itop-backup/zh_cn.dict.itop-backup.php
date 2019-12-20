@@ -39,7 +39,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-week-days' => '在每个 <b> %1$s 的 %2$s</b> 进行备份',
 	'bkp-retention' => '最多 <b>%1$d 份备份文件 </b> 在目标目录.',
 	'bkp-next-to-delete' => '当下一次备份时将被删除 (see the setting "retention_count")',
-	'bkp-table-file' => 'File', 
+	'bkp-table-file' => 'File',
 	'bkp-table-file+' => '只有扩展名是.zip的文件才被认为是备份文件',
 	'bkp-table-size' => '大小',
 	'bkp-table-size+' => '',

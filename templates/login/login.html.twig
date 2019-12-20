@@ -1,0 +1,73 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% block login_content %}
+	{% import "macros.twig" as Macro %}
+	<div id="login-content">
+	{% block login_title %}
+		<div id="login-title">
+			<h1>{{ 'UI:Login:Welcome'|dict_s }}</h1>
+			{% if bFailedLogin %}
+				<p class="hilite">{{ sMessage }}</p>
+			{% else %}
+				<p>{{ sMessage }}</p>
+			{% endif %}
+		</div>
+	{% endblock login_title %}
+	{% block login_form %}
+		<div id="login-form">
+			<form id="login_form" method="post">
+				<div id="login-form-content">
+					{% block login_sso_buttons %}
+						<div id="login-sso-buttons">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left"/>' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
+						</div>
+					{% endblock login_sso_buttons %}
+					{% block login_input %}
+						<div id="login-input">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_input') }}
+						</div>
+					{% endblock login_input %}
+					{% block login_additional_controls %}
+						<div id="login-additional-controls">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_additional_controls') }}
+						</div>
+					{% endblock login_additional_controls %}
+					{% block login_submit %}
+						<div id="login-submit">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_submit') }}
+						</div>
+					{% endblock login_submit %}
+					{% block login_links %}
+						<div id="login-links">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_links') }}
+						</div>
+					{% endblock login_links %}
+					{% block login_form_footer %}
+						<div id="login-form-footer">
+							{{ Macro.BlockExtension(aPluginFormData, 'login_form_footer') }}
+						</div>
+					{% endblock login_form_footer %}
+				</div>
+				<input type="hidden" id="login_mode" name="login_mode" value="form" />
+				<input type="hidden" id="login_op" name="loginop" value="login" />
+				{% for sName, sValue in aPreviousPostedVars %}
+					<input type="hidden" name="{{ sName }}" value="{{ sValue }}" />
+				{% endfor %}
+			</form>
+		</div>
+	{% endblock login_form %}
+	</div>
+{% endblock login_content %}
+
+{% block login_footer %}
+	<div id="login-footer">
+		{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
+	</div>
+{% endblock login_footer %}
+
+
+
+

@@ -45,7 +45,7 @@ class iTopMutex
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
-		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = false, $sDBTlsCA = null
+		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = null, $sDBTlsCA = null
 	)
 	{
 		// Compute the name of a lock for mysql
@@ -87,6 +87,25 @@ class iTopMutex
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
 		$this->InitMySQLSession();
 	}
+
+	/**
+	 * Get instance of self but with an escaped $sName
+	 *
+	 * this is meant to be used with non trusted string such as user inputs.
+	 *
+	 * @param mixed ...$aArgs smae as __construct()
+	 *
+	 * @return \iTopMutex
+	 * @since 2.7.0
+	 *
+	 */
+	public static function GetInstanceFromUserInput(...$aArgs)
+	{
+		$aArgs[0] = \CMDBSource::Quote($aArgs[0]);
+
+		return new iTopMutex(...$aArgs);
+	}
+
 
 	public function __destruct()
 	{

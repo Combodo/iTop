@@ -1,0 +1,22 @@
+{# itop-portal-base/portal/templates/bricks/tile.html.twig #}
+{# Base brick tile layout #}
+
+<div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
+	{% block pTileWrapper %}
+		<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}"
+			{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
+			{% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
+			 class="tile{# vertical-center#}" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
+		<div class="tile_decoration">
+			<span class="icon {{ brick.GetDecorationClassHome }}"></span>
+			
+		</div>
+			<div class="tile_body">
+				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
+				{% if brick.HasDescription %}
+					<div class="tile_description">{{ brick.GetDescription|dict_s|raw }}</div>
+				{% endif %}
+			</div>
+		</a>
+	{% endblock %}
+</div>

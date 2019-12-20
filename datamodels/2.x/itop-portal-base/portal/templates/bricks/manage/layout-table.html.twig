@@ -1,0 +1,356 @@
+{# itop-portal-base/portal/templates/bricks/manage/layout-table.html.twig #}
+{# Manage brick base layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/manage/layout.html.twig' %}
+
+{% block pPageBodyClass %}{{ parent() }} page_manage_brick{% endblock %}
+
+{% block pMainContentHolder %}
+    {% if aGroupingTabsValues|length > 1 %}
+        <ul class="nav nav-pills grouping_tabs">
+            {% for aGroupingTab in aGroupingTabsValues %}
+                <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %}>
+                    <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sGroupingTab': aGroupingTab.value}) }}"
+                       id="btn_tab_for_{{ aGroupingTab.value }}">
+                        {{ aGroupingTab.label|raw }}
+                        {% if oBrick.GetShowTabCounts() %}
+                            <span class="badge">{{ aGroupingTab.count|raw }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% set iTableCount = 0 %}
+    {% if aGroupingAreasData|length > 0 %}
+        {% for aAreaData in aGroupingAreasData %}
+            {% if aAreaData.iItemsCount > 0 %}
+                {% set iTableCount = iTableCount + 1 %}
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title" style="float: left;">{{ aAreaData.sTitle }}</h3>
+                        {% if bCanExport %}
+                            <a href="{{ app.url_generator.generate('p_manage_brick_excel_export_start', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': aAreaData.sId})|raw }}"
+                               id="btn_export_excel_for_{{ aAreaData.sId }}"
+                               data-toggle="modal" data-target="#modal-for-all">
+                                <span class="fas fa-download fa-lg" style="float: right;"
+                                   data-toggle="tooltip" data-delay="300" data-placement="left"
+                                   title="{{ 'ExcelExporter:ExportMenu'|dict_s }}"></span>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body">
+                        <table id="table-{{ aAreaData.sId }}" class="table table-striped table-bordered responsive" width="100%"></table>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if iTableCount == 0 %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3 class="text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block pPageLiveScripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var sDataLoading = '{{ sDataLoading }}';
+        // Used for ajax throttling
+        var iSearchThrottle = 300;
+        var oKeyTimeout;
+        var aKeyTimeoutFilteredKeys = [16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
+
+        var columnsProperties = {
+            {% for aAreaData in aGroupingAreasData %}
+                '{{ aAreaData.sId }}': {{ aAreaData.aColumnsDefinition|json_encode()|raw }},
+            {% endfor %}
+        };
+        var rawData = {
+            {% for aAreaData in aGroupingAreasData %}
+                '{{ aAreaData.sId }}': {{ aAreaData.aItems|json_encode()|raw }},
+            {% endfor %}
+        };
+
+        // Show a loader inside the table
+        var showTableLoader = function (oElem) {
+            oElem.children('tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+        };
+        // Columns definition for the table from the columnsProperties
+        var getColumnsDefinition = function (tableName) {
+            var tableProperties = columnsProperties[tableName];
+
+            if (tableProperties === undefined && window.console) {
+                console.log('Could not retrieve columns properties for table "' + tableName + '"');
+                return false;
+            }
+            if (rawData[tableName] === undefined && window.console) {
+                console.log('Could not retrieve data for table "' + tableName + '"');
+                return false;
+            }
+
+            var columnsDefinition = [];
+
+            for (key in tableProperties) {
+                // Regular attribute columns
+                if (key !== '_ui_extensions') {
+                    columnsDefinition.push({
+                        "width": "auto",
+                        "searchable": true,
+                        "sortable": true,
+                        "title": tableProperties[key].title,
+                        "defaultContent": "",
+                        "type": "html",
+                        "data": "attributes." + key + ".att_code",
+                        "render": {
+                        	_: function (att_code, type, row) {
+								var cellElem;
+								var itemActions;
+								var itemPrimarayAction;
+
+								// Preparing action on the cell
+								// Note : For now we will use only one action, the secondary actions are therefore not implemented. Only the data structure is done.
+								itemActions = row.attributes[att_code].actions;
+
+								// Preparing the cell data
+								cellElem = (itemActions.length > 0) ? $('<a></a>') : $('<span></span>');
+								cellElem.html(row.attributes[att_code].value);
+								// Building actions
+								if (itemActions.length > 0) {
+									// - Primary action
+									itemPrimaryAction = itemActions[0];
+									switch (itemPrimaryAction.type) {
+										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_VIEW') }}':
+											url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
+											break;
+										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\ManageBrick::ENUM_ACTION_EDIT') }}':
+											url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, itemPrimaryAction.class).replace(/-objectId-/, itemPrimaryAction.id);
+											break;
+										default:
+											url = '#';
+											//console.log('Action "'+itemPrimaryAction+'" not implemented');
+											break;
+									}
+									SetActionUrl(cellElem, url);
+									SetActionOpeningTarget(cellElem, itemPrimaryAction.opening_target);
+
+									// - Secondary actions
+									// Not done for now, only the data structure is ready in case we need it later
+								}
+
+								return cellElem.prop('outerHTML');
+							},
+	                        sort: function (att_code, type, row) {
+                        		return row.attributes[att_code].sort_value;
+							},
+						},
+                    });
+                }
+                // UI extensions buttons
+                else {
+                    columnsDefinition.push({
+                        "width": "auto",
+                        "searchable": false,
+                        "sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+                        "title": tableProperties[key].title,
+                        "defaultContent": "",
+                        "type": "html",
+                        "data": "attributes." + key + ".att_code",
+                        "render": function (att_code, type, row) {
+                            var cellElem = $('<div class="group-actions-wrapper"></div>');
+                            var actionsCount = row.actions.length;
+
+                            // Adding menu wrapper in case there are several actions
+                            var actionsElem = $('<div></div>');
+                            actionsElem.appendTo(cellElem);
+                            if (actionsCount > 1) {
+                                actionsElem.addClass('group-actions pull-right');
+
+                                // Adding hamburger icon toggler
+                                actionsElem.append(
+                                    $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-' + row.id + '"></a>')
+                                );
+
+                                // Adding sub menu
+                                var actionsSSMenuElem = $('<div id="item-actions-menu-' + row.id + '" class="item-action-wrapper panel panel-default"></div>')
+                                    .appendTo(actionsElem);
+                                var actionsSSMenuContainerElem = $('<div class="panel-body"></div>')
+                                    .appendTo(actionsSSMenuElem);
+                            }
+
+                            // Adding actions
+                            for (var i in row.actions) {
+                                var actionDef = row.actions[i];
+                                var actionElem = $('<a></a>')
+                                    .attr('href', actionDef.url)
+                                    .append($('<span></span>').html(actionDef.label));
+
+                                // Adding css classes to action
+                                for (var j in actionDef.css_classes) {
+                                    actionElem.addClass(actionDef.css_classes[j]);
+                                }
+
+                                // Performing specific treatment regarding the action type
+                                if (actionDef.type === 'button') {
+                                    // External files
+                                    // Note: Not supported yet
+
+                                    // On click callback
+                                    actionElem.attr('onclick', actionDef.onclick);
+                                }
+                                else if (actionDef.type === 'link') {
+                                    actionElem.attr('target', actionDef.target);
+                                }
+
+                                if (actionsCount > 1) {
+                                    actionsSSMenuContainerElem.append($('<p></p>').append(actionElem));
+                                }
+                                else {
+                                    actionsElem.append(actionElem);
+                                }
+                            }
+
+                            return cellElem.prop('outerHTML');
+                        }
+                    });
+                }
+            }
+
+            return columnsDefinition;
+        };
+
+        $(document).ready(function () {
+            {% for aAreaData in aGroupingAreasData %}
+                {% set sAreaId = aAreaData.sId %}
+
+                showTableLoader($('#table-{{ sAreaId }}'));
+                var oTable{{ sAreaId }} = $('#table-{{ sAreaId }}').DataTable({
+                    "language": {
+                        "processing": "{{ 'Portal:Datatables:Language:Processing'|dict_s }}",
+                        "search": "{{ 'Portal:Datatables:Language:Search'|dict_s }}",
+                        "lengthMenu": "{{ 'Portal:Datatables:Language:LengthMenu'|dict_s }}",
+                        "zeroRecords": "{{ 'Portal:Datatables:Language:ZeroRecords'|dict_s }}",
+                        "info": "{{ 'Portal:Datatables:Language:Info'|dict_s }}",
+                        "infoEmpty": "{{ 'Portal:Datatables:Language:InfoEmpty'|dict_s }}",
+                        "infoFiltered": "({{ 'Portal:Datatables:Language:InfoFiltered'|dict_s }})",
+                        "emptyTable": "{{ 'Portal:Datatables:Language:EmptyTable'|dict_s }}",
+                        "paginate": {
+                            "first": "{{ 'Portal:Datatables:Language:Paginate:First'|dict_s }}",
+                            "previous": "{{ 'Portal:Datatables:Language:Paginate:Previous'|dict_s }}",
+                            "next": "{{ 'Portal:Datatables:Language:Paginate:Next'|dict_s }}",
+                            "last": "{{ 'Portal:Datatables:Language:Paginate:Last'|dict_s }}"
+                        },
+                        "aria": {
+                            "sortAscending": ": {{ 'Portal:Datatables:Language:Sort:Ascending'|dict_s }}",
+                            "sortDescending": ": {{ 'Portal:Datatables:Language:Sort:Descending'|dict_s }}"
+                        }
+                    },
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+                    "displayLength": {{ iDefaultListLength }},
+                    "dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
+                    "columns": getColumnsDefinition('{{ sAreaId }}'),
+                    "order": [],
+                    "rowCallback": function (oRow, oData) {
+                        if (oData.highlight_class !== undefined) {
+                            var sHighlightClass = oData.highlight_class;
+                            var sBSHiglightClass = '';
+
+                            // Adding classic iTop class
+                            $(oRow).addClass(sHighlightClass);
+                            // Adding mapped BS class
+                            if (sHighlightClass === '{{ constant('HILIGHT_CLASS_CRITICAL') }}') {
+                                sBSHiglightClass = 'danger';
+                            }
+                            else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_WARNING') }}') {
+                                sBSHiglightClass = 'warning';
+                            }
+                            else if (sHighlightClass === '{{ constant('HILIGHT_CLASS_OK') }}') {
+                                sBSHiglightClass = 'success';
+                            }
+                            $(oRow).addClass(sBSHiglightClass);
+                        }
+                    },
+                    "drawCallback": function (settings) {
+                        // Hiding pagination if only one page
+                        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+                            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+                        }
+                        else {
+                            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+                        }
+                    },
+                    {% if sDataLoading == constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') %}
+                        "data": rawData['{{ sAreaId }}'],
+                    {% else %}
+                    "processing": true,
+                    "serverSide": true,
+                    {#"searchDelay": 1000, // can be used to increase time between server calls when typing search query#}
+                    "ajax": {
+                        "url": "{{ app.url_generator.generate('p_manage_brick_lazy', {'sBrickId': sBrickId, 'sGroupingTab': sGroupingTab, 'sGroupingArea': sAreaId})|raw }}",
+                        "data": function (d) {
+                            d.iPageNumber = Math.floor(d.start / d.length) + 1;
+                            d.iListLength = d.length;
+
+                            // Prepare sort params (formatting them for direct use by DBObjectSet)
+                            d.aSortParams = {};
+                            for (var iSortIdx in d.order) {
+                                /* oSortedColumnData {column: index, dir: 'asc'|'desc'} */
+                                var oSortedColumnData = d.order[iSortIdx];
+                                /* sSortedColumnId (eg. 'attributes.ATT_CODE.att_code') */
+                                var sSortedColumnId = d.columns[oSortedColumnData.column].data;
+
+                                // Make proper attribute alias for OQL from column ID
+                                sSortedColumnId = sSortedColumnId.replace(/^attributes\./, '').replace(/\.att_code$/, '');
+
+                                d.aSortParams[sSortedColumnId] = (oSortedColumnData.dir === 'asc');
+                            }
+
+                            {% if sSearchValue is not null %}
+                            // Sets default filter value
+                            if (d.draw === 1) {
+                                $('#table-{{ sAreaId }}_filter input').val('{{ sSearchValue }}');
+                                d.search.value = $('#table-{{ sAreaId }}_filter input').val();
+                            }
+                            {% endif %}
+                            if (d.search.value) {
+                                d.sSearchValue = d.search.value;
+                            }
+                        }
+                    }
+                    {% endif %}
+                });
+
+                // Overrides filter input to apply throttle. Otherwise, an ajax request is send each time a key is pressed
+                // Also removes accents from search string
+                // Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
+                $('#table-{{ sAreaId }}_filter input').off().on('keyup', function () {
+                    var me = this;
+
+                    clearTimeout(oKeyTimeout);
+                    oKeyTimeout = setTimeout(function () {
+                        oTable{{ sAreaId }}.search(me.value.latinise()).draw();
+                    }, iSearchThrottle);
+                });// Shows a loader in the table when processing
+                $('#table-{{ sAreaId }}').on('processing.dt', function (event, settings, processing) {
+                if (processing === true) {
+                    showTableLoader($(this));
+                }
+            });
+            {% endfor %}
+
+            // Enable tooltips
+			$(function () {
+				$('[data-toggle="tooltip"]').tooltip()
+			});
+
+            // Auto collapse item actions popup
+            $('body').click(function () {
+                $('table .item-action-wrapper.collapse.in').collapse('hide');
+            });
+        });
+    </script>
+{% endblock %}

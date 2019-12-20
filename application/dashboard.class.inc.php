@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -24,21 +25,33 @@ require_once(APPROOT.'core/modelreflection.class.inc.php');
  *
  * A user editable dashboard page
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashboard
 {
+	/** @var string $sTitle*/
 	protected $sTitle;
+	/** @var bool $bAutoReload */
 	protected $bAutoReload;
+	/** @var float|int $iAutoReloadSec */
 	protected $iAutoReloadSec;
+	/** @var string $sLayoutClass */
 	protected $sLayoutClass;
+	/** @var array $aWidgetsData */
 	protected $aWidgetsData;
+	/** @var \DOMNode|null $oDOMNode */
 	protected $oDOMNode;
+	/** @var string $sId */
 	protected $sId;
+	/** @var array $aCells */
 	protected $aCells;
+	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
-	
+
+	/**
+	 * Dashboard constructor.
+	 *
+	 * @param string $sId
+	 */
 	public function __construct($sId)
 	{
 		$this->sTitle = '';
@@ -51,7 +64,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param $sXml
+	 * @param string $sXml
 	 *
 	 * @throws \Exception
 	 */
@@ -64,7 +77,10 @@ abstract class Dashboard
 		restore_error_handler();
 		$this->FromDOMDocument($oDoc);
 	}
-	
+
+	/**
+	 * @param \DOMDocument $oDoc
+	 */
 	public function FromDOMDocument(DOMDocument $oDoc)
 	{
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
@@ -160,9 +176,16 @@ abstract class Dashboard
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
+        // To avoid collision with other dashlets with the same ID we suffix it. Collisions typically happen with extensions.
+	    // Note: The check is done so we don't append it at each save of the dashboard.
+        if(strpos($sId, 'uniqid_') === false)
+        {
+        	$sId .= '_uniqid_' . uniqid();
+        }
+
 	    $sDashletType = $oDomNode->getAttribute('xsi:type');
 
-        // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
+        // Test if dashlet can be instantiated, otherwise (uninstalled, broken, ...) we display a placeholder
 	    $sClass = static::GetDashletClassFromType($sDashletType);
 	    /** @var \Dashlet $oNewDashlet */
 	    $oNewDashlet = new $sClass($this->oMetaModel, $sId);
@@ -172,7 +195,13 @@ abstract class Dashboard
         return $oNewDashlet;
     }
 
-	static function SortOnRank($aItem1, $aItem2)
+	/**
+	 * @param array $aItem1
+	 * @param array $aItem2
+	 *
+	 * @return int
+	 */
+	public static function SortOnRank($aItem1, $aItem2)
 	{
 		return ($aItem1['rank'] > $aItem2['rank']) ? +1 : -1;
 	}
@@ -200,6 +229,10 @@ abstract class Dashboard
 		}
 	}
 
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function ToXml()
 	{
 		$oDoc = new DOMDocument();
@@ -268,7 +301,9 @@ abstract class Dashboard
 		}
 	}
 
-
+	/**
+	 * @param array $aParams
+	 */
 	public function FromParams($aParams)
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
@@ -305,42 +340,66 @@ abstract class Dashboard
 	{
 		
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function GetLayout()
 	{
 		return $this->sLayoutClass;
 	}
-	
+
+	/**
+	 * @param string $sLayoutClass
+	 */
 	public function SetLayout($sLayoutClass)
 	{
 		$this->sLayoutClass = $sLayoutClass;
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function GetTitle()
 	{
 		return $this->sTitle;
 	}
 
+	/**
+	 * @param string $sTitle
+	 */
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function GetAutoReload()
 	{
 		return $this->bAutoReload;
 	}
 
+	/**
+	 * @param bool $bAutoReload
+	 */
 	public function SetAutoReload($bAutoReload)
 	{
 		$this->bAutoReload = $bAutoReload;
 	}
 
+	/**
+	 * @return float|int
+	 */
 	public function GetAutoReloadInterval()
 	{
 		return $this->iAutoReloadSec;
 	}
 
+	/**
+	 * @param bool $iAutoReloadSec
+	 */
 	public function SetAutoReloadInterval($iAutoReloadSec)
 	{
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$iAutoReloadSec);
@@ -356,12 +415,13 @@ abstract class Dashboard
 		$this->aCells[] = array($oDashlet);
 	}
 
-    /**
-     * @param \WebPage $oPage     *
-     * @param array $aExtraParams
-     *
-     * @throws \ReflectionException
-     */
+	/**
+	 * @param \WebPage $oPage *
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 */
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
 		// menu to pick a layout and edit other properties of the dashboard
@@ -449,7 +509,7 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
@@ -468,6 +528,12 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 */
 	public function RenderDashletsSelection(WebPage $oPage)
 	{
 		// Toolbox/palette to drag and drop dashlets
@@ -485,7 +551,11 @@ EOF
 		$oPage->add('</div>');
 		$oPage->add_ready_script("$('.dashlet_icon').draggable({helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 */
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
 	{
 		// Toolbox/palette to edit the properties of each dashlet
@@ -545,7 +615,10 @@ EOF
 
 		return $aDashlets;
 	}
-	
+
+	/**
+	 * @return int|mixed
+	 */
 	protected function GetNewDashletId()
 	{
 		$iNewId = 0;
@@ -561,13 +634,19 @@ EOF
 	}
 
     /**
-     * @param $oForm
+     * @param \DesignerForm $oForm
      * @param array $aExtraParams
      *
      * @return mixed
      */
 	abstract protected function SetFormParams($oForm, $aExtraParams = array());
 
+	/**
+	 * @param string $sType
+	 * @param \ModelFactory|null $oFactory
+	 *
+	 * @return string
+	 */
 	public static function GetDashletClassFromType($sType, $oFactory = null)
 	{
 		if (is_subclass_of($sType, 'Dashlet'))
@@ -586,37 +665,49 @@ EOF
 	}
 }
 
+/**
+ * Class RuntimeDashboard
+ */
 class RuntimeDashboard extends Dashboard
 {
+	/** @var bool $bCustomized */
 	protected $bCustomized;
+	/** @var string $sDefinitionFile */
 	private $sDefinitionFile = '';
+	/** @var null $sReloadURL */
 	private $sReloadURL = null;
 
-
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
 		$this->bCustomized = false;
 		$this->oMetaModel = new ModelReflectionRuntime();
 	}
-		
+
+	/**
+	 * @param bool $bCustomized
+	 */
 	public function SetCustomFlag($bCustomized)
 	{
 		$this->bCustomized = $bCustomized;
 	}
 
 	/**
-	 * @param \DesignerForm $oForm
-	 *
-	 * @param array $aExtraParams
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	protected function SetFormParams($oForm, $aExtraParams = array())
 	{
 		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function Save()
 	{
 		$sXml = $this->ToXml();
@@ -632,7 +723,7 @@ class RuntimeDashboard extends Dashboard
 		}
 		else
 		{
-			// No such customized dasboard for the current user, let's create a new record
+			// No such customized dashboard for the current user, let's create a new record
 			$oUserDashboard = new UserDashboard();
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
 			$oUserDashboard->Set('menu_code', $this->sId);
@@ -642,7 +733,18 @@ class RuntimeDashboard extends Dashboard
 		$oUserDashboard->DBWrite();
 		utils::PopArchiveMode();
 	}
-	
+
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function Revert()
 	{
 		$oUDSearch = new DBObjectSearch('UserDashboard');
@@ -669,6 +771,7 @@ class RuntimeDashboard extends Dashboard
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	public static function GetDashboard($sDashboardFile, $sDashBoardId)
 	{
@@ -713,10 +816,7 @@ class RuntimeDashboard extends Dashboard
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams (class and id of the current object
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
@@ -851,6 +951,9 @@ EOF
 		);
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function HasCustomDashboard()
 	{
 		try
@@ -879,7 +982,7 @@ EOF
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
+		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-pencil-alt\"></i><ul>";
 	
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
@@ -939,9 +1042,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \ReflectionException
+	 * @inheritDoc
 	 */
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
@@ -977,7 +1078,7 @@ EOF
 
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *
@@ -1117,7 +1218,14 @@ EOF
 		);
 		$oPage->add_ready_script("");
 	}
-	
+
+	/**
+	 * @param string|null $sOQL
+	 *
+	 * @return \DesignerForm
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
+	 */
 	public static function GetDashletCreationForm($sOQL = null)
 	{
 		$oAppContext = new ApplicationContext();
@@ -1228,6 +1336,9 @@ EOF
 	/**
 	 * @param \WebPage $oPage
 	 * @param $sOQL
+	 *
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
 	 */
 	public static function GetDashletCreationDlgFromOQL($oPage, $sOQL)
 	{
@@ -1292,11 +1403,17 @@ EOF
 		$this->sDefinitionFile = $sDefinitionFile;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function GetReloadURL()
 	{
 		return $this->sReloadURL;
 	}
 
+	/**
+	 * @param string $sReloadURL
+	 */
 	public function SetReloadURL($sReloadURL)
 	{
 		$this->sReloadURL = $sReloadURL;

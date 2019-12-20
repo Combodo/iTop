@@ -21,10 +21,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
-));
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
 
@@ -45,20 +41,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeObsolescenceDate' => '报废日期',
 	'Core:AttributeObsolescenceDate+' => '',
 
-    'Core:AttributeTagSet' => '清单',
-    'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet' => '清单',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => '日志',
-    'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog' => '日志',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
+	'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => '整数',
@@ -106,7 +102,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributePassword' => '密码',
 	'Core:AttributePassword+' => 'Password of an external device',
 
- 	'Core:AttributeEncryptedString' => '加密字符串',
+	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -864,8 +860,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
@@ -1039,4 +1035,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
 ));

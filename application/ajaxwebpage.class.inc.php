@@ -30,7 +30,7 @@ class ajax_page extends WebPage implements iTabbedPage
 {
     /**
      * Jquery style ready script
-     * @var Hash     
+     * @var array
      */	  
 	protected $m_sReadyScript;
 	protected $m_oTabs;
@@ -216,8 +216,9 @@ EOF
 		}
 	    $this->outputCollapsibleSectionInit();
 
+	    $oKPI = new ExecutionKPI();
 	    $s_captured_output = $this->ob_get_clean_safe();
-		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
+	    if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
         	// inline content != attachment && html => filter all scripts for malicious XSS scripts
         	echo self::FilterXSS($this->s_content);
@@ -287,10 +288,16 @@ EOF
         	echo self::FilterXSS($s_captured_output);
         }
 
+	    $oKPI->ComputeAndReport('Echoing');
+
         if (class_exists('DBSearch'))
         {
             DBSearch::RecordQueryTrace();
         }
+	    if (class_exists('ExecutionKPI'))
+	    {
+		    ExecutionKPI::ReportStats();
+	    }
     }
 
     /**

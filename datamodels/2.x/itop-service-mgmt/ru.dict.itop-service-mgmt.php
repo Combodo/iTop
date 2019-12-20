@@ -5,41 +5,38 @@
  * @author      Vladimir Kunin <v.b.kunin@gmail.com>
  * @link        http://community.itop-itsm.ru  iTop Russian Community
  * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-'Menu:ServiceManagement' => 'Управление услугами',
-'Menu:ServiceManagement+' => 'Управление услугами',
-'Menu:Service:Overview' => 'Обзор',
-'Menu:Service:Overview+' => 'Управление услугами - Обзор',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуг',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
+	'Menu:ServiceManagement' => 'Управление услугами',
+	'Menu:ServiceManagement+' => 'Управление услугами',
+	'Menu:Service:Overview' => 'Обзор',
+	'Menu:Service:Overview+' => 'Управление услугами - Обзор',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуг',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
 
-'Menu:ProviderContract' => 'Договоры с поставщиками',
-'Menu:ProviderContract+' => 'Договоры с поставщиками',
-'Menu:CustomerContract' => 'Договоры с заказчиками',
-'Menu:CustomerContract+' => 'Договоры с заказчиками',
-'Menu:ServiceSubcategory' => 'Подкатегории услуг',
-'Menu:ServiceSubcategory+' => 'Подкатегории услуг',
-'Menu:Service' => 'Услуги',
-'Menu:Service+' => 'Услуги',
-'Menu:ServiceElement' => 'Элементы услуг',
-'Menu:ServiceElement+' => 'Элементы услуг',
-'Menu:SLA' => 'SLA',
-'Menu:SLA+' => 'Соглашения об уровне услуг',
-'Menu:SLT' => 'SLT',
-'Menu:SLT+' => 'Целевые показатели уровня услуг',
-'Menu:DeliveryModel' => 'Модели предоставления услуг',
-'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
-'Menu:ServiceFamily' => 'Пакеты услуг',
-'Menu:ServiceFamily+' => 'Пакеты услуг',
-'Menu:Procedure' => 'Каталог процедур',
-'Menu:Procedure+' => 'Каталог процедур',
-
-
-
+	'Menu:ProviderContract' => 'Договоры с поставщиками',
+	'Menu:ProviderContract+' => 'Договоры с поставщиками',
+	'Menu:CustomerContract' => 'Договоры с заказчиками',
+	'Menu:CustomerContract+' => 'Договоры с заказчиками',
+	'Menu:ServiceSubcategory' => 'Подкатегории услуг',
+	'Menu:ServiceSubcategory+' => 'Подкатегории услуг',
+	'Menu:Service' => 'Услуги',
+	'Menu:Service+' => 'Услуги',
+	'Menu:ServiceElement' => 'Элементы услуг',
+	'Menu:ServiceElement+' => 'Элементы услуг',
+	'Menu:SLA' => 'SLA',
+	'Menu:SLA+' => 'Соглашения об уровне услуг',
+	'Menu:SLT' => 'SLT',
+	'Menu:SLT+' => 'Целевые показатели уровня услуг',
+	'Menu:DeliveryModel' => 'Модели предоставления услуг',
+	'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
+	'Menu:ServiceFamily' => 'Пакеты услуг',
+	'Menu:ServiceFamily+' => 'Пакеты услуг',
+	'Menu:Procedure' => 'Каталог процедур',
+	'Menu:Procedure+' => 'Каталог процедур',
 ));
 
 //
@@ -50,7 +47,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Модель предоставления услуг (Delivery Model)',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Модель предоставления услуг',
-
 ));
 
 
@@ -396,18 +392,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkSLAToSLT/Attribute:sla_name+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_id' => 'SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Название SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
-	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Метрика SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Тип тикета',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Приоритет тикета',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Значение SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Единицы SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));
 
 //

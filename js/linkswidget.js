@@ -159,56 +159,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
 
 		return false; // Don't submit the form, stay in the current page !
-
-		var theMap = { sAttCode: me.sAttCode,
-					   iInputId: me.iInputId,
-					   sSuffix: me.sSuffix,
-					   bDuplicates: me.bDuplicates
-					 };
-		
-		me.UpdateButtons(0);
-		// Gather the parameters from the search form
-		$('#SearchFormToAdd_'+me.id+' :input').each( function() {
-				if (this.name != '')
-				{
-					var val = $(this).val(); // supports multiselect as well
-					if (val !== null)
-					{
-						theMap[this.name] = val;					
-					}
-				}
-		});
-		
-		// Gather the already linked target objects
-		theMap.aAlreadyLinked = [];
-		$('#linkedset_'+me.id+' .selection:input').each(function(i) {
-			var iRemote = $(this).attr('data-remote-id');
-			theMap.aAlreadyLinked.push(iRemote);
-		});
-		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
-		theMap['class'] = me.sClass;
-		theMap.operation = 'searchObjectsToAdd'; // Override what is defined in the form itself
-		
-		sSearchAreaId = '#SearchResultsToAdd_'+me.id;
-		$(sSearchAreaId).block();
-		
-		// Run the query and display the results
-		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
-			function(data)
-			{
-				$(sSearchAreaId).html(data);
-				$(sSearchAreaId+' .listResults').tableHover();
-				$('#count_'+me.id).change(function(){
-					var c = this.value;
-					me.UpdateButtons(c);
-				});
-				me.UpdateSizes(null, null);
-				$(sSearchAreaId).unblock();		
-			},
-			'html'
-		);
-
-		return false; // Don't submit the form, stay in the current page !
 	};
 
 	this.UpdateButtons = function(iCount)
@@ -448,6 +398,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
         }
         else {
             // Modifying a newly added link - the structure should already be up to date
+			if (iUniqueId < 0)
+			{
+				iUniqueId = -iUniqueId;
+			}
             me.aAdded[iUniqueId]['attr_' + sFormPrefix + sAttCode] = value;
         }
 	};

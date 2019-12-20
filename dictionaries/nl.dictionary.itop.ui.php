@@ -114,6 +114,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contact',
 	'Class:User/Attribute:contactid+' => 'Contactpersoon',
+	'Class:User/Attribute:org_id' => 'Organisatie',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Achternaam',
 	'Class:User/Attribute:last_name+' => 'Naam van het overeenkomende contact',
 	'Class:User/Attribute:first_name' => 'Voornaam',
@@ -136,7 +138,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:status+' => 'Of de gebruikersaccount in- of uitgeschakeld is.',
 	'Class:User/Attribute:status/Value:enabled' => 'Ingeschakeld',
 	'Class:User/Attribute:status/Value:disabled' => 'Uitgeschakeld',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Er moet minstens één profiel toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',
@@ -347,7 +349,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nee',
-    'UI:Login:Title' => 'Aanmelden in iTop',
+	'UI:Login:Title' => 'Aanmelden in iTop',
 	'Menu:WelcomeMenu' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Welkom in iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -422,7 +424,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:Insert' => 'Invoegen',
 	'UI:Button:More' => 'Meer',
 	'UI:Button:Less' => 'Minder',
-	
+
 	'UI:SearchToggle' => 'Zoek',
 	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
 	'UI:SearchFor_Class' => 'Zoek naar %1$s objecten',
@@ -442,7 +444,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Niet mogelijk om het tijdelijke bestand naar een tijdelijke map weg te schrijven. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload gestopt door bestandsextensie. (Oorspronkelijke bestandsnaam = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Uploaden van bestand mislukt, oorzaak onbekend. (Foutcode = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Fout: de volgende parameter moet worden gespecificeerd voor deze actie: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Fout: de volgende parameters moeten worden gespecificeerd voor deze actie: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Fout: de volgende parameters moeten worden gespecificeerd voor deze actie: %1$s, %2$s and %3$s.',
@@ -460,6 +462,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fout: ongeldige stimulus "%1$s" op object %2$s in staat "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Fout: ongeldig dashboard-bestand',
 	'UI:Error:InvalidDashboard' => 'Fout: ongeldig dashboard',
+	'UI:Error:MaintenanceMode' => 'Toepassing is momenteel in onderhoud',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Tel',
 	'UI:GroupBy:Count+' => 'Aantal elementen',
@@ -526,6 +530,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop kan je een e-mail sturen waarin de instructies voor het resetten van jouw account staan.',
 	'UI:Login:ResetPassword' => 'Stuur nu!',
 	'UI:Login:ResetPwdFailed' => 'E-mail sturen mislukt: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is geen geldige login',
 	'UI:ResetPwd-Error-NotPossible' => 'externe accounts staan het resetten van het wachtwoord niet toe.',
@@ -562,6 +567,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'Geen toegang tot iTop. Neem contact op met een iTop-beheerder.',
 	'UI:Login:Error:AccessAdmin' => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een iTop-beheerder',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Selecteer --',
 	'UI:CSVImport:MappingNotApplicable' => '-- Negeer dit veld --',
 	'UI:CSVImport:NoData' => 'Lege data set..., voeg data toe',
@@ -619,7 +627,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Selecteer een mapping voor ieder veld',
 	'UI:CSVImport:AlertMultipleMapping' => 'Zorg dat er voor elk veld slechts één mapping is',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Selecteer tenminste een zoekcriterium.',
-	'UI:CSVImport:Encoding' => 'Tekstencodering',	
+	'UI:CSVImport:Encoding' => 'Tekstencodering',
 	'UI:UniversalSearchTitle' => 'iTop - Universele zoekopdracht',
 	'UI:UniversalSearch:Error' => 'Fout: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
@@ -689,6 +697,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query: %1$s',
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webqueries',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
@@ -710,7 +722,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label van het attribuut',
 	'UI:Schema:Type' => 'Type',
-	
+
 	'UI:Schema:Type+' => 'Datatype van het attribuut',
 	'UI:Schema:Origin' => 'Oorsprong',
 	'UI:Schema:Origin+' => 'De basisklasse waarin dit attribuut is gedefinieerd',
@@ -800,7 +812,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Zou automatisch moeten  geüpdated worden, maar: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Zal automatisch geüpdated worden (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objecten/links refereren naar %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objecten/links refereren naar sommige objecten die verwijderd worden',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objecten/links refereren naar sommige objecten die verwijderd worden',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Elke verdere referentie moet verwijderd worden om de integriteit van de database te verzekeren',
 	'UI:Delete:Consequence+' => 'Wat er zal gebeuren',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Sorry, je bent niet gemachtigd om dit object te verwijderen. Voor uitgebreide uitleg, zie hierboven',
@@ -849,7 +861,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:FatalErrorMessage' => 'Fatale fout, iTop kan niet doorgaan.',
 	'UI:Error_Details' => 'Fout: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop gebruikersmanagement - klasse-projecties',
+	'UI:PageTitle:ClassProjections' => 'iTop gebruikersmanagement - klasse-projecties',
 	'UI:PageTitle:ProfileProjections' => 'iTop gebuikersmanagement - profiel-projecties',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse van objecten',
@@ -888,10 +900,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link tussen %1$s en %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link tussen %1$s en %2$s',
-	
+
 	'Menu:AdminTools' => 'Administratietools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administratietools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools die alleen toegankelijk zijn voor gebruikers met een beheerdersprofiel', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
@@ -907,28 +920,28 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Objecten van de infrastructuur aan de hand van type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Objecten van de infrastructuur aan de hand van status',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard voor Configuratie Management',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuratie Items aan de hand van status',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items aan de hand van type',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard voor Configuratie Management',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuratie Items aan de hand van status',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items aan de hand van type',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Dashboard voor Request Management',
-'UI-RequestManagementOverview-RequestByService' => 'Gebruikersaanvragen aan de hand van service',
-'UI-RequestManagementOverview-RequestByPriority' => 'Gebruikersaanvragen aan de hand van prioriteit',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Nog niet toegewezen gebruikersaanvragen',
+	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard voor Request Management',
+	'UI-RequestManagementOverview-RequestByService' => 'Gebruikersaanvragen aan de hand van service',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Gebruikersaanvragen aan de hand van prioriteit',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Nog niet toegewezen gebruikersaanvragen',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard voor Incident Management',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidenten aan de hand van service',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidenten aan de hand van prioriteit',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Nog niet toegewezen incidenten',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard voor Incident Management',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidenten aan de hand van service',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidenten aan de hand van prioriteit',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Nog niet toegewezen incidenten',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard voor Change Management',
-'UI-ChangeManagementOverview-ChangeByType' => 'Changes aan de hand van type',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Nog niet toegewezen Changes',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages door changes',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard voor Change Management',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Changes aan de hand van type',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Nog niet toegewezen Changes',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages door changes',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard voor Service Management',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Klantencontracten die binnen 30 dagen vernieuwd moeten worden',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Providercontracten die binnen 30 dagen vernieuwd moeten worden',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard voor Service Management',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Klantencontracten die binnen 30 dagen vernieuwd moeten worden',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Providercontracten die binnen 30 dagen vernieuwd moeten worden',
 
 	'UI:ContactsMenu' => 'Contacten',
 	'UI:ContactsMenu+' => 'Contacten',
@@ -939,13 +952,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'In bulk aanmaken of updaten', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Overzicht van het Datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Exporteer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Exporteer de resultaten van elke query in HTML, CSV or XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Notificaties', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuratie van de Notificaties', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuratie van <span class="hilite">Notificaties</span>',
@@ -981,19 +994,19 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Menu:AuditCategories' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Queries uitvoeren', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Voer een query uit', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Universele Zoekopdracht', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Zoek naar alles...', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'Gebruikersmanagement', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Gebruikersmanagement', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1015,9 +1028,9 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:Download-CSV' => 'Download %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Gemist op %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
-	'UI:Deadline_Minutes' => '%1$d min',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_LessThan1Min' => '< 1 min',
+	'UI:Deadline_Minutes' => '%1$d min',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
 	'UI:PasswordConfirm' => '(Bevestig)',
@@ -1069,8 +1082,8 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Portal:ChangeMyPassword' => 'Verander mijn wachtwoord',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'Mijn lopende aanvragen',
-	'Portal:ClosedRequests'  => 'Mijn gesloten aanvragen',
-	'Portal:ResolvedRequests'  => 'Mijn opgeloste aanvragen',
+	'Portal:ClosedRequests' => 'Mijn gesloten aanvragen',
+	'Portal:ResolvedRequests' => 'Mijn opgeloste aanvragen',
 	'Portal:SelectService' => 'Selecteer een service uit de catalogus:',
 	'Portal:PleaseSelectOneService' => 'Selecteer een service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Selecteer een subcategorie voor de service %1$s:',
@@ -1089,7 +1102,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Portal:RemoveAttachment' => ' Verwijder bijlage ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Bijlage #%1$d to %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Selecteer een template voor %1$s',
-	'Enum:Undefined' => 'Ongedefinieerd',	
+	'Enum:Undefined' => 'Ongedefinieerd',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Dagen %2$s Uren %3$s Minuten %4$s Seconden',
 	'UI:ModifyAllPageTitle' => 'Bewerk alles',
 	'UI:Modify_N_ObjectsOf_Class' => 'Bezig met het aanpassen van %1$d objecten van klasse %2$s',
@@ -1101,7 +1114,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:BulkModifyStatus' => 'Operatie',
 	'UI:BulkModifyStatus+' => 'Status van de operatie',
 	'UI:BulkModifyErrors' => 'Fouten (indien van toepassing)',
-	'UI:BulkModifyErrors+' => 'Fouten die de bewerking verhinderen',	
+	'UI:BulkModifyErrors+' => 'Fouten die de bewerking verhinderen',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Fout',
 	'UI:BulkModifyStatusModified' => 'Aangepast',
@@ -1195,8 +1208,8 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Eigenschappen',
-	'UI:DashboardEdit:Dashlets' => 'Beschikbare Dashlets',	
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet Eigenschappen',	
+	'UI:DashboardEdit:Dashlets' => 'Beschikbare Dashlets',
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet Eigenschappen',
 
 	'UI:Form:Property' => 'Eigenschap',
 	'UI:Form:Value' => 'Waarde',
@@ -1307,7 +1320,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Month-10' => 'Oktober',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Zo',
 	'DayOfWeek-Monday-Min' => 'Ma',
@@ -1329,7 +1342,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
 	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'Maak een Snelkoppeling aan...',
 	'UI:ShortcutRenameDlg:Title' => 'Hernoem de snelkoppeling',
 	'UI:ShortcutListDlg:Title' => 'Maak een snelkoppeling voor de lijst aan',
@@ -1379,7 +1392,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	<tr><td>i</td><td>minuten (2 cijfers, bv. 00..59)</td></tr>
 	<tr><td>s</td><td>secondn (2 cijfers, bv. 00..59)</td></tr>
 	</table>',
-		
+
 	'UI:Button:Remove' => 'Verwijder',
 	'UI:AddAnExisting_Class' => 'Voeg objecten van type %1$s toe...',
 	'UI:SelectionOf_Class' => 'Selectie van objecten van type %1$s',
@@ -1392,13 +1405,13 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:About:InstallationOptions' => 'Installatie-opties',
 	'UI:About:ManualExtensionSource' => 'Extensie',
 	'UI:About:Extension_Version' => 'Versie: %1$s',
-	'UI:About:RemoteExtensionSource' => 'Data',	
-	
+	'UI:About:RemoteExtensionSource' => 'Data',
+
 	'UI:DisconnectedDlgMessage' => 'Je bent afgemeld. Je moet je opnieuw aanmelden om de toepassing verder te gebruiken.',
 	'UI:DisconnectedDlgTitle' => 'Waarschuwing!',
 	'UI:LoginAgain' => 'Opnieuw aanmelden',
 	'UI:StayOnThePage' => 'Op deze pagina blijven',
-	
+
 	'ExcelExporter:ExportMenu' => 'Exporteer naar Excel',
 	'ExcelExporter:ExportDialogTitle' => 'Exporteer als Excel-bestand',
 	'ExcelExporter:ExportButton' => 'Exporteer',
@@ -1418,16 +1431,16 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:CurrentObjectLockExpired_Explanation' => 'De vergrendeling om gelijktijdige wijzigingen te voorkomen, is opgeheven.Je kan je wijzigingen niet meer opslaan aangezien andere gebruikers ondertussen dit object kunnen aanpassen.',
 	'UI:ConcurrentLockKilled' => 'De vergrendeling voor gelijktijdige gebruikers is opgeheven.',
 	'UI:Menu:KillConcurrentLock' => 'Verwijder de vergrendeling voor gelijktijdige gebruikers!',
-	
+
 	'UI:Menu:ExportPDF' => 'Exporteer als PDF...',
 	'UI:Menu:PrintableVersion' => 'Printvriendelijke versie',
-	
+
 	'UI:BrowseInlineImages' => 'Afbeeldingen doorbladeren...',
 	'UI:UploadInlineImageLegend' => 'Voeg een afbeelding toe',
 	'UI:SelectInlineImageToUpload' => 'Selecteer een afbeelding om up te loaden',
 	'UI:AvailableInlineImagesLegend' => 'Beschikbare afbeeldingen',
 	'UI:NoInlineImage' => 'Er is geen afbeelding beschikbaar op de server. Gebruik de "Afbeeldingen doorbladeren..." knop hierboven om een afbeelding te kiezen op je PC.',
-	
+
 	'UI:ToggleFullScreen' => 'Minimaliseren / Maximaliseren',
 	'UI:Button:ResetImage' => 'Vorige afbeelding herstellen',
 	'UI:Button:RemoveImage' => 'Afbeelding verwijderen',
@@ -1436,6 +1449,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	// Search form
 	'UI:Search:Toggle' => 'Inklappen / uitklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Direct zoeken werd uitgeschakeld voor deze klasse.',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Voeg enkele criteria toe in het zoekveld of klik op de zoekknop om objecten te zien.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Voeg nieuw criterium toe',
 	// - Add new criteria button
@@ -1477,20 +1491,20 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Alle',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is gedefinieerd',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is niet gedefinieerd',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s en %3$s andere',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Alle',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is gedefinieerd',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is niet gedefinieerd',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s en %3$s andere',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Alle',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is gedefinieerd',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is niet gedefinieerd',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s en %3$s andere',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Alle',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is gedefinieerd',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is niet gedefinieerd',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s en %3$s andere',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Alle',
 
 	// - Criteria operators
 	//   - Default widget

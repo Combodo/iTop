@@ -43,9 +43,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Description',
 	'Class:AuditRule/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Sous-classe d\'étiquette',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de l\'objet',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attribut',
 	'Class:AuditRule/Attribute:query' => 'Requête',
 	'Class:AuditRule/Attribute:query+' => 'Expression OQL de calcul des éléments incorrects',
 	'Class:AuditRule/Attribute:valid_flag' => 'Interprétation',
@@ -93,8 +93,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
 	'Class:User/Attribute:finalclass+' => 'Nom de la classe instanciable',
-	'Class:User/Attribute:contactid' => 'Contact (personne)',
+	'Class:User/Attribute:contactid' => 'Personne',
 	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Organisation',
+	'Class:User/Attribute:org_id+' => 'Organisation de la personne associée',
 	'Class:User/Attribute:last_name' => 'Nom',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Prénom',
@@ -117,7 +119,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:status+' => 'Est-ce que ce compte utilisateur est actif, ou non?',
 	'Class:User/Attribute:status/Value:enabled' => 'Actif',
 	'Class:User/Attribute:status/Value:disabled' => 'Désactivé',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
@@ -300,14 +302,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: UserDashboard
 //
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserDashboard' => 'User dashboard~~',
-	'Class:UserDashboard+' => '~~',
-	'Class:UserDashboard/Attribute:user_id' => 'User~~',
-	'Class:UserDashboard/Attribute:user_id+' => '~~',
-	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
-	'Class:UserDashboard/Attribute:menu_code+' => '~~',
-	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
-	'Class:UserDashboard/Attribute:contents+' => '~~',
+	'Class:UserDashboard' => 'Tableau de bord utilisateur',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'Utilisateur',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Contenu',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -328,7 +330,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
-    'UI:Login:Title' => 'iTop login',
+	'UI:Login:Title' => 'iTop login',
 	'Menu:WelcomeMenu' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -377,7 +379,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Sauver',
 	'UI:Button:Cancel' => 'Annuler',
-	'UI:Button:Close' => 'Close~~',
+	'UI:Button:Close' => 'Fermer',
 	'UI:Button:Apply' => 'Appliquer',
 	'UI:Button:Back' => ' << Retour ',
 	'UI:Button:Restart' => ' |<< Recommencer ',
@@ -403,7 +405,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Insert' => 'Insérer',
 	'UI:Button:More' => 'Plus',
 	'UI:Button:Less' => 'Moins',
-	
+
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
@@ -423,7 +425,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Téléchargement arrêté à cause de l\'extension. (Nom du fichier original = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Le téléchargement a échoué pour une raison inconnue. (Code d\'erreur = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque le paramètre suivant: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s, %2$s and %3$s.',
@@ -441,6 +443,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
+	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
+	'UI:Error:MaintenanceTitle' => 'Maintenance',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
@@ -507,6 +511,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
 	'UI:Login:ResetPassword' => 'Envoyer le message',
 	'UI:Login:ResetPwdFailed' => 'Impossible de vous faire parvenir le message: %1$s',
+	'UI:Login:SeparatorOr' => 'Ou',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'le compte \'%1$s\' est inconnu.',
 	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans iTop.',
@@ -543,6 +548,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
+	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
 	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
@@ -600,7 +608,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Veuillez choisir la correspondance pour chacun des champs.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
-	'UI:CSVImport:Encoding' => 'Encodage des caractères',	
+	'UI:CSVImport:Encoding' => 'Encodage des caractères',
 	'UI:UniversalSearchTitle' => 'iTop - Recherche Universelle',
 	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
@@ -670,6 +678,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur la requête : ',
 	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
 	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',
+	'UI:RunQuery:DevelopedOQL' => 'OQL développé',
+	'UI:RunQuery:DevelopedOQLCount' => 'OQL développé pour le compte',
+	'UI:RunQuery:ResultSQLCount' => 'SQL généré pour le compte',
+	'UI:RunQuery:ResultSQL' => 'SQL généré',
 	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
@@ -691,7 +703,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label de l\'attribut',
 	'UI:Schema:Type' => 'Type',
-	
+
 	'UI:Schema:Type+' => 'Type de données de l\'attribut',
 	'UI:Schema:Origin' => 'Origine',
 	'UI:Schema:Origin+' => 'La classe de base dans laquelle l\'attribut est défini',
@@ -781,7 +793,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Devrait être mis à jour automatiquement, mais: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Va être mis à jour automatiquement (champs impactés : %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objets ou liens font référence à %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objets ou liens font référence à certain des objets à supprimer',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objets ou liens font référence à certain des objets à supprimer',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'pour garantir l\'intégrité de la base de données, toutes les références doivent être supprimées.',
 	'UI:Delete:Consequence+' => 'Ce qui va être effectué',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Désolé, vous n\'êtes pas autorisé à supprimer cette objet. Voir les explications détaillées ci-dessus.',
@@ -791,7 +803,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:WelcomeToITop' => 'Bienvenue dans iTop',
 	'UI:DetailsPageTitle' => 'iTop - %2$s - Détails de %1$s',
 	'UI:ErrorPageTitle' => 'iTop - Erreur',
-	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
+	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (ou vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, ou contactez votre administrateur.',
 	'Tag:Archived' => 'Archivé',
 	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
@@ -830,7 +842,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop gestion des utilisateurs - projections des classes',
+	'UI:PageTitle:ClassProjections' => 'iTop gestion des utilisateurs - projections des classes',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestion des utilisateurs - projections des profils',
 	'UI:UserManagement:Class' => 'Type',
 	'UI:UserManagement:Class+' => 'Type des objets',
@@ -869,10 +881,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:GrantMatrix' => 'Matrice des droits',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Lien entre %1$s et %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Lien entre %1$s et %2$s',
-	
+
 	'Menu:AdminTools' => 'Outils d\'admin', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'Système',
 
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu+' => 'Gestion du Changement',
@@ -888,28 +901,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Nombre d\'éléments par type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Nombre d\'éléments par état',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion de Configuration',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Actifs par état',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Actifs par type',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion de Configuration',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Actifs par état',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Actifs par type',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Demandes Utilisateurs',
-'UI-RequestManagementOverview-RequestByService' => 'Demandes par service',
-'UI-RequestManagementOverview-RequestByPriority' => 'Demandes par priorité',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Demandes non affectées à un agent',
+	'UI:RequestMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Demandes Utilisateurs',
+	'UI-RequestManagementOverview-RequestByService' => 'Demandes par service',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Demandes par priorité',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Demandes non affectées à un agent',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Incidents',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidents par service',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents par priorité',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents non affectés à un agent',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Incidents',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents par service',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents par priorité',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents non affectés à un agent',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
-'UI-ChangeManagementOverview-ChangeByType' => 'Changes par type',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes non affectés à un agent',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interruptions de service liées à un changement',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Changes par type',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes non affectés à un agent',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interruptions de service liées à un changement',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Services',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contrats clients à renouveler dans les 30 jours',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contrats fournisseurs à renouveler dans les 30 jours',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Services',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contrats clients à renouveler dans les 30 jours',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contrats fournisseurs à renouveler dans les 30 jours',
 
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',
@@ -920,13 +933,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Menu:CSVImportMenu' => 'Import CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Exportation', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Exportation des résultats d\'une requête en HTML, CSV ou XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
@@ -936,7 +949,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <ol>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet de la classe spécifiée est <b>créé</b>, <b>mis à jour</b> ou <b>supprimé</b>.</li>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet d\'une classe donnée <b>entre</b> ou <b>sort</b> d\'un <b>état</b> spécifié.</li>
-	<li>Certains déclencheurs sont exécutés lorsqu\'un <b>seuil</b> sur <b>TTO</b> ou <b>TTR</b>a été <b>atteint</b>.</li>
+	<li>Certains déclencheurs sont exécutés lorsqu\'un <b>seuil</b> sur <b>TTO</b> ou <b>TTR</b> a été <b>atteint</b>.</li>
 </ol>
 </p>
 <p>
@@ -953,7 +966,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
 
-	'Menu:TagAdminMenu' => 'Etiquettes',
+	'Menu:TagAdminMenu' => 'Étiquettes',
 	'Menu:TagAdminMenu+' => 'Gestion des étiquettes',
 	'UI:TagAdminMenu:Title' => 'Gestion des étiquettes',
 	'UI:TagAdminMenu:NoTags' => 'Pas de champ étiquette configuré',
@@ -962,19 +975,19 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:AuditCategories' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Requêtes OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Executer une requête OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+	'Menu:RunQueriesMenu+' => 'Exécuter une requête OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'Menu:QueryMenu' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Recherche Universelle', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -996,9 +1009,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Download-CSV' => 'Télécharger %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Passé de %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
-	'UI:Deadline_Minutes' => '%1$d min',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_LessThan1Min' => '< 1 min',
+	'UI:Deadline_Minutes' => '%1$d min',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
 	'UI:Help' => 'Aide',
 	'UI:PasswordConfirm' => '(Confirmer)',
@@ -1050,8 +1063,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:ChangeMyPassword' => 'Changer mon mot de passe',
 	'Portal:Disconnect' => 'Déconnexion',
 	'Portal:OpenRequests' => 'Mes requêtes en cours',
-	'Portal:ClosedRequests'  => 'Mes requêtes fermées',
-	'Portal:ResolvedRequests'  => 'Mes requêtes résolues',
+	'Portal:ClosedRequests' => 'Mes requêtes fermées',
+	'Portal:ResolvedRequests' => 'Mes requêtes résolues',
 	'Portal:SelectService' => 'Choisissez un service dans le catalogue:',
 	'Portal:PleaseSelectOneService' => 'Veuillez choisir un service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Choisissez une sous-catégorie du service %1$s:',
@@ -1070,7 +1083,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:RemoveAttachment' => ' Enlever la pièce jointe ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Pièce jointe #%1$d à %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Sélectionnez un modèle de requête pour %1$s',
-	'Enum:Undefined' => 'Non défini',	
+	'Enum:Undefined' => 'Non défini',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s J %2$s H %3$s min %4$s s',
 	'UI:ModifyAllPageTitle' => 'Modification par lots',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modification de %1$d objet(s) de type %2$s',
@@ -1082,7 +1095,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:BulkModifyStatus' => 'Opération',
 	'UI:BulkModifyStatus+' => '',
 	'UI:BulkModifyErrors' => 'Erreur',
-	'UI:BulkModifyErrors+' => '',	
+	'UI:BulkModifyErrors+' => '',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Erreur',
 	'UI:BulkModifyStatusModified' => 'Modifié',
@@ -1176,8 +1189,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:DashboardEdit:Layout' => 'Mise en page',
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
-	'UI:DashboardEdit:Dashlets' => 'Indicateurs',	
-	'UI:DashboardEdit:DashletProperties' => 'Propriétés de l\'Indicateur',	
+	'UI:DashboardEdit:Dashlets' => 'Indicateurs',
+	'UI:DashboardEdit:DashletProperties' => 'Propriétés de l\'Indicateur',
 
 	'UI:Form:Property' => 'Propriété',
 	'UI:Form:Value' => 'Valeur',
@@ -1288,7 +1301,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-10' => 'Octobre',
 	'Month-11' => 'Novembre',
 	'Month-12' => 'Décembre',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Di',
 	'DayOfWeek-Monday-Min' => 'Lu',
@@ -1310,7 +1323,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Déc',
 	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
 	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
@@ -1360,7 +1373,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 <tr><td>i</td><td>minutes (sur 2 chiffres: 00..59)</td></tr>
 <tr><td>s</td><td>secondes (sur 2 chiffres: 00..59)</td></tr>
 </table>',
-		
+
 	'UI:Button:Remove' => 'Enlever',
 	'UI:AddAnExisting_Class' => 'Ajouter des objets de type %1$s...',
 	'UI:SelectionOf_Class' => 'Sélection d\'objets de type %1$s',
@@ -1373,13 +1386,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:InstallationOptions' => 'Options d\'installation',
 	'UI:About:ManualExtensionSource' => 'Extension',
 	'UI:About:Extension_Version' => 'Version: %1$s',
-	'UI:About:RemoteExtensionSource' => 'Data~~',	
-	
+	'UI:About:RemoteExtensionSource' => 'iTop Hub',
+
 	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
 	'UI:DisconnectedDlgTitle' => 'Attention !',
 	'UI:LoginAgain' => 'S\'identifier',
 	'UI:StayOnThePage' => 'Rester sur cette page',
-	
+
 	'ExcelExporter:ExportMenu' => 'Exporter pour Excel...',
 	'ExcelExporter:ExportDialogTitle' => 'Export au format Excel',
 	'ExcelExporter:ExportButton' => 'Exporter',
@@ -1399,16 +1412,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes a expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
 	'UI:ConcurrentLockKilled' => 'Le verrouillage en édition de l\'objet courant a été supprimé.',
 	'UI:Menu:KillConcurrentLock' => 'Supprimer le verrouillage !',
-	
+
 	'UI:Menu:ExportPDF' => 'Exporter en PDF...',
 	'UI:Menu:PrintableVersion' => 'Version imprimable',
-	
+
 	'UI:BrowseInlineImages' => 'Parcourir les images...',
 	'UI:UploadInlineImageLegend' => 'Ajouter une image',
 	'UI:SelectInlineImageToUpload' => 'Sélectionnez l\'image à ajouter',
 	'UI:AvailableInlineImagesLegend' => 'Images disponibles',
 	'UI:NoInlineImage' => 'Il n\'y a aucune image de disponible sur le serveur. Utilisez le bouton "Parcourir" (ci-dessus) pour sélectionner une image sur votre ordinateur et la télécharger sur le serveur.',
-	
+
 	'UI:ToggleFullScreen' => 'Agrandir / Minimiser',
 	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
@@ -1416,7 +1429,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
-	'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Conformément à vos préférences utilisateur, vous ne voyez pas les données obsolètes',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Ajoutez des critères dans le formulaire de recherche ou cliquez sur le bouton rechercher pour voir les objets.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button
@@ -1458,20 +1472,20 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s : %2$s',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s est renseigné',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s n\'est pas renseigné',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s est renseigné',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s n\'est pas renseigné',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
 
 	// - Criteria operators
 	//   - Default widget

@@ -1,0 +1,95 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+var iDiskFreeSpace = {{ iDiskFreeSpace }};
+
+$.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        "operation": "CanUpdateCore"
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oRequirements = $("#header-requirements");
+        var oCanCoreUpdate = $("#can-core-update");
+        oCanCoreUpdate.html(data.sMessage);
+        oRequirements.removeClass("message_info");
+        if (data.bStatus)
+        {
+            oRequirements.addClass("message_ok");
+        }
+        else
+        {
+            oRequirements.addClass("message_error");
+        }
+    }
+});
+
+var oGetItopDiskSpace = $.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        "operation": "GetItopDiskSpace"
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oRequirement = $("#itop-disk-space");
+        oRequirement.html(data.sItopDiskSpace);
+    }
+});
+
+var oGetDBDiskSpace = $.ajax({
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        "operation": "GetDBDiskSpace"
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oRequirement = $("#db-disk-space");
+        oRequirement.html(data.sDBDiskSpace);
+    }
+});
+
+$.when(oGetItopDiskSpace, oGetDBDiskSpace).then(
+    function(data1, data2)
+    {
+        var iItopDiskSpace = data1[0].iItopDiskSpace;
+        var iDBDiskSpace = data2[0].iDBDiskSpace;
+        if ((2 * (iItopDiskSpace + iDBDiskSpace)) > iDiskFreeSpace)
+        {
+            $("#dobackup-warning").show();
+        }
+    }
+);
+
+$("#file").on("change", function(e) {
+    var selectedFile = $('#file').get(0).files[0];
+    var errorMsg = $("#header-file-size");
+    var submitButton = $("#check-update");
+    if (selectedFile)
+    {
+        if (selectedFile.size > {{ iFileUploadMaxSize }})
+        {
+            errorMsg.show();
+            submitButton.prop("disabled", true);
+            return;
+        }
+    }
+    errorMsg.hide();
+    submitButton.prop("disabled", false);
+});
+
+$("#check-update").on("click", function(e) {
+    $("#submit-wait").show();
+    $(this).prop("disabled", true);
+    $(".ajax-spin").removeClass("fa-spinner").removeClass("fa-spin").addClass("fa-times");
+    $(this).parents('form').submit();
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+});

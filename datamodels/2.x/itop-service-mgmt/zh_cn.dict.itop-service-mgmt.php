@@ -30,37 +30,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-'Menu:ServiceManagement' => '服务管理',
-'Menu:ServiceManagement+' => '服务管理概况',
-'Menu:Service:Overview' => '概况',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同(按服务等级)',
-'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+	'Menu:ServiceManagement' => '服务管理',
+	'Menu:ServiceManagement+' => '服务管理概况',
+	'Menu:Service:Overview' => '概况',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同(按服务等级)',
+	'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
 
-'Menu:ProviderContract' => '供应商合同',
-'Menu:ProviderContract+' => '供应商合同',
-'Menu:CustomerContract' => '客户合同',
-'Menu:CustomerContract+' => '客户合同',
-'Menu:ServiceSubcategory' => '子服务',
-'Menu:ServiceSubcategory+' => '子服务',
-'Menu:Service' => '服务',
-'Menu:Service+' => '服务',
-'Menu:ServiceElement' => '服务元素',
-'Menu:ServiceElement+' => '服务元素',
-'Menu:SLA' => 'SLA',
-'Menu:SLA+' => '服务等级协议',
-'Menu:SLT' => 'SLT',
-'Menu:SLT+' => '服务等级目标',
-'Menu:DeliveryModel' => '交付模式',
-'Menu:DeliveryModel+' => '交付模式',
-'Menu:ServiceFamily' => '服务族',
-'Menu:ServiceFamily+' => '服务族',
-'Menu:Procedure' => '流程清单',
-'Menu:Procedure+' => '所有流程清单',
-
-
-
+	'Menu:ProviderContract' => '供应商合同',
+	'Menu:ProviderContract+' => '供应商合同',
+	'Menu:CustomerContract' => '客户合同',
+	'Menu:CustomerContract+' => '客户合同',
+	'Menu:ServiceSubcategory' => '子服务',
+	'Menu:ServiceSubcategory+' => '子服务',
+	'Menu:Service' => '服务',
+	'Menu:Service+' => '服务',
+	'Menu:ServiceElement' => '服务元素',
+	'Menu:ServiceElement+' => '服务元素',
+	'Menu:SLA' => 'SLA',
+	'Menu:SLA+' => '服务等级协议',
+	'Menu:SLT' => 'SLT',
+	'Menu:SLT+' => '服务等级目标',
+	'Menu:DeliveryModel' => '交付模式',
+	'Menu:DeliveryModel+' => '交付模式',
+	'Menu:ServiceFamily' => '服务族',
+	'Menu:ServiceFamily+' => '服务族',
+	'Menu:Procedure' => '流程清单',
+	'Menu:Procedure+' => '所有流程清单',
 ));
 
 //
@@ -71,7 +68,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:deliverymodel_id' => '交付模式',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => '交付模式名称',
-
 ));
 
 

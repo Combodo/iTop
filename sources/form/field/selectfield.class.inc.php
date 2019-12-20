@@ -26,15 +26,24 @@ use Dict;
  * Description of SelectField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
  */
 class SelectField extends MultipleChoicesField
 {
+	// Overloaded constants
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
+
+	/** @var string DEFAULT_NULL_CHOICE_LABEL */
 	const DEFAULT_NULL_CHOICE_LABEL = 'UI:SelectOne';
+	/** @var bool DEFAULT_STARTS_WITH_NULL_CHOICE */
 	const DEFAULT_STARTS_WITH_NULL_CHOICE = true;
 
+	/** @var bool $bStartsWithNullChoice */
 	protected $bStartsWithNullChoice;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
@@ -55,7 +64,7 @@ class SelectField extends MultipleChoicesField
     /**
      * @param $bStartsWithNullChoice
      *
-     * @return \Combodo\iTop\Form\Field\SelectField
+     * @return $this
      */
 	public function SetStartsWithNullChoice($bStartsWithNullChoice)
 	{
@@ -84,7 +93,7 @@ class SelectField extends MultipleChoicesField
 	 * Overloads the method to prevent changing this property.
 	 *
 	 * @param boolean $bMultipleValuesEnabled
-	 * @return \Combodo\iTop\Form\Field\SelectField
+	 * @return $this
 	 */
 	public function SetMultipleValuesEnabled($bMultipleValuesEnabled)
 	{

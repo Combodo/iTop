@@ -75,6 +75,27 @@ class ormDocument
 		return $this->m_sMimeType;
 	}
 
+	/**
+	 * @return int size in bits
+	 * @uses strlen which returns the no of bits used
+	 * @since 2.7.0
+	 */
+	public function GetSize()
+	{
+		return strlen($this->m_data);
+	}
+
+	/**
+	 * @param int $precision
+	 *
+	 * @return string
+	 * @uses utils::BytesToFriendlyFormat()
+	 */
+	public function GetFormattedSize($precision = 2)
+	{
+		$bytes = $this->GetSize();
+		return utils::BytesToFriendlyFormat($bytes, $precision);
+	}
 	public function GetData()
 	{
 		return $this->m_data;
@@ -126,6 +147,7 @@ class ormDocument
 	 */
 	public function GetDisplayURL($sClass, $Id, $sAttCode)
 	{
+		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode";
 	}
 
@@ -137,6 +159,7 @@ class ormDocument
 	{
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = md5($this->GetData());
+		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 

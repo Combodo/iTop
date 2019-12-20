@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Renderer;
 
@@ -233,6 +234,7 @@ abstract class FormRenderer
 		$output = array(
 			'id' => $oField->GetId(),
 			'html' => '',
+			'html_metadata' => array(),
 			'js_inline' => '',
 			'css_inline' => '',
 			'js_files' => array(),
@@ -258,6 +260,18 @@ abstract class FormRenderer
 			else
 			{
 				$output['html'] .= $oRenderingOutput->GetHtml();
+			}
+		}
+		// HTML metadata
+		foreach ($oRenderingOutput->GetMetadata() as $sMetadataName => $sMetadataValue)
+		{
+			// Warning: Do not work with ENUM_RENDER_MODE_JOINED mode
+			if ($sMode === static::ENUM_RENDER_MODE_EXPLODED)
+			{
+				if (!in_array($sMetadataName, $output['html_metadata']))
+				{
+					$output['html_metadata'][$sMetadataName] = $sMetadataValue;
+				}
 			}
 		}
 

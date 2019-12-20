@@ -1,0 +1,20 @@
+{% if title_level is not defined %}
+    {% set title_level = '==' %}
+{% endif %}
+
+
+{%- for tagName,tags in structure.tags if tagName in tagsWithDescription -%}
+    {%- for tag in tags -%}
+        {%- if tag.description is not empty -%}
+{%- if WRAP is defined -%}
+    <WRAP {{WRAP}}>
+{%- endif -%}
+{{title_level}} {{ tagName }} {{title_level}}
+{{ tag.description|escape }}
+{%- if WRAP is defined -%}
+    </WRAP>
+{%- endif -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endfor -%}
+

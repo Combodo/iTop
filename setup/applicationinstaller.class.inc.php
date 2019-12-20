@@ -41,82 +41,156 @@ class ApplicationInstaller
 	const WARNING = 3;
 	const INFO = 4;
 
-	/** @var \PHPParameters */
+	/** @var \Parameters */
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
-	
+
+	/**
+	 * @param \Parameters $oParams
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
 	public function __construct($oParams)
 	{
 		$this->oParams = $oParams;
+
+		$aParamValues = $oParams->GetParamForConfigArray();
+		$oConfig = new Config();
+		$oConfig->UpdateFromParams($aParamValues, null);
+		utils::SetConfig($oConfig);
 	}
-	
+
+	/**
+	 * @return string
+	 */
+	private function GetTargetEnv()
+	{
+		$sTargetEnvironment = $this->oParams->Get('target_env', '');
+		if ($sTargetEnvironment !== '')
+		{
+			return $sTargetEnvironment;
+		}
+
+		return 'production';
+	}
+
+	/**
+	 * @return string
+	 */
+	private function GetTargetDir()
+	{
+		$sTargetEnv = $this->GetTargetEnv();
+		return 'env-'.$sTargetEnv;
+	}
+
 	/**
 	 * Runs all the installation steps in one go and directly outputs
 	 * some information about the progress and the success of the various
 	 * sequential steps.
+	 *
+	 * @param bool $bVerbose
+	 * @param string|null $sMessage
+	 * @param string|null $sInstallComment
+	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps()
+	public function ExecuteAllSteps($bVerbose = true, &$sMessage = null, $sInstallComment = null)
 	{
 		$sStep = '';
 		$sStepLabel = '';
 		$iOverallStatus = self::OK;
 		do
 		{
-			if($sStep != '')
+			if ($bVerbose)
 			{
-				echo "$sStepLabel\n";
-				echo "Executing '$sStep'\n";
+				if ($sStep != '')
+				{
+					echo "$sStepLabel\n";
+					echo "Executing '$sStep'\n";
+				}
+				else
+				{
+					echo "Starting the installation...\n";
+				}
+			}
+			$aRes = $this->ExecuteStep($sStep, $sInstallComment);
+			$sStep = $aRes['next-step'];
+			$sStepLabel = $aRes['next-step-label'];
+			$sMessage = $aRes['message'];
+			if ($bVerbose)
+			{
+				switch ($aRes['status'])
+				{
+					case self::OK;
+						echo "Ok. ".$aRes['percentage-completed']." % done.\n";
+						break;
+
+					case self::ERROR:
+						$iOverallStatus = self::ERROR;
+						echo "Error: ".$aRes['message']."\n";
+						break;
+
+					case self::WARNING:
+						$iOverallStatus = self::WARNING;
+						echo "Warning: ".$aRes['message']."\n";
+						echo $aRes['percentage-completed']." % done.\n";
+						break;
+
+					case self::INFO:
+						echo "Info: ".$aRes['message']."\n";
+						echo $aRes['percentage-completed']." % done.\n";
+						break;
+				}
 			}
 			else
 			{
-				echo "Starting the installation...\n";
-			}
-			$aRes = $this->ExecuteStep($sStep);
-			$sStep = $aRes['next-step'];
-			$sStepLabel = $aRes['next-step-label'];
-			
-			switch($aRes['status'])
-			{
-				case self::OK;
-				echo "Ok. ".$aRes['percentage-completed']." % done.\n";
-				break;
-				
-				case self::ERROR:
-				$iOverallStatus = self::ERROR;
-				echo "Error: ".$aRes['message']."\n";
-				break;
-				
-				case self::WARNING:
-				$iOverallStatus = self::WARNING;
-				echo "Warning: ".$aRes['message']."\n";
-				echo $aRes['percentage-completed']." % done.\n";
-				break;
-					
-				case self::INFO:
-				echo "Info: ".$aRes['message']."\n";
-				echo $aRes['percentage-completed']." % done.\n";
-				break;
+				switch ($aRes['status'])
+				{
+					case self::ERROR:
+						$iOverallStatus = self::ERROR;
+						break;
+					case self::WARNING:
+						$iOverallStatus = self::WARNING;
+						break;
+				}
 			}
 		}
 		while(($aRes['status'] != self::ERROR) && ($aRes['next-step'] != ''));
 		
 		return ($iOverallStatus == self::OK);
 	}
-	
+
+	private function GetConfig()
+	{
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
+		try
+		{
+			return new Config($sConfigFile);
+		}
+		catch (Exception $e)
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * Executes the next step of the installation and reports about the progress
 	 * and the next step to perform
 	 *
 	 * @param string $sStep The identifier of the step to execute
+	 * @param string|null $sInstallComment
 	 *
 	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
 	 */
-	public function ExecuteStep($sStep = '')
+	public function ExecuteStep($sStep = '', $sInstallComment = null)
 	{
 		try
 		{
 			$fStart = microtime(true);
+			SetupPage::log_info("##### STEP {$sStep} start");
+			$this->EnterReadOnlyMode();
 			switch ($sStep)
 			{
 				case '':
@@ -179,7 +253,7 @@ class ApplicationInstaller
 					// __DB__-%Y-%m-%d
 					$sDestination = $aPreinstall['backup']['destination'];
 					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$aDBParams = $this->GetParamValues($this->oParams);
+					$aDBParams = $this->oParams->GetParamForConfigArray();
 					$oTempConfig = new Config();
 					$oTempConfig->UpdateFromParams($aDBParams);
 					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
@@ -198,12 +272,8 @@ class ApplicationInstaller
 					$aSelectedModules = $this->oParams->Get('selected_modules');
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
 					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
 					if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])
@@ -233,13 +303,9 @@ class ApplicationInstaller
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', array());
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$sUrl = $this->oParams->Get('url', '');
 
@@ -256,13 +322,9 @@ class ApplicationInstaller
 					break;
 
 				case 'after-db-create':
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$sAdminUser = $aAdminParams['user'];
 					$sAdminPwd = $aAdminParams['pwd'];
@@ -284,9 +346,9 @@ class ApplicationInstaller
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					$sTargetDir = 'env-'.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment);
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
@@ -303,22 +365,17 @@ class ApplicationInstaller
 					break;
 
 				case 'create-config':
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-
-					$sTargetDir = 'env-'.$sTargetEnvironment;
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
 					$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', array());
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', array());
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 
 					self::DoCreateConfig($sTargetDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion,
-						$bOldAddon, $aSelectedModuleCodes, $aSelectedExtensionCodes, $aParamValues);
+						$bOldAddon, $aSelectedModuleCodes, $aSelectedExtensionCodes, $aParamValues, $sInstallComment);
 
 					$aResult = array(
 						'status' => self::INFO,
@@ -327,6 +384,7 @@ class ApplicationInstaller
 						'next-step-label' => 'Completed',
 						'percentage-completed' => 100,
 					);
+					$this->ExitReadOnlyMode();
 					break;
 
 
@@ -338,9 +396,8 @@ class ApplicationInstaller
 						'next-step-label' => "Unknown setup step '$sStep'.",
 						'percentage-completed' => 100,
 					);
+					break;
 			}
-			$fDuration = round(microtime(true) - $fStart, 2);
-			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 		catch (Exception $e)
 		{
@@ -368,36 +425,45 @@ class ApplicationInstaller
 				$idx++;
 			}
 		}
+		finally
+		{
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
+		}
 
 		return $aResult;
 	}
 
-	/**
-	 * @param array $oParams
-	 *
-	 * @return array to use with {@see Config::UpdateFromParams}
-	 */
-	private function GetParamValues($oParams)
+	private function EnterReadOnlyMode()
 	{
-		$aDBParams = $oParams->Get('database');
-		$aParamValues = array(
-			'mode' => $oParams->Get('mode'),
-			'db_server' => $aDBParams['server'],
-			'db_user' => $aDBParams['user'],
-			'db_pwd' => $aDBParams['pwd'],
-			'db_name' => $aDBParams['name'],
-			'new_db_name' => $aDBParams['name'],
-			'db_prefix' => $aDBParams['prefix'],
-			'db_tls_enabled' => $aDBParams['db_tls_enabled'],
-			'db_tls_ca' => $aDBParams['db_tls_ca'],
-			'application_path' => $oParams->Get('url', ''),
-			'language' => $oParams->Get('language', ''),
-			'graphviz_path' => $oParams->Get('graphviz_path', ''),
-			'source_dir' => $oParams->Get('source_dir', ''),
-		);
+		if ($this->GetTargetEnv() != 'production')
+		{
+			return;
+		}
 
-		return $aParamValues;
+		if (SetupUtils::IsInReadOnlyMode())
+		{
+			return;
+		}
+
+		SetupUtils::EnterReadOnlyMode($this->GetConfig());
 	}
+
+	private function ExitReadOnlyMode()
+	{
+		if ($this->GetTargetEnv() != 'production')
+		{
+			return;
+		}
+
+		if (!SetupUtils::IsInReadOnlyMode())
+		{
+			return;
+		}
+
+		SetupUtils::ExitReadOnlyMode();
+	}
+
 
 	protected static function DoCopy($aCopies)
 	{
@@ -440,6 +506,8 @@ class ApplicationInstaller
 		{
 			$oBackup->SetMySQLBinDir($sMySQLBinDir);
 		}
+
+		CMDBSource::InitFromConfig($oConfig);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
@@ -472,10 +540,26 @@ class ApplicationInstaller
 			$aDirsToScan[] = $sExtraPath;
 		}
 		$sTargetPath = APPROOT.$sTargetDir;
+
 		if (!is_dir($sSourcePath))
 		{
 			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
-		}		
+		}
+		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
+			if (is_file($sConfigFilePath))
+			{
+				$oConfig = new Config($sConfigFilePath);
+			}
+			else
+			{
+				$oConfig = null;
+			}
+			SetupUtils::EnterMaintenanceMode($oConfig);
+		}
+
 		if (!is_dir($sTargetPath))
 		{
 			if (!mkdir($sTargetPath))
@@ -534,7 +618,7 @@ class ApplicationInstaller
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'-with-delta.xml');
 		}
 
-		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
 		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 		//$aCompilerLog = $oMFCompiler->GetLog();
 		//SetupPage::log_info(implode("\n", $aCompilerLog));
@@ -562,6 +646,10 @@ class ApplicationInstaller
 		{
 			$sIntanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
+		}
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+			SetupUtils::ExitMaintenanceMode();
 		}
 	}
 
@@ -597,6 +685,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
+		$oContextTag = new ContextTag('Setup');
 
 		// Migrate columns
 		self::MoveColumns($sDBPrefix);
@@ -789,6 +878,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
+		$oContextTag = new ContextTag('Setup');
 		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
 		
 		// Perform here additional DB setup... profiles, etc...
@@ -855,6 +945,8 @@ class ApplicationInstaller
 		if (!self::$bMetaModelStarted)
 		{
 			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+			$oContextTag = new ContextTag('Setup');
+
 			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
 		} 
 		
@@ -876,13 +968,15 @@ class ApplicationInstaller
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aParamValues parameters array used to create config file using {@see Config::UpdateFromParams}
 	 *
+	 * @param null $sInstallComment
+	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
 	protected static function DoCreateConfig(
 		$sModulesDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion, $bOldAddon, $aSelectedModuleCodes,
-		$aSelectedExtensionCodes, $aParamValues
+		$aSelectedExtensionCodes, $aParamValues, $sInstallComment = null
 	) {
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
 		$sMode = $aParamValues['mode'];
@@ -909,7 +1003,8 @@ class ApplicationInstaller
 			// the default value on upgrade differs from the default value at first install
 			$oConfig->Set('tracking_level_linked_set_default', LINKSET_TRACKING_NONE, 'first_install');
 		}
-		
+
+		$oConfig->Set('access_mode', ACCESS_FULL);
 		// Final config update: add the modules
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
 		if ($bOldAddon)
@@ -923,7 +1018,9 @@ class ApplicationInstaller
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes))
+		$oContextTag = new ContextTag('Setup');
+
+		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment))
 		{
 			throw new Exception("Failed to record the installation information");
 		}
@@ -945,7 +1042,7 @@ class ApplicationInstaller
 		$oConfig->WriteToFile($sConfigFile);
 			
 		// try to make the final config file read-only
-		@chmod($sConfigFile, 0444); // Read-only for owner and group, nothing for others
+		@chmod($sConfigFile, 0440); // Read-only for owner and group, nothing for others
 
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');

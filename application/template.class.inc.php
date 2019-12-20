@@ -399,6 +399,7 @@ class ObjectDetailsTemplate extends DisplayTemplate
 		$aPlugInProperties = $aMatches[1];
 		foreach($aPlugInProperties as $sPlugInClass)
 		{
+			/** @var \iApplicationUIExtension $oInstance */
 			$oInstance = MetaModel::GetPlugins('iApplicationUIExtension', $sPlugInClass);
 			if ($oInstance != null) // Safety check...
 			{

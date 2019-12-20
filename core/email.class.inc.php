@@ -24,8 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/lib/swiftmailer/lib/swift_required.php');
-
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
 
@@ -333,7 +331,6 @@ class EMail
 	{
 		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
 		{
-			require_once(APPROOT.'lib/emogrifier/Classes/Emogrifier.php');
 			$emogrifier = new \Pelago\Emogrifier($sBody, $sCustomStyles);
 			$sBody = $emogrifier->emogrify(); // Adds html/body tags if not already present
 		}

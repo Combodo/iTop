@@ -1,0 +1,12 @@
+{% if title_level is not defined %}
+    {% set title_level='' %}
+{% endif %}
+
+{% if (node.parent is null) %}
+{{title_level}} File {{ structure.path }} {{title_level}}
+{% endif %}
+
+{% if (node.parent is not null and structure.parent.fullyQualifiedStructuralElementName != node.fullyQualifiedStructuralElementName) %}
+{{title_level}} Inherited from {{title_level}}
+[[{{structure.parent}}|{{structure.parent}}]]
+{% endif %}

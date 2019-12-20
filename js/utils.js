@@ -199,7 +199,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 			$('#'+divId).block();
 
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
-				{operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams},
+				{operation: 'ajax', filter: sSerializedFilter, encoding: 'serialize', extra_params: sExtraParams},
 				function (data) {
 					$('#'+divId).empty();
 					$('#'+divId).append(data);

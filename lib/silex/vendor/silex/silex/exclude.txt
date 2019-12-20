@@ -1,5 +1,0 @@
-#
-# The following source files are not re-distributed with the "build" of the application
-# since they are used solely for constructing other files during the build process
-#
-tests

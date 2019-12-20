@@ -19,7 +19,7 @@
 
 /**
  * Class BackgroundTask
- * A class to record information about the execution of background processes 
+ * A class to record information about the execution of background processes ({@link iProcess} impl)
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -55,6 +55,7 @@ class BackgroundTask extends DBObject
 
 		MetaModel::Init_AddAttribute(new AttributeBoolean("running", array("allowed_values"=>null, "sql"=>"running", "default_value"=>false, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,paused'), "sql"=>"status", "default_value"=>'active', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("system_user", array("allowed_values"=>null, "sql"=>"system_user", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 	
 	public function ComputeDurations($fLatestDuration)

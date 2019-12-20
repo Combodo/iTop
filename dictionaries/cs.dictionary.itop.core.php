@@ -44,20 +44,20 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Pole objektů (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Pole objektů (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
 
 	'Core:AttributeInteger' => 'Celé číslo (integer)',
@@ -105,7 +105,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:AttributePassword' => 'Heslo',
 	'Core:AttributePassword+' => 'Heslo k externímu zařízení',
 
- 	'Core:AttributeEncryptedString' => 'Šifrovaný řetězec',
+	'Core:AttributeEncryptedString' => 'Šifrovaný řetězec',
 	'Core:AttributeEncryptedString+' => 'Řetězec šifrovaný lokálním klíčem',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -863,8 +863,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing/runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
@@ -908,7 +908,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:BulkExport:XMLOptions' => 'Možnosti XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'HTML tabulka (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Možnosti tabulky',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
+	'Core:BulkExport:OptionNoLocalize' => 'Nepřekládat hodnoty číselníků',
 	'Core:BulkExport:OptionLinkSets' => 'Zahrnout odkazované objekty',
 	'Core:BulkExport:OptionFormattedText' => 'Zachovat formátování textu',
 	'Core:BulkExport:ScopeDefinition' => 'Definice objektů k exportu',

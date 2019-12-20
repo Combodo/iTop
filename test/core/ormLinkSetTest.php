@@ -42,8 +42,9 @@ use ormLinkSet;
  */
 class ormLinkSetTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
 
-    /**
+	/**
      * @throws Exception
      */
     protected function setUp()

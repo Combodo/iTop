@@ -18,10 +18,21 @@
 
 
 /**
- * A union of DBObjectSearches 
+ * A union of DBObjectSearches
+ *
+ * This search class represent an union over a collection of DBObjectSearch.
+ * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
+ * Please refer to DBSearch's documentation
  *
  * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ *
+ * @package     iTopORM
+ * @phpdoc-tuning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
+ * @api
+ * @see DBSearch
+ * @see DBObjectSearch
  */
  
 class DBUnionSearch extends DBSearch
@@ -29,6 +40,15 @@ class DBUnionSearch extends DBSearch
 	protected $aSearches; // source queries
 	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
 
+    /**
+     * DBUnionSearch constructor.
+     *
+     * @api
+     *
+     * @param $aSearches
+     *
+     * @throws CoreException
+     */
 	public function __construct($aSearches)
 	{
 		if (count ($aSearches) == 0)
@@ -238,6 +258,24 @@ class DBUnionSearch extends DBSearch
 		return $bRet;
 	}
 
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
+		}
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+	}
+
+
+
 	public function IsAny()
 	{
 		$bIsAny = true;
@@ -363,6 +401,16 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
+	public function Filter($sClassAlias, DBSearch $oFilter)
+	{
+		$aSearches = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+		}
+		return new DBUnionSearch($aSearches);
+	}
+
 	public function Intersect(DBSearch $oFilter)
 	{
 		$aSearches = array();
@@ -434,9 +482,24 @@ class DBUnionSearch extends DBSearch
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * @see DBSearch::ToJSON()
+	 */
+	public function ToJSON()
+	{
+		$sRet = array('unions' => array());
+		foreach ($this->aSearches as $oSearch)
+		{
+			$sRet['unions'][] = $oSearch->ToJSON();
+		}
+		return $sRet;
+	}
+
+	/**
 	 * Returns a new DBUnionSearch object where duplicates queries have been removed based on their OQLs
-	 * 
+	 *
 	 * @return \DBUnionSearch
+	 * @throws \CoreException
 	 */
 	public function RemoveDuplicateQueries()
 	{
@@ -478,7 +541,7 @@ class DBUnionSearch extends DBSearch
 	{
 		if (count($this->aSearches) == 1)
 		{
-			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 		}
 
 		$aSQLQueries = array();
@@ -630,6 +693,8 @@ class DBUnionSearch extends DBSearch
 			$oSearch->SetDataFiltered();
 		}
 	}
+
+
 
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{

@@ -36,6 +36,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:NoAttachment' => 'Aucune pièce jointe.',
 	'Attachments:PreviewNotAvailable' => 'Pas d\'aperçu pour ce type de pièce jointe.',
 	'Attachments:Error:FileTooLarge' => 'Le fichier est trop gros pour être chargé. %1$s',
+	'Attachments:Render:Icons' => 'Affichage en icônes',
+	'Attachments:Render:Table' => 'Affichage en liste',
 ));
 
 //
@@ -57,4 +59,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contenu',
 	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Attachments:File:Thumbnail' => 'Icône',
+	'Attachments:File:Name' => 'Nom du fichier',
+	'Attachments:File:Date' => 'Date de chargement',
+	'Attachments:File:Creator' => 'Chargé par',
+	'Attachments:File:Size' => 'Taille',
+	'Attachments:File:MimeType' => 'Type',
 ));

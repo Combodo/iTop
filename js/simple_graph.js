@@ -478,7 +478,7 @@ $(function()
 				sHtml += '</select>'
 			}
 			sHtml += '&nbsp;<button type="button" id="'+sId+'_refresh_btn">'+this.options.labels.refresh+'</button>';
-			sHtml += '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+			sHtml += '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
 			if (this.options.export_as_pdf != null)
 			{
 				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';			

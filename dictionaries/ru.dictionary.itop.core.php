@@ -5,7 +5,7 @@
  * @author      Vladimir Kunin <v.b.kunin@gmail.com>
  * @link        http://community.itop-itsm.ru  iTop Russian Community
  * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
@@ -29,20 +29,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeObsolescenceDate' => 'Дата устаревания',
 	'Core:AttributeObsolescenceDate+' => '',
 
-    'Core:AttributeTagSet' => 'Список тегов',
-    'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet' => 'Список тегов',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Журнал',
-    'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog' => 'Журнал',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Вычисляемый enum',
-    'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum' => 'Вычисляемый enum',
+	'Core:AttributeMetaEnum+' => '',
 
-    'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
+	'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Список объектов заданного класса, связанные с текущим объектом через промежуточный класс',
 
 	'Core:AttributeInteger' => 'Целое',
@@ -90,7 +90,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributePassword' => 'Пароль',
 	'Core:AttributePassword+' => 'Пароль внешнего устройства',
 
- 	'Core:AttributeEncryptedString' => 'Зашифрованная строка',
+	'Core:AttributeEncryptedString' => 'Зашифрованная строка',
 	'Core:AttributeEncryptedString+' => 'Строка, зашифрованная локальным ключом',
 	'Core:AttributeEncryptUnknownLibrary' => 'Заданная библиотека шифрования (%1$s) неизвестна',
 	'Core:AttributeEncryptFailedToDecrypt' => '** ошибка расшифровки **',
@@ -698,8 +698,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:NeverRun' => 'Синхронизация не запускалась. Логи отсутсвуют.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s, сейчас в процессе...',
-	'Menu:DataSources' => 'Synchronization Data Sources~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Синхронизация данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Невид. (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -848,8 +848,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:ExecProcess:Code255' => 'Ошибка PHP (parsing, or runtime)~~',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$d с',
-	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',
+	'Core:Duration_Seconds' => '%1$d с',
+	'Core:Duration_Minutes_Seconds' => '%1$d мин %2$d с',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
 

@@ -57,7 +57,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Journal privé',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Contacts',
+	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
 	'Class:Ticket/Attribute:contacts_list+' => '',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',

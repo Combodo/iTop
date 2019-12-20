@@ -1,45 +1,80 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Class WebPage
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * Generic interface common to CLI and Web pages
  */
 Interface Page
 {
+	/**
+	 * Outputs (via some echo) the complete HTML page by assembling all its elements
+	 *
+	 * @return mixed
+	 */
 	public function output();
 
+	/**
+	 * Add any text or HTML fragment to the body of the page
+	 *
+	 * @param string $sText
+	 *
+	 * @return mixed
+	 */
 	public function add($sText);
 
+	/**
+	 * Add a paragraph to the body of the page
+	 *
+	 * @param string $sText
+	 *
+	 * @return mixed
+	 */
 	public function p($sText);
 
+	/**
+	 * Add a pre-formatted text to the body of the page
+	 *
+	 * @param string $sText
+	 *
+	 * @return mixed
+	 */
 	public function pre($sText);
 
+	/**
+	 * Add a comment
+	 *
+	 * @param string $sText
+	 *
+	 * @return mixed
+	 */
 	public function add_comment($sText);
 
+	/**
+	 * Adds a tabular content to the web page
+	 *
+	 * @param string[] $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
+	 * @param string[] $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A
+	 *     column 'pkey' is expected for each row
+	 * @param array $aParams Hash array. Extra parameters for the table.
+	 *
+	 * @return void
+	 */
 	public function table($aConfig, $aData, $aParams = array());
 }
 
@@ -60,6 +95,10 @@ Interface Page
  */
 class WebPage implements Page
 {
+	/**
+	 * @since 2.7.0 N°2529
+	 */
+	const PAGES_CHARSET = 'utf-8';
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
@@ -82,7 +121,12 @@ class WebPage implements Page
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
 
-
+	/**
+	 * WebPage constructor.
+	 *
+	 * @param string $s_title
+	 * @param bool $bPrintable
+	 */
 	public function __construct($s_title, $bPrintable = false)
 	{
 		$this->s_title = $s_title;
@@ -111,6 +155,8 @@ class WebPage implements Page
 
 	/**
 	 * Change the title of the page after its creation
+	 *
+	 * @param string $s_title
 	 */
 	public function set_title($s_title)
 	{
@@ -119,6 +165,9 @@ class WebPage implements Page
 
 	/**
 	 * Specify a default URL and a default target for all links on a page
+	 *
+	 * @param string $s_href
+	 * @param string $s_target
 	 */
 	public function set_base($s_href = '', $s_target = '')
 	{
@@ -127,7 +176,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add any text or HTML fragment to the body of the page
+	 * @inheritDoc
 	 */
 	public function add($s_html)
 	{
@@ -138,6 +187,9 @@ class WebPage implements Page
 	 * Add any text or HTML fragment (identified by an ID) at the end of the body of the page
 	 * This is useful to add hidden content, DIVs or FORMs that should not
 	 * be embedded into each other.
+	 *
+	 * @param string $s_html
+	 * @param string $sId
 	 */
 	public function add_at_the_end($s_html, $sId = '')
 	{
@@ -145,7 +197,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a paragraph to the body of the page
+	 * @inheritDoc
 	 */
 	public function p($s_html)
 	{
@@ -153,7 +205,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a pre-formatted text to the body of the page
+	 * @inheritDoc
 	 */
 	public function pre($s_html)
 	{
@@ -161,7 +213,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a comment
+	 * @inheritDoc
 	 */
 	public function add_comment($sText)
 	{
@@ -170,6 +222,10 @@ class WebPage implements Page
 
 	/**
 	 * Add a paragraph to the body of the page
+	 *
+	 * @param string $s_html
+	 *
+	 * @return string
 	 */
 	public function GetP($s_html)
 	{
@@ -177,20 +233,22 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Adds a tabular content to the web page
-	 *
-	 * @param string[] $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
-	 * @param string[] $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A
-	 *     column 'pkey' is expected for each row
-	 * @param array $aParams Hash array. Extra parameters for the table.
-	 *
-	 * @return void
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function table($aConfig, $aData, $aParams = array())
 	{
 		$this->add($this->GetTable($aConfig, $aData, $aParams));
 	}
 
+	/**
+	 * @param array $aConfig
+	 * @param array $aData
+	 * @param array $aParams
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function GetTable($aConfig, $aData, $aParams = array())
 	{
 		$oAppContext = new ApplicationContext();
@@ -218,6 +276,12 @@ class WebPage implements Page
 		return $sHtml;
 	}
 
+	/**
+	 * @param array $aRow
+	 * @param array $aConfig
+	 *
+	 * @return string
+	 */
 	public function GetTableRow($aRow, $aConfig)
 	{
 		$sHtml = '';
@@ -242,6 +306,8 @@ class WebPage implements Page
 
 	/**
 	 * Add some Javascript to the header of the page
+	 *
+	 * @param string $s_script
 	 */
 	public function add_script($s_script)
 	{
@@ -250,6 +316,8 @@ class WebPage implements Page
 
 	/**
 	 * Add some Javascript to the header of the page
+	 *
+	 * @param $s_script
 	 */
 	public function add_ready_script($s_script)
 	{
@@ -282,12 +350,18 @@ class WebPage implements Page
 		$this->a_dict_entries_prefixes[] = $s_entriesPrefix;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function get_dict_signature()
 	{
 		return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(',',
 					$this->a_dict_entries).'|'.implode(',', $this->a_dict_entries_prefixes));
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function get_dict_file_content()
 	{
 		$aEntries = array();
@@ -307,6 +381,8 @@ class WebPage implements Page
 
 	/**
 	 * Add some CSS definitions to the header of the page
+	 *
+	 * @param string $s_style
 	 */
 	public function add_style($s_style)
 	{
@@ -326,12 +402,20 @@ class WebPage implements Page
 
 	/**
 	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
+	 *
+	 * @param string $s_linked_stylesheet
+	 * @param string $s_condition
 	 */
 	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
 	{
 		$this->a_linked_stylesheets[] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
 	}
 
+	/**
+	 * @param string $sSaasRelPath
+	 *
+	 * @throws \Exception
+	 */
 	public function add_saas($sSaasRelPath)
 	{
 		$sCssRelPath = utils::GetCSSFromSASS($sSaasRelPath);
@@ -347,6 +431,8 @@ class WebPage implements Page
 
 	/**
 	 * Add some custom header to the page
+	 *
+	 * @param string $s_header
 	 */
 	public function add_header($s_header)
 	{
@@ -364,6 +450,8 @@ class WebPage implements Page
 
 	/**
 	 * Build a special kind of TABLE useful for displaying the details of an object from a hash array of data
+	 *
+	 * @param array $aFields
 	 */
 	public function details($aFields)
 	{
@@ -409,15 +497,22 @@ class WebPage implements Page
 
 	/**
 	 * Build a special kind of TABLE useful for displaying the details of an object from a hash array of data
+	 *
+	 * @param array $aFields
+	 *
+	 * @return string
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<div class=\"details\" id='search-widget-results-outer'>\n";
+		$sHtml = "<div class=\"details\">\n";
 		foreach ($aFields as $aAttrib)
 		{
-			$sDataAttCode = isset($aAttrib['attcode']) ? "data-attcode=\"{$aAttrib['attcode']}\"" : '';
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttCode>\n";
+			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
+			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
+			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.$aAttrib['value_raw'].'"' : '';
+
+			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataValueRaw>\n";
 			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
@@ -453,7 +548,7 @@ class WebPage implements Page
 	/**
 	 * Build a set of radio buttons suitable for editing a field/attribute of an object (including its validation)
 	 *
-	 * @param $aAllowedValues hash Array of value => display_value
+	 * @param $aAllowedValues array Array of value => display_value
 	 * @param $value mixed Current value for the field/attribute
 	 * @param $iId mixed Unique Id for the input control in the page
 	 * @param $sFieldName string The name of the field, attr_<$sFieldName> will hold the value for the field
@@ -473,13 +568,13 @@ class WebPage implements Page
 			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
 			{
 				// When there is only once choice, select it by default
-				$sSelected = ' checked';
+				$sSelected = 'checked';
 			}
 			else
 			{
-				$sSelected = ($value == $key) ? ' checked' : '';
+				$sSelected = ($value == $key) ? 'checked' : '';
 			}
-			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\"$sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
+			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\" $sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
 			if ($bVertical)
 			{
 				if ($idx == 0)
@@ -518,6 +613,8 @@ class WebPage implements Page
 	 * Possible improvement: I've noticed that several output buffers are stacked,
 	 * if they are not empty, the output will be corrupted. The solution would
 	 * consist in unstacking all of them (and concatenate the contents).
+	 *
+	 * @throws \Exception
 	 */
 	protected function ob_get_clean_safe()
 	{
@@ -555,7 +652,8 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Outputs (via some echo) the complete HTML page by assembling all its elements
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function output()
 	{
@@ -573,31 +671,7 @@ class WebPage implements Page
 		echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
 		echo $this->get_base_tag();
 
-		$this->output_dict_entries();
-
-		foreach ($this->a_linked_scripts as $s_script)
-		{
-			// Make sure that the URL to the script contains the application's version number
-			// so that the new script do NOT get reloaded from the cache when the application is upgraded
-			if (strpos($s_script, '?') === false)
-			{
-				$s_script .= "?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
-				$s_script .= "&t=".utils::GetCacheBusterTimestamp();
-			}
-			echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-		}
-		if (count($this->a_scripts) > 0)
-		{
-			echo "<script type=\"text/javascript\">\n";
-			foreach ($this->a_scripts as $s_script)
-			{
-				echo "$s_script\n";
-			}
-			echo "</script>\n";
-		}
+		// First put stylesheets so they can be loaded before browser interprets JS files, otherwise visual glitch can occur.
 		foreach ($this->a_linked_stylesheets as $a_stylesheet)
 		{
 			if (strpos($a_stylesheet['link'], '?') === false)
@@ -619,6 +693,7 @@ class WebPage implements Page
 			}
 		}
 
+		// Then inline styles
 		if (count($this->a_styles) > 0)
 		{
 			echo "<style>\n";
@@ -628,10 +703,43 @@ class WebPage implements Page
 			}
 			echo "</style>\n";
 		}
+
+		// Favicon
 		if (class_exists('MetaModel') && MetaModel::GetConfig())
 		{
 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 		}
+
+		// Dict entries for JS
+		$this->output_dict_entries();
+
+		// JS files
+		foreach ($this->a_linked_scripts as $s_script)
+		{
+			// Make sure that the URL to the script contains the application's version number
+			// so that the new script do NOT get reloaded from the cache when the application is upgraded
+			if (strpos($s_script, '?') === false)
+			{
+				$s_script .= "?t=".utils::GetCacheBusterTimestamp();
+			}
+			else
+			{
+				$s_script .= "&t=".utils::GetCacheBusterTimestamp();
+			}
+			echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
+		}
+
+		// JS inline scripts
+		if (count($this->a_scripts) > 0)
+		{
+			echo "<script type=\"text/javascript\">\n";
+			foreach ($this->a_scripts as $s_script)
+			{
+				echo "$s_script\n";
+			}
+			echo "</script>\n";
+		}
+
 		echo "</head>\n";
 		echo "<body>\n";
 		echo self::FilterXSS($this->s_content);
@@ -655,6 +763,9 @@ class WebPage implements Page
 
 	/**
 	 * Build a series of hidden field[s] from an array
+	 *
+	 * @param string $sLabel
+	 * @param array $aData
 	 */
 	public function add_input_hidden($sLabel, $aData)
 	{
@@ -833,43 +944,55 @@ class WebPage implements Page
 		}
 	}
 
+	/**
+	 * @param array $aActions
+	 * @param array $aFavoriteActions
+	 *
+	 * @return string
+	 */
 	public function RenderPopupMenuItems($aActions, $aFavoriteActions = array())
 	{
 		$sPrevUrl = '';
 		$sHtml = '';
 		if (!$this->IsPrintableVersion())
 		{
-			foreach ($aActions as $aAction)
+			foreach ($aActions as $sActionId => $aAction)
 			{
-				$sClass = isset($aAction['css_classes']) ? ' class="'.implode(' ', $aAction['css_classes']).'"' : '';
-				$sOnClick = isset($aAction['onclick']) ? ' onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
+				$sDataActionId = 'data-action-id="'.$sActionId.'"';
+				$sClass = isset($aAction['css_classes']) ? 'class="'.implode(' ', $aAction['css_classes']).'"' : '';
+				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
 						"UTF-8").'"' : '';
-				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
+				$sTarget = isset($aAction['target']) ? "target=\"{$aAction['target']}\"" : "";
 				if (empty($aAction['url']))
 				{
 					if ($sPrevUrl != '') // Don't output consecutively two separators...
 					{
-						$sHtml .= "<li>{$aAction['label']}</li>";
+						$sHtml .= "<li $sDataActionId>{$aAction['label']}</li>";
 					}
 					$sPrevUrl = '';
 				}
 				else
 				{
-					$sHtml .= "<li><a $sTarget href=\"{$aAction['url']}\"$sClass $sOnClick>{$aAction['label']}</a></li>";
+					$sHtml .= "<li $sDataActionId><a $sTarget href=\"{$aAction['url']}\" $sClass $sOnClick>{$aAction['label']}</a></li>";
 					$sPrevUrl = $aAction['url'];
 				}
 			}
 			$sHtml .= "</ul></li></ul></div>";
-			foreach (array_reverse($aFavoriteActions) as $aAction)
+			foreach (array_reverse($aFavoriteActions) as $sActionId => $aAction)
 			{
 				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
-				$sHtml .= "<div class=\"actions_button\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";
+				$sHtml .= "<div class=\"actions_button\" data-action-id=\"$sActionId\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";
 			}
 		}
 
 		return $sHtml;
 	}
 
+	/**
+	 * @param bool $bReturnOutput
+	 *
+	 * @throws \Exception
+	 */
 	protected function output_dict_entries($bReturnOutput = false)
 	{
 		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0))
@@ -923,11 +1046,27 @@ $("#LnkCollapse_"+iSectionId).click(function(e) {
 EOD
 		);
 	}
+
+	/**
+	 * @param string $sSectionLabel
+	 * @param bool $bOpenedByDefault
+	 * @param string $sSectionStateStorageBusinessKey
+	 *
+	 * @throws \Exception
+	 */
 	public function StartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
 		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,	$sSectionStateStorageBusinessKey));
 	}
 
+	/**
+	 * @param string $sSectionLabel
+	 * @param bool $bOpenedByDefault
+	 * @param string $sSectionStateStorageBusinessKey
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
 		$this->bHasCollapsibleSection = true;
@@ -952,6 +1091,9 @@ EOD
 		$this->add($this->GetEndCollapsibleSection());
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetEndCollapsibleSection()
 	{
 		return "</div>";
@@ -962,12 +1104,35 @@ EOD
 
 interface iTabbedPage
 {
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '');
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
+	 * @param string $sHtml
+	 *
+	 * @return mixed
+	 */
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml);
 
+	/**
+	 * @param string $sTabContainer
+	 *
+	 * @return mixed
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '');
 
+	/**
+	 * @param string $sTabLabel
+	 *
+	 * @return mixed
+	 */
 	public function SetCurrentTab($sTabLabel = '');
 
 	/**
@@ -988,10 +1153,19 @@ interface iTabbedPage
 
 	public function GetCurrentTab();
 
+	/**
+	 * @param string$sTabLabel
+	 * @param string|null $sTabContainer
+	 *
+	 * @return mixed
+	 */
 	public function RemoveTab($sTabLabel, $sTabContainer = null);
 
 	/**
 	 * Finds the tab whose title matches a given pattern
+	 *
+	 * @param string $sPattern
+	 * @param string|null $sTabContainer
 	 *
 	 * @return mixed The name of the tab as a string or false if not found
 	 */
@@ -1014,6 +1188,12 @@ class TabManager
 		$this->m_sCurrentTab = '';
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sPrefix
+	 *
+	 * @return string
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->m_aTabs[$sTabContainer] = array('prefix' => $sPrefix, 'tabs' => array());
@@ -1021,12 +1201,20 @@ class TabManager
 		return "\$Tabs:$sTabContainer\$";
 	}
 
+	/**
+	 * @param string $sHtml
+	 *
+	 * @throws \Exception
+	 */
 	public function AddToCurrentTab($sHtml)
 	{
 		$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
 	}
 
-	public function GetCurrentTabLength($sHtml)
+	/**
+	 * @return int
+	 */
+	public function GetCurrentTabLength()
 	{
 		$iLength = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) : 0;
 
@@ -1052,16 +1240,33 @@ class TabManager
 		return $sResult;
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sTab
+	 *
+	 * @return bool
+	 */
 	public function TabExists($sTabContainer, $sTab)
 	{
 		return isset($this->m_aTabs[$sTabContainer]['tabs'][$sTab]);
 	}
 
+	/**
+	 * @return int
+	 */
 	public function TabsContainerCount()
 	{
 		return count($this->m_aTabs);
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
+	 * @param string $sHtml
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
 		if (!isset($this->m_aTabs[$sTabContainer]['tabs'][$sTabLabel]))
@@ -1085,6 +1290,11 @@ class TabManager
 		return ''; // Nothing to add to the page for now
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 *
+	 * @return string
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
 		$sPreviousTabContainer = $this->m_sCurrentTabContainer;
@@ -1093,6 +1303,11 @@ class TabManager
 		return $sPreviousTabContainer;
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 *
+	 * @return string
+	 */
 	public function SetCurrentTab($sTabLabel = '')
 	{
 		$sPreviousTab = $this->m_sCurrentTab;
@@ -1129,17 +1344,26 @@ class TabManager
 		return ''; // Nothing to add to the page for now
 	}
 
-
+	/**
+	 * @return string
+	 */
 	public function GetCurrentTabContainer()
 	{
 		return $this->m_sCurrentTabContainer;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetCurrentTab()
 	{
 		return $this->m_sCurrentTab;
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 * @param string|null $sTabContainer
+	 */
 	public function RemoveTab($sTabLabel, $sTabContainer = null)
 	{
 		if ($sTabContainer == null)
@@ -1161,6 +1385,9 @@ class TabManager
 
 	/**
 	 * Finds the tab whose title matches a given pattern
+	 *
+	 * @param string $sPattern
+	 * @param string|null $sTabContainer
 	 *
 	 * @return mixed The actual name of the tab (as a string) or false if not found
 	 */
@@ -1188,6 +1415,11 @@ class TabManager
 	 * DOES NOT WORK: apparently in the *old* version of jquery
 	 * that we are using this is not supported... TO DO upgrade
 	 * the whole jquery bundle...
+	 *
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
+	 *
+	 * @return string
 	 */
 	public function SelectTab($sTabContainer, $sTabLabel)
 	{
@@ -1214,6 +1446,12 @@ class TabManager
 		return "window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"; // Let the time to the tabs widget to initialize
 	}
 
+	/**
+	 * @param string $sContent
+	 * @param \WebPage $oPage
+	 *
+	 * @return mixed
+	 */
 	public function RenderIntoContent($sContent, WebPage $oPage)
 	{
 		// Render the tabs in the page (if any)

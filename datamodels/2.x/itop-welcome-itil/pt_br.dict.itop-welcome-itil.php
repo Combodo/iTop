@@ -53,6 +53,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserAccountsMenu+' => 'Contas usuários',
 	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
 	'Menu:MyShortcuts' => 'Meus atalhos',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -60,8 +63,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource' => 'Recurso abstrato',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -69,8 +72,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu' => 'Recurso Admin Menu',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -78,6 +81,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu' => 'Menu de consultas de execução de recursos',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

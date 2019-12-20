@@ -1,0 +1,52 @@
+# Copyright (C) 2010-2018 Combodo SARL
+#
+#  This file is part of iTop.
+#
+#  iTop is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  iTop is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+p_browse_brick:
+  path: '/browse/{sBrickId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\BrowseBrickController::DisplayAction'
+
+
+p_browse_brick_mode:
+  path: '/browse/{sBrickId}/{sBrowseMode}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\BrowseBrickController::DisplayAction'
+
+
+p_browse_brick_mode_list:
+  path: '/browse/{sBrickId}/list/page/{iPageNumber}/show/{iListLength}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\BrowseBrickController::DisplayAction'
+    sBrowseMode: 'list'
+    sDataLoading: 'lazy'
+    iPageNumber: 1
+    iListLength: 20
+  requirements:
+    sBrowseMode: 'list'
+    iPageNumber: '\d+'
+    iListLength: '\d+'
+
+
+p_browse_brick_mode_tree:
+  path: '/browse/{sBrickId}/tree/expand/{sLevelAlias}/{sNodeId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\BrowseBrickController::DisplayAction'
+    sBrowseMode: 'tree'
+    sDataLoading: 'lazy'
+    sNodeId: ~
+  requirements:
+    sBrowseMode: 'tree'

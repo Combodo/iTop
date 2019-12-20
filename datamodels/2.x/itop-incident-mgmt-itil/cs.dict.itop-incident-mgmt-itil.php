@@ -48,8 +48,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -240,15 +238,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Nadřazený problém',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Odkaz na nadřazený problém',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
 ));

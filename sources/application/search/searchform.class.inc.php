@@ -170,8 +170,13 @@ class SearchForm
 		$sStyle .= ($bAutoSubmit === true) ? '' : ' no_auto_submit';
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_long\">" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "</span><span class=\"sft_short\">" . Dict::S('UI:SearchToggle') . "</span>";
-		$sHtml .= "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
+		$sHtml .= "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
+		$sHtml .= "<span class=\"pull-right\">";
+		$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
+		$sHtml .= "<br class='clearboth' />";
 		$sHtml .= "<span class=\"sft_hint pull-right\">" . Dict::S('UI:Search:AutoSubmit:DisabledHint') . "</span>";
+		$sHtml .= "</span>";
+		$sHtml .= "<br class='clearboth' />";
 		$sHtml .= "</h2>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n</div>\n";
@@ -247,6 +252,8 @@ class SearchForm
 		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
 		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
 
+		$bShowObsoleteData = \appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));// ? What to do when true == utils::IsArchiveMode()
+
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
@@ -255,6 +262,7 @@ class SearchForm
 			'init_opened' => $bOpen,
 			'auto_submit' => $bAutoSubmit,
 			'list_params' => $aListParams,
+			'show_obsolete_data' => $bShowObsoleteData,
 			'search' => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
 				'fields' => $aFields,
@@ -387,7 +395,7 @@ class SearchForm
 
 		foreach($aAttributeDefs as $sAttCode => $oAttDef)
 		{
-			if ($this->IsSubAttribute($oAttDef)) continue;
+			if ($oAttDef instanceof AttributeFriendlyName) continue; //it was already forced into $aZList in the code above
 
             $bHasIndex =  isset($aIndexes[$sAttCode]);
 			$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers, $bHasIndex);
@@ -414,10 +422,6 @@ class SearchForm
 		return $aDBIndexes;
 	}
 
-	protected function IsSubAttribute($oAttDef)
-	{
-		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeSubItem));
-	}
 
     /**
      * @param \AttributeDefinition $oAttrDef

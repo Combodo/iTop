@@ -51,17 +51,30 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 ## Last releases
 
+### Versions 2.7.*
+ - 2.7.0-beta published on December 18, 2019
+ - [Changes since the previous version][62]
+ - [New features][63]
+ - [Migration notes][64]
+ - [Download iTop 2.7.0-beta][65]
+
+[62]: https://www.itophub.io/wiki/page?id=2_7_0:release:change_log
+[63]: https://www.itophub.io/wiki/page?id=2_7_0:release:2_7_whats_new
+[64]: https://www.itophub.io/wiki/page?id=2_7_0:install:260_to_270_migration_notes
+[65]: https://sourceforge.net/projects/itop/files/itop/2.7.0-beta
+
+
 ### Versions 2.6.*
- - 2.6.0 published on January 9, 2019  
+ - 2.6.0 published on January 9, 2019
  - [Changes since the previous version][58]
  - [New features][59]
  - [Migration notes][60]
- - [Download iTop 2.6.0][61]
+ - [Download iTop 2.6.1][61]
 
 [58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
 [59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
 [60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.1
 
 
 ### Versions 2.5.*
@@ -117,6 +130,7 @@ We would like to give a special thank you to the people from the community who c
  - Gumble, David
  - Hippler, Lars
  - Khamit, Shamil
+ - Kincel, Martin
  - Konečný, Kamil
  - Kunin, Vladimir
  - Lassiter, Dennis

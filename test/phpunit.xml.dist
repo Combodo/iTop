@@ -53,6 +53,15 @@
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
+        <!--testsuite name="OQL">
+            <directory>OQL</directory>
+        </testsuite-->
+        <testsuite name="Status">
+            <directory>status</directory>
+        </testsuite>
+        <testsuite name="CoreExtensions">
+            <directory>coreExtensions</directory>
+        </testsuite>
     </testsuites>
 
     <!-- Code coverage white list -->

@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+$("#do-update").on("click", function() {
+    $("#submit-wait").show();
+    $(this).prop("disabled", true);
+    $("#cancel-update").prop("disabled", true);
+    $(this).parents('form').submit();
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+});

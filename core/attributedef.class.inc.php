@@ -1,29 +1,21 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Typology for the attributes
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -73,7 +65,7 @@ define('EXTKEY_ABSOLUTE', 2);
 define('DEL_MANUAL', 1);
 
 /**
- * Propagation of the deletion through an external key - ask the user to delete the referencing object
+ * Propagation of the deletion through an external key - remove linked objects if ext key has is_null_allowed=false
  *
  * @package     iTopORM
  */
@@ -512,7 +504,7 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * @param string|null $sDefault
+	 * @param string|null $sDefault if null, will return the attribute code replacing "_" by " "
 	 *
 	 * @return string
 	 *
@@ -1028,6 +1020,14 @@ abstract class AttributeDefinition
 		if ($this->GetValidationPattern() !== '')
 		{
 			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\Validator($this->GetValidationPattern()));
+		}
+
+		// Metadata
+		$oFormField->AddMetadata('attribute-code', $this->GetCode());
+		$oFormField->AddMetadata('attribute-type', get_class($this));
+		if($this::IsScalar())
+		{
+			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -2769,7 +2769,7 @@ class AttributeDecimal extends AttributeDBField
 
 		if (!is_null($value) && ($value !== ''))
 		{
-			$value = sprintf("%01.".$this->Get('decimals')."f", $value);
+			$value = sprintf("%01.".$this->Get('decimals')."F", $value);
 		}
 		return $value; // null or string
 	}
@@ -3554,6 +3554,22 @@ class AttributeFinalClass extends AttributeString
 		}
 
 		return $aLocalizedValues;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 2.7
+	 */
+	public function CopyOnAllTables()
+	{
+		$sClass = self::GetHostClass();
+		if (MetaModel::IsLeafClass($sClass))
+		{
+			// Leaf class, no finalclass
+			return false;
+		}
+		return true;
 	}
 }
 
@@ -6525,26 +6541,60 @@ class AttributeExternalField extends AttributeDefinition
 		}
 	}
 
+	/**
+	 * @param string $sDefault
+	 *
+	 * @return string dict entry if defined, otherwise :
+	 *    <ul>
+	 *    <li>if field is a friendlyname then display the label of the ExternalKey
+	 *    <li>the class hierarchy -> field name
+	 *
+	 *    <p>For example, having this :
+	 *
+	 * <pre>
+	 *       +---------------------+     +--------------------+      +--------------+
+	 *       | Class A             |     | Class B            |      | Class C      |
+	 *       +---------------------+     +--------------------+      +--------------+
+	 *       | foo <ExternalField>-------->c_id_friendly_name--------->friendlyname |
+	 *       +---------------------+     +--------------------+      +--------------+
+	 * </pre>
+	 *
+	 *       <p>The ExternalField foo points to a magical field that is brought by c_id ExternalKey in class B.
+	 *
+	 *       <p>In the normal case the foo label would be : B -> C -> friendlyname<br>
+	 *       But as foo is a friendlyname its label will be the same as the one on A.b_id field
+	 *       This can be overrided with dict key Class:ClassA/Attribute:foo
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function GetLabel($sDefault = null)
 	{
+		$sLabelDefaultValue = '';
+		$sLabel = parent::GetLabel($sLabelDefaultValue);
+		if ($sLabelDefaultValue !== $sLabel)
+		{
+			return $sLabel;
+		}
+
 		if ($this->IsFriendlyName())
 		{
+			// This will be used even if we are pointing to a friendlyname in a distance > 1
+			// For example we can link to a magic friendlyname (like org_id_friendlyname)
+			// If a specific label is needed, use a Dict key !
+			// See N°2174
 			$sKeyAttCode = $this->Get("extkey_attcode");
 			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
 			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+
+			return $sLabel;
 		}
-		else
-		{
-			$sLabel = parent::GetLabel('');
-			if (strlen($sLabel) == 0)
-			{
-				$oRemoteAtt = $this->GetExtAttDef();
-				$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
-				$oKeyAtt = $this->GetKeyAttDef();
-				$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
-				$sLabel = "{$sKeyLabel}->{$sLabel}";
-			}
-		}
+
+		$oRemoteAtt = $this->GetExtAttDef();
+		$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+		$oKeyAtt = $this->GetKeyAttDef();
+		$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
+		$sLabel = "{$sKeyLabel}->{$sLabel}";
 
 		return $sLabel;
 	}
@@ -6863,7 +6913,16 @@ class AttributeExternalField extends AttributeDefinition
 			{
 				$sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
 			}
+			/** @var \Combodo\iTop\Form\Field\Field $oFormField */
 			$oFormField = new $sFormFieldClass($this->GetCode());
+			switch ($sFormFieldClass)
+			{
+				case '\Combodo\iTop\Form\Field\SelectField':
+					$oFormField->SetChoices($oRemoteAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
+					break;
+				default:
+					break;
+			}
 		}
 		parent::MakeFormField($oObject, $oFormField);
 
@@ -7262,6 +7321,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
+		/** @var $oFormField \Combodo\iTop\Form\Field\BlobField */
 		if ($oFormField === null)
 		{
 			$sFormFieldClass = static::GetFormFieldClass();
@@ -7271,12 +7331,23 @@ class AttributeBlob extends AttributeDefinition
 		// Note: As of today we want this field to always be read-only
 		$oFormField->SetReadOnly(true);
 
-		// Generating urls
-		$value = $oObject->Get($this->GetCode());
-		$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-		$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-
+		// Calling parent before so current value is set, then proceed
 		parent::MakeFormField($oObject, $oFormField);
+
+		// Setting current value correctly as the default method returns an empty string when there is no file yet.
+		/** @var \ormDocument $value */
+		$value = $oObject->Get($this->GetCode());
+		if(!is_object($value))
+		{
+			$oFormField->SetCurrentValue(new ormDocument());
+		}
+
+		// Generating urls
+		if(is_object($value) && !$value->IsEmpty())
+		{
+			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+		}
 
 		return $oFormField;
 	}
@@ -7849,6 +7920,87 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
+
+    public function GetSubItemSearchType($sItemCode)
+    {
+        switch ($sItemCode)
+        {
+            case 'timespent':
+                return static::SEARCH_WIDGET_TYPE_NUMERIC;  //seconds
+            case 'started':
+            case 'laststart':
+            case 'stopped':
+                return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+        }
+
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'deadline':
+                        return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+                    case 'passed':
+                    case 'triggered':
+                        return static::SEARCH_WIDGET_TYPE_ENUM; //booleans, used in conjuction with GetSubItemAllowedValues and IsSubItemNullAllowed
+                    case 'overrun':
+                        return static::SEARCH_WIDGET_TYPE_NUMERIC; //seconds
+                }
+            }
+        }
+
+        return static::SEARCH_WIDGET_TYPE_RAW;
+    }
+
+    public function GetSubItemAllowedValues($sItemCode, $aArgs = array(), $sContains = '')
+    {
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'passed':
+                    case 'triggered':
+                        return array(
+                            0 => $this->GetBooleanLabel(0),
+                            1 => $this->GetBooleanLabel(1),
+                        );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function IsSubItemNullAllowed($sItemCode, $bDefaultValue)
+    {
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'passed':
+                    case 'triggered':
+                       return false;
+                }
+            }
+        }
+
+        return $bDefaultValue;
+    }
+
 	protected function GetBooleanLabel($bValue)
 	{
 		$sDictKey = $bValue ? 'yes' : 'no';
@@ -8198,9 +8350,39 @@ class AttributeStopWatch extends AttributeDefinition
  */
 class AttributeSubItem extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+    /**
+     * Return the search widget type corresponding to this attribute
+     * the computation is made by AttributeStopWatch::GetSubItemSearchType
+     *
+     * @return string
+     */
+    public function GetSearchType()
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
 
-	static public function ListExpectedParams()
+        return $oParent->GetSubItemSearchType($this->Get('item_code'));
+    }
+
+    public function GetAllowedValues($aArgs = array(), $sContains = '')
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
+
+        return $oParent->GetSubItemAllowedValues($this->Get('item_code'), $aArgs, $sContains);
+    }
+
+    public function IsNullAllowed()
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
+
+        $bDefaultValue = parent::IsNullAllowed();
+
+        return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
+    }
+
+    static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
 	}

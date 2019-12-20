@@ -1,0 +1,43 @@
+# Copyright (C) 2010-2018 Combodo SARL
+#
+#  This file is part of iTop.
+#
+#  iTop is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  iTop is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+# This file is the entry point to configure your own HTTP routes.
+# Files in the routes/ subdirectory configure the routes for your dependencies.
+
+defaults:
+  resource: 'routes/default.yaml'
+
+user_profile_brick:
+  resource: 'routes/user_profile_brick.yaml'
+
+object_brick:
+  resource: 'routes/object_brick.yaml'
+
+create_brick:
+  resource: 'routes/create_brick.yaml'
+
+browse_brick:
+  resource: 'routes/browse_brick.yaml'
+
+manage_brick:
+  resource: 'routes/manage_brick.yaml'
+
+aggregatepage_brick:
+  resource: 'routes/aggregatepage_brick.yaml'
+
+extensions_extra_routes:
+  resource: 'routes/extensions_extra_routes.php'

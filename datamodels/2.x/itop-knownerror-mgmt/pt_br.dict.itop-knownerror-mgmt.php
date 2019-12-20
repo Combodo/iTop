@@ -150,7 +150,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Palavras-chaves',
 	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Domínios',
 ));
 
 //

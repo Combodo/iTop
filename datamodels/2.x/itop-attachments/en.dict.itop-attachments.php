@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -36,6 +36,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:NoAttachment' => 'No attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s',
+	'Attachments:Render:Icons' => 'Display as icons',
+	'Attachments:Render:Table' => 'Display as list',
 ));
 
 //
@@ -57,4 +59,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contents',
 	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Attachments:File:Thumbnail' => 'Icon',
+	'Attachments:File:Name' => 'File name',
+	'Attachments:File:Date' => 'Upload date',
+	'Attachments:File:Creator' => 'Uploaded by',
+	'Attachments:File:Size' => 'Size',
+	'Attachments:File:MimeType' => 'Type',
 ));

@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -42,20 +42,20 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date',
 	'Core:AttributeObsolescenceDate+' => '',
 
-    'Core:AttributeTagSet' => 'List of tags',
-    'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet' => 'List of tags',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)',
 
-    'Core:AttributeCaseLog' => 'Log',
-    'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog' => 'Log',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum',
-    'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum' => 'Computed enum',
+	'Core:AttributeMetaEnum+' => '',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -103,7 +103,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributePassword' => 'Password',
 	'Core:AttributePassword+' => 'Password of an external device',
 
- 	'Core:AttributeEncryptedString' => 'Encrypted string',
+	'Core:AttributeEncryptedString' => 'Encrypted string',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **',
@@ -861,8 +861,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 

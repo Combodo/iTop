@@ -3,6 +3,8 @@ $sConfigFile = 'conf/production/config-itop.php';
 $sStartPage = './pages/UI.php';
 $sSetupPage = './setup/index.php';
 
+require_once('approot.inc.php');
+
 /**
  * Check that the configuration file exists and has the appropriate access rights
  * If the file does not exist, launch the configuration wizard to create it
@@ -29,4 +31,3 @@ else
 	// Config file does not exist, need to run the setup wizard to create it
 	header("Location: $sSetupPage");
 }
-?>

@@ -21,37 +21,34 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-'Menu:ServiceManagement' => 'Ydelses Management',
-'Menu:ServiceManagement+' => 'Ydelses Management oversigt',
-'Menu:Service:Overview' => 'Oversigt',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakt(er) efter Service Level',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter status',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakt(er), der udløber om mindre end 30 dage',
+	'Menu:ServiceManagement' => 'Ydelses Management',
+	'Menu:ServiceManagement+' => 'Ydelses Management oversigt',
+	'Menu:Service:Overview' => 'Oversigt',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakt(er) efter Service Level',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter status',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakt(er), der udløber om mindre end 30 dage',
 
-'Menu:ProviderContract' => 'Leverandør kontrakter',
-'Menu:ProviderContract+' => 'Leverandør kontrakter',
-'Menu:CustomerContract' => 'Kunde kontrakter',
-'Menu:CustomerContract+' => 'Kunde kontrakter',
-'Menu:ServiceSubcategory' => 'Ydelses underkategorier',
-'Menu:ServiceSubcategory+' => 'Ydelses underkategorier',
-'Menu:Service' => 'Ydelser',
-'Menu:Service+' => 'Ydelser',
-'Menu:ServiceElement' => 'Ydelses elementer',
-'Menu:ServiceElement+' => '',
-'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'Service Level Agreements',
-'Menu:SLT' => 'SLTs',
-'Menu:SLT+' => 'Service Level Targets',
-'Menu:DeliveryModel' => 'Leverings model(ler)',
-'Menu:DeliveryModel+' => '',
-'Menu:ServiceFamily' => 'Ydelses familie(r)',
-'Menu:ServiceFamily+' => '',
-'Menu:Procedure' => 'Procedure katalog',
-'Menu:Procedure+' => '',
-
-
-
+	'Menu:ProviderContract' => 'Leverandør kontrakter',
+	'Menu:ProviderContract+' => 'Leverandør kontrakter',
+	'Menu:CustomerContract' => 'Kunde kontrakter',
+	'Menu:CustomerContract+' => 'Kunde kontrakter',
+	'Menu:ServiceSubcategory' => 'Ydelses underkategorier',
+	'Menu:ServiceSubcategory+' => 'Ydelses underkategorier',
+	'Menu:Service' => 'Ydelser',
+	'Menu:Service+' => 'Ydelser',
+	'Menu:ServiceElement' => 'Ydelses elementer',
+	'Menu:ServiceElement+' => '',
+	'Menu:SLA' => 'SLAs',
+	'Menu:SLA+' => 'Service Level Agreements',
+	'Menu:SLT' => 'SLTs',
+	'Menu:SLT+' => 'Service Level Targets',
+	'Menu:DeliveryModel' => 'Leverings model(ler)',
+	'Menu:DeliveryModel+' => '',
+	'Menu:ServiceFamily' => 'Ydelses familie(r)',
+	'Menu:ServiceFamily+' => '',
+	'Menu:Procedure' => 'Procedure katalog',
+	'Menu:Procedure+' => '',
 ));
 
 //
@@ -62,7 +59,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings model',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Leverings model navn',
-
 ));
 
 

@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -26,8 +26,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-backup-running' => 'A backup is running. Please wait...',
 	'bkp-restore-running' => 'A restore is running. Please wait...',
 
-	'Menu:BackupStatus' => 'Scheduled Backups',
-	'bkp-status-title' => 'Scheduled Backups',
+	'Menu:BackupStatus' => 'Backups',
+	'bkp-status-title' => 'Backups',
 	'bkp-status-checks' => 'Settings and checks',
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.',
@@ -40,7 +40,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-week-days' => 'Backups will occur <b>every %1$s at %2$s</b>',
 	'bkp-retention' => 'At most <b>%1$d backup files will be kept</b> in the target directory.',
 	'bkp-next-to-delete' => 'Will be deleted when the next backup occurs (see the setting "retention_count")',
-	'bkp-table-file' => 'File', 
+	'bkp-table-file' => 'File',
 	'bkp-table-file+' => 'Only files having the extension .zip are considered as being backup files',
 	'bkp-table-size' => 'Size',
 	'bkp-table-size+' => '',

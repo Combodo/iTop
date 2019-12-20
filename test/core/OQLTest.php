@@ -10,7 +10,13 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 
+use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
+use DBSearch;
+use Exception;
+use OqlInterpreter;
+use utils;
 
 /**
  * @runTestsInSeparateProcesses
@@ -19,8 +25,57 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  */
 class OQLTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
+	/**
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function testOQLSetup()
+	{
+		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
+		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
+		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
+		$sConfigFile = utils::GetConfig()->GetLoadedFile();
+		@chmod($sConfigFile, 0770);
+		utils::GetConfig()->WriteToFile();
+		@chmod($sConfigFile, 0444); // Read-only
+	}
+
+	/**
+	 * @dataProvider NestedQueryProvider
+	 *
+	 * @param $sQuery
+	 *
+	 * @throws \OQLException
+	 */
+	public function testGoodNestedQueryQueryParser($sQuery)
+	{
+		$this->debug($sQuery);
+		$oOql = new OqlInterpreter($sQuery);
+		$oQuery = $oOql->ParseQuery();
+		static::assertInstanceOf('OqlQuery', $oQuery);
+	}
+
+	public function NestedQueryProvider()
+	{
+		return array(
+			array("SELECT User AS U JOIN Person AS P ON U.contactid = P.id WHERE U.status='enabled' AND U.id NOT IN (SELECT User AS U JOIN Person AS P ON U.contactid=P.id JOIN URP_UserOrg AS L ON L.userid = U.id WHERE U.status='enabled' AND L.allowed_org_id = P.org_id UNION SELECT User AS U WHERE U.status='enabled' AND U.id NOT IN ( SELECT User AS U JOIN URP_UserOrg AS L ON L.userid = U.id WHERE U.status='enabled'))"),
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = \'3\'))'),
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE `Organization`.`id`=`UserRequest`.`org_id`))'),
+			array("SELECT UserRequest AS Ur WHERE Ur.id NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id)"),
+			array("SELECT Ticket AS T WHERE T. finalclass IN ('userrequest' , 'change') AND T.id  NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id  UNION SELECT Change AS C JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = C.id)"),
+			array("SELECT PhysicalDevice WHERE status='production' AND id NOT IN (SELECT PhysicalDevice AS p JOIN lnkFunctionalCIToProviderContract AS l ON l.functionalci_id=p.id)"),
+			array("SELECT Team WHERE id NOT IN (SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id WHERE 1)"),
+		);
+	}
+
     /**
      * @dataProvider GoodQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      *
@@ -29,7 +84,7 @@ class OQLTest extends ItopDataTestCase
     public function testGoodQueryParser($sQuery)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $oQuery = $oOql->ParseQuery();
         static::assertInstanceOf('OqlQuery', $oQuery);
     }
@@ -118,6 +173,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * @dataProvider BadQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      * @param $sExpectedExceptionClass
@@ -126,13 +182,13 @@ class OQLTest extends ItopDataTestCase
     public function testBadQueryParser($sQuery, $sExpectedExceptionClass)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $sExceptionClass = '';
         try
         {
             $oOql->ParseQuery();
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $sExceptionClass = get_class($e);
         }
@@ -158,6 +214,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * @dataProvider TypeErrorQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      *
@@ -168,7 +225,7 @@ class OQLTest extends ItopDataTestCase
     public function testTypeErrorQueryParser($sQuery)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $oOql->ParseQuery();
     }
 
@@ -182,6 +239,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * Needs actual datamodel
+     * @depends testOQLSetup
      *
      * @dataProvider QueryNormalizationProvider
      *
@@ -195,10 +253,10 @@ class OQLTest extends ItopDataTestCase
         $sExceptionClass = '';
         try
         {
-            $oSearch = \DBObjectSearch::FromOQL($sQuery);
+            $oSearch = DBObjectSearch::FromOQL($sQuery);
             static::assertInstanceOf('DBObjectSearch', $oSearch);
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $sExceptionClass = get_class($e);
         }
@@ -266,4 +324,105 @@ class OQLTest extends ItopDataTestCase
            array('SELECT UserRequest AS r JOIN Attachment AS a ON a.item_id = r.id', ''),
         );
     }
+
+
+	/**
+	 * @depends testOQLSetup
+	 * @dataProvider OQLIntersectProvider
+	 *
+	 * Needs specific datamodel from unit-test-specific module
+	 * for lnkGRTypeToServiceSubcategory and GRType classes
+	 *
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function testOQLIntersect($sOQL1, $sOQL2, $sOQLIntersect)
+	{
+		// Check that legacy mode is not set
+		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
+		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
+
+		$oSearch1 = DBSearch::FromOQL($sOQL1);
+		$oSearch2 = DBSearch::FromOQL($sOQL2);
+		$oSearchI = $oSearch1->Intersect($oSearch2);
+
+		$sOQLResult = $oSearchI->ToOQL();
+		//$this->debug($sOQLResult);
+
+		self::assertEquals($sOQLIntersect, $sOQLResult);
+	}
+
+	public function OQLIntersectProvider()
+	{
+		return array(
+			// Wrong result:
+			/*
+			SELECT `SSC`
+				FROM ServiceSubcategory AS `SSC`
+				JOIN Service AS `S` ON `SSC`.service_id = `S`.id
+				JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `S`.id
+				JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id
+				JOIN lnkGRTypeToServiceSubcategory AS `l1` ON `l1`.servicesubcategory_id = `SSC`.id
+				JOIN GRType AS `GRT` ON `l1`.grtype_id = `GRT`.id
+				WHERE ((`GRT`.`id` = :grtype_id) AND ((`cc`.`org_id` = :current_contact->org_id) AND (`SSC`.`status` != 'obsolete')))
+			*/
+// Needs specific data model from unit-test-specific module for lnkGRTypeToServiceSubcategory and GRType classes
+//			'ServiceSubcategory' => array(
+//				"SELECT ServiceSubcategory AS SSC JOIN lnkGRTypeToServiceSubcategory AS l1 ON l1.servicesubcategory_id = SSC.id JOIN GRType AS GRT ON l1.grtype_id = GRT.id JOIN Service AS S ON SSC.service_id = S.id WHERE GRT.id = :grtype_id",
+//				"SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status != 'obsolete'",
+//				"SELECT `SSC` FROM ServiceSubcategory AS `SSC` JOIN Service AS `S` ON `SSC`.service_id = `S`.id JOIN lnkCustomerContractToService AS `l11` ON `l11`.service_id = `S`.id JOIN CustomerContract AS `cc` ON `l11`.customercontract_id = `cc`.id JOIN lnkGRTypeToServiceSubcategory AS `l1` ON `l1`.servicesubcategory_id = `SSC`.id JOIN GRType AS `GRT` ON `l1`.grtype_id = `GRT`.id WHERE ((`GRT`.`id` = :grtype_id) AND ((`cc`.`org_id` = :current_contact->org_id) AND (`SSC`.`status` != 'obsolete')))"
+//			),
+			'Person' => array(
+				"SELECT P FROM Person AS P JOIN lnkPersonToTeam AS l1 ON l1.person_id = P.id JOIN Team AS T ON l1.team_id = T.id WHERE T.id = 3",
+				"SELECT p FROM Person AS p JOIN Person AS mgr ON p.manager_id = mgr.id JOIN lnkContactToTicket AS l1 ON l1.contact_id = mgr.id JOIN Ticket AS T ON l1.ticket_id = T.id WHERE T.id = 4 AND p.id = 3",
+				"SELECT `P` FROM Person AS `P` JOIN Person AS `mgr` ON `P`.manager_id = `mgr`.id JOIN lnkContactToTicket AS `l11` ON `l11`.contact_id = `mgr`.id JOIN Ticket AS `T1` ON `l11`.ticket_id = `T1`.id JOIN lnkPersonToTeam AS `l1` ON `l1`.person_id = `P`.id JOIN Team AS `T` ON `l1`.team_id = `T`.id WHERE ((`T`.`id` = 3) AND ((`T1`.`id` = 4) AND (`P`.`id` = 3)))"
+			),
+			'Person2' => array(
+				"SELECT P FROM Person AS P JOIN lnkPersonToTeam AS l1 ON l1.person_id = P.id JOIN Team AS T ON l1.team_id = T.id JOIN Person AS MGR ON P.manager_id = MGR.id WHERE T.id = 3",
+				"SELECT p FROM Person AS p JOIN Person AS mgr ON p.manager_id = mgr.id JOIN lnkContactToTicket AS l1 ON l1.contact_id = mgr.id JOIN Ticket AS T ON l1.ticket_id = T.id WHERE T.id = 4 AND p.id = 3",
+				"SELECT `P` FROM Person AS `P` JOIN Person AS `MGR` ON `P`.manager_id = `MGR`.id JOIN lnkContactToTicket AS `l11` ON `l11`.contact_id = `MGR`.id JOIN Ticket AS `T1` ON `l11`.ticket_id = `T1`.id JOIN lnkPersonToTeam AS `l1` ON `l1`.person_id = `P`.id JOIN Team AS `T` ON `l1`.team_id = `T`.id WHERE ((`T`.`id` = 3) AND ((`T1`.`id` = 4) AND (`P`.`id` = 3)))"
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider MakeSelectQueryProvider
+	 * @param $sOQL
+	 * @param $sExpectedExceptionClass
+	 */
+	public function testMakeSelectQuery($sOQL, $sExpectedExceptionClass = '')
+	{
+		$sExceptionClass = '';
+		try
+		{
+			$oSearch = DBSearch::FromOQL($sOQL);
+			CMDBSource::TestQuery($oSearch->MakeSelectQuery());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		static::assertEquals($sExpectedExceptionClass, $sExceptionClass);
+	}
+
+	public function MakeSelectQueryProvider()
+	{
+		return array(
+			array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `Toto`.`org_id`)))", 'OqlNormalizeException'),
+			array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))"),
+			array("SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE ((`U`.`status` = 'enabled') AND (`L`.`allowed_org_id` = `P`.`org_id`)) UNION SELECT `U` FROM User AS `U` WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE (`U`.`status` = 'enabled')))))))"),
+			array("SELECT `Ur` FROM UserRequest AS `Ur` WHERE (`Ur`.`id` NOT IN (SELECT `Ur` FROM UserRequest AS `Ur` JOIN lnkFunctionalCIToTicket AS `lnk` ON `lnk`.ticket_id = `Ur`.id WHERE 1))"),
+			array("SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`finalclass` IN ('userrequest', 'change')) AND (`T`.`id` NOT IN (SELECT `Ur` FROM UserRequest AS `Ur` JOIN lnkFunctionalCIToTicket AS `lnk` ON `lnk`.ticket_id = `Ur`.id WHERE 1 UNION SELECT `C` FROM Change AS `C` JOIN lnkFunctionalCIToTicket AS `lnk` ON `lnk`.ticket_id = `C`.id WHERE 1)))"),
+			array("SELECT `PhysicalDevice` FROM PhysicalDevice AS `PhysicalDevice` WHERE ((`PhysicalDevice`.`status` = 'production') AND (`PhysicalDevice`.`id` NOT IN (SELECT `p` FROM PhysicalDevice AS `p` JOIN lnkFunctionalCIToProviderContract AS `l` ON `l`.functionalci_id = `p`.id WHERE 1)))"),
+			array("SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE ((`U1`.`status` = 'enabled') AND (`L`.`allowed_org_id` = `P`.`org_id`)) UNION SELECT `U` FROM User AS `U` WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE (`U`.`status` = 'enabled')))))))", "OqlNormalizeException"),
+			array("SELECT Team WHERE id NOT IN (SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id WHERE 1)"),
+			array("SELECT UserRequest WHERE id NOT IN (SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN PhysicalDevice AS f ON l.functionalci_id=f.id WHERE f.status='production')"),
+			array("SELECT UserRequest WHERE id NOT IN (SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN PhysicalDevice AS f ON l.functionalci_id=f.id WHERE f.status='production' UNION SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN ApplicationSolution AS f ON l.functionalci_id=f.id WHERE f.status='active')"),
+			array("SELECT Person WHERE status='active' AND id NOT IN (SELECT Person AS p JOIN User AS u ON u.contactid=p.id WHERE u.status='enabled')"),
+		);
+	}
+
 }

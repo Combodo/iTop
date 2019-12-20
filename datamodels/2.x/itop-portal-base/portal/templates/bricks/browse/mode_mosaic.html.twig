@@ -1,0 +1,423 @@
+{# itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig #}
+{# Browse brick mosaic mode layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+
+{% block bBrowseMainContent %}
+	<div id="brick_content_mosaic">
+		{% block bBrowseMosaicContent %}
+			<ol id="mosaic-breadcrumb" class="breadcrumb">
+				<li><a href="#" data-level-id="L"><span class="fas fa-home"></span></a></li>
+			</ol>
+			<div class="mosaic-group" data-level-id="L">
+			</div>
+		{% endblock %}
+	</div>
+
+	<div id="brick_content_empty" class="text-center">
+		{% block bBrowseMosaicEmpty %}
+			{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}
+		{% endblock %}
+	</div>
+	<div id="brick_mosaic_overlay">
+		{% block bBrowseMosaicOverlay %}
+			<div class="overlay_content">
+				{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+			</div>
+		{% endblock %}
+	</div>
+{% endblock %}
+
+{% block pPageLiveScripts %}
+	{{ parent() }}
+	
+	<script type="text/javascript">
+		var sBrowseMode = '{{ sBrowseMode }}';
+		var oLevelsProperties = {{ aLevelsProperties|raw }};
+		var oRawDatas = {{ aItems|raw }};
+        var sMosaicEffectName = 'fade';
+        var oMosaicEffectOptions = {};
+        var iMosaicEffectDuration = 200;
+
+        // Show a loader over the mosaic
+		var showMosaicLoader = function()
+		{
+			$("#brick_content_mosaic").hide();
+			$('#brick_mosaic_overlay').show();
+		};
+		// Hide the loader over the tree
+		var hideMosaicLoader = function()
+		{
+			$('#brick_mosaic_overlay').hide();
+			$("#brick_content_mosaic").show();
+		};
+		// Show the requested level
+		var showLevel = function(sLevelAlias, sItemId)
+		{
+		    // Retrieving level to show
+		    var sLevelId = sLevelAlias + ((sItemId !== undefined) ? '::'+sItemId : '' );
+		    var oLevelElem = $('#brick_content_mosaic .mosaic-group[data-level-id="' + sLevelId + '"]');
+		    var bLevelLoaded = (oLevelElem.length > 0);
+
+		    // Hiding current level
+            $('#brick_content_mosaic .mosaic-group:visible').hide(
+                sMosaicEffectName,
+				oMosaicEffectOptions,
+				iMosaicEffectDuration,
+				function(){
+                    // Showing level
+					if(!bLevelLoaded)
+					{
+                        showMosaicLoader();
+					    loadChildNodes(sLevelAlias, sItemId);
+					}
+					else
+					{
+					    oLevelElem.show(sMosaicEffectName, oMosaicEffectOptions, iMosaicEffectDuration, function(){ buildBreadcrumb(); });
+					}
+				}
+			);
+		};
+		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
+		var registerToggleListeners = function()
+		{
+		    $('#brick_content_mosaic .mosaic-drilldown').off('click').on('click', function (oEvent) {
+				oEvent.preventDefault();
+
+                showLevel($(this).attr('data-level-alias'), $(this).attr('data-item-id'));
+			});
+
+            $('#brick_content_mosaic .mosaic-rollup').off('click').on('click', function (oEvent) {
+                oEvent.preventDefault();
+
+                var upperlevelId = $(this).attr('data-level-id');
+                var upperlevelIdParts = upperlevelId.split('::');
+
+                showLevel(upperlevelIdParts[0], upperlevelIdParts[1]);
+            });
+
+            // Allows link in item's description to work. Otherwise, the predentDefault of the item takes over.
+            $('#brick_content_mosaic .mosaic-item-description a').off('click').on('click', function(oEvent){
+                oEvent.stopPropagation();
+			});
+		};
+		// Registers the filter listeners on the tree.
+		var registerFilterListeners = function()
+		{
+			/*$('#brick_search_field').treeListFilter('#brick_content_mosaic', iSearchDelay, filterResultsHandler);*/
+		};
+		// Load current node childnodes throught AJAX
+		var loadChildNodes = function(sLevelAlias, sNodeId)
+		{
+			var sUrl = '{{ app.url_generator.generate('p_browse_brick_mode_tree', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sLevelAlias': '-sLevelAlias-', 'sNodeId': '-sNodeId-'})|raw }}';
+			sUrl = sUrl.replace(/-sLevelAlias-/, sLevelAlias).replace(/-sNodeId-/, sNodeId);
+
+            $.ajax(sUrl)
+			.done(function(data) {
+				// Building child nodes
+				for(index in data.data)
+				{
+					var sublevel = data.data[index];
+					var sublevelData = {};
+					sublevelData[sublevel.level_alias+"::"+sublevel.id] = sublevel;
+					buildMosaic(sublevelData, sLevelAlias+"::"+sNodeId, false);
+				}
+				// Showing sublevel
+                $('#brick_content_mosaic .mosaic-group[data-level-id="'+sLevelAlias+"::"+sNodeId+'"]').show(sMosaicEffectName, oMosaicEffectOptions, iMosaicEffectDuration, function(){ buildBreadcrumb(); });
+
+				registerToggleListeners();
+			})
+			.fail(function() {
+				alert('{{ 'Error:XHR:Fail'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}');
+			})
+			.always(function(){
+                hideMosaicLoader();
+			});
+		};
+		// Build mosaic nodes from data under the nodeId
+		var buildMosaic = function(data, nodeId, isRootLevel)
+		{
+		    if(nodeId === undefined)
+			{
+				// We are on the root node
+				nodeId = 'L';
+			}
+			if(isRootLevel === undefined)
+			{
+				isRootLevel = true;
+			}
+
+			// Building node if necessary
+			if($('div[data-level-id="'+nodeId+'"]').length === 0)
+			{
+                $('#brick_content_mosaic').append( $('<div></div>').addClass('mosaic-group').attr('data-level-id', nodeId) );
+			}
+
+			if(!isRootLevel)
+			{
+			    // Retrieving upper level id
+                var levelIdParts = nodeId.split('::');
+                var upperlevelId = $('.mosaic-item[data-level-alias="'+levelIdParts[0]+'"][data-item-id="'+levelIdParts[1]+'"]').closest('.mosaic-group').attr('data-level-id');
+
+                // Building back button
+                if( $('div[data-level-id="'+nodeId+'"] .mosaic-group-back').length === 0 ) {
+                    var backElem = $('<div></div>').addClass('mosaic-group-item').addClass('mosaic-group-back');
+                    var aElem = $('<a></a>').addClass('mosaic-item').addClass('mosaic-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="mosaic-item-text"><span class="glyphicon glyphicon-arrow-left"></span></div>');
+
+                    backElem.append(aElem);
+                    $('div[data-level-id="' + nodeId + '"]').append(backElem);
+                }
+			}
+			else
+			{
+                $('div[data-level-id="'+nodeId+'"]').html('');
+			}
+			
+			$.each(data, function(i, item){
+				var levelId = item.level_alias+'::'+item.id;
+				var levelAltId = item.level_alias+'_'+item.id;
+				var levelActions = oLevelsProperties[item.level_alias].actions;
+				var levelActionsKeys = Object.keys(levelActions);
+				var levelPrimaryAction = levelActions[levelActionsKeys[0]];
+				var url = '';
+
+                // Building node
+                var itemElem  = $('<div></div>').addClass('mosaic-group-item');
+				var aElem   = $('<a></a>').addClass('mosaic-item').attr('data-item-id', item.id).attr('href', '#').attr('data-level-alias', item.level_alias);
+				var iItemFlags = 0;
+                // - Adding stub div
+				var textElem = $('<div></div>').addClass('mosaic-item-text');
+				// - Adding wrapper to textElem to easily control text's subnodes flow
+				var textWrapperElem = $('<div></div>').addClass('mosaic-item-text-wrapper');
+				textWrapperElem.appendTo(textElem);
+                // - Adding image
+                if( (item.image !== undefined) && (item.image !== '') && (item.image !== null) )
+                {
+                    iItemFlags += 4;
+                    aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<img />').attr('src', item.image) ) );
+                }
+                // - Adding name
+                if( (item.name !== undefined) && (item.name !== '') )
+                {
+                    iItemFlags += 1;
+					textWrapperElem.append( $('<div></div>').addClass('mosaic-item-name').html(item.name) );
+                }
+                // - Adding description
+                if( (item.description !== undefined) && (item.description !== '') )
+                {
+                    iItemFlags += 2;
+					textWrapperElem.append( $('<div></div>').addClass('mosaic-item-description').html(item.description) );
+				}
+                aElem.append( textElem );
+				// - Adding CSS class to adjust the layout regarding which properties are available
+				aElem.addClass('mosaic-item-layout-'+iItemFlags);
+                // - Appending element
+				$('div[data-level-id="'+nodeId+'"]').append(itemElem);
+				itemElem.append(aElem);
+				
+				// Building tooltip for the node
+				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
+				{
+					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'top'});
+				}
+				
+				// Building actions for that node
+				switch(levelPrimaryAction.type)
+				{
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
+						aElem.addClass('mosaic-drilldown');
+						break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+                        SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+                        break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+						url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+                        SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+                        break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+						url = levelPrimaryAction.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
+                        SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+                        break;
+					default:
+						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
+						break;
+				}
+				
+				if(levelActionsKeys.length > 1)
+				{
+					// Retrieving secondary action (Now we also display primary action)
+					var actionsButtons = {};
+					for(j = 0; j < levelActionsKeys.length; j++)
+					{
+						actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
+					}
+					
+					// Preparing secondary actions container
+					var actionsElem = $('<div></div>').addClass('mosaic-group-item-actions');
+					itemElem.append(actionsElem);
+					// Preparing secondary actions menu
+					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					actionsElem.append(actionsSSTogglerElem);
+					actionsElem.append(actionsSSMenuElem);
+
+					// Adding secondary actions
+					for(j in actionsButtons)
+					{
+						var action = actionsButtons[j];
+						var actionElem = $('<a></a>');
+						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						
+						switch(action.type)
+						{
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+								url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+								url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+								url = action.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
+								break;
+							default:
+							    url = '#';
+								//console.log('Action "'+action.type+'" not implemented for secondary action');
+								break;
+						}
+                        SetActionUrl(actionElem, url);
+                        SetActionOpeningTarget(actionElem, action.opening_target);
+						
+						// Adding title if present
+						if(action.title !== undefined)
+						{
+							actionElem.attr('title', action.title);
+						}
+						// Adding icon class if present
+						if(action.icon_class !== undefined)
+						{
+							actionIconElem.addClass(action.icon_class);
+						}
+						
+						actionElem.append(action.title);
+						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+					}
+				}
+				
+				// Building subnodes if necessary
+				if(item.subitems.length !== 0)
+				{
+                    var subitemsElem;
+				    if($('div[data-level-id="'+levelId+'"]').length > 0)
+					{
+                        subitemsElem = $('div[data-level-id="'+levelId+'"]');
+					}
+					else
+					{
+					    subitemsElem = $('<div></div>').addClass('mosaic-group').attr('data-level-id', levelId);
+                        $('div[data-level-id="'+nodeId+'"]').after(subitemsElem);
+					}
+					buildMosaic(item.subitems, levelId, false);
+				}				
+			});
+			
+			// Update listeners
+			if(isRootLevel)
+			{
+				registerToggleListeners();
+			}
+		};
+		// Build breadcrumb
+		var buildBreadcrumb = function(oCurrentElem)
+		{
+            var aCurrentLevelParts = [];
+            var bLeafLevel = false;
+
+		    // If no current item, it's because we begin to build the breadcrumb, starting from the bottom
+			if(oCurrentElem === undefined)
+			{
+			    bLeafLevel = true;
+
+                // Retrieving current level id
+                var sCurrentLevelId = $('#brick_content_mosaic > .mosaic-group:visible').attr('data-level-id');
+                aCurrentLevelParts = sCurrentLevelId.split('::');
+
+                // Emptying breadcrumb
+                $('#mosaic-breadcrumb > li:not(:first-of-type)').remove();
+
+				// Finding current item
+                oCurrentElem = $('#brick_content_mosaic .mosaic-item[data-level-alias="'+aCurrentLevelParts[0]+'"][data-item-id="'+aCurrentLevelParts[1]+'"]');
+                if(oCurrentElem.length === 0)
+				{
+				    return false;
+				}
+			}
+			else
+			{
+			    aCurrentLevelParts = [oCurrentElem.attr('data-level-alias'), oCurrentElem.attr('data-item-id')];
+			}
+
+            // Adding level as crumb
+			var oCrumb = $('<li></li>');
+			var oCrumbLink = (bLeafLevel) ? $('<span></span>') : $('<a></a>');
+			oCrumbLink.html( oCurrentElem.find('.mosaic-item-name').html() );
+			oCrumbLink.attr('data-level-id', aCurrentLevelParts.join('::')).attr('href', '#');
+			oCrumb.append(oCrumbLink).insertAfter('#mosaic-breadcrumb > li:first-of-type');
+			if(bLeafLevel)
+			{
+                oCrumb.addClass('active');
+            }
+			// Adding listener
+			$('#mosaic-breadcrumb > li:not(:last-of-type) > a').off('click').on('click', function(oEvent){
+                oEvent.preventDefault();
+
+				var levelId = $(this).attr('data-level-id');
+				var levelIdParts = levelId.split('::');
+
+				showLevel(levelIdParts[0], levelIdParts[1]);
+            });
+
+			// Finding parent level
+			var oParentLevelElem = oCurrentElem.closest('.mosaic-group');
+			if(oParentLevelElem.length > 0)
+			{
+			    var sParentLevelId = oParentLevelElem.attr('data-level-id');
+			    var aParentLevelParts = sParentLevelId.split('::');
+			    var oParentElem = $('#brick_content_mosaic .mosaic-item[data-level-alias="'+aParentLevelParts[0]+'"][data-item-id="'+aParentLevelParts[1]+'"]');
+
+			    if(oParentElem.length === 1)
+				{
+				    buildBreadcrumb(oParentElem);
+				}
+			}
+		};
+		
+		$(document).ready(function(){
+			// Auto collapse item actions popup
+			$('body').click(function(){
+				$('#brick_content_mosaic .item-action-wrapper.collapse.in').collapse('hide');
+			});
+			
+			// Build the tree (collapsed)
+			showMosaicLoader();
+			buildMosaic(oRawDatas);
+			hideMosaicLoader();
+			registerFilterListeners();
+
+			// Open first level if only one item
+			// TODO: We must disable opening of first level when pre-filtering when filtering will be implemented
+			if($('#brick_content_mosaic > .mosaic-group[data-level-id="L"] > .mosaic-group-item').length == 1)
+			{
+			    setTimeout(function(){
+                    $('#brick_content_mosaic > .mosaic-group[data-level-id="L"] > .mosaic-group-item > .mosaic-item').trigger('click');
+				}, 300);
+			}
+		});
+	</script>
+{% endblock %}

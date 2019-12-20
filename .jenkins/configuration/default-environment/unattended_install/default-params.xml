@@ -7,7 +7,7 @@
     </preinstall>
     <source_dir>datamodels/2.x/</source_dir>
     <datamodel_version>2.5.0</datamodel_version>
-    <previous_configuration_file>/var/lib/jenkins/workspace/iTop-CI/unattended_install/default-config-itop.php</previous_configuration_file>
+    <previous_configuration_file>default-config-itop.php</previous_configuration_file>
     <extensions_dir>extensions</extensions_dir>
     <target_env>production</target_env>
     <workspace_dir></workspace_dir>

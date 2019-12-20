@@ -7,10 +7,10 @@ $(function()
 		// default options
 		options:
 		{
-			image_url: '',
+			image_icon: '',
 			cache_uuid: '',
 			display_limit: 7,
-			placeholder_image_url: '../images/transparent_32_32.png',
+			placeholder_image_icon: '',
 			providers: [],
 			labels: {
 				'no_message': 'No new message',
@@ -157,8 +157,8 @@ $(function()
 			var me = this;
 			var iTotalCount = aAllMessages.length;
 			var iCount = 0;
-			var sHtml = '<span id="newsroom_menu" class="itop_popup toolkit_menu"><ul><li><img id="newsroom_menu_icon" src="'+this.options.image_url+'"><ul>';
-			sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_dismiss_all"><i class="fa fa-fw fa-check"></i>'+this.options.labels.mark_all_as_read+'</li>';
+			var sHtml = '<span id="newsroom_menu" class="itop_popup toolkit_menu"><ul><li><i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow '+this.options.image_icon+'"></i><ul>';
+			sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_dismiss_all"><i class="fas fa-fw fa-check"></i>'+this.options.labels.mark_all_as_read+'</li>';
 			moment.locale(GetUserLanguage());
 			var aUnreadMessagesByProvider = [];
 			for(var k in this.options.providers)
@@ -171,13 +171,14 @@ $(function()
 				aUnreadMessagesByProvider[oMessage.provider]++;
 				if (iCount < this.options.display_limit)
 				{
+					var sImage = '';
 					if ((oMessage.image !== undefined) && (oMessage.image !== null))
 					{
-						sImageUrl = oMessage.image;					
+						sImage = '<img src="'+oMessage.image+'">';
 					}
 					else
 					{
-						sImageUrl = this.options.placeholder_image_url;
+						sImage = '<i class="'+this.options.placeholder_image_icon+'"></i>';
 					}				
 					var div = document.createElement("div");
 					div.textContent = oMessage.text;
@@ -185,7 +186,7 @@ $(function()
 					var converter = new showdown.Converter({noHeaderId: true});
 				    var sRichDescription = converter.makeHtml(sDescription);
 				    sRichDescription += '<span class="newsroom_menu_item_date">'+this.options.providers[oMessage.provider].label+' - '+moment(oMessage.start_date).fromNow()+'</span>';
-					sHtml += '<li class="newsroom_menu_item" data-msg-id="'+oMessage.id+'" data-provider-id="'+oMessage.provider+'" data-url="'+oMessage.url+'" id="newsroom_menu_item_'+oMessage.id+'"><div><img src="'+sImageUrl+'"><p>'+sRichDescription+'</p><div style="clear:both"></div></div></li>';
+					sHtml += '<li class="newsroom_menu_item" data-msg-id="'+oMessage.id+'" data-provider-id="'+oMessage.provider+'" data-url="'+oMessage.url+'" id="newsroom_menu_item_'+oMessage.id+'"><div>'+sImage+'<p>'+sRichDescription+'</p><div style="clear:both"></div></div></li>';
 				}
 				iCount++;
 			}
@@ -372,7 +373,7 @@ $(function()
 			{
 				this._markAllMessagesAsRead(k);
 			}
-			$('#newsroom_menu').html('<img src="'+this.options.image_url+'" style="opacity:0.4" title="'+this.options.labels.no_message+'">');
+			$('#newsroom_menu').html('<i class="top-right-icon '+this.options.image_icon+'" style="opacity:0.4" title="'+this.options.labels.no_message+'"></i>');
 			$('#newsroom_menu_counter_container').remove();
 			this._getAllMessages();
 		}

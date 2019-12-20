@@ -28,14 +28,21 @@ use Closure;
  * Values = Items that have been picked
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
  */
 abstract class MultipleChoicesField extends Field
 {
+	/** @var bool DEFAULT_MULTIPLE_VALUES_ENABLED */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
+	/** @var bool $bMultipleValuesEnabled */
 	protected $bMultipleValuesEnabled;
+	/** @var array $aChoices */
 	protected $aChoices;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
@@ -44,6 +51,9 @@ abstract class MultipleChoicesField extends Field
 		$this->currentValue = array();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function GetCurrentValue()
 	{
 		$value = null;
@@ -67,7 +77,7 @@ abstract class MultipleChoicesField extends Field
 	 * Sets the current value for the MultipleChoicesField.
 	 *
 	 * @param mixed $currentValue Can be either an array of values (in case of multiple values) or just a simple value
-	 * @return \Combodo\iTop\Form\Field\MultipleChoicesField
+	 * @return $this
 	 */
 	public function SetCurrentValue($currentValue)
 	{
@@ -86,29 +96,52 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function GetMultipleValuesEnabled()
 	{
 		return $this->bMultipleValuesEnabled;
 	}
 
+	/**
+	 * @param bool $bMultipleValuesEnabled
+	 *
+	 * @return $this
+	 */
 	public function SetMultipleValuesEnabled($bMultipleValuesEnabled)
 	{
 		$this->bMultipleValuesEnabled = $bMultipleValuesEnabled;
 		return $this;
 	}
 
+	/**
+	 * @param array $aValues
+	 *
+	 * @return $this
+	 */
 	public function SetValues($aValues)
 	{
 		$this->currentValue = $aValues;
 		return $this;
 	}
 
+	/**
+	 * @param mixed $value
+	 *
+	 * @return $this
+	 */
 	public function AddValue($value)
 	{
 		$this->currentValue = $value;
 		return $this;
 	}
 
+	/**
+	 * @param mixed $value
+	 *
+	 * @return $this
+	 */
 	public function RemoveValue($value)
 	{
 		if (array_key_exists($value, $this->currentValue))
@@ -118,22 +151,41 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
 	public function IsAmongValues($value)
 	{
 		return in_array($value, $this->currentValue);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function GetChoices()
 	{
 		return $this->aChoices;
 	}
 
+	/**
+	 * @param array $aChoices
+	 *
+	 * @return $this
+	 */
 	public function SetChoices($aChoices)
 	{
 		$this->aChoices = $aChoices;
 		return $this;
 	}
 
+	/**
+	 * @param string $sId
+	 * @param null   $choice
+	 *
+	 * @return $this
+	 */
 	public function AddChoice($sId, $choice = null)
 	{
 		if ($choice === null)
@@ -144,6 +196,11 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param string $sId
+	 *
+	 * @return $this
+	 */
 	public function RemoveChoice($sId)
 	{
 		if (in_array($sId, $this->aChoices))
@@ -153,6 +210,9 @@ abstract class MultipleChoicesField extends Field
 		return $this;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function Validate()
 	{
 		$this->SetValid(true);

@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-local/2.6.1',
+	'authent-local/2.7.0',
 	array(
 		// Identification
 		//
@@ -36,7 +36,9 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
+
 		'settings' => array(
+			// see the './datamodel.authent-local.xml' for the default settings!
 		),
 	)
 );

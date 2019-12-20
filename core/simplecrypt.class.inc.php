@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -66,7 +66,7 @@ class SimpleCrypt
      * Constructor
      * @param string $sEngineName Engine for encryption. Values: Simple, Mcrypt, Sodium or OpenSSL
      * @throws Exception This library is unkown
-     */       
+     */
     function __construct($sEngineName = 'Mcrypt')
     {
     	switch($sEngineName){
@@ -88,7 +88,8 @@ class SimpleCrypt
 			    }
 			    break;
 		    case 'OpenSSL':
-			    if(!function_exists('openssl_decrypt')){
+		    case 'OpenSSLMcryptCompatibility':
+		    if(!function_exists('openssl_decrypt')){
 				    $sEngineName = 'Simple';
 			    }
 			    break;
@@ -101,30 +102,30 @@ class SimpleCrypt
         $sEngineName = 'SimpleCrypt' . $sEngineName . 'Engine';
         $this->oEngine = new $sEngineName;
     }
-   
+
     /**
      * Encrypts the string with the given key
      * @param string $key
      * @param string $sString Plaintext string
      * @return string Ciphered string
-     */   
+     */
     function Encrypt($key, $sString)
     {
-        return $this->oEngine->Encrypt($key,$sString);       
+        return $this->oEngine->Encrypt($key,$sString);
     }
-   
+
 
     /**
      * Decrypts the string by the given key
      * @param string $key
      * @param string $string Ciphered string
-     * @return string Plaintext string 
+     * @return string Plaintext string
      */
     function Decrypt($key, $string)
     {
         return $this->oEngine->Decrypt($key,$string);
     }
-    
+
     /**
      * Returns a random "salt" value, to be used when "hashing" a password
      * using a one-way encryption algorithm, to prevent an attack using a "rainbow table"
@@ -135,9 +136,9 @@ class SimpleCrypt
     {
 		// Copied from http://www.php.net/manual/en/function.mt-rand.php#83655
 		// get 128 pseudorandom bits in a string of 16 bytes
-		
+
 		$sRandomBits = null;
-		
+
 		// Unix/Linux platform?
 		$fp = @fopen('/dev/urandom','rb');
 		if ($fp !== FALSE)
@@ -156,14 +157,14 @@ class SimpleCrypt
 				{
 				    $CAPI_Util = new COM('CAPICOM.Utilities.1');
 				    $sBase64RandomBits = ''.$CAPI_Util->GetRandom(16,0);
-				
+
 				    // if we ask for binary data PHP munges it, so we
 				    // request base64 return value.  We squeeze out the
 				    // redundancy and useless ==CRLF by hashing...
 				    if ($sBase64RandomBits)
 				    {
 						//echo "Random bits got from CAPICOM.Utilities.1<br/>\n";
-				    	$sRandomBits = md5($sBase64RandomBits, TRUE);	
+				    	$sRandomBits = md5($sBase64RandomBits, TRUE);
 				    }
 				}
 				catch (Exception $ex)
@@ -182,10 +183,10 @@ class SimpleCrypt
 			{
 				$sRandomBits .= sprintf('%04x', mt_rand(0, 65535));
 			}
-			
-			
+
+
 		}
-		return $sRandomBits;    	
+		return $sRandomBits;
     }
 }
 
@@ -221,7 +222,7 @@ class SimpleCryptSimpleEngine implements CryptEngine
             $char = chr(ord($char)+ord($keychar));
             $result.=$char;
         }
-        return $result;       
+        return $result;
     }
 
     public function Decrypt($key, $encrypted_data)
@@ -235,7 +236,7 @@ class SimpleCryptSimpleEngine implements CryptEngine
             $result.=$char;
         }
         return $result;
-    }       
+    }
 }
 
 /**
@@ -258,10 +259,13 @@ class SimpleCryptMcryptEngine implements CryptEngine
 	{
 		$this->td = mcrypt_module_open($this->alg,'','cbc','');
 	}
-	
+
     public function Encrypt($key, $sString)
     {
-		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($this->td), MCRYPT_RAND_URANDOM); // MCRYPT_RAND_URANDOM is now useable since itop requires php >= 5.6
+		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($this->td), MCRYPT_DEV_URANDOM); // MCRYPT_DEV_URANDOM is now useable since itop requires php >= 5.6
+	    if (false === $iv) {
+		    throw new Exception('IV generation failed');
+	    }
 		mcrypt_generic_init($this->td, $key, $iv);
 		if (empty($sString))
 		{
@@ -275,7 +279,7 @@ class SimpleCryptMcryptEngine implements CryptEngine
     public function Decrypt($key, $encrypted_data)
     {
         $iv = substr($encrypted_data, 0, mcrypt_enc_get_iv_size($this->td));
-        $string = substr($encrypted_data, mcrypt_enc_get_iv_size($this->td));       
+        $string = substr($encrypted_data, mcrypt_enc_get_iv_size($this->td));
 		$r = mcrypt_generic_init($this->td, $key, $iv);
 		if (($r < 0) || ($r === false))
 		{
@@ -288,7 +292,7 @@ class SimpleCryptMcryptEngine implements CryptEngine
 		}
         return $decrypted_data;
     }
-    
+
     public function __destruct()
     {
     	mcrypt_module_close($this->td);

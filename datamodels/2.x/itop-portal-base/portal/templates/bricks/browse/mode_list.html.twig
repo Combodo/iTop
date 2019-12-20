@@ -1,0 +1,321 @@
+{# itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig #}
+{# Browse brick list mode layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+
+{% block bBrowseMainContent%}
+	<table id="brick-content-table" class="table table-striped table-bordered responsive" cellspacing="0" width="100%">
+		<tbody>
+		</tbody>
+	</table>
+{% endblock %}
+
+{% block pPageLiveScripts %}
+	{{ parent() }}
+		
+	<script type="text/javascript">
+		var sBrowseMode = '{{ sBrowseMode }}';
+		var sDataLoading = '{{ sDataLoading }}';
+		var oLevelsProperties = {{ aLevelsProperties|raw }};
+		var oRawDatas = {{ aItems|raw }};
+		var oTable;
+		// Used for ajax throttling
+		var iSearchThrottle = 600;
+		var oKeyTimeout;
+		var aKeyTimeoutFilteredKeys = [9, 16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Tab, Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
+		
+		// Show a loader inside the table
+		var showTableLoader = function(oElem)
+		{
+			oElem.children('tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+		};
+		// Columns definition for the table from the oLevelsProperties
+		var getColumnsDefinition = function()
+		{
+			var aColumnsDefinition = [];
+			
+			for(sKey in oLevelsProperties)
+			{
+				// Level main column
+				aColumnsDefinition.push({
+					"width": "auto",
+					"searchable": true,
+					"sortable": true,
+					"title": oLevelsProperties[sKey].title,
+					"defaultContent": "",
+					"type": "html",
+					"data": oLevelsProperties[sKey].alias,
+					"render": function(data, type, row){
+						var cellElem;
+						var levelAltId = data.level_alias+'_'+data.id;
+						var levelActions;
+						var levelActionsKeys;
+						var drilldownActionIndex;
+						var levelPrimaryAction;
+						var url = '';
+						
+						// Preparing actions on the cell
+						levelActions = oLevelsProperties[data.level_alias].actions;
+						// - Removing explicit (not default) drilldown action as it has no prupose on that browse mode
+						delete levelActions['{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}'];
+						// - Removing implciit (default) drilldown action
+						if( (levelActions['default'] !== undefined) && (levelActions['default'].type === '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}') ) 
+						{
+							delete levelActions['default'];
+						}
+						levelActionsKeys = Object.keys(levelActions);
+						
+						// Preparing the cell data
+						cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+						cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
+						
+						// Building tooltip for the node
+						// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
+						// For the same reason, tooltip widget is created in "drawCallback" instead of here.
+						if( (data.tooltip !== undefined) && (data.tooltip !== ''))
+						{
+							cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').html(data.name).prop('outerHTML') );
+						}
+						else
+						{
+							cellElem.html(data.name);
+						}
+						
+						// Building actions
+						if(levelActionsKeys.length > 0)
+						{
+							// - Primary action (click on item)
+							levelPrimaryAction = levelActions[levelActionsKeys[0]];
+							switch(levelPrimaryAction.type)
+							{
+								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+									url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+                                    break;
+								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+									url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+									break;
+								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+									url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+									url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
+									break;
+								default:
+								    url = '#';
+									//console.log('Action "'+levelPrimaryAction.type+'" not implemented');
+									break;
+							}
+                            SetActionUrl(cellElem, url);
+                            SetActionOpeningTarget(cellElem, levelPrimaryAction.opening_target);
+
+							// - Secondary actions
+							if(levelActionsKeys.length > 1)
+							{
+								// Retrieving secondary action (Now we also display primary action)
+								var actionsButtons = {};
+								for(j = 0; j < levelActionsKeys.length; j++)
+								{
+									actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
+								}
+								
+								// Preparing secondary actions container
+								var actionsElem = $('<div></div>').addClass('pull-right group-actions');
+								cellElem.append(actionsElem);
+								// Preparing secondary actions
+								var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+								var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+								var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+								actionsSSMenuElem.append(actionsSSMenuContainerElem);
+								actionsElem.append(actionsSSTogglerElem);
+								actionsElem.append(actionsSSMenuElem);
+
+								// Adding secondary actions
+								for(j in actionsButtons)
+								{
+									var action = actionsButtons[j];
+									var actionElem = $('<a></a>');
+									var actionIconElem = $('<span></span>').appendTo(actionElem);
+									
+									switch(action.type)
+									{
+										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+											url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+											break;
+										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+											url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+											break;
+										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+											url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+											url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
+											break;
+										default:
+										    url = '#';
+											//console.log('Action "'+action.type+'" not implemented for secondary action');
+											break;
+									}
+                                    SetActionUrl(actionElem, url);
+                                    SetActionOpeningTarget(actionElem, action.opening_target);
+									
+									// Adding title if present
+									if(action.title !== undefined)
+									{
+										actionElem.attr('title', action.title);
+									}
+									// Adding icon class if present
+									if(action.icon_class !== undefined)
+									{
+										actionIconElem.addClass(action.icon_class);
+									}
+						
+									actionElem.append(action.title);
+									actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+								}
+							}
+						}
+						
+						return cellElem.prop('outerHTML');
+					},
+				});
+				
+				// Level's fields columns
+				if(oLevelsProperties[sKey].fields !== undefined)
+				{
+					for(var i in oLevelsProperties[sKey].fields)
+					{
+						aColumnsDefinition.push({
+							"width": "auto",
+							"searchable": true,
+							"sortable": true,
+							"visible": !oLevelsProperties[sKey].fields[i].hidden,
+							"title": oLevelsProperties[sKey].fields[i].label,
+							"defaultContent": "",
+							"type": "html",
+							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code
+						});
+					}
+				}
+			}
+			
+			return aColumnsDefinition;
+		};
+		
+		$(document).ready(function()
+		{
+			showTableLoader($('#brick-content-table'));
+			
+			// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
+			// We would just have to override / complete the necessary elements
+			oTable = $('#brick-content-table').DataTable({
+				"language": {
+					"processing":	  "{{ 'Portal:Datatables:Language:Processing'|dict_s }}",
+					"search":		  "{{ 'Portal:Datatables:Language:Search'|dict_s }}",
+					"lengthMenu":	  "{{ 'Portal:Datatables:Language:LengthMenu'|dict_s }}",
+					"zeroRecords":	 "{{ 'Portal:Datatables:Language:ZeroRecords'|dict_s }}",
+					"info":			"{{ 'Portal:Datatables:Language:Info'|dict_s }}",
+					"infoEmpty":	   "{{ 'Portal:Datatables:Language:InfoEmpty'|dict_s }}",
+					"infoFiltered":	"({{ 'Portal:Datatables:Language:InfoFiltered'|dict_s }})",
+					"emptyTable":	  "{{ 'Portal:Datatables:Language:EmptyTable'|dict_s }}",
+					"paginate": {
+						"first":	  "{{ 'Portal:Datatables:Language:Paginate:First'|dict_s }}",
+						"previous":   "{{ 'Portal:Datatables:Language:Paginate:Previous'|dict_s }}",
+						"next":	   "{{ 'Portal:Datatables:Language:Paginate:Next'|dict_s }}",
+						"last":	   "{{ 'Portal:Datatables:Language:Paginate:Last'|dict_s }}"
+					},
+					"aria": {
+						"sortAscending":  ": {{ 'Portal:Datatables:Language:Sort:Ascending'|dict_s }}",
+						"sortDescending": ": {{ 'Portal:Datatables:Language:Sort:Descending'|dict_s }}"
+					}
+				},
+				"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+				"displayLength": {{ iDefaultLengthList }},
+				"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
+				"columns": getColumnsDefinition(),
+				"order": [],
+				"drawCallback": function(settings){
+					// Tooltip has to been created here, as the render callback only returns a string, not an object.
+					$(this).find('[data-toggle="tooltip"]').tooltip({container: 'body', html: true, trigger: 'hover', placement: 'right'});	// container option is necessary when in a table
+					// Hiding pagination if only one page
+					if($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+					{
+						$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+					}
+					else
+					{
+						$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+					}
+				},
+				{% if sDataLoading == constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') %}
+				"data": oRawDatas,
+				{% else %}
+				"processing": true,
+				"serverSide": true,
+				"ajax": {
+					"url": "{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_BROWSE_MODE_LIST')})|raw }}",
+					"data": function (d) {
+						d.iPageNumber = Math.floor(d.start / d.length)+1;
+						d.iListLength = d.length;
+						d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
+
+						// Prepare sort params (formatting them for direct use by DBObjectSet)
+						d.aSortParams = {};
+						for (var iSortIdx in d.order) {
+							/* oSortedColumnData {column: index, dir: 'asc'|'desc'} */
+							var oSortedColumnData = d.order[iSortIdx];
+							/* sSortedColumnId (eg. 'L-1-1' for level's main column, or 'L-1-1.fields.ATTCODE' for other columns) */
+							var sSortedColumnId = d.columns[oSortedColumnData.column].data;
+
+							// Make proper attribute alias for OQL from column ID
+							// - Main level column (we have to retrieve the attcode from the level properties)
+							if (sSortedColumnId.indexOf('.fields') < 0) {
+								var sSortedAttributeAlias = sSortedColumnId+'.'+oLevelsProperties[sSortedColumnId].name_att;
+							}
+							// - Optional fields (attcode is already in the column ID, we just have to clean it)
+							else {
+								var sSortedAttributeAlias = sSortedColumnId.replace('.fields', '');
+							}
+
+							d.aSortParams[sSortedAttributeAlias] = (oSortedColumnData.dir === 'asc');
+						}
+
+
+						if (d.search.value)
+						{
+							d.sSearchValue = d.search.value;
+						}
+					}
+				},
+				{% endif %}
+				"search": {
+					"caseInsensitive": true,
+					{% if sSearchValue is not null %}
+					"search": "{{ sSearchValue|escape('js') }}",
+					{% endif %}
+				},
+			});
+			// Overrides filter input to apply throttle. Otherwise, an ajax request is send each time a key is pressed
+			// Also removes accents from search string
+			// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
+			$('#brick-content-table_filter input').off().on('keyup', function(event){
+				var me = this;
+				
+				// We trigger the search only if those keys where not pressed
+				if(aKeyTimeoutFilteredKeys.indexOf(event.which) < 0)
+				{
+					clearTimeout(oKeyTimeout);
+					oKeyTimeout = setTimeout(function() {
+						oTable.search(me.value.latinise()).draw();
+					}, iSearchThrottle);
+				}
+			});
+			// Shows a loader in the table when processing
+			$('#brick-content-table').on('processing.dt', function(event, settings, processing){
+				if(processing === true)
+				{
+					showTableLoader($(this));
+				}
+			});
+			
+			// Auto collapse item actions popup
+			$('body').click(function(){
+				$('table .item-action-wrapper.collapse.in').collapse('hide');
+			});
+		});
+	</script>
+{% endblock %}

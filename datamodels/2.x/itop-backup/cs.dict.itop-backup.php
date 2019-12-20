@@ -26,7 +26,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-week-days' => 'Záloha bude provedena <b>vždy v %1$s v %2$s</b>',
 	'bkp-retention' => 'V cílové složce <b>bude uchováno maximálně %1$d souborů záloh</b>.',
 	'bkp-next-to-delete' => 'Bude odstraněna při další záloze (nastavení "retention_count")',
-	'bkp-table-file' => 'Soubor', 
+	'bkp-table-file' => 'Soubor',
 	'bkp-table-file+' => 'Pouze soubory s příponou .zip jsou považovány za soubory zálohy.',
 	'bkp-table-size' => 'Velikost',
 	'bkp-table-size+' => '',

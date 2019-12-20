@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -28,9 +28,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Page:Home' => 'Home',
 	'Page:GoPortalHome' => 'Home page',
 	'Page:GoPreviousPage' => 'Previous page',
-    'Page:ReloadPage' => 'Reload page',
+	'Page:ReloadPage' => 'Reload page',
 	'Portal:Button:Submit' => 'Submit',
-    'Portal:Button:Apply' => 'Update',
+	'Portal:Button:Apply' => 'Update',
 	'Portal:Button:Cancel' => 'Cancel',
 	'Portal:Button:Close' => 'Close',
 	'Portal:Button:Add' => 'Add',
@@ -38,14 +38,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:Button:Delete' => 'Delete',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode',
-    'Error:HTTP:400' => 'Bad request',
-    'Error:HTTP:401' => 'Authentication',
-    'Error:HTTP:404' => 'Page not found',
+	'Error:HTTP:400' => 'Bad request',
+	'Error:HTTP:401' => 'Authentication',
+	'Error:HTTP:404' => 'Page not found',
 	'Error:HTTP:500' => 'Oops! An error has occured.',
 	'Error:HTTP:GetHelp' => 'Please contact your %1$s administrator if the problem keeps happening.',
 	'Error:XHR:Fail' => 'Could not load data, please contact your %1$s administrator',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.',
-    'Portal:Datatables:Language:Processing' => 'Please wait...',
+	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.',
+	'Portal:Datatables:Language:Processing' => 'Please wait...',
 	'Portal:Datatables:Language:Search' => 'Filter:',
 	'Portal:Datatables:Language:LengthMenu' => 'Display _MENU_ items per page',
 	'Portal:Datatables:Language:ZeroRecords' => 'No result',
@@ -66,6 +66,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost',
 ));
 
 // UserProfile brick
@@ -78,12 +79,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your %1$s administrator',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal information',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));
 
 // AggregatePageBrick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
 ));
 
@@ -92,7 +93,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Browse:Name' => 'Browse throught items',
 	'Brick:Portal:Browse:Mode:List' => 'List',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Edit',
@@ -107,8 +108,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Manage:Name' => 'Manage items',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
 	'Brick:Portal:Manage:Others' => 'Others',
@@ -126,22 +127,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, complete the following information:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied'
 ));
 
 // CreateBrick brick
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Create:Name' => 'Quick creation',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
+	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
 ));
 
 // Filter brick
 Dict::Add('EN US', 'English', 'English', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search',
+	'Brick:Portal:Filter:Name' => 'Prefilter a brick',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Search',
 ));

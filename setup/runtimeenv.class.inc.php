@@ -24,11 +24,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."setup/modulediscovery.class.inc.php");
-require_once(APPROOT.'setup/modelfactory.class.inc.php');
-require_once(APPROOT.'setup/compiler.class.inc.php');
-require_once(APPROOT.'setup/extensionsmap.class.inc.php');
-require_once(APPROOT.'core/metamodel.class.php');
+require_once APPROOT."setup/modulediscovery.class.inc.php";
+require_once APPROOT.'setup/modelfactory.class.inc.php';
+require_once APPROOT.'setup/compiler.class.inc.php';
+require_once APPROOT.'setup/extensionsmap.class.inc.php';
 
 define ('MODULE_ACTION_OPTIONAL', 1);
 define ('MODULE_ACTION_MANDATORY', 2);
@@ -111,26 +110,8 @@ class RunTimeEnvironment
 	 */    
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
 	{
-		require_once(APPROOT.'/core/log.class.inc.php');
-		require_once(APPROOT.'/core/kpi.class.inc.php');
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
-		require_once(APPROOT.'/core/dict.class.inc.php');
-		require_once(APPROOT.'/core/attributedef.class.inc.php');
-		require_once(APPROOT.'/core/filterdef.class.inc.php');
-		require_once(APPROOT.'/core/stimulus.class.inc.php');
-		require_once(APPROOT.'/core/MyHelpers.class.inc.php');
-		require_once(APPROOT.'/core/oql/expression.class.inc.php');
-		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-		require_once(APPROOT.'/core/sqlquery.class.inc.php');
-		require_once(APPROOT.'/core/sqlobjectquery.class.inc.php');
-		require_once(APPROOT.'/core/sqlunionquery.class.inc.php');
-		require_once(APPROOT.'/core/dbobject.class.php');
-		require_once(APPROOT.'/core/dbsearch.class.php');
-		require_once(APPROOT.'/core/dbobjectset.class.php');
-		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
-		require_once(APPROOT.'/core/userrights.class.inc.php');
-		require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
-	
+		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
+
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0)
 		{
@@ -154,37 +135,39 @@ class RunTimeEnvironment
 			$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
 		}
 	}
-	
+
 	/**
 	 * Analyzes the current installation and the possibilities
-	 * 
+	 *
 	 * @param Config $oConfig Defines the target environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 * @return hash Array with the following format:
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 *
+	 * @return array Array with the following format:
 	 * array =>
 	 *     'iTop' => array(
 	 *         'version_db' => ... (could be empty in case of a fresh install)
 	 *         'version_code => ...
 	 *     )
 	 *     <module_name> => array(
-	 *         'version_db' => ...  
-	 *         'version_code' => ...  
+	 *         'version_db' => ...
+	 *         'version_code' => ...
 	 *         'install' => array(
 	 *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
-	 *             'message' => ...  
-	 *         )   
+	 *             'message' => ...
+	 *         )
 	 *         'uninstall' => array(
 	 *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
-	 *             'message' => ...  
-	 *         )   
-	 *         'label' => ...  
-	 *         'dependencies' => array(<module1>, <module2>, ...)  
+	 *             'message' => ...
+	 *         )
+	 *         'label' => ...
+	 *         'dependencies' => array(<module1>, <module2>, ...)
 	 *         'visible' => true | false
 	 *     )
 	 * )
-	 */     
+	 * @throws \Exception
+	 */
 	public function AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		$aRes = array(
@@ -243,7 +226,6 @@ class RunTimeEnvironment
 	
 		try
 		{
-			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::InitFromConfig($oConfig);
 			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
 		}
@@ -345,6 +327,11 @@ class RunTimeEnvironment
 	}
 
 
+	/**
+	 * @param Config $oConfig
+	 *
+	 * @throws \Exception
+	 */
 	public function WriteConfigFileSafe($oConfig)
 	{
 		self::MakeDirSafe(APPCONF);
@@ -362,7 +349,7 @@ class RunTimeEnvironment
 	 * Return an array with extra directories to scan for extensions/modules to install
 	 * @return string[]
 	 */
-	protected function GetExtraDirsToScan()
+	protected function GetExtraDirsToScan($aDirs = array())
 	{
 		// Do nothing, overload this method if needed
 		return array();
@@ -543,7 +530,7 @@ class RunTimeEnvironment
 		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 		self::MakeDirSafe($sTargetDir);
 		$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
-		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
 		$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
 
 		$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
@@ -702,8 +689,9 @@ class RunTimeEnvironment
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
-		$iPrevAccessMode = $oConfig->Get('access_mode');
-		$oConfig->Set('access_mode', ACCESS_FULL);
+		$iPrevAccessMode = MetaModel::GetConfig()->Get('access_mode');
+		MetaModel::GetConfig()->Set('access_mode', ACCESS_FULL);
+		//$oConfig->Set('access_mode', ACCESS_FULL);
 
 		if (CMDBSource::DBName() == '')
 		{		
@@ -807,7 +795,7 @@ class RunTimeEnvironment
 		}
 
 		// Restore the previous access mode
-		$oConfig->Set('access_mode', $iPrevAccessMode);
+		MetaModel::GetConfig()->Set('access_mode', $iPrevAccessMode);
 
 		// Database is created, installation has been tracked into it
 		return true;	
@@ -818,7 +806,6 @@ class RunTimeEnvironment
 		$aResult = false;
 		try
 		{
-			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::InitFromConfig($oConfig);
 			$sSQLQuery = "SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install";
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
@@ -944,7 +931,7 @@ class RunTimeEnvironment
 				{
 					// Make a "previous" file
 					copy(
-						APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
+						APPROOT.'data/'.$this->sFinalEnv.'.delta.xml',
 						APPROOT.'data/'.$this->sFinalEnv.'.delta.prev.xml'
 					);
 				}

@@ -1,0 +1,2 @@
+To regenerate the autoload, run:
+composer dump-autoload -a

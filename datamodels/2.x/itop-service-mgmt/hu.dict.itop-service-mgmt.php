@@ -20,37 +20,34 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-'Menu:ServiceManagement' => 'Szolgáltatás menedzsment',
-'Menu:ServiceManagement+' => '',
-'Menu:Service:Overview' => 'Áttekintő',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Szerződések szolgáltatás szintenként',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Szerződések státuszonként',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 napon belül lejáró szerződések',
+	'Menu:ServiceManagement' => 'Szolgáltatás menedzsment',
+	'Menu:ServiceManagement+' => '',
+	'Menu:Service:Overview' => 'Áttekintő',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Szerződések szolgáltatás szintenként',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Szerződések státuszonként',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 napon belül lejáró szerződések',
 
-'Menu:ProviderContract' => 'Szállítói szerződés',
-'Menu:ProviderContract+' => '',
-'Menu:CustomerContract' => 'Ügyfél szerződés',
-'Menu:CustomerContract+' => '',
-'Menu:ServiceSubcategory' => 'Szolgáltatás alkategóriák',
-'Menu:ServiceSubcategory+' => '',
-'Menu:Service' => 'Szolgáltatások',
-'Menu:Service+' => '',
-'Menu:ServiceElement' => 'Sevice elements~~',
-'Menu:ServiceElement+' => 'Sevice elements~~',
-'Menu:SLA' => 'SLA-k',
-'Menu:SLA+' => '',
-'Menu:SLT' => 'SLT-k',
-'Menu:SLT+' => '',
-'Menu:DeliveryModel' => 'Delivery models~~',
-'Menu:DeliveryModel+' => 'Delivery models~~',
-'Menu:ServiceFamily' => 'Service families~~',
-'Menu:ServiceFamily+' => 'Service families~~',
-'Menu:Procedure' => 'Procedures catalog~~',
-'Menu:Procedure+' => 'All procedures catalog~~',
-
-
-
+	'Menu:ProviderContract' => 'Szállítói szerződés',
+	'Menu:ProviderContract+' => '',
+	'Menu:CustomerContract' => 'Ügyfél szerződés',
+	'Menu:CustomerContract+' => '',
+	'Menu:ServiceSubcategory' => 'Szolgáltatás alkategóriák',
+	'Menu:ServiceSubcategory+' => '',
+	'Menu:Service' => 'Szolgáltatások',
+	'Menu:Service+' => '',
+	'Menu:ServiceElement' => 'Sevice elements~~',
+	'Menu:ServiceElement+' => 'Sevice elements~~',
+	'Menu:SLA' => 'SLA-k',
+	'Menu:SLA+' => '',
+	'Menu:SLT' => 'SLT-k',
+	'Menu:SLT+' => '',
+	'Menu:DeliveryModel' => 'Delivery models~~',
+	'Menu:DeliveryModel+' => 'Delivery models~~',
+	'Menu:ServiceFamily' => 'Service families~~',
+	'Menu:ServiceFamily+' => 'Service families~~',
+	'Menu:Procedure' => 'Procedures catalog~~',
+	'Menu:Procedure+' => 'All procedures catalog~~',
 ));
 
 //
@@ -61,7 +58,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model~~',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
-
 ));
 
 

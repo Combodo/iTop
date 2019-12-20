@@ -1,0 +1,53 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% block login_content %}
+	<div id="login-content">
+		<div id="login-title">
+			<h1>{{ 'UI:ResetPwd-Title'|dict_s }}</h1>
+			{% if bNoUser and sErrorMessage is null %}
+				<p>{{ 'UI:ResetPwd-Error-WrongLogin'|dict_format(sAuthUser) }}</p>
+			{% elseif bBadToken and sErrorMessage is null %}
+				<p>{{ 'UI:ResetPwd-Error-InvalidToken'|dict_s }}</p>
+			{% else %}
+				{% if sUserName is not empty %}
+					<p>{{ 'UI:ResetPwd-Error-EnterPassword'|dict_format(sUserName) }}</p>
+				{% endif %}
+
+				{% if sErrorMessage is not null %}
+					<p class="hilite">{{ sErrorMessage|raw }}</p>
+				{% endif %}
+			</div>
+			<div id="login-form">
+					<form method="post">
+						<div id="login-form-content">
+							<div id="login-input">
+								<div>
+									<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
+									<input type="password" id="new_pwd" name="new_pwd" value="" />
+								</div>
+								<div>
+									<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
+									<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" />
+								</div>
+							</div>
+							<div id="login-submit">
+								<div>
+									<input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" />
+								</div>
+							</div>
+					</div>
+					<input type="hidden" name="loginop" value="do_reset_pwd" />
+					<input type="hidden" name="auth_user" value="{{ sAuthUser }}" />
+					<input type="hidden" name="token" value="{{ sToken }}" />
+				</form>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	{% include 'resetpwdform.js.twig' %}
+{% endblock script %}

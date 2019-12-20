@@ -1,0 +1,40 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% block login_content %}
+	<div id="login-content">
+		<div id="login-title">
+			<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
+			<p>{{ 'UI:Login:ForgotPwdForm+'|dict_s }}</p>
+			{% if bFailedToReset %}
+				<p class="hilite">{{ 'UI:Login:ResetPwdFailed'|dict_format(sFailureReason) }}</p>
+			{% endif %}
+		</div>
+		<div id="login-form">
+			<form method="post">
+				<div id="login-form-content">
+					<div id="login-input">
+						<div>
+							<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}:</label>
+							<input id="user" type="text" name="auth_user" value="{{ sAuthUser }}" />
+						</div>
+					</div>
+					<div id="login-submit" class="forgotpwd-submit">
+						<div>
+							<input type="submit" value="{{ 'UI:Login:ResetPassword'|dict_s }}" />
+							<input class="login-submit-secondary" type="button" onClick="window.close();" value="{{ 'UI:Button:Cancel'|dict_s }}" />
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="loginop" value="forgot_pwd_go" />
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block ready_script %}
+	{% include 'forgotpwdform.ready.js.twig' %}
+{% endblock ready_script %}

@@ -525,10 +525,10 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
 		
 						$sNow = date(AttributeDateTime::GetSQLFormat());
-						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < '$sNow'";
+						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < :now";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
-						$oSet = new DBObjectSet($oFilter);
-						$oSet->OptimizeColumnLoad(array($sAttCode));
+						$oSet = new DBObjectSet($oFilter, array(), array('now' => $sNow));
+						$oSet->OptimizeColumnLoad(array($sClass => array($sAttCode)));
 						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
 						{
 							$sClass = get_class($oObj);
@@ -590,9 +590,8 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							if($oObj->IsModified())
 							{
 								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
-					
-								$oMyChange = CMDBObject::GetCurrentChange();
-								$oObj->DBUpdateTracked($oMyChange);
+
+								$oObj->DBUpdate();
 							}
 
 							// Activate any existing trigger

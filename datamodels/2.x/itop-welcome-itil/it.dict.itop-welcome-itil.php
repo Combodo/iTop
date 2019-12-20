@@ -40,8 +40,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Notifications:Title' => 'Categorie di Audit',
 	'Menu:RunQueriesMenu' => 'Esegui query',
 	'Menu:RunQueriesMenu+' => '',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:QueryMenu' => 'Rubbrica delle Query',
+	'Menu:QueryMenu+' => 'Rubbrica delle Query',
 	'Menu:UniversalSearchMenu' => 'Ricerca universale',
 	'Menu:UniversalSearchMenu+' => '',
 	'Menu:UserManagementMenu' => 'Gestione degli utenti',
@@ -52,7 +52,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserAccountsMenu' => 'Account utente',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Account utente',
-	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:MyShortcuts' => 'Le mie scorciatoie',
+	'Menu:UserManagement' => 'Gestione utenti',
+	'Menu:Queries' => 'Interrogazioni',
+	'Menu:Configuration' => 'configurazione',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

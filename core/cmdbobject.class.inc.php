@@ -59,7 +59,6 @@ require_once('sqlobjectquery.class.inc.php');
 require_once('sqlunionquery.class.inc.php');
 
 require_once('dbobject.class.php');
-require_once('dbsearch.class.php');
 require_once('dbobjectset.class.php');
 
 require_once('backgroundprocess.inc.php');
@@ -514,7 +513,23 @@ abstract class CMDBObject extends DBObject
 		}
 	}
 
-
+	/**
+	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} instead, that will automatically create and persist a CMDBChange object.
+	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param null $bSkipStrongSecurity
+	 *
+	 * @return int|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
 	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
 		self::SetCurrentChange($oChange);
@@ -522,7 +537,24 @@ abstract class CMDBObject extends DBObject
 		$ret = $this->DBInsertTracked_Internal();
 		return $ret;
 	}
-	
+
+	/**
+	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsertNoReload} instead, that will automatically create and persist a CMDBChange object.
+	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param null $bSkipStrongSecurity
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
 	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
 		self::SetCurrentChange($oChange);
@@ -530,13 +562,20 @@ abstract class CMDBObject extends DBObject
 		$ret = $this->DBInsertTracked_Internal(true);
 		return $ret;
 	}
-	
+
 	/**
-	 * To Be Obsoleted: DO NOT rely on an overload of this method since
-	 * DBInsertTracked (resp. DBInsertTrackedNoReload) may call directly
-	 * DBInsert (resp. DBInsertNoReload) in future versions of iTop.
+	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} or {@link DBInsertNoReload} instead
+	 *
 	 * @param bool $bDoNotReload
+	 *
 	 * @return integer Identifier of the created object
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	protected function DBInsertTracked_Internal($bDoNotReload = false)
 	{
@@ -583,6 +622,18 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
+	/**
+	 * @deprecated 2.7.0 N°2361 simply use {@link DBUpdate} instead, that will automatically create and persist a CMDBChange object.
+	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param null $bSkipStrongSecurity
+	 *
+	 * @return int|void
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \SecurityException
+	 */
 	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
 	{
 		self::SetCurrentChange($oChange);
@@ -594,13 +645,38 @@ abstract class CMDBObject extends DBObject
 	 * @param null $oDeletionPlan
 	 *
 	 * @return \DeletionPlan|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
+	/**
+	 * @deprecated 2.7.0 N°2361 simply use {@link DBDelete} instead, that will automatically create and persist a CMDBChange object.
+	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param null $bSkipStrongSecurity
+	 * @param null $oDeletionPlan
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
 		self::SetCurrentChange($oChange);
@@ -612,11 +688,17 @@ abstract class CMDBObject extends DBObject
 	 * @param null $oDeletionPlan
 	 *
 	 * @return \DeletionPlan|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
-		$prevkey = $this->GetKey();
 		$ret = parent::DBDelete($oDeletionPlan);
 		return $ret;
 	}
@@ -696,6 +778,8 @@ abstract class CMDBObject extends DBObject
  * TODO: investigate how to get rid of this class that was made to workaround some language limitation... or a poor design!
  *
  * @package     iTopORM
+ *
+ * @internal
  */
 class CMDBObjectSet extends DBObjectSet
 {

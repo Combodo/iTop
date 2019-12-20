@@ -1,5 +1,6 @@
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.7.0-dev";
+$version: "v2.7.0-beta";
+$approot-relative: "../../../../../"; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
 $gray-base:              #000 !default;
@@ -21,32 +22,57 @@ $combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
 $combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
 
 // Vars
-$highlight-color: $combodo-orange;
-$grey-color: #555555;
-$complement-color: #1c94c4;
-$complement-light: #d6e8ef;
-$frame-background-color: $gray-extra-light;
-$text-color: #000;
-$box-radius: 0px;
-$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15);
+$highlight-color: $combodo-orange !default;
+$grey-color: #555555 !default;
+$complement-color: #1c94c4 !default;
+$complement-light: #d6e8ef !default;
+$frame-background-color: $gray-extra-light !default;
+$text-color: #000 !default;
+$box-radius: 0px !default;
+$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
 
-$hyperlink-color: $complement-color;
-$hyperlink-text-decoration: none;
+$hyperlink-color: $complement-color !default;
+$hyperlink-text-decoration: none !default;
 
 ////////////
 // Search //
-$search-criteria-box-color: #2D2D2D;
-$search-criteria-box-picto-color: #E87C1E;
-$search-criteria-box-bg-color: #EEEEEE;
-$search-criteria-box-hover-color: $white;
-$search-criteria-box-border-color: #CCCCCC;
-$search-criteria-box-border: 1px solid $search-criteria-box-border-color;
-$search-criteria-box-radius: 1px;
+$search-criteria-box-color: #2D2D2D !default;
+$search-criteria-box-picto-color: #E87C1E !default;
+$search-criteria-box-bg-color: #EEEEEE !default;
+$search-criteria-box-hover-color: $white !default;
+$search-criteria-box-border-color: #CCCCCC !default;
+$search-criteria-box-border: 1px solid $search-criteria-box-border-color !default;
+$search-criteria-box-radius: 1px !default;
 //
-$search-add-criteria-box-color: $search-criteria-box-color;
-$search-add-criteria-box-bg-color: $white;
-$search-add-criteria-box-hover-color: $gray-extra-light;
+$search-add-criteria-box-color: $search-criteria-box-color !default;
+$search-add-criteria-box-bg-color: $white !default;
+$search-add-criteria-box-hover-color: $gray-extra-light !default;
 //
-$search-button-box-color: $combodo-orange;
-$search-button-box-bg-color: $white;
-$search-button-box-bg-hover-color: $gray-extra-light;
+$search-button-box-color: $combodo-orange !default;
+$search-button-box-bg-color: $white !default;
+$search-button-box-bg-hover-color: $gray-extra-light !default;
+
+// Console elements
+$summary-details-background: $grey-color !default; 
+$main-header-background: $frame-background-color !default;
+$table-even-background: $frame-background-color !default;
+$popup-menu-highlight-color: $highlight-color !default;
+$popup-menu-text-color: #000 !default;
+$popup-menu-background-color: #fff !default;
+$popup-menu-text-higlight-color: #fff !default;
+$breadcrumb-color: #555 !default;
+$breadcrumb-text-color: #fff !default;
+$breadcrumb-highlight-color: $highlight-color !default;
+$breadcrumb-text-highlight-color: #fff !default;
+
+// JQuery UI widgets vars
+$primary-text-color: #333333 !default;
+$secondary-text-color: $grey-color !default;
+$error-text-color: $white !default;
+$highlight-text-color: #363636 !default;
+$hover-background-color: #fde17c !default;
+$border-highlight-color: #f26522 !default;
+$highlight-item-color: $white !default;
+$content-color: #eeeeee !default; 
+$default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
+$icons-filter: hue-rotate(0deg) !default;

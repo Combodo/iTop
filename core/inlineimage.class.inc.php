@@ -479,7 +479,7 @@ EOF
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 
 		return
-<<<EOF
+			<<<JS
 		// Hook the file upload of all CKEditor instances
 		$('.htmlEditor').each(function() {
 			var oEditor = $(this).ckeditorGet();
@@ -545,7 +545,7 @@ EOF
 				}
 			});
 		});
-EOF
+JS
 		;
 	}
 }

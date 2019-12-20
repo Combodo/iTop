@@ -445,14 +445,16 @@ EOF
 			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
 				// For external fields, find the real type of the target
+				$sExtFieldAttCode = $sAttCode;
 				$sTargetClass = $sClass;
 				while (is_a($sAttType, 'AttributeExternalField', true))
 				{
-					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sAttCode, 'extkey_attcode');
-					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sAttCode, 'target_attcode');
+					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
+					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
 					$sTargetClass = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
 					$aTargetAttCodes = $this->oModelReflection->ListAttributes($sTargetClass);
 					$sAttType = $aTargetAttCodes[$sTargetAttCode];
+					$sExtFieldAttCode = $sTargetAttCode;
 				}
 				if (is_a($sAttType, 'AttributeLinkedSet', true))
 				{

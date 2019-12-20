@@ -507,9 +507,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkDevice' => '网络设备',
 	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '网络类型',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '网络设备类型',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '网络类型名称',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '网络设备类型名称',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => '设备',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => '连接到该网络设备的所有设备',

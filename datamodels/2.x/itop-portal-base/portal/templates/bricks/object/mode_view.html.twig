@@ -1,0 +1,20 @@
+{# itop-portal-base/portal/templates/bricks/object/mode_view.html.twig #}
+{# Object brick view layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/object/mode_create.html.twig' %}
+
+{# This layout is exactly the same as the mode_create.html.twig, we duplicated it in case we need to have some subtle differences #}
+
+{% block pFormButtons %}
+	{# Misc. buttons #}
+	{% if form.buttons is defined and (form.buttons.actions is defined or form.buttons.links is defined) %}
+		<div class="form_btn_misc">
+            {% include 'itop-portal-base/portal/templates/bricks/object/plugins_buttons.html.twig' with {'aButtons': form.buttons} %}
+		</div>
+	{% endif %}
+
+	{% if tIsModal is defined and tIsModal == true %}
+		<div class="form_btn_regular">
+			<input class="btn btn-primary form_btn_cancel" type="button" value="{{ 'Portal:Button:Close'|dict_s }}" data-dismiss="modal" />
+		</div>
+	{% endif %}
+{% endblock %}

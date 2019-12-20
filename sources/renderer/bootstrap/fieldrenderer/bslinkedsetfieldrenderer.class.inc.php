@@ -1,51 +1,48 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use Exception;
 use ApplicationContext;
-use IssueLog;
-use Dict;
-use MetaModel;
 use AttributeFriendlyName;
-use Combodo\iTop\Renderer\FieldRenderer;
-use Combodo\iTop\Renderer\RenderingOutput;
+use Dict;
+use Exception;
+use IssueLog;
+use MetaModel;
 
 /**
  * Description of BsLinkedSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * 
+ * @property \Combodo\iTop\Form\Field\LinkedSetField $oField 
+ * 
  */
-class BsLinkedSetFieldRenderer extends FieldRenderer
+class BsLinkedSetFieldRenderer extends BsFieldRenderer
 {
     /**
-     * Returns a RenderingOutput for the FieldRenderer's Field
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     *
-     * @throws \CoreException
+     * @inheritDoc
      */
 	public function Render()
 	{
-	    $oOutput = new RenderingOutput();
-        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+	    $oOutput = parent::Render();
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		// Vars to build the table
@@ -123,7 +120,7 @@ EOF
 			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
 			// - Output
 			$oOutput->AddJs(
-<<<EOF
+<<<JS
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
 				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
@@ -168,7 +165,14 @@ EOF
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
-									oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id);
+									if(row.limited_access)
+									{
+										oCheckboxElem.html('-');
+									}
+									else
+									{
+										oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id);
+									}
 									return oCheckboxElem.prop('outerHTML');
 								}
 						});
@@ -215,7 +219,7 @@ EOF
 				{
 					var iDefaultOrderColumnIndex = ({$sIsEditable}) ? 1 : 0;
 
-					// Instanciates datatables
+					// Instantiates datatables
 					oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
 						"language": {
 							"emptyTable":	  "{$sEmptyTableLabel}"
@@ -231,6 +235,10 @@ EOF
 						"rowId": "id",
 						"data": oRawDatas_{$this->oField->GetGlobalId()},
 						"rowCallback": function(oRow, oData){
+							if(oData.limited_access)
+							{
+								$(oRow).addClass('limited_access');
+							}
 							// Opening in a new modal on click
 							$(oRow).find('a').off('click').on('click', function(oEvent){
 								// Prevents link opening.
@@ -239,28 +247,24 @@ EOF
 								oEvent.stopPropagation();
 								
 								// Note : This could be better if we check for an existing modal first instead of always creating a new one
-								var oModalElem = $('#modal-for-all').clone();
-								oModalElem.attr('id', '').appendTo('body');
-								// Loading content
-								oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-								oModalElem.find('.modal-content').load(
-									$(this).attr('href'),
-									{},
-			                        function(sResponseText, sStatus, oXHR){
-			                            // Hiding modal in case of error as the general AJAX error handler will display a message
-			                            if(sStatus === 'error')
-			                            {
-			                                oModalElem.modal('hide');
-			                            }
-			                        }
-								);
-								oModalElem.modal('show');
+								CombodoPortalToolbox.OpenModal({
+									content: {
+										endpoint: $(this).attr('href'),
+									},
+								});
 							});
 						},
 					});
 						
 					// Handles items selection/deselection
-					// - Directly on the table
+					// - Preventing limited access rows to be selected on click
+					oTable_{$this->oField->GetGlobalId()}.off('user-select').on('user-select', function(oEvent, dt, type, cell, originalEvent){
+						if($(originalEvent.target).closest('tr[role="row"]').hasClass('limited_access'))
+						{
+							oEvent.preventDefault();
+						}
+					});
+					// - Selecting when clicking on the rows (instead of the global checkbox)
 					oTable_{$this->oField->GetGlobalId()}.off('select').on('select', function(oEvent, dt, type, indexes){
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
@@ -278,6 +282,7 @@ EOF
 						// Updating remove button
 						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
+					// - Deselecting when clicking on the rows (instead of the global checkbox)
 					oTable_{$this->oField->GetGlobalId()}.off('deselect').on('deselect', function(oEvent, dt, type, indexes){
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
@@ -301,16 +306,16 @@ EOF
 					$('#{$this->oField->GetGlobalId()}_check_all').off('click').on('click', function(oEvent){
 						if($(this).prop('checked'))
 						{
-							oTable_{$this->oField->GetGlobalId()}.rows().select();
+							oTable_{$this->oField->GetGlobalId()}.rows(':not(.limited_access)').select();
 						}
 						else
 						{
-							oTable_{$this->oField->GetGlobalId()}.rows().deselect();
+							oTable_{$this->oField->GetGlobalId()}.rows(':not(.limited_access)').deselect();
 						}
 						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 				};
-EOF
+JS
 			);
 
 			// Additional features if in edition mode
@@ -430,7 +435,7 @@ EOF
 				$sAddButtonEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 				// - Output
 				$oOutput->AddJs(
-	<<<EOF
+	<<<JS
 					// Handles items selection/deselection
 					// - Remove button state handler
 					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
@@ -457,7 +462,7 @@ EOF
 					    // Checking removed objects
 					    for(var i in oValues.current)
 					    {
-					        if($('#{$sTableId} tr[role="row"] input[data-object-id="'+i+'"]').length === 0)
+					        if($('#{$sTableId} tr[role="row"][id="'+i+'"]').length === 0)
                             {
                                 oValues.remove[i] = {};
                             }
@@ -495,39 +500,34 @@ EOF
 						$('#{$sTableId} tr[role="row"] > td input[data-target-object-id]').each(function(iIndex, oElem){
 							aObjectIdsToIgnore.push( $(oElem).attr('data-target-object-id') );
 						});
+						
 						// Creating a new modal
-						var oModalElem;
+						var oOptions =
+						{
+							content: {
+								endpoint: '{$sAddButtonEndpoint}',
+								data: {
+									sFormPath: '{$this->oField->GetFormPath()}',
+									sFieldId: '{$this->oField->GetId()}',
+									aObjectIdsToIgnore : aObjectIdsToIgnore
+								},
+							},
+						};
+					
 						if($('.modal[data-source-element="{$sButtonAddId}"]').length === 0)
 						{
-							oModalElem = $('#modal-for-all').clone();
-							oModalElem.attr('id', '').attr('data-source-element', '{$sButtonAddId}').appendTo('body');
+							oOptions['attributes'] = {'data-source-element': '{$sButtonAddId}'};
 						}
 						else
 						{
-							oModalElem = $('.modal[data-source-element="{$sButtonAddId}"]').first();
+							oOptions['base_modal'] = {
+								'usage': 'replace',
+								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
+							};
 						}
-						// Resizing to small modal
-						oModalElem.find('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
-						// Loading content
-						oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-						oModalElem.find('.modal-content').load(
-							'{$sAddButtonEndpoint}',
-							{
-								sFormPath: '{$this->oField->GetFormPath()}',
-								sFieldId: '{$this->oField->GetId()}',
-								aObjectIdsToIgnore : aObjectIdsToIgnore
-							},
-							function(sResponseText, sStatus, oXHR){
-							    // Hiding modal in case of error as the general AJAX error handler will display a message
-							    if(sStatus === 'error')
-							    {
-							        oModalElem.modal('hide');
-							    }
-							}
-						);
-						oModalElem.modal('show');
+						CombodoPortalToolbox.OpenModal(oOptions);
 					});
-EOF
+JS
 				);
 			}
 		}
@@ -553,6 +553,7 @@ EOF
      */
 	protected function PrepareItems(&$aItems, &$aItemIds)
 	{
+		/** @var \ormLinkSet $oValueSet */
 		$oValueSet = $this->oField->GetCurrentValue();
 		$oValueSet->OptimizeColumnLoad(array($this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)));
 		while ($oItem = $oValueSet->Fetch())
@@ -576,16 +577,28 @@ EOF
 			{
 				$oRemoteItem = $oItem;
 			}
+			
+			// Skip item if not supposed to be displayed
+			$bLimitedAccessItem = $this->oField->IsLimitedAccessItem($oRemoteItem->GetKey());
+			if ($bLimitedAccessItem && !$this->oField->GetDisplayLimitedAccessItems())
+			{
+				continue;
+			}
 
 			$aItemProperties = array(
 				'id' => ($this->oField->IsIndirect() && $oItem->IsNew()) ? -1*$oRemoteItem->GetKey() : $oItem->GetKey(),
 				'target_id' => $oRemoteItem->GetKey(),
 				'name' => $oItem->GetName(),
-				'attributes' => array()
-			);
+				'attributes' => array(),
+				'limited_access' => $bLimitedAccessItem,
+				'disabled' => true,
+				'active' => false,
+				'inactive' => true,
+				'not-selectable' => true,
+ 			);
 
 			// Target object others attributes
-            // TODO: Support for AttriubteImage, AttributeBlob
+            // TODO: Support for AttributeImage, AttributeBlob
 			foreach ($this->oField->GetAttributesToDisplay(true) as $sAttCode)
 			{
 				if ($sAttCode !== 'id')
@@ -597,6 +610,7 @@ EOF
 					$oAttDef = MetaModel::GetAttributeDef($this->oField->GetTargetClass(), $sAttCode);
 					if ($oAttDef->IsExternalKey())
 					{
+						/** @var \AttributeExternalKey $oAttDef */
 						$aAttProperties['value'] = $oRemoteItem->Get($sAttCode . '_friendlyname');
 
 						// Checking if user can access object's external key
@@ -628,6 +642,7 @@ EOF
 			$aItems[] = $aItemProperties;
 			$aItemIds[$aItemProperties['id']] = array();
 		}
+		$oValueSet->rewind();
 	}
 
 }

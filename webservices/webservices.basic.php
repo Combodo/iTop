@@ -172,11 +172,8 @@ class BasicServices extends WebServicesBase
 
 		try
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", "Administrator");
-			$iChangeId = $oMyChange->DBInsertNoReload();
-	
+			CMDBObject::SetTrackInfo('Administrator');
+
 			$oNewTicket = MetaModel::NewObject($sClass);
 			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);
@@ -231,7 +228,7 @@ class BasicServices extends WebServicesBase
 			$this->MyObjectSetScalar('impact', 'impact', $sImpact, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
 
-			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
+			$this->MyObjectInsert($oNewTicket, 'created', $oRes);
 		}
 		catch (CoreException $e)
 		{

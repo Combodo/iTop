@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -481,7 +481,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'Rack units',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '',
-	'Class:DatacenterDevice/Attribute:managementip' => 'Management ip',
+	'Class:DatacenterDevice/Attribute:managementip' => 'Management IP',
 	'Class:DatacenterDevice/Attribute:managementip+' => '',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'PowerA source',
 	'Class:DatacenterDevice/Attribute:powerA_id+' => '',

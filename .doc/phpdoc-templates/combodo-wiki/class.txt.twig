@@ -1,0 +1,136 @@
+{% extends 'layout.txt.twig' %}
+
+{% block content %}
+<wrap button>[[start|🔙 Back]]</wrap>
+
+{% if node.tags['internal'] is defined %}
+====== {{ node.name }} ======
+<WRAP alert>This class is "internal", and thus is not documented!</WRAP>
+{% elseif node.tags['api'] is not defined and node.tags['api-advanced'] is not defined and node.tags['overwritable-hook'] is not defined and node.tags['extension-hook'] is not defined %}
+====== {{ node.name }} ======
+<WRAP alert>This class is neither "api", "api-advanced", "overwritable-hook" or "extension-hook", and thus is not documented!</WRAP>
+{% else %}
+
+====== {{ node.name }} ======
+
+{% if node.deprecated %}<wrap danger>deprecated</wrap>{% endif %}
+{% if node.abstract %}<wrap warning>abstract</wrap>{% endif %}
+{% if node.final %}<wrap notice>final</wrap>{% endif %}
+{% include 'includes/wrap-tags.txt.twig' with {structure:node, wrap: 'safety', wrapTags: ['api', 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
+
+
+
+{% if node.deprecated %}
+=== **<del>Deprecated</del>**===
+//{{ node.tags.deprecated[0].description }}//
+{% endif %}
+
+
+== {{  node.summary|replace({"\n":""})|raw }} ==
+<html>{{ node.description|markdown|raw }}</html>
+
+
+{% include 'includes/code-examples.txt.twig' with {structure:node, title_level: '====='} %}
+
+
+{% set class = node.parent %}
+{% block hierarchy_element %}
+
+{% if class and class.name is defined and class.name|trim != '' %}
+==== parent ====
+{% set child = class %}
+{% set class = class.parent %}
+{{ block('hierarchy_element') }}
+[[{{ child.name }}|{{ child.name }}]]
+{% endif %}
+{% endblock %}
+
+
+{% for interface in node.interfaces|sort_asc %}
+{% if loop.first %}
+==== Implements ====
+{% endif %}
+{% if loop.length > 1 %}  * {% endif %}{{ interface.fullyQualifiedStructuralElementName ?: interface }}
+{% endfor %}
+
+
+{% for trait in node.usedTraits|sort_asc %}
+{% if loop.first %}
+==== Uses traits ====
+{% endif %}
+{% if loop.length > 1 %}  * {% endif %}{{ trait.fullyQualifiedStructuralElementName ?: trait }}
+{% endfor %}
+
+
+{% include 'includes/see-also.txt.twig' with {structure:node, title_level: '==='} %}
+
+{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tuning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license', 'code-example']} %}
+
+{% set methods = node.inheritedMethods.merge(node.methods.merge(node.magicMethods)) %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'api'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'api-advanced'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'overwritable-hook'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'extension-hook'} %}
+
+
+{% include 'includes/code-examples.txt.twig' with {structure:node, title_level: '=====', sub_title_level: '=='} %}
+
+<WRAP clear />
+
+{% for method in methods|sort_asc
+    if method.visibility == 'public'
+    and (
+        method.tags['api'] is defined
+        or method.tags['api-advanced'] is defined
+        or method.tags['overwritable-hook'] is defined
+        or method.tags['extension-hook'] is defined
+    )
+    and (
+        node.tags['phpdoc-tuning-exclude-inherited'] is not defined
+        or method.parent.name == node.name
+    )
+%}
+{%- if loop.first %}
+===== Public methods =====
+{% endif %}
+{{ block('method') }}
+{% endfor %}
+{% for method in methods|sort_asc if method.visibility == 'protected' and (method.tags['overwritable-hook'] is defined or method.tags['extension-hook'] is defined) %}
+{%- if loop.first %}
+===== Protected methods =====
+{% endif %}
+{{ block('method') }}
+{% endfor %}
+
+
+
+
+
+{% set constants = node.inheritedConstants.merge(node.constants) %}
+{% if constants|length > 0 %}
+===== Constants =====
+{% for constant in constants|sort_asc %}
+{{ block('constant') }}
+{% endfor %}
+{% endif %}
+
+
+{#{% set properties = node.inheritedProperties.merge(node.properties.merge(node.magicProperties)) %}#}
+{#{% for property in properties|sort_asc if property.visibility == 'public' %}#}
+{#{%- if loop.first %}#}
+{#===== Public properties =====#}
+{#{% endif %}#}
+{#{{ block('property') }}#}
+{#{% endfor %}#}
+{#{% for property in properties|sort_asc if property.visibility == 'protected' %}#}
+{#{%- if loop.first %}#}
+{#===== Protected properties =====#}
+{#{% endif %}#}
+{#{{ block('property') }}#}
+{#{% endfor %}#}
+
+
+{%- endif %} {#{% elseif node.tags['xxx'] is not defined and ... #}
+
+<wrap button>[[start|🔙 Back]]</wrap>
+{% endblock %}

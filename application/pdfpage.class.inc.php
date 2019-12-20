@@ -1,6 +1,23 @@
 <?php
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 require_once(APPROOT.'application/utils.inc.php');
-require_once(APPROOT.'lib/tcpdf/tcpdf.php');
 
 /**
  * Custom class derived from TCPDF for providing custom headers and footers
@@ -100,8 +117,8 @@ class PDFPage extends WebPage
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
 		parent::__construct($s_title);
-		define(K_PATH_FONTS, APPROOT.'lib/tcpdf/fonts');
-		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, 'UTF-8', false);
+		define(K_PATH_FONTS, APPROOT.'lib/combodo/tcpdf/fonts');
+		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
 
 		// set document information
 		$this->oPdf->SetCreator(PDF_CREATOR);

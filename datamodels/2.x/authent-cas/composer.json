@@ -1,0 +1,5 @@
+{
+	"require" : {
+		"apereo/phpcas" : "~1.3"
+	}
+}

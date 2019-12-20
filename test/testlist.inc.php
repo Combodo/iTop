@@ -285,10 +285,8 @@ class TestMyBizModel extends TestBizModel
 		echo "<h4>Enum links</h4>";
 		self::DumpVariable(MetaModel::EnumReferencedClasses("cmdbTeam"));
 		self::DumpVariable(MetaModel::EnumReferencingClasses("Organization"));
-	
-		self::DumpVariable(MetaModel::EnumLinkingClasses());
-		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdbContact"));
-		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdWorkshop"));
+
+		self::DumpVariable(MetaModel::GetLinkClasses());
 		self::DumpVariable(MetaModel::GetLinkLabel("Liens_entre_contacts_et_workshop", "toworkshop"));
 	}
 	
@@ -337,20 +335,17 @@ class TestMyBizModel extends TestBizModel
 	function test_setattribute()
 	{
 		echo "<h4>Set attribute and update</h4>";
+		/** @var cmdbTeam $team */
 		$team = MetaModel::GetObject("cmdbTeam", "2");
 		$team->Set("headcount", rand(1,1000));
 		$team->Set("email", "Luis ".rand(9,250));
 		self::DumpVariable($team->ListChanges());
 		echo "New headcount = {$team->Get("headcount")}</br>\n";
 		echo "Computed name = {$team->Get("name")}</br>\n";
-	
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_setattribute / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-	
+
+		CMDBObject::SetTrackInfo('test_setattribute / Made by robot #'.rand(1, 100));
 		//DBSearch::StartDebugQuery();
-		$team->DBUpdateTracked($oMyChange);
+		$team->DBUpdate();
 		//DBSearch::StopDebugQuery();
 	
 		echo "<h4>Check the modified team</h4>";
@@ -359,11 +354,6 @@ class TestMyBizModel extends TestBizModel
 	}
 	function test_newobject()
 	{
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_newobject / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-	
 		echo "<h4>Create a new object (team)</h4>";
 		$oNewTeam = MetaModel::NewObject("cmdbTeam");
 		$oNewTeam->Set("name", "ekip2choc #".rand(1000, 2000));
@@ -371,11 +361,11 @@ class TestMyBizModel extends TestBizModel
 		$oNewTeam->Set("email", null);
 		$oNewTeam->Set("owner", "ITOP");
 		$oNewTeam->Set("headcount", "0".rand(38000, 38999)); // should be reset to an int value
-		$iId = $oNewTeam->DBInsertTracked($oMyChange);
+		$iId = $oNewTeam->DBInsert();
 		echo "Created new team: $iId</br>";
 		echo "<h4>Delete team #$iId</h4>";
 		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
-		$oTeam->DBDeleteTracked($oMyChange);
+		$oTeam->DBDelete();
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
@@ -409,26 +399,27 @@ class TestMyBizModel extends TestBizModel
 	
 	function test_changetracking()
 	{
-		echo "<h4>Create a change</h4>";
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-		echo "Created new change: $iChangeId</br>";
+		echo '<h4>Create a change</h4>';
+		/** @var CMDBChange $oMyChange * */
+		$oMyChange = MetaModel::NewObject('CMDBChange');
+		$oMyChange->Set('date', time());
+		$oMyChange->Set('userinfo', 'Made by robot #'.rand(1, 100));
 		self::DumpVariable($oMyChange);
-	
-		echo "<h4>Create a new object (team)</h4>";
-		$oNewTeam = MetaModel::NewObject("cmdbTeam");
-		$oNewTeam->Set("name", "ekip2choc #".rand(1000, 2000));
-		$oNewTeam->Set("email", "machin".rand(1,100)."@tnut.com");
-		$oNewTeam->Set("email", null);
-		$oNewTeam->Set("owner", "ITOP");
-		$oNewTeam->Set("headcount", "0".rand(38000, 38999)); // should be reset to an int value
-		$iId = $oNewTeam->DBInsertTracked($oMyChange);
+
+		echo '<h4>Create a new object (team)</h4>';
+		$oNewTeam = MetaModel::NewObject('cmdbTeam');
+		$oNewTeam->Set('name', 'ekip2choc #'.rand(1000, 2000));
+		$oNewTeam->Set('email', 'machin'.rand(1, 100).'@tnut.com');
+		$oNewTeam->Set('email', null);
+		$oNewTeam->Set('owner', 'ITOP');
+		$oNewTeam->Set('headcount', '0'.rand(38000, 38999)); // should be reset to an int value
+		$oNewTeam::SetCurrentChange($oMyChange);
+		$iId = $oNewTeam->DBInsert();
 		echo "Created new team: $iId</br>";
 		echo "<h4>Delete team #$iId</h4>";
-		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
-		$oTeam->DBDeleteTracked($oMyChange);
+		$oTeam = MetaModel::GetObject('cmdbTeam', $iId);
+		$oTeam::SetCurrentChange($oMyChange);
+		$oTeam->DBDelete();
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
@@ -530,12 +521,9 @@ class TestMyBizModel extends TestBizModel
 		echo "<h5>New workshops</h5>\n";
 		$oSetWorkshopsCurr = $oObj->Get("myworkshops");
 		$this->show_list($oSetWorkshopsCurr);
-	
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_linkedset / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-		$oObj->DBUpdateTracked($oMyChange);
+
+		CMDBObject::SetTrackInfo('test_linkedset / Made by robot #'.rand(1, 100));
+		$oObj->DBUpdate();
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 	
 		echo "<h5>After the write</h5>\n";
@@ -4712,199 +4700,6 @@ class TestExecActions extends TestBizModel
 	}
 }
 
-class TestIntersectOptimization extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query optimizations (pointing to)';
-	}
-
-	static public function GetDescription()
-	{
-		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
-	}
-
-	protected function DoExecute()
-	{
-		$sBaseQuery = 'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"';
-		$aQueries = array(
-			// Exact same query
-			'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
-			// Same query, other aliases
-			'SELECT Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.name = "The World Company"',
-			// Same aliases, different condition
-			'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.parent_id = 0',
-			// Other aliases, different condition
-			'SELECT Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.parent_id = 0',
-			// Same aliases, simpler query tree
-			'SELECT Service AS s WHERE name LIKE "Save the World"',
-			// Other aliases, simpler query tree
-			'SELECT Service AS s2 WHERE name LIKE "Save the World"',
-			// Same aliases, different query tree
-			'SELECT Service AS s JOIN ServiceFamily AS f ON s.servicefamily_id = f.id WHERE s.org_id = 123 AND f.name = "Care"',
-			// Other aliases, different query tree
-			'SELECT Service AS s2 JOIN ServiceFamily AS f ON s2.servicefamily_id = f.id WHERE s2.org_id = 123 AND f.name = "Care"',
-		);
-		echo "<h4>Base query: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h4>\n";
-		foreach ($aQueries as $sOQL)
-		{
-			echo "<h5>Checking: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			$oSearchA = DBSearch::FromOQL($sBaseQuery);
-			$oSearchB = DBSearch::FromOQL($sOQL);
-			$oIntersect = $oSearchA->Intersect($oSearchB);
-			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
-			echo "<p>Successfully tested the SQL query.</p>\n";
-		}
-	}
-}
-
-class TestIntersectOptimization2 extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query optimizations (referenced by)';
-	}
-
-	static public function GetDescription()
-	{
-		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
-	}
-
-	protected function DoExecute()
-	{
-		$sBaseQuery = 'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"';
-		$aQueries = array(
-			// Exact same query
-			'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
-			// Same query, other aliases
-			'SELECT Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.name = "Help"',
-			// Same aliases, different condition
-			'SELECT Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.servicefamily_id = 321',
-			// Other aliases, different condition
-			'SELECT Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.servicefamily_id = 321',
-			// Same aliases, simpler query tree
-			'SELECT Organization AS o WHERE o.name = "Demo"',
-			// Other aliases, simpler query tree
-			'SELECT Organization AS o2 WHERE o2.name = "Demo"',
-			// Same aliases, different query tree
-			'SELECT Organization AS o JOIN Location AS l ON l.org_id = o.id WHERE l.name = "Paris"',
-			// Other aliases, different query tree
-			'SELECT Organization AS o2 JOIN Location AS l ON l.org_id = o2.id WHERE l.name = "Paris"',
-		);
-		echo "<h4>Base query: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h4>\n";
-		foreach ($aQueries as $sOQL)
-		{
-			echo "<h5>Checking: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			$oSearchA = DBSearch::FromOQL($sBaseQuery);
-			$oSearchB = DBSearch::FromOQL($sOQL);
-			$oIntersect = $oSearchA->Intersect($oSearchB);
-			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
-			echo "<p>Successfully tested the SQL query.</p>\n";
-		}
-	}
-}
-
-class TestIntersectOptimization3 extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query optimizations (mix)';
-	}
-
-	static public function GetDescription()
-	{
-		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
-	}
-
-	protected function DoExecute()
-	{
-		$aQueries = array(
-			array(
-				'SELECT Organization AS o',
-				'SELECT Organization AS o JOIN Location AS l ON l.org_id = o.id JOIN Organization AS p ON o.parent_id = p.id WHERE l.name = "Paris" AND p.code LIKE "toto"',
-			),
-			array(
-				'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "left_name"',
-				'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "right_name"',
-			),
-		);
-		echo "<h4>Mixing....</h4>\n";
-		foreach ($aQueries as $aQ)
-		{
-			$sBaseQuery = $aQ[0];
-			$sOQL = $aQ[1];
-			echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			$oSearchA = DBSearch::FromOQL($sBaseQuery);
-			$oSearchB = DBSearch::FromOQL($sOQL);
-			$oIntersect = $oSearchA->Intersect($oSearchB);
-			echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-			CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
-			echo "<p>Successfully tested the SQL query.</p>\n";
-		}
-	}
-}
-
-class TestIntersectOptimization4 extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query optimizations (Folding on Join/ReferencedBy)';
-	}
-
-	static public function GetDescription()
-	{
-		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
-	}
-
-	protected function DoExecute()
-	{
-		echo "<h4>Here we are (conluding a long series of tests)</h4>\n";
-		$sQueryA = 'SELECT UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE r.agent_id = 456 AND s.servicefamily_id = 789 AND o.name = "right_name"';
-		$sQueryB = 'SELECT Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "some name"';
-
-		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sQueryA);
-		$oSearchB = DBSearch::FromOQL($sQueryB);
-		$oSearchB->AddCondition_ReferencedBy($oSearchA, 'service_id');
-		echo "<p>Referenced by...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
-	}
-}
-
-class TestIntersectOptimization5 extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query optimizations (Folding on Join/PointingTo)';
-	}
-
-	static public function GetDescription()
-	{
-		return 'Clever optimization required for the portal to work fine (expected improvement: query never finishing... to an almost instantaneous query!';
-	}
-
-	protected function DoExecute()
-	{
-		echo "<h4>Here we are (concluding a long series of tests)</h4>\n";
-		$sQueryA = 'SELECT Organization AS o JOIN UserRequest AS r ON r.org_id = o.id JOIN Person AS p ON r.caller_id = p.id WHERE o.name LIKE "Company" AND r.service_id = 123 AND p.employee_number LIKE "007"';
-		$sQueryB = 'SELECT UserRequest AS ur JOIN Person AS p ON ur.agent_id = p.id WHERE p.status != "terminated"';
-
-		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sQueryA);
-		$oSearchB = DBSearch::FromOQL($sQueryB);
-		$oSearchB->AddCondition_PointingTo($oSearchA, 'org_id');
-		echo "<p>Pointing to...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
-	}
-}
-
 class TestParsingOptimization extends TestBizModel
 {
 	static public function GetName()
@@ -5033,70 +4828,6 @@ class TestImplicitAlias extends TestBizModel
 				echo "<p>Failed as expected.</p>\n";
 			}
 		}
-	}
-}
-
-class TestIntersectNotOptimized extends TestBizModel
-{
-	static public function GetName()
-	{
-		return 'Internal query NOT optimized';
-	}
-
-	static public function GetDescription()
-	{
-		return '(N.718) Sometimes, the optimization CANNOT be performed because merging two different classes (same branch) is not implemented';
-	}
-
-	protected function DoExecute()
-	{
-		echo "<h4>Intersect NOT optimized on 'pointing to'</h4>\n";
-		$sBaseQuery = 'SELECT lnkContactToFunctionalCI AS l JOIN Contact AS c ON l.contact_id = c.id';
-		$sOQL = 'SELECT lnkContactToFunctionalCI AS l JOIN Person AS p ON l.contact_id = p.id';
-		echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sBaseQuery);
-		$oSearchB = DBSearch::FromOQL($sOQL);
-		$oIntersect = $oSearchA->Intersect($oSearchB);
-		echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
-
-		echo "<h4>Intersect NOT optimized on 'referenced by'</h4>\n";
-		$sBaseQuery = 'SELECT Organization AS o JOIN Contact AS c ON c.org_id = o.id WHERE c.id = 1';
-		$sOQL = 'SELECT Organization AS o JOIN Person AS p ON p.org_id = o.id WHERE p.id = 2';
-		echo "<h5>Left: ".htmlentities($sBaseQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>Right: ".htmlentities($sOQL, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sBaseQuery);
-		$oSearchB = DBSearch::FromOQL($sOQL);
-		$oIntersect = $oSearchA->Intersect($oSearchB);
-		echo "<p>Intersect: ".htmlentities($oIntersect->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oIntersect->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
-
-		echo "<h4>NOT Folding on AddCondition_PointingTo</h4>\n";
-		$sQueryA = 'SELECT Organization AS o JOIN Contact AS c ON c.org_id = o.id';
-		$sQueryB = 'SELECT Person';
-		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sQueryA);
-		$oSearchB = DBSearch::FromOQL($sQueryB);
-		$oSearchB->AddCondition_PointingTo($oSearchA, 'org_id');
-		echo "<p>Pointing to...: ".htmlentities($oSearchB->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oSearchB->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
-
-		echo "<h4>NOT Folding on AddCondition_ReferencedBy</h4>\n";
-		$sQueryA = 'SELECT lnkContactToFunctionalCI AS l JOIN Contact AS c ON l.contact_id = c.id';
-		$sQueryB = 'SELECT Person';
-		echo "<h5>A: ".htmlentities($sQueryA, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		echo "<h5>B: ".htmlentities($sQueryB, ENT_QUOTES, 'UTF-8')."</h5>\n";
-		$oSearchA = DBSearch::FromOQL($sQueryA);
-		$oSearchB = DBSearch::FromOQL($sQueryB);
-		$oSearchB->AddCondition_ReferencedBy($oSearchA, 'contact_id');
-		echo "<p>Referenced by...: ".htmlentities($oSearchA->ToOQL(), ENT_QUOTES, 'UTF-8')."</p>\n";
-		CMDBSource::TestQuery($oSearchA->MakeSelectQuery());
-		echo "<p>Successfully tested the SQL query.</p>\n";
 	}
 }
 

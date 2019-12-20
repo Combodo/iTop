@@ -26,7 +26,7 @@
 
 /**
  * Implements the public interface for utilities
- * related to the SLA computation 
+ * related to the SLA computation
  */
 class SLAComputation implements iWorkingTimeComputer
 {
@@ -38,7 +38,7 @@ class SLAComputation implements iWorkingTimeComputer
 	/**
 	 * Generic "extensibility" method: select which extension is actually used
 	 *
-	 * @param $sClassName string The name of the class (derived from SLAComputationAddOnAPI) to use
+	 * @param string $sClassName The name of the class (derived from SLAComputationAddOnAPI) to use
 	 *
 	 * @return void
 	 * @throws \CoreException
@@ -59,13 +59,14 @@ class SLAComputation implements iWorkingTimeComputer
 
 	/**
 	 * Get the class of the extension actually used
+	 *
 	 * @return string The name of the extension class used
 	 */
 	public static function GetModuleInstance()
 	{
 		return self::$m_oAddOn;
 	}
-	
+
 	public static function GetDescription()
 	{
 		return "SLA computation (depends on the installed module)";
@@ -75,9 +76,9 @@ class SLAComputation implements iWorkingTimeComputer
 	 * Get the date/time corresponding to a given delay in the future from the present
 	 * considering only the valid (open) hours for a specified object
 	 *
-	 * @param $oObject Ticket The object for which to compute the deadline
-	 * @param $iDuration integer The duration (in seconds) in the future
-	 * @param $oStartDate DateTime The starting point for the computation
+	 * @param Ticket $oObject The object for which to compute the deadline
+	 * @param integer $iDuration The duration (in seconds) in the future
+	 * @param DateTime $oStartDate The starting point for the computation
 	 *
 	 * @return DateTime The date/time for the deadline
 	 * @throws \Exception
@@ -93,15 +94,16 @@ class SLAComputation implements iWorkingTimeComputer
 		{
 			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);
 		}
+
 		return $oEndDate;
 	}
 
 	/**
 	 * Get duration (considering only open hours) elapsed between two given DateTimes
 	 *
-	 * @param $oObject Ticket The object for which to compute the duration
-	 * @param $oStartDate DateTime The starting point for the computation (default = now)
-	 * @param $oEndDate DateTime The ending point for the computation (default = now)
+	 * @param Ticket $oObject The object for which to compute the duration
+	 * @param DateTime $oStartDate The starting point for the computation (default = now)
+	 * @param DateTime $oEndDate The ending point for the computation (default = now)
 	 *
 	 * @return integer The duration (number of seconds) of open hours elapsed between the two dates
 	 * @throws \Exception
@@ -115,8 +117,10 @@ class SLAComputation implements iWorkingTimeComputer
 		$iDuration = self::$m_oAddOn->GetOpenDuration($oObject, $oStartDate, $oEndDate);
 		if (class_exists('WorkingTimeRecorder'))
 		{
-			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_DURATION);
+			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration,
+				WorkingTimeRecorder::COMPUTED_DURATION);
 		}
+
 		return $iDuration;
 	}
 }
@@ -135,14 +139,16 @@ class SLAComputationAddOnAPI
 	 */
 	public function Init()
 	{
-	}	
+	}
 
 	/**
 	 * Get the date/time corresponding to a given delay in the future from the present
 	 * considering only the valid (open) hours for a specified ticket
-	 * @param $oTicket Ticket The ticket for which to compute the deadline
-	 * @param $iDuration integer The duration (in seconds) in the future
-	 * @param $oStartDate DateTime The starting point for the computation
+	 *
+	 * @param Ticket $oTicket The ticket for which to compute the deadline
+	 * @param integer $iDuration The duration (in seconds) in the future
+	 * @param DateTime $oStartDate The starting point for the computation
+	 *
 	 * @return DateTime The date/time for the deadline
 	 */
 	public static function GetDeadline($oTicket, $iDuration, DateTime $oStartDate)
@@ -155,14 +161,17 @@ class SLAComputationAddOnAPI
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
 		$oResult->modify('+'.$iDuration.' seconds');
+
 		return $oResult;
 	}
-	
+
 	/**
 	 * Get duration (considering only open hours) elapsed between two given DateTimes
-	 * @param $oTicket Ticket The ticket for which to compute the duration
-	 * @param $oStartDate DateTime The starting point for the computation (default = now)
-	 * @param $oEndDate DateTime The ending point for the computation (default = now)
+	 *
+	 * @param Ticket $oTicket The ticket for which to compute the duration
+	 * @param DateTime $oStartDate The starting point for the computation (default = now)
+	 * @param DateTime $oEndDate The ending point for the computation (default = now)
+	 *
 	 * @return integer The duration (number of seconds) of open hours elapsed between the two dates
 	 */
 	public static function GetOpenDuration($oTicket, DateTime $oStartDate, DateTime $oEndDate)
@@ -171,8 +180,9 @@ class SLAComputationAddOnAPI
 		{
 			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
 		}
+
 		return abs($oEndDate->format('U') - $oStartDate->format('U'));
 	}
 }
+
 SLAComputation::SelectModule('SLAComputationAddOnAPI');
-?>

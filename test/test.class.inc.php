@@ -434,57 +434,20 @@ abstract class TestBizModel extends TestHandler
 	}
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-//		list($bRes, $aIssues) = $oNew->CheckToWrite();
-//		if (!$bRes)
-//		{
-//			throw new CoreException('Could not create object, unexpected values', array('issues' => $aIssues));
-//		}
-		if ($oNew instanceof CMDBObject)
+		if ($bReload)
 		{
-			if (!isset($this->m_oChange))
-			{
-				 new CMDBChange();
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$oMyChange->Set("userinfo", "Someone doing some tests");
-				$iChangeId = $oMyChange->DBInsertNoReload();
-				$this->m_oChange = $oMyChange; 
-			}
-			$oChange = $this->GetCurrentChange();
-			if ($bReload)
-			{
-				$iId = $oNew->DBInsertTracked($oChange);
-			}
-			else
-			{
-				$iId = $oNew->DBInsertTrackedNoReload($oChange);
-			}
+			$iId = $oNew->DBInsert();
 		}
 		else
 		{
-			if ($bReload)
-			{
-				$iId = $oNew->DBInsert();
-			}
-			else
-			{
-				$iId = $oNew->DBInsertNoReload();
-			}
+			$iId = $oNew->DBInsertNoReload();
 		}
 		return $iId;
 	}
 
   	protected function UpdateObjectInDB($oObject)
 	{
-   	if ($oObject instanceof CMDBObject)
-		{
-			$oChange = $this->GetCurrentChange();
-			$oObject->DBUpdateTracked($oChange);
-		}
-		else
-		{
-			$oObject->DBUpdate();
-		}
+		$oObject->DBUpdate();
 	}
 	protected function ResetDB()
 	{

@@ -1,28 +1,22 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * User preferences page
- * Displays / edit some user preferences
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
@@ -326,7 +320,7 @@ EOF
 		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
 		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
-		$sIcon = '<img src="../images/newsroom_menu.png" style="vertical-align:middle">';
+		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-comment-dots" style="top: 0;"></i>';
 		$oP->p(Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon));
 		
 		/**
@@ -368,7 +362,13 @@ EOF
 		$oP->add('</form>');
 		$oP->add('</fieldset>');
 	}
-	
+
+	/** @var iPreferencesExtension $oLoginExtensionInstance */
+	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
+	{
+		$oPreferencesExtensionInstance->DisplayPreferences($oP);
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Footer
@@ -394,101 +394,122 @@ $sOperation = utils::ReadParam('operation', '');
 	
 try
 {
-	switch($sOperation)
+	/** @var iPreferencesExtension $oLoginExtensionInstance */
+	$bOperationUsed = false;
+	foreach(MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
 	{
-		case 'apply':
-		$oFilter = DBObjectSearch::FromOQL('SELECT Organization');
-		$sSelectionMode = utils::ReadParam('selectionMode', '');
-		$aExceptions = utils::ReadParam('storedSelection', array());
-		if (($sSelectionMode == 'negative') && (count($aExceptions) == 0))
+		if ($oPreferencesExtensionInstance->ApplyPreferences($oPage, $sOperation))
 		{
-			// All Orgs selected
-			appUserPreferences::SetPref('favorite_orgs', null);
+			$bOperationUsed = true;
+			break;
 		}
-		else
+	}
+
+	if (!$bOperationUsed)
+	{
+		switch ($sOperation)
 		{
-			// Some organizations selected... store them
-			$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
-			appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
-		}
-		DisplayPreferences($oPage);
-		break;
-		
-		case 'apply_language':
-		$sLangCode = utils::ReadParam('language', 'EN US');
-		$oUser = UserRights::GetUserObject();
-		$oUser->Set('language', $sLangCode);
-		utils::PushArchiveMode(false);
-		$oUser->AllowWrite(true);
-		$oUser->DBUpdate();
-		utils::PopArchiveMode();
-		// Redirect to force a reload/display of the page with the new language
-		$oAppContext = new ApplicationContext();
-		$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
-		$oPage->add_header('Location: '.$sURL);
-		break;
-		case 'apply_others':
-		$iDefaultPageSize = (int)utils::ReadParam('default_page_size', -1);
-		if ($iDefaultPageSize > 0)
-		{
-			appUserPreferences::SetPref('default_page_size', $iDefaultPageSize);
-		}
-		$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
-		appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
-		DisplayPreferences($oPage);
-		break;
-		
-		case 'apply_newsroom_preferences':
-		$iCountProviders = 0;
-		$oUser = UserRights::GetUserObject();
-		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-		foreach($aProviders as $oProvider)
-		{
-			if ($oProvider->IsApplicable($oUser))
-			{
-				$iCountProviders++;
-			}
-		}
-		$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
-		if ($bNewsroomEnabled && ($iCountProviders > 0))
-		{
-			$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', 7);
-			if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
-			if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
-			$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', $iNewsroomDisplaySize);
-			if ($iCurrentDisplaySize != $iNewsroomDisplaySize)
-			{
-				// Save the preference only if it differs from the current (or default) value
-				appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);
-			}
-		}
-		$bProvidersModified = false;
-		foreach($aProviders as $oProvider)
-		{
-			if ($oProvider->IsApplicable($oUser))
-			{
-				$sProviderClass = get_class($oProvider);
-				$bProviderEnabled = (utils::ReadParam('newsroom_provider_'.$sProviderClass, 'off') == 'on');
-				$bCurrentValue = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true);
-				if ($bCurrentValue != $bProviderEnabled)
+			case 'apply':
+				$oFilter = DBObjectSearch::FromOQL('SELECT Organization');
+				$sSelectionMode = utils::ReadParam('selectionMode', '');
+				$aExceptions = utils::ReadParam('storedSelection', array());
+				if (($sSelectionMode == 'negative') && (count($aExceptions) == 0))
 				{
-					// Save the preference only if it differs from the current value
-					$bProvidersModified = true;
-					appUserPreferences::SetPref('newsroom_provider_'.$sProviderClass, $bProviderEnabled);
+					// All Orgs selected
+					appUserPreferences::SetPref('favorite_orgs', null);
 				}
-			}
+				else
+				{
+					// Some organizations selected... store them
+					$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
+					appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
+				}
+				DisplayPreferences($oPage);
+				break;
+
+			case 'apply_language':
+				$sLangCode = utils::ReadParam('language', 'EN US');
+				$oUser = UserRights::GetUserObject();
+				$oUser->Set('language', $sLangCode);
+				utils::PushArchiveMode(false);
+				$oUser->AllowWrite(true);
+				$oUser->DBUpdate();
+				utils::PopArchiveMode();
+				// Redirect to force a reload/display of the page with the new language
+				$oAppContext = new ApplicationContext();
+				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
+				$oPage->add_header('Location: '.$sURL);
+				break;
+			case 'apply_others':
+				$iDefaultPageSize = (int)utils::ReadParam('default_page_size', -1);
+				if ($iDefaultPageSize > 0)
+				{
+					appUserPreferences::SetPref('default_page_size', $iDefaultPageSize);
+				}
+				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
+				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
+				DisplayPreferences($oPage);
+				break;
+
+			case 'apply_newsroom_preferences':
+				$iCountProviders = 0;
+				$oUser = UserRights::GetUserObject();
+				$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
+				foreach ($aProviders as $oProvider)
+				{
+					if ($oProvider->IsApplicable($oUser))
+					{
+						$iCountProviders++;
+					}
+				}
+				$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
+				if ($bNewsroomEnabled && ($iCountProviders > 0))
+				{
+					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', 7);
+					if ($iNewsroomDisplaySize < 1)
+					{
+						$iNewsroomDisplaySize = 1;
+					}
+					if ($iNewsroomDisplaySize > 20)
+					{
+						$iNewsroomDisplaySize = 20;
+					}
+					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', $iNewsroomDisplaySize);
+					if ($iCurrentDisplaySize != $iNewsroomDisplaySize)
+					{
+						// Save the preference only if it differs from the current (or default) value
+						appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);
+					}
+				}
+				$bProvidersModified = false;
+				foreach ($aProviders as $oProvider)
+				{
+					if ($oProvider->IsApplicable($oUser))
+					{
+						$sProviderClass = get_class($oProvider);
+						$bProviderEnabled = (utils::ReadParam('newsroom_provider_'.$sProviderClass, 'off') == 'on');
+						$bCurrentValue = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true);
+						if ($bCurrentValue != $bProviderEnabled)
+						{
+							// Save the preference only if it differs from the current value
+							$bProvidersModified = true;
+							appUserPreferences::SetPref('newsroom_provider_'.$sProviderClass, $bProviderEnabled);
+						}
+					}
+				}
+				if ($bProvidersModified)
+				{
+					$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
+				}
+				DisplayPreferences($oPage);
+				break;
+
+			case 'display':
+			default:
+				$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '',
+					utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+				DisplayPreferences($oPage);
 		}
-		if ($bProvidersModified)
-		{
-			$oPage->add_ready_script('$(".itop-newsroom_menu").newsroom_menu("clearCache");');
-		}
-		DisplayPreferences($oPage);
-		break;
-		
-		case 'display':
-		default:
-		$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-		DisplayPreferences($oPage);
 	}
 	$oPage->output();
 }

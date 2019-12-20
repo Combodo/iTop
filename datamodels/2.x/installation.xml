@@ -16,6 +16,10 @@
             <module>itop-profiles-itil</module>
             <module>itop-welcome-itil</module>
             <module>itop-tickets</module>
+            <module>itop-files-information</module>
+            <module>itop-twig-base</module>
+            <module>combodo-db-tools</module>
+            <module>itop-core-update</module>
             <module>itop-hub-connector</module>
           </modules>
           <mandatory>true</mandatory>
@@ -99,8 +103,8 @@
             <options type="array">
               <choice>
                 <extension_code>itop-ticket-mgmt-simple-ticket-enhanced-portal</extension_code>
-                <title>Enhanced Customer Portal</title>
-                <description>Replace the built-in customer portal with a more modern version, working better with hand-held devices and bringing new features</description>
+                <title>Customer Portal</title>
+                <description><![CDATA[Modern & responsive portal for the end-users]]></description>
                 <modules type="array">
                   <module>itop-portal</module>
                   <module>itop-portal-base</module>
@@ -134,8 +138,8 @@
               </choice>
               <choice>
                 <extension_code>itop-ticket-mgmt-itil-enhanced-portal</extension_code>
-                <title>Enhanced Customer Portal</title>
-                <description>Replace the built-in customer portal with a more modern version, working better with hand-held devices and bringing new features</description>
+                <title>Customer Portal</title>
+                <description><![CDATA[Modern & responsive portal for the end-users]]></description>
                 <modules type="array">
                   <module>itop-portal</module>
                   <module>itop-portal-base</module>

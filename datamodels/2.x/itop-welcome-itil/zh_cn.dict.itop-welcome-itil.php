@@ -54,6 +54,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserAccountsMenu+' => '用户帐户',
 	'Menu:UserAccountsMenu:Title' => '用户帐户',
 	'Menu:MyShortcuts' => '我的快捷方式',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -81,4 +84,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

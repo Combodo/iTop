@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 
@@ -109,7 +110,7 @@ class BulkExportResultGC implements iBackgroundProcess
 		{
 			// Next one ?
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array(), null, 1 /* limit count */);
-			$oSet->OptimizeColumnLoad(array('temp_file_path'));
+			$oSet->OptimizeColumnLoad(array('BulkExportResult' => array('temp_file_path')));
 			$oResult = $oSet->Fetch();
 			if (is_null($oResult))
 			{
@@ -170,6 +171,7 @@ abstract class BulkExport
 			$oRefClass = new ReflectionClass($sPHPClass);
 			if ($oRefClass->isSubclassOf('BulkExport') && !$oRefClass->isAbstract())
 			{
+				/** @var BulkExport $oBulkExporter */
 				$oBulkExporter = new $sPHPClass();
 				if ($oBulkExporter->IsFormatSupported($sFormatCode, $oSearch))
 				{
@@ -189,7 +191,7 @@ abstract class BulkExport
      *
      * @param int $iPersistentToken The identifier of the BulkExportResult object storing the information
      *
-     * @return iBulkExport|null
+     * @return BulkExport|null
      * @throws ArchivedObjectException
      * @throws CoreException
      * @throws ReflectionException

@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-knownerror-mgmt/2.6.1',
+	'itop-knownerror-mgmt/2.7.0',
 	array(
 		// Identification
 		//
@@ -82,5 +82,3 @@ if (!class_exists('KnownErrorMgmtInstaller'))
 		}
 	}
 }
-
-?>

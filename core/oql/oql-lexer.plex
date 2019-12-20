@@ -148,6 +148,7 @@ above            = "ABOVE"
 above_strict     = "ABOVE STRICT"
 not_above        = "NOT ABOVE"
 not_above_strict = "NOT ABOVE STRICT"
+null_val = "NULL"
 //
 // WARNING: there seems to be a bug in the Lexer about matching the longest pattern
 //          when there are alternates in the regexp.
@@ -390,6 +391,9 @@ numval {
 }
 strval {
 	$this->token = OQLParser::STRVAL;
+}
+null_val {
+    $this->token = OQLParser::NULL_VAL;
 }
 name {
 	$this->token = OQLParser::NAME;

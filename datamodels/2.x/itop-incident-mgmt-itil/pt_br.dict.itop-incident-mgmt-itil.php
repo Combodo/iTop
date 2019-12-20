@@ -46,8 +46,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -236,17 +234,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente principal ao próprio incidente',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Problema principal',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Ref problema principal',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a resolução ao ticket filho (ev_autoresolve) e alinhe as seguintes características: service, team, agent, resolution info',
+	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
 ));

@@ -37,17 +37,16 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-3.3.1.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
 		if(utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.dev.js');
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
 		}
 		else
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.prod.min.js');
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
@@ -75,6 +74,8 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
 
 	    $this->add_dict_entries('UI:Combo');
 
@@ -122,7 +123,7 @@ class NiceWebPage extends WebPage
 	$("table.listResults").tableHover(); // hover tables
 EOF
 		);
-		$this->add_saas("css/light-grey.scss");
+	    $this->LoadTheme();
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
@@ -232,7 +233,8 @@ EOF
 		foreach($aChoices as $sKey => $sValue)
 		{
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
-			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."</option>");
+			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue,
+					ENT_QUOTES, self::PAGES_CHARSET)."</option>");
 		}
 		$this->add("</select>");
 	}
@@ -254,6 +256,10 @@ EOF
 		}
 		parent::output();
 	}
-}
 
-?>
+	protected function LoadTheme()
+	{
+		$sCssThemeUrl = ThemeHandler::GetTheme();
+		$this->add_linked_stylesheet($sCssThemeUrl);
+	}
+}

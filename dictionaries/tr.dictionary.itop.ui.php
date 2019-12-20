@@ -109,6 +109,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'İrtibat (kişi)',
 	'Class:User/Attribute:contactid+' => 'İrtibat detayları',
+	'Class:User/Attribute:org_id' => 'Kurum',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Soyadı',
 	'Class:User/Attribute:last_name+' => 'İrtibatın soyadı',
 	'Class:User/Attribute:first_name' => 'Adı',
@@ -131,7 +133,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled~~',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'Kullanıcı adı tekil olmalı - "%1s" mevcut bir kullanıcıya ait.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'En az bir profil kullanıcıya atanmalı',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
@@ -342,7 +344,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'BooleanLabel:yes' => 'evet',
 	'BooleanLabel:no' => 'hayır',
-    'UI:Login:Title' => 'iTop login~~',
+	'UI:Login:Title' => 'iTop login~~',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -417,7 +419,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
-	
+
 	'UI:SearchToggle' => 'Ara',
 	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
 	'UI:SearchFor_Class' => '%1$s Arama',
@@ -437,7 +439,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Geçici dosya diske yazılamadı. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Dosya yükleme dosya uzantısı nedeniyle duruduruldu. (Dosya adı = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Dosya yükleme bilinmeyen bir sebeple başarısız oldu. (Hata kodu = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Hata: Bu operasyon için %1$s parametresi tanımlanmalı.',
 	'UI:Error:2ParametersMissing' => 'Hata: Bu operasyon için %1$s ve %2$s parametreleri tanımlanmalı.',
 	'UI:Error:3ParametersMissing' => 'Hata: Bu operasyon için %1$s, %2$s ve %3$s parametreleri tanımlanmalı.',
@@ -455,6 +457,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hata: "%3$s" durumundaki %2$s nesnesi için "%1$s" uyarısı geçersizdir.',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -521,6 +525,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -557,6 +562,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Login' => 'iTop\'a Giriş',
 	'UI:Login:Error:AccessRestricted' => 'iTop erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
 	'UI:Login:Error:AccessAdmin' => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Birini seçiniz --',
 	'UI:CSVImport:MappingNotApplicable' => '-- alanı ihmal et --',
 	'UI:CSVImport:NoData' => 'Boş veri seti..., veri giriniz!',
@@ -614,7 +622,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Lütfen tüm alanlar için alan eşlemesini yapınız.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Lütfen en az bir sorgu kriteri seçiniz.',
-	'UI:CSVImport:Encoding' => 'Karakter kodlaması',	
+	'UI:CSVImport:Encoding' => 'Karakter kodlaması',
 	'UI:UniversalSearchTitle' => 'iTop - Genel arama',
 	'UI:UniversalSearch:Error' => 'Hata: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
@@ -684,6 +692,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:MoreInfo' => 'Sorgu hakkında detaylı bilgi: ',
 	'UI:RunQuery:DevelopedQuery' => 'Yeniden düzenlenen sorgu: ',
 	'UI:RunQuery:SerializedFilter' => 'Özel filtre: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -705,7 +717,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Schema:Label' => 'Etiket',
 	'UI:Schema:Label+' => 'Özellik etiketi',
 	'UI:Schema:Type' => 'Tip',
-	
+
 	'UI:Schema:Type+' => 'Özellik veri tipi',
 	'UI:Schema:Origin' => 'Kaynak',
 	'UI:Schema:Origin+' => 'Özelliğin tanımlandığı ana sınıf',
@@ -795,7 +807,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Otomatik güncellenmeli, ancak: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'otomatik güncellenecek (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d nesne/ilişki %2$s\'yi referans ediyor',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d silinmek istenen nesne/bağlantıları referans veriyor',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d silinmek istenen nesne/bağlantıları referans veriyor',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Veri tabanı doğruluğu(Database integrity) için yeni referans verilmesi engellenmelidir',
 	'UI:Delete:Consequence+' => 'Ne yapılacak',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Bu nesneyi silmeye yetkiniz yok, yukarıdaki açıklamayı bakınız',
@@ -844,7 +856,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:FatalErrorMessage' => 'Kritik Hata, iTop devam edemiyor.',
 	'UI:Error_Details' => 'Hata: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop Kullanıcı Yönetimi - sınıf koruması',
+	'UI:PageTitle:ClassProjections' => 'iTop Kullanıcı Yönetimi - sınıf koruması',
 	'UI:PageTitle:ProfileProjections' => 'iTop Kullanıcı Yönetimi - profil koruması',
 	'UI:UserManagement:Class' => 'Sınıf',
 	'UI:UserManagement:Class+' => 'Nesnin sınıfı',
@@ -883,10 +895,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:GrantMatrix' => 'Yetkiler',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s ve %2$s arasındaki ilişki',
 	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s ve %2$s arasındaki ilişki',
-	
+
 	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Değişiklik Yönetimi',
 	'UI:ChangeManagementMenu+' => 'Değişiklik Yönetimi',
@@ -902,28 +915,28 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastructure objects by type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastructure objects by status',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Konfigürasyon Yönetimi Gösterge Tablosu',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Durumlarına göre Konfigürasyon Kalemleri(KK)',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Tiplerine göre Konfigürasyon Kalemleri(KK)',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Konfigürasyon Yönetimi Gösterge Tablosu',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Durumlarına göre Konfigürasyon Kalemleri(KK)',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Tiplerine göre Konfigürasyon Kalemleri(KK)',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Çağrı Yönetimi Gösterge Tablosu',
-'UI-RequestManagementOverview-RequestByService' => 'Hizmetlere göre çağrılar',
-'UI-RequestManagementOverview-RequestByPriority' => 'Önceliklere göre çağrılar',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Henüz atanmamış çağrılar',
+	'UI:RequestMgmtMenuOverview:Title' => 'Çağrı Yönetimi Gösterge Tablosu',
+	'UI-RequestManagementOverview-RequestByService' => 'Hizmetlere göre çağrılar',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Önceliklere göre çağrılar',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Henüz atanmamış çağrılar',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Arıza Gösterge Tablosu',
-'UI-IncidentManagementOverview-IncidentByService' => 'Servislere göre arızalar',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Önceliklere göre arızalar',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Henüz atanmamış arızalar',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Arıza Gösterge Tablosu',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Servislere göre arızalar',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Önceliklere göre arızalar',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Henüz atanmamış arızalar',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Değişiklik Yönetimi Gösterge Tablosu',
-'UI-ChangeManagementOverview-ChangeByType' => 'Tiplerine göre değişiklikler',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Henüz atanmamış değişiklikler',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Değişiklik nedeniyle devre dışı',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Değişiklik Yönetimi Gösterge Tablosu',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Tiplerine göre değişiklikler',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Henüz atanmamış değişiklikler',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Değişiklik nedeniyle devre dışı',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Hizmet Yönetimi Gösterge Tablosu',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => '30 gün içinde biten Müşteri Sözleşmeleri',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => '30 gün içinde biten Tedarikçi Sözleşmeleri',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Hizmet Yönetimi Gösterge Tablosu',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => '30 gün içinde biten Müşteri Sözleşmeleri',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => '30 gün içinde biten Tedarikçi Sözleşmeleri',
 
 	'UI:ContactsMenu' => 'İrtibatlar',
 	'UI:ContactsMenu+' => 'İrtibatlar',
@@ -934,13 +947,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Menu:CSVImportMenu' => 'CSV dışardan al', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Çoklu yaratım veya güncelleme', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Veri Modeli', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Veri Modeli Özeti', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Dışarı ver', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
@@ -977,19 +990,19 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Menu:AuditCategories' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Genel sorgu', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1011,9 +1024,9 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Download-CSV' => 'Download %1$s~~',
 
 	'UI:DeadlineMissedBy_duration' => '%1$s ile kaçırıldı',
-	'UI:Deadline_LessThan1Min' => '< 1 dk.',		
-	'UI:Deadline_Minutes' => '%1$d dk.',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$ddk',			
+	'UI:Deadline_LessThan1Min' => '< 1 dk.',
+	'UI:Deadline_Minutes' => '%1$d dk.',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$ddk',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d gün %2$d saat %3$d dk',
 	'UI:Help' => 'Yardım',
 	'UI:PasswordConfirm' => '(Onay)',
@@ -1065,8 +1078,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:ChangeMyPassword' => 'Şifre değiştir',
 	'Portal:Disconnect' => 'Çıkış',
 	'Portal:OpenRequests' => 'Açık isteklerim',
-	'Portal:ClosedRequests'  => 'My closed requests',
-	'Portal:ResolvedRequests'  => 'Çözdüğüm istekler',
+	'Portal:ClosedRequests' => 'My closed requests',
+	'Portal:ResolvedRequests' => 'Çözdüğüm istekler',
 	'Portal:SelectService' => 'Kataloğdan servis seçiniz:',
 	'Portal:PleaseSelectOneService' => 'Sevis seçiniz',
 	'Portal:SelectSubcategoryFrom_Service' => '%1$s servis için alt kategorsi seçiniz:',
@@ -1085,7 +1098,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Portal:RemoveAttachment' => ' Remove Attachment ~~',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d to %2$s (%3$s)~~',
 	'Portal:SelectRequestTemplate' => 'Select a template for %1$s~~',
-	'Enum:Undefined' => 'Tanımsız',	
+	'Enum:Undefined' => 'Tanımsız',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Days %2$s Hours %3$s Minutes %4$s Seconds~~',
 	'UI:ModifyAllPageTitle' => 'Modify All~~',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modifying %1$d objects of class %2$s~~',
@@ -1097,7 +1110,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:BulkModifyStatus' => 'Operation~~',
 	'UI:BulkModifyStatus+' => 'Status of the operation~~',
 	'UI:BulkModifyErrors' => 'Errors (if any)~~',
-	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',	
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',
 	'UI:BulkModifyStatusOk' => 'Ok~~',
 	'UI:BulkModifyStatusError' => 'Error~~',
 	'UI:BulkModifyStatusModified' => 'Modified~~',
@@ -1191,8 +1204,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 
 	'UI:DashboardEdit:Layout' => 'Layout~~',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties~~',
-	'UI:DashboardEdit:Dashlets' => 'Available Dashlets~~',	
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties~~',	
+	'UI:DashboardEdit:Dashlets' => 'Available Dashlets~~',
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties~~',
 
 	'UI:Form:Property' => 'Property~~',
 	'UI:Form:Value' => 'Value~~',
@@ -1303,7 +1316,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
@@ -1325,7 +1338,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...~~',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut~~',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list~~',
@@ -1375,7 +1388,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-		
+
 	'UI:Button:Remove' => 'Remove~~',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
@@ -1388,13 +1401,13 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'Data~~',	
-	
+	'UI:About:RemoteExtensionSource' => 'Data~~',
+
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',
 	'UI:LoginAgain' => 'Login again~~',
 	'UI:StayOnThePage' => 'Stay on this page~~',
-	
+
 	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
 	'ExcelExporter:ExportButton' => 'Export~~',
@@ -1414,16 +1427,16 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !~~',
-	
+
 	'UI:Menu:ExportPDF' => 'Export as PDF...~~',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version~~',
-	
+
 	'UI:BrowseInlineImages' => 'Browse images...~~',
 	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
-	
+
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
@@ -1432,6 +1445,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1473,20 +1487,20 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
 
 	// - Criteria operators
 	//   - Default widget

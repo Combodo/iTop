@@ -29,6 +29,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreOqlMultipleResultsForbiddenException;
 use DBSearch;
 use Exception;
 use Expression;
@@ -47,6 +48,7 @@ use FunctionExpression;
  */
 class DBSearchTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws \Exception
@@ -516,6 +518,142 @@ class DBSearchTest extends ItopDataTestCase
 		$this->debug($aRes);
 
 		self::assertEquals(1, count($aRes));
+	}
+
+	/**
+	 * @dataProvider GetFirstResultProvider
+	 *
+	 * @param string $sOql query to test
+	 * @param bool $bMustHaveOneResultMax arg passed to the tested function
+	 * @param int $sReturn
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @covers       DBSearch::GetFirstResult()
+	 */
+	public function testGetFirstResult($sOql, $bMustHaveOneResultMax, $sReturn)
+	{
+		$oSearch = DBSearch::FromOQL($sOql);
+
+		$bHasThrownException = false;
+		try
+		{
+			$oFirstResult = $oSearch->GetFirstResult($bMustHaveOneResultMax);
+		}
+		catch (CoreOqlMultipleResultsForbiddenException $e)
+		{
+			$oFirstResult = null;
+			$bHasThrownException = true;
+		}
+
+		switch ($sReturn)
+		{
+			case 'exception':
+				self::assertEquals(true, $bHasThrownException, 'Exception raised');
+				break;
+			case 'null':
+				self::assertNull($oFirstResult, 'Null returned');
+				break;
+			case 'object':
+				self::assertInternalType('object', $oFirstResult, 'Object returned');
+				break;
+		}
+	}
+
+	public function GetFirstResultProvider()
+	{
+		return array(
+			'One result' => array(
+				'SELECT Person WHERE id = 1',
+				false,
+				'object',
+			),
+			'Multiple results, no exception' => array(
+				'SELECT Person',
+				false,
+				'object',
+			),
+			'Multiple results, with exception' => array(
+				'SELECT Person',
+				true,
+				'exception',
+			),
+			'Multiple results with "WHERE 1", with exception' => array(
+				'SELECT Person WHERE 1',
+				true,
+				'exception',
+			),
+			'No result' => array(
+				'SELECT Person WHERE id = -1',
+				true,
+				'null',
+			),
+		);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testSanity_GroupFunction_In_WherePart()
+	{
+		$sExceptionClass = '';
+		$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
+		self::assertNotNull($oSearch);
+
+		try
+		{
+			$oExpr1 = Expression::FromOQL('AVC(FCI.name)');
+			//$aGroupBy = array('group1' => $oExpr1);
+			//$oSearch->MakeGroupByQuery(array(), $aGroupBy, false, array(), array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		static::assertEquals('OQLParserException', $sExceptionClass);
+	}
+
+	public function testSanity_GroupFunction_In_GroupByPart()
+	{
+		$sExceptionClass = '';
+		try
+		{
+			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI WHERE COUNT(FCI.name) = AVC(FCI.name)");
+			//$oSearch->MakeGroupByQuery(array(), array(), false, array(), array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		static::assertEquals('OQLParserException', $sExceptionClass);
+	}
+
+	public function testSanity_UnknownGroupFunction_In_SelectPart()
+	{
+		$sExceptionClass = '';
+		try
+		{
+			$oTimeExpr = Expression::FromOQL('FCI.speed');
+			$oWrongExpr = new FunctionExpression('GABUZOMEU', array($oTimeExpr));
+			// Alias => Expression
+			$aFunctions = array(
+				'_itop_wrong_' => $oWrongExpr,
+			);
+			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
+			$oSearch->MakeGroupByQuery(array(), array(), false, $aFunctions, array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		//later on it should raise an exception...
+		static::assertEquals('', $sExceptionClass);
 	}
 
 }

@@ -192,7 +192,11 @@ class Dict
 	/**
 	 * Formats a localized string with numbered placeholders (%1$s...) for the additional arguments
 	 * See vsprintf for more information about the syntax of the placeholders
+	 *
+	 * @see \TemplateString to use placeholders
+	 *
 	 * @param string $sFormatCode
+	 *
 	 * @return string
 	 */
 	public static function Format($sFormatCode /*, ... arguments ....*/)

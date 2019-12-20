@@ -57,7 +57,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Privates Log',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Kontakte',
+	'Class:Ticket/Attribute:contacts_list' => 'Kontakte',
 	'Class:Ticket/Attribute:contacts_list+' => '',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => '',

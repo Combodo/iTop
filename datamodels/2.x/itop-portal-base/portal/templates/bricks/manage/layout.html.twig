@@ -1,0 +1,23 @@
+{# itop-portal-base/portal/templates/bricks/manage/layout.html.twig #}
+{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+
+{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }} ({{ iCount }}) {% endblock %}
+
+{% block pMainHeaderActions %}
+    {% if oBrick.GetAvailablesDisplayModes|length > 1 %}
+		<div class="btn-group btn_group_explicit">
+            {% for sDisplay in oBrick.GetAvailablesDisplayModes %}
+				<a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplay}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
+				   id="btn_tab_for_{{ sDisplay }}"
+				   class="btn btn-default {% if sDisplay == oBrick.GetPresentationDataForTileMode(sDisplayMode).layoutDisplayMode %}active{% endif %}">
+                    {{ ('Brick:Portal:Manage:DisplayMode:' ~ sDisplay)|dict_s }}
+				</a>
+            {% endfor %}
+		</div>
+    {% endif %}
+{% endblock %}
+
+{% block pPageReadyScripts %}
+    {{ parent() }}
+    {% include 'itop-portal-base/portal/templates/helpers/tagset_clic_handler.js.twig' %}
+{% endblock %}

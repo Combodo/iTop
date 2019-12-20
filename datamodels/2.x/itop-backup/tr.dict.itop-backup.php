@@ -39,7 +39,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'bkp-week-days' => 'Backups will occur <b>every %1$s at %2$s</b>~~',
 	'bkp-retention' => 'At most <b>%1$d backup files will be kept</b> in the target directory.~~',
 	'bkp-next-to-delete' => 'Will be deleted when the next backup occurs (see the setting "retention_count")~~',
-	'bkp-table-file' => 'File~~', 
+	'bkp-table-file' => 'File~~',
 	'bkp-table-file+' => 'Only files having the extension .zip are considered as being backup files~~',
 	'bkp-table-size' => 'Size~~',
 	'bkp-table-size+' => '~~',

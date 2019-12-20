@@ -27,9 +27,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:Home' => 'Welkom',
 	'Page:GoPortalHome' => 'Startpagina',
 	'Page:GoPreviousPage' => 'Vorige pagina',
-    'Page:ReloadPage' => 'Pagina herladen',
+	'Page:ReloadPage' => 'Pagina herladen',
 	'Portal:Button:Submit' => 'Verstuur',
-    'Portal:Button:Apply' => 'Update',
+	'Portal:Button:Apply' => 'Update',
 	'Portal:Button:Cancel' => 'Afbreken',
 	'Portal:Button:Close' => 'Sluiten',
 	'Portal:Button:Add' => 'Toevoegen',
@@ -37,14 +37,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Button:Delete' => 'Verwijderen',
 	'Portal:EnvironmentBanner:Title' => 'Je werkt momenteel in de <strong>%1$s</strong>-omgeving',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Keer terug naar de productie-omgeving',
-    'Error:HTTP:400' => 'Bad request~~',
-    'Error:HTTP:401' => 'Aanmelden is vereist',
-    'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
+	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:401' => 'Aanmelden is vereist',
+	'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
 	'Error:HTTP:500' => 'Oeps! Er is een fout opgetreden',
 	'Error:HTTP:GetHelp' => 'Neem contact op met de beheerder als dit probleem zich blijft voordoen',
 	'Error:XHR:Fail' => 'De data kan niet worden geladen, neem contact op met de beheerder',
-    'Portal:ErrorUserLoggedOut' => 'Je bent afgemeld en moet opnieuw aanmelden om verder te kunnen werken.',
-    'Portal:Datatables:Language:Processing' => 'Even geduld...',
+	'Portal:ErrorUserLoggedOut' => 'Je bent afgemeld en moet opnieuw aanmelden om verder te kunnen werken.',
+	'Portal:Datatables:Language:Processing' => 'Even geduld...',
 	'Portal:Datatables:Language:Search' => 'Filter :',
 	'Portal:Datatables:Language:LengthMenu' => 'Toon _MENU_ items per pagina',
 	'Portal:Datatables:Language:ZeroRecords' => 'Geen resultaten',
@@ -65,6 +65,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
 ));
 
 // UserProfile brick
@@ -91,7 +92,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Browse:Name' => 'Bladeren',
 	'Brick:Portal:Browse:Mode:List' => 'Lijst',
 	'Brick:Portal:Browse:Mode:Tree' => 'Boomstructuur',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mozaïek',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mozaïek',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Wijzigen',
@@ -106,8 +107,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Manage:Name' => 'Beheer items',
 	'Brick:Portal:Manage:Table:NoData' => 'Geen gegevens',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Acties',
-    'Brick:Portal:Manage:DisplayMode:list' => 'Lijst',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Acties',
+	'Brick:Portal:Manage:DisplayMode:list' => 'Lijst',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Taartgrafiek',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Staafgrafiek',
 	'Brick:Portal:Manage:Others' => 'Andere',
@@ -130,17 +131,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Create:Name' => 'Snel aanmaken',
-    'Brick:Portal:Create:ChooseType' => 'Geef een type op.',
+	'Brick:Portal:Create:ChooseType' => 'Geef een type op.',
 ));
 
 // Filter brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
+	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));

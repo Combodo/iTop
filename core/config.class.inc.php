@@ -1,20 +1,23 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
+ */
 
 
 define('ITOP_APPLICATION', 'iTop');
@@ -63,18 +66,18 @@ define('DEFAULT_MAX_DISPLAY_LIMIT', 15);
 define('DEFAULT_STANDARD_RELOAD_INTERVAL', 5 * 60);
 define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
-define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
+define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
+
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
  *
- * @package     iTopORM
- *
  * @see \MetaModel::GetConfig() to get the config, if the metamodel was already loaded
  * @see utils::GetConfig() to load config from the current env, if metamodel is not loaded
+ * @package     iTopORM
  */
 class Config
 {
@@ -96,6 +99,14 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = array(
+		'log_level_min' => array(
+			'type' => 'array',
+			'description' => 'Optional min log level per channel',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'app_env_label' => array(
 			'type' => 'string',
 			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
@@ -171,19 +182,27 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_character_set' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
-			'type' => 'string',
-			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',
-			'default' => 'DEPRECATED_2.5',
-			'value' => '',
+		'db_core_transactions_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If true, CRUD transactions in iTop core will be enabled',
+			'default' => true,
+			'value' => true,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_collation' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
-			'type' => 'string',
-			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4_unicode_ci',
-			'default' => 'DEPRECATED_2.5',
-			'value' => '',
+		'db_core_transactions_retry_count' => array(
+			'type' => 'integer',
+			'description' => 'Number of times the current transaction is tried',
+			'default' => 3,
+			'value' => 3,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'db_core_transactions_retry_delay_ms' => array(
+			'type' => 'integer',
+			'description' => 'Base delay in milliseconds between transaction tries',
+			'default' => 500,
+			'value' => 500,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
@@ -336,8 +355,8 @@ class Config
 			'type' => 'string',
 			'description' => 'Font used when generating a PDF file',
 			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-										// Standard PDF fonts like helvetica or times newroman are NOT Unicode
-										// A new DroidSansFallback can be used to improve CJK support (se PR #49)
+			// Standard PDF fonts like helvetica or times newroman are NOT Unicode
+			// A new DroidSansFallback can be used to improve CJK support (se PR #49)
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -371,6 +390,14 @@ class Config
 			'description' => 'Log the usage of the application (i.e. the date/time and the user name of each login)',
 			'default' => false,
 			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_filename_builder_impl' => array(
+			'type' => 'string',
+			'description' => 'Name of the ILogFileNameBuilder to use',
+			'default' => 'WeeklyRotatingLogFileNameBuilder',
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
@@ -569,7 +596,7 @@ class Config
 				'Asia/Istanbul',
 				'Asia/Singapore',
 				'Africa/Casablanca',
-				'Australia/Sydney'
+				'Australia/Sydney',
 			),
 			'default' => 'Europe/Paris',
 			'value' => 'Europe/Paris',
@@ -693,6 +720,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'login_debug' => array(
+			'type' => 'bool',
+			'description' => 'Activate the login FSM debug',
+			// examples... not used (nor 'description')
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'forgot_password' => array(
 			'type' => 'bool',
 			'description' => 'Enable the "Forgot password" feature',
@@ -803,52 +839,60 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-        'email_validation_pattern' => array(
-            'type' => 'string',
-            'description' => 'Regular expression to validate/detect the format of an eMail address',
-            'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => true,
-        ),
-        'email_decoration_class' => array(
-            'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fa fa-envelope" will put a mail icon.',
-            'default' => 'fa fa-envelope',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_validation_pattern' => array(
-            'type' => 'string',
-            'description' => 'Regular expression to validate/detect the format of a phone number',
-            'default' => "[0-9.\-\ \+\(\)]+",
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_url_pattern' => array(
-            'type' => 'string',
-            'description' => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
-            'default' => 'tel:%1$s',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_decoration_class' => array(
-            'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fa fa-phone" will put a phone icon.',
-            'default' => 'fa fa-phone',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
+		'email_validation_pattern' => array(
+			'type' => 'string',
+			'description' => 'Regular expression to validate/detect the format of an eMail address',
+			'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'email_decoration_class' => array(
+			'type' => 'string',
+			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
+			'default' => 'fas fa-envelope',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_validation_pattern' => array(
+			'type' => 'string',
+			'description' => 'Regular expression to validate/detect the format of a phone number',
+			'default' => "[0-9.\-\ \+\(\)]+",
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_url_pattern' => array(
+			'type' => 'string',
+			'description' => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
+			'default' => 'tel:%1$s',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_decoration_class' => array(
+			'type' => 'string',
+			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
+			'default' => 'fas fa-phone',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_kpi_duration' => array(
 			'type' => 'integer',
-			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers)',
+			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers) new: add "log_kpi_slow_queries" to limit the stats',
 			// examples... not used
 			'default' => 0,
 			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_kpi_slow_queries' => array(
+			'type' => 'float',
+			'description' => 'Log only KPI duration stats lasting more than this value in seconds (0 for all)',
+			'default' => 1,
+			'value' => 1,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
@@ -1116,14 +1160,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'disable_attachments_download_legacy_portal' => array(
-			'type' => 'bool',
-			'description' => 'Disable attachments download from legacy portal',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		),
 		'secure_rest_services' => array(
 			'type' => 'bool',
 			'description' => 'When set to true, only the users with the profile "REST Services User" are allowed to use the REST web services.',
@@ -1172,6 +1208,46 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'use_legacy_dbsearch' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use legacy SQL query generation',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'query_cache_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use cache for query generation',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'expression_cache_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use cache for query expression generation',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_kpi_record_oql' => array(
+			'type' => 'integer',
+			'description' => '1 => Record OQL requests and parameters',
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'backoffice_default_theme' => array(
+			'type' => 'string',
+			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
+			'default' => 'light-grey',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
@@ -1183,6 +1259,7 @@ class Config
 	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they
 	 *     are related to a whole domain, and a domain can host multiple itop)
 	 *     Beware: do not expose server side information to the client !
+	 * @throws \Exception
 	 */
 	public function GetItopInstanceid()
 	{
@@ -1228,18 +1305,17 @@ class Config
 		}
 		$this->m_aSettings[$sPropCode]['value'] = $value;
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
-
 	}
 
-    /**
-     * @param string $sPropCode
-     *
-     * @return mixed
-     */
-    public function Get($sPropCode)
-    {
-        return $this->m_aSettings[$sPropCode]['value'];
-    }
+	/**
+	 * @param string $sPropCode
+	 *
+	 * @return mixed
+	 */
+	public function Get($sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['value'];
+	}
 
 	/**
 	 * Event log options (see LOG_... definition)
@@ -1311,16 +1387,16 @@ class Config
 	 */
 	protected $m_aCharsets;
 
-    /**
-     * Config constructor.
-     *
-     * @param string|null $sConfigFile
-     * @param bool $bLoadConfig
-     *
-     * @throws \ConfigException
-     * @throws \CoreException
-     */
-    public function __construct($sConfigFile = null, $bLoadConfig = true)
+	/**
+	 * Config constructor.
+	 *
+	 * @param string|null $sConfigFile
+	 * @param bool $bLoadConfig
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
 		if (is_null($sConfigFile))
@@ -1356,7 +1432,7 @@ class Config
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
 		$this->m_sEncryptionLibrary = isset($aEncryptParams['lib']) ? $aEncryptParams['lib'] : DEFAULT_ENCRYPTION_LIB;
-		$this->m_sEncryptionKey= isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
+		$this->m_sEncryptionKey = isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
 
 		$this->m_aModuleSettings = array();
 
@@ -1382,13 +1458,13 @@ class Config
 		 */
 	}
 
-    /**
-     * @param string $sPurpose
-     * @param string $sFileName
-     *
-     * @throws \ConfigException
-     */
-    protected function CheckFile($sPurpose, $sFileName)
+	/**
+	 * @param string $sPurpose
+	 * @param string $sFileName
+	 *
+	 * @throws \ConfigException
+	 */
+	protected function CheckFile($sPurpose, $sFileName)
 	{
 		if (!file_exists($sFileName))
 		{
@@ -1431,18 +1507,18 @@ class Config
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
 		}
+		catch (Error $e)
+		{
+			// PHP 7
+			throw new ConfigException('Error in configuration file',
+				array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
+		}
 		catch (Exception $e)
 		{
 			// well, never reach in case of parsing error :-(
 			// will be improved in PHP 6 ?
 			throw new ConfigException('Error in configuration file',
 				array('file' => $sConfigFile, 'error' => $e->getMessage()));
-		}
-		catch(Error $e)
-		{
-		    // PHP 7
-		    throw new ConfigException('Error in configuration file',
-		        array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
 		}
 		if (strlen($sNoise) > 0)
 		{
@@ -1486,6 +1562,11 @@ class Config
 			}
 		}
 
+		if (file_exists(READONLY_MODE_FILE))
+		{
+			$this->Set('access_mode', ACCESS_READONLY, READONLY_MODE_FILE);
+		}
+
 		$this->m_bLogGlobal = isset($MySettings['log_global']) ? (bool)trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool)trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool)trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;
@@ -1514,6 +1595,16 @@ class Config
 		// (we have their final path at that point)
 	}
 
+	/**
+	 * @see \MetaModel::GetModuleParameter()
+	 *
+	 * @param string $sProperty
+	 * @param mixed $defaultvalue
+	 *
+	 * @param string $sModule
+	 *
+	 * @return mixed|null if present, value defined in the configuration file, if not module parameter from XML
+	 */
 	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
 	{
 		if (isset($this->m_aModuleSettings[$sModule][$sProperty]))
@@ -1525,14 +1616,18 @@ class Config
 		return $this->GetModuleParameter($sModule, $sProperty, $defaultvalue);
 	}
 
-    /**
-     * @param string $sModule
-     * @param string $sProperty
-     * @param mixed|null $defaultvalue
-     *
-     * @return mixed|null
-     */
-    public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+	/**
+	 * @see \MetaModel::GetModuleSetting() to get from the configuration file first
+	 *
+	 * @param string $sProperty
+	 * @param mixed $defaultvalue
+	 *
+	 * @param string $sModule
+	 *
+	 * @return mixed|null parameter value defined in the XML
+	 * @link https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Axml_reference#modules_parameters
+	 */
+	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$ret = $defaultvalue;
 		if (class_exists('ModulesXMLParameters'))
@@ -1778,16 +1873,16 @@ class Config
 		return $aSettings;
 	}
 
-    /**
-     * Write the configuration to a file (php format) that can be reloaded later
-     * By default write to the same file that was specified when constructing the object
-     *
-     * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
-     *
-     * @return boolean True otherwise throws an Exception
+	/**
+	 * Write the configuration to a file (php format) that can be reloaded later
+	 * By default write to the same file that was specified when constructing the object
 	 *
-     * @throws \ConfigException
-     */
+	 * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
+	 *
+	 * @return boolean True otherwise throws an Exception
+	 *
+	 * @throws \ConfigException
+	 */
 	public function WriteToFile($sFileName = '')
 	{
 		if (empty($sFileName))
@@ -1815,7 +1910,6 @@ class Config
 				'log_notification' => $this->m_bLogNotification,
 				'log_issue' => $this->m_bLogIssue,
 				'log_web_service' => $this->m_bLogWebService,
-				'query_cache_enabled' => $this->m_bQueryCacheEnabled,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
 			);
 			foreach ($aBoolValues as $sKey => $bValue)
@@ -1927,7 +2021,12 @@ class Config
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
 
-			return fclose($hFile);
+			$bReturn = fclose($hFile);
+
+			utils::SetConfig($this);
+			FileLog::RenameLegacyLogFiles();
+
+			return $bReturn;
 		}
 		else
 		{
@@ -1935,16 +2034,16 @@ class Config
 		}
 	}
 
-    /**
-     * Helper function to initialize a configuration from the page arguments
-     *
-     * @param array $aParamValues
-     * @param string|null $sModulesDir
-     * @param bool $bPreserveModuleSettings
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
+	/**
+	 * Helper function to initialize a configuration from the page arguments
+	 *
+	 * @param array $aParamValues
+	 * @param string|null $sModulesDir
+	 * @param bool $bPreserveModuleSettings
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
 	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
 		if (isset($aParamValues['application_path']))
@@ -1979,7 +2078,7 @@ class Config
 			$this->Set('db_name', $sDBName);
 			$this->Set('db_subname', $aParamValues['db_prefix']);
 
-			$bDbTlsEnabled = (bool) $aParamValues['db_tls_enabled'];
+			$bDbTlsEnabled = (bool)$aParamValues['db_tls_enabled'];
 			if ($bDbTlsEnabled)
 			{
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, 'UpdateFromParams');
@@ -1990,9 +2089,12 @@ class Config
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, null);
 			}
 			$sDbTlsCa = $bDbTlsEnabled ? $aParamValues['db_tls_ca'] : null;
-			if (isset($sDbTlsCa) && !empty($sDbTlsCa)) {
+			if (isset($sDbTlsCa) && !empty($sDbTlsCa))
+			{
 				$this->Set('db_tls.ca', $sDbTlsCa, 'UpdateFromParams');
-			} else {
+			}
+			else
+			{
 				// empty parameter : we don't want it in the file
 				$this->Set('db_tls.ca', null, null);
 			}
@@ -2019,7 +2121,7 @@ class Config
 	 * selected modules
 	 *
 	 * @param string $sModulesDir The relative path to the directory to scan for modules (typically the 'env-xxx'
-	 *     directory resulting from the compilation)
+	 *     directory resulting from the compilation). If null nothing will be done.
 	 * @param array $aSelectedModules An array of selected modules' identifiers. If null all modules found will be
 	 *     considered as installed
 	 *
@@ -2027,60 +2129,62 @@ class Config
 	 */
 	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
 	{
-		if (!is_null($sModulesDir))
+		if ($sModulesDir === null)
 		{
-			// Initialize the arrays below with default values for the application...
-			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
-			$aAddOns = $oEmptyConfig->GetAddOns();
+			return;
+		}
 
-			$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
-			foreach ($aModules as $sModuleId => $aModuleInfo)
+		// Initialize the arrays below with default values for the application...
+		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+		$aAddOns = $oEmptyConfig->GetAddOns();
+
+		$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
+		foreach ($aModules as $sModuleId => $aModuleInfo)
+		{
+			list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
 			{
-				list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-				if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
+				if (isset($aModuleInfo['settings']))
 				{
-					if (isset($aModuleInfo['settings']))
+					list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+					foreach ($aModuleInfo['settings'] as $sProperty => $value)
 					{
-						list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						foreach ($aModuleInfo['settings'] as $sProperty => $value)
+						if (isset($this->m_aModuleSettings[$sName][$sProperty]))
 						{
-							if (isset($this->m_aModuleSettings[$sName][$sProperty]))
-							{
-								// Do nothing keep the original value
-							}
-							else
-							{
-								$this->SetModuleSetting($sName, $sProperty, $value);
-							}
+							// Do nothing keep the original value
 						}
-					}
-					if (isset($aModuleInfo['installer']))
-					{
-						$sModuleInstallerClass = $aModuleInfo['installer'];
-						if (!class_exists($sModuleInstallerClass))
+						else
 						{
-							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+							$this->SetModuleSetting($sName, $sProperty, $value);
 						}
-						if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-						{
-							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
-						}
-						$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
-						call_user_func_array($aCallSpec, array($this));
 					}
 				}
+				if (isset($aModuleInfo['installer']))
+				{
+					$sModuleInstallerClass = $aModuleInfo['installer'];
+					if (!class_exists($sModuleInstallerClass))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+					}
+					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
+					}
+					$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+					call_user_func_array($aCallSpec, array($this));
+				}
 			}
-			$this->SetAddOns($aAddOns);
 		}
+		$this->SetAddOns($aAddOns);
 	}
 
-    /**
-     * Helper: for an array of string, change the prefix when found
-     *
-     * @param array $aStrings
-     * @param string $sSearchPrefix
-     * @param string $sNewPrefix
-     */
+	/**
+	 * Helper: for an array of string, change the prefix when found
+	 *
+	 * @param array $aStrings
+	 * @param string $sSearchPrefix
+	 * @param string $sNewPrefix
+	 */
 	protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
 	{
 		foreach ($aStrings as &$sFile)
@@ -2092,13 +2196,13 @@ class Config
 		}
 	}
 
-    /**
-     * Obsolete: kept only for backward compatibility of the Toolkit
-     * Quick and dirty way to clone a config file into another environment
-     *
-     * @param string $sSourceEnv
-     * @param string $sTargetEnv
-     */
+	/**
+	 * Obsolete: kept only for backward compatibility of the Toolkit
+	 * Quick and dirty way to clone a config file into another environment
+	 *
+	 * @param string $sSourceEnv
+	 * @param string $sTargetEnv
+	 */
 	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
 	{
 		// Now does nothing since the includes are built into the environment itself

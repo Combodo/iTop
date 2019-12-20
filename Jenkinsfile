@@ -1,5 +1,9 @@
 pipeline {
   agent any
+    parameters {
+        booleanParam(name: 'debugMode', defaultValue: 'false', description: 'Debug mode?')
+        booleanParam(name: 'runNonRegOQLTests', defaultValue: 'false', description: 'Do You want to run legacy OQL regression tests?')
+    }
   stages {
 
     stage('init') {
@@ -36,7 +40,7 @@ pipeline {
       parallel {
         stage('phpunit') {
           steps {
-            sh './.jenkins/bin/tests/phpunit.sh'
+            sh './.jenkins/bin/tests/phpunit.sh ${debugMode} ${runNonRegOQLTests}'
           }
         }
       }

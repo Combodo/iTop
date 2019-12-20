@@ -234,7 +234,7 @@ function MakeDataToPost($sTargetRoute)
 	if (MetaModel::GetConfig()->Get('demo_mode'))
 	{
 		// Don't expose such information in demo mode
-		$aDataToPost = array();
+		$aDataToPost = array('disabled' => true, 'reason' => 'demo_mode');
 	}
 	else
 	{

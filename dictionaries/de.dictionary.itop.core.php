@@ -41,20 +41,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'Liste von Tags',
-    'Core:AttributeTagSet+' => 'List von Tags',
+	'Core:AttributeTagSet' => 'Liste von Tags',
+	'Core:AttributeTagSet+' => 'List von Tags',
 	'Core:AttributeSet:placeholder' => 'Zum Hinzufügen klicken',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log',
-    'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog' => 'Log',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Berechnetes Enum',
-    'Core:AttributeMetaEnum+' => 'Liste berechneter alphanumerischer Strings',
+	'Core:AttributeMetaEnum' => 'Berechnetes Enum',
+	'Core:AttributeMetaEnum+' => 'Liste berechneter alphanumerischer Strings',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array von Objekten (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array von Objekten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Beliebige Art von Objekten der [subclass] der selben Klasse',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -102,7 +102,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributePassword' => 'Passwort',
 	'Core:AttributePassword+' => 'Passwort eines externen Geräts',
 
- 	'Core:AttributeEncryptedString' => 'verschlüsselter String',
+	'Core:AttributeEncryptedString' => 'verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
 	'Core:AttributeEncryptUnknownLibrary' => 'Angegebene Library zur Verschlüsslung (%1$s) ist unbekannt',
 	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsslungsfehler **',
@@ -860,8 +860,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:ExecProcess:Code255' => 'PHP-Fehler (Parsing oder Laufzeit)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 

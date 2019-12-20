@@ -36,4 +36,6 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLDAP' => 'LDAP-gebruiker',
 	'Class:UserLDAP+' => 'Gebruiker aangemeld via LDAP',
+	'Class:UserLDAP/Attribute:password' => 'Password~~',
+	'Class:UserLDAP/Attribute:password+' => 'user authentication string~~',
 ));

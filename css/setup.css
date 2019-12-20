@@ -1,0 +1,266 @@
+/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+/* Helpers classes */
+.center {
+  text-align: center;
+}
+/* Animations */
+@keyframes progress_bar_color_ongoing {
+  from {
+    background-color: #fbd38d;
+  }
+  to {
+    background-color: #feebc8;
+  }
+}
+@-webkit-keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/* Theme */
+body {
+  background-color: #eee;
+  color: #1a202c;
+  margin: 0;
+  padding: 0;
+  font-size: 10pt;
+  font-family: Tahoma, Verdana, Arial, Helvetica;
+  overflow-y: auto;
+}
+h1 {
+  color: #555;
+  font-size: 16pt;
+}
+h2 {
+  color: #1a202c;
+  font-size: 14pt;
+}
+h3 {
+  color: #1c94c4;
+  font-size: 12pt;
+  font-weight: bold;
+}
+a {
+  color: #1c94c4;
+  text-decoration: none;
+}
+a:hover {
+  color: #ea7d1e;
+}
+label {
+	cursor: pointer;
+}
+
+#header {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #fff;
+  height: 54px;
+  border: 3px solid #cbd2d9;
+  border-bottom: none;
+}
+#header img {
+  border: 0;
+  vertical-align: middle;
+  margin-right: 20px;
+}
+#header h1 {
+  vertical-align: middle;
+  height: 54px;
+  noline-height: 54px;
+  margin: 0;
+}
+#setup {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 3px solid #cbd2d9;
+  border-top: none;
+}
+.next {
+  width: 100%;
+  text-align: right;
+}
+.v-spacer {
+  padding-top: 1em;
+}
+button {
+  margin-top: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+p.info {
+  padding-left: 50px;
+  background: url(../images/info-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+p.ok {
+  padding-left: 50px;
+  background: url(../images/clean-mid.png) no-repeat left -8px;
+  min-height: 48px;
+}
+p.warning {
+  padding-left: 50px;
+  background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+p.error {
+  padding-left: 50px;
+  background: url(../images/stop-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+td.label {
+  text-align: left;
+}
+label.read-only {
+  color: #666;
+  cursor: text;
+}
+td.input {
+  text-align: left;
+}
+table.formTable {
+  border: 0;
+  cellpadding: 2px;
+  cellspacing: 0;
+}
+.wizlabel, .wizinput {
+  color: #000;
+  font-size: 10pt;
+}
+.wizhelp {
+  color: #333;
+  font-size: 8pt;
+}
+#progress {
+  border: none;
+  width: 210px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  margin: 5px;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  border-radius: 2px;
+  background-color: #edf2f7 !important;
+}
+#progress .progress {
+  color: #000 !important;
+  /* !important to overload jQuery UI style */
+  background-image: linear-gradient(270deg, #fbd38d 50%, #feebc8 55%, #fbd38d 80%) !important;
+  /* !important to overload jQuery UI style */
+  animation: bg-pan-left 3s infinite both;
+  background-size: 600% 100%;
+  border-radius: inherit;
+}
+#progress .progress.progress-error {
+  background-color: #e53e3e !important;
+  /* !important to overload jQuery UI style */
+  animation: none;
+}
+h3.clickable {
+  background: url(../images/plus.gif) no-repeat left;
+  padding-left: 16px;
+  cursor: hand;
+}
+h3.clickable.open {
+  background: url(../images/minus.gif) no-repeat left;
+  padding-left: 16px;
+  cursor: hand;
+}
+.message {
+  color: #1a202c;
+  background-color: #f7fafc;
+  border-left: 4px solid #4a5568;
+  padding: 10px;
+}
+.message.message-valid {
+  color: #276749;
+  background-color: #f0fff4;
+  border-color: #48bb78;
+}
+.message.message-warning {
+  color: #c05621;
+  background-color: #fffaf0;
+  border-color: #ed8936;
+}
+.message.message-error {
+  color: #c53030;
+  background-color: #fff5f5;
+  border-color: #e53e3e;
+}
+.message > .message-title {
+  font-weight: bold;
+  margin-right: 5px;
+}
+.text-valid {
+  color: #276749;
+}
+.text-warning {
+  color: #c05621;
+}
+.text-error {
+  color: #c53030;
+}
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 30px 0 0 0;
+}
+fieldset > legend {
+  margin-top: 25px;
+  margin-bottom: 7px;
+  padding-bottom: 7px;
+  width: 100%;
+  color: #3c3c3c;
+  font-size: 12pt;
+  font-weight: bold;
+  border-bottom: 1px solid #d2d2d2;
+}
+#details > .message {
+  margin-bottom: 6px;
+}
+#details > .message:last-of-type {
+  margin-bottom: 0;
+}
+.module-selection-banner img {
+  max-height: 48px;
+}
+.module-selection-body {
+  height: 28em;
+  overflow: auto;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  background-color: #f7fafc;
+  padding: 10px;
+}

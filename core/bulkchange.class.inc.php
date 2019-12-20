@@ -654,7 +654,7 @@ class BulkChange
 		return $aResults;
 	}
 
-	
+
 	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
@@ -726,25 +726,38 @@ class BulkChange
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-MissingExtKey', $sMissingKeys));
 			return $oTargetObj;
 		}
-	
-		// Optionaly record the results
+
+		// Optionally record the results
 		//
 		if ($oChange)
 		{
-			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
+			$newID = $oTargetObj->DBInsert();
 		}
 		else
 		{
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void(0);
+			$newID = 0;
 		}
+
+		$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
+		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+		$aResult[$iRow]["id"] = new CellStatus_Void($newID);
+
 		return $oTargetObj;
 	}
-	
+
+	/**
+	 * @param array $aResult
+	 * @param int $iRow
+	 * @param \CMDBObject $oTargetObj
+	 * @param array $aRowData
+	 * @param \CMDBChange $oChange
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
@@ -772,7 +785,7 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj->DBUpdateTracked($oChange);
+					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
 				{
@@ -786,6 +799,14 @@ class BulkChange
 		}
 	}
 
+	/**
+	 * @param array $aResult
+	 * @param int $iRow
+	 * @param \CMDBObject $oTargetObj
+	 * @param \CMDBChange $oChange
+	 *
+	 * @throws \BulkChangeException
+	 */
 	protected function UpdateMissingObject(&$aResult, $iRow, $oTargetObj, CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareMissingObject($oTargetObj, $aErrors);
@@ -813,7 +834,7 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj->DBUpdateTracked($oChange);
+					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
 				{
@@ -829,6 +850,11 @@ class BulkChange
 	
 	public function Process(CMDBChange $oChange = null)
 	{
+		if ($oChange)
+		{
+			CMDBObject::SetCurrentChange($oChange);
+		}
+
 		// Note: $oChange can be null, in which case the aim is to check what would be done
 
 		// Debug...
