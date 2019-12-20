@@ -272,7 +272,7 @@ EOF
 		{
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
-			if (is_countable($aSuggestedWords) && count($aSuggestedWords) > 0)
+			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0)
 			{
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
 
