@@ -15,6 +15,11 @@
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
 test/vendor/*
+# remove tests from libs (N°2651)
+/lib/**/test/**
+/lib/**/tests/**
+/lib/**/Test/**
+/lib/**/Tests/**
 
 # all datas but listing prevention
 /data/**
