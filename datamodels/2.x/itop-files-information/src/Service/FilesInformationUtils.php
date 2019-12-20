@@ -24,9 +24,15 @@ class FilesInformationUtils
      */
     public static function Scan($sPath = '', $bGetDirSize = true)
     {
-        $sRealRootPath = utils::AbsolutePath($sPath);
-        $aFiles = scandir($sRealRootPath);
         $aFileStats = array();
+
+        $sRealRootPath = utils::AbsolutePath($sPath);
+        if (empty($sRealRootPath))
+        {
+        	return $aFileStats;
+        }
+
+        $aFiles = scandir($sRealRootPath);
 
         foreach ($aFiles as $sScanFile)
         {
