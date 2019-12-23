@@ -102,4 +102,23 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @dataProvider appRootUrlProvider
+	 * @covers utils::GetAppRootUrl
+	 */
+	public function testGetAppRootUrl($sReturnValue, $sCurrentScript, $sAppRoot, $sAbsoluteUrl)
+	{
+		$this->assertEquals($sReturnValue, utils::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl));
+	}
+
+	public function appRootUrlProvider()
+	{
+		return array(
+			'Setup index (windows antislash)' => array('http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'),
+			'Setup index (windows slash)' => array('http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+			'Setup index (windows slash, drive letter case difference)' => array('http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+		);
+	}
+
 }

@@ -846,10 +846,25 @@ class utils
 		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
 
 		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
+		$sAppRoot       = realpath(APPROOT);
+
+		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
+	}
+
+	/**
+	 * @param $sCurrentScript
+	 * @param $sAppRoot
+	 * @param $sAbsoluteUrl
+	 *
+	 * @return false|string
+	 * @throws \Exception
+	 */
+	public static function GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl)
+	{
 		$sCurrentScript = str_replace('\\', '/', $sCurrentScript); // canonical path
-		$sAppRoot       = str_replace('\\', '/', realpath(APPROOT)).'/'; // canonical path with the trailing '/' appended
-		$sCurrentRelativePath = str_replace($sAppRoot, '', $sCurrentScript);
-	
+		$sAppRoot = str_replace('\\', '/', $sAppRoot).'/'; // canonical path with the trailing '/' appended
+		$sCurrentRelativePath = str_ireplace($sAppRoot, '', $sCurrentScript);
+
 		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
 		if ($sAppRootPos !== false)
 		{
@@ -858,7 +873,7 @@ class utils
 		else
 		{
 			// Second attempt without index.php at the end...
-			$sCurrentRelativePath = str_replace('index.php', '', $sCurrentRelativePath);
+			$sCurrentRelativePath = str_ireplace('index.php', '', $sCurrentRelativePath);
 			$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
 			if ($sAppRootPos !== false)
 			{
@@ -868,8 +883,9 @@ class utils
 			{
 				// No luck...
 				throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
-			}			
+			}
 		}
+
 		return $sAppRootUrl;
 	}
 
