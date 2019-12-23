@@ -98,7 +98,7 @@ class FilesInformationUtils
         $iRawMode = $aStats['mode'];
         $iMode = decoct($iRawMode & 0170000); // File Encoding Bit
 
-	    $sDisplayMode =(array_key_exists(octdec($iMode),$aTypes))?$aTypes[octdec($iMode)]{0}:'u';
+	    $sDisplayMode =(array_key_exists(octdec($iMode),$aTypes))?$aTypes[octdec($iMode)][0]:'u';
 	    $sDisplayMode.=(($iRawMode&0x0100)?'r':'-').(($iRawMode&0x0080)?'w':'-');
 	    $sDisplayMode.=(($iRawMode&0x0040)?(($iRawMode&0x0800)?'s':'x'):(($iRawMode&0x0800)?'S':'-'));
 	    $sDisplayMode.=(($iRawMode&0x0020)?'r':'-').(($iRawMode&0x0010)?'w':'-');

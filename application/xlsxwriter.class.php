@@ -174,7 +174,7 @@ Class XLSXWriter
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="n"><v>'.self::convert_date_time($value).'</v></c>');
 		} else if ($value==''){
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'"/>');
-		} else if ($value{0}=='='){
+		} else if ($value[0]=='='){
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="s"><f>'.self::xmlspecialchars($value).'</f></c>');
 		} else if ($value!==''){
 			fwrite($fd,'<c r="'.$cell.'" s="'.$s.'" t="s"><v>'.self::xmlspecialchars($this->setSharedString($value)).'</v></c>');
