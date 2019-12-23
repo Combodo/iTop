@@ -89,7 +89,7 @@ class SetupPage extends NiceWebPage
 
 	public function error($sText)
 	{
-		$this->add("<div class=\"message message-error\"><span class=\"message-title\">Error:</span>$sText</div>");
+		$this->add("<div class=\"message message-error\">$sText</div>");
 		$this->log_error($sText);
 	}
 
