@@ -54,7 +54,12 @@ register_shutdown_function(function()
 });
 
 session_name('itop-'.md5(APPROOT));
-session_start();
+$bSessionStart = session_start();
+// Trigger an exception if the session cannot be started
+if ($bSessionStart !== false)
+{
+        throw new Exception("Session cannot start");
+}
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
 if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))
