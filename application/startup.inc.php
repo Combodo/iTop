@@ -56,7 +56,7 @@ register_shutdown_function(function()
 session_name('itop-'.md5(APPROOT));
 $bSessionStart = session_start();
 // Trigger an exception if the session cannot be started
-if ($bSessionStart !== false)
+if ($bSessionStart === false)
 {
         throw new Exception("Session cannot start");
 }
