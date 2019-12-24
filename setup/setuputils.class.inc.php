@@ -265,21 +265,6 @@ class SetupUtils
 		SetupPage::log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 		// Check some more ini settings here, needed for file upload
-		if (function_exists('get_magic_quotes_gpc'))
-		{
-			if (@get_magic_quotes_gpc())
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "'magic_quotes_gpc' is set to On. Please turn it Off in php.ini before continuing.");
-			}
-		}
-		if (function_exists('get_magic_quotes_runtime'))
-		{
-			if (@get_magic_quotes_runtime())
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "'magic_quotes_runtime' is set to On. Please turn it Off in php.ini before continuing.");
-			}
-		}
-
 		$sMemoryLimit = trim(ini_get('memory_limit'));
 		if (empty($sMemoryLimit))
 		{

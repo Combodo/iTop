@@ -457,7 +457,7 @@ class Str
 	public static function gpc2pure($gpc)
 	{
 		if (ini_get('magic_quotes_sybase')) $pure = str_replace("''", "'", $gpc);
-		else                                $pure = get_magic_quotes_gpc() ? stripslashes($gpc) : $gpc;
+		else                                $pure = $gpc;
 		return $pure;
 	}
 	public static function html2pure($html)

@@ -273,10 +273,6 @@ class WizardHelper
 	static public function FromJSON($sJSON)
 	{
 		$oWizHelper = new WizardHelper();
-		if (get_magic_quotes_gpc())
-		{
-			$sJSON = stripslashes($sJSON);
-		}
 		$aData = json_decode($sJSON, true); // true means hash array instead of object
 		$oWizHelper->m_aData = $aData;
 		return $oWizHelper;
