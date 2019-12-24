@@ -256,7 +256,7 @@ abstract class AttributeDefinition
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array();
 	}
@@ -327,7 +327,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -338,7 +338,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return false;
 	}
@@ -348,7 +348,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return false;
 	}
@@ -358,7 +358,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsLinkSet()
+	public static function IsLinkSet()
 	{
 		return false;
 	}
@@ -377,7 +377,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is an external key, pointing to the host class
 	 */
-	static public function IsHierarchicalKey()
+	public static function IsHierarchicalKey()
 	{
 		return false;
 	}
@@ -385,7 +385,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is stored on an object pointed to be an external key
 	 */
-	static public function IsExternalField()
+	public static function IsExternalField()
 	{
 		return false;
 	}
@@ -410,7 +410,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is kept in the loaded object (in memory)
 	 */
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return true;
 	}
@@ -418,7 +418,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value comes from the database in one way or another
 	 */
-	static public function LoadFromDB()
+	public static function LoadFromDB()
 	{
 		return true;
 	}
@@ -962,7 +962,7 @@ abstract class AttributeDefinition
 		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
@@ -1251,7 +1251,7 @@ abstract class AttributeDefinition
 
 class AttributeDashboard extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
 			array("definition_file", "is_user_editable"));
@@ -1309,7 +1309,7 @@ class AttributeDashboard extends AttributeDefinition
 	}
 
 	// if this verb returns false, then GetValue must be implemented
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return false;
 	}
@@ -1327,7 +1327,7 @@ class AttributeDashboard extends AttributeDefinition
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
 			array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
@@ -1343,7 +1343,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return true;
 	}
 
-	static public function IsLinkSet()
+	public static function IsLinkSet()
 	{
 		return true;
 	}
@@ -2085,7 +2085,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oRemoteAtt;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LinkedSetField';
 	}
@@ -2159,7 +2159,7 @@ class AttributeLinkedSet extends AttributeDefinition
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
 	}
@@ -2235,7 +2235,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
  */
 class AttributeDBFieldVoid extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
 	}
@@ -2287,12 +2287,12 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $this->Get("depends_on");
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -2392,7 +2392,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
  */
 class AttributeDBField extends AttributeDBFieldVoid
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
@@ -2417,7 +2417,7 @@ class AttributeInteger extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2533,7 +2533,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
 	}
@@ -2661,7 +2661,7 @@ class AttributeDecimal extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
 	}
@@ -2784,7 +2784,7 @@ class AttributeBoolean extends AttributeInteger
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2922,7 +2922,7 @@ class AttributeBoolean extends AttributeInteger
 		return $sRes;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
 	}
@@ -3025,7 +3025,7 @@ class AttributeString extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -3167,7 +3167,7 @@ class AttributeString extends AttributeDBField
 		return $this->GetOptional('display_style', 'select');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
@@ -3195,7 +3195,7 @@ class AttributeClass extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
 	}
@@ -3255,7 +3255,7 @@ class AttributeClassState extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field'));
 	}
@@ -3319,7 +3319,7 @@ class AttributeApplicationLanguage extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 	}
@@ -3558,7 +3558,6 @@ class AttributeFinalClass extends AttributeString
 
 	/**
 	 * @return bool
-	 * @throws \CoreException
 	 * @since 2.7
 	 */
 	public function CopyOnAllTables()
@@ -3583,7 +3582,7 @@ class AttributePassword extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -3819,7 +3818,7 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	static public function RenderWikiHtml($sText, $bWikiOnly = false)
+	public static function RenderWikiHtml($sText, $bWikiOnly = false)
 	{
 		if (!$bWikiOnly)
 		{
@@ -4023,7 +4022,7 @@ class AttributeText extends AttributeString
 		return $this->GetOptional('height', '');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\TextAreaField';
 	}
@@ -4549,7 +4548,7 @@ class AttributeCaseLog extends AttributeLongText
 		return $this->GetOptional('format', 'html'); // default format for case logs is now HTML
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\CaseLogField';
 	}
@@ -4614,7 +4613,7 @@ class AttributeEmailAddress extends AttributeString
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('email_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\EmailField';
 	}
@@ -4666,7 +4665,7 @@ class AttributePhoneNumber extends AttributeString
 			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\PhoneField';
 	}
@@ -4768,7 +4767,7 @@ class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -4969,7 +4968,7 @@ class AttributeEnum extends AttributeString
 		return $sRes;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
 	}
@@ -5105,7 +5104,7 @@ class AttributeEnum extends AttributeString
  */
 class AttributeMetaEnum extends AttributeEnum
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array('allowed_values', 'sql', 'default_value', 'mapping');
 	}
@@ -5245,13 +5244,13 @@ class AttributeDateTime extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
-	static $oFormat = null;
+	public static $oFormat = null;
 
 	/**
 	 *
 	 * @return DateTimeFormat
 	 */
-	static public function GetFormat()
+	public static function GetFormat()
 	{
 		if (self::$oFormat == null)
 		{
@@ -5283,7 +5282,7 @@ class AttributeDateTime extends AttributeDBField
 	 *
 	 * @return string
 	 */
-	static public function GetInternalFormat()
+	public static function GetInternalFormat()
 	{
 		return 'Y-m-d H:i:s';
 	}
@@ -5293,17 +5292,17 @@ class AttributeDateTime extends AttributeDBField
 	 *
 	 * @return string
 	 */
-	static public function GetSQLFormat()
+	public static function GetSQLFormat()
 	{
 		return 'Y-m-d H:i:s';
 	}
 
-	static public function SetFormat(DateTimeFormat $oDateTimeFormat)
+	public static function SetFormat(DateTimeFormat $oDateTimeFormat)
 	{
 		self::$oFormat = $oDateTimeFormat;
 	}
 
-	static public function GetSQLTimeFormat()
+	public static function GetSQLTimeFormat()
 	{
 		return 'H:i:s';
 	}
@@ -5334,7 +5333,7 @@ class AttributeDateTime extends AttributeDBField
 		return $sSearchString;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\DateTimeField';
 	}
@@ -5398,7 +5397,7 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -5793,7 +5792,7 @@ class AttributeDuration extends AttributeInteger
 		return array('days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\DurationField';
 	}
@@ -5828,7 +5827,7 @@ class AttributeDate extends AttributeDateTime
 
 	static $oDateFormat = null;
 
-	static public function GetFormat()
+	public static function GetFormat()
 	{
 		if (self::$oDateFormat == null)
 		{
@@ -5838,7 +5837,7 @@ class AttributeDate extends AttributeDateTime
 		return self::$oDateFormat;
 	}
 
-	static public function SetFormat(DateTimeFormat $oDateFormat)
+	public static function SetFormat(DateTimeFormat $oDateFormat)
 	{
 		self::$oDateFormat = $oDateFormat;
 	}
@@ -5848,7 +5847,7 @@ class AttributeDate extends AttributeDateTime
 	 *
 	 * @return string
 	 */
-	static public function GetInternalFormat()
+	public static function GetInternalFormat()
 	{
 		return 'Y-m-d';
 	}
@@ -5858,12 +5857,12 @@ class AttributeDate extends AttributeDateTime
 	 *
 	 * @return string
 	 */
-	static public function GetSQLFormat()
+	public static function GetSQLFormat()
 	{
 		return 'Y-m-d';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -6017,7 +6016,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
 	}
@@ -6216,7 +6215,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oRet;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectObjectField';
 	}
@@ -6292,7 +6291,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	protected $m_sTargetClass;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
 		$idx = array_search('targetclass', $aParams);
@@ -6325,7 +6324,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		parent::SetHostClass($sHostClass);
 	}
 
-	static public function IsHierarchicalKey()
+	public static function IsHierarchicalKey()
 	{
 		return true;
 	}
@@ -6500,7 +6499,7 @@ class AttributeExternalField extends AttributeDefinition
 	}
 
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
 	}
@@ -6685,7 +6684,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $this->GetKeyAttDef($iType)->GetTargetClass();
 	}
 
-	static public function IsExternalField()
+	public static function IsExternalField()
 	{
 		return true;
 	}
@@ -6789,7 +6788,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNullAllowed();
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -6884,7 +6883,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
 	}
@@ -6952,7 +6951,7 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeURL extends AttributeString
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
 		return array_merge(parent::ListExpectedParams(), array("target"));
@@ -6997,7 +6996,7 @@ class AttributeURL extends AttributeString
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('url_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\UrlField';
 	}
@@ -7033,7 +7032,7 @@ class AttributeBlob extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -7043,12 +7042,12 @@ class AttributeBlob extends AttributeDefinition
 		return "Document";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -7314,7 +7313,7 @@ class AttributeBlob extends AttributeDefinition
 		return $sFingerprint;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\BlobField';
 	}
@@ -7470,7 +7469,7 @@ class AttributeImage extends AttributeBlob
 		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\ImageField';
 	}
@@ -7511,7 +7510,7 @@ class AttributeStopWatch extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		// The list of thresholds must be an array of iPercent => array of 'option' => value
 		return array_merge(parent::ListExpectedParams(),
@@ -7523,12 +7522,12 @@ class AttributeStopWatch extends AttributeDefinition
 		return "StopWatch";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -8037,8 +8036,6 @@ class AttributeStopWatch extends AttributeDefinition
 									(int)$sValue) : null;
 								break;
 							case 'passed':
-								$sHtml = $this->GetBooleanLabel((int)$sValue);
-								break;
 							case 'triggered':
 								$sHtml = $this->GetBooleanLabel((int)$sValue);
 								break;
@@ -8258,14 +8255,12 @@ class AttributeStopWatch extends AttributeDefinition
 						switch ($sThresholdCode)
 						{
 							case 'deadline':
-								break;
-
-							case 'passed':
-							case 'triggered':
-								$sRet = $this->GetBooleanLabel($value);
-								break;
-
 							case 'overrun':
+								break;
+
+							case 'triggered':
+							case 'passed':
+								$sRet = $this->GetBooleanLabel($value);
 								break;
 						}
 					}
@@ -8382,7 +8377,7 @@ class AttributeSubItem extends AttributeDefinition
         return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
     }
 
-    static public function ListExpectedParams()
+    public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
 	}
@@ -8413,12 +8408,12 @@ class AttributeSubItem extends AttributeDefinition
 		return null;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -8435,7 +8430,7 @@ class AttributeSubItem extends AttributeDefinition
 
 //	public function IsNullAllowed() {return false;}
 
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return false;
 	} // if this verb returns false, then GetValues must be implemented
@@ -8566,7 +8561,7 @@ class AttributeSubItem extends AttributeDefinition
 		return false;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
 	}
@@ -8597,7 +8592,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -8607,12 +8602,12 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return "One Way Password";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -9049,7 +9044,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		$this->aCSSClasses[] = 'attribute-set';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
 	}
@@ -9378,7 +9373,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return $this->Get('max_items');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SetField';
 	}
@@ -9396,7 +9391,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 		$this->aCSSClasses[] = 'attribute-class-attcode-set';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
 	}
@@ -9524,7 +9519,6 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 * @return mixed
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @throws \OQLException
 	 * @throws \Exception
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
@@ -9636,7 +9630,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		$this->aCSSClasses[] = 'attribute-query-attcode-set';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('query_field'));
 	}
@@ -9839,7 +9833,7 @@ class AttributeTagSet extends AttributeSet
 		return 'TagSet';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
 	}
@@ -10542,7 +10536,7 @@ class AttributeTagSet extends AttributeSet
 		return parent::Fingerprint($value);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\TagSetField';
 	}
@@ -10584,7 +10578,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return $this->GetOptional("depends_on", array());
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -10604,7 +10598,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return array('' => $sPrefix);
 	}
 
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return true;
 	}
@@ -10653,7 +10647,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return true;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -10760,7 +10754,7 @@ class AttributeRedundancySettings extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array(
 			'sql',
@@ -11233,7 +11227,7 @@ class AttributeCustomFields extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("handler_class"));
 	}
@@ -11248,7 +11242,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return true;
 	}
 
-	static public function LoadFromDB()
+	public static function LoadFromDB()
 	{
 		return false;
 	} // See ReadValue...
@@ -11337,7 +11331,7 @@ class AttributeCustomFields extends AttributeDefinition
 		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SubFormField';
 	}
@@ -11717,7 +11711,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return true;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -11728,7 +11722,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return true;
 	}
@@ -11773,7 +11767,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
