@@ -155,8 +155,11 @@ abstract class AttributeDefinition
 		return static::SEARCH_WIDGET_TYPE != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	/** @var string */
 	protected $m_sCode;
-	private $m_aParams = array();
+	/** @var array */
+	protected $m_aParams;
+	/** @var string */
 	protected $m_sHostClass = '!undefined!';
 
 	public function Get($sParamName)
@@ -264,11 +267,11 @@ abstract class AttributeDefinition
 	/**
 	 * @throws \Exception
 	 */
-	private function ConsistencyCheck()
+	protected function ConsistencyCheck()
 	{
 		// Check that any mandatory param has been specified
 		//
-		$aExpectedParams = $this->ListExpectedParams();
+		$aExpectedParams = static::ListExpectedParams();
 		foreach($aExpectedParams as $sParamName)
 		{
 			if (!array_key_exists($sParamName, $this->m_aParams))
