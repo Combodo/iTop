@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\Controller;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
+use AttributeExternalKey;
 use AttributeImage;
 use AttributeTagSet;
 use BinaryExpression;
@@ -846,10 +847,21 @@ class ManageBrickController extends BrickController
 			$aSearchListItems = array();
 			foreach ($aColumnsAttrs as $sColumnAttr)
 			{
-				if (MetaModel::IsValidAttCode($sClass, $sColumnAttr))
+				// Skip invalid attcodes
+				if (!MetaModel::IsValidAttCode($sClass, $sColumnAttr))
 				{
-					$aSearchListItems[] = $sColumnAttr;
+					continue;
 				}
+
+				// For external key, force search on the friendlyname instead of the ID.
+				// This should be addressed more globally with the bigger issue, see N°1970
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sColumnAttr);
+				if($oAttDef instanceof AttributeExternalKey)
+				{
+					$sColumnAttr .= '_friendlyname';
+				}
+
+				$aSearchListItems[] = $sColumnAttr;
 			}
 
 			$oFullBinExpr = null;

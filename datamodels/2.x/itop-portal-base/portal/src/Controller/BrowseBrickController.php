@@ -31,6 +31,7 @@ use DBObjectSet;
 use BinaryExpression;
 use FieldExpression;
 use VariableExpression;
+use AttributeExternalKey;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
 
@@ -173,9 +174,26 @@ class BrowseBrickController extends BrickController
 					$aSearchFields = array($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']);
 					if (!empty($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields']))
 					{
+						$sTmpFieldClass = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetClass();
 						foreach ($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'] as $aTmpField)
 						{
-							$aSearchFields[] = $aTmpField['code'];
+							$sTmpFieldAttCode = $aTmpField['code'];
+
+							// Skip invalid attcodes
+							if(!MetaModel::IsValidAttCode($sTmpFieldClass, $sTmpFieldAttCode))
+							{
+								continue;
+							}
+
+							// For external key, force search on the friendlyname instead of the ID.
+							// This should be addressed more globally with the bigger issue, see N°1970
+							$oTmpFieldAttDef = MetaModel::GetAttributeDef($sTmpFieldClass, $sTmpFieldAttCode);
+							if($oTmpFieldAttDef instanceof AttributeExternalKey)
+							{
+								$sTmpFieldAttCode .= '_friendlyname';
+							}
+
+							$aSearchFields[] = $sTmpFieldAttCode;
 						}
 					}
 					// - Building query for the search values parts
