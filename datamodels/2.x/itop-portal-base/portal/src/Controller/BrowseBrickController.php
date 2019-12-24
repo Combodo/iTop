@@ -20,7 +20,9 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttributeLinkedSetIndirect;
 use Combodo\iTop\Portal\Helper\BrowseBrickHelper;
+use DBObjectSearch;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -133,10 +135,10 @@ class BrowseBrickController extends BrickController
 					$aRealiasingMap = array();
 					$oParentAtt = MetaModel::GetAttributeDef($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search']->GetClass(), $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att']);
 					// If we work on a n:n link
-					if($oParentAtt instanceof \AttributeLinkedSetIndirect)
+					if($oParentAtt instanceof AttributeLinkedSetIndirect)
 					{
 						// Create a DBSearch from Link class
-						$oSubSearch = new \DBObjectSearch($oParentAtt->GetLinkedClass());
+						$oSubSearch = new DBObjectSearch($oParentAtt->GetLinkedClass());
 						// Join it to the bottom query
 						$oSubSearch = $oSubSearch->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
 							DBSearch::JOIN_POINTING_TO, $oParentAtt->GetExtKeyToMe(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
@@ -332,7 +334,7 @@ class BrowseBrickController extends BrickController
 									{
 										$sParentAttCode = $aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'];
 										$oParentAtt = MetaModel::GetAttributeDef($oQuery->GetClass(), $sParentAttCode);
-										if($oParentAtt instanceof \AttributeLinkedSetIndirect)
+										if($oParentAtt instanceof AttributeLinkedSetIndirect)
 										{
 											$oQuery->AddConditionAdvanced($sParentAttCode.'->'.$oParentAtt->GetExtKeyToRemote(), $sNodeId);
 										}
