@@ -533,7 +533,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'a conta não está associada a uma pessoa que contenha um endereço de e-mail. Por favor, contate o administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'faltando um endereço de e-mail. Por favor, contate o administrador.',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
-	'UI:ResetPwd-EmailSent' => 'Por favor, verifique seu email e siga as instruções...',
 	'UI:ResetPwd-EmailSubject' => 'Alterar a senha',
 	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do iTop.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
 

@@ -537,7 +537,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.',
 	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.',
 

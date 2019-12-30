@@ -539,7 +539,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'deze account is niet gelinkt aan een persoon waarvan een e-mailadres gekend is. Neem contact op met jouw beheerder.',
 	'UI:ResetPwd-Error-NoEmail' => 'Er mist een e-mailadres. Neem contact op met jouw beheerder.',
 	'UI:ResetPwd-Error-Send' => 'Er is een technisch probleem bij het verzenden van de e-mail. Neem contact op met jouw beheerder.',
-	'UI:ResetPwd-EmailSent' => 'Kijk in jouw mailbox en volg de instructies...',
 	'UI:ResetPwd-EmailSubject' => 'Reset jouw iTop-wachtwoord',
 	'UI:ResetPwd-EmailBody' => '<body><p>U hebt een reset van jouw iTop-wachtwoord aangevraagd.</p><p>Klik op deze link (eenmalig gebruik) om <a href="%1$s">een nieuw wachtwoord in te voeren</a></p>.',
 

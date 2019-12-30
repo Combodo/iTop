@@ -189,51 +189,52 @@ class LoginWebPage extends NiceWebPage
 			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
             /** @var UserInternal $oUser */
             $oUser = UserRights::GetUserObject();
-			if ($oUser == null)
+
+			if ($oUser != null)
 			{
-				throw new Exception(Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser));
-			}
-			if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
-			}
-			if (!$oUser->CanChangePassword())
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
-			}
-			
-			$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-			if ($sTo == '')
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+				}
+				if (!$oUser->CanChangePassword())
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+				}
+
+				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+				if ($sTo == '')
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				}
+
+				// This token allows the user to change the password without knowing the previous one
+				$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+				$oUser->Set('reset_pwd_token', $sToken);
+				CMDBObject::SetTrackInfo('Reset password');
+				$oUser->AllowWrite(true);
+				$oUser->DBUpdate();
+
+				$oEmail = new Email();
+				$oEmail->SetRecipientTO($sTo);
+				$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+				$oEmail->SetRecipientFrom($sFrom);
+				$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
+				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
+				$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
+				$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
+				switch ($iRes)
+				{
+					//case EMAIL_SEND_PENDING:
+					case EMAIL_SEND_OK:
+						break;
+
+					case EMAIL_SEND_ERROR:
+					default:
+						IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
+						throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+				}
 			}
 
-			// This token allows the user to change the password without knowing the previous one
-			$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
-			$oUser->Set('reset_pwd_token', $sToken);
-			CMDBObject::SetTrackInfo('Reset password');
-			$oUser->AllowWrite(true);
-			$oUser->DBUpdate();
-
-			$oEmail = new Email();
-			$oEmail->SetRecipientTO($sTo);
-			$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
-			$oEmail->SetRecipientFrom($sFrom);
-			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
-			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
-			$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
-			$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
-			switch ($iRes)
-			{
-				//case EMAIL_SEND_PENDING:
-				case EMAIL_SEND_OK:
-					break;
-		
-				case EMAIL_SEND_ERROR:
-				default:
-					IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
-					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
-			}
 
 			$oTwigContext = new LoginTwigRenderer();
 			$aVars = $oTwigContext->GetDefaultVars();

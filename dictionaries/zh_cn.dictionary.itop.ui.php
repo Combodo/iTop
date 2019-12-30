@@ -533,7 +533,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => '该账户未关联邮箱地址，请联系管理员.',
 	'UI:ResetPwd-Error-NoEmail' => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send' => '邮件传输存在技术原因. 请联系管理员.',
-	'UI:ResetPwd-EmailSent' => '请检查邮箱并按照提示操作...',
 	'UI:ResetPwd-EmailSubject' => '重置iTop 密码',
 	'UI:ResetPwd-EmailBody' => '<body><p>您已请求重置iTop 密码.</p><p>请点击这个链接 (一次性) <a href="%1$s">来输入新的密码</a></p>.',
 

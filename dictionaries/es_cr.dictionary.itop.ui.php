@@ -533,7 +533,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'La cuenta no está asociada a una persona con correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'Falta dirección de correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-Send' => 'Falla al envar un correo. Por favor contacte al administrador.',
-	'UI:ResetPwd-EmailSent' => 'Por favor verifique su buzón de correo y siga las instrucciones...',
 	'UI:ResetPwd-EmailSubject' => 'Restablecer contraseña de iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Ha solicitado restablecer su contraseña en iTop.</p><p>Por favor de click en la siguiente liga: <a href="%1$s">proporcione una nueva contraseña</a></p>.',
 

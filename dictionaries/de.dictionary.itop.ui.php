@@ -521,7 +521,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
 	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
-	'UI:ResetPwd-EmailSent' => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
 	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
 	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
 

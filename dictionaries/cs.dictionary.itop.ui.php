@@ -535,7 +535,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'účet není spojen s osobou s uvedenou emailovou adresou. Kontaktujte administrátora.',
 	'UI:ResetPwd-Error-NoEmail' => 'chybí emailová adresa. Kontaktujte administrátora.',
 	'UI:ResetPwd-Error-Send' => 'technický problém při odesílání emailu. Kontaktujte administrátora.',
-	'UI:ResetPwd-EmailSent' => 'Vyčkejte na příchod emailové zprávy a postupujte dle instrukcí...',
 	'UI:ResetPwd-EmailSubject' => 'Obnovení hesla pro iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Vyžádali jste obovení hesla pro iTop.</p><p>Pokračujte kliknutím na následující <a href="%1$s">jednorázový odkaz</a> a zadejte nové heslo.</p>',
 
