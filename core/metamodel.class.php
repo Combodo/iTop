@@ -6690,6 +6690,10 @@ abstract class MetaModel
 		else
 		{
 			// do the job for the real target class
+			if (!class_exists($aRow[$sClassAlias."finalclass"]))
+			{
+				throw new CoreException("Class {$aRow[$sClassAlias."finalclass"]} derived from $sClass does not exist anymore, please remove corresponding tables in the database", array('row' => $aRow));
+			}
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
