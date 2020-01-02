@@ -20,7 +20,10 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-config.php',
-		),
+			'src/Validator/ConfigNodesVisitor.php',
+			'src/Validator/iTopConfigAstValidator.php',
+			'src/Validator/iTopConfigSyntaxValidator.php',
+),
 		'webservice' => array(),
 		'dictionary' => array(
 			'en.dict.itop-config.php',

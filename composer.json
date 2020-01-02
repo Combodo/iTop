@@ -3,26 +3,25 @@
   "license": "AGPLv3",
   "require": {
     "php": ">=5.6.0",
-    "ext-soap": "*",
+    "ext-ctype": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "ext-iconv": "*",
     "ext-json": "*",
     "ext-mysqli": "*",
-    "ext-dom": "*",
-    "ext-iconv": "*",
-    "ext-gd": "*",
-    "ext-ctype": "*",
-
+    "ext-soap": "*",
+    "combodo/tcpdf": "6.3.0",
+    "nikic/php-parser": "^3.1",
+    "pear/archive_tar": "1.4.7",
+    "pelago/emogrifier": "2.1.0",
     "scssphp/scssphp": "1.0.0",
     "swiftmailer/swiftmailer": "5.4.9",
-    "pelago/emogrifier": "2.1.0",
-    "combodo/tcpdf": "6.3.0",
-    "pear/archive_tar": "1.4.7",
-
     "symfony/console": "3.4.*",
     "symfony/dotenv": "3.4.*",
     "symfony/framework-bundle": "3.4.*",
+    "symfony/polyfill-php70": "1.*",
     "symfony/twig-bundle": "3.4.*",
-    "symfony/yaml": "3.4.*",
-    "symfony/polyfill-php70": "1.*"
+    "symfony/yaml": "3.4.*"
   },
   "require-dev": {
     "symfony/stopwatch": "3.4.*",

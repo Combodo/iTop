@@ -24,54 +24,30 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
+use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
+
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/itopwebpage.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
+/**
+ * @param $sContents
+ * @param $oP
+ *
+ * @throws \Exception
+ */
 function TestConfig($sContents, $oP)
 {
-	try
-	{
-		ini_set('display_errors', 1);
-		ob_start();
-        // in PHP < 7.0.0 syntax errors are in output
-        // in PHP >= 7.0.0 syntax errors are thrown as Error
-        $sSafeContent = preg_replace(array('#^\s*<\?php#', '#\?>\s*$#'), '', $sContents);
-        eval('if(0){'.trim($sSafeContent).'}');
-        $sNoise = trim(ob_get_contents());
-		ob_end_clean();
-    }
-    catch (Error $e)
-    {
-        // ParseError only thrown in PHP7
-		throw new Exception('Error in configuration: '.$e->getMessage().' at line '.$e->getLine());
-	}
-	if (strlen($sNoise) > 0)
-	{
-		if (preg_match("/(Error|Parse error|Notice|Warning): (.+) in \S+ : eval\(\)'d code on line (\d+)/i", strip_tags($sNoise), $aMatches))
-		{
-			$sMessage = $aMatches[2];
-			$sLine = $aMatches[3];
-			$iLine = (int) $sLine;
+	/// 1- first check if there is no malicious code
+	$oiTopConfigValidator = new iTopConfigAstValidator();
+	$oiTopConfigValidator->validate($sContents);
 
-			// Highlight the line
-			$aLines = explode("\n", $sContents);
-			$iStart = 0;
-			for ($i = 0 ; $i < $iLine - 1; $i++) $iStart += strlen($aLines[$i]);
-			$iEnd = $iStart + strlen($aLines[$iLine - 1]);
-			$iTotalLines = count($aLines);
-
-			$sMessage = Dict::Format('config-parse-error', $sMessage, $sLine);
-			throw new Exception($sMessage);
-		}
-		else
-		{
-			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
-			throw new Exception('Syntax error in configuration file: <tt>'.$sNoise.'</tt>');
-		}
-	}
+	/// 2 - only after we are sure that there is no malicious cade, we can perform a syntax check!
+	$oiTopConfigValidator = new iTopConfigSyntaxValidator();
+	$oiTopConfigValidator->validate($sContents, true);
 }
 
 /**

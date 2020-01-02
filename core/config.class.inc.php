@@ -1249,6 +1249,10 @@ class Config
 			'show_in_conf_sample' => false,
 		),
 	);
+	/**
+	 * @var \Combodo\iTop\Config\Parser\iTopConfigParser|null
+	 */
+	private $oItopConfigParser;
 
 	public function IsProperty($sPropCode)
 	{
@@ -1889,6 +1893,20 @@ class Config
 		{
 			$sFileName = $this->m_sFile;
 		}
+		$oHandle = fopen($this->m_sFile, 'r');
+		$index = 0;
+		while (!flock($oHandle, LOCK_SH))
+		{
+			if ($index > 50){
+				throw new ConfigException("Could not read to configuration file", array('file' => $this->m_sFile));
+			}
+			usleep(100000);
+			$index++;
+		}
+
+		$this->oItopConfigParser = new iTopConfigParser(file_get_contents($this->m_sFile));
+		flock($oHandle, LOCK_UN);
+
 		$hFile = @fopen($sFileName, 'w');
 		if ($hFile !== false)
 		{
@@ -1969,7 +1987,7 @@ class Config
 							$sSeenAs = $aSettingInfo['value'] ? 'true' : 'false';
 							break;
 						default:
-							$sSeenAs = self::PrettyVarExport($aSettingInfo['value'], "\t");
+							$sSeenAs = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MySettings', $sPropCode),$aSettingInfo['value'], "\t");
 					}
 					fwrite($hFile, "\n");
 					if (isset($aSettingInfo['description']))
@@ -1984,7 +2002,7 @@ class Config
 							$default = $default ? 'true' : 'false';
 						}
 						fwrite($hFile,
-							"\t//\tdefault: ".self::PrettyVarExport($aSettingInfo['default'], "\t//\t\t", true)."\n");
+							"\t//\tdefault: ".self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MySettings', $sPropCode), $aSettingInfo['default'], "\t//\t\t", true)."\n");
 					}
 					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
 				}
@@ -1999,7 +2017,7 @@ class Config
 				fwrite($hFile, "\t'$sModule' => array (\n");
 				foreach ($aProperties as $sProperty => $value)
 				{
-					$sNiceExport = self::PrettyVarExport($value, "\t\t");
+					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
 					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
 				}
 				fwrite($hFile, "\t),\n");
@@ -2012,12 +2030,20 @@ class Config
 			fwrite($hFile, " *\n");
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
-			fwrite($hFile, "\t'addons' => array (\n");
-			foreach ($this->m_aAddons as $sKey => $sFile)
+			$aParserValue = $this->oItopConfigParser->GetVarValue('MyModules', 'addons');
+			if ($aParserValue['found'])
 			{
-				fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
+				fwrite($hFile, "\t'addons' => {$aParserValue['value']},\n");
 			}
-			fwrite($hFile, "\t),\n");
+			else
+			{
+				fwrite($hFile, "\t'addons' => array (\n");
+				foreach ($this->m_aAddons as $sKey => $sFile)
+				{
+					fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
+				}
+				fwrite($hFile, "\t),\n");
+			}
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
 
@@ -2211,6 +2237,7 @@ class Config
 	/**
 	 * Pretty format a var_export'ed value so that (if possible) the identation is preserved on every line
 	 *
+	 * @param array $aParserValue
 	 * @param mixed $value The value to export
 	 * @param string $sIndentation The string to use to indent the text
 	 * @param bool $bForceIndentation Forces the identation (enven if it breaks/changes an eval, for example to ouput a
@@ -2218,8 +2245,13 @@ class Config
 	 *
 	 * @return string The indented export string
 	 */
-	protected static function PrettyVarExport($value, $sIndentation, $bForceIndentation = false)
+	protected static function PrettyVarExport($aParserValue, $value, $sIndentation, $bForceIndentation = false)
 	{
+		if ($aParserValue['found'])
+		{
+			return $aParserValue['value'];
+		}
+
 		$sExport = var_export($value, true);
 		$sNiceExport = str_replace(array("\r\n", "\n", "\r"), "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation)
