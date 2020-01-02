@@ -128,6 +128,19 @@ class OQLClassNode
 		return $sOQL;
 	}
 
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->GetJoins() as $aJoins)
+		{
+			/** @var \OQLJoin $oJoin */
+			foreach ($aJoins as $oJoin)
+			{
+				$oJoin->GetOOQLClassNode()->Browse($callback);
+			}
+		}
+	}
+
 	public function GetExternalKeys()
 	{
 		return $this->aExtKeys;

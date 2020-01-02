@@ -23,7 +23,7 @@ class OQLClassTreeBuilder
 	 * @param \DBObjectSearch $oDBObjetSearch
 	 * @param \QueryBuilderContext $oBuild
 	 */
-	public function __construct($oDBObjetSearch, $oBuild)
+	protected function __construct($oDBObjetSearch, $oBuild)
 	{
 		$this->oBuild = $oBuild;
 		$this->oDBObjectSearch = $oDBObjetSearch;
@@ -34,6 +34,25 @@ class OQLClassTreeBuilder
 			$this->sClassAlias = $oBuild->GetEmptyClassAlias();
 		}
 		$this->oOQLClassNode = new OQLClassNode($oBuild, $this->sClass, $this->sClassAlias);
+	}
+
+	/**
+	 * @param \DBObjectSearch $oDBObjetSearch
+	 * @param \QueryBuilderContext $oBuild
+	 *
+	 * @return \OQLClassNode
+	 * @throws \CoreException
+	 */
+	public static function GetOQLClassTree($oDBObjetSearch, $oBuild)
+	{
+		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oDBObjetSearch, $oBuild);
+		$oOQLClassNode = $oOQLClassTreeBuilder->DevelopOQLClassNode();
+		$oOQLClassTreeOptimizer = new OQLClassTreeOptimizer($oOQLClassNode, $oBuild);
+		$oOQLClassTreeOptimizer->OptimizeClassTree();
+		$oOQLActualClassTreeResolver = new OQLActualClassTreeResolver($oOQLClassNode, $oBuild);
+		$oOQLClassNode = $oOQLActualClassTreeResolver->Resolve();
+
+		return $oOQLClassNode;
 	}
 
 	/**
