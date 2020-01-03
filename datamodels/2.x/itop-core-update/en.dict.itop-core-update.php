@@ -73,7 +73,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Database backup',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archive application files',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Copy new version files',
-    'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application and database',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Check application upgrade',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application',
+	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade database',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Exiting maintenance mode',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade completed',
 

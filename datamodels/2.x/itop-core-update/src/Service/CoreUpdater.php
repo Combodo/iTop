@@ -13,11 +13,11 @@ use Combodo\iTop\FilesInformation\Service\FilesIntegrity;
 use DBBackup;
 use Dict;
 use Exception;
-use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
 use iTopMutex;
 use MetaModel;
+use SetupLog;
 use SetupUtils;
 use utils;
 use ZipArchive;
@@ -47,7 +47,7 @@ final class CoreUpdater
 		}
 		if (is_file(self::UPDATE_DIR.'web/setup/appupgradecopy.php'))
 		{
-			IssueLog::Info('itop-core-update: Use updater provided in the archive');
+			SetupLog::Info('itop-core-update: Use updater provided in the archive');
 			self::CopyFile(self::UPDATE_DIR.'web/setup/appupgradecopy.php', APPROOT.'setup/appupgradecopy.php');
 			@include_once(APPROOT.'setup/appupgradecopy.php');
 		}
@@ -63,43 +63,31 @@ final class CoreUpdater
 			else
 			{
 				// Local function for older iTop versions
-				IssueLog::Info('itop-core-update: Use default updater');
+				SetupLog::Info('itop-core-update: Use default updater');
 				self::LocalUpdateCoreFiles(self::UPDATE_DIR.'web/');
 			}
-			IssueLog::Info('itop-core-update: Update done, check files integrity');
+			SetupLog::Info('itop-core-update: Update done, check files integrity');
 			FilesIntegrity::CheckInstallationIntegrity(APPROOT);
-			IssueLog::Info('itop-core-update: Files integrity OK');
-
+			SetupLog::Info('itop-core-update: Files integrity OK');
+			// Reset the opcache since otherwise the "core" files may still be cached !!
+			if (function_exists('opcache_reset'))
+			{
+				// Zend opcode cache
+				opcache_reset();
+			}
+			if (function_exists('apc_clear_cache'))
+			{
+				// APC(u) cache
+				apc_clear_cache();
+			}
 		} catch (Exception $e)
 		{
-			IssueLog::error($e->getMessage());
-			IssueLog::Info('itop-core-update: ended');
+			SetupLog::error($e->getMessage());
+			SetupLog::Info('itop-core-update: ended');
 			throw $e;
 		} finally
 		{
 			self::RRmdir(self::UPDATE_DIR);
-		}
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public static function CheckCompile()
-	{
-		try
-		{
-			// Compile code in env-production-build
-			IssueLog::Info('itop-core-update: Check compilation');
-
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv, false);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
-			$oRuntimeEnv->CompileFrom('production');
-			SetupUtils::tidydir(APPROOT."env-{$sTargetEnv}-build");
-		} catch (Exception $e)
-		{
-			IssueLog::error($e->getMessage());
-			throw $e;
 		}
 	}
 
@@ -111,35 +99,13 @@ final class CoreUpdater
 		try
 		{
 			// Compile code
-			IssueLog::Info('itop-core-update: Start compilation');
+			SetupLog::Info('itop-core-update: Start compilation');
 
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
+			$oRuntimeEnv->CheckDirectories($sFinalEnv);
 			$oRuntimeEnv->CompileFrom('production');
-
-			IssueLog::Info('itop-core-update: Compilation done');
-		} catch (Exception $e)
-		{
-			IssueLog::error($e->getMessage());
-			throw $e;
-		}
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public static function UpdateDatabase()
-	{
-		try
-		{
-			// Compile code
-			IssueLog::Info('itop-core-update: Update database');
-
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
-			$oConfig = $oRuntimeEnv->MakeConfigFile($sTargetEnv.' (built on '.date('Y-m-d').')');
+			$oConfig = $oRuntimeEnv->MakeConfigFile($sFinalEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
 			$oRuntimeEnv->InitDataModel($oConfig, true);
@@ -191,10 +157,11 @@ final class CoreUpdater
 
 			$oRuntimeEnv->Commit();
 
-			IssueLog::Info('itop-core-update: Update database done');
-		} catch (Exception $e)
+			SetupLog::Info('itop-core-update: Compilation done');
+		}
+		catch (Exception $e)
 		{
-			IssueLog::error($e->getMessage());
+			SetupLog::error($e->getMessage());
 			throw $e;
 		}
 	}
@@ -274,16 +241,16 @@ final class CoreUpdater
 
 		if (!file_exists($sTempFile))
 		{
-			IssueLog::Error("Failed to create itop archive $sTempFile");
+			SetupLog::Error("Failed to create itop archive $sTempFile");
 		}
 
 		if (@rename($sTempFile, $sItopArchiveFile))
 		{
-			IssueLog::Info("Archive $sItopArchiveFile Created");
+			SetupLog::Info("Archive $sItopArchiveFile Created");
 		}
 		else
 		{
-			IssueLog::Error("Failed to create archive $sItopArchiveFile");
+			SetupLog::Error("Failed to create archive $sItopArchiveFile");
 		}
 	}
 
@@ -307,7 +274,7 @@ final class CoreUpdater
 		try
 		{
 			$oBackup->CreateCompressedBackup($sTargetFile);
-			IssueLog::Info('itop-core-update: Backup done: '.$sTargetFile);
+			SetupLog::Info('itop-core-update: Backup done: '.$sTargetFile);
 		} catch (Exception $e)
 		{
 			$oMutex->Unlock();
@@ -498,12 +465,12 @@ final class CoreUpdater
 			// Extract archive file
 			self::ExtractUpdateFile($sArchiveFile);
 
-			IssueLog::Info('itop-core-update: Archive extracted, check files integrity');
+			SetupLog::Info('itop-core-update: Archive extracted, check files integrity');
 
 			// Check files integrity
 			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
 
-			IssueLog::Info('itop-core-update: Files integrity OK');
+			SetupLog::Info('itop-core-update: Files integrity OK');
 		} catch (Exception $e)
 		{
 			self::RRmdir(self::UPDATE_DIR);
@@ -553,7 +520,7 @@ final class CoreUpdater
 			}
 			if (is_file(self::UPDATE_DIR.'web/setup/appupgradecheck.php'))
 			{
-				IssueLog::Info('itop-core-update: Use updater provided in the archive');
+				SetupLog::Info('itop-core-update: Use updater provided in the archive');
 				self::CopyFile(self::UPDATE_DIR.'web/setup/appupgradecheck.php', APPROOT.'setup/appupgradecheck.php');
 				@include_once(APPROOT.'setup/appupgradecheck.php');
 			}

@@ -16,12 +16,6 @@ use utils;
 
 class UpdateController extends Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
-		$this->InitFromModule();
-	}
-
     public function OperationSelectUpdateFile()
 	{
 		$sTransactionId = utils::GetNewTransactionId();

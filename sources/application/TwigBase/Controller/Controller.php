@@ -46,12 +46,31 @@ abstract class Controller
 	private $m_aAjaxTabs;
 
 
-	public function __construct()
+	/**
+	 * Controller constructor.
+	 *
+	 * @param string $sViewPath Path of the twig files
+	 * @param string $sModuleName name of the module (or 'core' if not a module)
+	 */
+	public function __construct($sViewPath, $sModuleName = 'core')
 	{
 		$this->m_aLinkedScripts = array();
 		$this->m_aLinkedStylesheets = array();
 		$this->m_aAjaxTabs = array();
 		$this->m_aDefaultParams = array();
+		$this->SetViewPath($sViewPath);
+		$this->SetModuleName($sModuleName);
+		if ($sModuleName != 'core')
+		{
+			try
+			{
+				$this->m_aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
+			}
+			catch (Exception $e)
+			{
+				IssueLog::Error($e->getMessage());
+			}
+		}
 	}
 
 	/**
@@ -132,6 +151,36 @@ abstract class Controller
 			$oP->output();
 
 			IssueLog::Error($e->getMessage());
+		}
+	}
+
+	/**
+	 * Entry point to handle requests
+	 *
+	 * @api
+	 */
+	public function HandleAjaxOperation()
+	{
+		try
+		{
+			$this->CheckAccess();
+			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
+
+			$sMethodName = 'Operation'.$this->m_sOperation;
+			if (method_exists($this, $sMethodName))
+			{
+				$this->$sMethodName();
+			}
+			else
+			{
+				$this->DisplayPageNotFound();
+			}
+		}
+		catch (Exception $e)
+		{
+			http_response_code(500);
+			$aResponse = array('sError' => $e->getMessage());
+			echo json_encode($aResponse);
 		}
 	}
 
@@ -294,10 +343,12 @@ abstract class Controller
 	/**
 	 * Generate a page, zip it and propose the zipped file for download
 	 *
-	 * @api
-	 *
 	 * @param array $aParams Params used by the twig template
 	 * @param null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 *
+	 * @throws \Exception
+	 * @api
+	 *
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null)
 	{
@@ -413,11 +464,19 @@ abstract class Controller
 		$this->m_aAjaxTabs[] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
 	}
 
+	/**
+	 * @param $aParams
+	 * @param $sName
+	 * @param $sTemplateFileExtension
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	private function RenderTemplate($aParams, $sName, $sTemplateFileExtension)
 	{
 		if (empty($this->m_oTwig))
 		{
-			return 'Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display';
+			throw new Exception('Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display');
 		}
 		try
 		{
@@ -506,4 +565,8 @@ abstract class Controller
 	{
 		$this->m_oPage->output();
 	}
+}
+
+class PageNotFoundException extends Exception
+{
 }

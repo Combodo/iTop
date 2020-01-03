@@ -544,7 +544,16 @@ class RunTimeEnvironment
 
 	/**
 	 * Helper function to create the database structure
+	 *
+	 * @param \Config $oConfig
+	 * @param $sMode
+	 *
 	 * @return boolean true on success, false otherwise
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function CreateDatabaseStructure(Config $oConfig, $sMode)
 	{
@@ -554,7 +563,7 @@ class RunTimeEnvironment
 		}
 		else
 		{
-			$this->log_info("Creating the structure in '".$oConfig->Get('db_subname')."'.");
+			$this->log_info("Creating the structure in '".$oConfig->Get('db_name')."'.");
 		}
 	
 		//MetaModel::CheckDefinitions();

@@ -72,7 +72,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Sauvegarde des fichiers de l\'application',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archivage des fichiers de l\'application',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Copie des fichiers de la nouvelle version',
-    'iTopUpdate:UI:SetupMessage:Compile' => 'Mise à jour de l\'application et de la base de données',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Contrôle de la mise à jour',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Mise à jour de l\'application',
+	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Mise à jour de la base de données',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Application en utilisation normale',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Installation terminée',
 

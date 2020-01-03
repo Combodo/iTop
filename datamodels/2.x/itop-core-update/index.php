@@ -12,7 +12,7 @@ use ContextTag;
 require_once(APPROOT.'application/startup.inc.php');
 new ContextTag('Setup');
 
-$oUpdateController = new UpdateController();
+$oUpdateController = new UpdateController(MODULESROOT.'itop-core-update/view', 'itop-core-update');
 $oUpdateController->DisableInDemoMode();
 $oUpdateController->AllowOnlyAdmin();
 $oUpdateController->SetDefaultOperation('SelectUpdateFile');
