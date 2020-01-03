@@ -8,7 +8,7 @@
 class OQLClassTreeBuilder
 {
 	/** @var \DBObjectSearch  */
-	private $oDBObjetSearch;
+	private $oDBObjectSearch;
 	/** @var OQLClassNode */
 	private $oOQLClassNode;
 	/** @var \QueryBuilderContext  */
@@ -26,7 +26,7 @@ class OQLClassTreeBuilder
 	public function __construct($oDBObjetSearch, $oBuild)
 	{
 		$this->oBuild = $oBuild;
-		$this->oDBObjetSearch = $oDBObjetSearch;
+		$this->oDBObjectSearch = $oDBObjetSearch;
 		$this->sClass = $oDBObjetSearch->GetFirstJoinedClass();
 		$this->sClassAlias = $oDBObjetSearch->GetFirstJoinedClassAlias();
 		if (empty($this->sClassAlias))
@@ -70,7 +70,7 @@ class OQLClassTreeBuilder
 	 */
 	private function AddExternalKeysFromSearch()
 	{
-		foreach ($this->oDBObjetSearch->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
+		foreach ($this->oDBObjectSearch->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
 		{
 			if (array_key_exists(TREE_OPERATOR_EQUALS, $aPointingTo))
 			{
@@ -203,7 +203,7 @@ class OQLClassTreeBuilder
 	private function JoinClassesForExternalKeys()
 	{
 		// Get filters from the search outgoing joins
-		$aAllPointingTo = $this->oDBObjetSearch->GetCriteria_PointingTo();
+		$aAllPointingTo = $this->oDBObjectSearch->GetCriteria_PointingTo();
 
 		// Add filters from external keys
 		foreach (array_keys($this->oOQLClassNode->GetExternalKeys()) as $sKeyAttCode)
@@ -317,7 +317,7 @@ class OQLClassTreeBuilder
 	 */
 	private function JoinClassesReferencedBy()
 	{
-		foreach ($this->oDBObjetSearch->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
+		foreach ($this->oDBObjectSearch->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
 		{
 			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
@@ -382,7 +382,7 @@ class OQLClassTreeBuilder
 	 */
 	private function TranslateNestedRequests()
 	{
-		$aClassAliases = $this->oDBObjetSearch->GetJoinedClasses();
-		$this->oDBObjetSearch->RenameNestedQueriesAliasesInNameSpace($aClassAliases);
+		$aClassAliases = $this->oDBObjectSearch->GetJoinedClasses();
+		$this->oDBObjectSearch->RenameNestedQueriesAliasesInNameSpace($aClassAliases);
 	}
 }
