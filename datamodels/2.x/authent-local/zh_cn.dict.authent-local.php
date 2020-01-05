@@ -30,25 +30,27 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
 //
 // Class: UserLocal
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserLocal' => 'iTop 用户',
 	'Class:UserLocal+' => '用户由 iTop 验证身份',
 	'Class:UserLocal/Attribute:password' => '密码',
 	'Class:UserLocal/Attribute:password+' => '用于验证用户身份的字符串',
 
-	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
-	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Can expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Never expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
-	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
+	'Class:UserLocal/Attribute:expiration' => '密码过期',
+	'Class:UserLocal/Attribute:expiration+' => '密码过期状态 (需要一个扩展才能生效)',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => '允许过期',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => '永不过期',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => '已过期',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:password_renewed_date' => '密码更新',
+	'Class:UserLocal/Attribute:password_renewed_date+' => '上次修改密码的时间',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => '密码必须至少8 个字符,包含大小写、数字和特殊字符.',
 ));
