@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
@@ -34,7 +35,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s~~',
+	'Attachments:Render:Icons' => '显示为图标',
+	'Attachments:Render:Table' => '显示为列表',
 ));
 
 //
@@ -42,18 +45,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Attachment' => 'Attachment~~',
-	'Class:Attachment+' => '~~',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
+	'Class:Attachment' => '附件',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => '过期',
 	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
+	'Class:Attachment/Attribute:temp_id' => '临时 id',
 	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Item class~~',
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Item~~',
 	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
-	'Class:Attachment/Attribute:item_org_id+' => '~~',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
-	'Class:Attachment/Attribute:contents+' => '~~',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => '内容',
+	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Attachments:File:Thumbnail' => '图标',
+	'Attachments:File:Name' => '文件名',
+	'Attachments:File:Date' => '上传日期',
+	'Attachments:File:Creator' => '上传者',
+	'Attachments:File:Size' => '大小',
+	'Attachments:File:MimeType' => '类型',
 ));
