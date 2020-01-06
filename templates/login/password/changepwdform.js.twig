@@ -82,11 +82,13 @@ $(function() {
 					if (oResponse[sPwdField].isValid || oField.val() == '')
 					{
 						oDiv.removeClass('invalid');
+						$('#login-submit .login-submit-primary').prop('disabled', false);
 					}
 					else
 					{
 						oDiv.addClass('invalid');
 						oMessage.append(oResponse[sPwdField].message);
+						$('#login-submit .login-submit-primary').prop('disabled', true);
 					}
 
 

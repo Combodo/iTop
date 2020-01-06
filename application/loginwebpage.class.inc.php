@@ -1064,6 +1064,9 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if ($operation == 'check_pwd_policy')
 		{
+			$sAuthUser = $_SESSION['auth_user'];
+			UserRights::Login($sAuthUser); // Set the user's language
+
 			$aPwdMap = array();
 
 			foreach (array('new_pwd', 'retype_new_pwd') as $postedPwd)
