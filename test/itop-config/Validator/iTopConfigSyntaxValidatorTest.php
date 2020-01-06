@@ -20,8 +20,8 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 	{
 		parent::setUp();
 
-		require_once __DIR__.'/../../src/Validator/ConfigNodesVisitor.php';
-		require_once __DIR__.'/../../src/Validator/iTopConfigSyntaxValidator.php';
+		require_once __DIR__.'/../../../env-production/itop-config/src/Validator/ConfigNodesVisitor.php';
+		require_once __DIR__.'/../../../env-production/itop-config/src/Validator/iTopConfigSyntaxValidator.php';
 	}
 
 
