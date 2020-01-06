@@ -96,7 +96,19 @@ class UserLocal extends UserInternal
 		MetaModel::Init_AddAttribute(new AttributeDate("password_renewed_date", array("allowed_values"=>null, "sql"=>"password_renewed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'password', 'expiration', 'password_renewed_date', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array(
+				'col:col1' =>
+					array(
+						'contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',
+					),
+				'col:col2' =>
+					array(
+						'fieldset:UserLocal:password:expiration' =>  array('expiration', 'password_renewed_date',),
+					),
+			)
+
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
