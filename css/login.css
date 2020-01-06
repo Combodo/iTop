@@ -217,3 +217,13 @@ a:hover {
 	margin-bottom: auto;
 }
 
+#login-input .invalid input{
+	border-color: #F56565;
+}
+
+
+#login-input .invalid .message, #login-submit.invalid .message {
+	color: #F56565;
+	display: inline-block;
+	padding: 5px;
+}
