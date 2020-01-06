@@ -15,3 +15,89 @@ function DoCheckPwd()
     }
     return true;
 }
+
+$(function() {
+	var iCheckPwdPolicyTimeout = null;
+	var jqXHRCheckPwdPolicy = null;
+	var aPwdFieldMap = ['new_pwd', 'retype_new_pwd'];
+	var sFieldsCssSelector = aPwdFieldMap.map(function(item) {return '#'+item}).join(',');
+
+	console.debug(aPwdFieldMap, sFieldsCssSelector);
+
+	$(sFieldsCssSelector).on('keyup', function() {
+		if (null != iCheckPwdPolicyTimeout)
+		{
+			clearTimeout(iCheckPwdPolicyTimeout);
+		}
+
+		var iCheckPwdPolicyTimeout = setTimeout(function () {
+			if (null != jqXHRCheckPwdPolicy)
+			{
+				jqXHRCheckPwdPolicy.abort();
+			}
+
+			var oData = {};
+			$.each(aPwdFieldMap, function(index, sPwdField) {
+				oData[sPwdField] = $('#'+sPwdField).val();
+			});
+
+			if (oData.new_pwd != oData.retype_new_pwd)
+			{
+				$('#login-submit .message')
+						.empty()
+						.append('{{ 'UI:Login:RetypePwdDoesNotMatch'|dict_s }}')
+				;
+				$('#login-submit')
+						.addClass('invalid')
+				;
+
+				$('#login-submit .login-submit-primary').prop('disabled', true);
+			}
+			else
+			{
+				$('#login-submit .message')
+						.empty()
+				;
+				$('#login-submit')
+						.removeClass('invalid')
+				;
+				$('#login-submit .login-submit-primary').prop('disabled', false);
+			}
+
+			jqXHRCheckPwdPolicy = $.ajax('?loginop=check_pwd_policy', {
+				cache: false,
+				dataType: 'json',
+				data: oData,
+				method:'POST'
+			});
+
+			jqXHRCheckPwdPolicy.done(function(oResponse) {
+				$.each(aPwdFieldMap, function(index, sPwdField) {
+					var oField = $('#'+sPwdField);
+					var oDiv = oField.parent();
+					var oMessage = oDiv.find('.message');
+
+					oMessage.empty();
+
+					if (oResponse[sPwdField].isValid || oField.val() == '')
+					{
+						oDiv.removeClass('invalid');
+					}
+					else
+					{
+						oDiv.addClass('invalid');
+						oMessage.append(oResponse[sPwdField].message);
+					}
+
+
+				});
+			});
+
+
+			jqXHRCheckPwdPolicy.fail(function(oResponse) {
+
+			});
+		}, 200); //setTimeout
+
+	}); //.on('keyup', function() {
+}); //$(function() {

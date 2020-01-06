@@ -176,6 +176,21 @@ class UserLocal extends UserInternal
 		return (empty($this->m_oPasswordValidity)) || ($this->m_oPasswordValidity->isPasswordValid());
 	}
 
+	public function getPasswordValidityMessage()
+	{
+		if (ContextTag::Check('Setup'))
+		{
+			// during the setup, the admin account can have whatever password you want ...
+			return null;
+		}
+
+		if (empty($this->m_oPasswordValidity))
+		{
+			return null;
+		}
+
+		return $this->m_oPasswordValidity->getPasswordValidityMessage();
+	}
 
 
 	/**

@@ -23,15 +23,19 @@
 					<div>
 						<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
 						<input type="password" id="new_pwd" name="new_pwd" value="" />
+						<span class="message"></span>
 					</div>
 					<div>
 						<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
 						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" />
+						<span class="message"></span>
 					</div>
 				</div>
 				<div id="login-submit" class="changepwd-submit">
 					<div>
-						<input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" />
+						<input class="login-submit-primary" type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" />
+						<span class="message"></span>
+
 						<input class="login-submit-secondary" type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}" />
 					</div>
 				</div>
@@ -39,6 +43,36 @@
 			</div>
 		</form>
 		</div>
+
+	<style type="text/css">
+	#login-input .invalid input{
+		border:1px solid red;
+		background-color: #FFD0D0;
+	}
+
+
+	#login-input .invalid .message{
+		border-left: 1px solid red;
+		background-color: #FFD0D0;
+		display: inline-block;
+		padding: 5px;
+	}
+
+	#login-submit.invalid .message {
+		border-left: 1px solid #9e510f;
+		background-color: #9e510f;
+		display: inline-block;
+		padding: 5px;
+	}
+	#login-submit.invalid input[type="submit"] {
+		/*border: 1px solid red;*/
+		/*background-color: red;*/
+		/*display: inline-block;*/
+		/*padding: 5px;*/
+		color: rgb(247, 125, 25);
+	}
+
+	</style>
 {% endblock %}
 
 {% block script %}

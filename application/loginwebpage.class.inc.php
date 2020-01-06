@@ -1062,6 +1062,21 @@ class LoginWebPage extends NiceWebPage
 				exit;
 			}
 		}
+		else if ($operation == 'check_pwd_policy')
+		{
+			$aPwdMap = array();
+
+			foreach (array('new_pwd', 'retype_new_pwd') as $postedPwd)
+			{
+				$oUser = new UserLocal();
+				$oUser->ValidatePassword($_POST[$postedPwd]);
+
+				$aPwdMap[$postedPwd]['isValid'] = $oUser->IsPasswordValid();
+				$aPwdMap[$postedPwd]['message'] = $oUser->getPasswordValidityMessage();
+			}
+			echo json_encode($aPwdMap);
+			die();
+		}
 		if ($operation == 'do_change_pwd')
 		{
 			if (isset($_SESSION['auth_user']))
