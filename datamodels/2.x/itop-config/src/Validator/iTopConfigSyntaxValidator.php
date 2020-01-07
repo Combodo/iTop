@@ -7,12 +7,6 @@
 
 namespace Combodo\iTop\Config\Validator;
 
-
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor;
-use PhpParser\Parser;
-use PhpParser\ParserFactory;
-
 class iTopConfigSyntaxValidator
 {
 	/**
@@ -21,7 +15,7 @@ class iTopConfigSyntaxValidator
 	 * @param $sConfig
 	 * @param $bAllowUnsecure
 	 */
-	public function validate($sConfig, $bAllowUnsecure)
+	public function Validate($sConfig, $bAllowUnsecure)
 	{
 		exec('php -v', $aOutput, $iReturnVar);
 		$bCanRunCli = ($iReturnVar == 0);

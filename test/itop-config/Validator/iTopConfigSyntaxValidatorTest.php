@@ -32,7 +32,7 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 	public function testValidCode()
 	{
 		$oiTopConfigValidator = new iTopConfigSyntaxValidator();
-		$oiTopConfigValidator->validate("<?php \n echo 'foo'; ", false);
+		$oiTopConfigValidator->Validate("<?php \n echo 'foo'; ", false);
 	}
 
 	public function testThrowOnInvalidCode()
@@ -41,7 +41,7 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 
 		$this->expectException(\Exception::class);
 		try{
-			$oiTopConfigValidator->validate("<?php \n zef;zefzef \n zdadz = azdazd \n zerfgzaezerfgzef>", false);
+			$oiTopConfigValidator->Validate("<?php \n zef;zefzef \n zdadz = azdazd \n zerfgzaezerfgzef>", false);
 		}catch (\Exception $e)
 		{
 			$this->assertStringStartsWith('PHP Parse error:  syntax error, unexpected \'zdadz\' (T_STRING)', $e->getMessage());

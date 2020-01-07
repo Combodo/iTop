@@ -37,7 +37,7 @@ class iTopConfigParser
 	{
 		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
-		$this->browseFile($oParser, $sConfig);
+		$this->BrowseFile($oParser, $sConfig);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class iTopConfigParser
 	 *
 	 * @return \Combodo\iTop\Config\Validator\ConfigNodesVisitor
 	 */
-	private function browseFile(\PhpParser\Parser $oParser, $sConfig)
+	private function BrowseFile(\PhpParser\Parser $oParser, $sConfig)
 	{
 		$prettyPrinter = new Standard();
 

@@ -1250,7 +1250,7 @@ class Config
 		),
 	);
 	/**
-	 * @var \Combodo\iTop\Config\Parser\iTopConfigParser|null
+	 * @var \iTopConfigParser|null
 	 */
 	private $oItopConfigParser;
 

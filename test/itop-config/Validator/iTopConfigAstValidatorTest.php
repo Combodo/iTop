@@ -35,7 +35,7 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 		$oiTopConfigValidator = new iTopConfigAstValidator();
 		$this->expectException(\Exception::class);
 		try{
-			$oiTopConfigValidator->validate($sConf);
+			$oiTopConfigValidator->Validate($sConf);
 		}catch (\Exception $e)
 		{
 			$this->assertStringStartsWith('Invalid configuration:', $e->getMessage());
@@ -81,7 +81,7 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 	{
 		$oiTopConfigValidator = new iTopConfigAstValidator();
 
-		$oiTopConfigValidator->validate($sConf);
+		$oiTopConfigValidator->Validate($sConf);
 	}
 
 	public function ValidDataProvider()

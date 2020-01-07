@@ -21,7 +21,7 @@ class iTopConfigAstValidator
 	 *
 	 * @throws \Exception
 	 */
-	public function validate($sConfig)
+	public function Validate($sConfig)
 	{
 		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 

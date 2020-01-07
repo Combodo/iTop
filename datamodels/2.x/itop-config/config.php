@@ -43,11 +43,11 @@ function TestConfig($sContents, $oP)
 {
 	/// 1- first check if there is no malicious code
 	$oiTopConfigValidator = new iTopConfigAstValidator();
-	$oiTopConfigValidator->validate($sContents);
+	$oiTopConfigValidator->Validate($sContents);
 
 	/// 2 - only after we are sure that there is no malicious cade, we can perform a syntax check!
 	$oiTopConfigValidator = new iTopConfigSyntaxValidator();
-	$oiTopConfigValidator->validate($sContents, true);
+	$oiTopConfigValidator->Validate($sContents, true);
 }
 
 /**
