@@ -22,8 +22,6 @@ $(function() {
 	var aPwdFieldMap = ['new_pwd', 'retype_new_pwd'];
 	var sFieldsCssSelector = aPwdFieldMap.map(function(item) {return '#'+item}).join(',');
 
-	console.debug(aPwdFieldMap, sFieldsCssSelector);
-
 	$(sFieldsCssSelector).on('keyup', function() {
 		if (null != iCheckPwdPolicyTimeout)
 		{
