@@ -2396,6 +2396,24 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	/**
+	 * List the changed attributes that were persisted by an update.
+	 * 
+	 * @see \DBObject::ListChanges() use DBObject::ListChanges() if your code is BEFORE the update 
+	 * 
+	 * @return array
+	 */
+	public function ListChangesUpdated()
+	{
+		if (empty($this->m_aChanges))
+		{
+			return array();
+		}
+
+		return $this->m_aChanges;
+	}
+
+	
     /**
      * Whether or not an object was modified since last read from the DB
      * (ie: does it differ from the DB ?)
