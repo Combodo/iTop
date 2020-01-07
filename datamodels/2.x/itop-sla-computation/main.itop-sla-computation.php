@@ -42,6 +42,8 @@ class SLAComputation implements iWorkingTimeComputer
 	 *
 	 * @return void
 	 * @throws \CoreException
+	 *
+	 * @deprecated will be removed soon (see N°2683)
 	 */
 	public static function SelectModule($sClassName)
 	{
@@ -131,6 +133,8 @@ class SLAComputation implements iWorkingTimeComputer
  * 24x7 (no holiday) computation. To override this behavior, implement
  * a derived class from this one, overloading the behavior, and call
  * SLAComputation::SetExtension()
+ *
+ * @deprecated will be removed soon (see N°2683)
  */
 class SLAComputationAddOnAPI
 {
