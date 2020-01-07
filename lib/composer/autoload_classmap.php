@@ -139,6 +139,7 @@ return array(
     'Combodo\\iTop\\Application\\Search\\CriterionParser' => $baseDir . '/sources/application/search/criterionparser.class.inc.php',
     'Combodo\\iTop\\Application\\Search\\SearchForm' => $baseDir . '/sources/application/search/searchform.class.inc.php',
     'Combodo\\iTop\\Application\\TwigBase\\Controller\\Controller' => $baseDir . '/sources/application/TwigBase/Controller/Controller.php',
+    'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => $baseDir . '/sources/application/TwigBase/Controller/Controller.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => $baseDir . '/sources/application/TwigBase/Twig/Extension.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => $baseDir . '/sources/application/TwigBase/Twig/TwigHelper.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',

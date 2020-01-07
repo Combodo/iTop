@@ -24,30 +24,28 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-core-update/2.7.0',
+	'itop-files-information/2.7.0',
 	array(
 		// Identification
 		//
-		'label' => 'iTop Core Update',
+		'label' => 'iTop files information',
 		'category' => 'business',
 
 		// Setup
 		//
 		'dependencies' => array(
-            'itop-files-information/2.7.0',
-            'combodo-db-tools/2.7.0',
 		),
 		'mandatory' => false,
-		'visible' => true,
+		'visible' => false,
 
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-core-update.php',
-			'src/Service/RunTimeEnvironmentCoreUpdater.php',
-			'src/Service/CoreUpdater.php',
-			'src/Controller/UpdateController.php',
-			'src/Controller/AjaxController.php',
+		    'model.itop-files-information.php',
+            'src/Service/FilesInformation.php',
+            'src/Service/FilesInformationException.php',
+			'src/Service/FilesInformationUtils.php',
+			'src/Service/FilesIntegrity.php',
 		),
 		'webservice' => array(),
 		'data.struct' => array(),

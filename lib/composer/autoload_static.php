@@ -369,6 +369,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\Search\\CriterionParser' => __DIR__ . '/../..' . '/sources/application/search/criterionparser.class.inc.php',
         'Combodo\\iTop\\Application\\Search\\SearchForm' => __DIR__ . '/../..' . '/sources/application/search/searchform.class.inc.php',
         'Combodo\\iTop\\Application\\TwigBase\\Controller\\Controller' => __DIR__ . '/../..' . '/sources/application/TwigBase/Controller/Controller.php',
+        'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => __DIR__ . '/../..' . '/sources/application/TwigBase/Controller/Controller.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/Extension.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/TwigHelper.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
