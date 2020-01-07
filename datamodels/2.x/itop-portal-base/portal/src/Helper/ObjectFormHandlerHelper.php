@@ -260,11 +260,16 @@ class ObjectFormHandlerHelper
 					break;
 
 				default:
-					// Do nothing
+					// As of N°2306 we don't put the $_SERVER['REQUEST_URI'] anymore as it could lead to XSS.
+					$sFormEndpoint = null;
 					break;
 			}
+
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($sFormEndpoint);
+			if($sFormEndpoint !== null)
+			{
+				$oFormRenderer->SetEndpoint($sFormEndpoint);
+			}
 
 			$oFormManager = new ObjectFormManager();
 			$oFormManager->SetContainer($this->oContainer)
