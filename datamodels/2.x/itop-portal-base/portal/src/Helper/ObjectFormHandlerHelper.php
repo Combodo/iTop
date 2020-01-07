@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -240,6 +240,7 @@ class ObjectFormHandlerHelper
 			}
 			else
 			{
+				// Fallback to current URL for other use cases
 				$sFormEndpoint = $_SERVER['REQUEST_URI'];
 			}
 			$oFormRenderer = new BsFormRenderer();
