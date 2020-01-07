@@ -1893,19 +1893,26 @@ class Config
 		{
 			$sFileName = $this->m_sFile;
 		}
-		$oHandle = fopen($this->m_sFile, 'r');
-		$index = 0;
-		while (!flock($oHandle, LOCK_SH))
+		$oHandle = null;
+		if (is_file($this->m_sFile))
 		{
-			if ($index > 50){
-				throw new ConfigException("Could not read to configuration file", array('file' => $this->m_sFile));
+			$oHandle = fopen($this->m_sFile, 'r');
+			$index = 0;
+			while (!flock($oHandle, LOCK_SH))
+			{
+				if ($index > 50)
+				{
+					throw new ConfigException("Could not read to configuration file", array('file' => $this->m_sFile));
+				}
+				usleep(100000);
+				$index++;
 			}
-			usleep(100000);
-			$index++;
 		}
-
 		$this->oItopConfigParser = new iTopConfigParser(file_get_contents($this->m_sFile));
-		flock($oHandle, LOCK_UN);
+		if ($oHandle !==null)
+		{
+			flock($oHandle, LOCK_UN);
+		}
 
 		$hFile = @fopen($sFileName, 'w');
 		if ($hFile !== false)
