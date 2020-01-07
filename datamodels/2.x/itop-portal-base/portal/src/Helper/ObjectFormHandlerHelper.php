@@ -234,14 +234,34 @@ class ObjectFormHandlerHelper
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
-			if (in_array($sMode, array('create', 'edit', 'view')))
+			switch($sMode)
 			{
-				$sFormEndpoint = $this->oUrlGenerator->generate('p_object_'.$sMode, array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
-			}
-			else
-			{
-				// Fallback to current URL for other use cases
-				$sFormEndpoint = $_SERVER['REQUEST_URI'];
+				case 'create':
+				case 'edit':
+				case 'view':
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_'.$sMode,
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+						)
+					);
+					break;
+
+				case 'apply_stimulus':
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_apply_stimulus',
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+							'sStimulusCode' => $this->oRequestManipulator->ReadParam('sStimulusCode'),
+						)
+					);
+					break;
+
+				default:
+					// Do nothing
+					break;
 			}
 			$oFormRenderer = new BsFormRenderer();
 			$oFormRenderer->SetEndpoint($sFormEndpoint);
