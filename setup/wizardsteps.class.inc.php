@@ -674,7 +674,7 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;An iTop CRON process is being executed on the target database. It is highly recommended to stop any iTop CRON process prior to running the setup program.");
+				$oPage->p("<img src=\"../images/info.png\"/>&nbsp;An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.");
 			}
 		}
 	}
