@@ -30,6 +30,7 @@ use BinaryExpression;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -592,6 +593,9 @@ class ManageBrickController extends BrickController
 				/** @var DBObject $oCurrentRow */
 				while ($oCurrentRow = $oSet->Fetch())
 				{
+					$sCurrentObjectClass = get_class($oCurrentRow);
+					$sCurrentObjectId = $oCurrentRow->GetKey();
+
 					// ... Retrieving item's attributes values
 					$aItemAttrs = array();
 					foreach ($aColumnsAttrs as $sItemAttr)
@@ -631,6 +635,7 @@ class ManageBrickController extends BrickController
 
 						/** @var \AttributeDefinition $oAttDef */
 						$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
+						$sAttDefClass = get_class($oAttDef);
 						if ($oAttDef->IsExternalKey())
 						{
 							/** @var \AttributeExternalKey $oAttDef */
@@ -688,9 +693,25 @@ class ManageBrickController extends BrickController
 						}
 						unset($oAttDef);
 
+						// For simple fields, we get the raw (stored) value as well
+						$bExcludeRawValue = false;
+						foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+						{
+							if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
+							{
+								$bExcludeRawValue = true;
+								break;
+							}
+						}
+						$attValueRaw = ($bExcludeRawValue === false) ? $oCurrentRow->Get($sItemAttr) : null;
+
 						$aItemAttrs[$sItemAttr] = array(
-							'att_code' => $sItemAttr,
-							'value' => $sValue,
+							'object_class' => $sCurrentObjectClass,
+							'object_id' => $sCurrentObjectId,
+							'attribute_code' => $sItemAttr,
+							'attribute_type' => $sAttDefClass,
+							'value_raw' => $attValueRaw,
+							'value_html' => $sValue,
 							'sort_value' => $sSortValue,
 							'actions' => $aActions,
 						);

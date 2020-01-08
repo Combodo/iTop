@@ -67,7 +67,14 @@
 						// Preparing the cell data
 						cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
 						cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
-						
+
+						// Building metadata
+						for(var sPropName in data.metadata)
+						{
+							var propValue = data.metadata[sPropName];
+							cellElem.attr('data-'+sPropName.replace('_', '-'), propValue);
+						}
+
 						// Building tooltip for the node
 						// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
 						// For the same reason, tooltip widget is created in "drawCallback" instead of here.
@@ -187,7 +194,26 @@
 							"title": oLevelsProperties[sKey].fields[i].label,
 							"defaultContent": "",
 							"type": "html",
-							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code
+							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code,
+							"render": function(data, type, row){
+								var cellElem = $('<span></span>');
+
+								// Building value and metadata
+								for(var sPropName in data)
+								{
+									var sPropValue = data[sPropName];
+									if(sPropName === 'value_html')
+									{
+										cellElem.html(sPropValue);
+									}
+									else
+									{
+										cellElem.attr('data-'+sPropName.replace('_', '-'), sPropValue);
+									}
+								}
+
+								return cellElem.prop('outerHTML');
+							},
 						});
 					}
 				}

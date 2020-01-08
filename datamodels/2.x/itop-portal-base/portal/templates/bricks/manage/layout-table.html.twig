@@ -8,7 +8,7 @@
     {% if aGroupingTabsValues|length > 1 %}
         <ul class="nav nav-pills grouping_tabs">
             {% for aGroupingTab in aGroupingTabsValues %}
-                <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %}>
+                <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %} data-id="{{ aGroupingTab.value }}" data-label="{{ aGroupingTab.label }}" data-item-count="{{ aGroupingTab.count }}">
                     <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sGroupingTab': aGroupingTab.value}) }}"
                        id="btn_tab_for_{{ aGroupingTab.value }}">
                         {{ aGroupingTab.label|raw }}
@@ -105,20 +105,33 @@
                         "title": tableProperties[key].title,
                         "defaultContent": "",
                         "type": "html",
-                        "data": "attributes." + key + ".att_code",
+                        "data": "attributes." + key + ".attribute_code",
                         "render": {
-                        	_: function (att_code, type, row) {
+                        	_: function (attribute_code, type, row) {
 								var cellElem;
 								var itemActions;
-								var itemPrimarayAction;
+								var itemPrimaryAction;
+								var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
 
 								// Preparing action on the cell
 								// Note : For now we will use only one action, the secondary actions are therefore not implemented. Only the data structure is done.
-								itemActions = row.attributes[att_code].actions;
+								itemActions = row.attributes[attribute_code].actions;
 
 								// Preparing the cell data
 								cellElem = (itemActions.length > 0) ? $('<a></a>') : $('<span></span>');
-								cellElem.html(row.attributes[att_code].value);
+								for(var sPropName in row.attributes[attribute_code])
+								{
+									var propValue = row.attributes[attribute_code][sPropName];
+									if(sPropName === 'value_html')
+									{
+										cellElem.html(propValue);
+									}
+									else if(metadataNames.indexOf(sPropName) > -1)
+									{
+										cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+									}
+								}
+
 								// Building actions
 								if (itemActions.length > 0) {
 									// - Primary action
@@ -144,8 +157,8 @@
 
 								return cellElem.prop('outerHTML');
 							},
-	                        sort: function (att_code, type, row) {
-                        		return row.attributes[att_code].sort_value;
+	                        sort: function (attribute_code, type, row) {
+                        		return row.attributes[attribute_code].sort_value;
 							},
 						},
                     });
@@ -159,8 +172,8 @@
                         "title": tableProperties[key].title,
                         "defaultContent": "",
                         "type": "html",
-                        "data": "attributes." + key + ".att_code",
-                        "render": function (att_code, type, row) {
+                        "data": "attributes." + key + ".attribute_code",
+                        "render": function (attribute_code, type, row) {
                             var cellElem = $('<div class="group-actions-wrapper"></div>');
                             var actionsCount = row.actions.length;
 
@@ -300,11 +313,11 @@
                             for (var iSortIdx in d.order) {
                                 /* oSortedColumnData {column: index, dir: 'asc'|'desc'} */
                                 var oSortedColumnData = d.order[iSortIdx];
-                                /* sSortedColumnId (eg. 'attributes.ATT_CODE.att_code') */
+                                /* sSortedColumnId (eg. 'attributes.ATT_CODE.attribute_code') */
                                 var sSortedColumnId = d.columns[oSortedColumnData.column].data;
 
                                 // Make proper attribute alias for OQL from column ID
-                                sSortedColumnId = sSortedColumnId.replace(/^attributes\./, '').replace(/\.att_code$/, '');
+                                sSortedColumnId = sSortedColumnId.replace(/^attributes\./, '').replace(/\.attribute_code$/, '');
 
                                 d.aSortParams[sSortedColumnId] = (oSortedColumnData.dir === 'asc');
                             }

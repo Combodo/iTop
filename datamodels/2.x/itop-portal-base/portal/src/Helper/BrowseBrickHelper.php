@@ -322,12 +322,26 @@ class BrowseBrickHelper
 			// Retrieving objects from all levels
 			$aItems = array_values($aCurrentRow);
 
+			$sCurrentObjectClass = get_class($value);
+			$sCurrentObjectId = $value->GetKey();
+
+			$sNameAttCode = $aLevelsProperties[$key]['name_att'];
+			$sNameAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $sNameAttCode);
+			$sNameAttDefClass = get_class($sNameAttDef);
+
 			$aRow[$key] = array(
 				'level_alias' => $key,
-				'id' => $value->GetKey(),
-				'name' => $value->Get($aLevelsProperties[$key]['name_att']),
-				'class' => get_class($value),
+				'id' => $sCurrentObjectId,
+				'name' => $value->Get($sNameAttCode),
+				'class' => $sCurrentObjectClass,
 				'action_rules_token' => $this->PrepareActionRulesForItems($aItems, $key, $aLevelsProperties),
+				'metadata' => array(
+					'object_class' => $sCurrentObjectClass,
+					'object_id' => $sCurrentObjectId,
+					'attribute_code' => $sNameAttCode,
+					'attribute_type' => $sNameAttDefClass,
+					'value_raw' => $value->Get($sNameAttCode),
+				),
 			);
 
 			// Adding optional attributes if necessary
@@ -336,7 +350,7 @@ class BrowseBrickHelper
 				if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
 				{
 					$sPropertyName = substr($sOptionalAttribute, 0, -4);
-					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
+					$oAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $aLevelsProperties[$key][$sOptionalAttribute]);
 
 					if ($oAttDef instanceof AttributeImage)
 					{
@@ -346,8 +360,8 @@ class BrowseBrickHelper
 							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
 							{
 								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', array(
-									'sObjectClass' => get_class($value),
-									'sObjectId' => $value->GetKey(),
+									'sObjectClass' => $sCurrentObjectClass,
+									'sObjectId' => $sCurrentObjectId,
 									'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute],
 									'cache' => 86400,
 								));
@@ -372,7 +386,8 @@ class BrowseBrickHelper
 				$aRow[$key]['fields'] = array();
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
-					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
+					$oAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $aField['code']);
+					$sAttDefClass = get_class($oAttDef);
 
 					switch (true)
 					{
@@ -390,8 +405,8 @@ class BrowseBrickHelper
 							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
 							{
 								$sUrl = $this->oUrlGenerator->generate('p_object_document_display', array(
-									'sObjectClass' => get_class($value),
-									'sObjectId' => $value->GetKey(),
+									'sObjectClass' => $sCurrentObjectClass,
+									'sObjectId' => $sCurrentObjectId,
 									'sObjectField' => $aField['code'],
 									'cache' => 86400,
 								));
@@ -408,7 +423,26 @@ class BrowseBrickHelper
 							break;
 					}
 
-					$aRow[$key]['fields'][$aField['code']] = $sHtmlForFieldValue;
+					// For simple fields, we get the raw (stored) value as well
+					$bExcludeRawValue = false;
+					foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+					{
+						if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
+						{
+							$bExcludeRawValue = true;
+							break;
+						}
+					}
+					$attValueRaw = ($bExcludeRawValue === false) ? $value->Get($aField['code']) : null;
+
+					$aRow[$key]['fields'][$aField['code']] = array(
+						'object_class' => $sCurrentObjectClass,
+						'object_id' => $sCurrentObjectId,
+						'attribute_code' => $aField['code'],
+						'attribute_type' => $sAttDefClass,
+						'value_raw' => $attValueRaw,
+						'value_html' => $sHtmlForFieldValue,
+					);
 				}
 			}
 		}

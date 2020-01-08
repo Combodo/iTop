@@ -469,4 +469,23 @@ class ApplicationHelper
 		return $aForm;
 	}
 
+	/**
+	 * Return an array of AttributeDefinition classes for which the raw value should be excluded from the markup meta (because its too big / complex)
+	 * IMPORTANT: This needs to be refactored when the portal will handle attributes display in a better way. Also this is a duplicate from cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as for the moment we have no clean place to put this.
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+		return array(
+			'AttributeBlob',
+			'AttributeCustomFields',
+			'AttributeDashboard',
+			'AttributeLinkedSet',
+			'AttributeStopWatch',
+			'AttributeSubItem',
+			'AttributeTable',
+			'AttributeText'
+		);
+	}
 }
