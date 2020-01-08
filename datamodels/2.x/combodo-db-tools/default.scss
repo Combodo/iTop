@@ -1,0 +1,48 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+.db-tools-tab-content{
+  .dbt-lostattachments{
+    .dbt-steps{
+      .dbt-step{
+        margin-top: 30px;
+
+        .dbt-step-description{
+          padding: 0;
+          margin: 0px 0px 5px 0px;
+        }
+
+        .dbt-step-number{
+          margin-right: 0.3em;
+        }
+
+        .listResults{
+          tr>*:first-child{
+            text-align: center;
+          }
+        }
+
+        /* This is to avoid long exception message on restore errors */
+        .message_error{
+          max-height: 150px;
+          overflow-y: auto;
+        }
+      }
+    }
+  }
+}
