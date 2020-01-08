@@ -168,7 +168,7 @@
       <enable_class>ResourceAdminMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
-    <menu id="Configuration" xsi:type="MenuGroup" _delta="define">
+    <menu id="Configuration" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
