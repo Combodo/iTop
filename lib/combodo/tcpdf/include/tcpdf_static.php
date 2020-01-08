@@ -55,7 +55,7 @@ class TCPDF_STATIC {
 	 * Current TCPDF version.
 	 * @private static
 	 */
-	private static $tcpdf_version = '6.2.26';
+	private static $tcpdf_version = '6.3.2';
 
 	/**
 	 * String alias for total number of pages.
@@ -1929,7 +1929,7 @@ class TCPDF_STATIC {
 				continue;
 			}
 			$ret = @file_get_contents($path);
-			if ($ret !== false) {
+			if ( $ret != false ) {
 			    return $ret;
 			}
 			// try to use CURL for URLs

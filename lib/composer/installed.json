@@ -1,17 +1,17 @@
 [
     {
         "name": "combodo/tcpdf",
-        "version": "6.3.0",
-        "version_normalized": "6.3.0.0",
+        "version": "6.3.2",
+        "version_normalized": "6.3.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-            "reference": "d645f9438b757499ac4cb39c10c41ded0f9f0326"
+            "reference": "2723050de47c8cbd78293656d896c0000442e23a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/d645f9438b757499ac4cb39c10c41ded0f9f0326",
-            "reference": "d645f9438b757499ac4cb39c10c41ded0f9f0326",
+            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/2723050de47c8cbd78293656d896c0000442e23a",
+            "reference": "2723050de47c8cbd78293656d896c0000442e23a",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "replace": {
             "tecnickcom/tcpdf": "self.version"
         },
-        "time": "2019-08-16T08:14:13+00:00",
+        "time": "2020-01-08T16:22:40+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
