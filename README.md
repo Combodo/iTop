@@ -125,6 +125,7 @@ We would like to give a special thank you to the people from the community who c
  - Casteleyn, Thomas
  - Castro, Randall Badilla
  - Colantoni, Maria Laura
+ - Couronné, Guy
  - Dvořák, Lukáš
  - Goethals, Stefan
  - Gumble, David
