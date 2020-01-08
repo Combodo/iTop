@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 // Portal
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
