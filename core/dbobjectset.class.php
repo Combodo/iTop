@@ -980,7 +980,15 @@ class DBObjectSet implements iDBObjectSetIterator
 					}
 					else
 					{
-						$oRetObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+						try
+						{
+							$oRetObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+						}
+						catch (CoreException $e)
+						{
+							$this->m_iCurrRow++;
+							$oRetObj = $this->Fetch($sRequestedClassAlias);
+						}
 					}
 					break;
 				}
