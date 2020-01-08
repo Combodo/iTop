@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Form;
 
@@ -40,7 +41,7 @@ abstract class FormManager
 	 * - formrenderer_endpoint : The endpoint of the renderer
 	 *
 	 * @param string $sJson
-	 * @return \Combodo\iTop\Form\FormManager
+	 * @return $this
 	 */
 	static function FromJSON($sJson)
 	{
@@ -89,7 +90,7 @@ abstract class FormManager
 	/**
 	 *
 	 * @param \Combodo\iTop\Form\Form $oForm
-	 * @return \Combodo\iTop\Form\FormManager
+	 * @return $this
 	 */
 	public function SetForm(Form $oForm)
 	{
@@ -109,7 +110,7 @@ abstract class FormManager
 	/**
 	 *
 	 * @param \Combodo\iTop\Renderer\FormRenderer $oRenderer
-	 * @return \Combodo\iTop\Form\FormManager
+	 * @return $this
 	 */
 	public function SetRenderer(FormRenderer $oRenderer)
 	{
@@ -149,9 +150,24 @@ abstract class FormManager
 
 	abstract public function Build();
 
+	/**
+	 * @param array|null $aArgs
+	 *
+	 * @return mixed
+	 */
 	abstract public function OnUpdate($aArgs = null);
 
+	/**
+	 * @param array|null $aArgs
+	 *
+	 * @return mixed
+	 */
 	abstract public function OnSubmit($aArgs = null);
 
+	/**
+	 * @param array|null $aArgs
+	 *
+	 * @return mixed
+	 */
 	abstract public function OnCancel($aArgs = null);
 }

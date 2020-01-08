@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -91,7 +91,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param string $sJson
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 *
 	 * @throws \Exception
 	 * @throws \ArchivedObjectException
@@ -175,7 +175,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetContainer(ContainerInterface $oContainer)
 	{
@@ -197,7 +197,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param \DBObject $oObject
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetObject(DBObject $oObject)
 	{
@@ -219,7 +219,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param string $sMode
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetMode($sMode)
 	{
@@ -241,7 +241,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param boolean $bIsSubmittable
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetIsSubmittable($bIsSubmittable)
 	{
@@ -263,7 +263,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param string $sActionRulesToken
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetActionRulesToken($sActionRulesToken)
 	{
@@ -285,7 +285,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param array $aFormProperties
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetFormProperties($aFormProperties)
 	{
@@ -307,7 +307,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param array $aCallbackUrls
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetCallbackUrls($aCallbackUrls)
 	{
