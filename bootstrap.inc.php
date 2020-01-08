@@ -64,11 +64,12 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 
 		case $sSAPIName == 'CLI':
 		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
-		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/soapserver.php'):
-		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
+		case isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], '/webservices/soapserver.php') !== false):
+		case isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], '/webservices/export-v2.php') !== false):
 			_MaintenanceTextMessage($sMessage);
 			break;
 
+		case isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], '/webservices/rest.php') !== false):
 		case isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/json'):
 			_MaintenanceJsonMessage($sTitle, $sMessage);
 			break;
