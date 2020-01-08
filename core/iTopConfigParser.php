@@ -37,7 +37,16 @@ class iTopConfigParser
 	{
 		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
-		$this->BrowseFile($oParser, $sConfig);
+		$this->aVarsMap = array(
+			'MySettings' => array(),
+			'MyModuleSettings' => array(),
+			'MyModules' => array(),
+		);
+
+		if ($sConfig !== null)
+		{
+			$this->BrowseFile($oParser, $sConfig);
+		}
 	}
 
 	/**
@@ -76,12 +85,6 @@ class iTopConfigParser
 	private function BrowseFile(\PhpParser\Parser $oParser, $sConfig)
 	{
 		$prettyPrinter = new Standard();
-
-		$this->aVarsMap = array(
-			'MySettings' => array(),
-			'MyModuleSettings' => array(),
-			'MyModules' => array(),
-		);
 
 		try
 		{

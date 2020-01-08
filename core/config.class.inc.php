@@ -1894,6 +1894,8 @@ class Config
 			$sFileName = $this->m_sFile;
 		}
 		$oHandle = null;
+		$sConfig = null;
+
 		if (is_file($this->m_sFile))
 		{
 			$oHandle = fopen($this->m_sFile, 'r');
@@ -1907,8 +1909,9 @@ class Config
 				usleep(100000);
 				$index++;
 			}
+			$sConfig = file_get_contents($this->m_sFile);
 		}
-		$this->oItopConfigParser = new iTopConfigParser(file_get_contents($this->m_sFile));
+		$this->oItopConfigParser = new iTopConfigParser($sConfig);
 		if ($oHandle !==null)
 		{
 			flock($oHandle, LOCK_UN);

@@ -132,7 +132,6 @@ class iTopConfigParserTest extends ItopTestCase
 	 */
 	public function testConfigWriteToFile()
 	{
-		exec("rm -f /tmp/config-itop*");
 		$tmpConfigFileBeforePath = tempnam( '/tmp/', 'config-itop');
 		$tmpConfigFileAfterPath = tempnam( '/tmp/', 'config-itop');
 
@@ -175,5 +174,41 @@ CONF;
 		unlink($tmpConfigFileAfterPath);
 		unlink($tmpConfigFileBeforePath);
 		$this->assertEquals($tmpConfigContentBefore, $tmpConfigContentAfter);
+	}
+
+	/**
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function testConfigWriteToFile_FromScratchInstallation()
+	{
+		$sConfigPath = utils::GetConfigFilePath();
+		$tmpSavePath = tempnam( '/tmp/', 'config-itop');
+
+		$conf_exists = is_file($sConfigPath);
+		if ($conf_exists)
+		{
+			rename($sConfigPath, $tmpSavePath);
+		}
+
+		$oConfig = new Config($sConfigPath, false);
+		try{
+			$oConfig->WriteToFile();
+			if ($conf_exists)
+			{
+				rename($tmpSavePath, $sConfigPath);
+			}
+		}catch(\Exception $e)
+		{
+			if ($conf_exists)
+			{
+				rename($tmpSavePath, $sConfigPath);
+			}
+
+			$this->assertTrue(false, "failed writetofile with no initial file");
+		}
+
 	}
 }
