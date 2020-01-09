@@ -166,6 +166,7 @@
           <class id="QueryOQL"/>
           <!-- SynchroData group -->
           <class id="SynchroDataSource"/>
+					<class id="SynchroAttribute"/>
         </classes>
       </group>
     </groups>
