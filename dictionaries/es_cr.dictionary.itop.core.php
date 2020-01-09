@@ -1037,4 +1037,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
 	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
 ));
-:globe_with_meridians:
