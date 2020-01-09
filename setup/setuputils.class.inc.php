@@ -58,7 +58,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION = '7.1.3'; // we are aiming on switching to Symfony 4 in iTop 2.8
 	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '7.4.0';
+	const PHP_NOT_VALIDATED_VERSION = '7.5.0';
 
 	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
