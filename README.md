@@ -135,6 +135,7 @@ We would like to give a special thank you to the people from the community who c
  - Konečný, Kamil
  - Kunin, Vladimir
  - Lassiter, Dennis
+ - Lazcano, Federico
  - Lucas, Jonathan
  - Malik, Remie
  - Rosenke, Stephan
@@ -149,7 +150,6 @@ We would like to give a special thank you to the people from the community who c
  - Karkoff1212
  - larhip
  - Laura
- - lazki
  - Purple Grape
  - Schlobinux
  - theBigOne
