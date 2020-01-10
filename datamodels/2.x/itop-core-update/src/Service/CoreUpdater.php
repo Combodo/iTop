@@ -13,6 +13,7 @@ use Combodo\iTop\FilesInformation\Service\FilesIntegrity;
 use DBBackup;
 use Dict;
 use Exception;
+use IssueLog;
 use iTopExtension;
 use iTopExtensionsMap;
 use iTopMutex;
@@ -162,6 +163,13 @@ final class CoreUpdater
 		catch (Exception $e)
 		{
 			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
 			throw $e;
 		}
 	}

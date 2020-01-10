@@ -95,7 +95,6 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.',
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful',
 	'Menu:iTopUpdate' => 'Application Upgrade',
 	'Menu:iTopUpdate+' => 'Application Upgrade',

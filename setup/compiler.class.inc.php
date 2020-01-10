@@ -149,6 +149,10 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+			{
+				SetupUtils::ExitMaintenanceMode();
+			}
 			throw $e;
 		}
 
@@ -156,10 +160,6 @@ class MFCompiler
 		{
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
-		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-		{
-			SetupUtils::ExitMaintenanceMode();
 		}
 
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!

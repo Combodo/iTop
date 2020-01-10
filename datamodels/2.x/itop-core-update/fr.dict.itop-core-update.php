@@ -94,7 +94,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'iTopUpdate:UI:RestoreArchive' => 'Vous pouvez restaurer l\'application depuis \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Vous pouvez restaurer la base de données depuis \'%1$s\'',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'L\'application est actuellement en maintenance, aucun utilisateur n\'a accès à l\'application. Vous pouvez lancer un setup ou réinstaller l\'application depuis une sauvegarde pour retourner dans un mode normal.',
 	'iTopUpdate:UI:UpdateDone' => 'Mise à jour effectuée',
 	'Menu:iTopUpdate' => 'Mise à jour de l\'application',
 	'Menu:iTopUpdate+' => 'Mise à jour de l\'application',
