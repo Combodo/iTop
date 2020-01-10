@@ -60,10 +60,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:PostMaxSize' => 'PHP ini value post_max_size: %1$s',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'PHP ini value upload_max_filesize: %1$s',
 
-    'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Checking filesystem',
-    'iTopUpdate:UI:CanCoreUpdate:Error' => 'Checking filesystem failed (%1$s)',
-    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking filesystem failed (File not exist %1$s)',
-    'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking filesystem failed',
+    'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Checking files',
+    'iTopUpdate:UI:CanCoreUpdate:Error' => 'Checking files failed (%1$s)',
+    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking files failed (File not exist %1$s)',
+    'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking files failed',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Application can be updated',
     'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s',
 
