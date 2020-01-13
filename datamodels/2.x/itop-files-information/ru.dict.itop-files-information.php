@@ -1,31 +1,19 @@
 <?php
 /**
- * Localized data
+ * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @author      Vladimir Kunin <v.b.kunin@gmail.com>
+ * @link        http://community.itop-itsm.ru  iTop Russian Community
+ * @link        https://github.com/itop-itsm-ru/itop-rus
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+	'FilesInformation:Error:MissingFile' => 'Файл %1$s отсутствует',
+	'FilesInformation:Error:CorruptedFile' => 'Файл %1$s повреждён',
+	'FilesInformation:Error:CantWriteToFile' => 'Невозможно выполнить запись в файл %1$s',
 ));
 
 
