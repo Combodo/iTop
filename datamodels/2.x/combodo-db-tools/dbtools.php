@@ -1,21 +1,21 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 @include_once('../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
@@ -48,7 +48,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	}
 	$sClassSelection = utils::ReadParam('class_selection', '');
 
-	$oP->SetCurrentTab(Dict::S('DBTools:Inconsistencies'));
+	$oP->SetCurrentTab('DBTools:Inconsistencies');
 
 	$bRunAnalysis = intval(utils::ReadParam('run_analysis', '0'));
 	if ($bRunAnalysis)
@@ -293,7 +293,7 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 	$bDoRestore = in_array($sStepName, array('restore'));
 
 	// Build HTML
-	$oP->SetCurrentTab(Dict::S('DBTools:LostAttachments'));
+	$oP->SetCurrentTab('DBTools:LostAttachments');
 
 	$oP->add('<div class="db-tools-tab-content">');
 	$oP->add('<div class="dbt-lostattachments">');

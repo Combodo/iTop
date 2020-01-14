@@ -1,28 +1,22 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Data Exchange - synchronization with external applications (incoming data)
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
+
 class SynchroExceptionNotStarted extends CoreException
 {
 }
@@ -266,7 +260,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	{
 		if (!$this->IsNew())
 		{
-			$oPage->SetCurrentTab(Dict::S('Core:SynchroAttributes'));
+			$oPage->SetCurrentTab('Core:SynchroAttributes');
 			$oAttributeSet = $this->Get('attribute_list');
 			$aAttributes = array();
 
@@ -404,7 +398,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	 */
 	protected function DisplayStatusTab(WebPage $oPage)
 	{
-		$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
+		$oPage->SetCurrentTab('Core:SynchroStatus');
 
 		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
 		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/,
@@ -2834,7 +2828,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		//$this->DisplayBareHeader($oPage, $bEditMode);
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -534,7 +534,7 @@ EOF
 				{
 					continue;
 				}
-				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode());
+				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(), true, 'Class:'.$sClass.'/Attribute:'.$sAttCode);
 				continue;
 			}
 
@@ -556,7 +556,7 @@ EOF
 			{
 				$sCount = " ($iCount)";
 			}
-			$oPage->SetCurrentTab($oAttDef->GetLabel().$sCount);
+			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
 			if ($this->IsNew())
 			{
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -735,9 +735,9 @@ EOF
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
 					$iNotifsCount += $oNotifSet->Count();
 				}
-				// Display notifications regarding the object: on block per subclass to have the intersting columns
+				// Display notifications regarding the object: on block per subclass to have the interesting columns
 				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
-				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
+				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
 				foreach($aNotificationClasses as $sNotifClass)
 				{
@@ -801,7 +801,7 @@ EOF
 				$aTableClasses[] = 'one-col-details';
 			}
 
-			$oPage->SetCurrentTab(Dict::S($sTab));
+			$oPage->SetCurrentTab($sTab);
 			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ',
 					$aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
@@ -1027,10 +1027,10 @@ HTML
 			/** @var \iTopWebPage $oPage */
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+			$oPage->SetCurrentTab('UI:PropertiesTab');
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
-			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
+			//$oPage->SetCurrentTab('UI:HistoryTab');
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
 				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
@@ -2659,7 +2659,7 @@ EOF
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap))
@@ -4197,7 +4197,7 @@ EOF
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
 		if ($this->IsNew())
 		{

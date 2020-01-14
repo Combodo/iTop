@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -932,7 +932,7 @@ EOF
 
     }
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:Attributes'));
+	$oPage->SetCurrentTab('UI:Schema:Attributes');
 	$aConfig = array( 'origincolor' => array('label' => "", 'description' => ""),
         			  'code' => array('label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')),
 					  'type' => array('label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')),
@@ -961,16 +961,16 @@ EOF
 EOF
     );
 
-    $oPage->SetCurrentTab(Dict::S('UI:Schema:RelatedClasses'));
+    $oPage->SetCurrentTab('UI:Schema:RelatedClasses');
     DisplayRelatedClassesGraph($oPage, $sClass);
-    $oPage->SetCurrentTab(Dict::S('UI:Schema:ChildClasses'));
+    $oPage->SetCurrentTab('UI:Schema:ChildClasses');
 
     DisplaySubclasses($oPage, $sClass, $sContext);
 
-    $oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
+    $oPage->SetCurrentTab('UI:Schema:LifeCycle');
 	DisplayLifecycle($oPage, $sClass);
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:Triggers'));
+	$oPage->SetCurrentTab('UI:Schema:Triggers');
 	DisplayTriggers($oPage, $sClass);
 
 	$oPage->SetCurrentTab();

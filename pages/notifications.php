@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -52,7 +52,7 @@ $oP->add('<p>&nbsp;</p>');
 $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
 
-$oP->SetCurrentTab(Dict::S('UI:NotificationsMenu:Triggers'));
+$oP->SetCurrentTab('UI:NotificationsMenu:Triggers');
 $oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableTriggers').'</h2>');
 $oFilter = new DBObjectSearch('Trigger');
 $aParams = array();
@@ -69,7 +69,7 @@ foreach(MetaModel::EnumChildClasses('Action', ENUM_CHILD_CLASSES_EXCLUDETOP) as 
 	}
 }
 
-$oP->SetCurrentTab(Dict::S('UI:NotificationsMenu:Actions'));
+$oP->SetCurrentTab('UI:NotificationsMenu:Actions');
 
 if (count($aActionClasses) == 1)
 {

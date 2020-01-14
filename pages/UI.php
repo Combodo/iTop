@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -285,7 +285,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
-	$oP->SetCurrentTab(Dict::S('UI:RelationshipList'));
+	$oP->SetCurrentTab('UI:RelationshipList');
 	$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\">");
 	$sOldRelation = $sRelation;
 	if (($sRelation == 'impacts') && ($sDirection == 'up'))
@@ -317,7 +317,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 
 function DisplayNavigatorGroupTab($oP)
 {
-	$oP->SetCurrentTab(Dict::S('UI:RelationGroups'));
+	$oP->SetCurrentTab('UI:RelationGroups');
 	$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
 	$oP->add('<img src="../images/indicator.gif">');
 	/*
@@ -1746,13 +1746,13 @@ EOF
 		if ($sFirstTab == 'list')
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
+			$oP->SetCurrentTab('UI:RelationshipGraph');
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorGroupTab($oP);
 		}
 		else
 		{
-			$oP->SetCurrentTab(Dict::S('UI:RelationshipGraph'));
+			$oP->SetCurrentTab('UI:RelationshipGraph');
 			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			DisplayNavigatorGroupTab($oP);
