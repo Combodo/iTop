@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Simple web page with no includes, header or fancy formatting, useful to
- * generate HTML fragments when called by an AJAX method
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT."/application/webpage.class.inc.php");
@@ -62,9 +55,9 @@ class ajax_page extends WebPage implements iTabbedPage
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
-	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
+	public function AddToTab($sTabContainer, $sTabCode, $sHtml)
 	{
-		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
+		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabCode, $sHtml));
 	}
 
 	public function SetCurrentTabContainer($sTabContainer = '')
@@ -72,26 +65,28 @@ class ajax_page extends WebPage implements iTabbedPage
 		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
-	public function SetCurrentTab($sTabLabel = '')
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
 	{
-		return $this->m_oTabs->SetCurrentTab($sTabLabel);
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
 	}
-	
+
 	/**
 	 * Add a tab which content will be loaded asynchronously via the supplied URL
-	 * 
+	 *
 	 * Limitations:
 	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
 	 * Static content cannot be added inside such tabs.
-	 * 
-	 * @param string $sTabLabel The (localised) label of the tab
+	 *
+	 * @param string $sTabCode The (localised) label of the tab
 	 * @param string $sUrl The URL to load (on the same server)
 	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+	 * @param string|null $sTabTitle
+	 *
 	 * @since 2.0.3
 	 */
-	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
 	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
+		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
 	}
 	
 	public function GetCurrentTab()
@@ -99,9 +94,9 @@ class ajax_page extends WebPage implements iTabbedPage
 		return $this->m_oTabs->GetCurrentTab();
 	}
 
-	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	public function RemoveTab($sTabCode, $sTabContainer = null)
 	{
-		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
+		$this->m_oTabs->RemoveTab($sTabCode, $sTabContainer);
 	}
 
 	/**
@@ -119,9 +114,9 @@ class ajax_page extends WebPage implements iTabbedPage
 	 * that we are using this is not supported... TO DO upgrade
 	 * the whole jquery bundle...
 	 */
-	public function SelectTab($sTabContainer, $sTabLabel)
+	public function SelectTab($sTabContainer, $sTabCode)
 	{
-		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
+		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
 	
 	public function AddToMenu($sHtml)

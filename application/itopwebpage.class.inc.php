@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -1480,15 +1480,15 @@ EOF;
 
 	/**
 	 * @param string $sTabContainer
-	 * @param string $sTabLabel
+	 * @param string $sTabCode
 	 * @param string $sHtml
 	 *
 	 * @return mixed|void
 	 * @throws \Exception
 	 */
-	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
+	public function AddToTab($sTabContainer, $sTabCode, $sHtml)
 	{
-		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
+		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabCode, $sHtml));
 	}
 
 	/**
@@ -1502,13 +1502,14 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabLabel
+	 * @param string $sTabCode
+	 * @param string|null $sTabTitle
 	 *
 	 * @return mixed|string
 	 */
-	public function SetCurrentTab($sTabLabel = '')
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
 	{
-		return $this->m_oTabs->SetCurrentTab($sTabLabel);
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
 	}
 
 	/**
@@ -1518,16 +1519,18 @@ EOF;
 	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from
 	 * another server. Static content cannot be added inside such tabs.
 	 *
-	 * @param string $sTabLabel The (localised) label of the tab
+	 * @param string $sTabCode The (localised) label of the tab
 	 * @param string $sUrl The URL to load (on the same server)
 	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be
 	 *     reloaded upon each activation.
+	 * @param string|null $sTabTitle
 	 *
+	 * @throws \Exception
 	 * @since 2.0.3
 	 */
-	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
 	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
+		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
 	}
 
 	/**
@@ -1539,14 +1542,14 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabLabel
+	 * @param string $sTabCode
 	 * @param string|null $sTabContainer
 	 *
 	 * @return mixed|void
 	 */
-	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	public function RemoveTab($sTabCode, $sTabContainer = null)
 	{
-		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
+		$this->m_oTabs->RemoveTab($sTabCode, $sTabContainer);
 	}
 
 	/**
@@ -1569,11 +1572,11 @@ EOF;
 	 * the whole jquery bundle...
 	 *
 	 * @param string $sTabContainer
-	 * @param string $sTabLabel
+	 * @param string $sTabCode
 	 */
-	public function SelectTab($sTabContainer, $sTabLabel)
+	public function SelectTab($sTabContainer, $sTabCode)
 	{
-		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
+		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
 
 	/**
