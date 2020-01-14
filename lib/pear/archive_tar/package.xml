@@ -32,10 +32,10 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
   <email>stig@php.net</email>
   <active>no</active>
  </helper>
- <date>2019-04-08</date>
- <time>15:30:00</time>
+ <date>2019-12-04</date>
+ <time>09:25:16</time>
  <version>
-  <release>1.4.7</release>
+  <release>1.4.9</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -44,7 +44,7 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Improved performance by increasing read buffer size
+* Implement Feature #23861: Add option to disallow symlinks [mrook]
  </notes>
  <contents>
   <dir name="/">
@@ -74,6 +74,36 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.4.8</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-10-21</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Fix Bug #23852: PHP 7.4 - Archive_Tar-&gt;_readHeader throws deprecation [mrook]
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.4.7</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-04-08</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Improved performance by increasing read buffer size
+   </notes>
+  </release>
   <release>
    <version>
     <release>1.4.6</release>
