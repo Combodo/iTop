@@ -303,7 +303,7 @@ class CoreServices implements iRestServiceProvider
 	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @param string $sVerb
-	 * @param $aParams
+	 * @param object $aParams
 	 *
 	 * @return RestResult The standardized result structure (at least a message)
 	 * @throws \CoreException
@@ -476,6 +476,7 @@ class CoreServices implements iRestServiceProvider
 			break;
 
 		case 'core/delete':
+			RestUtils::InitTrackingComment($aParams);
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);
