@@ -50,58 +50,67 @@ class ajax_page extends WebPage implements iTabbedPage
 		utils::InitArchiveMode();
     }
 
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function AddToTab($sTabContainer, $sTabCode, $sHtml)
 	{
 		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabCode, $sHtml));
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
 		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
 	{
 		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
 	}
 
 	/**
-	 * Add a tab which content will be loaded asynchronously via the supplied URL
-	 *
-	 * Limitations:
-	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
-	 * Static content cannot be added inside such tabs.
-	 *
-	 * @param string $sTabCode The (localised) label of the tab
-	 * @param string $sUrl The URL to load (on the same server)
-	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
-	 * @param string|null $sTabTitle
-	 *
-	 * @since 2.0.3
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
 	{
 		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 */
 	public function GetCurrentTab()
 	{
 		return $this->m_oTabs->GetCurrentTab();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function RemoveTab($sTabCode, $sTabContainer = null)
 	{
 		$this->m_oTabs->RemoveTab($sTabCode, $sTabContainer);
 	}
 
 	/**
-	 * Finds the tab whose title matches a given pattern
-	 * @return mixed The name of the tab as a string or false if not found
+	 * @inheritDoc
 	 */
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
@@ -118,17 +127,19 @@ class ajax_page extends WebPage implements iTabbedPage
 	{
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
-	
+
+	/**
+	 * @param string $sHtml
+	 */
 	public function AddToMenu($sHtml)
 	{
 		$this->m_sMenu .= $sHtml;
 	}
 
-    /**
-     * Echoes the content of the whole page
-     * @return void
-     */	  
-    public function output()
+	/**
+	 * @inheritDoc
+	 */
+	public function output()
     {
     	if (!empty($this->sContentType))
     	{
@@ -305,7 +316,11 @@ EOF
     {
 	}
 
-    public function add($sHtml)
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function add($sHtml)
     {
         if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
         {
@@ -318,10 +333,9 @@ EOF
     }
 
 	/**
-	 * Records the current state of the 'html' part of the page output
-	 * @return mixed The current state of the 'html' output
-	 */    
-    public function start_capture()
+	 * @inheritDoc
+	 */
+	public function start_capture()
     {
     	$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
 		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
@@ -337,13 +351,10 @@ EOF
 		}
     }
 
-    /**
-     * Returns the part of the html output that occurred since the call to start_capture
-     * and removes this part from the current html output
-     * @param $offset mixed The value returned by start_capture
-     * @return string The part of the html output that was added since the call to start_capture
-     */    
-    public function end_capture($offset)
+	/**
+	 * @inheritDoc
+	 */
+	public function end_capture($offset)
     {
 		if (is_array($offset))
 		{
@@ -364,11 +375,9 @@ EOF
     }
 
 	/**
-	 * Add any text or HTML fragment (identified by an ID) at the end of the body of the page
-	 * This is useful to add hidden content, DIVs or FORMs that should not
-	 * be embedded into each other.	 	 
+	 * @inheritDoc
 	 */
-    public function add_at_the_end($s_html, $sId = '')
+	public function add_at_the_end($s_html, $sId = '')
     {
     	if ($sId != '')
     	{
@@ -376,27 +385,27 @@ EOF
     	}
         $this->s_deferred_content .= $s_html;
     }
-	
+
 	/**
-	 * Adds a script to be executed when the DOM is ready (typical JQuery use)
-	 * NOT implemented in this version of the class.
-	 * @return void	 
-	 */	 	 	
+	 * @inheritDoc
+	 */
 	public function add_ready_script($sScript)
 	{
 		$this->m_sReadyScript .= $sScript."\n";
 	}
-	
+
 	/**
-	 * Cannot be called in this context, since Ajax pages do not share
-	 * any context with the calling page !!
+	 * @inheritDoc
 	 */
 	public function GetUniqueId()
 	{
 		assert(false);
 		return 0;
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);

@@ -894,8 +894,7 @@ EOF
 
 
 	/**
-	 * Outputs (via some echo) the complete HTML page by assembling all its elements
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function output()
@@ -1467,10 +1466,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabContainer
-	 * @param string $sPrefix
-	 *
-	 * @return mixed|void
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
@@ -1479,11 +1475,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabContainer
-	 * @param string $sTabCode
-	 * @param string $sHtml
-	 *
-	 * @return mixed|void
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function AddToTab($sTabContainer, $sTabCode, $sHtml)
@@ -1492,9 +1484,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabContainer
-	 *
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
@@ -1502,10 +1492,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabCode
-	 * @param string|null $sTabTitle
-	 *
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
 	{
@@ -1513,18 +1500,7 @@ EOF;
 	}
 
 	/**
-	 * Add a tab which content will be loaded asynchronously via the supplied URL
-	 *
-	 * Limitations:
-	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from
-	 * another server. Static content cannot be added inside such tabs.
-	 *
-	 * @param string $sTabCode The (localised) label of the tab
-	 * @param string $sUrl The URL to load (on the same server)
-	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be
-	 *     reloaded upon each activation.
-	 * @param string|null $sTabTitle
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
 	 * @since 2.0.3
 	 */
@@ -1534,7 +1510,7 @@ EOF;
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetCurrentTab()
 	{
@@ -1542,10 +1518,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sTabCode
-	 * @param string|null $sTabContainer
-	 *
-	 * @return mixed|void
+	 * @inheritDoc
 	 */
 	public function RemoveTab($sTabCode, $sTabContainer = null)
 	{
@@ -1553,12 +1526,7 @@ EOF;
 	}
 
 	/**
-	 * Finds the tab whose title matches a given pattern
-	 *
-	 * @param string $sPattern
-	 * @param string|null $sTabContainer
-	 *
-	 * @return mixed The name of the tab as a string or false if not found
+	 * @inheritDoc
 	 */
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
@@ -1580,9 +1548,7 @@ EOF;
 	}
 
 	/**
-	 * @param string $sHtml
-	 *
-	 * @return mixed|void
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function add($sHtml)
@@ -1598,9 +1564,7 @@ EOF;
 	}
 
 	/**
-	 * Records the current state of the 'html' part of the page output
-	 *
-	 * @return mixed The current state of the 'html' output
+	 * @inheritDoc
 	 */
 	public function start_capture()
 	{
@@ -1620,12 +1584,7 @@ EOF;
 	}
 
 	/**
-	 * Returns the part of the html output that occurred since the call to start_capture
-	 * and removes this part from the current html output
-	 *
-	 * @param $offset mixed The value returned by start_capture
-	 *
-	 * @return string The part of the html output that was added since the call to start_capture
+	 * @inheritDoc
 	 */
 	public function end_capture($offset)
 	{

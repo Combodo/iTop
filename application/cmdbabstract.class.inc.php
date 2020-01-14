@@ -204,6 +204,7 @@ EOF
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
@@ -1047,6 +1048,7 @@ HTML
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function DisplayPreview(WebPage $oPage)
 	{
