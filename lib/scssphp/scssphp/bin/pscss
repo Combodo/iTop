@@ -12,8 +12,8 @@
 
 error_reporting(E_ALL);
 
-if (version_compare(PHP_VERSION, '5.4') < 0) {
-    die('Requires PHP 5.4 or above');
+if (version_compare(PHP_VERSION, '5.6') < 0) {
+    die('Requires PHP 5.6 or above');
 }
 
 include __DIR__ . '/../scss.inc.php';
@@ -62,7 +62,7 @@ function parseArgument(&$i, $options) {
 }
 
 for ($i = 1; $i < $argc; $i++) {
-    if ($argv[$i] === '-h' || $argv[$i] === '--help') {
+    if ($argv[$i] === '-?' || $argv[$i] === '-h' || $argv[$i] === '--help') {
         $exe = $argv[0];
 
         $HELP = <<<EOT
@@ -70,17 +70,17 @@ Usage: $exe [options] [input-file]
 
 Options include:
 
-    -h, --help          Show this message
+    --help              Show this message [-h, -?]
     --continue-on-error Continue compilation (as best as possible) when error encountered
-    --debug-info        Annotate selectors with CSS referring to the source file and line number
-    -f=format           Set the output format (compact, compressed, crunched, expanded, or nested)
-    -i=path             Set import path
-    --iso8859-1         Use iso8859-1 encoding instead of utf-8 (default utf-8)
-    --line-numbers      Annotate selectors with comments referring to the source file and line number
-    -p=precision        Set decimal number precision (default 10)
+    --debug-info        Annotate selectors with CSS referring to the source file and line number [-g]
+    --dump-tree         Dump formatted parse tree [-T]
+    --iso8859-1         Use iso8859-1 encoding instead of default utf-8
+    --line-numbers      Annotate selectors with comments referring to the source file and line number [--line-comments]
+    --load-path=PATH    Set import path [-I]
+    --precision=N       Set decimal number precision (default 10) [-p]
     --sourcemap         Create source map file
-    -T                  Dump formatted parse tree
-    -v, --version       Print the version
+    --style=FORMAT      Set the output format (compact, compressed, crunched, expanded, or nested) [-s, -t]
+    --version           Print the version [-v]
 
 EOT;
         exit($HELP);
@@ -95,7 +95,7 @@ EOT;
         continue;
     }
 
-    if ($argv[$i] === '--debug-info') {
+    if ($argv[$i] === '-g' || $argv[$i] === '--debug-info') {
         $debugInfo = true;
         continue;
     }
@@ -115,19 +115,19 @@ EOT;
         continue;
     }
 
-    if ($argv[$i] === '-T') {
+    if ($argv[$i] === '-T' || $argv[$i] === '--dump-tree') {
         $dumpTree = true;
         continue;
     }
 
-    $value = parseArgument($i, array('-f', '--style'));
+    $value = parseArgument($i, array('-t', '-s', '--style'));
 
     if (isset($value)) {
         $style = $value;
         continue;
     }
 
-    $value = parseArgument($i, array('-i', '--load_paths'));
+    $value = parseArgument($i, array('-I', '--load-path'));
 
     if (isset($value)) {
         $loadPaths = $value;

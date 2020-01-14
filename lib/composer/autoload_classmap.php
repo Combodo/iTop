@@ -656,7 +656,6 @@ return array(
     'ScssPhp\\ScssPhp\\Parser' => $vendorDir . '/scssphp/scssphp/src/Parser.php',
     'ScssPhp\\ScssPhp\\SourceMap\\Base64' => $vendorDir . '/scssphp/scssphp/src/SourceMap/Base64.php',
     'ScssPhp\\ScssPhp\\SourceMap\\Base64VLQ' => $vendorDir . '/scssphp/scssphp/src/SourceMap/Base64VLQ.php',
-    'ScssPhp\\ScssPhp\\SourceMap\\Base64VLQEncoder' => $vendorDir . '/scssphp/scssphp/src/SourceMap/Base64VLQEncoder.php',
     'ScssPhp\\ScssPhp\\SourceMap\\SourceMapGenerator' => $vendorDir . '/scssphp/scssphp/src/SourceMap/SourceMapGenerator.php',
     'ScssPhp\\ScssPhp\\Type' => $vendorDir . '/scssphp/scssphp/src/Type.php',
     'ScssPhp\\ScssPhp\\Util' => $vendorDir . '/scssphp/scssphp/src/Util.php',

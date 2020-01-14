@@ -23,17 +23,20 @@
         "psr-4": { "ScssPhp\\ScssPhp\\": "src/" }
     },
     "autoload-dev": {
-        "psr-4": { "ScssPhp\\ScssPhp\\Test\\": "tests/" }
+        "psr-4": { "ScssPhp\\ScssPhp\\Tests\\": "tests/" }
     },
     "require": {
-        "php": "^5.6.0 || ^7"
+        "php": ">=5.6.0",
+        "ext-json": "*",
+        "ext-ctype": "*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~2.5",
-        "phpunit/phpunit": "~4.6",
+        "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.3",
         "twbs/bootstrap": "~4.3",
         "zurb/foundation": "~6.5"
     },
+    "minimum-stability": "dev",
     "bin": ["bin/pscss"],
     "archive": {
         "exclude": [
