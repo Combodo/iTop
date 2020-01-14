@@ -3674,7 +3674,8 @@ abstract class DBObject implements iDisplay
 		if (!array_key_exists($sStimulusCode, $aStateTransitions))
 		{
 			// This simulus has no effect in the current state... do nothing
-			return true;
+			IssueLog::Error(get_class($this).": Transition $sStimulusCode is not allowed in ".$this->Get($sStateAttCode));
+			return false;
 		}
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
