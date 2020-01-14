@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use AbstractAttachmentsRenderer;
 use AttachmentPlugIn;
+use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Renderer\RenderingOutput;
 use DBObjectSearch;
 use DBObjectSet;
@@ -40,6 +41,20 @@ use utils;
  */
 class BsFileUploadFieldRenderer extends BsFieldRenderer
 {
+	/** @var DBObjectSet */
+	private $oAttachmentsSet;
+
+	public function __construct(Field $oField)
+	{
+		parent::__construct($oField);
+
+		$oSearch = DBObjectSearch::FromOQL('SELECT Attachment WHERE item_class = :class AND item_id = :item_id');
+		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+		$oSearch->AllowAllData();
+		$sObjectClass = get_class($this->oField->GetObject());
+		$this->oAttachmentsSet = new DBObjectSet($oSearch, array(), array('class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()));
+	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -61,11 +76,6 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
 		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
 
-		// if opened
-//		$sCollapseTogglerExpanded = 'true';
-//		$sCollapseTogglerIconClass = $sCollapseTogglerIconVisibleClass;
-//		$sCollapseJSInitState = 'true';
-
 		// if collapsed
 		$sCollapseTogglerClass .= ' collapsed';
 		$sCollapseTogglerExpanded = 'false';
@@ -76,11 +86,13 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$oOutput->AddHtml('<div class="form_field_label">');
 		if ($this->oField->GetLabel() !== '')
 		{
+			$iAttachmentsCount = $this->oAttachmentsSet->Count();
 			$oOutput
 				->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label">')
 				->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
 				->AddHtml($this->oField->GetLabel(),true)
-				->AddHtml('<span class="glyphicon ' . $sCollapseTogglerIconClass . '"></>')
+				->AddHtml(' (<span class="attachments-count">'.$iAttachmentsCount.'</span>)')
+				->AddHtml('<span class="glyphicon ' . $sCollapseTogglerIconClass . '">')
 				->AddHtml('</a>')
 				->AddHtml('</label>');
 		}
@@ -179,11 +191,26 @@ JS
 		$oOutput->AddJs(
 			<<<JS
 			var attachmentRowTemplate = $sAttachmentTableRowTemplate;
-			var RemoveAttachment = function(sAttId)
+			function RemoveAttachment(sAttId)
 			{
 				$('#attachment_' + sAttId).attr('name', 'removed_attachments[]');
 				$('#display_attachment_' + sAttId).hide();
-			};
+				DecreaseAttachementsCount();
+			}
+			function IncreaseAttachementsCount()
+			{
+				UpdateAttachmentsCount(1);
+			}
+			function DecreaseAttachementsCount()
+			{
+				UpdateAttachmentsCount(-1);
+			}
+			function UpdateAttachmentsCount(iIncrement)
+			{
+				var countContainer = $("a#$sCollapseTogglerId>span.attachments-count"),
+					iCountCurrentValue = parseInt(countContainer.text());
+				countContainer.text(iCountCurrentValue+iIncrement);
+			}
 
 			$('#{$this->oField->GetGlobalId()}').fileupload({
 				url: '{$this->oField->GetUploadEndpoint()}',
@@ -197,11 +224,19 @@ JS
 					}
 					else
 					{
-						var iAttId = data.result.att_id,
+						var \$oAttachmentTBody = $(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody'),
+							iAttId = data.result.att_id,
 							sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
 							sIconClass = (data.result.preview == 'true') ? 'trigger-preview' : '',
 							sAttachmentMeta = '<input id="attachment_'+iAttId+'" type="hidden" name="attachments[]" value="'+iAttId+'"/>';
 
+						// hide "no attachment" line if present
+						\$oAttachmentFirstRow = \$oAttachmentTBody.find("tr:first-child");
+						\$oAttachmentFirstRow.find("td[colspan]").closest("tr").hide();
+						
+						// update attachments count
+						IncreaseAttachementsCount();
+						 
 						var replaces = [
 							{search: "{{iAttId}}", replace:iAttId },
 							{search: "{{lineStyle}}", replace:'' },
@@ -220,7 +255,7 @@ JS
 							sAttachmentRow = sAttachmentRow.replace(re, value.replace);
 						});
 						
-						$(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody').append(sAttachmentRow);
+						\$oAttachmentTBody.append(sAttachmentRow);
 						// Preview tooltip
 						if(data.result.preview){
 							$('#display_attachment_'+data.result.att_id +' a.trigger-preview').tooltip({
@@ -341,22 +376,14 @@ JS
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
-	 * @throws \OQLException
 	 */
 	protected function PrepareExistingFiles(RenderingOutput $oOutput, $bIsDeleteAllowed)
 	{
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
-
-		$sObjectClass = get_class($this->oField->GetObject());
 		$sDeleteBtn = Dict::S('Portal:Button:Delete');
 
-		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
-		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-		$oSearch->AllowAllData();
-		$oSet = new DBObjectSet($oSearch, array(), array('class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()));
-
 		// If in read only and no attachments, we display a short message
-		if ($this->oField->GetReadOnly() && ($oSet->Count() === 0))
+		if ($this->oField->GetReadOnly() && ($this->oAttachmentsSet->Count() === 0))
 		{
 			$oOutput->AddHtml(Dict::S('Attachments:NoAttachment'));
 		}
@@ -383,7 +410,7 @@ HTML
 			);
 
 			/** @var Attachment $oAttachment */
-			while ($oAttachment = $oSet->Fetch())
+			while ($oAttachment = $this->oAttachmentsSet->Fetch())
 			{
 				$iAttId = $oAttachment->GetKey();
 
