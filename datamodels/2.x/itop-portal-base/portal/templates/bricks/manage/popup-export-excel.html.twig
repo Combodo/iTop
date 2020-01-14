@@ -27,7 +27,7 @@
 
 <script type="text/javascript">
     var sDataState = 'not-yet-started';
-    var sOQL = "{{ sOQL|raw }}";
+    var sOQL = "{{ sOQL|json_encode|raw }}";
     var sFormat = 'xlsx';
     var sFields = "{{ sFields }}";
 
