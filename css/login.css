@@ -164,12 +164,12 @@ a:hover {
 	width: 100%;
 }
 
-#login-submit input.login-submit-secondary {
+#login-submit input.login-submit-secondary, #forgot_pwd_sent input.forgot_pwd_done {
 	background-color: #e0e0e0;
 	color: #333a4b;
 }
 
-#login-submit input {
+#login-submit input, #forgot_pwd_sent input{
 	background-color: #333a4b;
 	padding: 0.1em 1em;
 	border-radius: 0.25em;
@@ -227,3 +227,9 @@ a:hover {
 	display: inline-block;
 	padding: 5px;
 }
+
+#forgot_pwd_sent{
+	margin-left: 15%;
+	width: 70%;
+}
+	

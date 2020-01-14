@@ -5,14 +5,12 @@
 
 {% block login_content %}
 <div id="login-content">
-	<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
-	<p>{{ 'UI:ResetPwd-EmailSent'|dict_s }}</p>
-	<form method="post">
-		<table>
-			<tr>
-				<td colspan="2" class="center v-spacer"><input type="button" onClick="window.close();" value="{{ 'UI:Button:Done'|dict_s }}"/></td>
-			</tr>
-		</table>
-	</form>
+	<div id="login-title">
+		<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
+		<p>{{ 'UI:ResetPwd-EmailSent'|dict_s }}</p>
+	</div>
+	<div id="forgot_pwd_sent">
+		<input type="button" class="forgot_pwd_done" onClick="window.close();" value="{{ 'UI:Button:Done'|dict_s }}"/>
+	</div>
 </div>
 {% endblock %}
