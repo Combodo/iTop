@@ -196,7 +196,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
-			CoreUpdater::UpdateUpdateDatabase();
+			CoreUpdater::UpdateDatabase();
 			$iResponseCode = 200;
 		}
 		catch (Exception $e)
