@@ -1070,7 +1070,7 @@ class RunTimeEnvironment
 	{
 		if ($this->sFinalEnv != $this->sTargetEnv)
 		{
-			SetupUtils::tidydir($this->sTargetEnv);
+			SetupUtils::tidydir(APPROOT.$this->sTargetEnv);
 		}
 	}
 	
