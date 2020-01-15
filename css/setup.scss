@@ -42,6 +42,8 @@ $message-error-border-color: #E53E3E !default;
 $message-error-text-color: #C53030 !default;
 $message-error-bg-color: #FFF5F5 !default;
 
+$legacy-portal-removal-text-color: #e60000b8 !default;
+
 // Compilation progress bar
 $progress-bar-color: #000000 !default;
 $progress-bar-ongoing-1-bg-color: #FBD38D !default;
@@ -304,5 +306,17 @@ fieldset{
     rgba(0,0,0,.06) !important;
     background-color: #F7FAFC;
     padding: 10px;
+    .wiz-choice:checked ~ .description{
+        #itop-ticket-mgmt-simple-ticket-enhanced-portal:not(:checked),
+        #itop-ticket-mgmt-itil-enhanced-portal:not(:checked){
+            ~ .description::after {
+                content: "Legacy portal is no longer part of iTop, by leaving this option unchecked your portal users won't be able to access iTop anymore.";
+                display: block;
+                margin-top: 0.5em;
+                font-weight: bold;
+                color: $legacy-portal-removal-text-color;
+            }
+        }
+    }
 }
 

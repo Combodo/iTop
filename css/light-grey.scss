@@ -3263,28 +3263,6 @@ span.search-button, span.refresh-button {
 .date_format_tooltip td {
 	padding: 0.25em;
 }
-#setup {
-  .module-selection-banner img {
-		max-height: 48px;
-  }
-  .module-selection-body {
-	height: 28em;
-	overflow: auto;
-	border: #ccc 1px solid;
-	  .wiz-choice:checked ~ .description{
-		  #itop-ticket-mgmt-simple-ticket-enhanced-portal:not(:checked),
-		  #itop-ticket-mgmt-itil-enhanced-portal:not(:checked){
-			  ~ .description::after {
-				  content: "Legacy portal is no longer part of iTop, by leaving this option unchecked your portal users won't be able to access iTop anymore.";
-				  display: block;
-				  margin-top: 0.5em;
-				  font-weight: bold;
-				  color: #e60000b8;
-			  }
-		  }
-	  }
-  }
-}
 .mfp-close {
 	cursor: pointer !important;
 }
