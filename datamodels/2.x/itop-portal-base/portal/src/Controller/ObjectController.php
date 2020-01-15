@@ -1100,17 +1100,11 @@ class ObjectController extends BrickController
 	 * Note: This is inspired from itop-attachment/ajax.attachment.php
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sOperation
+	 * @param string $sOperation
 	 *
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
 	 * @throws \Exception
 	 */
 	public function AttachmentAction(Request $oRequest, $sOperation = null)
@@ -1147,6 +1141,7 @@ class ObjectController extends BrickController
 					try
 					{
 						$oDocument = utils::ReadPostedDocument($sFieldName);
+						/** @noinspection PhpUndefinedClassInspection */
 						/** @var \Attachment $oAttachment */
 						$oAttachment = MetaModel::NewObject('Attachment');
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
