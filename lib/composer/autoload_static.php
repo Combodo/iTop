@@ -2378,6 +2378,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'iScheduledProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'iSelfRegister' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
         'iTabbedPage' => __DIR__ . '/../..' . '/application/webpage.class.inc.php',
+        'iTopComposer' => __DIR__ . '/../..' . '/sources/application/composer/iTopComposer.php',
         'iTopConfigParser' => __DIR__ . '/../..' . '/core/iTopConfigParser.php',
         'iTopMutex' => __DIR__ . '/../..' . '/core/mutex.class.inc.php',
         'iTopOwnershipLock' => __DIR__ . '/../..' . '/core/ownershiplock.class.inc.php',

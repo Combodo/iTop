@@ -74,5 +74,10 @@
       "allow-contrib": false,
       "require": "3.4.*"
     }
+  },
+  "scripts": {
+    "post-install-cmd": ["@rmDeniedTestDir"],
+    "post-update-cmd": ["@rmDeniedTestDir"],
+    "rmDeniedTestDir":  "@php .make/composer/rmDeniedTestDir.php"
   }
 }
