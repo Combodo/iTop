@@ -155,6 +155,24 @@ class AjaxController extends Controller
 		$this->DisplayJSONPage($aParams, $iResponseCode);
 	}
 
+	public function OperationCheckCompile()
+	{
+		$aParams = array();
+		try
+		{
+			CoreUpdater::CheckCompile();
+			$iResponseCode = 200;
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error("Compile: ".$e->getMessage());
+			$aParams['sError'] = $e->getMessage();
+			$iResponseCode = 500;
+		}
+
+		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
 	public function OperationCompile()
 	{
 		$aParams = array();
@@ -163,7 +181,25 @@ class AjaxController extends Controller
 			CoreUpdater::Compile();
 			$iResponseCode = 200;
 		}
-        catch (Exception $e)
+		catch (Exception $e)
+		{
+			IssueLog::Error("Compile: ".$e->getMessage());
+			$aParams['sError'] = $e->getMessage();
+			$iResponseCode = 500;
+		}
+
+		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	public function OperationUpdateDatabase()
+	{
+		$aParams = array();
+		try
+		{
+			CoreUpdater::UpdateUpdateDatabase();
+			$iResponseCode = 200;
+		}
+		catch (Exception $e)
 		{
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();

@@ -1065,6 +1065,14 @@ class RunTimeEnvironment
 			}
 		}
 	}
+
+	public function Rollback()
+	{
+		if ($this->sFinalEnv != $this->sTargetEnv)
+		{
+			SetupUtils::tidydir($this->sTargetEnv);
+		}
+	}
 	
 	/**
 	 * Call the given handler method for all selected modules having an installation handler

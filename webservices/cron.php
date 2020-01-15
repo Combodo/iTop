@@ -19,14 +19,21 @@
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
+
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+// early exit
+if (file_exists(READONLY_MODE_FILE))
+{
+	echo "iTop is read-only. Exiting...\n";
+	exit(EXIT_CODE_ERROR);
+}
+
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
-
-const EXIT_CODE_ERROR = -1;
-const EXIT_CODE_FATAL = -2;
 
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile))
@@ -222,7 +229,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 		if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE))
 		{
 			$oP->p("Maintenance detected, exiting");
-			return;
+			exit(EXIT_CODE_ERROR);
 		}
 
 		$oTasks = new DBObjectSet($oSearch);
