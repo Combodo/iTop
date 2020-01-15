@@ -2155,6 +2155,7 @@ return array(
     'iScheduledProcess' => $baseDir . '/core/backgroundprocess.inc.php',
     'iSelfRegister' => $baseDir . '/core/userrights.class.inc.php',
     'iTabbedPage' => $baseDir . '/application/webpage.class.inc.php',
+    'iTopComposer' => $baseDir . '/sources/application/composer/iTopComposer.php',
     'iTopConfigParser' => $baseDir . '/core/iTopConfigParser.php',
     'iTopMutex' => $baseDir . '/core/mutex.class.inc.php',
     'iTopOwnershipLock' => $baseDir . '/core/ownershiplock.class.inc.php',
