@@ -175,6 +175,9 @@ p.error {
     background: url(../images/stop-mid.png) no-repeat left -5px;
     min-height: 48px;
 }
+label {
+    cursor: pointer;
+}
 td.label {
     text-align: left;
 }
