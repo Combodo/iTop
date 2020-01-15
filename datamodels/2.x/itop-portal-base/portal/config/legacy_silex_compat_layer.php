@@ -72,6 +72,7 @@ $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
 
 //TODO: The following needs to be refactored
 // Session messages
+// Note: We keep this system instead of following the Symfony system to make it simpler for extension developers to use them accross the admin. console and the portal.
 $aAllMessages = array();
 if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
 {
@@ -81,7 +82,7 @@ if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_mess
 		$aRanks = array();
 		foreach ($aMessageObjectData as $sMessageId => $aMessageData)
 		{
-			$sMsgClass = 'alert alert-';
+			$sMsgClass = 'alert alert-dismissible alert-';
 			switch ($aMessageData['severity'])
 			{
 				case 'info':
@@ -95,10 +96,10 @@ if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_mess
 					$sMsgClass .= 'success';
 					break;
 			}
-			$aObjectMessages[] = array('cssClass' => $sMsgClass, 'message' => $aMessageData['message']);
+			$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message']);
 			$aRanks[] = $aMessageData['rank'];
 		}
-		unset($_SESSION['obj_messages'][$sMessageKey]);
+		//unset($_SESSION['obj_messages'][$sMessageKey]);
 		array_multisort($aRanks, $aObjectMessages);
 		foreach ($aObjectMessages as $aObjectMessage)
 		{

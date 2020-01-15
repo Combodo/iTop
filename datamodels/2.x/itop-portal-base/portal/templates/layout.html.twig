@@ -329,8 +329,11 @@
                     {% if app['combodo.current_user.session_messages']|length > 0 %}
 						<section class="row" id="session-messages">
 							<div class="col-xs-12">
-                                {% for sessionMessage in app['combodo.current_user.session_messages'] %}
-									<div class="{{ sessionMessage['cssClass'] }}">{{ sessionMessage['message'] }}</div>
+                                {% for aSessionMessage in app['combodo.current_user.session_messages'] %}
+									<div class="{{ aSessionMessage['css_classes'] }}">
+										<button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>
+										{{ aSessionMessage['message'] }}
+									</div>
                                 {% endfor %}
 							</div>
 						</section>
