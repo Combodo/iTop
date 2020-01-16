@@ -35,6 +35,7 @@ Dict::Add('EN US', 'English', 'English', array(
     'iTopUpdate:UI:Back' => 'Back',
     'iTopUpdate:UI:Cancel' => 'Cancel',
     'iTopUpdate:UI:Continue' => 'Continue',
+	'iTopUpdate:UI:RunSetup' => 'Run Setup',
     'iTopUpdate:UI:WithDBBackup' => 'Database backup',
     'iTopUpdate:UI:WithFilesBackup' => 'Application files backup',
     'iTopUpdate:UI:WithoutBackup' => 'No backup is planned',

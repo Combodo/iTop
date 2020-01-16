@@ -173,6 +173,9 @@ class WizardController
 				// The configuration file already exists
 				if (!is_writable($sConfigFile))
 				{
+					SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
+					SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
+
 					$sRelativePath = utils::GetConfigFilePathRelative();
 					$oP = new SetupPage('Installation Cannot Continue');
 					$oP->add("<h2>Fatal error</h2>\n");

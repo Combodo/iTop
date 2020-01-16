@@ -91,7 +91,6 @@ function ExecNextStep() {
                     setTimeout(ExecNextStep, 500);
                 })
                 .fail(function ( jqXHR) {
-                    $("#setup_continue").removeAttr("disabled");
                     if (jqXHR && jqXHR.responseJSON) {
                         $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }}+" "+jqXHR.responseJSON.sError);
                     }
@@ -101,6 +100,7 @@ function ExecNextStep() {
                     }
                     $('.progress').css("background-image", "none").css("background-color", "#fcc");
                     $("#setup_error_outer").show();
+                    $("#setup_continue").hide();
                 })
             ;
         }

@@ -79,6 +79,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
 			$iResponseCode = 200;
 		} catch (Exception $e)
@@ -95,6 +96,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken(true);
 			SetupUtils::ExitReadOnlyMode();
 			$iResponseCode = 200;
 		} catch (Exception $e)
@@ -111,6 +113,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::Backup();
 			$iResponseCode = 200;
 		} catch (Exception $e)
@@ -127,6 +130,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::CreateItopArchive();
 			$iResponseCode = 200;
 		} catch (Exception $e)
@@ -143,6 +147,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::CopyCoreFiles();
 			$iResponseCode = 200;
 		} catch (Exception $e)
@@ -160,6 +165,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::CheckCompile();
 			$iResponseCode = 200;
 		}
@@ -178,6 +184,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::Compile();
 			$iResponseCode = 200;
 		}
@@ -196,6 +203,7 @@ class AjaxController extends Controller
 		$aParams = array();
 		try
 		{
+			SetupUtils::CheckSetupToken();
 			CoreUpdater::UpdateDatabase();
 			$iResponseCode = 200;
 		}
