@@ -48,6 +48,9 @@ $oListsCompat = new Lists($oModuleDesign);
 $oListsCompat->Process($container);
 
 // Generating CSS files
+// Note: We do this here as it is not user dependent and therefore can be cached for everyone.
+// A dedicated listener 'CssFromSassCompiler' exists to compile files again when by-passing HTTP cache.
+// This is to keep developers comfort when tuning the SCSS files.
 $aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
 $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
 foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
@@ -69,42 +72,3 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 	}
 }
 $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
-
-//TODO: The following needs to be refactored
-// Session messages
-// Note: We keep this system instead of following the Symfony system to make it simpler for extension developers to use them accross the admin. console and the portal.
-$aAllMessages = array();
-if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
-{
-	foreach ($_SESSION['obj_messages'] as $sMessageKey => $aMessageObjectData)
-	{
-		$aObjectMessages = array();
-		$aRanks = array();
-		foreach ($aMessageObjectData as $sMessageId => $aMessageData)
-		{
-			$sMsgClass = 'alert alert-dismissible alert-';
-			switch ($aMessageData['severity'])
-			{
-				case 'info':
-					$sMsgClass .= 'info';
-					break;
-				case 'error':
-					$sMsgClass .= 'danger';
-					break;
-				case 'ok':
-				default:
-					$sMsgClass .= 'success';
-					break;
-			}
-			$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message']);
-			$aRanks[] = $aMessageData['rank'];
-		}
-		//unset($_SESSION['obj_messages'][$sMessageKey]);
-		array_multisort($aRanks, $aObjectMessages);
-		foreach ($aObjectMessages as $aObjectMessage)
-		{
-			$aAllMessages[] = $aObjectMessage;
-		}
-	}
-}
-$container->setParameter('combodo.current_user.session_messages', $aAllMessages);

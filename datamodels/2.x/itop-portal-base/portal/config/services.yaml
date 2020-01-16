@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2018 Combodo SARL
+# Copyright (C) 2010-2020 Combodo SARL
 #
 #  This file is part of iTop.
 #
@@ -74,6 +74,8 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 400 }]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetPluginPropertyClass:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 300 }]
+    Combodo\iTop\Portal\EventListener\CssFromSassCompiler:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
@@ -141,4 +143,7 @@ services:
     public: true
   brick_controller_helper:
     alias: Combodo\iTop\Portal\Helper\BrickControllerHelper
+    public: true
+  session_message_helper:
+    alias: Combodo\iTop\Portal\Helper\SessionMessageHelper
     public: true
