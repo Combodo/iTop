@@ -466,15 +466,21 @@ abstract class Controller
 	/**
 	 * Add an AJAX tab to the current page
 	 *
-	 * @api
-	 *
-	 * @param string $sLabel Label of the tab
+	 * @param string $sCode Code of the tab
 	 * @param string $sURL URL to call when the tab is activated
 	 * @param bool $bCache If true, cache the result for the current web page
+	 * @param string $sLabel Label of the tab (if null the code is translated)
+	 *
+	 * @api
+	 *
 	 */
-	public function AddAjaxTab($sLabel, $sURL, $bCache = true)
+	public function AddAjaxTab($sCode, $sURL, $bCache = true, $sLabel = null)
 	{
-		$this->m_aAjaxTabs[] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+		if (is_null($sLabel))
+		{
+			$sLabel = Dict::S($sCode);
+		}
+		$this->m_aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
 	}
 
 	/**

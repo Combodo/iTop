@@ -1474,7 +1474,7 @@ class TabManager
 				{
 					// Sometimes people set an empty tab to force content NOT to be rendered in the previous one. We need to remove them.
 					// Note: Look for "->SetCurrentTab('');" for examples.
-					if (empty($sTabCode))
+					if ($sTabCode === '')
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
