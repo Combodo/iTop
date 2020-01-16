@@ -64,24 +64,29 @@
     </fieldset>
 
     <fieldset>
-        <div id="setup_error_outer" class="header_message message_error" style="display: none;">
-            <div>
-                <span id="setup_error"></span>
+        <div id="setup_error_outer">
+            <div class="header_message message_error" style="display: none;">
+                <div>
+                    <span id="setup_error"></span>
+                </div>
+                {% if bDoFilesArchive %}
+                    <div>
+                        <span>{{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}</span>
+                    </div>
+                {% endif %}
+                {% if bDoBackup %}
+                    <div>
+                        <span>{{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}</span>
+                    </div>
+                {% endif %}
+                <div>
+                    <span>{{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}</span>
+                </div>
             </div>
-            {% if bDoFilesArchive %}
-                <div>
-                    <span>{{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}</span>
-                </div>
-            {% endif %}
-            {% if bDoBackup %}
-                <div>
-                    <span>{{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}</span>
-                </div>
-            {% endif %}
             <form enctype="multipart/form-data" method="post">
                 <input type="hidden" name="operation" value="RunSetup"/>
                 <input type="hidden" name="authent" value="{{ sSetupToken }}">
-                <p><input id="run_setup" type="submit" value="{{ 'iTopUpdate:UI:RunSetup'|dict_s }}" disabled/></p>
+                <p><input id="run_setup" type="submit" value="{{ 'iTopUpdate:UI:RunSetup'|dict_s }}"/></p>
             </form>
         </div>
 

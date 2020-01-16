@@ -25,7 +25,8 @@ Dict::Add('EN US', 'English', 'English', array(
     'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade',
     'itop-core-update:UI:ConfirmUpdate' => 'Application Upgrade',
     'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade',
-    'itop-core-update:UI:UpdateDone' => 'Application Upgrade',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return in normal mode.',
+	'itop-core-update:UI:UpdateDone' => 'Application Upgrade',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Select an upgrade file to upload',
 	'iTopUpdate:UI:CheckUpdate' => 'Verify upgrade file',

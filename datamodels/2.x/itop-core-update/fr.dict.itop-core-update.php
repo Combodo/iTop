@@ -25,6 +25,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'itop-core-update:UI:SelectUpdateFile' => 'Mise à jour',
     'itop-core-update:UI:ConfirmUpdate' => 'Mise à jour',
     'itop-core-update:UI:UpdateCoreFiles' => 'Mise à jour',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'L\'application est actuellement en maintenance en mode lecture seule. Vous pouvez lancer un Setup pour retourner dans un mode normal.',
     'itop-core-update:UI:UpdateDone' => 'Mise à jour effectuée',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Sélectionner un fichier de mise à jour',
