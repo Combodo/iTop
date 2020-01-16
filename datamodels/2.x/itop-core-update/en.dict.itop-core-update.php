@@ -44,7 +44,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Archive application files',
 	'iTopUpdate:UI:UploadArchive' => 'Select a package to upload',
 	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server',
-	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be set in mode read-only.',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be read-only.',
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',
