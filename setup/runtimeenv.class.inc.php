@@ -730,7 +730,7 @@ class RunTimeEnvironment
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
-		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+		$oInstallRec->Set('version', ITOP_VERSION.'-'.ITOP_REVISION);
 		$oInstallRec->Set('comment', $sMainComment);
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
