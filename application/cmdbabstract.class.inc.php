@@ -5134,7 +5134,9 @@ EOF
 			'AttributeStopWatch',
 			'AttributeSubItem',
 			'AttributeTable',
-			'AttributeText'
+			'AttributeText',
+			'AttributePassword',
+			'AttributeOneWayPassword',
 		);
 	}
 }
