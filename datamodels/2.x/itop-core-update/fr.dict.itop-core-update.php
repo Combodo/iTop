@@ -42,6 +42,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Archive les fichiers de l\'application',
 	'iTopUpdate:UI:UploadArchive' => 'Choisir un package à télécharger',
 	'iTopUpdate:UI:ServerFile' => 'Chemin d\'un package présent sur le serveur',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Pendant toute la durée de la mise à jour, l\'application sera en lecture seule.',
 
     'iTopUpdate:UI:Status' => 'Versions installées',
     'iTopUpdate:UI:Action' => 'Mettre à jour',

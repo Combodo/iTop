@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade',
     'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade',
@@ -43,6 +42,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Archive application files',
 	'iTopUpdate:UI:UploadArchive' => 'Select a package to upload',
 	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be set in mode read-only.',
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',
