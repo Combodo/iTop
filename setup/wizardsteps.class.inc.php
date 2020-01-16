@@ -518,9 +518,9 @@ EOF
 		$sInstalledVersion = $aInstalledInfo['product_version'];
 		$sInstalledDataModelVersion = $aInstalledInfo['datamodel_version'];
 
-		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION.'.'.ITOP_REVISION."</h2>");
+		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION_FULL."</h2>");
 
-		if ($sInstalledVersion == (ITOP_VERSION.'.'.ITOP_REVISION))
+		if ($sInstalledVersion == ITOP_VERSION_FULL)
 		{
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
@@ -542,7 +542,7 @@ EOF
 		{
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not seem to be compatible with the installed version ($sInstalledVersion).");
+			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION_FULL.") does not seem to be compatible with the installed version ($sInstalledVersion).");
 			$oPage->p("The upgrade cannot continue, sorry.");
 		}
 		else

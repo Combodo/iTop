@@ -1166,7 +1166,7 @@ EOF;
 		}
 
 		// Render the revision number
-		if (ITOP_REVISION == '$WCREV$')
+		if (ITOP_REVISION == 'svn')
 		{
 			// This is NOT a version built using the buil system, just display the main version
 			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
