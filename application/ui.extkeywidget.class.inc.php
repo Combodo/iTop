@@ -1,61 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Class UIExtKeyWidget
- * UI wdiget for displaying and editing external keys when
- * A simple drop-down list is not enough...
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * The layout is the following
+ * This file is part of iTop.
  *
- * +-- #label_<id> (input)-------+  +-----------+
- * |                             |  | Browse... |
- * +-----------------------------+  +-----------+
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * And the popup dialog has the following layout:
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * +------------------- ac_dlg_<id> (div)-----------+
- * + +--- ds_<id> (div)---------------------------+ |
- * | | +------------- fs_<id> (form)------------+ | |
- * | | | +--------+---+                         | | |
- * | | | | Class  | V |                         | | |
- * | | | +--------+---+                         | | |
- * | | |                                        | | |
- * | | |    S e a r c h   F o r m               | | |
- * | | |                           +--------+   | | |
- * | | |                           | Search |   | | |
- * | | |                           +--------+   | | |
- * | | +----------------------------------------+ | |
- * | +--------------+-dh_<id>-+--------------------+ |
- * |                \ Search /                      |
- * |                 +------+                       |
- * | +--- fr_<id> (form)--------------------------+ |
- * | | +------------ dr_<id> (div)--------------+ | |
- * | | |                                        | | |
- * | | |      S e a r c h  R e s u l t s        | | |
- * | | |                                        | | |
- * | | +----------------------------------------+ | |
- * | |   +--------+    +-----+                    | |
- * | |   | Cancel |    | Add |                    | |
- * | |   +--------+    +-----+                    | |
- * | +--------------------------------------------+ |
- * +------------------------------------------------+
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/webpage.class.inc.php');
@@ -578,8 +537,21 @@ EOF
 		$oNewObj->UpdateObjectFromArg('default');
 
 		$sDialogTitle = '';
-		$oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
-		$oPage->add("<h1>".MetaModel::GetClassIcon($this->sTargetClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->sTargetClass))."</h1>\n");
+		$sClassLabel = MetaModel::GetName($this->sTargetClass);
+		$sClassIcon = MetaModel::GetClassIcon($this->sTargetClass);
+		$sObjClass = get_class($oNewObj);
+		$sObjKey = $oNewObj->GetKey();
+		$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+		$oPage->add(<<<HTML
+<div id="ac_create_{$this->iId}">
+	<!-- Beginning of object-details -->
+	<div class="object-details" data-object-class="$sObjClass" data-object-id="$sObjKey" data-object-mode="create">
+		<!-- Beginning of wizContainer -->
+		<div class="wizContainer" style="vertical-align:top;">
+			<div id="dcr_{$this->iId}">
+				<h1>$sClassIcon&nbsp;$sHeaderTitle</h1>
+HTML
+		);
 		$aFieldsFlags = array();
 		$aFieldsComments = array();
 		foreach(MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef)
@@ -591,7 +563,13 @@ EOF
 			}
 		}
 	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
-		$oPage->add('</div></div></div>');
+		$oPage->add(<<<HTML
+			</div>
+		</div><!-- End of wizContainer -->
+	</div><!-- End of object-details -->
+</div>
+HTML
+		);
 //		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
 		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
 		$oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");

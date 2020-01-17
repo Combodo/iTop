@@ -793,16 +793,8 @@ EOF
 			
 			if (!empty($sRealClass))
 			{
-				// Display the creation form
-				$sClassLabel = MetaModel::GetName($sRealClass);
-				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
-				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
-				$oP->add("<div class=\"wizContainer\">\n");
-
 				// Set all the default values in an object and clone this "default" object
 				$oObjToClone = MetaModel::NewObject($sRealClass);
-
 				// 1st - set context values
 				$oAppContext->InitObjectFromContext($oObjToClone);
 				// 2nd - set values from the page argument 'default'
@@ -815,15 +807,46 @@ EOF
 				// 3rd - prefill API
 				$oObjToClone->PrefillForm('creation_from_0',$aPrefillFormParam);
 
+				// Display the creation form
+				$sClassLabel = MetaModel::GetName($sRealClass);
+				$sClassIcon = MetaModel::GetClassIcon($sRealClass);
+				$sObjectTmpKey = $oObjToClone->GetKey();
+				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
+				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
+				$oP->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sRealClass" data-object-id="$sObjectTmpKey" data-object-mode="create">
+	<div class="page_header">
+		<h1>$sClassIcon $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+				);
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
-				$oP->add("</div>\n");
+				$oP->add(<<<HTML
+	</div><!-- End of wizContainer -->
+</div><!-- End of object-details -->
+HTML
+				);
 			}
 			else
 			{
 				// Select the derived class to create
 				$sClassLabel = MetaModel::GetName($sClass);
-				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
-				$oP->add("<div class=\"wizContainer\">\n");
+				$sClassIcon = MetaModel::GetClassIcon($sClass);
+				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+				$oP->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="" data-object-mode="create">
+	<div class="page_header">
+		<h1>$sClassIcon $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+				);
 				$oP->add('<form>');
 				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
 				$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
@@ -868,7 +891,11 @@ EOF
 				$oP->add('</select>');
 				$oP->add("&nbsp; <input type=\"submit\" value=\"".Dict::S('UI:Button:Apply')."\"></p>");
 				$oP->add('</form>');
-				$oP->add("</div>\n");
+				$oP->add(<<<HTML
+	</div><!-- End of wizContainer -->
+</div><!-- End of object-details -->
+HTML
+				);
 			}
 		break;
 	
@@ -1143,9 +1170,23 @@ EOF
 				//
 				$aIssues = $e->getIssues();
 
+				$sObjKey = $oObj->GetKey();
+				$sClassIcon = MetaModel::GetClassIcon($sClass);
+				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
-				$oP->add("<div class=\"wizContainer\">\n");
+				$oP->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="$sObjKey" data-object-mode="create">
+	<div class="page_header">
+		<h1>$sClassIcon $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+				);
+
+
 				if (!empty($aIssues))
 				{
 					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
@@ -1156,7 +1197,11 @@ EOF
 					$oP->AddHeaderMessage($sWarnings, 'message_info');
 				}
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
-				$oP->add("</div>\n");
+				$oP->add(<<<HTML
+	</div><!-- End of wizContainer -->
+</div><!-- End of object-details -->
+HTML
+				);
 			}
 		}
 		break;
