@@ -1160,8 +1160,8 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
-				// Removing transaction id from DB
-				// TODO : utils::RemoveTransaction($this->oForm->GetTransactionId()); ?
+				// Removing transaction id
+				utils::RemoveTransaction($this->oForm->GetTransactionId());
 				// Ending transaction with a commit as everything was fine
 				CMDBSource::Query('COMMIT');
 
