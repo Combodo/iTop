@@ -147,6 +147,13 @@ if (empty($_ENV['PORTAL_ID']))
 	exit;
 }
 
+// Make sure that the PORTAL_ID constant is also defined
+// Note: This is widely used in extensions, snippets and all
+if (!defined('PORTAL_ID'))
+{
+	define('PORTAL_ID', $_ENV['PORTAL_ID']);
+}
+
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
 $_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
