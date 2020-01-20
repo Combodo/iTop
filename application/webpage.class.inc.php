@@ -1583,6 +1583,15 @@ EOF
 	{
 		if (!$this->TabExists($sTabContainer, $sTabCode))
 		{
+			// Container
+			if (!array_key_exists($sTabContainer, $this->m_aTabs))
+			{
+				$this->m_aTabs[$sTabContainer] = array(
+					'prefix' => '',
+					'tabs' => array(),
+				);
+			}
+
 			// Common properties
 			$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode] = array(
 				'type' => $sTabType,
