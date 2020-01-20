@@ -20,6 +20,46 @@
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
+/**
+ * Class UIExtKeyWidget
+ * UI widget for displaying and editing external keys when
+ * A simple drop-down list is not enough...
+ *
+ * The layout is the following
+ *
+ * +-- #label_<id> (input)-------+  +-----------+
+ * |                             |  | Browse... |
+ * +-----------------------------+  +-----------+
+ *
+ * And the popup dialog has the following layout:
+ *
+ * +------------------- ac_dlg_<id> (div)-----------+
+ * + +--- ds_<id> (div)---------------------------+ |
+ * | | +------------- fs_<id> (form)------------+ | |
+ * | | | +--------+---+                         | | |
+ * | | | | Class  | V |                         | | |
+ * | | | +--------+---+                         | | |
+ * | | |                                        | | |
+ * | | |    S e a r c h   F o r m               | | |
+ * | | |                           +--------+   | | |
+ * | | |                           | Search |   | | |
+ * | | |                           +--------+   | | |
+ * | | +----------------------------------------+ | |
+ * | +--------------+-dh_<id>-+--------------------+ |
+ * |                \ Search /                      |
+ * |                 +------+                       |
+ * | +--- fr_<id> (form)--------------------------+ |
+ * | | +------------ dr_<id> (div)--------------+ | |
+ * | | |                                        | | |
+ * | | |      S e a r c h  R e s u l t s        | | |
+ * | | |                                        | | |
+ * | | +----------------------------------------+ | |
+ * | |   +--------+    +-----+                    | |
+ * | |   | Cancel |    | Add |                    | |
+ * | |   +--------+    +-----+                    | |
+ * | +--------------------------------------------+ |
+ * +------------------------------------------------+
+ */
 class UIExtKeyWidget
 {
 	const ENUM_OUTPUT_FORMAT_CSV = 'csv';
