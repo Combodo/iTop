@@ -44,7 +44,7 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-$oCtx = new ContextTag('CRON');
+$oCtx = new ContextTag(ContextTag::TAG_CRON);
 
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {

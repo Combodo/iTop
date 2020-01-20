@@ -275,6 +275,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'AttributeEmailAddress' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'AttributeEncryptedString' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'AttributeEnum' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
+        'AttributeEnumSet' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'AttributeExternalField' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'AttributeExternalKey' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'AttributeFinalClass' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',

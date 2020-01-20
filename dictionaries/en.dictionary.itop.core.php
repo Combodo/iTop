@@ -535,6 +535,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context/Value:REST/JSON' => 'REST',
+	'Class:Trigger/Attribute:context/Value:REST/JSON+' => 'REST/JSON',
+	'Class:Trigger/Attribute:context/Value:Synchro' => 'Synchro',
+	'Class:Trigger/Attribute:context/Value:Synchro+' => 'Synchro',
+	'Class:Trigger/Attribute:context/Value:Setup' => 'Setup',
+	'Class:Trigger/Attribute:context/Value:Setup+' => 'Setup',
+	'Class:Trigger/Attribute:context/Value:GUI:Console' => 'Console',
+	'Class:Trigger/Attribute:context/Value:GUI:Console+' => 'GUI:Console',
+	'Class:Trigger/Attribute:context/Value:CRON' => 'CRON',
+	'Class:Trigger/Attribute:context/Value:CRON+' => 'CRON',
+	'Class:Trigger/Attribute:context/Value:GUI:Portal' => 'Portal',
+	'Class:Trigger/Attribute:context/Value:GUI:Portal+' => 'GUI:Portal',
 ));
 
 //

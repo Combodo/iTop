@@ -1528,6 +1528,25 @@ EOF
 					// Exclusion list of AttributeDefinition Classes to filter class_field (empty means no exclusion)
 					$aParameters['attribute_definition_exclusion_list'] = $this->GetPropString($oField, 'attribute_definition_exclusion_list', '');
 				}
+				elseif ($sAttType == 'AttributeEnumSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$oValues = $oField->GetUniqueElement('values');
+					$oValueNodes = $oValues->getElementsByTagName('value');
+					$aValues = array();
+					foreach($oValueNodes as $oValue)
+					{
+						//	new style... $aValues[] = self::QuoteForPHP($oValue->textContent);
+						$aValues[] = $oValue->textContent;
+					}
+					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
+					$sValues = '"'.implode(',', $aValues).'"';
+					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+				}
 				elseif ($sAttType == 'AttributeQueryAttCodeSet')
 				{
 					$aTagFieldsInfo[] = $sAttCode;

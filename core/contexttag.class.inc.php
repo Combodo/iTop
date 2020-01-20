@@ -19,14 +19,14 @@
 
 /**
  * Simple helper class for keeping track of the context inside the call stack
- * 
+ *
  * To check (anywhere in the code) if a particular context tag is present
  * in the call stack simply do:
- * 
+ *
  * if (ContextTag::Check(<the_tag>)) ...
- * 
+ *
  * For example to know if the code is being executed in the context of a portal do:
- * 
+ *
  * if (ContextTag::Check('GUI:Portal'))
  *
  * @copyright   Copyright (C) 2016-2017 Combodo SARL
@@ -35,8 +35,15 @@
 
 class ContextTag
 {
+	const TAG_PORTAL = 'GUI:Portal';
+	const TAG_CRON = 'CRON';
+	const TAG_CONSOLE = 'GUI:Console';
+	const TAG_SETUP = 'Setup';
+	const TAG_SYNCHRO = 'Synchro';
+	const TAG_REST = 'REST/JSON';
+
 	protected static $aStack = array();
-	
+
 	/**
 	 * Store a context tag on the stack
 	 * @param string $sTag
@@ -46,6 +53,11 @@ class ContextTag
 		static::$aStack[] = $sTag;
 	}
 	
+	public static function AddContext($sTag)
+	{
+		static::$aStack[] = $sTag;
+	}
+
 	/**
 	 * Cleanup the context stack
 	 */
@@ -53,7 +65,7 @@ class ContextTag
 	{
 		array_pop(static::$aStack);
 	}
-	
+
 	/**
 	 * Check if a given tag is present in the stack
 	 * @param string $sTag
@@ -63,13 +75,28 @@ class ContextTag
 	{
 		return in_array($sTag, static::$aStack);
 	}
-	
+
 	/**
 	 * Get the whole stack as an array
-	 * @return hash
+	 * @return array
 	 */
 	public static function GetStack()
 	{
 		return static::$aStack;
+	}
+
+	/**
+	 * Get all the predefined context tags
+	 * @return array
+	 */
+	public static function GetTags()
+	{
+		return array(
+			ContextTag::TAG_REST,
+			ContextTag::TAG_SYNCHRO,
+			ContextTag::TAG_SETUP,
+			ContextTag::TAG_CONSOLE,
+			ContextTag::TAG_CRON,
+			ContextTag::TAG_PORTAL);
 	}
 }

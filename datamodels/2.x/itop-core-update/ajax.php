@@ -23,7 +23,7 @@ require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
 
 MetaModel::LoadConfig(utils::GetConfig());
 
-new ContextTag('Setup');
+new ContextTag(ContextTag::TAG_SETUP);
 
 $oUpdateController = new AjaxController(MODULESROOT.'itop-core-update/view', 'itop-core-update');
 $oUpdateController->DisableInDemoMode();

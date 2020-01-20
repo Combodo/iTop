@@ -2957,7 +2957,7 @@ class SynchroExecution
 		$this->m_bIsImportPhaseDateKnown = ($oImportPhaseStartDate != null);
 		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
 
-		$this->m_oCtx = new ContextTag('Synchro');
+		$this->m_oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
 

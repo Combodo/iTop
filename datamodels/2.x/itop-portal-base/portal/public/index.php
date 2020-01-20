@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 require_once MODULESROOT.'itop-portal-base/portal/config/bootstrap.php';
 
 // Stacking context tag so it knows we are in the portal
-$oContext = new ContextTag('GUI:Portal');
+$oContext = new ContextTag(ContextTag::TAG_PORTAL);
 $oContext2 = new ContextTag('Portal:' . $_ENV['PORTAL_ID']);
 
 // Note: Manually refactored ternary condition to be PHP 5.x compatible

@@ -164,6 +164,17 @@ class ormSet
 		return $aValues;
 	}
 
+	public function GetLabels()
+	{
+		$aLabels = array();
+		$aValues = $this->GetValues();
+		foreach ($aValues as $sValue)
+		{
+			$aLabels[$sValue] = $sValue;
+		}
+		return $aLabels;
+	}
+
 	/**
 	 * @return array of tag labels indexed by code for only the added tags
 	 */

@@ -51,7 +51,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::__construct($sTitle, $bPrintable);
 		$this->m_oTabs = new TabManager();
-		$this->oCtx = new ContextTag('GUI:Console');
+		$this->oCtx = new ContextTag(ContextTag::TAG_CONSOLE);
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
