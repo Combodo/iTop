@@ -24,70 +24,96 @@ class iTopComposer
 
 	public function ListAllTestDir()
 	{
-		return array_merge(
-			glob(APPROOT.'lib/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/*/[tT]est/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/*/*/[tT]est/', GLOB_ONLYDIR ),
+		$aAllTestDirs = array();
+		$sPath = realpath(APPROOT.'lib');
 
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sPath);
+		$iterator = new RecursiveIteratorIterator(
+			$oDirectoryIterator,
+			RecursiveIteratorIterator::CHILD_FIRST);
 
-			glob(APPROOT.'lib/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/*/[tT]ests/', GLOB_ONLYDIR ),
-			glob(APPROOT.'lib/*/*/*/*/*/*/*/*/[tT]ests/', GLOB_ONLYDIR )
+		/** @var DirectoryIterator $file */
+		foreach($iterator as $file) {
+			if(!$file->isDir()) {
+				continue;
+			}
+			$sDirName = $file->getFilename();
+			if (in_array($sDirName, array('.', '..'), true))
+			{
+				continue;
+			}
+			if (!$this->IsTestDir($sDirName))
+			{
+				continue;
+			}
 
-		);
+			$sDirPath = $file->getRealpath();
+			$sDirPathWithSlashes = str_replace(DIRECTORY_SEPARATOR, '/', $sDirPath);
+			$aAllTestDirs[] = $sDirPathWithSlashes;
+		}
+
+		return $aAllTestDirs;
+	}
+	
+	private function IsTestDir($sDirName)
+	{
+		return preg_match('/^[tT]ests?$/', $sDirName);
+	}
+
+	/**
+	 * @return string APPROOT constant but with slashes instead of DIRECTORY_SEPARATOR.
+	 *      This ease writing our paths, as we can use '/' for every platforms.
+	 */
+	private function GetApprootWithSlashes()
+	{
+		return str_replace(DIRECTORY_SEPARATOR, '/', APPROOT);
 	}
 
 	public function ListAllowedTestDir()
 	{
+		$APPROOT_WITH_SLASHES = $this->GetApprootWithSlashes();
 		return array(
-			APPROOT.'lib/twig/twig/src/Node/Expression/Test/',
-			APPROOT.'lib/twig/twig/lib/Twig/Node/Expression/Test/',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Node/Expression/Test',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Node/Expression/Test',
 		);
 	}
 
 	public function ListDeniedTestDir()
 	{
+		$APPROOT_WITH_SLASHES = $this->GetApprootWithSlashes();
 		return array(
-			APPROOT.'lib/nikic/php-parser/test/',
-			APPROOT.'lib/symfony/framework-bundle/Test/',
-			APPROOT.'lib/symfony/var-dumper/Test/',
-			APPROOT.'lib/symfony/var-dumper/Tests/Test/',
-			APPROOT.'lib/twig/twig/src/Test/',
-			APPROOT.'lib/psr/log/Psr/Log/Test/',
-			APPROOT.'lib/twig/twig/lib/Twig/Test/',
-			APPROOT.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test/',
-			APPROOT.'lib/pear/console_getopt/tests/',
-			APPROOT.'lib/pear/pear_exception/tests/',
-			APPROOT.'lib/symfony/cache/Tests/',
-			APPROOT.'lib/symfony/class-loader/Tests/',
-			APPROOT.'lib/symfony/config/Tests/',
-			APPROOT.'lib/symfony/console/Tests/',
-			APPROOT.'lib/symfony/css-selector/Tests/',
-			APPROOT.'lib/symfony/debug/Tests/',
-			APPROOT.'lib/symfony/dependency-injection/Tests/',
-			APPROOT.'lib/symfony/dotenv/Tests/',
-			APPROOT.'lib/symfony/event-dispatcher/Tests/',
-			APPROOT.'lib/symfony/filesystem/Tests/',
-			APPROOT.'lib/symfony/finder/Tests/',
-			APPROOT.'lib/symfony/framework-bundle/Tests/',
-			APPROOT.'lib/symfony/http-foundation/Tests/',
-			APPROOT.'lib/symfony/http-kernel/Tests/',
-			APPROOT.'lib/symfony/routing/Tests/',
-			APPROOT.'lib/symfony/stopwatch/Tests/',
-			APPROOT.'lib/symfony/twig-bridge/Tests/',
-			APPROOT.'lib/symfony/twig-bundle/Tests/',
-			APPROOT.'lib/symfony/var-dumper/Tests/',
-			APPROOT.'lib/symfony/web-profiler-bundle/Tests/',
-			APPROOT.'lib/symfony/yaml/Tests/',
-			APPROOT.'lib/symfony/debug/Resources/ext/tests/',
+			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
+			$APPROOT_WITH_SLASHES.'lib/psr/log/Psr/Log/Test',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
+			$APPROOT_WITH_SLASHES.'lib/pear/console_getopt/tests',
+			$APPROOT_WITH_SLASHES.'lib/pear/pear_exception/tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/cache/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/class-loader/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/config/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/console/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/css-selector/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/dependency-injection/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/dotenv/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/event-dispatcher/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/filesystem/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/finder/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/http-foundation/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/http-kernel/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/routing/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/stopwatch/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
 		);
 	}
 
