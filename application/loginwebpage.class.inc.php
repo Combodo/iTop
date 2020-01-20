@@ -704,6 +704,7 @@ EOF
 			{
 				// No rights to be here, redirect to the portal
 				header('Location: '.$ret);
+				die();
 			}
 		}
 	}
