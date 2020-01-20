@@ -20,13 +20,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade',
     'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade',
     'itop-core-update:UI:ConfirmUpdate' => 'Application Upgrade',
     'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade',
-    'itop-core-update:UI:UpdateDone' => 'Application Upgrade',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return in normal mode.',
+	'itop-core-update:UI:UpdateDone' => 'Application Upgrade',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Select an upgrade file to upload',
 	'iTopUpdate:UI:CheckUpdate' => 'Verify upgrade file',
@@ -36,6 +36,7 @@ Dict::Add('EN US', 'English', 'English', array(
     'iTopUpdate:UI:Back' => 'Back',
     'iTopUpdate:UI:Cancel' => 'Cancel',
     'iTopUpdate:UI:Continue' => 'Continue',
+	'iTopUpdate:UI:RunSetup' => 'Run Setup',
     'iTopUpdate:UI:WithDBBackup' => 'Database backup',
     'iTopUpdate:UI:WithFilesBackup' => 'Application files backup',
     'iTopUpdate:UI:WithoutBackup' => 'No backup is planned',
@@ -43,6 +44,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Archive application files',
 	'iTopUpdate:UI:UploadArchive' => 'Select a package to upload',
 	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be read-only.',
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',

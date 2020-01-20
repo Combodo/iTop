@@ -32,6 +32,7 @@ use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\SessionMessageHelper;
 use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
@@ -1159,8 +1160,8 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
-				// Removing transaction id from DB
-				// TODO : utils::RemoveTransaction($this->oForm->GetTransactionId()); ?
+				// Removing transaction id
+				utils::RemoveTransaction($this->oForm->GetTransactionId());
 				// Ending transaction with a commit as everything was fine
 				CMDBSource::Query('COMMIT');
 
@@ -1169,7 +1170,9 @@ class ObjectFormManager extends FormManager
 
 				if ($bWasModified)
 				{
-					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+					/** @var \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper */
+					$oSessionMessageHelper = $this->oContainer->get('session_message_helper');
+					$oSessionMessageHelper->AddMessage(uniqid(), Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName()), SessionMessageHelper::ENUM_SEVERITY_OK);
 				}
 			}
 			catch (Exception $e)

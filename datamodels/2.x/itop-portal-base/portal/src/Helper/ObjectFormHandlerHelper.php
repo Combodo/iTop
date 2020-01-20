@@ -152,7 +152,7 @@ class ObjectFormHandlerHelper
 				// Preparing object
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObject);
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 				);
 				$oObject->PrefillForm('creation_from_0', $aPrefillFormParam);
@@ -217,7 +217,7 @@ class ObjectFormHandlerHelper
 			else
 			{
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)['code'],
 				);

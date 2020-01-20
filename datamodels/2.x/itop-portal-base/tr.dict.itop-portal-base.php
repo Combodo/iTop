@@ -125,6 +125,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s~~',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:~~',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)~~',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',

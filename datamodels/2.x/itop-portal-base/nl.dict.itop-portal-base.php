@@ -130,6 +130,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul de volgende informatie in:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s opgeslagen~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',

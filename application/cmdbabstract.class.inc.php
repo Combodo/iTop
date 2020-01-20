@@ -839,6 +839,7 @@ EOF
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
 
 						if ($bEditMode)
 						{
@@ -941,6 +942,7 @@ EOF
 							// - Attribute code and AttributeDef. class
 							$val['attcode'] = $sAttCode;
 							$val['atttype'] = $sAttDefClass;
+							$val['attlabel'] = $sAttLabel;
 
 							// - How the field should be rendered
 							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
@@ -1033,7 +1035,7 @@ HTML
 			$this->DisplayBareRelations($oPage, $bEditMode);
 			//$oPage->SetCurrentTab('UI:HistoryTab');
 			//$this->DisplayBareHistory($oPage, $bEditMode);
-			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
+			$oPage->AddAjaxTab('UI:HistoryTab',
 				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
 			$oPage->add(<<<HTML
 </div><!-- End of object-details -->
@@ -5134,7 +5136,9 @@ EOF
 			'AttributeStopWatch',
 			'AttributeSubItem',
 			'AttributeTable',
-			'AttributeText'
+			'AttributeText',
+			'AttributePassword',
+			'AttributeOneWayPassword',
 		);
 	}
 }

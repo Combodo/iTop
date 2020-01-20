@@ -25,6 +25,7 @@ define('ITOP_APPLICATION_SHORT', 'iTop');
 define('ITOP_VERSION', '2.7.0-dev');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
+define('ITOP_VERSION_FULL', ITOP_VERSION.'-'.ITOP_REVISION);
 
 define('ACCESS_USER_WRITE', 1);
 define('ACCESS_ADMIN_WRITE', 2);

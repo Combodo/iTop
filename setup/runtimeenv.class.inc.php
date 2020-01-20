@@ -174,7 +174,7 @@ class RunTimeEnvironment
 			ROOT_MODULE => array(
 				'version_db' => '',
 				'name_db' => '',
-				'version_code' => ITOP_VERSION.'.'.ITOP_REVISION,
+				'version_code' => ITOP_VERSION_FULL,
 				'name_code' => ITOP_APPLICATION,
 			)
 		);
@@ -730,7 +730,7 @@ class RunTimeEnvironment
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
-		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+		$oInstallRec->Set('version', ITOP_VERSION_FULL);
 		$oInstallRec->Set('comment', $sMainComment);
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
@@ -1063,6 +1063,14 @@ class RunTimeEnvironment
 					SetupUtils::rrmdir($sDest);
 				}
 			}
+		}
+	}
+
+	public function Rollback()
+	{
+		if ($this->sFinalEnv != $this->sTargetEnv)
+		{
+			SetupUtils::tidydir(APPROOT.'env-'.$this->sTargetEnv);
 		}
 	}
 	

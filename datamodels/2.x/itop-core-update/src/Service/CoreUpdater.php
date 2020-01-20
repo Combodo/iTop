@@ -95,6 +95,39 @@ final class CoreUpdater
 	/**
 	 * @throws \Exception
 	 */
+	public static function CheckCompile()
+	{
+		try
+		{
+			// Compile code
+			SetupLog::Info('itop-core-update: Start checking compilation');
+
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
+			$oRuntimeEnv->CheckDirectories($sFinalEnv);
+			$oRuntimeEnv->CompileFrom('production');
+
+			$oRuntimeEnv->Rollback();
+
+			SetupLog::Info('itop-core-update: Checking compilation done');
+		}
+		catch (Exception $e)
+		{
+			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
+			throw $e;
+		}
+	}
+
+	/**
+	 * @throws \Exception
+	 */
 	public static function Compile()
 	{
 		try
@@ -103,9 +136,37 @@ final class CoreUpdater
 			SetupLog::Info('itop-core-update: Start compilation');
 
 			$sFinalEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
 			$oRuntimeEnv->CheckDirectories($sFinalEnv);
 			$oRuntimeEnv->CompileFrom('production');
+
+			SetupLog::Info('itop-core-update: Compilation done');
+		}
+		catch (Exception $e)
+		{
+			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
+			throw $e;
+		}
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public static function UpdateDatabase()
+	{
+		try
+		{
+			SetupLog::Info('itop-core-update: Start Update database');
+
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
 			$oConfig = $oRuntimeEnv->MakeConfigFile($sFinalEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
@@ -156,9 +217,7 @@ final class CoreUpdater
 			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules,
 				$aSelectedExtensionCodes, 'Done by the iTop Core Updater');
 
-			$oRuntimeEnv->Commit();
-
-			SetupLog::Info('itop-core-update: Compilation done');
+			SetupLog::Info('itop-core-update: Update database done');
 		}
 		catch (Exception $e)
 		{

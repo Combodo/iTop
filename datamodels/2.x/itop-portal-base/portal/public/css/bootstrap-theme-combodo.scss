@@ -4222,7 +4222,8 @@ a.thumbnail.active {
 .alert {
     padding: 15px;
     margin-bottom: 18px;
-    border: 1px solid transparent;
+    border: none;
+	border-left: 4px solid transparent;
     border-radius: $border-radius-base
 }
 .alert h4 {
@@ -4246,13 +4247,14 @@ a.thumbnail.active {
 .alert-dismissable .close,
 .alert-dismissible .close {
     position: relative;
-    top: -2px;
+    top: 2px;
     right: -21px;
-    color: inherit
+    color: inherit;
+	font-size: 14px;
 }
 .alert-success {
     background-color: $state-success-bg;
-    border-color: #d6e9c6;
+    border-color: $state-success-border;
     color: $state-success-text
 }
 .alert-success hr {

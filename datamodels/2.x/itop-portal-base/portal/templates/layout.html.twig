@@ -325,22 +325,20 @@
 		<div class="container-fluid" id="main-wrapper">
 			<div class="row">
 				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
-
-                    {% if app['combodo.current_user.session_messages']|length > 0 %}
-						<section class="row" id="session-messages">
-							<div class="col-xs-12">
-                                {% for sessionMessage in app['combodo.current_user.session_messages'] %}
-									<div class="{{ sessionMessage['cssClass'] }}">{{ sessionMessage['message'] }}</div>
-                                {% endfor %}
-							</div>
-						</section>
-                    {% endif %}
-
+                    <section class="row" id="session-messages">
+						<div class="col-xs-12">
+                            {% for aSessionMessage in app['session_message_helper'] %}
+								<div class="{{ aSessionMessage['css_classes'] }}">
+									<button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>
+									{{ aSessionMessage['message'] }}
+								</div>
+                            {% endfor %}
+						</div>
+					</section>
 					<section class="row" id="main-header">
 						{% block pMainHeader %}
 						{% endblock %}
 					</section>
-
 					<section class="row" id="main-content">
 						{% block pMainContent %}
 						{% endblock %}

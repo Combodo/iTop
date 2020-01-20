@@ -533,6 +533,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
 	'Class:Trigger/Attribute:finalclass+' => 'Nom de la classe instanciable',
+	'Class:Trigger/Attribute:context/Value:REST/JSON' => 'REST',
+	'Class:Trigger/Attribute:context/Value:REST/JSON+' => 'REST/JSON',
+	'Class:Trigger/Attribute:context/Value:Synchro' => 'Synchro',
+	'Class:Trigger/Attribute:context/Value:Synchro+' => 'Synchro',
+	'Class:Trigger/Attribute:context/Value:Setup' => 'Setup',
+	'Class:Trigger/Attribute:context/Value:Setup+' => 'Setup',
+	'Class:Trigger/Attribute:context/Value:GUI:Console' => 'Console',
+	'Class:Trigger/Attribute:context/Value:GUI:Console+' => 'GUI:Console',
+	'Class:Trigger/Attribute:context/Value:CRON' => 'CRON',
+	'Class:Trigger/Attribute:context/Value:CRON+' => 'CRON',
+	'Class:Trigger/Attribute:context/Value:GUI:Portal' => 'Portal',
+	'Class:Trigger/Attribute:context/Value:GUI:Portal+' => 'GUI:Portal',
 ));
 
 //

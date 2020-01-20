@@ -45,6 +45,7 @@ return array(
     'AttributeEmailAddress' => $baseDir . '/core/attributedef.class.inc.php',
     'AttributeEncryptedString' => $baseDir . '/core/attributedef.class.inc.php',
     'AttributeEnum' => $baseDir . '/core/attributedef.class.inc.php',
+    'AttributeEnumSet' => $baseDir . '/core/attributedef.class.inc.php',
     'AttributeExternalField' => $baseDir . '/core/attributedef.class.inc.php',
     'AttributeExternalKey' => $baseDir . '/core/attributedef.class.inc.php',
     'AttributeFinalClass' => $baseDir . '/core/attributedef.class.inc.php',

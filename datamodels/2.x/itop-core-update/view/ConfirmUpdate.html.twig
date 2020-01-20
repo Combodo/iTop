@@ -8,7 +8,7 @@
 
         <fieldset>
             <legend>{{ 'iTopUpdate:UI:Status'|dict_s }}</legend>
-            <div class="header_message message_info">
+            <div class="header_message message_ok">
                 <div>
                     <span>{{ sQuestion }}</span>
                 </div>
@@ -67,7 +67,11 @@
 
         <fieldset>
             <legend>{{ 'iTopUpdate:UI:Action'|dict_s }}</legend>
-
+            <div class="header_message message_info">
+                <div>
+                    <span>{{ 'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s }}</span>
+                </div>
+            </div>
             <div>
                 <table>
                     <tr>

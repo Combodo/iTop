@@ -179,7 +179,7 @@ class UserLocal extends UserInternal
 
 	public function IsPasswordValid()
 	{
-		if (ContextTag::Check('Setup'))
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
 		{
 			// during the setup, the admin account can have whatever password you want ...
 			return true;
@@ -190,7 +190,7 @@ class UserLocal extends UserInternal
 
 	public function getPasswordValidityMessage()
 	{
-		if (ContextTag::Check('Setup'))
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
 		{
 			// during the setup, the admin account can have whatever password you want ...
 			return null;

@@ -143,7 +143,7 @@ var buildTable_{$this->oField->GetGlobalId()} = function()
 		"dom": "t",
 	    "order": [[3, "asc"]],
 	    "columnDefs": [
-	        { targets: [5], orderable: false},
+	        { targets: [4], orderable: false},
 	        { targets: '_all', orderable: true }
 	    ],
 	    "language": {
@@ -389,22 +389,10 @@ JS
 		}
 		else
 		{
-			$sTitleThumbnail = Dict::S('Attachments:File:Thumbnail');
-			$sTitleFileName = Dict::S('Attachments:File:Name');
-			$sTitleFileSize = Dict::S('Attachments:File:Size');
-			$sTitleFileDate = Dict::S('Attachments:File:Date');
-			$sTitleFileCreator = Dict::S('Attachments:File:Creator');
-			$sTitleFileType = Dict::S('Attachments:File:MimeType');
+			$sTableHead = self::GetAttachmentTableHeader();
 			$oOutput->Addhtml(<<<HTML
 <table id="$sAttachmentTableId" class="attachments-list table table-striped responsive">
-	<thead>
-		<th>$sTitleThumbnail</th>
-		<th data-priority="1">$sTitleFileName</th>
-		<th>$sTitleFileSize</th>
-		<th>$sTitleFileDate</th>
-		<th>$sTitleFileCreator</th>
-		<th data-priority="1"></th>
-	</thead>
+	$sTableHead
 <tbody>
 HTML
 			);
@@ -456,7 +444,6 @@ HTML
 					$sAttachmentMeta,
 					$sFileSize,
 					$sAttachmentDate,
-					$sAttachmentCreator,
 					$bIsDeleteAllowed
 				));
 			}
@@ -469,24 +456,41 @@ HTML
 		}
 	}
 
+	protected static function GetAttachmentTableHeader()
+	{
+		$sTitleThumbnail = Dict::S('Attachments:File:Thumbnail');
+		$sTitleFileName = Dict::S('Attachments:File:Name');
+		$sTitleFileSize = Dict::S('Attachments:File:Size');
+		$sTitleFileDate = Dict::S('Attachments:File:Date');
+
+		return <<<HTML
+	<thead>
+		<th>$sTitleThumbnail</th>
+		<th data-priority="1">$sTitleFileName</th>
+		<th>$sTitleFileSize</th>
+		<th>$sTitleFileDate</th>
+		<th data-priority="1"></th>
+	</thead>
+HTML;
+	}
+
 	/**
-	 * @param $iAttId
-	 * @param $sLineStyle
-	 * @param $sDocDownloadUrl
-	 * @param $sIconClass
-	 * @param $sAttachmentThumbUrl
-	 * @param $sFileName
-	 * @param $sAttachmentMeta
-	 * @param $sFileSize
-	 * @param $sAttachmentDate
-	 * @param $sAttachmentCreator
-	 * @param $bIsDeleteAllowed
+	 * @param int $iAttId
+	 * @param string $sLineStyle
+	 * @param string $sDocDownloadUrl
+	 * @param string $sIconClass
+	 * @param string $sAttachmentThumbUrl
+	 * @param string $sFileName
+	 * @param string $sAttachmentMeta
+	 * @param string $sFileSize
+	 * @param string $sAttachmentDate
+	 * @param boolean $bIsDeleteAllowed
 	 *
 	 * @return string
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$sAttachmentDate, $sAttachmentCreator, $bIsDeleteAllowed
+		$sAttachmentDate, $bIsDeleteAllowed
 	) {
 		$sDeleteButton = '';
 		if ($bIsDeleteAllowed)
@@ -501,7 +505,6 @@ HTML
 	  <td><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
 	  <td>$sFileSize</td>
 	  <td>$sAttachmentDate</td>
-	  <td>$sAttachmentCreator</td>
 	  <td>$sDeleteButton</td>
 	</tr>
 HTML;

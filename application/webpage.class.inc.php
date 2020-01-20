@@ -510,9 +510,10 @@ class WebPage implements Page
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
 			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
 			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
+			$sDataAttributeLabel = isset($aAttrib['attlabel']) ? 'data-attribute-label="'.utils::HtmlEntities($aAttrib['attlabel']).'"' : '';
 			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.$aAttrib['value_raw'].'"' : '';
 
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataValueRaw>\n";
 			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
@@ -1474,7 +1475,7 @@ class TabManager
 				{
 					// Sometimes people set an empty tab to force content NOT to be rendered in the previous one. We need to remove them.
 					// Note: Look for "->SetCurrentTab('');" for examples.
-					if (empty($sTabCode))
+					if ($sTabCode === '')
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
@@ -1583,6 +1584,15 @@ EOF
 	{
 		if (!$this->TabExists($sTabContainer, $sTabCode))
 		{
+			// Container
+			if (!array_key_exists($sTabContainer, $this->m_aTabs))
+			{
+				$this->m_aTabs[$sTabContainer] = array(
+					'prefix' => '',
+					'tabs' => array(),
+				);
+			}
+
 			// Common properties
 			$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode] = array(
 				'type' => $sTabType,

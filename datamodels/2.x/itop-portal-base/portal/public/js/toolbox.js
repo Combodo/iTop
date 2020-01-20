@@ -56,7 +56,7 @@ var CombodoPortalToolbox = {
 		});
 	},
 	/**
-	 * Generic function to create and open a modal, used by high-levconfiel functions such as "CombodoPortalToolbox.OpenUrlInModal()".
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoPortalToolbox.OpenUrlInModal()".
 	 * When developing extensions, you should use them instead.
 	 *
 	 * @param oOptions

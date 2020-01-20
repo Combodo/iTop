@@ -1423,10 +1423,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 }
 
 /* CKEditor : Adding BS error feedback */
-.form_field div.cke{
+.form_field .cke{
 	border: 1px solid $gray-lighter;
 }
-.form_field.has-error div.cke{
+.form_field.has-error .cke{
 	border: 1px solid $state-danger-text;
 	border-radius: $border-radius-base;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);

@@ -78,6 +78,16 @@
                     <span>{{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}</span>
                 </div>
             {% endif %}
+            <div>
+                <span>{{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}</span>
+            </div>
+        </div>
+        <div id="run_setup" style="display: none;">
+            <form enctype="multipart/form-data" method="post">
+                <input type="hidden" name="operation" value="RunSetup"/>
+                <input type="hidden" name="authent" value="{{ sSetupToken }}">
+                <p><input id="run_setup" type="submit" value="{{ 'iTopUpdate:UI:RunSetup'|dict_s }}"/></p>
+            </form>
         </div>
 
         <form enctype="multipart/form-data" method="post">
