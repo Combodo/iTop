@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -1028,7 +1028,8 @@ abstract class AttributeDefinition
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
-		if($this::IsScalar())
+		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
+		if ($this::IsScalar())
 		{
 			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
 		}
