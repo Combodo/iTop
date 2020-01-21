@@ -9695,6 +9695,21 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
+	 * Allowed different values for the set values are mandatory for this attribute to be modified
+	 *
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		return $this->GetAllowedValues($aArgs, $sContains);
+	}
+
+	/**
 	 * @param \ormSet $oValue
 	 *
 	 * @param $aArgs
@@ -9708,7 +9723,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		$aJson = array();
 
 		// possible_values
-		$aAllowedValues = $this->GetAllowedValues($aArgs);
+		$aAllowedValues = $this->GetPossibleValues($aArgs);
 		$aSetKeyValData = array();
 		foreach($aAllowedValues as $sCode => $sLabel)
 		{
@@ -10054,13 +10069,20 @@ class AttributeEnumSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public static function ListExpectedParams()
 	{
-		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
-		if (is_null($aRawValues))
+		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
+	}
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->Get('possible_values');
+		if (!$oValSetDef)
 		{
 			return null;
 		}
+
+		$aRawValues = $oValSetDef->GetValues($aArgs, $sContains);
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
