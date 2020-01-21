@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2011-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 
 use Combodo\iTop\DesignElement;
@@ -2674,16 +2675,19 @@ EOF;
 	 */
 	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
-		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme'); 
+		// Build compiled themes folder
 		$sThemesDir = $sTempTargetDir.'/branding/themes/';
 		if(!is_dir($sThemesDir))
 		{
 			SetupUtils::builddir($sThemesDir);
 		}
+
+		// Parsing themes
+		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme');
 		foreach($oThemeNodes as $oTheme)
 		{
 			$sThemeId = $oTheme->getAttribute('id');
-			$sThemeDir = $sTempTargetDir.'/branding/themes/'.$sThemeId;
+			$sThemeDir = $sThemesDir.$sThemeId;
 
 			if(!is_dir($sThemesDir.$sThemeId))
 			{
@@ -2720,6 +2724,41 @@ EOF;
 			}
 			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
+
+		if($oThemeNodes->count() === 0)
+		{
+			$aDefaultThemeInfo = $this->GetDefaultThemeInformation();
+			$sThemeDir = $sThemesDir.$aDefaultThemeInfo['name'];
+
+			if(!is_dir($sThemeDir))
+			{
+				SetupUtils::builddir($sThemeDir);
+			}
+			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aDefaultThemeInfo['parameters']));
+		}
+	}
+
+	/**
+	 * Return default theme name and parameters
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	protected function GetDefaultThemeInformation()
+	{
+		return array(
+			'name' => 'light-grey',
+			'parameters' => array(
+				'variables' => array(),
+				'imports' => array(
+					'css-variables' => '../css/css-variables.scss',
+				),
+				'stylesheets' => array(
+					'jqueryui' => '../css/ui-lightness/jqueryui.scss',
+					'main' => '../css/light-grey.scss',
+				),
+			),
+		);
 	}
 
 	/**

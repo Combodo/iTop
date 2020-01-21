@@ -1,22 +1,20 @@
 <?php
 /**
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- *  * Copyright (C) 2013-2019 Combodo SARL
- *  *
- *  * This file is part of iTop.
- *  *
- *  * iTop is free software; you can redistribute it and/or modify
- *  * it under the terms of the GNU Affero General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * iTop is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU Affero General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU Affero General Public License
- *  
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 use ScssPhp\ScssPhp\Compiler;
@@ -28,9 +26,15 @@ class ThemeHandler{
 		$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
 		$sEnvPath =  APPROOT.'env-' . utils::GetCurrentEnvironment() .'/';
 		$sThemePath = $sEnvPath.'/branding/themes/'.$sThemeId.'/';
-		$aThemeParameters = json_decode(file_get_contents($sThemePath.'theme-parameters.json'), true);
+		$aThemeParameters = json_decode(@file_get_contents($sThemePath.'theme-parameters.json'), true);
 		$sThemeCssPath = $sThemePath.'main.css';
-		
+
+		// Check that theme is compiled
+		if($aThemeParameters === null)
+		{
+			throw new CoreException('Could not load "'.$sThemeId.'" theme parameters from file, check that it has been compiled correctly');
+		}
+
 		$sTheme = '';
 		$iStyleLastModified = 0;
 		clearstatcache();
