@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -674,7 +674,10 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->p("<img src=\"../images/info.png\"/>&nbsp;An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.");
+				$oPage->add(<<<HTML
+<div class="message">An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.</div>
+HTML
+				);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,10 +22,10 @@
 /* Animations */
 @keyframes progress_bar_color_ongoing {
   from {
-    background-color: #fbd38d;
+    background-color: #FBD38D;
   }
   to {
-    background-color: #feebc8;
+    background-color: #FEEBC8;
   }
 }
 @-webkit-keyframes bg-pan-left {
@@ -47,7 +47,7 @@
 /* Theme */
 body {
   background-color: #eee;
-  color: #1a202c;
+  color: #1A202C;
   margin: 0;
   padding: 0;
   font-size: 10pt;
@@ -55,15 +55,15 @@ body {
   overflow-y: auto;
 }
 h1 {
-  color: #555;
+  color: #555555;
   font-size: 16pt;
 }
 h2 {
-  color: #1a202c;
+  color: #1A202C;
   font-size: 14pt;
 }
 h3 {
-  color: #1c94c4;
+  color: #1C94C4;
   font-size: 12pt;
   font-weight: bold;
 }
@@ -72,7 +72,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #ea7d1e;
+  color: #EA7D1E;
 }
 #header {
   width: 600px;
@@ -82,7 +82,7 @@ a:hover {
   padding: 20px;
   background-color: #fff;
   height: 54px;
-  border: 3px solid #cbd2d9;
+  border: 3px solid #CBD2D9;
   border-bottom: none;
 }
 #header img {
@@ -102,7 +102,7 @@ a:hover {
   margin-right: auto;
   padding: 20px;
   background-color: #fff;
-  border: 3px solid #cbd2d9;
+  border: 3px solid #CBD2D9;
   border-top: none;
 }
 .next {
@@ -172,12 +172,12 @@ table.formTable {
   margin: 5px;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
   border-radius: 2px;
-  background-color: #edf2f7 !important;
+  background-color: #EDF2F7 !important;
 }
 #progress .progress {
-  color: #000 !important;
+  color: #000000 !important;
   /* !important to overload jQuery UI style */
-  background-image: linear-gradient(270deg, #fbd38d 50%, #feebc8 55%, #fbd38d 80%) !important;
+  background-image: linear-gradient(270deg, #FBD38D 50%, #FEEBC8 55%, #FBD38D 80%) !important;
   /* !important to overload jQuery UI style */
   animation: bg-pan-left 3s infinite both;
   background-size: 600% 100%;
@@ -185,7 +185,7 @@ table.formTable {
 }
 #progress .progress.progress-error {
   background-image: none !important;
-  background-color: #f56565 !important;
+  background-color: #F56565 !important;
   /* !important to overload jQuery UI style */
   animation: none;
 }
@@ -200,38 +200,41 @@ h3.clickable.open {
   cursor: hand;
 }
 .message {
-  color: #1a202c;
-  background-color: #f7fafc;
-  border-left: 4px solid #4a5568;
+  color: #1A202C;
+  background-color: #F7FAFC;
+  border-left: 4px solid #4A5568;
   padding: 10px;
-}
-.message.message-valid {
-  color: #276749;
-  background-color: #f0fff4;
-  border-color: #48bb78;
-}
-.message.message-warning {
-  color: #c05621;
-  background-color: #fffaf0;
-  border-color: #ed8936;
-}
-.message.message-error {
-  color: #c53030;
-  background-color: #fff5f5;
-  border-color: #e53e3e;
 }
 .message > .message-title {
   font-weight: bold;
   margin-right: 5px;
 }
+.message ~ .message {
+  margin-top: 6px;
+}
+.message.message-valid {
+  color: #276749;
+  background-color: #F0FFF4;
+  border-color: #48BB78;
+}
+.message.message-warning {
+  color: #C05621;
+  background-color: #FFFAF0;
+  border-color: #ED8936;
+}
+.message.message-error {
+  color: #C53030;
+  background-color: #FFF5F5;
+  border-color: #E53E3E;
+}
 .text-valid {
   color: #276749;
 }
 .text-warning {
-  color: #c05621;
+  color: #C05621;
 }
 .text-error {
-  color: #c53030;
+  color: #C53030;
 }
 fieldset {
   border: none;
@@ -243,16 +246,10 @@ fieldset > legend {
   margin-bottom: 7px;
   padding-bottom: 7px;
   width: 100%;
-  color: #3c3c3c;
+  color: #3C3C3C;
   font-size: 12pt;
   font-weight: bold;
-  border-bottom: 1px solid #d2d2d2;
-}
-#details > .message {
-  margin-bottom: 6px;
-}
-#details > .message:last-of-type {
-  margin-bottom: 0;
+  border-bottom: 1px solid #D2D2D2;
 }
 .module-selection-banner img {
   max-height: 48px;
@@ -261,7 +258,7 @@ fieldset > legend {
   height: 28em;
   overflow: auto;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
-  background-color: #f7fafc;
+  background-color: #F7FAFC;
   padding: 10px;
 }
 .module-selection-body .wiz-choice:checked ~ .description #itop-ticket-mgmt-simple-ticket-enhanced-portal:not(:checked) ~ .description::after, .module-selection-body .wiz-choice:checked ~ .description #itop-ticket-mgmt-itil-enhanced-portal:not(:checked) ~ .description::after {
@@ -269,5 +266,5 @@ fieldset > legend {
   display: block;
   margin-top: 0.5em;
   font-weight: bold;
-  color: rgba(230, 0, 0, 0.722);
+  color: #e60000b8;
 }
