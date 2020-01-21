@@ -33,6 +33,8 @@ ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
+SetupUtils::ExitMaintenanceMode(false);
+
 /////////////////////////////////////////////////////////////////////
 // Fake functions to protect the first run of the installer
 // in case the PHP JSON module is not installed...
