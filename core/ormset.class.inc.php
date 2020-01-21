@@ -160,7 +160,7 @@ class ormSet
 	public function GetValues()
 	{
 		$aValues = array_merge($this->aPreserved, $this->aAdded);
-
+		sort($aValues);
 		return $aValues;
 	}
 
