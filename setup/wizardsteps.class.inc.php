@@ -1062,7 +1062,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1070,7 +1071,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1189,7 +1191,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1197,7 +1200,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
