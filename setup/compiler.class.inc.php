@@ -2599,10 +2599,10 @@ EOF;
 	/**
 	 * Transform the file references into the corresponding filename (and create the file in the relevant directory)
 	 *
-	 * @param $oNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sRelativePath
+	 * @param \MFElement $oNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sRelativePath
 	 *
 	 * @throws \DOMFormatException
 	 * @throws \Exception
@@ -2643,11 +2643,11 @@ EOF;
 
 
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sNodeName
-	 * @param $sTargetFile
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sNodeName
+	 * @param string $sTargetFile
 	 *
 	 * @throws \Exception
 	 */
@@ -2666,10 +2666,11 @@ EOF;
 			copy($sSourceFile, $sTargetFile);
 		}
 	}
+
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \Exception
 	 */
@@ -2683,6 +2684,7 @@ EOF;
 		}
 
 		// Parsing themes
+		/** @var \DOMNodeList $oThemeNodes */
 		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme');
 		foreach($oThemeNodes as $oTheme)
 		{
@@ -2762,9 +2764,9 @@ EOF;
 	}
 
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \DOMFormatException
 	 * @throws \Exception
@@ -2793,6 +2795,11 @@ EOF;
 		}
 	}
 
+	/**
+	 * @param \MFElement $oPortalsNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 */
 	protected function CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		if ($oPortalsNode)
@@ -2850,7 +2857,14 @@ EOF;
 	{
 		return ($aConf1['rank'] < $aConf2['rank']) ? -1 : 1;
 	}
-	
+
+	/**
+	 * @param \MFElement $oParametersNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 *
+	 * @throws \Exception
+	 */
 	protected function CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		if ($oParametersNode)
