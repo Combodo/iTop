@@ -2725,7 +2725,7 @@ EOF;
 			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
 
-		if($oThemeNodes->count() === 0)
+		if($oThemeNodes->length === 0)
 		{
 			$aDefaultThemeInfo = $this->GetDefaultThemeInformation();
 			$sThemeDir = $sThemesDir.$aDefaultThemeInfo['name'];
