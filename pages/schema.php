@@ -797,8 +797,6 @@ JS
 	}
 }
 
-
-
 /**
  * Display the details of a given class of objects
  *
@@ -810,19 +808,6 @@ JS
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	$oPage->add('<div id="classDetailContainer">'); // MSIE compat (N°2618)
-	$oPage->add_style(<<<CSS
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-	#classDetailContainer
-	{
-		overflow-y: scroll;
-		height: 100%;
-		margin-right: 30px;
-	}
-}
-CSS
-	);
-
 	DisplayClassHeader($oPage, $sClass);
 	$aParentClasses = array();
 	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
@@ -1029,8 +1014,6 @@ EOF
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();
-
-	$oPage->add('</div>');
 }
 
 
