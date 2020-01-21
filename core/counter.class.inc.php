@@ -130,7 +130,7 @@ class KeyValueStore extends DBObject
 	public static function Init()
 	{
 		$aParams = array(
-			'category' => 'bizmodel',
+			'category' => '',
 			'key_type' => 'autoincrement',
 			'name_attcode' => array('key_name'),
 			'state_attcode' => '',
