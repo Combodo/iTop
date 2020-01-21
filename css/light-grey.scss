@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -1203,7 +1203,8 @@ input.dp-applied {
 				display: none;
 				max-width: 450px;
 				max-height: 520px;
-				overflow: auto;
+				overflow-x: auto;
+				overflow-y: hidden;
 
 				.sfc_fg_operators{
 					font-size: 12px;
