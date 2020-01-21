@@ -19,18 +19,32 @@
 
 use ScssPhp\ScssPhp\Compiler;
 
-class ThemeHandler{
+/**
+ * Class ThemeHandler
+ *
+ * @author Stephen Abello <stephen.abello@combodo.com>
+ * @since 2.7.0
+ */
+class ThemeHandler
+{
 
+	/**
+	 * Return the absolute URL for the compiled theme CSS file
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public static function GetTheme()
 	{
 		$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
-		$sEnvPath =  APPROOT.'env-' . utils::GetCurrentEnvironment() .'/';
+		$sEnvPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$sThemePath = $sEnvPath.'/branding/themes/'.$sThemeId.'/';
 		$aThemeParameters = json_decode(@file_get_contents($sThemePath.'theme-parameters.json'), true);
 		$sThemeCssPath = $sThemePath.'main.css';
 
 		// Check that theme is compiled
-		if($aThemeParameters === null)
+		if ($aThemeParameters === null)
 		{
 			throw new CoreException('Could not load "'.$sThemeId.'" theme parameters from file, check that it has been compiled correctly');
 		}
@@ -41,19 +55,19 @@ class ThemeHandler{
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		foreach ($aThemeParameters['imports'] as $sImport)
 		{
-			$sTheme.= '@import "' . $sImport . '";' . "\n";
-			
+			$sTheme .= '@import "'.$sImport.'";'."\n";
+
 			$iImportLastModified = filemtime($sEnvPath.$sImport);
 			$iStyleLastModified = $iStyleLastModified < $iImportLastModified ? $iImportLastModified : $iStyleLastModified;
 		}
 		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
 		{
-			$sTheme.= '@import "' . $sStylesheet . '";'."\n";
-			
+			$sTheme .= '@import "'.$sStylesheet.'";'."\n";
+
 			$iStylesheetLastModified = filemtime($sEnvPath.$sStylesheet);
 			$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 		}
-		
+
 		// Checking if our compiled css is outdated
 		if (!file_exists($sThemeCssPath) || (is_writable($sThemePath) && (filemtime($sThemeCssPath) < $iStyleLastModified)))
 		{
@@ -64,13 +78,14 @@ class ThemeHandler{
 			// Setting our import path to env-*
 			$oScss->setImportPaths($sEnvPath);
 			// Temporary disabling max exec time while compiling
-			$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
+			$iCurrentMaxExecTime = (int)ini_get('max_execution_time');
 			set_time_limit(0);
 			// Compiling our theme
 			$sThemeCss = $oScss->compile($sTheme);
 			set_time_limit($iCurrentMaxExecTime);
 			file_put_contents($sThemePath.'main.css', $sThemeCss);
 		}
+
 		// Return absolute url to theme compiled css
 		return utils::GetAbsoluteUrlModulesRoot().'/branding/themes/'.$sThemeId.'/main.css';
 	}
