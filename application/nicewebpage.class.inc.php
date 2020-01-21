@@ -259,7 +259,7 @@ EOF
 
 	protected function LoadTheme()
 	{
-		$sCssThemeUrl = ThemeHandler::GetTheme();
+		$sCssThemeUrl = ThemeHandler::GetDefaultThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
 	}
 }

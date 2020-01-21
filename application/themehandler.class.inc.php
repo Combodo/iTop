@@ -27,67 +27,102 @@ use ScssPhp\ScssPhp\Compiler;
  */
 class ThemeHandler
 {
-
 	/**
-	 * Return the absolute URL for the compiled theme CSS file
+	 * Return the absolute URL for the default theme CSS file
 	 *
 	 * @return string
-	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public static function GetTheme()
+	public static function GetDefaultThemeUrl()
 	{
 		$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
-		$sEnvPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
-		$sThemePath = $sEnvPath.'/branding/themes/'.$sThemeId.'/';
-		$aThemeParameters = json_decode(@file_get_contents($sThemePath.'theme-parameters.json'), true);
-		$sThemeCssPath = $sThemePath.'main.css';
+		static::CompileTheme($sThemeId);
 
-		// Check that theme is compiled
-		if ($aThemeParameters === null)
+		// Return absolute url to theme compiled css
+		return utils::GetAbsoluteUrlModulesRoot().'/branding/themes/'.$sThemeId.'/main.css';
+	}
+
+	/**
+	 * Compile the $sThemeId theme
+	 *
+	 * @param string $sThemeId
+	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
+	 * @param array|null $aImportsPaths Paths where imports can be found
+	 * @param string|null $sWorkingPath Path of the folder used during compilation
+	 *
+	 * @throws \CoreException
+	 */
+	public static function CompileTheme($sThemeId, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	{
+		// Default working path
+		if($sWorkingPath === null)
 		{
-			throw new CoreException('Could not load "'.$sThemeId.'" theme parameters from file, check that it has been compiled correctly');
+			$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		}
 
-		$sTheme = '';
+		// Default import paths (env-*)
+		if($aImportsPaths === null)
+		{
+			$aImportsPaths = array(
+				APPROOT.'env-'.utils::GetCurrentEnvironment().'/',
+			);
+		}
+
+		// Note: We do NOT check that the folder exists!
+		$sThemeFolderPath = $sWorkingPath.'/branding/themes/'.$sThemeId.'/';
+		$sThemeCssPath = $sThemeFolderPath.'main.css';
+
+		// Save parameters if passed...
+		if(is_array($aThemeParameters))
+		{
+			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
+		}
+		// ... Otherwise, retrieve them from compiled DM
+		else
+		{
+			$aThemeParameters = json_decode(@file_get_contents($sThemeFolderPath.'theme-parameters.json'), true);
+			if ($aThemeParameters === null)
+			{
+				throw new CoreException('Could not load "'.$sThemeId.'" theme parameters from file, check that it has been compiled correctly');
+			}
+		}
+
+		$sTmpThemeScssContent = '';
 		$iStyleLastModified = 0;
 		clearstatcache();
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		foreach ($aThemeParameters['imports'] as $sImport)
 		{
-			$sTheme .= '@import "'.$sImport.'";'."\n";
+			$sTmpThemeScssContent .= '@import "'.$sImport.'";'."\n";
 
-			$iImportLastModified = filemtime($sEnvPath.$sImport);
+			$iImportLastModified = filemtime($sWorkingPath.$sImport);
 			$iStyleLastModified = $iStyleLastModified < $iImportLastModified ? $iImportLastModified : $iStyleLastModified;
 		}
 		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
 		{
-			$sTheme .= '@import "'.$sStylesheet.'";'."\n";
+			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
 
-			$iStylesheetLastModified = filemtime($sEnvPath.$sStylesheet);
+			$iStylesheetLastModified = filemtime($sWorkingPath.$sStylesheet);
 			$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 		}
 
 		// Checking if our compiled css is outdated
-		if (!file_exists($sThemeCssPath) || (is_writable($sThemePath) && (filemtime($sThemeCssPath) < $iStyleLastModified)))
+		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && (filemtime($sThemeCssPath) < $iStyleLastModified)))
 		{
 			$oScss = new Compiler();
 			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
 			// Setting our xml variables
 			$oScss->setVariables($aThemeParameters['variables']);
-			// Setting our import path to env-*
-			$oScss->setImportPaths($sEnvPath);
+			// Setting our imports paths
+			$oScss->setImportPaths($aImportsPaths);
 			// Temporary disabling max exec time while compiling
 			$iCurrentMaxExecTime = (int)ini_get('max_execution_time');
 			set_time_limit(0);
 			// Compiling our theme
-			$sThemeCss = $oScss->compile($sTheme);
+			$sTmpThemeCssContent = $oScss->compile($sTmpThemeScssContent);
 			set_time_limit($iCurrentMaxExecTime);
-			file_put_contents($sThemePath.'main.css', $sThemeCss);
+			file_put_contents($sThemeCssPath, $sTmpThemeCssContent);
 		}
-
-		// Return absolute url to theme compiled css
-		return utils::GetAbsoluteUrlModulesRoot().'/branding/themes/'.$sThemeId.'/main.css';
 	}
 }
 

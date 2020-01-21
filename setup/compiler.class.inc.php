@@ -2676,6 +2676,14 @@ EOF;
 	 */
 	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
+		// Set imports paths
+		// Note: During compilation, we don't have access to "env-xxx", so we have to set several imports paths:
+		// - The CSS directory for the
+		$aImportsPaths = array(
+			APPROOT.'css/',
+			$sTempTargetDir,
+		);
+
 		// Build compiled themes folder
 		$sThemesDir = $sTempTargetDir.'/branding/themes/';
 		if(!is_dir($sThemesDir))
@@ -2683,60 +2691,64 @@ EOF;
 			SetupUtils::builddir($sThemesDir);
 		}
 
-		// Parsing themes
+		// Parsing themes from DM
+		$aThemes = array();
 		/** @var \DOMNodeList $oThemeNodes */
 		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme');
 		foreach($oThemeNodes as $oTheme)
 		{
 			$sThemeId = $oTheme->getAttribute('id');
-			$sThemeDir = $sThemesDir.$sThemeId;
-
-			if(!is_dir($sThemesDir.$sThemeId))
-			{
-				SetupUtils::builddir($sThemesDir.$sThemeId);
-			}
-			
-			$oVariables = $oTheme->GetNodes('variables/variable');
-			$oImports = $oTheme->GetNodes('imports/import');
-			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
-			
 			$aThemeParameters = array(
 				'variables' => array(),
 				'imports' => array(),
 				'stylesheets' => array(),
 			);
-			// json array
-			$sVariablesContent = '';
+
+			/** @var \DOMNodeList $oVariables */
+			$oVariables = $oTheme->GetNodes('variables/variable');
 			foreach($oVariables as $oVariable)
 			{
 				$sVariableId = $oVariable->getAttribute('id');
 				$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
 			}
 
+			/** @var \DOMNodeList $oImports */
+			$oImports = $oTheme->GetNodes('imports/import');
 			foreach($oImports as $oImport)
 			{
 				$sImportId = $oImport->getAttribute('id');
 				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
 			}
-			
+
+			/** @var \DOMNodeList $oStylesheets */
+			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
 			foreach($oStylesheets as $oStylesheet)
 			{
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
-			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aThemeParameters));
+
+			$aThemes[$sThemeId] = $aThemeParameters;
 		}
 
-		if($oThemeNodes->length === 0)
+		// Force to have a default theme if none in the DM
+		if(empty($aThemes))
 		{
 			$aDefaultThemeInfo = $this->GetDefaultThemeInformation();
-			$sThemeDir = $sThemesDir.$aDefaultThemeInfo['name'];
+			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
+		}
 
+		// Compile themes
+		foreach($aThemes as $sThemeId => $aThemeParameters)
+		{
+			$sThemeDir = $sThemesDir.$sThemeId;
 			if(!is_dir($sThemeDir))
 			{
 				SetupUtils::builddir($sThemeDir);
 			}
-			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aDefaultThemeInfo['parameters']));
+
+
+			ThemeHandler::CompileTheme($sThemeId, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 		}
 	}
 
