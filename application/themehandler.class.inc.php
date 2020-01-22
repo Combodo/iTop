@@ -47,8 +47,8 @@ class ThemeHandler
 	 *
 	 * @param string $sThemeId
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
-	 * @param array|null $aImportsPaths Paths where imports can be found
-	 * @param string|null $sWorkingPath Path of the folder used during compilation
+	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
+	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
 	 */
@@ -95,19 +95,19 @@ class ThemeHandler
 		{
 			$sTmpThemeScssContent .= '@import "'.$sImport.'";'."\n";
 
-			$iImportLastModified = filemtime($sWorkingPath.$sImport);
+			$iImportLastModified = @filemtime($sWorkingPath.$sImport);
 			$iStyleLastModified = $iStyleLastModified < $iImportLastModified ? $iImportLastModified : $iStyleLastModified;
 		}
 		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
 		{
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
 
-			$iStylesheetLastModified = filemtime($sWorkingPath.$sStylesheet);
+			$iStylesheetLastModified = @filemtime($sWorkingPath.$sStylesheet);
 			$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 		}
 
 		// Checking if our compiled css is outdated
-		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && (filemtime($sThemeCssPath) < $iStyleLastModified)))
+		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && (@filemtime($sThemeCssPath) < $iStyleLastModified)))
 		{
 			$oScss = new Compiler();
 			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');

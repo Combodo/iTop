@@ -2676,16 +2676,20 @@ EOF;
 	 */
 	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
+		// Make sure temp. target dir. ends with a '/'
+		$sTempTargetDir .= '/';
+
 		// Set imports paths
 		// Note: During compilation, we don't have access to "env-xxx", so we have to set several imports paths:
-		// - The CSS directory for the
+		// - The CSS directory for the native imports (eg. "../css/css-variables.scss")
+		// - The SCSS from modules
 		$aImportsPaths = array(
 			APPROOT.'css/',
-			$sTempTargetDir,
+			$sTempTargetDir.'/',
 		);
 
 		// Build compiled themes folder
-		$sThemesDir = $sTempTargetDir.'/branding/themes/';
+		$sThemesDir = $sTempTargetDir.'branding/themes/';
 		if(!is_dir($sThemesDir))
 		{
 			SetupUtils::builddir($sThemesDir);
