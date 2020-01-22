@@ -9460,6 +9460,14 @@ class AttributeTable extends AttributeDBField
 			$value = @unserialize($aCols[$sPrefix.'']);
 			if ($value === false)
 			{
+				$value = @json_decode($aCols[$sPrefix.''], true);
+				if (is_null($value))
+				{
+					$value = false;
+				}
+			}
+			if ($value === false)
+			{
 				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
 		} catch (Exception $e)
@@ -9473,7 +9481,15 @@ class AttributeTable extends AttributeDBField
 	public function GetSQLValues($value)
 	{
 		$aValues = array();
-		$aValues[$this->Get("sql")] = serialize($value);
+		try
+		{
+			$sSerializedValue = serialize($value);
+		}
+		catch (Exception $e)
+		{
+			$sSerializedValue = json_encode($value);
+		}
+		$aValues[$this->Get("sql")] = $sSerializedValue;
 
 		return $aValues;
 	}
