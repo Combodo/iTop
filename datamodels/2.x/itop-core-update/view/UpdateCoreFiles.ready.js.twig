@@ -43,14 +43,14 @@ function GetAjaxRequest(sOperation)
     if (sOperation === "Backup")
     {
         oAjaxRequest.success = function() {
-            $("#do_backup_done").show();
+            $("#do_backup_done").show(300);
         };
     }
 
     if (sOperation === "FilesArchive")
     {
         oAjaxRequest.success = function() {
-            $("#do_files_archive_done").show();
+            $("#do_files_archive_done").show(300);
         };
     }
 
@@ -98,12 +98,11 @@ function ExecNextStep() {
                     {
                         $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }});
                     }
-                    $('.progress').css("background-image", "none").css("background-color", "#fcc");
+                    $('#progress').hide();
                     $("#setup_error_outer").show();
                     $("#run_setup").show();
                     $("#setup_continue").hide();
-                })
-            ;
+                });
         }
         else
         {
@@ -114,8 +113,9 @@ function ExecNextStep() {
     {
         $.ajax(oGetCurrentVersion);
         $("#setup_continue").removeAttr("disabled");
-        $("#current_version").removeClass("message_info").addClass("message_ok");
-        $('.progress').css("background-image", "none").css("background-color", "#cfc");
+        $('#installation_progress').hide(300);
+        $('#new_version').show();
+        $("#current_version").removeClass("message-info").addClass("message-valid");
     }
 }
 
