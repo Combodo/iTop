@@ -969,6 +969,30 @@ EOF
 		);
 
 	}
+	//for IE and edge
+	$oPage->add_ready_script(
+		<<<EOF
+           var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
+			$("#dataModelScrollableDiv").width(parentwidth);
+			
+			$(window).resize(function() {
+			    clearTimeout(window.resizedFinished);
+			    window.resizedFinished = setTimeout(function(){
+			        var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
+					$("#dataModelScrollableDiv").width(parentwidth);
+			    }, 250);
+			});
+			/*		$(".ui-layout-center.data-model-viewer").on('resize', function() {
+					       var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
+					        $("#dataModelScrollableDiv").width(parentwidth);        
+					     }).trigger('resize');
+				}
+	            /*$(window).on('resize', function() {
+				       var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
+				        $("#dataModelScrollableDiv").width(parentwidth);        
+				     });*/
+EOF
+	);
 
 	$oPage->SetCurrentTab('UI:Schema:Attributes');
 	$aConfig = array(
