@@ -161,7 +161,7 @@ JS
 		// TODO : Add max upload size when itop attachment has been refactored
 		if (!$this->oField->GetReadOnly())
 		{
-			$oOutput->AddHtml('<div class="upload_container row">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
+			$oOutput->AddHtml('<div class="upload_container">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
 		}
 		// Ending files container
 		$oOutput->AddHtml('</div>');
@@ -186,7 +186,6 @@ JS
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
 			'{{sAttachmentDate}}',
-			'{{sAttachmentCreator}}',
 			$bIsDeleteAllowed
 		));
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
@@ -249,7 +248,6 @@ JS
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
-							{search: "{{sAttachmentCreator}}", replace:data.result.contact_id_friendlyname },
 						];
 						var sAttachmentRow = attachmentRowTemplate;
 						$.each(replaces, function(indexInArray, value ) {
@@ -393,7 +391,7 @@ JS
 		{
 			$sTableHead = self::GetAttachmentTableHeader($bIsDeleteAllowed);
 			$oOutput->Addhtml(<<<HTML
-<table id="$sAttachmentTableId" class="attachments-list table table-striped responsive">
+<table id="$sAttachmentTableId" class="attachments-list table table-striped table-bordered responsive" cellspacing="0" width="100%">
 	$sTableHead
 <tbody>
 HTML
@@ -433,8 +431,6 @@ HTML
 				{
 					$sAttachmentDate = $oAttachment->Get('creation_date');
 				}
-
-				$sAttachmentCreator = $oAttachment->Get('contact_id_friendlyname');
 
 				$oOutput->Addhtml(self::GetAttachmentTableRow(
 					$iAttId,

@@ -1207,49 +1207,30 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	padding: 0px;
 }
 /* FileUpload */
-.fileupload_field_content{
-	padding: 8px 23px;
-	border: 1px solid $gray-lighter;
-	background-color: #F9F9F9;
-}
-.fileupload_field_content > div{
-	margin-bottom: 15px;
-}
 .attachments_container {
 	.attachments-list {
-		& thead > tr > th {
+		thead > tr > th {
 			text-align: center;
 		}
 
-		& tbody > tr > td {
+		tbody > tr > td {
 			padding: 0.5rem 8px;
 			text-align: left;
 			vertical-align: middle;
 
-			&:first-child {
+			&[role="icon"] {
 				text-align: center;
+
+				img{
+					max-height: 32px;
+				}
 			}
-			&:nth-child(3) {
+			&[role="formatted-size"] {
 				text-align: right;
 			}
-		}
-	}
-
-	.attachment {
-		height: 4em;
-
-		.attachment_name {
-			overflow-x: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		}
-
-		.btn {
-			margin-top: 3px;
-		}
-
-		&:hover {
-			background-color: #e0e0e0;
+			&[role="delete"] {
+				text-align: center;
+			}
 		}
 	}
 }

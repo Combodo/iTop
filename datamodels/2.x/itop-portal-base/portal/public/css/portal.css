@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -15,23 +15,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-/*!
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+
 /*!
  * Combodo portal template v1.0.0
  */
@@ -1137,14 +1121,6 @@ table .group-actions {
   padding: 0px;
 }
 /* FileUpload */
-.fileupload_field_content {
-  padding: 8px 23px;
-  border: 1px solid #ddd;
-  background-color: #F9F9F9;
-}
-.fileupload_field_content > div {
-  margin-bottom: 15px;
-}
 .attachments_container .attachments-list thead > tr > th {
   text-align: center;
 }
@@ -1153,25 +1129,17 @@ table .group-actions {
   text-align: left;
   vertical-align: middle;
 }
-.attachments_container .attachments-list tbody > tr > td:first-child {
+.attachments_container .attachments-list tbody > tr > td[role="icon"] {
   text-align: center;
 }
-.attachments_container .attachments-list tbody > tr > td:nth-child(3) {
+.attachments_container .attachments-list tbody > tr > td[role="icon"] img {
+  max-height: 32px;
+}
+.attachments_container .attachments-list tbody > tr > td[role="formatted-size"] {
   text-align: right;
 }
-.attachments_container .attachment {
-  height: 4em;
-}
-.attachments_container .attachment .attachment_name {
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.attachments_container .attachment .btn {
-  margin-top: 3px;
-}
-.attachments_container .attachment:hover {
-  background-color: #e0e0e0;
+.attachments_container .attachments-list tbody > tr > td[role="delete"] {
+  text-align: center;
 }
 .attachment-tooltip {
   width: 350px;
@@ -1369,12 +1337,12 @@ table .group-actions {
 .cke_notification_success {
   display: none;
   background-color: #dff0d8;
-  border-color: #d6e9c6;
+  border-color: #58a959;
   color: #468847;
 }
 .cke_notification_warning {
   background-color: #fcf8e3;
-  border-color: #fbeed5;
+  border-color: #ceae78;
   color: #c09853;
 }
 /* CKEditor : Misc */
