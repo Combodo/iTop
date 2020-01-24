@@ -348,22 +348,22 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileName = Dict::S('Attachments:File:Name');
 		$sFileSize = Dict::S('Attachments:File:Size');
 		$sFileDate = Dict::S('Attachments:File:Date');
-		$sFileCreator = Dict::S('Attachments:File:Creator');
+		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
 		$sDeleteColumn = '';
 		if ($bWithDeleteButton)
 		{
-			$sDeleteColumn = '<th></th>';
+			$sDeleteColumn = '<th role="delete"></th>';
 		}
 		$this->oPage->add(<<<HTML
 <table class="listResults attachmentsList">
 	<thead>
-		<th>$sThumbnail</th>
-		<th>$sFileName</th>
-		<th>$sFileSize</th>
-		<th>$sFileDate</th>
-		<th>$sFileCreator</th>
-		<th>$sFileType</th>
+		<th role="icon">$sThumbnail</th>
+		<th role="filename">$sFileName</th>
+		<th role="formatted-size">$sFileSize</th>
+		<th role="upload-date">$sFileDate</th>
+		<th role="uploader">$sFileUploader</th>
+		<th role="type">$sFileType</th>
 		$sDeleteColumn
 	</thead>
 <tbody>
@@ -452,7 +452,8 @@ JS
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
 		$sAttachmentMeta = $this->GetAttachmentHiddenInput($iAttachmentId, $bIsDeletedAttachment);
-		$sFileSize = $oDoc->GetFormattedSize();
+		$sFileSize = $oDoc->GetSize();
+		$sFileFormattedSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 		$sAttachmentDate = '';
 		if (!$bIsTempAttachment)
@@ -464,7 +465,8 @@ JS
 			}
 		}
 
-		$sAttachmentCreator = $oAttachment->Get('contact_id_friendlyname');
+		$sAttachmentUploader = $oAttachment->Get('contact_id_friendlyname');
+		$sAttachmentUploaderForHtml = utils::HtmlEntities($sAttachmentUploader);
 
 		$sFileType = $oDoc->GetMimeType();
 
@@ -483,17 +485,17 @@ JS
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);
-			$sDeleteColumn = "<td>$sDeleteButton</td>";
+			$sDeleteColumn = "<td role=\"delete\">$sDeleteButton</td>";
 		}
 
 		$this->oPage->add(<<<HTML
-	<tr id="$sTrId" $sLineClass $sLineStyle>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
-	  <td>$sFileSize</td>
-	  <td>$sAttachmentDate</td>
-	  <td>$sAttachmentCreator</td>
-	  <td>$sFileType</td>
+	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$sFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
+	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
+	  <td role="formatted-size">$sFileFormattedSize</td>
+	  <td role="upload-date">$sAttachmentDate</td>
+	  <td role="uploader">$sAttachmentUploader</td>
+	  <td role="type">$sFileType</td>
 	  $sDeleteColumn
 	</tr>
 HTML

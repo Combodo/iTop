@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
@@ -66,7 +62,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:File:Thumbnail' => '图标',
 	'Attachments:File:Name' => '文件名',
 	'Attachments:File:Date' => '上传日期',
-	'Attachments:File:Creator' => '上传者',
+	'Attachments:File:Uploader' => '上传者',
 	'Attachments:File:Size' => '大小',
 	'Attachments:File:MimeType' => '类型',
 ));

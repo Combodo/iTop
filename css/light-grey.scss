@@ -3830,14 +3830,20 @@ input:checked + .slider:before {
 .pull-left { float: left; }
 
 
-table.attachmentsList {
-	&>tbody{
-		&>tr>td:first-child {
-			text-align: center;
-		}
-		&>tr>td:nth-child(3) {
-			text-align: right;
-			padding-right: 0.5em;
+.attachmentsList {
+	>tbody{
+		>tr>td{
+			&[role="icon"] {
+				text-align: center;
+				padding: 0.25em;
+			}
+			&[role="formatted-size"] {
+				text-align: right;
+				padding-right: 0.5em;
+			}
+			&[role="delete"] {
+				text-align: center;
+			}
 		}
 	}
 }

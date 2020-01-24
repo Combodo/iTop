@@ -472,11 +472,11 @@ HTML
 
 		return <<<HTML
 	<thead>
-		<th>$sTitleThumbnail</th>
-		<th data-priority="1">$sTitleFileName</th>
-		<th>$sTitleFileSize</th>
-		<th>$sTitleFileDate</th>
-		<th data-priority="1"></th>
+		<th role="icon">$sTitleThumbnail</th>
+		<th role="filename" data-priority="1">$sTitleFileName</th>
+		<th role="formatted-size">$sTitleFileSize</th>
+		<th role="upload-date">$sTitleFileDate</th>
+		$sDeleteHeaderAsHtml
 	</thead>
 HTML;
 	}
@@ -500,20 +500,20 @@ HTML;
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
 		$sAttachmentDate, $bIsDeleteAllowed
 	) {
-		$sDeleteButton = '';
+		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
 		{
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
-			$sDeleteButton = '<input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'">';
+			$sDeleteCell = '<td role="delete"><input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'"></td>';
 		}
 
 		return <<<HTML
 	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td>$sFileSize</td>
-	  <td>$sAttachmentDate</td>
-	  <td>$sDeleteButton</td>
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass src="$sAttachmentThumbUrl"></a></td>
+	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+	  <td role="formatted-size">$sFileSize</td>
+	  <td role="upload-date">$sAttachmentDate</td>
+	  $sDeleteCell
 	</tr>
 HTML;
 	}
