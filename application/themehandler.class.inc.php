@@ -109,18 +109,7 @@ class ThemeHandler
 		// Checking if our compiled css is outdated
 		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && (@filemtime($sThemeCssPath) < $iStyleLastModified)))
 		{
-			$oScss = new Compiler();
-			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
-			// Setting our xml variables
-			$oScss->setVariables($aThemeParameters['variables']);
-			// Setting our imports paths
-			$oScss->setImportPaths($aImportsPaths);
-			// Temporary disabling max exec time while compiling
-			$iCurrentMaxExecTime = (int)ini_get('max_execution_time');
-			set_time_limit(0);
-			// Compiling our theme
-			$sTmpThemeCssContent = $oScss->compile($sTmpThemeScssContent);
-			set_time_limit($iCurrentMaxExecTime);
+			$sTmpThemeCssContent = utils::CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths, $aThemeParameters['variables']);
 			file_put_contents($sThemeCssPath, $sTmpThemeCssContent);
 		}
 	}
