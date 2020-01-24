@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 /**
  * Attachments rendering for iTop console.
@@ -319,8 +320,20 @@ JS;
 }
 
 
+/**
+ * Class TableDetailsAttachmentsRenderer
+ */
 class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 {
+	/**
+	 * @param bool $bWithDeleteButton
+	 * @param array $aAttachmentsDeleted
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
 	private function AddAttachmentsTable($bWithDeleteButton, $aAttachmentsDeleted = array())
 	{
 		if ($this->GetAttachmentsCount() === 0)
@@ -404,14 +417,15 @@ JS
 	}
 
 	/**
-	 * @param $bWithDeleteButton
-	 * @param $bIsEven
+	 * @param bool $bWithDeleteButton
+	 * @param bool $bIsEven
 	 * @param \DBObject $oAttachment
 	 * @param array $aAttachmentsDate
 	 * @param int[] $aAttachmentsDeleted
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	private function AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oAttachment, $aAttachmentsDate, $aAttachmentsDeleted)
 	{

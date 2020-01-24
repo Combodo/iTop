@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -57,6 +57,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 	/**
 	 * @inheritDoc
+	 * @throws \CoreException
 	 */
 	public function Render()
 	{
@@ -76,7 +77,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
 		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
 
-		// if collapsed
+		// If collapsed
 		$sCollapseTogglerClass .= ' collapsed';
 		$sCollapseTogglerExpanded = 'false';
 		$sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
@@ -397,7 +398,7 @@ JS
 HTML
 			);
 
-			/** @var Attachment $oAttachment */
+			/** @var \Attachment $oAttachment */
 			while ($oAttachment = $this->oAttachmentsSet->Fetch())
 			{
 				$iAttId = $oAttachment->GetKey();
@@ -456,7 +457,13 @@ HTML
 		}
 	}
 
-	protected static function GetAttachmentTableHeader()
+	/**
+	 * @param bool $bIsDeleteAllowed
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	protected static function GetAttachmentTableHeader($bIsDeleteAllowed)
 	{
 		$sTitleThumbnail = Dict::S('Attachments:File:Thumbnail');
 		$sTitleFileName = Dict::S('Attachments:File:Name');
@@ -487,6 +494,7 @@ HTML;
 	 * @param boolean $bIsDeleteAllowed
 	 *
 	 * @return string
+	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
