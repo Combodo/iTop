@@ -112,6 +112,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
 		$sNoAttachmentLabel = json_encode(Dict::S('Attachments:NoAttachment'));
+		$sDeleteColumnDef = $bIsDeleteAllowed ? '{ targets: [4], orderable: false},' : '';
 		$oOutput->AddJs(
 			<<<JS
 // Collapse handlers
@@ -144,8 +145,8 @@ var buildTable_{$this->oField->GetGlobalId()} = function()
 		"dom": "t",
 	    "order": [[3, "asc"]],
 	    "columnDefs": [
-	        { targets: [4], orderable: false},
-	        { targets: '_all', orderable: true }
+	        $sDeleteColumnDef
+	        { targets: '_all', orderable: true },
 	    ],
 	    "language": {
 			"infoEmpty": $sNoAttachmentLabel,
@@ -390,7 +391,7 @@ JS
 		}
 		else
 		{
-			$sTableHead = self::GetAttachmentTableHeader();
+			$sTableHead = self::GetAttachmentTableHeader($bIsDeleteAllowed);
 			$oOutput->Addhtml(<<<HTML
 <table id="$sAttachmentTableId" class="attachments-list table table-striped responsive">
 	$sTableHead
@@ -469,6 +470,9 @@ HTML
 		$sTitleFileName = Dict::S('Attachments:File:Name');
 		$sTitleFileSize = Dict::S('Attachments:File:Size');
 		$sTitleFileDate = Dict::S('Attachments:File:Date');
+
+		// Optional column
+		$sDeleteHeaderAsHtml = ($bIsDeleteAllowed) ? '<th role="delete" data-priority="1"></th>' : '';
 
 		return <<<HTML
 	<thead>
