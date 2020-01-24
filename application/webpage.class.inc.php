@@ -511,7 +511,7 @@ class WebPage implements Page
 			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
 			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
 			$sDataAttributeLabel = isset($aAttrib['attlabel']) ? 'data-attribute-label="'.utils::HtmlEntities($aAttrib['attlabel']).'"' : '';
-			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.$aAttrib['value_raw'].'"' : '';
+			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
 			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataValueRaw>\n";
 			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
