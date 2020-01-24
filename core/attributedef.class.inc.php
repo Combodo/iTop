@@ -10090,15 +10090,20 @@ class AttributeEnumSet extends AttributeSet
 		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
 	}
 
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	private function GetRawValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->Get('possible_values');
 		if (!$oValSetDef)
 		{
-			return null;
+			return array();
 		}
 
-		$aRawValues = $oValSetDef->GetValues($aArgs, $sContains);
+		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		$aRawValues = $this->GetRawValues($aArgs, $sContains);
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
@@ -10110,6 +10115,12 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueLabel($sValue)
 	{
+		$aValues = $this->GetRawValues();
+		if (isset($aValues[$sValue]))
+		{
+			$sValue = $aValues[$sValue];
+		}
+
 		if (is_null($sValue))
 		{
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
@@ -10189,6 +10200,37 @@ class AttributeEnumSet extends AttributeSet
 		}
 
 		return $sRes;
+	}
+
+}
+
+class AttributeContextSet extends AttributeEnumSet
+{
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		$oValSetDef = $this->Get('possible_values');
+		if (!$oValSetDef)
+		{
+			return null;
+		}
+
+		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	public function GetValueLabel($sValue)
+	{
+		$aValues = $this->GetPossibleValues();
+		if (in_array($sValue, $aValues))
+		{
+			return $aValues[$sValue];
+		}
+		return Dict::S('Enum:Undefined');
+	}
+
+	public function GetValueDescription($sValue)
+	{
+		return '';
 	}
 
 }

@@ -91,12 +91,37 @@ class ContextTag
 	 */
 	public static function GetTags()
 	{
-		return array(
+		$aRawTags = array(
 			ContextTag::TAG_REST,
 			ContextTag::TAG_SYNCHRO,
 			ContextTag::TAG_SETUP,
 			ContextTag::TAG_CONSOLE,
 			ContextTag::TAG_CRON,
 			ContextTag::TAG_PORTAL);
+
+		$aTags = array();
+
+		foreach ($aRawTags as $sRawTag)
+		{
+			$aTags[$sRawTag] = Dict::S("Core:Context={$sRawTag}");
+		}
+
+		$aPortalsConf = PortalDispatcherData::GetData();
+		$aDispatchers = array();
+		foreach ($aPortalsConf as $sPortalId => $aConf)
+		{
+			$sHandlerClass = $aConf['handler'];
+			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
+		}
+
+		foreach ($aDispatchers as $sPortalId => $oDispatcher)
+		{
+			if ($sPortalId != 'backoffice')
+			{
+				$aTags['Portal:'.$sPortalId] = $oDispatcher->GetLabel();
+			}
+		}
+
+		return $aTags;
 	}
 }

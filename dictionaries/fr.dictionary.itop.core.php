@@ -201,6 +201,19 @@ Opérateurs :<br/>
 
 	'Core:AttributeTag' => 'Taxon',
 	'Core:AttributeTag+' => 'Taxon',
+
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=REST/JSON+' => 'REST/JSON',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Synchro+' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=Setup+' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=GUI:Console+' => 'GUI:Console',
+	'Core:Context=CRON' => 'CRON',
+	'Core:Context=CRON+' => 'CRON',
+	'Core:Context=GUI:Portal' => 'Portal',
+	'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));
 
 
@@ -533,18 +546,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
 	'Class:Trigger/Attribute:finalclass+' => 'Nom de la classe instanciable',
-	'Class:Trigger/Attribute:context/Value:REST/JSON' => 'REST',
-	'Class:Trigger/Attribute:context/Value:REST/JSON+' => 'REST/JSON',
-	'Class:Trigger/Attribute:context/Value:Synchro' => 'Synchro',
-	'Class:Trigger/Attribute:context/Value:Synchro+' => 'Synchro',
-	'Class:Trigger/Attribute:context/Value:Setup' => 'Setup',
-	'Class:Trigger/Attribute:context/Value:Setup+' => 'Setup',
-	'Class:Trigger/Attribute:context/Value:GUI:Console' => 'Console',
-	'Class:Trigger/Attribute:context/Value:GUI:Console+' => 'GUI:Console',
-	'Class:Trigger/Attribute:context/Value:CRON' => 'CRON',
-	'Class:Trigger/Attribute:context/Value:CRON+' => 'CRON',
-	'Class:Trigger/Attribute:context/Value:GUI:Portal' => 'Portal',
-	'Class:Trigger/Attribute:context/Value:GUI:Portal+' => 'GUI:Portal',
 ));
 
 //
