@@ -969,31 +969,6 @@ EOF
 		);
 
 	}
-	//for IE and edge
-	$oPage->add_ready_script(
-		<<<EOF
-           var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
-			$("#dataModelScrollableDiv").width(parentwidth);
-			
-			$(window).resize(function() {
-			    clearTimeout(window.resizedFinished);
-			    window.resizedFinished = setTimeout(function(){
-			        var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
-					$("#dataModelScrollableDiv").width(parentwidth);
-			    }, 250);
-			});
-			/*		$(".ui-layout-center.data-model-viewer").on('resize', function() {
-					       var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
-					        $("#dataModelScrollableDiv").width(parentwidth);        
-					     }).trigger('resize');
-				}
-	            /*$(window).on('resize', function() {
-				       var parentwidth = $(".ui-layout-center.data-model-viewer").width();      
-				        $("#dataModelScrollableDiv").width(parentwidth);        
-				     });*/
-EOF
-	);
-
 	$oPage->SetCurrentTab('UI:Schema:Attributes');
 	$aConfig = array(
 		'origincolor' => array('label' => "", 'description' => ""),
@@ -1107,7 +1082,7 @@ function DisplayClassHeader($oPage, $sClass)
 	$oPage->add("<h2 id=\"dataModelScrollableClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sClass."</span><span class=\"parenthesis\">)</span></h2>");
 	$oPage->add("</div>");
 
-//content header
+	//content header
 	$oPage->add("<div id=\"dataModelHeader\">");
 	DisplayGranularityDisplayer($oPage);
 	$oPage->add("<div id=\"dataModelClassIcon\">".MetaModel::GetClassIcon($sClass)."</div>");
@@ -1118,6 +1093,9 @@ function DisplayClassHeader($oPage, $sClass)
 	{
 		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
 	}
+	//ajuste the size of title
+	$oPage->add_ready_script("$('#dataModelScrollableDiv').width($('#dataModelScrollableDiv').parent().width());");
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1178,7 +1156,12 @@ $oPage->add("</div>");
 $oPage->add_init_script(
 	<<<EOF
 		$('#dataModelSplitPane').layout({
-		west : {size: "20%", minSize : 200,paneSize : 600}
+			west : {size: "20%", minSize : 200,paneSize : 600},
+			center : {
+				onresize_end : function(){
+					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
+				}
+			}
 		});
 		// Layout
 EOF
