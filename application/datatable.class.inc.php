@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -443,13 +443,14 @@ EOF;
 	}
 
 	/**
-	 * @param $aColumns
-	 * @param $sSelectMode
-	 * @param $bViewLink
+	 * @param array $aColumns
+	 * @param string $sSelectMode
+	 * @param bool $bViewLink
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	protected function GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink)
 	{
@@ -522,6 +523,7 @@ EOF;
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	protected function GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
@@ -653,6 +655,7 @@ EOF;
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
