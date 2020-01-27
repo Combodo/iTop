@@ -1286,7 +1286,7 @@ class Config
 	 *
 	 * @throws \CoreException
 	 */
-	public function Set($sPropCode, $value, $sSourceDesc = 'unknown')
+	public function Set($sPropCode, $value, $sSourceDesc = 'unknown', $bCanOverride = false)
 	{
 		$sType = $this->m_aSettings[$sPropCode]['type'];
 		switch ($sType)
@@ -1310,6 +1310,7 @@ class Config
 		}
 		$this->m_aSettings[$sPropCode]['value'] = $value;
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
+		$this->m_aCanOverrideSettings[$sPropCode] = $bCanOverride;
 	}
 
 	/**
@@ -1563,7 +1564,7 @@ class Config
 				{
 					$value = $rawvalue;
 				}
-				$this->Set($sPropCode, $value, $sConfigFile);
+				$this->Set($sPropCode, $value, $sConfigFile, true);
 			}
 		}
 
@@ -1991,30 +1992,37 @@ class Config
 				// Write all values that are either always visible or present in the cloned config file
 				if ($aSettingInfo['show_in_conf_sample'] || (!empty($aSettingInfo['source_of_value']) && ($aSettingInfo['source_of_value'] != 'unknown')))
 				{
-					$sType = $aSettingInfo['type'];
-					switch ($sType)
-					{
-						case 'bool':
-							$sSeenAs = $aSettingInfo['value'] ? 'true' : 'false';
-							break;
-						default:
-							$sSeenAs = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MySettings', $sPropCode),$aSettingInfo['value'], "\t");
-					}
 					fwrite($hFile, "\n");
+
 					if (isset($aSettingInfo['description']))
 					{
 						fwrite($hFile, "\t// $sPropCode: {$aSettingInfo['description']}\n");
 					}
+
 					if (isset($aSettingInfo['default']))
 					{
-						$default = $aSettingInfo['default'];
-						if ($aSettingInfo['type'] == 'bool')
+
+						if (isset($this->m_aCanOverrideSettings[$sPropCode]) && $this->m_aCanOverrideSettings[$sPropCode])
 						{
-							$default = $default ? 'true' : 'false';
+							$aParserValue = $this->oItopConfigParser->GetVarValue('MySettings', $sPropCode);
 						}
-						fwrite($hFile,
-							"\t//\tdefault: ".self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MySettings', $sPropCode), $aSettingInfo['default'], "\t//\t\t", true)."\n");
+						else
+						{
+							$aParserValue = array('found' => false);
+						}
+						$sComment = self::PrettyVarExport($aParserValue,$aSettingInfo['default'], "\t//\t\t", true);
+						fwrite($hFile,"\t//\tdefault: {$sComment}\n");
 					}
+
+					if (isset($this->m_aCanOverrideSettings[$sPropCode]) && $this->m_aCanOverrideSettings[$sPropCode])
+					{
+						$aParserValue = $this->oItopConfigParser->GetVarValue('MySettings', $sPropCode);
+					}
+					else
+					{
+						$aParserValue = array('found' => false);
+					}
+					$sSeenAs = self::PrettyVarExport($aParserValue,$aSettingInfo['value'], "\t");
 					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
 				}
 			}
