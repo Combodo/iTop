@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use AbstractAttachmentsRenderer;
 use AttachmentPlugIn;
+use AttributeDateTime;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Renderer\RenderingOutput;
 use DBObjectSearch;
@@ -185,7 +186,9 @@ JS
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
+			'{{iFileSizeRaw}}',
 			'{{sAttachmentDate}}',
+			'{{iAttachmentDateRaw}}',
 			$bIsDeleteAllowed
 		));
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
@@ -423,13 +426,16 @@ HTML
 					}
 				}
 
+				$iFileSizeRaw = $oDoc->GetSize();
 				$sFileSize = $oDoc->GetFormattedSize();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
+				$iAttachmentDateRaw = '';
 				if (!$bIsTempAttachment)
 				{
 					$sAttachmentDate = $oAttachment->Get('creation_date');
+					$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 				}
 
 				$oOutput->Addhtml(self::GetAttachmentTableRow(
@@ -441,7 +447,9 @@ HTML
 					$sFileName,
 					$sAttachmentMeta,
 					$sFileSize,
+					$iFileSizeRaw,
 					$sAttachmentDate,
+					$iAttachmentDateRaw,
 					$bIsDeleteAllowed
 				));
 			}
@@ -490,7 +498,9 @@ HTML;
 	 * @param string $sFileName
 	 * @param string $sAttachmentMeta
 	 * @param string $sFileSize
+	 * @param integer $iFileSizeRaw
 	 * @param string $sAttachmentDate
+	 * @param integer $iAttachmentDateRaw
 	 * @param boolean $bIsDeleteAllowed
 	 *
 	 * @return string
@@ -498,7 +508,7 @@ HTML;
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$sAttachmentDate, $bIsDeleteAllowed
+		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
@@ -511,8 +521,8 @@ HTML;
 	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
 	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass src="$sAttachmentThumbUrl"></a></td>
 	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size">$sFileSize</td>
-	  <td role="upload-date">$sAttachmentDate</td>
+	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
+	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
 	  $sDeleteCell
 	</tr>
 HTML;

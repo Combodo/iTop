@@ -414,6 +414,23 @@ JS
 
 		$this->oPage->add('</tbody>'.PHP_EOL);
 		$this->oPage->add('</table>'.PHP_EOL);
+
+		$this->oPage->add_ready_script(<<<'JS'
+var $attachmentsTable = $("table.attachmentsList");
+$attachmentsTable.tablesorter(
+	{
+		textExtraction : 
+			function(node, table, cellIndex) {
+				if ($(node).is("[data-order]")) {
+					return $(node).attr("data-order");
+				}
+
+				return $(node).text();
+			}
+		}
+);
+JS
+		);
 	}
 
 	/**
@@ -452,10 +469,11 @@ JS
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
 		$sAttachmentMeta = $this->GetAttachmentHiddenInput($iAttachmentId, $bIsDeletedAttachment);
-		$sFileSize = $oDoc->GetSize();
+		$iFileSize = $oDoc->GetSize();
 		$sFileFormattedSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
-		$sAttachmentDate = '';
+		$sAttachmentDateFormatted = '';
+		$iAttachmentDateRaw = '';
 		if (!$bIsTempAttachment)
 		{
 			$sAttachmentDate = $oAttachment->Get('creation_date');
@@ -463,6 +481,9 @@ JS
 			{
 				$sAttachmentDate = $aAttachmentsDate[$iAttachmentId];
 			}
+			$oAttachmentDate = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $sAttachmentDate);
+			$sAttachmentDateFormatted = AttributeDateTime::GetFormat()->Format($oAttachmentDate);
+			$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 		}
 
 		$sAttachmentUploader = $oAttachment->Get('contact_id_friendlyname');
@@ -489,11 +510,11 @@ JS
 		}
 
 		$this->oPage->add(<<<HTML
-	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$sFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
+	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$iFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
 	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
 	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size">$sFileFormattedSize</td>
-	  <td role="upload-date">$sAttachmentDate</td>
+	  <td role="formatted-size" data-order="$iFileSize">$sFileFormattedSize</td>
+	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDateFormatted</td>
 	  <td role="uploader">$sAttachmentUploader</td>
 	  <td role="type">$sFileType</td>
 	  $sDeleteColumn
