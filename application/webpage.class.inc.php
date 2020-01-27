@@ -296,8 +296,32 @@ class WebPage implements Page
 		foreach ($aConfig as $sName => $aAttribs)
 		{
 			$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
-			$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
-			$sHtml .= "<td $sClass>$sValue</td>";
+
+			// Prepare metadata
+			// - From table config.
+			$sMetadata = '';
+			if(isset($aAttribs['metadata']))
+			{
+				foreach($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue)
+				{
+					$sMetadataPropSanitized = str_replace('_', '-', $sMetadataProp);
+					$sMetadataValueSanitized = utils::HtmlEntities($sMetadataValue);
+					$sMetadata .= 'data-'.$sMetadataPropSanitized.'="'.$sMetadataValueSanitized.'" ';
+				}
+			}
+
+			// Prepare value
+			if(is_array($aRow[$sName]))
+			{
+				$sValueHtml = ($aRow[$sName]['value_html'] === '') ? '&nbsp;' : $aRow[$sName]['value_html'];
+				$sMetadata .= 'data-value-raw="'.utils::HtmlEntities($aRow[$sName]['value_raw']).'" ';
+			}
+			else
+			{
+				$sValueHtml = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
+			}
+
+			$sHtml .= "<td $sClass $sMetadata>$sValueHtml</td>";
 		}
 		$sHtml .= "</tr>";
 

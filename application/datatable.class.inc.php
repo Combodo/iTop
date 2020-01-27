@@ -456,11 +456,15 @@ EOF;
 		$aAttribs = array();
 		if ($sSelectMode == 'multiple')
 		{
-			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+			$aAttribs['form::select'] = array(
+				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>",
+				'description' => Dict::S('UI:SelectAllToggle+'),
+				'metadata' => array(),
+			);
 		}
 		else if ($sSelectMode == 'single')
 		{
-			$aAttribs['form::select'] = array('label' => "", 'description' => '');
+			$aAttribs['form::select'] = array('label' => '', 'description' => '', 'metadata' => array());
 		}
 
 		foreach($this->aClassAliases as $sAlias => $sClassName)
@@ -471,12 +475,33 @@ EOF;
 				{
 					if ($sAttCode == '_key_')
 					{
-						$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
+						$sAttLabel = MetaModel::GetName($sClassName);
+
+						$aAttribs['key_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => '',
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 					else
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => $oAttDef->GetOrderByHint());
+						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
+
+						$aAttribs[$sAttCode.'_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => $oAttDef->GetOrderByHint(),
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_code' => $sAttCode,
+								'attribute_type' => $sAttDefClass,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 				}
 			}
@@ -507,6 +532,7 @@ EOF;
 		}
 
 		$aValues = array();
+		$aAttDefsCache = array();
 		$this->oSet->Seek(0);
 		$iMaxObjects = $iPageSize;
 		while (($aObjects = $this->oSet->FetchAssoc()) && ($iMaxObjects != 0))
@@ -547,11 +573,41 @@ EOF;
 						{
 							if ($sAttCode == '_key_')
 							{
-								$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+								$aRow['key_'.$sAlias] = array(
+									'value_raw' => $aObjects[$sAlias]->GetKey(),
+									'value_html' => $aObjects[$sAlias]->GetHyperLink(),
+								);
 							}
 							else
 							{
-								$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								// Prepare att. def. classes cache to avoid retrieving AttDef for each row
+								if(!isset($aAttDefsCache[$sClassName][$sAttCode]))
+								{
+									$aAttDefClassesCache[$sClassName][$sAttCode] = get_class(MetaModel::GetAttributeDef($sClassName, $sAttCode));
+								}
+
+								// Only retrieve raw (stored) value for simple fields
+								$bExcludeRawValue = false;
+								foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+								{
+									if (is_a($aAttDefClassesCache[$sClassName][$sAttCode], $sAttDefClassToExclude, true))
+									{
+										$bExcludeRawValue = true;
+										break;
+									}
+								}
+
+								if($bExcludeRawValue)
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								}
+								else
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = array(
+										'value_raw' => $aObjects[$sAlias]->Get($sAttCode),
+										'value_html' => $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize),
+									);
+								}
 							}
 						}
 					}
@@ -609,7 +665,7 @@ EOF;
 
 		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 
-		$sHtml = '<table class="listContainer">';
+		$sHtml = '<table class="listContainer object-list">';
 
 		foreach($this->oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
 		{

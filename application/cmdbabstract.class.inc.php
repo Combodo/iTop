@@ -5126,8 +5126,10 @@ EOF
 	 *
 	 * @return array
 	 * @since 2.7.0
+	 *
+	 * @internal Do NOT use, this is experimental and most likely to be moved elsewhere when we find its rightful place.
 	 */
-	protected static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
 		return array(
 			'AttributeBlob',
 			'AttributeCustomFields',
