@@ -318,7 +318,40 @@ class SQLObjectQuery extends SQLQuery
 		return "UPDATE $sFrom SET $sValues WHERE $sWhere";
 	}
 
-	// Interface, build the SQL query
+
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 *
+	 * @param array $aArgs
+	 * @return string
+	 * @throws CoreException
+	 */
+	public function RenderInsert($aArgs = array())
+	{
+		$this->PrepareRendering();
+		$aJoinInfo = reset($this->__aFrom);
+
+		if ($aJoinInfo['jointype'] != 'first' || count($this->__aFrom) > 1)
+		{
+			throw new CoreException('Cannot render insert');
+		}
+
+		$sFrom   = "`{$aJoinInfo['tablename']}`";
+
+		$sColList = '`'.implode('`,`', array_keys($this->m_aValues)).'`';
+
+		$aSetValues = array();
+		foreach ($this->__aSetValues as $sFieldSpec => $value)
+		{
+			$aSetValues[] = CMDBSource::Quote($value);
+		}
+		$sValues = implode(',', $aSetValues);
+
+		return "INSERT INTO $sFrom ($sColList) VALUES  ($sValues)";
+	}
+
 
 	/**
 	 * @param array $aOrderBy
