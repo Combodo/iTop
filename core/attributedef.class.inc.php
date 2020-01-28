@@ -10090,7 +10090,7 @@ class AttributeEnumSet extends AttributeSet
 		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
 	}
 
-	private function GetRawValues($aArgs = array(), $sContains = '')
+	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->Get('possible_values');
 		if (!$oValSetDef)
@@ -10103,7 +10103,7 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetPossibleValues($aArgs = array(), $sContains = '')
 	{
-		$aRawValues = $this->GetRawValues($aArgs, $sContains);
+		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
@@ -10115,7 +10115,7 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueLabel($sValue)
 	{
-		$aValues = $this->GetRawValues();
+		$aValues = $this->GetRawPossibleValues();
 		if (isset($aValues[$sValue]))
 		{
 			$sValue = $aValues[$sValue];
@@ -10170,14 +10170,14 @@ class AttributeEnumSet extends AttributeSet
 		return $sDescription;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($bLocalize)
 		{
-			if ($sValue instanceof ormSet)
+			if ($value instanceof ormSet)
 			{
 				/** @var ormSet $oOrmSet */
-				$oOrmSet = $sValue;
+				$oOrmSet = $value;
 				$aRes = array();
 				foreach ($oOrmSet->GetValues() as $sValue)
 				{
@@ -10189,14 +10189,14 @@ class AttributeEnumSet extends AttributeSet
 			}
 			else
 			{
-				$sLabel = $this->GetValueLabel($sValue);
-				$sDescription = $this->GetValueDescription($sValue);
+				$sLabel = $this->GetValueLabel($value);
+				$sDescription = $this->GetValueDescription($value);
 				$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
 			}
 		}
 		else
 		{
-			$sRes = parent::GetAsHtml($sValue, $oHostObject, $bLocalize);
+			$sRes = parent::GetAsHtml($value, $oHostObject, $bLocalize);
 		}
 
 		return $sRes;
@@ -10204,36 +10204,6 @@ class AttributeEnumSet extends AttributeSet
 
 }
 
-class AttributeContextSet extends AttributeEnumSet
-{
-
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
-	{
-		$oValSetDef = $this->Get('possible_values');
-		if (!$oValSetDef)
-		{
-			return null;
-		}
-
-		return $oValSetDef->GetValues($aArgs, $sContains);
-	}
-
-	public function GetValueLabel($sValue)
-	{
-		$aValues = $this->GetPossibleValues();
-		if (in_array($sValue, $aValues))
-		{
-			return $aValues[$sValue];
-		}
-		return Dict::S('Enum:Undefined');
-	}
-
-	public function GetValueDescription($sValue)
-	{
-		return '';
-	}
-
-}
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
@@ -10393,8 +10363,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			if (is_null($aJsonFromWidget))
 			{
 				$proposedValue = trim($proposedValue);
+				$aProposedValues = $this->FromStringToArray($proposedValue);
 				$aValues = array();
-				foreach(explode(',', $proposedValue) as $sValue)
+				foreach($aProposedValues as $sValue)
 				{
 					$sAttCode = trim($sValue);
 					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -10601,8 +10572,9 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim($proposedValue);
+			$aProposedValues = $this->FromStringToArray($proposedValue);
 			$aValues = array();
-			foreach(explode(',', $proposedValue) as $sValue)
+			foreach($aProposedValues as $sValue)
 			{
 				$sAttCode = trim($sValue);
 				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
