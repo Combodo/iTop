@@ -22,6 +22,7 @@ namespace Combodo\iTop\Portal\Helper;
 use ArrayIterator;
 use IteratorAggregate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use utils;
 
 /**
  * Class SessionMessageHelper
@@ -65,9 +66,10 @@ class SessionMessageHelper implements IteratorAggregate
 	 * @param string $sId
 	 * @param string $sContent
 	 * @param string $sSeverity
+	 * @param array $aMetadata An array of key => scalar value
 	 * @param int $iRank
 	 */
-	public function AddMessage($sId, $sContent, $sSeverity = self::DEFAULT_SEVERITY, $iRank = 1)
+	public function AddMessage($sId, $sContent, $sSeverity = self::DEFAULT_SEVERITY, $aMetadata = array(), $iRank = 1)
 	{
 		$sKey = $this->GetMessagesKey();
 		if(!isset($_SESSION['obj_messages'][$sKey]))
@@ -79,6 +81,7 @@ class SessionMessageHelper implements IteratorAggregate
 			'severity' => $sSeverity,
 			'rank' => $iRank,
 			'message' => $sContent,
+			'metadata' => $aMetadata,
 		);
 	}
 
@@ -158,7 +161,13 @@ class SessionMessageHelper implements IteratorAggregate
 							$sMsgClass .= 'success';
 							break;
 					}
-					$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message']);
+
+					$sMsgMetadata = '';
+					foreach ($aMessageData['metadata'] as $sMetadatumName => $sMetadatumValue)
+					{
+						$sMsgMetadata .= 'data-'.str_replace('_', '-', $sMetadatumName).'="'.utils::HtmlEntities($sMetadatumValue).'" ';
+					}
+					$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message'], 'metadata' => $sMsgMetadata);
 					$aRanks[] = $aMessageData['rank'];
 				}
 				unset($_SESSION['obj_messages'][$sMessageKey]);
