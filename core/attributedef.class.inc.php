@@ -10125,7 +10125,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeEnumSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 
 	public static function ListExpectedParams()
 	{
