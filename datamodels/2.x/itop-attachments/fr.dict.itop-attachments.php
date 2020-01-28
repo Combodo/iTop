@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:TabTitle_Count' => 'Pièces jointes (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Pièces jointes',
@@ -65,4 +64,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Attachment/Attribute:creation_date' => 'Date de création',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Utilisateur',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Contact',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

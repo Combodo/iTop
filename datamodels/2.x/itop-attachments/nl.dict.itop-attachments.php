@@ -40,6 +40,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Een voorbeeld is niet beschikbaar voor dit type bijlage.',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Render:Icons' => 'Display as icons~~',
+	'Attachments:Render:Table' => 'Display as list~~',
 ));
 
 //
@@ -61,4 +63,26 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contents~~',
 	'Class:Attachment/Attribute:contents+' => '~~',
+));
+
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Attachments:File:Thumbnail' => 'Icon~~',
+	'Attachments:File:Name' => 'File name~~',
+	'Attachments:File:Date' => 'Upload date~~',
+	'Attachments:File:Uploader' => 'Uploaded by~~',
+	'Attachments:File:Size' => 'Size~~',
+	'Attachments:File:MimeType' => 'Type~~',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
+	'Class:Attachment/Attribute:user_id' => 'User id~~',
+	'Class:Attachment/Attribute:user_id+' => '~~',
+	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 ));

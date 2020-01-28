@@ -26,7 +26,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'itop-core-update:UI:ConfirmUpdate' => 'Confirmation de la mise à jour',
     'itop-core-update:UI:UpdateCoreFiles' => 'Mise à jour en cours',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'L\'application est actuellement en maintenance en mode lecture seule. Vous pouvez lancer un Setup pour retourner dans un mode normal.',
-    'itop-core-update:UI:UpdateDone' => 'Mise à jour effectuée',
+	'itop-core-update:UI:UpdateDone' => 'Mise à jour effectuée',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Mise à jour',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Mise à jour',
@@ -43,7 +43,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'iTopUpdate:UI:Cancel' => 'Annuler',
     'iTopUpdate:UI:Continue' => 'Continuer',
 	'iTopUpdate:UI:RunSetup' => 'Lancer le Setup',
-	'iTopUpdate:UI:WithDBBackup' => 'Sauvegarde de la base de données',
+    'iTopUpdate:UI:WithDBBackup' => 'Sauvegarde de la base de données',
     'iTopUpdate:UI:WithFilesBackup' => 'Archive des fichiers de l\'application',
     'iTopUpdate:UI:WithoutBackup' => 'Pas de sauvegarde',
     'iTopUpdate:UI:Backup' => 'Sauvegarde effectuée avant la mise à jour',
