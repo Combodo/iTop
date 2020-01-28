@@ -2,9 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2019 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * This file is part of iTop.
  *
@@ -24,16 +24,16 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Menu:ConfigEditor' => 'Configuratie',
-	'config-edit-title' => 'Configuratie-editor',
+	'config-edit-title' => 'Aanpassen configuratie',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
 	'config-apply' => 'Opslaan',
 	'config-apply-title' => 'Opslaan (Ctrl+S)',
-	'config-cancel' => 'Herbeginnen',
-	'config-saved' => 'Wijzigingen opgeslagen',
-	'config-confirm-cancel' => 'Je wijzigingen zullen verloren gaan',
+	'config-cancel' => 'Herbegin',
+	'config-saved' => 'Wijzigingen zijn opgeslagen.',
+	'config-confirm-cancel' => 'Je wijzigingen zullen verloren gaan.',
 	'config-no-change' => 'Er zijn geen wijzigingen vastgesteld.',
 	'config-reverted' => 'De wijzigingen zijn ongedaan gemaakt.',
 	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
 	'config-current-line' => 'Huidige regel: %1$s',
-	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
+	'config-saved-warning-db-password' => 'Wijzigingen zijn opgeslagen, maar de backup zal niet werken doordat het databasewachtwoord karakters bevat die niet ondersteund zijn.',
 ));
