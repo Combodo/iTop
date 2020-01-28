@@ -3563,9 +3563,9 @@ table.listResults .originColor{
 	@extend %attribute-set-item-edition;
 }
 //////////////////////
-// TagSet attribute //
+// Set attribute //
 // Always styled like the selectize items, see below.
-.attribute-tag-set.attribute-set{
+.attribute-set{
 	.attribute-set-item{
 		@extend %attribute-set-item-edition;
 	}

@@ -10024,13 +10024,55 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		if ($value instanceof ormSet)
 		{
-			$value = $value->GetValues();
+			$aValues = $value->GetValues();
+			return $this->GenerateViewHtmlForValues($aValues);
 		}
 		if (is_array($value))
 		{
 			return implode(', ', $value);
 		}
 		return $value;
+	}
+
+	/**
+	 * HTML representation of a list of values (read-only)
+	 * accept a list of strings
+	 *
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
+	{
+		if (empty($aValues)) {return '';}
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
+		foreach($aValues as $sValue)
+		{
+			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+			$sAttCode = $this->GetCode();
+			$sLabel = utils::HtmlEntities($this->GetValueLabel($sValue));
+			$sDescription = utils::HtmlEntities($this->GetValueDescription($sValue));
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+			$sFilter = rawurlencode($oFilter->serialize());
+			$sLink = '';
+			if ($bWithLink)
+			{
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sLink = ' href="'.$sUrl.'"';
+			}
+			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.
+				'" data-description="'.$sDescription.'">'.$sLabel.'</a>';
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
 	}
 
 	/**
@@ -10176,16 +10218,7 @@ class AttributeEnumSet extends AttributeSet
 		{
 			if ($value instanceof ormSet)
 			{
-				/** @var ormSet $oOrmSet */
-				$oOrmSet = $value;
-				$aRes = array();
-				foreach ($oOrmSet->GetValues() as $sValue)
-				{
-					$sLabel = $this->GetValueLabel($sValue);
-					$sDescription = $this->GetValueDescription($sValue);
-					$aRes[] = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
-				}
-				$sRes = implode(', ', $aRes);
+				$sRes = $this->GenerateViewHtmlForValues($value->GetValues());
 			}
 			else
 			{
