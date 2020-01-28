@@ -117,7 +117,6 @@ final class ItopCounter
 			}
 
 			$hResult = mysqli_query($hDBLink, $sSql);
-			mysqli_free_result($hResult);
 
 		}
 		catch(Exception $e)
