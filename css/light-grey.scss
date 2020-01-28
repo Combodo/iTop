@@ -3512,10 +3512,6 @@ table.listResults .originColor{
 .attribute {
 	&.attribute-set {
 		.attribute-set-item{
-			&::after{
-				content: ",";
-				margin-right: 0.5em;
-			}
 			&:last-of-type::after{
 				content: "";
 				margin-right: 0;
