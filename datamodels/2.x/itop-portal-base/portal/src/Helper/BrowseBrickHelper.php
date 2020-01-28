@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\Helper;
 
 
 use AttributeImage;
+use AttributeSet;
 use AttributeTagSet;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
 use DBSearch;
@@ -397,6 +398,11 @@ class BrowseBrickHelper
 							$aCodes = $oSetValues->GetTags();
 							/** @var \AttributeTagSet $oAttDef */
 							$sHtmlForFieldValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
+							break;
+
+						case $oAttDef instanceof AttributeSet:
+							$oAttDef->SetDisplayLink(false);
+							$sHtmlForFieldValue = $value->Get($aField['code']);
 							break;
 
 						case $oAttDef instanceof AttributeImage:

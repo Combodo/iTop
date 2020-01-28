@@ -9683,11 +9683,21 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+		$this->bDisplayLink = true;
+	}
+
+	/**
+	 * @param bool $bDisplayLink
+	 */
+	public function setDisplayLink($bDisplayLink)
+	{
+		$this->bDisplayLink = $bDisplayLink;
 	}
 
 	public static function ListExpectedParams()
@@ -10062,7 +10072,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 			$sFilter = rawurlencode($oFilter->serialize());
 			$sLink = '';
-			if ($bWithLink)
+			if ($bWithLink && $this->bDisplayLink)
 			{
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 				$sLink = ' href="'.$sUrl.'"';
@@ -11198,7 +11208,7 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
-				if ($bWithLink)
+				if ($bWithLink && $this->bDisplayLink)
 				{
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 					$sLink = ' href="'.$sUrl.'"';
