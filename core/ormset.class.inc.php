@@ -111,7 +111,7 @@ class ormSet
 
 	/**
 	 *
-	 * @param array $aItems
+	 * @param string[] $aItems
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue when a code is invalid
@@ -126,7 +126,7 @@ class ormSet
 		$aValues = array();
 		$iCount = 0;
 		$bError = false;
-		foreach($aItems as $oItem)
+		foreach($aItems as $sItem)
 		{
 			$iCount++;
 			if (($this->iLimit != 0) && ($iCount > $this->iLimit))
@@ -134,7 +134,7 @@ class ormSet
 				$bError = true;
 				continue;
 			}
-			$aValues[] = $oItem;
+			$aValues[] = $sItem;
 		}
 
 		$this->aPreserved = &$aValues;

@@ -1537,12 +1537,11 @@ EOF
 					$aValues = array();
 					foreach($oValueNodes as $oValue)
 					{
-						//	new style... $aValues[] = self::QuoteForPHP($oValue->textContent);
 						$aValues[] = $oValue->textContent;
 					}
-					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
-					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
+					$aParameters['allowed_values'] = 'null';
+					$aParameters['possible_values'] = "new ValueSetEnumPadded($sValues)";
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;

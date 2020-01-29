@@ -350,10 +350,10 @@ class ValueSetEnum extends ValueSetDefinition
 		$this->m_values = $Values;
 	}
 
-	// Helper to export the datat model
+	// Helper to export the data model
 	public function GetValueList()
 	{
-		$this->LoadValues($aArgs = array());
+		$this->LoadValues(null);
 		return $this->m_aValues;
 	}
 
@@ -379,6 +379,29 @@ class ValueSetEnum extends ValueSetDefinition
 		}
 		$this->m_aValues = $aValues;
 		return true;
+	}
+}
+
+class ValueSetEnumPadded extends ValueSetEnum
+{
+	public function __construct($Values)
+	{
+		parent::__construct($Values);
+		if (is_string($Values))
+		{
+			$this->LoadValues(null);
+		}
+		else
+		{
+			$this->m_aValues = $Values;
+		}
+		$aPaddedValues = array();
+		foreach ($this->m_aValues as $sKey => $sVal)
+		{
+			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
+			$aPaddedValues[$sKey] = $sKey;
+		}
+		$this->m_values = $aPaddedValues;
 	}
 }
 

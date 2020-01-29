@@ -9706,21 +9706,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * Allowed values are mandatory for this attribute to be modified
-	 *
-	 * @param array $aArgs
-	 * @param string $sContains
-	 *
-	 * @return array|null
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
-	{
-		return parent::GetAllowedValues($aArgs, $sContains);
-	}
-
-	/**
 	 * Allowed different values for the set values are mandatory for this attribute to be modified
 	 *
 	 * @param array $aArgs
@@ -10142,8 +10127,27 @@ class AttributeEnumSet extends AttributeSet
 		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
 	}
 
+	public function GetMaxSize()
+	{
+		$aRawValues = $this->GetRawPossibleValues();
+		$iMaxItems = $this->GetMaxItems();
+		$aLengths = array();
+		foreach (array_keys($aRawValues) as $sKey)
+		{
+			$aLengths[] = strlen($sKey);
+		}
+		rsort($aLengths, SORT_NUMERIC);
+		$iMaxSize = 2;
+		for ($i = 0; $i < min($iMaxItems, count($aLengths)); $i++)
+		{
+			$iMaxSize += $aLengths[$i] + 1;
+		}
+		return max(255, $iMaxSize);
+	}
+
 	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
 	{
+		/** @var ValueSetEnumPadded $oValSetDef */
 		$oValSetDef = $this->Get('possible_values');
 		if (!$oValSetDef)
 		{
@@ -10184,9 +10188,14 @@ class AttributeEnumSet extends AttributeSet
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
 			if (is_null($sLabel))
 			{
-				$sDefault = str_replace('_', ' ', $sValue);
 				// Browse the hierarchy again, accepting default (english) translations
-				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, false);
+				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, false);
+				if (is_null($sLabel))
+				{
+					$sDefault = trim(str_replace('_', ' ', $sValue));
+					// Browse the hierarchy again, accepting default (english) translations
+					$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sDefault, $sDefault, false);
+				}
 			}
 		}
 
