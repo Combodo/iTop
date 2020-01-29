@@ -83,8 +83,9 @@ abstract class DBObject implements iDisplay
 	/** @var bool true IF the object is mapped to a DB record */
 	protected $m_bIsInDB = false;
 	protected $m_iKey = null;
-	/** @var array key: attcode, value: corresponding current value (in memory, before persisting object) */
+	/** @var array attcode => value : corresponding current value (the new value passed to {@link Set}). Reset during {@link DBUpdate} */
 	private $m_aCurrValues = array();
+	/** @var array attcode => value : previous values before the {@link Set} call. Array is reset at the end of {@link DBUpdate} */
 	protected $m_aOrigValues = array();
 
 	protected $m_aExtendedData = null;
@@ -97,7 +98,8 @@ abstract class DBObject implements iDisplay
 	private $m_bDirty = false;
 
 	/**
-	 * @var boolean|null true if the object has been verified and is consistent with integrity rules. If null, then the check has to be performed again to know the status
+	 * @var boolean|null true if the object has been verified and is consistent with integrity rules.
+	 *           If null, then the check has to be performed again to know the status
 	 * @see CheckToWrite()
 	 */
 	private $m_bCheckStatus = null;
@@ -134,10 +136,11 @@ abstract class DBObject implements iDisplay
 	 */
 	protected $m_aModifiedAtt = array();
 	/**
-	 * @var array attname => currentvalue Persists changes for {@link DBUpdate}
+	 * @var array attname => value : value before the last {@link Set} call. Set at the beginning of {@link DBUpdate}.
+	 * @see ListPreviousValuesForUpdatedAttributes getter for this attribute
 	 * @since 2.7.0 N°2293
 	 */
-	protected $m_aChanges;
+	protected $m_aPreviousValuesForUpdatedAttributes;
 	/**
 	 * @var array Set of Synch data related to this object
 	 * <ul>
@@ -852,17 +855,13 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the value as it was before change with Set
-     * 
-     * The original value vary according to the persisted state 
-     *   - not persisted: NULL
-     *   - persisted: the "in DB" value
-     * 
      * @param string $sAttCode
      *
-     * @return mixed|null the original value
+     * @return mixed|null the value as it was before changed with {@link Set}.
+     *        Returns null if the attribute wasn't changed.
      *
-     * @throws CoreException
+     * @see m_aOrigValues
+     * @throws CoreException if the attribute is unknown for the current object
      */
 	public function GetOriginal($sAttCode)
 	{
@@ -2376,12 +2375,11 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * List the attributes that have been changed since the object has been loaded from the DB
-     *
      * @api
      * @api-advanced
      *
-     * @return array attname => currentvalue
+     * @return array attname => currentvalue List the attributes that have been changed using {@link Set}. Reset during {@link DBUpdate}
+     * @uses m_aCurrValues
      * @throws Exception
      */
 	public function ListChanges()
@@ -2390,27 +2388,28 @@ abstract class DBObject implements iDisplay
 		{
 			return $this->ListChangedValues($this->m_aCurrValues);
 		}
-		else
-		{
-			return $this->m_aCurrValues;
-		}
+
+		return $this->m_aCurrValues;
 	}
 
 	/**
-	 * List the changed attributes that were persisted by an update.
-	 * 
-	 * @see \DBObject::ListChanges() use DBObject::ListChanges() if your code is BEFORE the update 
-	 * 
-	 * @return array
+	 * @api
+	 * @api-advanced
+	 *
+	 * @return array attname => value : value that was present before the last {@link Set} call.
+	 *       This array is set at the beginning of {@link DBpdate} using {@link InitPreviousValuesForUpdatedAttributes}
+	 * @uses m_aPreviousValuesForUpdatedAttributes
+	 * @see ListChanges() use this other method if your code is BEFORE the update
+	 * @since 2.7.0 N°2293
 	 */
-	public function ListChangesUpdated()
+	public function ListPreviousValuesForUpdatedAttributes()
 	{
-		if (empty($this->m_aChanges))
+		if (empty($this->m_aPreviousValuesForUpdatedAttributes))
 		{
 			return array();
 		}
 
-		return $this->m_aChanges;
+		return $this->m_aPreviousValuesForUpdatedAttributes;
 	}
 
 	
@@ -3025,13 +3024,14 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Update an object in DB
 	 *
-     * @api
-     * @see DBWrite
-     * 
+	 * @api
+	 * @see DBWrite
+	 *
 	 * @return int object key
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \CoreCannotSaveObjectException if CheckToWrite() returns issues
+	 * @throws \Exception
 	 */
 	public function DBUpdate()
 	{
@@ -3048,7 +3048,8 @@ abstract class DBObject implements iDisplay
 		}
 		$aUpdateReentrance[$sKey] = true;
 
-		$this->m_aChanges = array(); // reset attribute to avoid stack collisions
+		$this->InitPreviousValuesForUpdatedAttributes();
+
 		try
 		{
 			$this->DoComputeValues();
@@ -3201,7 +3202,9 @@ abstract class DBObject implements iDisplay
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
 
-					$this->m_aChanges = $this->ListChanges(); // N°2293 save changes for use in user callbacks
+					// following lines are resetting changes (so after this {@link ListChanges} won't return changes anymore)
+					// new values are already in the object (call {@link Get} to get them)
+					// call {@link ListPreviousValuesForUpdatedAttributes} to get changed fields and previous values
 					$this->m_bDirty = false;
 					$this->m_aTouchedAtt = array();
 					$this->m_aModifiedAtt = array();
@@ -3303,6 +3306,30 @@ abstract class DBObject implements iDisplay
 		}
 
 		return $this->m_iKey;
+	}
+
+	/**
+	 * @internal
+	 * Save updated fields previous values for {@link DBUpdate} callbacks
+	 * @see  ListPreviousValuesForUpdatedAttributes to get the data in the callbacks
+	 * @uses ListChanges
+	 * @uses m_aOrigValues
+	 * @uses m_aPreviousValuesForUpdatedAttributes
+	 * @since 2.7.0 N°2293
+	 * @throws \Exception
+	 */
+	private function InitPreviousValuesForUpdatedAttributes()
+	{
+		$aChanges= $this->ListChanges();
+		if (empty($aChanges))
+		{
+			$this->m_aPreviousValuesForUpdatedAttributes = array();
+			return;
+		}
+
+		$aPreviousValuesForUpdatedAttributes = array_intersect_key($this->m_aOrigValues, $aChanges);
+
+		$this->m_aPreviousValuesForUpdatedAttributes = $aPreviousValuesForUpdatedAttributes;
 	}
 
     /**
