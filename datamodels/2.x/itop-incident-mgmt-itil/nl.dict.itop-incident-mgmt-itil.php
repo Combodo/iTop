@@ -5,7 +5,7 @@
  * @copyright   Copyright (C) 2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @author      Thomas Casteleyn <info@super-visions.com>
- * @author 		jbostoen (2018)
+ * @author 		Jeffrey Bostoen (2018, 2019)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:IncidentManagement' => 'Incident Management',
@@ -169,16 +169,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:pending_reason+' => 'Reden waarvoor het in afwachting staat',
 	'Class:Incident/Attribute:parent_incident_id' => 'Hoofdincident',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
-	'Class:Incident/Attribute:parent_incident_ref' => 'Ref. Hoofdincident',
+	'Class:Incident/Attribute:parent_incident_ref' => 'Ref. hoofdincident',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Hoofdchange',
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref. hoofdchange',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
-	'Class:Incident/Attribute:parent_problem_id+' => '~~',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
-	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
+	'Class:Incident/Attribute:parent_problem_id' => 'Hoofdprobleem',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Ref. hoofdprobleem',
+	'Class:Incident/Attribute:parent_problem_ref+' => '',
 	'Class:Incident/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Subincidenten',
@@ -195,9 +195,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Ontevreden',
 	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Erg ontevreden',
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Erg ontevreden',
-	'Class:Incident/Attribute:user_comment' => 'Gebruikersreactie',
+	'Class:Incident/Attribute:user_comment' => 'Reactie gebruiker',
 	'Class:Incident/Attribute:user_comment+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Ref. Hoofdincident',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Ref. hoofdincident',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => 'Wijs toe',
 	'Class:Incident/Stimulus:ev_assign+' => '',
@@ -207,19 +207,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Stimulus:ev_pending+' => '',
 	'Class:Incident/Stimulus:ev_timeout' => 'Time-out',
 	'Class:Incident/Stimulus:ev_timeout+' => '',
-	'Class:Incident/Stimulus:ev_autoresolve' => 'Automatisch oplossen',
+	'Class:Incident/Stimulus:ev_autoresolve' => 'Los automatisch op',
 	'Class:Incident/Stimulus:ev_autoresolve+' => '',
-	'Class:Incident/Stimulus:ev_autoclose' => 'Automatisch sluiten',
+	'Class:Incident/Stimulus:ev_autoclose' => 'Sluit automatisch',
 	'Class:Incident/Stimulus:ev_autoclose+' => '',
-	'Class:Incident/Stimulus:ev_resolve' => 'Oplossen',
+	'Class:Incident/Stimulus:ev_resolve' => 'Los op',
 	'Class:Incident/Stimulus:ev_resolve+' => '',
 	'Class:Incident/Stimulus:ev_close' => 'Sluit dit incident',
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => 'Heropen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
-	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet toewijzen als hoofdincident',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet aan zichzelf toewijzen als hoofdincident',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
 ));

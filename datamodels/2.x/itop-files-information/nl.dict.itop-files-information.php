@@ -19,13 +19,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ *
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+	'FilesInformation:Error:MissingFile' => 'Ontbrekend bestand: %1$s',
+	'FilesInformation:Error:CorruptedFile' => 'Corrupt bestand: %1$s',
+	'FilesInformation:Error:CantWriteToFile' => 'Kan niet schrijven naar bestand %1$s',
 ));
 
 

@@ -66,3 +66,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:File:Size' => 'Size',
 	'Attachments:File:MimeType' => 'Type',
 ));
+//
+// Class: Attachment
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Attachment/Attribute:creation_date' => 'Creation date',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'User id',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Contact id',
+	'Class:Attachment/Attribute:contact_id+' => '',
+));

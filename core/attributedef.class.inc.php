@@ -9683,11 +9683,21 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+		$this->bDisplayLink = true;
+	}
+
+	/**
+	 * @param bool $bDisplayLink
+	 */
+	public function setDisplayLink($bDisplayLink)
+	{
+		$this->bDisplayLink = $bDisplayLink;
 	}
 
 	public static function ListExpectedParams()
@@ -10024,13 +10034,55 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		if ($value instanceof ormSet)
 		{
-			$value = $value->GetValues();
+			$aValues = $value->GetValues();
+			return $this->GenerateViewHtmlForValues($aValues);
 		}
 		if (is_array($value))
 		{
 			return implode(', ', $value);
 		}
 		return $value;
+	}
+
+	/**
+	 * HTML representation of a list of values (read-only)
+	 * accept a list of strings
+	 *
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
+	{
+		if (empty($aValues)) {return '';}
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
+		foreach($aValues as $sValue)
+		{
+			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+			$sAttCode = $this->GetCode();
+			$sLabel = utils::HtmlEntities($this->GetValueLabel($sValue));
+			$sDescription = utils::HtmlEntities($this->GetValueDescription($sValue));
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+			$sFilter = rawurlencode($oFilter->serialize());
+			$sLink = '';
+			if ($bWithLink && $this->bDisplayLink)
+			{
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sLink = ' href="'.$sUrl.'"';
+			}
+			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.
+				'" data-description="'.$sDescription.'">'.$sLabel.'</a>';
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
 	}
 
 	/**
@@ -10083,14 +10135,14 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeEnumSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
 	}
 
-	private function GetRawValues($aArgs = array(), $sContains = '')
+	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->Get('possible_values');
 		if (!$oValSetDef)
@@ -10103,7 +10155,7 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetPossibleValues($aArgs = array(), $sContains = '')
 	{
-		$aRawValues = $this->GetRawValues($aArgs, $sContains);
+		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
@@ -10115,7 +10167,7 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueLabel($sValue)
 	{
-		$aValues = $this->GetRawValues();
+		$aValues = $this->GetRawPossibleValues();
 		if (isset($aValues[$sValue]))
 		{
 			$sValue = $aValues[$sValue];
@@ -10170,33 +10222,24 @@ class AttributeEnumSet extends AttributeSet
 		return $sDescription;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($bLocalize)
 		{
-			if ($sValue instanceof ormSet)
+			if ($value instanceof ormSet)
 			{
-				/** @var ormSet $oOrmSet */
-				$oOrmSet = $sValue;
-				$aRes = array();
-				foreach ($oOrmSet->GetValues() as $sValue)
-				{
-					$sLabel = $this->GetValueLabel($sValue);
-					$sDescription = $this->GetValueDescription($sValue);
-					$aRes[] = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
-				}
-				$sRes = implode(', ', $aRes);
+				$sRes = $this->GenerateViewHtmlForValues($value->GetValues());
 			}
 			else
 			{
-				$sLabel = $this->GetValueLabel($sValue);
-				$sDescription = $this->GetValueDescription($sValue);
+				$sLabel = $this->GetValueLabel($value);
+				$sDescription = $this->GetValueDescription($value);
 				$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
 			}
 		}
 		else
 		{
-			$sRes = parent::GetAsHtml($sValue, $oHostObject, $bLocalize);
+			$sRes = parent::GetAsHtml($value, $oHostObject, $bLocalize);
 		}
 
 		return $sRes;
@@ -10204,36 +10247,6 @@ class AttributeEnumSet extends AttributeSet
 
 }
 
-class AttributeContextSet extends AttributeEnumSet
-{
-
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
-	{
-		$oValSetDef = $this->Get('possible_values');
-		if (!$oValSetDef)
-		{
-			return null;
-		}
-
-		return $oValSetDef->GetValues($aArgs, $sContains);
-	}
-
-	public function GetValueLabel($sValue)
-	{
-		$aValues = $this->GetPossibleValues();
-		if (in_array($sValue, $aValues))
-		{
-			return $aValues[$sValue];
-		}
-		return Dict::S('Enum:Undefined');
-	}
-
-	public function GetValueDescription($sValue)
-	{
-		return '';
-	}
-
-}
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
@@ -10393,8 +10406,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			if (is_null($aJsonFromWidget))
 			{
 				$proposedValue = trim($proposedValue);
+				$aProposedValues = $this->FromStringToArray($proposedValue);
 				$aValues = array();
-				foreach(explode(',', $proposedValue) as $sValue)
+				foreach($aProposedValues as $sValue)
 				{
 					$sAttCode = trim($sValue);
 					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -10601,8 +10615,9 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim($proposedValue);
+			$aProposedValues = $this->FromStringToArray($proposedValue);
 			$aValues = array();
-			foreach(explode(',', $proposedValue) as $sValue)
+			foreach($aProposedValues as $sValue)
 			{
 				$sAttCode = trim($sValue);
 				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -11193,7 +11208,7 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
-				if ($bWithLink)
+				if ($bWithLink && $this->bDisplayLink)
 				{
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 					$sLink = ' href="'.$sUrl.'"';

@@ -1,3 +1,21 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.7.0-beta2";
 $approot-relative: "../../../../../"; // relative to env-***/branding/themes/***/main.css
@@ -21,8 +39,26 @@ $combodo-orange-darker:		darken($combodo-orange, 18%) !default;
 $combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
 $combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
 
+// Brand colors
+// - Bases
+$brand-primary: 	$combodo-orange !default;
+$brand-secondary: 	$combodo-dark-gray !default;
+// - Shades
+$brand-primary-lightest:	lighten($brand-primary, 15%) !default;
+$brand-primary-lighter:		lighten($brand-primary, 10%) !default;
+$brand-primary-light:		lighten($brand-primary, 6%) !default;
+$brand-primary-dark:		darken($brand-primary, 6%) !default;
+$brand-primary-darker:		darken($brand-primary, 10%) !default;
+$brand-primary-darkest:		darken($brand-primary, 15%) !default;
+$brand-secondary-lightest:	lighten($brand-secondary, 15%) !default;
+$brand-secondary-lighter:	lighten($brand-secondary, 10%) !default;
+$brand-secondary-light:		lighten($brand-secondary, 6%) !default;
+$brand-secondary-dark:		darken($brand-secondary, 6%) !default;
+$brand-secondary-darker:	darken($brand-secondary, 10%) !default;
+$brand-secondary-darkest:	darken($brand-secondary, 15%) !default;
+
 // Vars
-$highlight-color: $combodo-orange !default;
+$highlight-color: $brand-primary !default;
 $grey-color: #555555 !default;
 $complement-color: #1c94c4 !default;
 $complement-light: #d6e8ef !default;
@@ -36,8 +72,11 @@ $hyperlink-text-decoration: none !default;
 
 ////////////
 // Search //
+$search-form-container-color: $white !default;
+$search-form-container-bg-color: $complement-color !default;
+//
 $search-criteria-box-color: #2D2D2D !default;
-$search-criteria-box-picto-color: #E87C1E !default;
+$search-criteria-box-picto-color: $brand-primary !default;
 $search-criteria-box-bg-color: #EEEEEE !default;
 $search-criteria-box-hover-color: $white !default;
 $search-criteria-box-border-color: #CCCCCC !default;
@@ -48,7 +87,7 @@ $search-add-criteria-box-color: $search-criteria-box-color !default;
 $search-add-criteria-box-bg-color: $white !default;
 $search-add-criteria-box-hover-color: $gray-extra-light !default;
 //
-$search-button-box-color: $combodo-orange !default;
+$search-button-box-color: $brand-primary !default;
 $search-button-box-bg-color: $white !default;
 $search-button-box-bg-hover-color: $gray-extra-light !default;
 
@@ -65,13 +104,13 @@ $breadcrumb-text-color: #fff !default;
 $breadcrumb-highlight-color: $highlight-color !default;
 $breadcrumb-text-highlight-color: #fff !default;
 
-// JQuery UI widgets vars
+// jQuery UI widgets vars
 $primary-text-color: #333333 !default;
 $secondary-text-color: $grey-color !default;
 $error-text-color: $white !default;
 $highlight-text-color: #363636 !default;
 $hover-background-color: #fde17c !default;
-$border-highlight-color: #f26522 !default;
+$border-highlight-color: $brand-primary-dark !default;
 $highlight-item-color: $white !default;
 $content-color: #eeeeee !default; 
 $default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;

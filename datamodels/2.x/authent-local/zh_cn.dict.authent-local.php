@@ -30,11 +30,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: UserLocal
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserLocal' => 'iTop 用户',
 	'Class:UserLocal+' => '用户由 iTop 验证身份',
@@ -53,4 +51,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserLocal/Attribute:password_renewed_date+' => '上次修改密码的时间',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => '密码必须至少8 个字符,包含大小写、数字和特殊字符.',
+
+	'UserLocal:password:expiration' => 'The fields below require an extension~~'
 ));

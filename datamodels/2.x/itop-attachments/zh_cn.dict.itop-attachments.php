@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
@@ -65,4 +64,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:File:Uploader' => '上传者',
 	'Attachments:File:Size' => '大小',
 	'Attachments:File:MimeType' => '类型',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
+	'Class:Attachment/Attribute:user_id' => 'User id~~',
+	'Class:Attachment/Attribute:user_id+' => '~~',
+	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 ));

@@ -1172,7 +1172,7 @@ class ObjectFormManager extends FormManager
 				{
 					/** @var \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper */
 					$oSessionMessageHelper = $this->oContainer->get('session_message_helper');
-					$oSessionMessageHelper->AddMessage(uniqid(), Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName()), SessionMessageHelper::ENUM_SEVERITY_OK);
+					$oSessionMessageHelper->AddMessage(uniqid(), Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName()), SessionMessageHelper::ENUM_SEVERITY_OK, array('object_class' => $sObjectClass, 'object_id' => $this->oObject->GetKey()));
 				}
 			}
 			catch (Exception $e)
