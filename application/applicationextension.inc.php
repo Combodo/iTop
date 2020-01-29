@@ -429,7 +429,7 @@ interface iApplicationObjectExtension
 	 *
 	 * @return void
 	 *
-	 * @since 2.7.0 N°2293 can access object changes by calling {@link $oObject::ListChangesUpdated()}
+	 * @since 2.7.0 N°2293 can access object changes by calling {@link DBObject::ListPreviousValuesForUpdatedAttributes} on $oObject
 	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 
