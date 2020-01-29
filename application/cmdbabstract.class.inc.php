@@ -2861,7 +2861,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
+	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
@@ -2922,7 +2922,7 @@ HTML
 			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
 		}
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		if ($sButtonsPosition == 'bottom')
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
 		{
 			// bottom: Displays the ticket details BEFORE the actions
 			$oPage->add('<div class="ui-widget-content">');
@@ -3033,7 +3033,7 @@ HTML
 </div><!-- End of object-details -->
 HTML
 		);
-		if ($sButtonsPosition != 'top')
+		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
 			$oPage->add('<div class="ui-widget-content">');
