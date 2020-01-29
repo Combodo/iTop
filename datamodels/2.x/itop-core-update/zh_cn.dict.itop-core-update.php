@@ -20,22 +20,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:UI:PageTitle' => '应用升级',
     'itop-core-update:UI:SelectUpdateFile' => '应用升级',
     'itop-core-update:UI:ConfirmUpdate' => ' 升级',
     'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade~~',
-    'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
+	'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
+
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Application Upgrade~~',
+	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirm Application Upgrade~~',
+	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Application Upgrading~~',
+	'itop-core-update/Operation:UpdateDone/Title' => 'Application Upgrade Done~~',
 
 	'iTopUpdate:UI:SelectUpdateFile' => '请选择要上传的升级文件',
 	'iTopUpdate:UI:CheckUpdate' => '校验升级文件',
 	'iTopUpdate:UI:ConfirmInstallFile' => '即将安装 %1$s',
 	'iTopUpdate:UI:DoUpdate' => '升级',
 	'iTopUpdate:UI:CurrentVersion' => '当前已安装的版本',
+	'iTopUpdate:UI:NewVersion' => 'Newly installed version~~',
     'iTopUpdate:UI:Back' => '返回',
     'iTopUpdate:UI:Cancel' => '取消',
     'iTopUpdate:UI:Continue' => '继续',
+	'iTopUpdate:UI:RunSetup' => 'Run Setup~~',
     'iTopUpdate:UI:WithDBBackup' => '数据库备份',
     'iTopUpdate:UI:WithFilesBackup' => '应用文件备份',
     'iTopUpdate:UI:WithoutBackup' => 'No backup is planned~~',
@@ -43,6 +50,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:UI:DoFilesArchive' => '打包应用文件',
 	'iTopUpdate:UI:UploadArchive' => 'Select a package to upload~~',
 	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server~~',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be read-only.~~',
 
     'iTopUpdate:UI:Status' => '状态',
     'iTopUpdate:UI:Action' => '升级',
@@ -73,7 +81,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => '数据库备份',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => '打包应用文件',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => '复制新文件',
-    'iTopUpdate:UI:SetupMessage:Compile' => '升级应用程序和数据库',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Check application upgrade~~',
+	'iTopUpdate:UI:SetupMessage:Compile' => '升级应用程序和数据库',
+	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade database~~',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => '正在退出维护模式',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => '升级完成',
 
@@ -93,7 +103,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'iTopUpdate:UI:RestoreArchive' => '您可以从归档文件 \'%1$s\' 还原应用程序',
 	'iTopUpdate:UI:RestoreBackup' => '您可以从 \'%1$s\' 还原数据库',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
 	'iTopUpdate:UI:UpdateDone' => '升级成功',
 	'Menu:iTopUpdate' => '应用升级',
 	'Menu:iTopUpdate+' => '应用升级',

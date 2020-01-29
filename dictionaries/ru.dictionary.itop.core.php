@@ -190,6 +190,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => 'Тег',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,8 +21,8 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @author jbostoen (2018)	
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -38,8 +38,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachment:Max_Mo' => '(Maximale bestandsgrootte: %1$s MB)',
 	'Attachment:Max_Ko' => '(Maximale bestandsgrootte: %1$s kB)',
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
-	'Attachments:PreviewNotAvailable' => 'Een voorbeeld is niet beschikbaar voor dit type bijlage.',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:PreviewNotAvailable' => 'Er is geen voorbeeld beschikbaar voor dit type bijlage.',
+	'Attachments:Error:FileTooLarge' => 'Het bestand is te groot om geüpload te worden: %1$s',
+	'Attachments:Render:Icons' => 'Toon als pictogram',
+	'Attachments:Render:Table' => 'Toon als lijst',
 ));
 
 //
@@ -49,16 +51,38 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment' => 'Bijlage',
 	'Class:Attachment+' => '',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
-	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
-	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => 'Item class~~',
-	'Class:Attachment/Attribute:item_class+' => '~~',
-	'Class:Attachment/Attribute:item_id' => 'Item~~',
-	'Class:Attachment/Attribute:item_id+' => '~~',
-	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
-	'Class:Attachment/Attribute:item_org_id+' => '~~',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
-	'Class:Attachment/Attribute:contents+' => '~~',
+	'Class:Attachment/Attribute:expire' => 'Vervalt',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Tijdelijke ID',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Klasse item',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Organisatie item',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Inhoud',
+	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Attachments:File:Thumbnail' => 'Pictogram',
+	'Attachments:File:Name' => 'Bestandsnaam',
+	'Attachments:File:Date' => 'Geüpload op',
+	'Attachments:File:Uploader' => 'Geüpload door',
+	'Attachments:File:Size' => 'Grootte',
+	'Attachments:File:MimeType' => 'Type',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:Attachment/Attribute:creation_date' => 'Datum creatie',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'ID Gebruiker',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

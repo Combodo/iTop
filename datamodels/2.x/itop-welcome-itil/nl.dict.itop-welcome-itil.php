@@ -19,6 +19,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ *
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:DataSources' => 'Synchronisatie-databronnen',
@@ -29,17 +31,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
 	'Menu:AdminTools' => 'Admintools',
 	'Menu:AdminTools+' => 'Beheertools',
-	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met en administratorprofiel.',
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
 	'Menu:DataModelMenu' => 'Datamodel',
 	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',
 	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => 'Exporteer de resultaten van queries naar HTML, CSV of XML',
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',
 	'Menu:NotificationsMenu' => 'Meldingen',
 	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',
 	'Menu:AuditCategories' => 'Auditcategorieën',
 	'Menu:AuditCategories+' => 'Auditcategorieën',
 	'Menu:Notifications:Title' => 'Auditcategorieën',
-	'Menu:RunQueriesMenu' => 'Queries uitvoeren',
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',
 	'Menu:RunQueriesMenu+' => 'Voer een query uit',
 	'Menu:QueryMenu' => 'Favoriete query\'s',
 	'Menu:QueryMenu+' => 'Favoriete query\'s',
@@ -54,9 +56,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
 	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
 	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:UserManagement' => 'Gebruikersbeheer',
+	'Menu:Queries' => 'Query\'s',
+	'Menu:Configuration' => 'Configuratie',
 ));
 
 //
@@ -64,8 +66,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource' => 'Abstracte Tool',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -73,8 +75,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu' => 'Tool "Admin Menu"',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -82,8 +84,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu' => 'Tool "Voer query\'s uit" Menu',
+	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -91,6 +93,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
+	'Class:ResourceSystemMenu+' => '',
 ));

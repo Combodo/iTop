@@ -20,22 +20,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade~~',
     'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade~~',
     'itop-core-update:UI:ConfirmUpdate' => 'Application Upgrade~~',
     'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade~~',
-    'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
+	'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
+
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Application Upgrade~~',
+	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirm Application Upgrade~~',
+	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Application Upgrading~~',
+	'itop-core-update/Operation:UpdateDone/Title' => 'Application Upgrade Done~~',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Select an upgrade file to upload~~',
 	'iTopUpdate:UI:CheckUpdate' => 'Verify upgrade file~~',
 	'iTopUpdate:UI:ConfirmInstallFile' => 'You are about to install %1$s~~',
 	'iTopUpdate:UI:DoUpdate' => 'Upgrade~~',
 	'iTopUpdate:UI:CurrentVersion' => 'Current installed version~~',
+	'iTopUpdate:UI:NewVersion' => 'Newly installed version~~',
     'iTopUpdate:UI:Back' => 'Back~~',
     'iTopUpdate:UI:Cancel' => 'Cancel~~',
     'iTopUpdate:UI:Continue' => 'Continue~~',
+	'iTopUpdate:UI:RunSetup' => 'Run Setup~~',
     'iTopUpdate:UI:WithDBBackup' => 'Database backup~~',
     'iTopUpdate:UI:WithFilesBackup' => 'Application files backup~~',
     'iTopUpdate:UI:WithoutBackup' => 'No backup is planned~~',
@@ -43,6 +50,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Archive application files~~',
 	'iTopUpdate:UI:UploadArchive' => 'Select a package to upload~~',
 	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server~~',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'During the upgrade, the application will be read-only.~~',
 
     'iTopUpdate:UI:Status' => 'Status~~',
     'iTopUpdate:UI:Action' => 'Update~~',
@@ -73,7 +81,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Database backup~~',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archive application files~~',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Copy new version files~~',
-    'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application and database~~',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Check application upgrade~~',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application and database~~',
+	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade database~~',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Exiting maintenance mode~~',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade completed~~',
 
@@ -93,7 +103,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'~~',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'~~',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful~~',
 	'Menu:iTopUpdate' => 'Application Upgrade~~',
 	'Menu:iTopUpdate+' => 'Application Upgrade~~',

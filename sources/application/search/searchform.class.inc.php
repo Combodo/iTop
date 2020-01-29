@@ -25,9 +25,9 @@ namespace Combodo\iTop\Application\Search;
 
 use ApplicationContext;
 use AttributeDefinition;
+use AttributeEnumSet;
 use AttributeExternalField;
 use AttributeFriendlyName;
-use AttributeSubItem;
 use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
@@ -476,6 +476,16 @@ class SearchForm
 		{
 			$aAllowedValues = array();
 			foreach($oAttrDef->GetAllowedValues() as $sCode => $sRawValue)
+			{
+				$aAllowedValues[$sCode] = utils::HtmlEntities($sRawValue);
+			}
+
+			return array('values' => $aAllowedValues);
+		}
+		elseif ($oAttrDef instanceof AttributeEnumSet)
+		{
+			$aAllowedValues = array();
+			foreach($oAttrDef->GetPossibleValues() as $sCode => $sRawValue)
 			{
 				$aAllowedValues[$sCode] = utils::HtmlEntities($sRawValue);
 			}

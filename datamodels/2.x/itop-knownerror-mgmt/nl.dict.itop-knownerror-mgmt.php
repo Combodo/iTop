@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  * 
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -52,7 +52,7 @@
 // Class: KnownError
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:KnownError' => 'Gekende Fout',
+	'Class:KnownError' => 'Gekende fout',
 	'Class:KnownError+' => 'Gedocumenteerde fout voor een gekend probleem',
 	'Class:KnownError/Attribute:name' => 'Naam',
 	'Class:KnownError/Attribute:name+' => '',
@@ -120,7 +120,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkDocumentToError' => 'Link Documenten / Fouten',
+	'Class:lnkDocumentToError' => 'Link Document / Fout',
 	'Class:lnkDocumentToError+' => 'Een link tussen een document en een gekende fout',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
@@ -167,7 +167,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FAQCategory+' => 'Categorie voor de FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Naam',
 	'Class:FAQCategory/Attribute:name+' => '',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQ\'s',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Alle veelgestelde vragen gerelateerd aan deze categorie',
 ));
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -182,8 +182,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Problem:KnownErrors+' => 'Alle gekende fouten',
 	'Menu:FAQCategory' => 'FAQ-categorieën',
 	'Menu:FAQCategory+' => 'Alle FAQ-categorieën',
-	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => 'Alle FAQs',
+	'Menu:FAQ' => 'FAQ\'s',
+	'Menu:FAQ+' => 'Alle FAQ\'s',
 
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Veelgestelde vragen',

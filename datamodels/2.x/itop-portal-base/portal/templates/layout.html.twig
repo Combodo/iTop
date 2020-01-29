@@ -328,7 +328,7 @@
                     <section class="row" id="session-messages">
 						<div class="col-xs-12">
                             {% for aSessionMessage in app['session_message_helper'] %}
-								<div class="{{ aSessionMessage['css_classes'] }}">
+								<div class="{{ aSessionMessage['css_classes'] }}" {{ aSessionMessage['metadata']|raw }}>
 									<button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>
 									{{ aSessionMessage['message'] }}
 								</div>

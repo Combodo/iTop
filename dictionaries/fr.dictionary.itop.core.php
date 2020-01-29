@@ -201,19 +201,13 @@ Opérateurs :<br/>
 
 	'Core:AttributeTag' => 'Taxon',
 	'Core:AttributeTag+' => 'Taxon',
-
+	
 	'Core:Context=REST/JSON' => 'REST',
-	'Core:Context=REST/JSON+' => 'REST/JSON',
 	'Core:Context=Synchro' => 'Synchro',
-	'Core:Context=Synchro+' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
-	'Core:Context=Setup+' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
-	'Core:Context=GUI:Console+' => 'GUI:Console',
 	'Core:Context=CRON' => 'CRON',
-	'Core:Context=CRON+' => 'CRON',
 	'Core:Context=GUI:Portal' => 'Portal',
-	'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));
 
 
@@ -1047,4 +1041,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Sous-classe de tâche asynchrone',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('FR FR', 'French', 'Français', array(
+ 'Core:Context=REST/JSON+' => 'REST/JSON',
+ 'Core:Context=Synchro+' => 'Synchro',
+ 'Core:Context=Setup+' => 'Setup',
+ 'Core:Context=GUI:Console+' => 'GUI:Console',
+ 'Core:Context=CRON+' => 'CRON',
+ 'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));

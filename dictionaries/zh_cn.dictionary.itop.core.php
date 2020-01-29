@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
@@ -203,6 +202,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
