@@ -2,9 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2019 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * This file is part of iTop.
  *
@@ -26,19 +26,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Verbinding maken met iTop Hub',
 	'Menu:iTopHub:Register+' => 'Ga naar de iTop Hub om je iTop bij te werken.',
-	'Menu:iTopHub:Register:Description' => '<p>Verkrijg toegang tot jouw iTop Hub (community platform)!</br>Je vindt er alle informatie die je nodig hebt, je kan je omgevingen beheren met gepersonaliseerde tools en extensies.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze iTop-mgeving naar de Hub.</p>',
+	'Menu:iTopHub:Register:Description' => '<p>Verkrijg toegang tot jouw iTop Hub (community platform)!</br>Je vindt er alle informatie die je nodig hebt. Je kan je omgevingen beheren met gepersonaliseerde tools en extensies.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze iTop-omgeving naar de Hub.</p>',
 	'Menu:iTopHub:MyExtensions' => 'Mijn extensies',
 	'Menu:iTopHub:MyExtensions+' => 'Bekijk de lijst van extensies die je gebruikt in deze iTop-omgeving.',
 	'Menu:iTopHub:BrowseExtensions' => 'Vind extensies op iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Blader door de extensiecatalogus op iTop Hub',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>In de iTop Hub Store vind je heel wat extensies!</br>Blader door de catalogus en ontdek welke extensies jou helpen om iTop aan te passen aan jouw manier van werken.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze iTop-mgeving naar de Hub.</p>',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>In de iTop Hub Store vind je heel wat extensies!</br>Blader door de catalogus en ontdek welke extensies jou helpen om iTop aan te passen aan jouw manier van werken.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze iTop-omgeving naar de Hub.</p>',
 	'iTopHub:GoBtn' => 'Ga naar iTop Hub',
 	'iTopHub:CloseBtn' => 'Sluiten',
 	'iTopHub:GoBtn:Tooltip' => 'Ga naar www.itophub.io',
 	'iTopHub:OpenInNewWindow' => 'Open iTop Hub in een nieuw venster',
 	'iTopHub:AutoSubmit' => 'Vraag dit niet opnieuw en ga volgende keer automatisch naar iTop Hub.',
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
-	'iTopHub:Explanation' => 'Door op deze knop te klikken, wordt je doorgestuurd naar iTop Hub.',
+	'iTopHub:Explanation' => 'Door op deze knop te klikken, word je doorgestuurd naar iTop Hub.',
 
 	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s vrije schijfruimte in %2$s.',
 	'iTopHub:FailedToCheckFreeDiskSpace' => 'Kon niet controleren hoeveel schijfruimte nog vrij is.',
@@ -48,7 +48,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:Landing:Install' => 'Bezig met extensies te installeren...',
 	'iTopHub:CompiledOK' => 'Compilatie geslaagd.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Er trad een fout op bij de installatie!<br/>iTop-configuratie werd NIET aangepast.',
-	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+	'iTopHub:FailAuthent' => 'Aanmelden lukt niet voor deze actie.',
 
 	'iTopHub:InstalledExtensions' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual' => 'Manueel geïnstalleerde extensies',
@@ -59,14 +59,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:ExtensionNotInstalled' => 'Niet geïnstalleerd',
 	'iTopHub:GetMoreExtensions' => 'Extensies zoeken op iTop Hub...',
 
-	'iTopHub:LandingWelcome' => 'Gefeliciteerd! Deze extensies werden gedownload via iTop Hub en op jouw iTop geïnstalleerd.',
+	'iTopHub:LandingWelcome' => 'Gefeliciteerd! Deze extensies werden gedownload via iTop Hub en op deze iTop geïnstalleerd.',
 	'iTopHub:GoBackToITopBtn' => 'Terug naar iTop',
 	'iTopHub:Uncompressing' => 'Extensies aan het uitpakken...',
 	'iTopHub:InstallationWelcome' => 'Installatie van extensies via iTop Hub',
-	'iTopHub:DBBackupLabel' => 'Backup van jouw omgeving',
-	'iTopHub:DBBackupSentence' => 'Neem vooraf een backup van de database en iTop-configuratie de update door te voeren',
+	'iTopHub:DBBackupLabel' => 'Backup van deze omgeving',
+	'iTopHub:DBBackupSentence' => 'Neem vooraf een backup van de database en iTop-configuratie vooraleer de update uit te voeren',
 	'iTopHub:DeployBtn' => 'Installeer!',
-	'iTopHub:DatabaseBackupProgress' => 'Backup omgeving...',
+	'iTopHub:DatabaseBackupProgress' => 'Backup deze omgeving...',
 
 	'iTopHub:InstallationEffect:Install' => 'Versie: %1$s zal geïnstalleerd worden.',
 	'iTopHub:InstallationEffect:NoChange' => 'Versie: %1$s is al geïnstalleerd.',

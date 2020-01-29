@@ -2,9 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2019 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * This file is part of iTop.
  *

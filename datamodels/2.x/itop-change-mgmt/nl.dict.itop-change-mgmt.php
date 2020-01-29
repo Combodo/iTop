@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  * 
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -122,7 +122,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Attribute:related_problems_list+' => 'Alle problemen gerelateerd aan deze change',
 	'Class:Change/Attribute:child_changes_list' => 'Subchanges',
 	'Class:Change/Attribute:child_changes_list+' => 'Alle subchanges gerelateerd aan deze change',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Hoofdchange friendly name',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Hoofdchange herkenbare naam',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => 'Wijs toe',
 	'Class:Change/Stimulus:ev_assign+' => '',
