@@ -900,7 +900,7 @@ input.dp-applied {
 	margin-right: auto;
 	font-size: 12px;
 	text-align: left;   /* To compensate .search_box:text-align */
-	border: 1px solid $complement-color;
+	border: 1px solid $search-form-container-bg-color;
 	//transition: width 0.3s ease-in-out;
 
 	/* Sizing reset */
@@ -1001,8 +1001,8 @@ input.dp-applied {
 		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
 		padding: 8px 10px;
 		margin: 0;
-		color: $white;
-		background-color: $complement-color;
+		color: $search-form-container-color;
+		background-color: $search-form-container-bg-color;
 		cursor: pointer;
 		.sft_hint,
 		.sfobs_hint{
