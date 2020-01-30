@@ -423,8 +423,8 @@ interface iApplicationObjectExtension
 	 *
 	 * Useful methods you can call on $oObject :
 	 *
-	 * * {@link \DBObject::ListPreviousValuesForUpdatedAttributes} : list of changed attributes and their values before the change
-	 * * {@link \DBObject::Get} : for a given attribute the new value that was persisted
+	 * * {@see DBObject::ListPreviousValuesForUpdatedAttributes()} : list of changed attributes and their values before the change
+	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
@@ -432,7 +432,7 @@ interface iApplicationObjectExtension
 	 *
 	 * @return void
 	 *
-	 * @since 2.7.0 N°2293 can access object changes by calling {@link DBObject::ListPreviousValuesForUpdatedAttributes} on $oObject
+	 * @since 2.7.0 N°2293 can access object changes by calling {@see DBObject::ListPreviousValuesForUpdatedAttributes()} on $oObject
 	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 

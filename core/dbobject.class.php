@@ -83,9 +83,9 @@ abstract class DBObject implements iDisplay
 	/** @var bool true IF the object is mapped to a DB record */
 	protected $m_bIsInDB = false;
 	protected $m_iKey = null;
-	/** @var array attcode => value : corresponding current value (the new value passed to {@link Set}). Reset during {@link DBUpdate} */
+	/** @var array attcode => value : corresponding current value (the new value passed to {@see DBObject::Set()}). Reset during {@see DBObject::DBUpdate()} */
 	private $m_aCurrValues = array();
-	/** @var array attcode => value : previous values before the {@link Set} call. Array is reset at the end of {@link DBUpdate} */
+	/** @var array attcode => value : previous values before the {@see DBObject::Set()} call. Array is reset at the end of {@see DBObject::DBUpdate()} */
 	protected $m_aOrigValues = array();
 
 	protected $m_aExtendedData = null;
@@ -136,7 +136,7 @@ abstract class DBObject implements iDisplay
 	 */
 	protected $m_aModifiedAtt = array();
 	/**
-	 * @var array attname => value : value before the last {@link Set} call. Set at the beginning of {@link DBUpdate}.
+	 * @var array attname => value : value before the last {@see DBObject::Set()} call. Set at the beginning of {@see DBObject::DBUpdate()}.
 	 * @see DBObject::ListPreviousValuesForUpdatedAttributes() getter for this attribute
 	 * @since 2.7.0 N°2293
 	 */
@@ -857,7 +857,7 @@ abstract class DBObject implements iDisplay
     /**
      * @param string $sAttCode
      *
-     * @return mixed|null the value as it was before changed with {@link Set}.
+     * @return mixed|null the value as it was before changed with {@see DBObject::Set()}.
      *        Returns null if the attribute wasn't changed.
      *
      * @see DBObject::$m_aOrigValues
@@ -2236,7 +2236,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Check if it is allowed to delete the existing object from the database
 	 *
-	 * an array of displayable error is added in {@link $m_aDeleteIssues}
+	 * an array of displayable error is added in {@see DBObject::$m_aDeleteIssues}
 	 *
      * @internal 
      *
@@ -2378,7 +2378,7 @@ abstract class DBObject implements iDisplay
      * @api
      * @api-advanced
      *
-     * @return array attname => currentvalue List the attributes that have been changed using {@link Set}. Reset during {@link DBUpdate}
+     * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}. Reset during {@see DBObject::DBUpdate()}
      * @uses m_aCurrValues
      * @throws Exception
      */
@@ -2396,8 +2396,8 @@ abstract class DBObject implements iDisplay
 	 * @api
 	 * @api-advanced
 	 *
-	 * @return array attname => value : value that was present before the last {@link Set} call.
-	 *       This array is set at the beginning of {@link DBpdate} using {@link InitPreviousValuesForUpdatedAttributes}
+	 * @return array attname => value : value that was present before the last {@see DBObject::Set()} call.
+	 *       This array is set at the beginning of {@see DBObject::DBpdate()} using {@see DBObject::InitPreviousValuesForUpdatedAttributes()}
 	 * @uses m_aPreviousValuesForUpdatedAttributes
 	 * @see DBObject::ListChanges() use this other method if your code is BEFORE the update
 	 * @since 2.7.0 N°2293
@@ -2659,7 +2659,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @return int key of the newly created object
 	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException if {@link CheckToWrite()} returns issues
+	 * @throws \CoreCannotSaveObjectException if {@see DBObject::CheckToWrite()} returns issues
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreWarning
@@ -2944,8 +2944,8 @@ abstract class DBObject implements iDisplay
     /**
      * @internal
      *
-     * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsert()} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
      *
      * @param CMDBChange $oChange
      *
@@ -2961,8 +2961,8 @@ abstract class DBObject implements iDisplay
     /**
      * @internal
      *
-     * @deprecated 2.7.0 N°2361 simply use {@link DBInsertNoReload} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsertNoReload()} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
      *
      * @param CMDBChange $oChange
      *
@@ -3202,9 +3202,9 @@ abstract class DBObject implements iDisplay
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
 
-					// following lines are resetting changes (so after this {@link ListChanges} won't return changes anymore)
-					// new values are already in the object (call {@link Get} to get them)
-					// call {@link ListPreviousValuesForUpdatedAttributes} to get changed fields and previous values
+					// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+					// new values are already in the object (call {@see DBObject::Get()} to get them)
+					// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
 					$this->m_bDirty = false;
 					$this->m_aTouchedAtt = array();
 					$this->m_aModifiedAtt = array();
@@ -3310,7 +3310,7 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * @internal
-	 * Save updated fields previous values for {@link DBUpdate} callbacks
+	 * Save updated fields previous values for {@see DBObject::DBUpdate()} callbacks
 	 * @see DBObject::ListPreviousValuesForUpdatedAttributes() to get the data in the callbacks
 	 * @uses ListChanges
 	 * @uses m_aOrigValues
@@ -3336,8 +3336,8 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      *
-     * @deprecated 2.7.0 N°2361 simply use {@link DBUpdate} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBUpdate()} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
      *
      * @param CMDBChange $oChange
      *
@@ -3608,8 +3608,8 @@ abstract class DBObject implements iDisplay
     /**
      * @internal
      *
-     * @deprecated 2.7.0 N°2361 simply use {@link DBDelete} instead.
-     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBDelete()} instead.
+     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
      *
      * @param CMDBChange $oChange
      * @param boolean $bSkipStrongSecurity
@@ -4164,13 +4164,13 @@ abstract class DBObject implements iDisplay
     /**
      * @overwritable-hook You can extend this method in order to provide your own logic.
      *
-     * This method is called after the object is updated into DB, and just before the {@link Reload} call.
+     * This method is called after the object is updated into DB, and just before the {@see DBObject::Reload()} call.
      *
-     * Warning : do not use {@link ListChanges} as it will return an empty array !
-     * Use instead {@link ListPreviousValuesForUpdatedAttributes} to get modified fields and their previous values,
-     * and {@link Get} to get the persisted value for a given attribute.
+     * Warning : do not use {@see DBObject::ListChanges()} as it will return an empty array !
+     * Use instead {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get modified fields and their previous values,
+     * and {@see DBObject::Get()} to get the persisted value for a given attribute.
      *
-     * @since 2.7.0 N°2293 can access object changes by calling {@link DBObject::ListPreviousValuesForUpdatedAttributes}
+     * @since 2.7.0 N°2293 can access object changes by calling {@see DBObject::ListPreviousValuesForUpdatedAttributes()}
      */
 	protected function AfterUpdate()
 	{
