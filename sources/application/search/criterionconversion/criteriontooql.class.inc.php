@@ -200,7 +200,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aRawValues[] = $sRawValue;
 			}
 		}
-		$sValue = implode(' ', $aRawValues);
+		$sValue = '"'.implode('" "', $aRawValues).'" _';
 
 		if (empty($sValue))
 		{
