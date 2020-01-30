@@ -110,10 +110,11 @@ abstract class Trigger extends cmdbAbstractObject
 		if (!$this->IsContextValid())
 		{
 			// Trigger does not match the current context
-			IssueLog::Info("Context NOT valid for: ".$this->Get('friendlyname'));
+			$sClass = get_class($this);
+			$sName = $this->Get('friendlyname');
+			IssueLog::Debug("Context NOT valid for : {$sClass} '$sName'");
 			return;
 		}
-		IssueLog::Info("Context VALID for: ".$this->Get('friendlyname'));
 
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
