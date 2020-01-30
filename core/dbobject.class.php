@@ -137,7 +137,7 @@ abstract class DBObject implements iDisplay
 	protected $m_aModifiedAtt = array();
 	/**
 	 * @var array attname => value : value before the last {@link Set} call. Set at the beginning of {@link DBUpdate}.
-	 * @see ListPreviousValuesForUpdatedAttributes getter for this attribute
+	 * @see DBObject::ListPreviousValuesForUpdatedAttributes() getter for this attribute
 	 * @since 2.7.0 N°2293
 	 */
 	protected $m_aPreviousValuesForUpdatedAttributes;
@@ -860,7 +860,7 @@ abstract class DBObject implements iDisplay
      * @return mixed|null the value as it was before changed with {@link Set}.
      *        Returns null if the attribute wasn't changed.
      *
-     * @see m_aOrigValues
+     * @see DBObject::$m_aOrigValues
      * @throws CoreException if the attribute is unknown for the current object
      */
 	public function GetOriginal($sAttCode)
@@ -2399,7 +2399,7 @@ abstract class DBObject implements iDisplay
 	 * @return array attname => value : value that was present before the last {@link Set} call.
 	 *       This array is set at the beginning of {@link DBpdate} using {@link InitPreviousValuesForUpdatedAttributes}
 	 * @uses m_aPreviousValuesForUpdatedAttributes
-	 * @see ListChanges() use this other method if your code is BEFORE the update
+	 * @see DBObject::ListChanges() use this other method if your code is BEFORE the update
 	 * @since 2.7.0 N°2293
 	 */
 	public function ListPreviousValuesForUpdatedAttributes()
@@ -3025,7 +3025,7 @@ abstract class DBObject implements iDisplay
 	 * Update an object in DB
 	 *
 	 * @api
-	 * @see DBWrite
+	 * @see DBObject::DBWrite()
 	 *
 	 * @return int object key
 	 *
@@ -3311,7 +3311,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * @internal
 	 * Save updated fields previous values for {@link DBUpdate} callbacks
-	 * @see  ListPreviousValuesForUpdatedAttributes to get the data in the callbacks
+	 * @see DBObject::ListPreviousValuesForUpdatedAttributes() to get the data in the callbacks
 	 * @uses ListChanges
 	 * @uses m_aOrigValues
 	 * @uses m_aPreviousValuesForUpdatedAttributes
@@ -4162,13 +4162,15 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * This method is called after the object is updated into DB. You can get changes using @link m_aChanges}.
-     *
-     * Warning : do not use {@link ListChanges} as it will return an empty array.
-     *
      * @overwritable-hook You can extend this method in order to provide your own logic.
      *
-     * @since 2.7.0 N°2293 can access object changes using {@link m_aChanges}
+     * This method is called after the object is updated into DB, and just before the {@link Reload} call.
+     *
+     * Warning : do not use {@link ListChanges} as it will return an empty array !
+     * Use instead {@link ListPreviousValuesForUpdatedAttributes} to get modified fields and their previous values,
+     * and {@link Get} to get the persisted value for a given attribute.
+     *
+     * @since 2.7.0 N°2293 can access object changes by calling {@link DBObject::ListPreviousValuesForUpdatedAttributes}
      */
 	protected function AfterUpdate()
 	{
