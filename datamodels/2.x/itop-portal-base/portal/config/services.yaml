@@ -76,6 +76,10 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 300 }]
     Combodo\iTop\Portal\EventListener\CssFromSassCompiler:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
+    Combodo\iTop\Portal\EventListener\ExceptionListener:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
+      calls:
+        - [setContainer, ['@service_container']]
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones

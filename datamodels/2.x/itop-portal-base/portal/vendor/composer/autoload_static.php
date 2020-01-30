@@ -71,6 +71,7 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\EventListener\\ApplicationContextSetPluginPropertyClass' => __DIR__ . '/../..' . '/src/EventListener/ApplicationContextSetPluginPropertyClass.php',
         'Combodo\\iTop\\Portal\\EventListener\\ApplicationContextSetUrlMakerClass' => __DIR__ . '/../..' . '/src/EventListener/ApplicationContextSetUrlMakerClass.php',
         'Combodo\\iTop\\Portal\\EventListener\\CssFromSassCompiler' => __DIR__ . '/../..' . '/src/EventListener/CssFromSassCompiler.php',
+        'Combodo\\iTop\\Portal\\EventListener\\ExceptionListener' => __DIR__ . '/../..' . '/src/EventListener/ExceptionListener.php',
         'Combodo\\iTop\\Portal\\EventListener\\UserProvider' => __DIR__ . '/../..' . '/src/EventListener/UserProvider.php',
         'Combodo\\iTop\\Portal\\Form\\ObjectFormManager' => __DIR__ . '/../..' . '/src/Form/ObjectFormManager.php',
         'Combodo\\iTop\\Portal\\Form\\PasswordFormManager' => __DIR__ . '/../..' . '/src/Form/PasswordFormManager.php',

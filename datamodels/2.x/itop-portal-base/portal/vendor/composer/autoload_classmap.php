@@ -51,6 +51,7 @@ return array(
     'Combodo\\iTop\\Portal\\EventListener\\ApplicationContextSetPluginPropertyClass' => $baseDir . '/src/EventListener/ApplicationContextSetPluginPropertyClass.php',
     'Combodo\\iTop\\Portal\\EventListener\\ApplicationContextSetUrlMakerClass' => $baseDir . '/src/EventListener/ApplicationContextSetUrlMakerClass.php',
     'Combodo\\iTop\\Portal\\EventListener\\CssFromSassCompiler' => $baseDir . '/src/EventListener/CssFromSassCompiler.php',
+    'Combodo\\iTop\\Portal\\EventListener\\ExceptionListener' => $baseDir . '/src/EventListener/ExceptionListener.php',
     'Combodo\\iTop\\Portal\\EventListener\\UserProvider' => $baseDir . '/src/EventListener/UserProvider.php',
     'Combodo\\iTop\\Portal\\Form\\ObjectFormManager' => $baseDir . '/src/Form/ObjectFormManager.php',
     'Combodo\\iTop\\Portal\\Form\\PasswordFormManager' => $baseDir . '/src/Form/PasswordFormManager.php',
