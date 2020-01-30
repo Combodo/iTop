@@ -200,6 +200,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aRawValues[] = $sRawValue;
 			}
 		}
+		// This allow to search for complete words
 		$sValue = '"'.implode('" "', $aRawValues).'" _';
 
 		if (empty($sValue))
