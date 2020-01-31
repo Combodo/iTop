@@ -38,5 +38,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 
-	'UserLocal:password:expiration' => 'Le champ requiert une extension'
+	'UserLocal:password:expiration' => 'Les champs ci-dessous nécessitent une extension'
 ));
