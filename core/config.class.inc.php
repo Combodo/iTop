@@ -90,7 +90,16 @@ class Config
 	protected $m_aWebServiceCategories;
 	protected $m_aAddons;
 
+	/** @var ConfigPlaceholdersResolver */
+	private $oConfigPlaceholdersResolver;
+
 	protected $m_aModuleSettings;
+	/**
+	 * @var \iTopConfigParser|null
+	 */
+	private $oItopConfigParser;
+	//for each conf entry, whether the non interpreted value can be kept in case is is written back to the disk.
+	private $m_aCanOverrideSettings;
 
 	/**
 	 * New way to store the settings !
@@ -1250,10 +1259,8 @@ class Config
 			'show_in_conf_sample' => false,
 		),
 	);
-	/**
-	 * @var \iTopConfigParser|null
-	 */
-	private $oItopConfigParser;
+
+
 
 	public function IsProperty($sPropCode)
 	{
@@ -1283,12 +1290,16 @@ class Config
 	 * @param string $sPropCode
 	 * @param mixed $value
 	 * @param string $sSourceDesc mandatory for variables with show_in_conf_sample=false
+	 * @param bool $bCanOverride whether the written to file value can still be the non evaluated version on must be the literal
 	 *
 	 * @throws \CoreException
 	 */
 	public function Set($sPropCode, $value, $sSourceDesc = 'unknown', $bCanOverride = false)
 	{
 		$sType = $this->m_aSettings[$sPropCode]['type'];
+
+		$value = $this->oConfigPlaceholdersResolver->Resolve($value);
+
 		switch ($sType)
 		{
 			case 'bool':
@@ -1308,6 +1319,13 @@ class Config
 			default:
 				throw new CoreException('Unknown type for setting', array('property' => $sPropCode, 'type' => $sType));
 		}
+
+		if ($this->m_aSettings[$sPropCode]['value'] == $value)
+		{
+			//when you set the exact same value than the previous one, then, you still can preserve the non evaluated version and so on preserve vars/jokers.
+			$bCanOverride = true;
+		}
+
 		$this->m_aSettings[$sPropCode]['value'] = $value;
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
 		$this->m_aCanOverrideSettings[$sPropCode] = $bCanOverride;
@@ -1404,6 +1422,8 @@ class Config
 	 */
 	public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
+		$this->oConfigPlaceholdersResolver = new ConfigPlaceholdersResolver();
+
 		$this->m_sFile = $sConfigFile;
 		if (is_null($sConfigFile))
 		{
@@ -2001,16 +2021,7 @@ class Config
 
 					if (isset($aSettingInfo['default']))
 					{
-
-						if (isset($this->m_aCanOverrideSettings[$sPropCode]) && $this->m_aCanOverrideSettings[$sPropCode])
-						{
-							$aParserValue = $this->oItopConfigParser->GetVarValue('MySettings', $sPropCode);
-						}
-						else
-						{
-							$aParserValue = array('found' => false);
-						}
-						$sComment = self::PrettyVarExport($aParserValue,$aSettingInfo['default'], "\t//\t\t", true);
+						$sComment = self::PrettyVarExport(null,$aSettingInfo['default'], "\t//\t\t", true);
 						fwrite($hFile,"\t//\tdefault: {$sComment}\n");
 					}
 
@@ -2020,7 +2031,7 @@ class Config
 					}
 					else
 					{
-						$aParserValue = array('found' => false);
+						$aParserValue = null;
 					}
 					$sSeenAs = self::PrettyVarExport($aParserValue,$aSettingInfo['value'], "\t");
 					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
@@ -2266,7 +2277,7 @@ class Config
 	 */
 	protected static function PrettyVarExport($aParserValue, $value, $sIndentation, $bForceIndentation = false)
 	{
-		if ($aParserValue['found'])
+		if (is_array($aParserValue) && $aParserValue['found'])
 		{
 			return $aParserValue['value'];
 		}
@@ -2289,4 +2300,108 @@ class Config
 		return $sNiceExport;
 	}
 
+}
+
+class ConfigPlaceholdersResolver
+{
+	/**
+	 * @var null|array
+	 */
+	private $aEnv;
+	/**
+	 * @var null|array
+	 */
+	private $aServer;
+
+	public function __construct($aEnv = null, $aServer = null)
+	{
+		$this->aEnv = $aEnv ?: $_ENV;
+		$this->aServer = $aServer ?: $_SERVER;
+	}
+
+	public function Resolve($rawValue)
+	{
+		if (empty($this->aEnv['ITOP_CONFIG_PLACEHOLDERS']))
+		{
+			IssueLog::Trace('ITOP_CONFIG_PLACEHOLDERS disabled, the feature is disabled', self::class, array($rawValue));
+			
+			return $rawValue;
+		}
+
+		if (is_array($rawValue))
+		{
+			$aResolvedRawValue = array();
+			foreach ($rawValue as $key => $value)
+			{
+				$aResolvedRawValue[$key] = $this->Resolve($value);
+			}
+			IssueLog::Trace('Resolved array ', self::class, array($aResolvedRawValue));
+
+			return $aResolvedRawValue;
+		}
+
+		if (!is_string($rawValue))
+		{
+			IssueLog::Trace('Unhandled var type', self::class, array($rawValue));
+			return $rawValue;
+		}
+
+		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
+		
+		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
+		{
+			IssueLog::Trace("No matching pattern found inside '{$rawValue}'", self::class);
+
+			return $rawValue;
+		}
+
+		$sValue = $rawValue;
+		foreach ($aMatchesCollection as $aMatches)
+		{
+			$sWholeMask = $aMatches[0];
+			$sSource = $aMatches[1];
+			$sKey = $aMatches[2];
+			$sDefault = isset($aMatches[3]) ? $aMatches[3] : null;
+
+			$sReplacement = $this->Get($sSource, $sKey, $sDefault, $sWholeMask);
+
+			$sValue = str_replace($sWholeMask, $sReplacement, $sValue);
+		}
+
+		IssueLog::Trace("replacement done, from '{$rawValue}' to '{$sValue}'", self::class);
+
+		return $sValue;
+	}
+
+	private function Get($sSourceName, $sKey, $sDefault, $sWholeMask)
+	{
+		if ('env' == $sSourceName)
+		{
+			$aSource = $this->aEnv;
+		}
+		else if ('server' == $sSourceName)
+		{
+			$aSource = $this->aServer;
+		}
+		else
+		{
+			$sErrorMessage = sprintf('unsupported source name "%s" into "%s"', $sSourceName, $sWholeMask);
+			IssueLog::Error($sErrorMessage, self::class, array($sSourceName, $sKey, $sDefault, $sWholeMask));
+			throw new ConfigException($sErrorMessage);
+		}
+
+		if (array_key_exists($sKey, $aSource))
+		{
+			return $aSource[$sKey];
+		}
+
+		if (null !== $sDefault)
+		{
+			return $sDefault;
+		}
+
+		$sErrorMessage = sprintf('key "%s" not found into "%s" while expanding', $sSourceName, $sWholeMask);
+		IssueLog::Error($sErrorMessage, self::class, array($sSourceName, $sKey, $sDefault, $sWholeMask));
+		throw new ConfigException($sErrorMessage);
+	}
 }
