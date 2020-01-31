@@ -4380,7 +4380,7 @@ class AttributeLongText extends AttributeText
 	{
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
-		return 65535 * 1024; // Limited... still 64 Mb!
+		return 65535 * 1024; // Limited... still 64 MB!
 	}
 }
 
