@@ -2321,10 +2321,8 @@ class ConfigPlaceholdersResolver
 
 	public function Resolve($rawValue)
 	{
-		if (empty($this->aEnv['ITOP_CONFIG_PLACEHOLDERS']))
+		if (empty($this->aEnv['ITOP_CONFIG_PLACEHOLDERS']) && empty($this->aServer['ITOP_CONFIG_PLACEHOLDERS']))
 		{
-			IssueLog::Trace('ITOP_CONFIG_PLACEHOLDERS disabled, the feature is disabled', self::class, array($rawValue));
-			
 			return $rawValue;
 		}
 
@@ -2335,14 +2333,12 @@ class ConfigPlaceholdersResolver
 			{
 				$aResolvedRawValue[$key] = $this->Resolve($value);
 			}
-			IssueLog::Trace('Resolved array ', self::class, array($aResolvedRawValue));
 
 			return $aResolvedRawValue;
 		}
 
 		if (!is_string($rawValue))
 		{
-			IssueLog::Trace('Unhandled var type', self::class, array($rawValue));
 			return $rawValue;
 		}
 
@@ -2350,8 +2346,6 @@ class ConfigPlaceholdersResolver
 		
 		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
 		{
-			IssueLog::Trace("No matching pattern found inside '{$rawValue}'", self::class);
-
 			return $rawValue;
 		}
 
@@ -2367,8 +2361,6 @@ class ConfigPlaceholdersResolver
 
 			$sValue = str_replace($sWholeMask, $sReplacement, $sValue);
 		}
-
-		IssueLog::Trace("replacement done, from '{$rawValue}' to '{$sValue}'", self::class);
 
 		return $sValue;
 	}
