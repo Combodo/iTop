@@ -3081,7 +3081,7 @@ EOF;
 # Apache 2.4
 <ifModule mod_authz_core.c>
 Require all denied
-	<FilesMatch ".+\.(css|scss|js|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
 	    Require all granted
 	</FilesMatch>
 </ifModule>
@@ -3090,7 +3090,7 @@ Require all denied
 <ifModule !mod_authz_core.c>
 deny from all
 Satisfy All
-	<FilesMatch ".+\.(css|scss|js|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
 	    Order Allow,Deny
 	    Allow from all
 	</FilesMatch>
@@ -3127,6 +3127,7 @@ EOF;
                <add fileExtension=".css" allowed="true" />
                <add fileExtension=".scss" allowed="true" />
                <add fileExtension=".js" allowed="true" />
+               <add fileExtension=".map" allowed="true" />
                <add fileExtension=".png" allowed="true" />
                <add fileExtension=".bmp" allowed="true" />
                <add fileExtension=".gif" allowed="true" />
