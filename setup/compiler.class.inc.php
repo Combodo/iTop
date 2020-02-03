@@ -2737,7 +2737,7 @@ EOF;
 		// Force to have a default theme if none in the DM
 		if(empty($aThemes))
 		{
-			$aDefaultThemeInfo = $this->GetDefaultThemeInformation();
+			$aDefaultThemeInfo = ThemeHandler::GetDefaultThemeInformation();
 			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
 		}
 
@@ -2753,29 +2753,6 @@ EOF;
 
 			ThemeHandler::CompileTheme($sThemeId, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 		}
-	}
-
-	/**
-	 * Return default theme name and parameters
-	 *
-	 * @return array
-	 * @since 2.7.0
-	 */
-	protected function GetDefaultThemeInformation()
-	{
-		return array(
-			'name' => 'light-grey',
-			'parameters' => array(
-				'variables' => array(),
-				'imports' => array(
-					'css-variables' => '../css/css-variables.scss',
-				),
-				'stylesheets' => array(
-					'jqueryui' => '../css/ui-lightness/jqueryui.scss',
-					'main' => '../css/light-grey.scss',
-				),
-			),
-		);
 	}
 
 	/**

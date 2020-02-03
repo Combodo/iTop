@@ -28,6 +28,29 @@ use ScssPhp\ScssPhp\Compiler;
 class ThemeHandler
 {
 	/**
+	 * Return default theme name and parameters
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function GetDefaultThemeInformation()
+	{
+		return array(
+			'name' => 'light-grey',
+			'parameters' => array(
+				'variables' => array(),
+				'imports' => array(
+					'css-variables' => '../css/css-variables.scss',
+				),
+				'stylesheets' => array(
+					'jqueryui' => '../css/ui-lightness/jqueryui.scss',
+					'main' => '../css/light-grey.scss',
+				),
+			),
+		);
+	}
+	
+	/**
 	 * Return the absolute URL for the default theme CSS file
 	 *
 	 * @return string
@@ -35,8 +58,26 @@ class ThemeHandler
 	 */
 	public static function GetDefaultThemeUrl()
 	{
-		$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
-		static::CompileTheme($sThemeId);
+		try
+		{
+			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
+			static::CompileTheme($sThemeId);
+		}
+		catch(CoreException $oCompileException)
+		{
+			// Fallback on our default theme (should always be compilable)
+			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$sThemeId = $aDefaultTheme['name'];
+			$sDefaultThemeDirPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/'.$sThemeId.'/';
+			
+			// Create our theme dir if it doesn't exist (XML theme node removed, renamed etc..)
+			if(!is_dir($sDefaultThemeDirPath))
+			{
+				SetupUtils::builddir($sDefaultThemeDirPath);
+			}
+			
+			static::CompileTheme($sThemeId, $aDefaultTheme['parameters']);
+		}
 
 		// Return absolute url to theme compiled css
 		return utils::GetAbsoluteUrlModulesRoot().'/branding/themes/'.$sThemeId.'/main.css';
