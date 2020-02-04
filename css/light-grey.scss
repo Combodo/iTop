@@ -1621,8 +1621,8 @@ input.dp-applied {
 		}
 		button{
 			width: 23px; /* Must be equals to .sf_filter > *:height */
-			background-color: $white;
-			color: $combodo-orange;
+			background-color: $search-button-box-bg-color;
+			color: $search-button-box-color;
 			font-size: 10px;
 
 			&:first-of-type{
@@ -3619,7 +3619,7 @@ table.listResults .originColor{
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #ccc;
+	background-color: $toggle-button-bg-color;
 	transition: .4s;
 }
 
@@ -3630,16 +3630,16 @@ table.listResults .originColor{
 	width: 15px;
 	left: 3px;
 	bottom: 3px;
-	background-color: white;
+	background-color: $toggle-button-slider-bg-color;
 	transition: .4s;
 }
 
 input:checked + .slider {
-	background-color: $combodo-orange;
+	background-color: $toggle-button-bg-checked-color;
 }
 
 input:focus + .slider {
-	box-shadow: 0 0 1px $combodo-orange;
+	box-shadow: 0 0 1px $toggle-button-bg-checked-color;
 }
 
 input:checked + .slider:before {
