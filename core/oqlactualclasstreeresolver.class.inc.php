@@ -64,11 +64,20 @@ class OQLActualClassTreeResolver
 		$aTranslateFields = array();
 		foreach ($aExpectedAttributes as $sAttCode => $oExpression)
 		{
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
+			// Attributes can be stored in attributes list or for magic ones into filter codes list.
+			$sOriginClass = null;
+			if (MetaModel::IsValidFilterCode($sClass, $sAttCode))
+			{
+				$sOriginClass = MetaModel::GetFilterCodeOrigin($sClass, $sAttCode);
+			}
+			else if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+			{
+				$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+			}
+			else
 			{
 				continue;
 			}
-			$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 			if (is_null($aClassAndAncestorsNodes[$sOriginClass]))
 			{
 				if ($sOriginClass == $sClass)

@@ -919,6 +919,20 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
+	final static public function GetFilterCodeOrigin($sClass, $sAttCode)
+	{
+		self::_check_subclass($sClass);
+		return self::$m_aFilterOrigins[$sClass][$sAttCode];
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 *
