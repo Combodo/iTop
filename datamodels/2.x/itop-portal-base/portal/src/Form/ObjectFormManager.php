@@ -83,20 +83,15 @@ class ObjectFormManager extends FormManager
 	protected $aCallbackUrls = array();
 	/** @var boolean $bIsSubmittable */
 	protected $bIsSubmittable = true;
-	
+
 	/**
 	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
 	 * - formobject_class : The class of the object that is being edited/viewed
 	 * - formmode : view|edit|create
 	 * - values for parent
 	 *
-	 * @param string $sJson
-	 *
-	 * @return $this
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
 	 */
 	static function FromJSON($sJson)
 	{
@@ -328,13 +323,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Creates a JSON string from the current object including :
-	 * - formobject_class
-	 * - formobject_id
-	 * - formmode
-	 * - values for parent
-	 *
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function ToJSON()
 	{
@@ -352,6 +341,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
+	 * @inheritDoc
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @throws \Exception
@@ -1040,9 +1030,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Calls all form fields OnCancel method in order to delegate them the cleanup;
-	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -1078,9 +1066,7 @@ class ObjectFormManager extends FormManager
 	 *          'errors' => array()
 	 *    )
 	 *
-	 * @param array $aArgs
-	 *
-	 * @return array
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1199,7 +1185,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * Note : Doesn't update the object, see ObjectFormManager::OnSubmit() for that;
 	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException

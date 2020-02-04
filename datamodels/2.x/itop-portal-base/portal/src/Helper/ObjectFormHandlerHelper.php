@@ -57,25 +57,25 @@ class ObjectFormHandlerHelper
 	/** @var string ENUM_MODE_CREATE */
 	const ENUM_MODE_CREATE = 'create';
 
-	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 	private $oRequestManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator */
 	private $oContextManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper */
+	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper */
 	private $oNavigationRuleHelper;
-	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 	private $oScopeValidator;
-	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
+	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
 	private $oSecurityHelper;
-	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator */
+	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
 	private $oUrlGenerator;
-	/** @var array */
+	/** @var array $aCombodoPortalInstanceConf */
 	private $aCombodoPortalInstanceConf;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Combodo\iTop\Portal\Twig\AppExtension */
+	/** @var \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension */
 	private $oAppExtension;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
 	private $oContainer;
 
 	/**
