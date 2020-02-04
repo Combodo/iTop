@@ -885,7 +885,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:AdminTools' => 'Administrátorské pomôcky', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System~~',
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Manažment zmien',
 	'UI:ChangeManagementMenu+' => '',

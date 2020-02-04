@@ -59,7 +59,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:MyShortcuts' => 'Mé odkazy',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //

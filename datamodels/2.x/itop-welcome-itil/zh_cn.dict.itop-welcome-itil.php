@@ -57,7 +57,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:MyShortcuts' => '我的快捷方式',
 	'Menu:UserManagement' => '用户管理',
 	'Menu:Queries' => '查询',
-	'Menu:Configuration' => '配置',
+	'Menu:ConfigurationTools' => '配置',
 ));
 
 //

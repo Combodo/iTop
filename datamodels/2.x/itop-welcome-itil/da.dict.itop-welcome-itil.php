@@ -56,7 +56,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:MyShortcuts' => 'Mine Genveje',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //

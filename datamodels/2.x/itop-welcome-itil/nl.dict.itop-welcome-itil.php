@@ -58,7 +58,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
 	'Menu:UserManagement' => 'Gebruikersbeheer',
 	'Menu:Queries' => 'Query\'s',
-	'Menu:Configuration' => 'Configuratie',
+	'Menu:ConfigurationTools' => 'Configuratie',
 ));
 
 //

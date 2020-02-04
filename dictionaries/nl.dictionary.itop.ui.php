@@ -905,7 +905,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:AdminTools' => 'Beheerderstools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Beheerderstools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools die alleen toegankelijk zijn voor gebruikers met een beheerdersprofiel', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'Systeem',
+	'Menu:SystemTools' => 'Systeem',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',

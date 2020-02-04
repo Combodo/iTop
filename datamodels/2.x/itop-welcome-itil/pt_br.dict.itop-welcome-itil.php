@@ -55,7 +55,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:MyShortcuts' => 'Meus atalhos',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //

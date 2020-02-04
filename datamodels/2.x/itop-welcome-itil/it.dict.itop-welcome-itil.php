@@ -55,7 +55,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:MyShortcuts' => 'Le mie scorciatoie',
 	'Menu:UserManagement' => 'Gestione utenti',
 	'Menu:Queries' => 'Interrogazioni',
-	'Menu:Configuration' => 'configurazione',
+	'Menu:ConfigurationTools' => 'configurazione',
 ));
 
 //
