@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -60,11 +60,12 @@ h1 {
 }
 h2 {
   color: #1A202C;
-  font-size: 12pt;
+  font-size: 14pt;
+  font-weight: normal;
 }
 h3 {
   color: #1C94C4;
-  font-size: 11pt;
+  font-size: 12pt;
   font-weight: bold;
 }
 a {
