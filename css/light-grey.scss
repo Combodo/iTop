@@ -568,7 +568,7 @@ div.ui-accordion-content {
 
 td a.CollapsibleLabel, a.CollapsibleLabel{ 
 	margin: 0;
-	padding: 0px 0pt 0px 16px;
+	padding: 0;
 	font-size:8pt;
 	text-decoration:none;
 	color:$grey-color;
@@ -578,7 +578,7 @@ td a.CollapsibleLabel::before, a.CollapsibleLabel::before{
 	color: $highlight-color;
 	content: "\f0dd";
 	font-weight: 900;
-	margin-right: 6px;
+	margin: 0 5px;
 	font-size: 10px;
 }
 
