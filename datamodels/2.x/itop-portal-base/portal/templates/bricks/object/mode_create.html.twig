@@ -80,6 +80,7 @@
 			{% if form.submit_rule is not null %}submit_rule: {{ form.submit_rule|json_encode|raw }}{% endif %},
 			{% if form.cancel_rule is not null %}cancel_rule: {{ form.cancel_rule|json_encode|raw }}{% endif %},
 			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
+			session_message_endpoint: "{{ app['url_generator'].generate('p_session_message_add')|raw }}",
 			is_modal: {% if tIsModal == true %}true{% else %}false{% endif %}
 		});
 		

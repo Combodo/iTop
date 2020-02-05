@@ -325,14 +325,9 @@
 		<div class="container-fluid" id="main-wrapper">
 			<div class="row">
 				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
-                    <section class="row" id="session-messages">
+                    <section class="row">
 						<div class="col-xs-12">
-                            {% for aSessionMessage in app['session_message_helper'] %}
-								<div class="{{ aSessionMessage['css_classes'] }}" {{ aSessionMessage['metadata']|raw }}>
-									<button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>
-									{{ aSessionMessage['message'] }}
-								</div>
-                            {% endfor %}
+							{% include 'itop-portal-base/portal/templates/helpers/session_messages/session_messages.html.twig' %}
 						</div>
 					</section>
 					<section class="row" id="main-header">

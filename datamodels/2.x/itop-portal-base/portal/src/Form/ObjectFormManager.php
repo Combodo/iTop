@@ -32,7 +32,6 @@ use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\SessionMessageHelper;
 use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
@@ -1156,9 +1155,7 @@ class ObjectFormManager extends FormManager
 
 				if ($bWasModified)
 				{
-					/** @var \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper */
-					$oSessionMessageHelper = $this->oContainer->get('session_message_helper');
-					$oSessionMessageHelper->AddMessage(uniqid(), Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName()), SessionMessageHelper::ENUM_SEVERITY_OK, array('object_class' => $sObjectClass, 'object_id' => $this->oObject->GetKey()));
+					$aData['messages']['success'] += array('_main' => array(Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName())));
 				}
 			}
 			catch (Exception $e)
