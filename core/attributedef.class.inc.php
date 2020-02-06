@@ -10172,7 +10172,7 @@ class AttributeEnumSet extends AttributeSet
 	public function GetValueLabel($sValue)
 	{
 		$aValues = $this->GetRawPossibleValues();
-		if (isset($aValues[$sValue]))
+		if (!empty($aValues) && !empty($sValue) && isset($aValues[$sValue]))
 		{
 			$sValue = $aValues[$sValue];
 		}
