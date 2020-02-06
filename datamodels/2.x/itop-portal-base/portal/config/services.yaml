@@ -49,6 +49,7 @@ services:
       $bDebug:            '%kernel.debug%'
       $sPortalCachePath:  '%kernel.cache_dir%/'
       $sPortalId:         '%env(string:PORTAL_ID)%'
+      $sCombodoPortalBaseAbsoluteUrl:     '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_URL)%'
       $aCombodoPortalInstanceConf:        '%combodo.portal.instance.conf%'
       $sCombodoPortalInstanceAbsoluteUrl: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
 
