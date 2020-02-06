@@ -457,7 +457,21 @@ class SQLObjectQuery extends SQLQuery
 		{
 			$sLimit = '';
 		}
-		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
+		if (count($this->__aSelectedIdFields) > 0)
+		{
+			$aCountFields = array();
+			foreach ($this->__aSelectedIdFields as $sFieldExpr)
+			{
+				$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+			}
+			$sCountFields = implode(', ', $aCountFields);
+			$sCountClause = "DISTINCT $sCountFields";
+		}
+		else
+		{
+			$sCountClause = '*';
+		}
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT($sCountClause) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
 		return $sSQL;
 	}
 
