@@ -366,7 +366,7 @@ try
 					$sDefaultChoice = $aInitFieldMapping[$index];
 				}
 				$oPage->add('<tr>');
-				$oPage->add("<th>$sField</th>");
+				$oPage->add('<th>'.utils::HtmlEntities($sField).'</th>');
 				$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice).'</td>');
 				$oPage->add('<td>&nbsp;</td>');
 				$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
