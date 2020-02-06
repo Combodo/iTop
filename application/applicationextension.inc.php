@@ -226,6 +226,33 @@ interface iPreferencesExtension
 }
 
 /**
+ * Extend this class instead of implementing iPreferencesExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPreferencesExtension implements iPreferencesExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function DisplayPreferences(WebPage $oPage)
+	{
+		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function ApplyPreferences(WebPage $oPage, $sOperation)
+	{
+		// Do nothing
+	}
+
+}
+
+/**
  * Implement this interface to change the behavior of the GUI for some objects.
  *
  * All methods are invoked by iTop for a given object. There are basically two usages:
@@ -386,6 +413,81 @@ interface iApplicationUIExtension
 }
 
 /**
+ * Extend this class instead of implementing iApplicationUIExtension if you don't need to overload
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormCancel($sTempId)
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumUsedAttributes($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetIcon($oObject)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHilightClass($oObject)
+	{
+		return HILIGHT_CLASS_NONE;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+		return array();
+	}
+
+}
+
+/**
  * Implement this interface to perform specific things when objects are manipulated
  *
  * Note that those methods will be called when objects are manipulated, either in a programmatic way
@@ -480,6 +582,65 @@ interface iApplicationObjectExtension
 	 * @return void
 	 */
 	public function OnDBDelete($oObject, $oChange = null);
+}
+
+/**
+ * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationObjectExtension implements iApplicationObjectExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnIsModified($oObject)
+	{
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToWrite($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToDelete($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+		return;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBDelete($oObject, $oChange = null)
+	{
+		return;
+	}
+
 }
 
 /**
@@ -867,6 +1028,41 @@ interface iPageUIExtension
 	 * @return string The HTML content to add into the page
 	 */
 	public function GetBannerHtml(iTopWebPage $oPage);
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPageUIExtension implements iPageUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNorthPaneHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSouthPaneHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
 }
 
 /**
