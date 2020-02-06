@@ -20,6 +20,29 @@ class iTopConfigSyntaxValidator
 		exec('php -v', $aOutput, $iReturnVar);
 		$bCanRunCli = ($iReturnVar == 0);
 
+		if (!isset($aOutput[0]))
+		{
+			$bCanRunCli = false;
+		}
+
+		if ($bCanRunCli)
+		{
+			if (!preg_match('/\s*PHP\s+(\d+\.\d+\.\d+)/', $aOutput[0], $aMatches))
+			{
+				$bCanRunCli = false;
+			}
+			else
+			{
+				require_once(APPROOT.'setup/setuputils.class.inc.php');
+
+				$sCliPhpVersion = $aMatches[1];
+				if (version_compare($sCliPhpVersion, \SetupUtils::PHP_MIN_VERSION, '<>=>'))
+				{
+					$bCanRunCli = false;
+				}
+			}
+		}
+
 		if ($bCanRunCli)
 		{
 			$this->CheckSyntaxSecure($sConfig);
