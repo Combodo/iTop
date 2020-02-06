@@ -1,20 +1,22 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 use Symfony\Component\DependencyInjection\Container;
 
@@ -30,6 +32,7 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     Extensibility
+ * @since       2.7.0
  */
 interface iLoginExtension
 {
@@ -41,6 +44,9 @@ interface iLoginExtension
 	public function ListSupportedLoginModes();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginFSMExtension extends iLoginExtension
 {
 	/**
@@ -58,6 +64,9 @@ interface iLoginFSMExtension extends iLoginExtension
 	public function LoginAction($sLoginState, &$iErrorCode);
 }
 
+/**
+ * @since 2.7.0
+ */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 {
 	public abstract function ListSupportedLoginModes();
@@ -172,6 +181,9 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLogoutExtension extends iLoginExtension
 {
 	/**
@@ -180,6 +192,9 @@ interface iLogoutExtension extends iLoginExtension
 	public function LogoutAction();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
@@ -188,7 +203,11 @@ interface iLoginUIExtension extends iLoginExtension
 	public function GetTwigContext();
 }
 
-
+/**
+ * @api
+ * @package     Extensibility
+ * @since 2.7.0
+ */
 interface iPreferencesExtension
 {
 	/**
@@ -589,7 +608,6 @@ abstract class ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param array $aCssClasses The CSS classes to add to the menu
 	 */
 	public function __construct($sUID, $sLabel)
 	{
@@ -1082,11 +1100,6 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
-	 *
-	 * @param DBObject $oObject The object being reported
-	 * @param string $sAttCode The attribute code (must be valid)
-	 *
-	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{
