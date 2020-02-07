@@ -36,7 +36,7 @@ class iTopConfigSyntaxValidator
 				require_once(APPROOT.'setup/setuputils.class.inc.php');
 
 				$sCliPhpVersion = $aMatches[1];
-				if (version_compare($sCliPhpVersion, \SetupUtils::PHP_MIN_VERSION, '<>=>'))
+				if (version_compare($sCliPhpVersion, \SetupUtils::PHP_MIN_VERSION, '<'))
 				{
 					$bCanRunCli = false;
 				}
