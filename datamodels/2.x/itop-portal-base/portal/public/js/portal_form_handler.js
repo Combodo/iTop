@@ -215,7 +215,7 @@ $(function()
 												{
 													sSeverity: sMessageType,
 													sContent: sMessageContent,
-												},
+												}
 											);
 										}
 										else if(oHelpBlock.attr('id') === 'session-messages')
