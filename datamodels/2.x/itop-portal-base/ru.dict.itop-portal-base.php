@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *

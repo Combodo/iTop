@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Page:DefaultTitle' => 'Portal do usuário iTop',

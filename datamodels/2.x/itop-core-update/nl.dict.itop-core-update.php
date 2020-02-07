@@ -23,24 +23,24 @@
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-
 	'iTopUpdate:UI:PageTitle' => 'Upgraden toepassing',
     'itop-core-update:UI:SelectUpdateFile' => 'Upgrade',
     'itop-core-update:UI:ConfirmUpdate' => 'Upgrade',
-    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade',	
+    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'De onderhoudsmode van deze toepassing is actief. Geen enkele gebruiker heeft momenteel toegang. Voer een setup of herstel uit om de onderhoudsmode te deactiveren.',
-    'itop-core-update:UI:UpdateDone' => 'Upgrade voltooid',
+	'itop-core-update:UI:UpdateDone' => 'Upgrade voltooid',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Upgrade',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Upgrade',
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Upgrade',
 	'itop-core-update/Operation:UpdateDone/Title' => 'Upgrade voltooid',
-	
+
 	'iTopUpdate:UI:SelectUpdateFile' => 'Selecteer een upgrade-bestand om te uploaden',
 	'iTopUpdate:UI:CheckUpdate' => 'Verifieer upgrade-bestand',
 	'iTopUpdate:UI:ConfirmInstallFile' => 'Er zal een upgrade uitgevoerd worden met %1$s',
 	'iTopUpdate:UI:DoUpdate' => 'Upgrade',
 	'iTopUpdate:UI:CurrentVersion' => 'Versienummer huidige installatie',
+	'iTopUpdate:UI:NewVersion' => 'Newly installed version~~',
     'iTopUpdate:UI:Back' => 'Vorige',
     'iTopUpdate:UI:Cancel' => 'Annuleer',
     'iTopUpdate:UI:Continue' => 'Volgende',
@@ -83,7 +83,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Maken van backup database',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archiveren van de toepassingsbestanden',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Kopiëren van nieuwe versies van bestanden',
-    'iTopUpdate:UI:SetupMessage:Compile' => 'Upgraden van toepassing en database',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Check application upgrade~~',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgraden van toepassing en database',
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgraden van database',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Deactiveren van onderhoudsmode',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade voltooid',

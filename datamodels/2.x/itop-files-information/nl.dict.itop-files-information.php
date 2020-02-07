@@ -22,7 +22,6 @@
  *
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Ontbrekend bestand: %1$s',

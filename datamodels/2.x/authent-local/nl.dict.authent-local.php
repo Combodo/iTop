@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 //
 // Class: UserLocal
 //
@@ -44,6 +43,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 8 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
 
-	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
-	
+	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.'
 ));

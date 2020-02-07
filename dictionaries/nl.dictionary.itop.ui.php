@@ -539,7 +539,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'Deze account is niet gelinkt aan een persoon waarvan een e-mailadres gekend is. Neem contact op met jouw beheerder.',
 	'UI:ResetPwd-Error-NoEmail' => 'Er ontbreekt een e-mailadres. Neem contact op met jouw beheerder.',
 	'UI:ResetPwd-Error-Send' => 'Er is een technisch probleem bij het verzenden van de e-mail. Neem contact op met jouw beheerder.',
-
 	'UI:ResetPwd-EmailSent' => 'Kijk in jouw mailbox (eventueel bij ongewenste mail) en volg de instructies...',
 	'UI:ResetPwd-EmailSubject' => 'Reset jouw '.ITOP_APPLICATION_SHORT.'-wachtwoord',
 	'UI:ResetPwd-EmailBody' => '<body><p>Je hebt een reset van jouw '.ITOP_APPLICATION_SHORT.'-wachtwoord aangevraagd.</p><p>Klik op deze link (eenmalig te gebruiken) om <a href="%1$s">een nieuw wachtwoord in te voeren</a></p>.',
@@ -914,6 +913,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes aan de hand van soort status',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes aan de hand van werkgroep',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nog niet toegewezen Changes',
+
 	'UI:ConfigurationManagementMenu' => 'Configuratie Management',
 	'UI:ConfigurationManagementMenu+' => 'Configuratie Management',
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastructuuroverzicht',

@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',

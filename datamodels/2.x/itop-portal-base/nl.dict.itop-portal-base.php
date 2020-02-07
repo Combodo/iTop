@@ -16,11 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 /**
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
-
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:DefaultTitle' => '%1$s Gebruikersportaal',

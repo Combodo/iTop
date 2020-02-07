@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Page:DefaultTitle' => 'Uživatelský portál %1$s',

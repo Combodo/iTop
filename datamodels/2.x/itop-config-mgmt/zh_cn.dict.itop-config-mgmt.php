@@ -20,12 +20,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',

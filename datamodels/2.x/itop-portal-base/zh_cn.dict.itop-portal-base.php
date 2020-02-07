@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Page:DefaultTitle' => 'iTop 用户门户',
