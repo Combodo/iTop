@@ -2380,6 +2380,7 @@ abstract class DBObject implements iDisplay
      *
      * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}. Reset during {@see DBObject::DBUpdate()}
      * @uses m_aCurrValues
+     * @see \DBObject::ListPreviousValuesForUpdatedAttributes()
      * @throws Exception
      */
 	public function ListChanges()
@@ -2396,10 +2397,14 @@ abstract class DBObject implements iDisplay
 	 * @api
 	 * @api-advanced
 	 *
+	 * To be used during the {@link \DBObject::DBUpdate()} call stack.
+	 *
+	 * To get values that were set to the changed fields, simply use {@link \DBObject::Get()}
+	 *
 	 * @return array attname => value : value that was present before the last {@see DBObject::Set()} call.
-	 *       This array is set at the beginning of {@see DBObject::DBpdate()} using {@see DBObject::InitPreviousValuesForUpdatedAttributes()}
+	 *       This array is set at the beginning of {@see DBObject::DBpdate()} using {@see DBObject::InitPreviousValuesForUpdatedAttributes()}.
 	 * @uses m_aPreviousValuesForUpdatedAttributes
-	 * @see DBObject::ListChanges() use this other method if your code is BEFORE the update
+	 * @see \DBObject::ListChanges()
 	 * @since 2.7.0 N°2293
 	 */
 	public function ListPreviousValuesForUpdatedAttributes()
