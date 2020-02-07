@@ -124,11 +124,13 @@ class ValueSetObjects extends ValueSetDefinition
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
+		$this->m_bIsLoaded = false; // Reset cache
 	}
 
 	public function AddCondition(DBSearch $oFilter)
 	{
-		$this->m_aExtraConditions[] = $oFilter;		
+		$this->m_aExtraConditions[] = $oFilter;
+		$this->m_bIsLoaded = false; // Reset cache
 	}
 
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
