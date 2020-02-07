@@ -325,7 +325,24 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 			return new UserLocalPasswordValidity(true);
 		}
 
-		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		$sUserLanguage = Dict::GetUserLanguage();
+		$customMessages = $config->GetModuleSetting('authent-local', 'password_validation.message', null);
+		if (is_string($customMessages) )
+		{
+			$sMessage = $customMessages;
+		}
+		elseif (isset($customMessages) && array_key_exists($sUserLanguage, $customMessages))
+		{
+			$sMessage = $customMessages[$sUserLanguage];
+		}
+		elseif (isset($customMessages) && array_key_exists('EN US', $customMessages))
+		{
+			$sMessage = $customMessages['EN US'];
+		}
+		else
+		{
+			$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		}
 
 		return new UserLocalPasswordValidity(
 			false,

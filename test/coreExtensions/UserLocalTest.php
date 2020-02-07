@@ -43,13 +43,18 @@ class UserLocalTest extends ItopTestCase
 	 * @preserveGlobalState disabled
 	 * @backupGlobals disabled
 	 */
-	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null)
+	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
 		$configMock = $this->createMock(\Config::class);
 
 		$configMock
 			->method('GetModuleSetting')
 			->willReturnMap($aConfigValueMap);
+
+		if (isset($sUserLanguage))
+		{
+			\Dict::SetUserLanguage($sUserLanguage);
+		}
 
 		/** @var UserLocal $oUserLocal */
 		$oUserLocal = \MetaModel::NewObject('UserLocal', array('login' => 'john'));
@@ -171,6 +176,76 @@ class UserLocalTest extends ItopTestCase
 				'expectedCheckIssues' => 'UserLocalPasswordPolicyMockNotValid',
 			),
 
+			'notValidPattern custom message FR' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('FR FR' => 'fr message', 'EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'fr message',
+				'userLanguage' => 'FR FR',
+			),
+			'notValidPattern custom message EN' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('FR FR' => 'fr message', 'EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'en message',
+				'userLanguage' => 'EN US',
+			),
+			'notValidPattern custom message Fallback' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'en message',
+				'userLanguage' => 'FR FR',
+			),
+			'notValidPattern custom message empty array' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array()),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
+				'userLanguage' => 'EN US',
+			),
+			'notValidPattern custom message string not array' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, 'not an array'),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'not an array',
+				'userLanguage' => 'EN US',
+			),
 		);
 	}
 
