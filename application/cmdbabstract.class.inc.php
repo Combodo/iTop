@@ -943,6 +943,7 @@ EOF
 							$val['attcode'] = $sAttCode;
 							$val['atttype'] = $sAttDefClass;
 							$val['attlabel'] = $sAttLabel;
+							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
 
 							// - How the field should be rendered
 							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';

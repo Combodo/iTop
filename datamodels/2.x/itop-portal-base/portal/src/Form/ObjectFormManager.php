@@ -944,6 +944,12 @@ class ObjectFormManager extends FormManager
 				$oField->SetDisplayMode($aFieldsExtraData[$sAttCode]['display_mode']);
 			}
 
+			// Overload (AttributeDefinition) flags metadata as they have been changed while building the form
+			$oField->AddMetadata('attribute-flag-hidden', $oField->GetHidden() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-read-only', $oField->GetReadOnly() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-mandatory', $oField->GetMandatory() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-must-change', $oField->GetMustChange() ? 'true' : 'false');
+
 			// Do not add hidden fields as they are of no use, if one is necessary because another depends on it, it will be automatically added.
 			// Note: We do this at the end because during the process an hidden field could have become writable if mandatory and empty for example.
 			if($oField->GetHidden() === false)

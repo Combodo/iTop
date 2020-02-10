@@ -2510,6 +2510,32 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return an hash array of the possible attribute flags (code => value)
+	 *
+	 * Example:
+	 * [
+	 *  "read_only" => OPT_ATT_READONLY,
+	 *  "mandatory" => OPT_ATT_MANDATORY,
+	 *  ...
+	 * ]
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function EnumPossibleAttributeFlags()
+	{
+		return $aPossibleAttFlags = array(
+			'normal' => OPT_ATT_NORMAL,
+			'hidden' => OPT_ATT_HIDDEN,
+			'read_only' => OPT_ATT_READONLY,
+			'mandatory' => OPT_ATT_MANDATORY,
+			'must_change' => OPT_ATT_MUSTCHANGE,
+			'must_prompt' => OPT_ATT_MUSTPROMPT,
+			'slave' => OPT_ATT_SLAVE
+		);
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sState
 	 * @param string $sAttCode

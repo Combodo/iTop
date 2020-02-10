@@ -1033,6 +1033,20 @@ abstract class AttributeDefinition
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
 		$oFormField->AddMetadata('attribute-label', utils::HtmlEntities($this->GetLabel()));
+		// - Attribute flags
+		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
+		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
+		{
+			// Note: Skip normal flag as we don't need it.
+			if($sFlagCode === 'normal')
+			{
+				continue;
+			}
+			$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
+			$sFormattedFlagValue = (($iFlags & $iFlagValue) === $iFlagValue) ? 'true' : 'false';
+			$oFormField->AddMetadata('attribute-flag-'.$sFormattedFlagCode, $sFormattedFlagValue);
+		}
+		// - Value raw
 		if ($this::IsScalar())
 		{
 			$oFormField->AddMetadata('value-raw', utils::HtmlEntities($oObject->Get($this->GetCode())));
