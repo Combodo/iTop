@@ -207,11 +207,11 @@ $(function()
 									for(var i in oMessages[sMessageType][sFieldId])
 									{
 										var sMessageContent = oMessages[sMessageType][sFieldId][i];
-										// Note: We might want to expose some routes directly in JS to ease their use
-										if(oHelpBlock === null && me.options.session_message_endpoint !== null)
+										if(oHelpBlock === null)
 										{
 											$.post(
-												me.options.session_message_endpoint,
+												// Note: We might want to expose some routes directly in JS to ease their use
+												GetAddSessionMessageUrl(),
 												{
 													sSeverity: sMessageType,
 													sContent: sMessageContent,

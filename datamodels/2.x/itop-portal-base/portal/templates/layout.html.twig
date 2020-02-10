@@ -407,6 +407,11 @@
 				{
 					return '{{ app['combodo.absolute_url'] }}';
 				};
+				// Note: We might want to expose URLs instead of this kind of stuff... 🤔
+				var GetAddSessionMessageUrl = function()
+				{
+					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
+				};
 				// Helper to add a parameter to an url
 				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
 				{
