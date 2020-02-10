@@ -124,13 +124,11 @@ class ValueSetObjects extends ValueSetDefinition
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
-		$this->m_bIsLoaded = false; // Reset cache
 	}
 
 	public function AddCondition(DBSearch $oFilter)
 	{
 		$this->m_aExtraConditions[] = $oFilter;
-		$this->m_bIsLoaded = false; // Reset cache
 	}
 
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
@@ -183,11 +181,7 @@ class ValueSetObjects extends ValueSetDefinition
      */
     public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
-		{
-			$this->LoadValues($aArgs, $sContains, $sOperation);
-			$this->m_bIsLoaded = true;
-		}
+		$this->LoadValues($aArgs, $sContains, $sOperation);
 		// The results are already filtered and sorted (on friendly name)
 		$aRet = $this->m_aValues;
 		return $aRet;
