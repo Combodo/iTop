@@ -22,6 +22,7 @@
 body {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 10pt;
+	background-color: $body-background-color;
     color: $text-color;
 	margin: 0;			/* Remove body margin/padding */
 	padding: 0;
