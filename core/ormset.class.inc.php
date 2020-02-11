@@ -29,6 +29,7 @@ class ormSet
 	protected $sClass; // class of the field
 	protected $sAttCode; // attcode of the field
 	protected $aOriginalObjects = null;
+	protected $m_bDisplayPartial = false;
 
 	/**
 	 * Object from the original set, minus the removed objects
@@ -387,5 +388,19 @@ class ormSet
 		return implode(', ', $this->GetValue()) === implode(', ', $other->GetValue());
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function DisplayPartial()
+	{
+		return $this->m_bDisplayPartial;
+	}
 
+	/**
+	 * @param bool $m_bDisplayPartial
+	 */
+	public function SetDisplayPartial($m_bDisplayPartial)
+	{
+		$this->m_bDisplayPartial = $m_bDisplayPartial;
+	}
 }
