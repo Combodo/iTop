@@ -468,18 +468,18 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(
-				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
-				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
+				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip_id_friendlyname) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip_id_friendlyname) < INET_ATON('10.22.32.255')",
+				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip_id_friendlyname`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip_id_friendlyname`) > INET_ATON('10.22.32.224')))",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
 			'TagSet Matches' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'\"tag1\" _\'',
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\'',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Matches2' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'\"tag1\" \"tag2\" _\'',
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\'',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Undefined' => array(
@@ -489,12 +489,12 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'TagSet Undefined and tag' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE (((".TAG_ATTCODE." MATCHES 'tag1 tag2') OR (".TAG_ATTCODE." = '')) AND 1)",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'\"tag1\" \"tag2\" _\' OR (`'.TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\' OR (`'.TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet equals' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'\"tag1\" _\' AND `'.TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'\"tag2\" _\')',
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\' AND `'.TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag2 _\')',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 
