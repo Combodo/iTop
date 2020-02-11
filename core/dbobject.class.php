@@ -1670,7 +1670,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @return integer the binary combination of flags for the given attribute in the given state of the object.
 	 * Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
-	 * Concat multiple values using the "|" operator.
+	 * Combine multiple values using the "|" operator, for example `OPT_ATT_READONLY | OPT_ATT_HIDDEN`.
      *
 	 * @throws \CoreException
 	 *
