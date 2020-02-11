@@ -1282,10 +1282,11 @@ class WizStepModulesChoice extends WizardStep
 			$sConfigPath = utils::GetConfigFilePath('production');
 		}
 
-		if ($sConfigPath !== null) // only called if the config file exists : we are updating a previous installation !
+		// only called if the config file exists : we are updating a previous installation !
+		// WARNING : we can't load this config directly, as it might be from another directory with a different approot_url (N°2684)
+		if ($sConfigPath !== null)
 		{
 			$oConfig = new Config($sConfigPath);
-			utils::SetConfig($oConfig);
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		}
 	}
