@@ -201,9 +201,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 			}
 		}
 		// This allow to search for complete words
-		$sValue = '"'.implode('" "', $aRawValues).'" _';
-
-		if (empty($sValue))
+		if (!empty($aRawValues))
+		{
+			$sValue = '"'.implode('" "', $aRawValues).'" _';
+		}
+		else
 		{
 			if ($bHasUnDefined)
 			{
