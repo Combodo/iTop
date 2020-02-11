@@ -176,12 +176,6 @@ abstract class Dashboard
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
-        // To avoid collision with other dashlets with the same ID we suffix it. Collisions typically happen with extensions.
-	    // Note: The check is done so we don't append it at each save of the dashboard.
-        if(strpos($sId, 'uniqid_') === false)
-        {
-        	$sId .= '_uniqid_' . uniqid();
-        }
 
 	    $sDashletType = $oDomNode->getAttribute('xsi:type');
 

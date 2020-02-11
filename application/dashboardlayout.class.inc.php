@@ -26,14 +26,9 @@
 
 abstract class DashboardLayout
 {
-	public function __construct()
-	{
-		
-	}
-	
 	abstract public function Render($oPage, $aDashlets, $bEditMode = false);
 	
-	static public function GetInfo()
+	public static function GetInfo()
 	{
 		return array(
 			'label' => '',
@@ -61,7 +56,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		{
 			/** @var \Dashlet $oDashlet */
 			$oDashlet = $aDashlets[$aKeys[$idx]];
-			if ($oDashlet->IsVisible())
+			if ($oDashlet::IsVisible())
 			{
 				$bNoVisibleFound = false;
 			}
@@ -134,6 +129,10 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						{
 							if ($oDashlet->IsVisible())
 							{
+								$sDashboardId = $oDashlet->GetID();
+								// N°2634 : we must have a unique id per dashlet !
+								// To avoid collision with other dashlets with the same ID we prefix it. Collisions typically happen with extensions.
+								$oDashlet->SetID("row$iRows-col$iCols-$sDashboardId");
 								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
 						}
