@@ -468,8 +468,8 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(
-				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip_id_friendlyname) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip_id_friendlyname) < INET_ATON('10.22.32.255')",
-				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip_id_friendlyname`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip_id_friendlyname`) > INET_ATON('10.22.32.224')))",
+				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip_) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
+				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
 			'TagSet Matches' => array(
