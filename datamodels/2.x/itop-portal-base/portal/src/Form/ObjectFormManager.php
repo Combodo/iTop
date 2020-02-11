@@ -1130,6 +1130,10 @@ class ObjectFormManager extends FormManager
 				{
 					$this->FinalizeAttachments($aArgs['attachmentIds']);
 				}
+
+				// Ending transaction with a commit as everything was fine
+				CMDBSource::Query('COMMIT');
+
 				// Checking if we have to apply a stimulus
 				if (isset($aArgs['applyStimulus']))
 				{
@@ -1151,10 +1155,6 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
-				// Removing transaction id
-				utils::RemoveTransaction($this->oForm->GetTransactionId());
-				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
 
 				// Resetting caselog fields value, otherwise the value will stay in it after submit.
 				$this->oForm->ResetCaseLogFields();
@@ -1171,6 +1171,11 @@ class ObjectFormManager extends FormManager
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
+			}
+			finally
+			{
+				// Removing transaction id
+				utils::RemoveTransaction($this->oForm->GetTransactionId());
 			}
 		}
 		else
