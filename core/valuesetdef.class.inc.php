@@ -97,7 +97,7 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
-	protected $m_aExtraConditions;
+	protected $m_oExtraCondition;
 	private $m_bAllowAllData;
 	private $m_aModifierProperties;
 	private $m_bSort;
@@ -116,7 +116,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
 		$this->m_aModifierProperties = $aModifierProperties;
-		$this->m_aExtraConditions = array();
+		$this->m_oExtraCondition = null;
 		$this->m_bSort = true;
 		$this->m_iLimit = 0;
 	}
@@ -124,11 +124,13 @@ class ValueSetObjects extends ValueSetDefinition
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
+		$this->m_bIsLoaded = false;
 	}
 
-	public function AddCondition(DBSearch $oFilter)
+	public function SetCondition(DBSearch $oFilter)
 	{
-		$this->m_aExtraConditions[] = $oFilter;
+		$this->m_oExtraCondition = $oFilter;
+		$this->m_bIsLoaded = false;
 	}
 
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
@@ -141,9 +143,9 @@ class ValueSetObjects extends ValueSetDefinition
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -181,7 +183,11 @@ class ValueSetObjects extends ValueSetDefinition
      */
     public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		$this->LoadValues($aArgs, $sContains, $sOperation);
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
+		{
+			$this->LoadValues($aArgs, $sContains, $sOperation);
+			$this->m_bIsLoaded = true;
+		}
 		// The results are already filtered and sorted (on friendly name)
 		$aRet = $this->m_aValues;
 		return $aRet;
@@ -212,9 +218,9 @@ class ValueSetObjects extends ValueSetDefinition
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
 		if (!$oFilter) return false;
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{

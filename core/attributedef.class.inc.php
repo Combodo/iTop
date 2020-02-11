@@ -6898,7 +6898,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		if ($oFilter)
 		{
 			$oValSetDef = $this->GetValuesDef();
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 
 			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
@@ -6914,7 +6914,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
 		if ($oFilter)
 		{
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 		}
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
 
