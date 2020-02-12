@@ -2361,7 +2361,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
 				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->AddChildNode($oTargetNode);
+				$oContainer->appendChild($oTargetNode);
 			}
 		}
 		else
@@ -2377,7 +2377,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
 				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->AddChildNode($oTargetNode);
+				$oContainer->appendChild($oTargetNode);
 			}
 		}
 
