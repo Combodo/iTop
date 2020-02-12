@@ -6,8 +6,12 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AbstractApplicationObjectExtension' => $baseDir . '/application/applicationextension.inc.php',
+    'AbstractApplicationUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractLoginFSMExtension' => $baseDir . '/application/applicationextension.inc.php',
+    'AbstractPageUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractPortalUIExtension' => $baseDir . '/application/applicationextension.inc.php',
+    'AbstractPreferencesExtension' => $baseDir . '/application/applicationextension.inc.php',
     'AbstractWeeklyScheduledProcess' => $baseDir . '/core/backgroundprocess.inc.php',
     'Action' => $baseDir . '/core/action.class.inc.php',
     'ActionChecker' => $baseDir . '/core/userrights.class.inc.php',
@@ -148,6 +152,7 @@ return array(
     'Combodo\\iTop\\TwigExtension' => $baseDir . '/application/twigextension.class.inc.php',
     'Config' => $baseDir . '/core/config.class.inc.php',
     'ConfigException' => $baseDir . '/core/config.class.inc.php',
+    'ConfigPlaceholdersResolver' => $baseDir . '/core/config.class.inc.php',
     'Console_Getopt' => $vendorDir . '/pear/console_getopt/Console/Getopt.php',
     'ContextTag' => $baseDir . '/core/contexttag.class.inc.php',
     'CoreCannotSaveObjectException' => $baseDir . '/core/coreexception.class.inc.php',
@@ -2109,6 +2114,7 @@ return array(
     'ValueSetDefinition' => $baseDir . '/core/valuesetdef.class.inc.php',
     'ValueSetEnum' => $baseDir . '/core/valuesetdef.class.inc.php',
     'ValueSetEnumClasses' => $baseDir . '/core/valuesetdef.class.inc.php',
+    'ValueSetEnumPadded' => $baseDir . '/core/valuesetdef.class.inc.php',
     'ValueSetObjects' => $baseDir . '/core/valuesetdef.class.inc.php',
     'ValueSetRange' => $baseDir . '/core/valuesetdef.class.inc.php',
     'VariableExpression' => $baseDir . '/core/oql/expression.class.inc.php',

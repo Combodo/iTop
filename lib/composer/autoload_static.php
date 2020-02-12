@@ -236,8 +236,12 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
     );
 
     public static $classMap = array (
+        'AbstractApplicationObjectExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'AbstractApplicationUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractLoginFSMExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'AbstractPageUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractPortalUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'AbstractPreferencesExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractWeeklyScheduledProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'Action' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'ActionChecker' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
@@ -378,6 +382,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\TwigExtension' => __DIR__ . '/../..' . '/application/twigextension.class.inc.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'ConfigException' => __DIR__ . '/../..' . '/core/config.class.inc.php',
+        'ConfigPlaceholdersResolver' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'Console_Getopt' => __DIR__ . '/..' . '/pear/console_getopt/Console/Getopt.php',
         'ContextTag' => __DIR__ . '/../..' . '/core/contexttag.class.inc.php',
         'CoreCannotSaveObjectException' => __DIR__ . '/../..' . '/core/coreexception.class.inc.php',
@@ -2339,6 +2344,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ValueSetDefinition' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
         'ValueSetEnum' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
         'ValueSetEnumClasses' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
+        'ValueSetEnumPadded' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
         'ValueSetObjects' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
         'ValueSetRange' => __DIR__ . '/../..' . '/core/valuesetdef.class.inc.php',
         'VariableExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',

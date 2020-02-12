@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e413c47265b246174add07c2c91b5e9",
+    "content-hash": "b29eb2767d269b9ec2cf4d148dc083bc",
     "packages": [
         {
             "name": "combodo/tcpdf",
-            "version": "6.3.2",
+            "version": "6.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-                "reference": "2723050de47c8cbd78293656d896c0000442e23a"
+                "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/2723050de47c8cbd78293656d896c0000442e23a",
-                "reference": "2723050de47c8cbd78293656d896c0000442e23a",
+                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
+                "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
                 "shasum": ""
             },
             "require": {
@@ -49,9 +49,14 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0"
+                "LGPL-3.0-only"
             ],
             "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "role": "lead"
+                },
                 {
                     "name": "Combodo",
                     "email": "contact@combodo.com"
@@ -59,7 +64,7 @@
             ],
             "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
             "homepage": "https://github.com/combodo-itop-libs/TCPDF",
-            "time": "2020-01-08T16:22:40+00:00"
+            "time": "2020-02-12T14:16:56+00:00"
         },
         {
             "name": "nikic/php-parser",
