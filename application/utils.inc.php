@@ -1505,6 +1505,17 @@ class utils
 	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}	
+	
+	/**
+	 * Helper to encapsulation iTop's html_entity_decode
+	 * @param string $sValue
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public static function HtmlEntityDecode($sValue)
+	{
+		return html_entity_decode($sValue, ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
