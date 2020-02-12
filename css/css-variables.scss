@@ -109,10 +109,8 @@ $popup-menu-highlight-color: $highlight-color !default;
 $popup-menu-text-color: #000 !default;
 $popup-menu-background-color: #fff !default;
 $popup-menu-text-higlight-color: #fff !default;
-$breadcrumb-color: #555 !default;
-$breadcrumb-text-color: #fff !default;
+$breadcrumb-color: $grey-color !default;
 $breadcrumb-highlight-color: $highlight-color !default;
-$breadcrumb-text-highlight-color: #fff !default;
 
 // jQuery UI widgets vars
 $primary-text-color: #333333 !default;
