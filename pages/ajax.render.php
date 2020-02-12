@@ -75,6 +75,18 @@ try
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
 
+	// N°2780 Fix ContextTag for console
+	// some operations are also used in the portal though
+	switch ($operation)
+	{
+		case 'export_build':
+		case 'export_download':
+			// do nothing : used in portal (export.js in portal-base)
+
+		default:
+			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
+	}
+
 	switch ($operation)
 	{
 		case 'datatable':
