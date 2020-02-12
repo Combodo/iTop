@@ -1071,21 +1071,20 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get $sAttCode formatted as HTML
-     * 
-     * The returned string is already escaped, and as such is protected against XSS
-     * The markup relies on a few assumptions (CSS) that could change without notice
-     * 
      * @api
      * 
      * @param string $sAttCode
      * @param bool   $bLocalize
      *
-     * @return string
+     * @return string $sAttCode formatted as HTML for the console details forms (when viewing, not when editing !)
+     *          The returned string is already escaped, and as such is protected against XSS
+     *          The markup relies on a few assumptions (CSS) that could change without notice
      *
      * @throws ArchivedObjectException
      * @throws CoreException
      * @throws DictExceptionMissingString
+     *
+     * @see \Combodo\iTop\Form\Field\Field for rendering in portal forms
      */
 	public function GetAsHTML($sAttCode, $bLocalize = true)
 	{
