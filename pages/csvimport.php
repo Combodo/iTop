@@ -457,7 +457,7 @@ try
 							// Do nothing
 						}
 					}
-					$sHtmlValue = $oCellStatus->GetDisplayableValue();
+					$sHtmlValue = utils::HtmlEntities(utils::HtmlEntityDecode($oCellStatus->GetDisplayableValue()));
 					switch(get_class($oCellStatus))
 					{
 						case 'CellStatus_Issue':
