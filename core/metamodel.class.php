@@ -5712,6 +5712,8 @@ abstract class MetaModel
 
 
 	/**
+	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception
