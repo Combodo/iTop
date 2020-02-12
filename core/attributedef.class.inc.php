@@ -9903,10 +9903,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aAllowedValues = $this->GetPossibleValues();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
 			$aValues = $this->FromStringToArray($proposedValue);
+			foreach ($aValues as $i => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$i]);
+				}
+			}
 			$oSet->SetValues($aValues);
 		}
 		elseif ($proposedValue instanceof ormSet)
@@ -10096,7 +10104,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
-		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		if (is_object($value) && ($value instanceof ormSet))
 		{
 			if ($bLocalize)
@@ -10107,11 +10114,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			{
 				$aValues = $value->GetValues();
 			}
-			$sRes = implode($sSepItem, $aValues);
-			if (!empty($sRes))
-			{
-				$sRes = "{$sSepItem}{$sRes}{$sSepItem}";
-			}
+			$sRes = implode($sSeparator, $aValues);
 		}
 		else
 		{
@@ -10268,6 +10271,89 @@ class AttributeEnumSet extends AttributeSet
 		return $sRes;
 	}
 
+	/**
+	 * @param ormSet $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 * @throws \Exception
+	 */
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		if (is_object($value) && ($value instanceof ormSet))
+		{
+			$aValues = $value->GetValues();
+			if ($bLocalize)
+			{
+				$aLocalizedValues = array();
+				foreach($aValues as $sValue)
+				{
+					$aLocalizedValues[] = utils::HtmlEntities($this->GetValueLabel($sValue));
+				}
+				$aValues = $aLocalizedValues;
+			}
+			$sRes = implode($sSeparator, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 *
+	 * @param string $sProposedValue
+	 * @param bool $bLocalizedValue
+	 * @param string $sSepItem
+	 * @param string $sSepAttribute
+	 * @param string $sSepValue
+	 * @param string $sAttributeQualifier
+	 *
+	 * @return mixed null if no match could be found
+	 * @throws \Exception
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if ($bLocalizedValue)
+		{
+			// Lookup for the values matching the input
+			//
+			$aValues = $this->FromStringToArray($sProposedValue);
+			$aFoundValues = array();
+			$aRawValues = $this->GetPossibleValues();
+			foreach ($aValues as $sValue)
+			{
+				$bFound = false;
+				foreach ($aRawValues as $sCode => $sRawValue)
+				{
+					if ($sValue == $sRawValue)
+					{
+						$aFoundValues[] = $sCode;
+						$bFound = true;
+						break;
+					}
+				}
+				if (!$bFound)
+				{
+					// Not found, break the import
+					return null;
+				}
+			}
+
+			return $this->MakeRealValue(implode(',', $aFoundValues), null);
+		}
+		else
+		{
+			return $this->MakeRealValue($sProposedValue, null, false);
+		}
+	}
 }
 
 

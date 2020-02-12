@@ -401,7 +401,7 @@ class ValueSetEnumPadded extends ValueSetEnum
 		foreach ($this->m_aValues as $sKey => $sVal)
 		{
 			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
-			$aPaddedValues[$sKey] = $sKey;
+			$aPaddedValues[$sKey] = $sVal;
 		}
 		$this->m_values = $aPaddedValues;
 	}
