@@ -446,9 +446,6 @@ try
 							case 'CellStatus_Issue':
 							case 'CellStatus_SearchIssue':
 							case 'CellStatus_NullIssue':
-							$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
-							break;
-							
 							case 'CellStatus_Ambiguous':
 							$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
 							break;
