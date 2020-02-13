@@ -1127,12 +1127,44 @@ class ScalarExpression extends UnaryExpression
 									{
 										$oValue = $oAttDef->GetExistingTagsFromString($oValue, true);
 									}
-									/** @var \ormTagSet $oValue */
+									/** @var \ormTagSet $sValue */
 									$aTags = $oValue->GetTags();
 									foreach($aTags as $oTag)
 									{
 										$aValue['label'] = $oTag->Get('label');
 										$aValue['value'] = $oTag->Get('code');
+										$aValues[] = $aValue;
+									}
+									$aCriterion['values'] = $aValues;
+								}
+								else
+								{
+									$aCriterion['has_undefined'] = true;
+								}
+							} catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							break;
+						case ($oAttDef instanceof AttributeEnumSet):
+							try
+							{
+								if (!empty($this->GetValue()))
+								{
+									$aValues = array();
+									$sValue = $this->GetValue();
+									if (is_string($sValue))
+									{
+										$aTags = $oAttDef->FromStringToArray($sValue, ' ');
+									}
+									else
+									{
+										$aTags = array();
+									}
+									foreach($aTags as $sLabel => $sValue)
+									{
+										$aValue['label'] = $sLabel;
+										$aValue['value'] = $sValue;
 										$aValues[] = $aValue;
 									}
 									$aCriterion['values'] = $aValues;

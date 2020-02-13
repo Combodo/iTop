@@ -9851,16 +9851,16 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return 255;
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
 		{
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			// convert also , separated strings
-			if ($sSepItem !== ',')
+			if ($sSepItem !== $sDefaultSepItem)
 			{
-				$proposedValue = str_replace(',', $sSepItem, $proposedValue);
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
 			}
 			foreach(explode($sSepItem, $proposedValue) as $sCode)
 			{
@@ -10138,7 +10138,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 class AttributeEnumSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
-
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
@@ -10353,6 +10352,38 @@ class AttributeEnumSet extends AttributeSet
 		{
 			return $this->MakeRealValue($sProposedValue, null, false);
 		}
+	}
+
+	/**
+	 * @param string $proposedValue Search string used for MATCHES
+	 *
+	 * @param string $sDefaultSepItem word separator to extract items
+	 *
+	 * @return array of EnumSet codes
+	 * @throws \Exception
+	 */
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			// convert also other separators
+			if ($sSepItem !== $sDefaultSepItem)
+			{
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
+			}
+			foreach(explode($sSepItem, $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				if (strlen($sValue) > 2)
+				{
+					$sLabel = $this->GetValueLabel($sValue);
+					$aValues[$sLabel] = $sValue;
+				}
+			}
+		}
+		return $aValues;
 	}
 }
 
@@ -10875,7 +10906,7 @@ class AttributeTagSet extends AttributeSet
 		return json_encode($aJson);
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
