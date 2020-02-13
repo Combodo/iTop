@@ -540,6 +540,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
 	'Class:Trigger/Attribute:finalclass+' => 'Nom de la classe instanciable',
+	'Class:Trigger/Attribute:context' => 'Contexte',
+	'Class:Trigger/Attribute:context+' => 'Contexte de déclenchement',
 ));
 
 //
