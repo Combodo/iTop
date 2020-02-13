@@ -1517,7 +1517,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeClassAttCodeSet')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
@@ -1531,7 +1530,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeEnumSet')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$oValues = $oField->GetUniqueElement('values');
 					$oValueNodes = $oValues->getElementsByTagName('value');
 					$aValues = array();
@@ -1549,7 +1547,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeQueryAttCodeSet')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
@@ -1559,7 +1556,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeClassState')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
