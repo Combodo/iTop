@@ -1895,6 +1895,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Server:otherinfo' => '其它信息',
 	'Server:power' => '电力供应',
 	'Person:info' => '基本信息',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
 	'Class:Subnet/Tab:IPUsage' => 'IP 使用率',

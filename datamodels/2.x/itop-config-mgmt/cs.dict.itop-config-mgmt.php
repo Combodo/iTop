@@ -1898,6 +1898,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Server:otherinfo' => 'Další informace',
 	'Server:power' => 'Napájení',
 	'Person:info' => 'Obecné informace',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornění',
 	'Class:Subnet/Tab:IPUsage' => 'Využití IP',

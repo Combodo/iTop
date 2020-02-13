@@ -1890,6 +1890,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Server:otherinfo' => 'Other information~~',
 	'Server:power' => 'Power supply~~',
 	'Person:info' => 'General information~~',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
 	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',

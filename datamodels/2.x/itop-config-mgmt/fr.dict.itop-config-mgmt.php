@@ -1894,6 +1894,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Server:otherinfo' => 'Autres informations',
 	'Server:power' => 'Alimentation électrique',
 	'Person:info' => 'Informations générales',
+	'UserLocal:info' => 'Informations générales',
 	'Person:personal_info' => 'Informations personnelles',
 	'Person:notifiy' => 'Notification',
 	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
