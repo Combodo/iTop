@@ -127,6 +127,15 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_bIsLoaded = false;
 	}
 
+	/**
+	 * @param \DBSearch $oFilter
+	 * @deprecated use SetCondition
+	 */
+	public function AddCondition(DBSearch $oFilter)
+	{
+		$this->SetCondition($oFilter);
+	}
+
 	public function SetCondition(DBSearch $oFilter)
 	{
 		$this->m_oExtraCondition = $oFilter;
