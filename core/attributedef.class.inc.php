@@ -10104,6 +10104,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		if (is_object($value) && ($value instanceof ormSet))
 		{
 			if ($bLocalize)
@@ -10114,7 +10115,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			{
 				$aValues = $value->GetValues();
 			}
-			$sRes = implode($sSeparator, $aValues);
+			$sRes = implode($sSepItem, $aValues);
 		}
 		else
 		{
@@ -10283,6 +10284,7 @@ class AttributeEnumSet extends AttributeSet
 	 */
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		if (is_object($value) && ($value instanceof ormSet))
 		{
 			$aValues = $value->GetValues();
@@ -10291,11 +10293,11 @@ class AttributeEnumSet extends AttributeSet
 				$aLocalizedValues = array();
 				foreach($aValues as $sValue)
 				{
-					$aLocalizedValues[] = utils::HtmlEntities($this->GetValueLabel($sValue));
+					$aLocalizedValues[] = $this->GetValueLabel($sValue);
 				}
 				$aValues = $aLocalizedValues;
 			}
-			$sRes = implode($sSeparator, $aValues);
+			$sRes = implode($sSepItem, $aValues);
 		}
 		else
 		{
