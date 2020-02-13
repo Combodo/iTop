@@ -1199,6 +1199,7 @@ EOF
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$aExtraParams['dashboard_div_id'] = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oKPI = new ExecutionKPI();

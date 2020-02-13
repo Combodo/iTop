@@ -129,10 +129,20 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						{
 							if ($oDashlet->IsVisible())
 							{
-								$sDashboardId = $oDashlet->GetID();
-								// N°2634 : we must have a unique id per dashlet !
-								// To avoid collision with other dashlets with the same ID we prefix it. Collisions typically happen with extensions.
-								$oDashlet->SetID("row$iRows-col$iCols-$sDashboardId");
+								$sDashletId = $oDashlet->GetID();
+								if(strpos($sDashletId, 'IDrow') === false)
+								{
+									$sDashboardDivId = $aExtraParams['dashboard_div_id'];
+									// N°2634 : we must have a unique id per dashlet !
+									// To avoid collision with other dashlets with the same ID we prefix it with row/cell id
+									// Collisions typically happen with extensions.
+									$sDashletId = $sDashboardDivId."_IDrow$iRows-col$iCols-$sDashletId";
+									if (array_key_exists('bCustomized', $aExtraParams) && ((bool)$aExtraParams['bCustomized']) === true)
+									{
+										$sDashletId = 'CUSTOM_'.$sDashletId;
+									}
+									$oDashlet->SetID($sDashletId);
+								}
 								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
 						}
