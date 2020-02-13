@@ -1158,9 +1158,18 @@ class DataTableSettings implements Serializable
 	 */
 	protected function GetPrefsKey($sTableId = null)
 	{
-		if ($sTableId == null) $sTableId = '*';
+		return static::GetAppUserPreferenceKey($this->aClassAliases, $sTableId);
+	}
+
+	public static function GetAppUserPreferenceKey($aClassAliases, $sTableId)
+	{
+		if ($sTableId === null)
+		{
+			$sTableId = '*';
+		}
+
 		$aKeys = array();
-		foreach($this->aClassAliases as $sAlias => $sClass)
+		foreach($aClassAliases as $sAlias => $sClass)
 		{
 			$aKeys[] = $sAlias.'-'.$sClass;
 		}

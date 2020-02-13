@@ -892,6 +892,7 @@ class DashletPlainText extends Dashlet
 
 class DashletObjectList extends Dashlet
 {
+	const APPUSERPREFERENCE_TABLE_PREFIX = 'Dashlet';
 	/**
 	 * @inheritdoc
 	 */
@@ -913,7 +914,6 @@ class DashletObjectList extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
-		$sQuery = $this->aProperties['query'];
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 
 		$oPage->add('<div class="dashlet-content">');
@@ -922,6 +922,20 @@ class DashletObjectList extends Dashlet
 		{
 			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
 		}
+		$oFilter = $this->GetDBSearch($aExtraParams);
+		$oBlock = new DisplayBlock($oFilter, 'list');
+		$aParams = array(
+			'menu' => $sShowMenu,
+			'table_id' => self::APPUSERPREFERENCE_TABLE_PREFIX.$this->sId,
+		);
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
+		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		$oPage->add('</div>');
+	}
+
+	public function GetDBSearch($aExtraParams = array())
+	{
+		$sQuery = $this->aProperties['query'];
 		if (isset($aExtraParams['query_params']))
 		{
 			$aQueryParams = $aExtraParams['query_params'];
@@ -935,15 +949,8 @@ class DashletObjectList extends Dashlet
 		{
 			$aQueryParams = array();
 		}
-		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
-		$oBlock = new DisplayBlock($oFilter, 'list');
-		$aParams = array(
-			'menu' => $sShowMenu,
-			'table_id' => 'Dashlet'.$this->sId,
-		);
-		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
-		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-		$oPage->add('</div>');
+
+		return DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 	}
 
 	/**
