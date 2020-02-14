@@ -161,6 +161,11 @@ class DBUnionSearch extends DBSearch
 		return $this->aSearches;
 	}
 
+	public function GetFirstJoinedClass()
+	{
+		return $this->GetClass();
+	}
+
 	/**
 	 * Limited to the selected classes
 	 */

@@ -239,6 +239,12 @@ abstract class DBSearch
 	abstract public function GetClassAlias();
 
 	/**
+	 * @return string
+	 * @internal
+	 */
+	abstract public function GetFirstJoinedClass();
+
+	/**
      * Change the class
      *
      * Defaults to the first selected class (most of the time it is also the first joined class
