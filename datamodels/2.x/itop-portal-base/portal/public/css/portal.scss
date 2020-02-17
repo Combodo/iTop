@@ -1116,6 +1116,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	color: $brand-primary;
 	font-size: 0.9em;
 }
+.form_field .form-control-static img{
+	max-width: 100% !important;
+	height: initial !important;
+}
 /* ExternalKey */
 .selectobject .input-group-addon{
 	cursor: pointer;
@@ -1343,11 +1347,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /* BlobField */
 .form_fields .file_open_link{
 	margin-left: 10px;
-}
-
-.form_field .form-control-static img{
-	max-width: 100% !important;
-	height: initial !important;
 }
 
 .form_buttons{
