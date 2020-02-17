@@ -186,7 +186,7 @@ $(function()
 										if(sMessageType === 'success')
 										{
 											// If not redirecting in a modal, will be set as session message
-											if((sRuleType === 'redirect') && (bRedirectInModal === false))
+											if((sRuleType === 'redirect') && (bRedirectInModal === false) && (sRedirectUrl !== null))
 											{
 												oHelpBlock = null;
 											}
