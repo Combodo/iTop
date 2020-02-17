@@ -1127,7 +1127,7 @@ class ScalarExpression extends UnaryExpression
 									{
 										$oValue = $oAttDef->GetExistingTagsFromString($oValue, true);
 									}
-									/** @var \ormTagSet $sValue */
+									/** @var \ormTagSet $oValue */
 									$aTags = $oValue->GetTags();
 									foreach($aTags as $oTag)
 									{
