@@ -426,7 +426,6 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
-		return;
 	}
 
 	/**
@@ -434,7 +433,6 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
 	{
-		return;
 	}
 
 	/**
@@ -442,7 +440,6 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function OnFormSubmit($oObject, $sFormPrefix = '')
 	{
-		return;
 	}
 
 	/**
@@ -450,7 +447,6 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function OnFormCancel($sTempId)
 	{
-		return;
 	}
 
 	/**
@@ -622,7 +618,6 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
 	 */
 	public function OnDBUpdate($oObject, $oChange = null)
 	{
-		return;
 	}
 
 	/**
@@ -630,7 +625,6 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
 	 */
 	public function OnDBInsert($oObject, $oChange = null)
 	{
-		return;
 	}
 
 	/**
@@ -638,7 +632,6 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
 	 */
 	public function OnDBDelete($oObject, $oChange = null)
 	{
-		return;
 	}
 
 }
