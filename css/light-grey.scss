@@ -577,7 +577,7 @@ td a.CollapsibleLabel, a.CollapsibleLabel{
 td a.CollapsibleLabel::before, a.CollapsibleLabel::before{
 	font-family: "Font Awesome 5 Free";
 	color: $highlight-color;
-	content: "\f0dd";
+	content: "\f0da"; // caret-right
 	font-weight: 900;
 	margin: 0 5px;
 	font-size: 10px;
@@ -594,7 +594,7 @@ td a.CollapsibleLabel.open, a.CollapsibleLabel.open{
 td a.CollapsibleLabel.open::before, a.CollapsibleLabel.open::before {
 	font-family: "Font Awesome 5 Free";
 	color: $highlight-color;
-	content: '\f0d7';
+	content: '\f0d7'; // caret-down
 	margin-right: 6px;
 	font-size: 10px;
 }
