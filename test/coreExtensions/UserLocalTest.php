@@ -8,6 +8,7 @@
 namespace coreExtensions;
 
 
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use UserLocal;
 use UserLocalPasswordPolicyMockNotValid;
@@ -24,7 +25,7 @@ use UserPasswordPolicyRegex;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class UserLocalTest extends ItopTestCase
+class UserLocalTest extends ItopDataTestCase
 {
 
 	public function setUp()
@@ -274,11 +275,30 @@ class UserLocalTest extends ItopTestCase
 			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
 		);
 
+
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
-		$oUserLocal->Set('password', 'foo');
+		//INSERT
+		$oUserLocal->Set('password', 'fooBar1???');
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'INSERT changes the "password_renewed_date"');
 
-		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'));
+		//UPDATE password_renewed_date
+		$oUserLocal->Set('password_renewed_date', $oBefore);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change the "password_renewed_date"');
+
+		//UPDATE password
+		$oUserLocal->Set('password', 'fooBar1???1');
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
+
+
+		//UPDATE both password & password_renewed_date
+		$oUserLocal->Set('password', 'fooBar1???2');
+		$oUserLocal->Set('password_renewed_date', $oBefore);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change both "password" and "password_renewed_date"');
 	}
 
 	public function ProviderPasswordRenewal()
