@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2018 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
  */
 
 /**
@@ -60,12 +58,7 @@ class MFException extends Exception
 	/**
 	 * MFException constructor.
 	 *
-	 * @param null $message
-	 * @param null $code
-	 * @param int $iSourceLineNumber
-	 * @param string $sXPath
-	 * @param string $sExtraInfo
-	 * @param null $previous
+	 * @inheritDoc
 	 */
 	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
 	{
@@ -153,9 +146,9 @@ class MFModule
 	/**
 	 * MFModule constructor.
 	 *
-	 * @param $sId
-	 * @param $sRootDir
-	 * @param $sLabel
+	 * @param string $sId
+	 * @param string $sRootDir
+	 * @param string $sLabel
 	 * @param bool $bAutoSelect
 	 */
 	public function __construct($sId, $sRootDir, $sLabel, $bAutoSelect = false)
@@ -192,7 +185,7 @@ class MFModule
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetId()
 	{
@@ -200,7 +193,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetName()
 	{
@@ -216,7 +209,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetLabel()
 	{
@@ -224,7 +217,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetRootDir()
 	{
@@ -249,6 +242,8 @@ class MFModule
 
 	/**
 	 * List all classes in this module
+	 *
+	 * @return array
 	 */
 	public function ListClasses()
 	{
@@ -287,7 +282,7 @@ class MFModule
 	}
 
 	/**
-	 * @param $sAutoSelect
+	 * @param string $sAutoSelect
 	 */
 	public function SetAutoSelect($sAutoSelect)
 	{
@@ -303,8 +298,8 @@ class MFModule
 	}
 
 	/**
-	 * @param $aFiles
-	 * @param $sCategory
+	 * @param array $aFiles
+	 * @param string $sCategory
 	 */
 	public function SetFilesToInclude($aFiles, $sCategory)
 	{
@@ -313,7 +308,7 @@ class MFModule
 	}
 
 	/**
-	 * @param $sCategory
+	 * @param string $sCategory
 	 *
 	 * @return mixed
 	 */
@@ -346,7 +341,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetName()
 	{
@@ -354,7 +349,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -362,7 +357,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -370,7 +365,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function GetDictionaryFiles()
 	{
@@ -402,7 +397,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -410,7 +405,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -418,7 +413,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function GetDictionaryFiles()
 	{
@@ -450,7 +445,7 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -458,7 +453,7 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -466,7 +461,7 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function GetDictionaryFiles()
 	{
