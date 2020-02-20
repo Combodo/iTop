@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Portal
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
@@ -29,15 +30,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Button:Cancel' => 'Zurück',
 	'Portal:Button:Close' => 'Schließen',
 	'Portal:Button:Add' => 'Hinzu',
-	'Portal:Button:Remove' => 'Wegnehmen',
+	'Portal:Button:Remove' => 'Entfernen',
 	'Portal:Button:Delete' => 'Löschen',
 	'Portal:EnvironmentBanner:Title' => 'Sie sind im Moment im <strong>%1$s</strong> Modus',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Zurück zum PRODUCTION Modus',
-	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:400' => 'Bad Request',
 	'Error:HTTP:401' => 'Authentifizierung',
 	'Error:HTTP:404' => 'Seite nicht gefunden.',
 	'Error:HTTP:500' => 'Oops! Es ist ein Fehler aufgetreten.',
-	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s administrator falls das Problem öfter auftaucht.',
+	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s Administrator falls das Problem öfter auftaucht.',
 	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren %1$s administrator',
 	'Portal:ErrorUserLoggedOut' => 'Sie sind ausgeloggt und müssen sich erneut einloggen, um fortfahren zu können.',
 	'Portal:Datatables:Language:Processing' => 'Bitte warten...',
@@ -61,7 +62,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Öffnen</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'de', //work with moment.js locales
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Form:Close:Warning' => 'Soll diese Eingabemaske verlassen werden? Eingegebene Daten werden nicht gespeichert.',
 ));
 
 // UserProfile brick
@@ -73,7 +74,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Passwort wählen',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Passwort bestätigen',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Um das Password zu ändern, kontaktieren Sie bitte Ihren %1$s Administrator',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Kann das Passwort nicht ändern - bitte kontaktieren Sie Ihren %1$s Administrator',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Passwort kann nicht geändert werden - bitte kontaktieren Sie Ihren %1$s Administrator',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persönliche Informationen',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));
@@ -123,14 +124,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Object:Form:Create:Title' => 'Neue %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Wird aktualisiert %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Bitte die folgendenen Informationen ausfüllen:',
-	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Bitte folgende Informationen eintragen:',
+	'Brick:Portal:Object:Form:Message:Saved' => 'gespeichert',
+    'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s gespeichert',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Objektverknüpfung kopieren',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Kopiert'
 ));
 
 // CreateBrick brick

@@ -27,7 +27,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:Error' => 'Fehler',
 	'DBTools:Count' => 'Anzahl',
 	'DBTools:SQLquery' => 'SQL Query',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
+	'DBTools:FixitSQLquery' => 'SQL Query zur Fehlerbehebung (Indikation)',
 	'DBTools:SQLresult' => 'SQL Ergebnis',
 	'DBTools:NoError' => 'Die Datenbank ist OK',
 	'DBTools:HideIds' => 'Fehler',

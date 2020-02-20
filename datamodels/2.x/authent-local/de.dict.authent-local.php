@@ -28,18 +28,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 
-	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
-	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Can expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Never expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
-	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
-
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
-
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'Class:UserLocal/Attribute:expiration' => 'Passwortablauf',
+	'Class:UserLocal/Attribute:expiration+' => 'Passwortablaufstatus (Statusabhängige Effekte müssen per Extension implementiert werden)',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'kann ablaufen',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Läuft nie ab',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'abgelaufen',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Passworterneuerung',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort muss mindestens 8 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.',
+	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine iTop Erweiterung'
 ));

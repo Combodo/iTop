@@ -22,9 +22,9 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
+	'FilesInformation:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
+	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
 ));
 
 
