@@ -19,6 +19,8 @@
  *
  */
 
+use Combodo\iTop\Composer\iTopComposer;
+
 $iTopFolder = __DIR__ . "/../../" ;
 
 require_once ("$iTopFolder/approot.inc.php");

@@ -1,5 +1,6 @@
 <?php
 
+use Combodo\iTop\Composer\iTopComposer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
@@ -26,10 +27,11 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 class iTopComposerTest extends ItopTestCase
 {
 
-//	protected function setUp()
-//	{
-//		parent::setUp();
-//	}
+	protected function setUp()
+	{
+		parent::setUp();
+		clearstatcache();
+	}
 
 	public function testListAllTestDir()
 	{
