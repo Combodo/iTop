@@ -56,7 +56,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:MyShortcuts' => 'Moje skratky',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //

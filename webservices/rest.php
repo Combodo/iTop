@@ -66,7 +66,7 @@ if (!function_exists('json_last_error_msg')) {
 // Main
 //
 $oP = new ajax_page('rest');
-$oCtx = new ContextTag('REST/JSON');
+$oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);

@@ -533,6 +533,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'a conta não está associada a uma pessoa que contenha um endereço de e-mail. Por favor, contate o administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'faltando um endereço de e-mail. Por favor, contate o administrador.',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Alterar a senha',
 	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do iTop.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
 
@@ -897,7 +898,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:AdminTools' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System~~',
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Gerenciamento Mudanças',
 	'UI:ChangeManagementMenu+' => 'Gerenciamento Mudanças',

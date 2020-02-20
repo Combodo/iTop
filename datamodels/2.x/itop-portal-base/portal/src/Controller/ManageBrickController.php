@@ -25,6 +25,7 @@ use AttributeDateTime;
 use AttributeDefinition;
 use AttributeExternalKey;
 use AttributeImage;
+use AttributeSet;
 use AttributeTagSet;
 use BinaryExpression;
 use CMDBSource;
@@ -685,6 +686,12 @@ class ManageBrickController extends BrickController
 							/** @var \AttributeTagSet $oAttDef */
 							$sValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
 							$sSortValue = implode(' ', $aCodes);
+						}
+						elseif ($oAttDef instanceof AttributeSet)
+						{
+							$oAttDef->SetDisplayLink(false);
+							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
+							$sSortValue = "".$oCurrentRow->Get($sItemAttr);
 						}
 						else
 						{

@@ -41,6 +41,10 @@ test/vendor/*
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/*
 
+# doc. generation
+/.doc/vendor
+
+
 #phpdocumentor temp file
 ast.dump
 

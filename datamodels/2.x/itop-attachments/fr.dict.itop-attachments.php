@@ -1,25 +1,20 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Localized data
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:TabTitle_Count' => 'Pièces jointes (%1$d)',
@@ -66,7 +61,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Thumbnail' => 'Icône',
 	'Attachments:File:Name' => 'Nom du fichier',
 	'Attachments:File:Date' => 'Date de chargement',
-	'Attachments:File:Creator' => 'Chargé par',
+	'Attachments:File:Uploader' => 'Chargé par',
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Attachment/Attribute:creation_date' => 'Date de création',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Utilisateur',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Contact',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

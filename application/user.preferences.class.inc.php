@@ -34,7 +34,7 @@ require_once(APPROOT.'/core/userrights.class.inc.php');
  */
 class appUserPreferences extends DBObject
 {
-	static $oUserPrefs = null; // Local cache
+	private static $oUserPrefs = null; // Local cache
 	
 	/**
 	 * Get the value of the given property/preference
@@ -43,7 +43,7 @@ class appUserPreferences extends DBObject
 	 * @param string $sDefaultValue The default value
 	 * @return string The value of the property for the current user
 	 */
-	static function GetPref($sCode, $sDefaultValue)
+	public static function GetPref($sCode, $sDefaultValue)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -65,7 +65,7 @@ class appUserPreferences extends DBObject
 	 * @param string $sCode Code/Name of the property/preference to set
 	 * @param string $sValue Value to set
 	 */
-	static function SetPref($sCode, $sValue)
+	public static function SetPref($sCode, $sValue)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -83,13 +83,13 @@ class appUserPreferences extends DBObject
 			self::Save();
 		}
 	}
-	
+
 	/**
 	 * Clears the value for a given preference (or list of preferences that matches a pattern), and updates the database
-	 * @param string $sPattern Code/Pattern of the properties/preferences to reset
+	 * @param string $sCodeOrPattern Code/Pattern of the properties/preferences to reset
 	 * @param boolean $bPattern Whether or not the supplied code is a PCRE pattern
 	 */
-	static function UnsetPref($sCodeOrPattern, $bPattern = false)
+	public static function UnsetPref($sCodeOrPattern, $bPattern = false)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -124,7 +124,7 @@ class appUserPreferences extends DBObject
 	 * Call this function to get all the preferences for the user, packed as a JSON object
 	 * @return string JSON representation of the preferences
 	 */
-	static function GetAsJSON()
+	public static function GetAsJSON()
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -137,19 +137,19 @@ class appUserPreferences extends DBObject
 	/**
 	 * Call this function if the user has changed (like when doing a logoff...)
 	 */
-	static public function ResetPreferences()
+	public static function ResetPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
 	/**
 	 * Call this function to ERASE all the preferences from the current user
 	 */
-	static public function ClearPreferences()
+	public static function ClearPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
 	
-	static protected function Save()
+	protected static function Save()
 	{
 		if (self::$oUserPrefs != null)
 		{
@@ -166,7 +166,7 @@ class appUserPreferences extends DBObject
 	 * Loads the preferences for the current user, creating the record in the database
 	 * if needed
 	 */
-	static protected function Load()
+	protected static function Load()
 	{
 		if (self::$oUserPrefs != null) return;
 		$oSearch = new DBObjectSearch('appUserPreferences');

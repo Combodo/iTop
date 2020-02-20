@@ -1146,6 +1146,38 @@ class ScalarExpression extends UnaryExpression
 								IssueLog::Error($e->getMessage());
 							}
 							break;
+						case ($oAttDef instanceof AttributeEnumSet):
+							try
+							{
+								if (!empty($this->GetValue()))
+								{
+									$aValues = array();
+									$sValue = $this->GetValue();
+									if (is_string($sValue))
+									{
+										$aTags = $oAttDef->FromStringToArray($sValue, ' ');
+									}
+									else
+									{
+										$aTags = array();
+									}
+									foreach($aTags as $sLabel => $sValue)
+									{
+										$aValue['label'] = $sLabel;
+										$aValue['value'] = $sValue;
+										$aValues[] = $aValue;
+									}
+									$aCriterion['values'] = $aValues;
+								}
+								else
+								{
+									$aCriterion['has_undefined'] = true;
+								}
+							} catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							break;
 						case $oAttDef->IsExternalKey():
 							try
 							{

@@ -55,7 +55,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:MyShortcuts' => 'Mes raccourcis',
 	'Menu:UserManagement' => 'Utilisateurs',
 	'Menu:Queries' => 'Requêtes',
-	'Menu:Configuration' => 'Configuration',
+	'Menu:ConfigurationTools' => 'Configuration',
 ));
 
 //

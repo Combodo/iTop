@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,6 +16,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
+use Combodo\iTop\Form\Validator\Validator;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -1022,15 +1026,30 @@ abstract class AttributeDefinition
 		// Validation pattern
 		if ($this->GetValidationPattern() !== '')
 		{
-			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\Validator($this->GetValidationPattern()));
+			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
-		if($this::IsScalar())
+		$oFormField->AddMetadata('attribute-label', utils::HtmlEntities($this->GetLabel()));
+		// - Attribute flags
+		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
+		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
 		{
-			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
+			// Note: Skip normal flag as we don't need it.
+			if($sFlagCode === 'normal')
+			{
+				continue;
+			}
+			$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
+			$sFormattedFlagValue = (($iFlags & $iFlagValue) === $iFlagValue) ? 'true' : 'false';
+			$oFormField->AddMetadata('attribute-flag-'.$sFormattedFlagCode, $sFormattedFlagValue);
+		}
+		// - Value raw
+		if ($this::IsScalar())
+		{
+			$oFormField->AddMetadata('value-raw', utils::HtmlEntities($oObject->Get($this->GetCode())));
 		}
 
 		return $oFormField;
@@ -4375,7 +4394,7 @@ class AttributeLongText extends AttributeText
 	{
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
-		return 65535 * 1024; // Limited... still 64 Mb!
+		return 65535 * 1024; // Limited... still 64 MB!
 	}
 }
 
@@ -6729,7 +6748,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
 		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
 		{
-			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator());
+			$oFormField->AddValidator(new NotEmptyExtKeyValidator());
 		}
 
 		parent::MakeFormField($oObject, $oFormField);
@@ -6879,7 +6898,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		if ($oFilter)
 		{
 			$oValSetDef = $this->GetValuesDef();
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 
 			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
@@ -6895,7 +6914,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
 		if ($oFilter)
 		{
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 		}
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
 
@@ -9455,6 +9474,14 @@ class AttributeTable extends AttributeDBField
 			$value = @unserialize($aCols[$sPrefix.'']);
 			if ($value === false)
 			{
+				$value = @json_decode($aCols[$sPrefix.''], true);
+				if (is_null($value))
+				{
+					$value = false;
+				}
+			}
+			if ($value === false)
+			{
 				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
 		} catch (Exception $e)
@@ -9468,7 +9495,15 @@ class AttributeTable extends AttributeDBField
 	public function GetSQLValues($value)
 	{
 		$aValues = array();
-		$aValues[$this->Get("sql")] = serialize($value);
+		try
+		{
+			$sSerializedValue = serialize($value);
+		}
+		catch (Exception $e)
+		{
+			$sSerializedValue = json_encode($value);
+		}
+		$aValues[$this->Get("sql")] = $sSerializedValue;
 
 		return $aValues;
 	}
@@ -9662,11 +9697,21 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+		$this->bDisplayLink = true;
+	}
+
+	/**
+	 * @param bool $bDisplayLink
+	 */
+	public function setDisplayLink($bDisplayLink)
+	{
+		$this->bDisplayLink = $bDisplayLink;
 	}
 
 	public static function ListExpectedParams()
@@ -9675,7 +9720,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * Allowed values are mandatory for this attribute to be modified
+	 * Allowed different values for the set values are mandatory for this attribute to be modified
 	 *
 	 * @param array $aArgs
 	 * @param string $sContains
@@ -9684,9 +9729,9 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
 	{
-		return parent::GetAllowedValues($aArgs, $sContains);
+		return $this->GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -9703,7 +9748,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		$aJson = array();
 
 		// possible_values
-		$aAllowedValues = $this->GetAllowedValues($aArgs);
+		$aAllowedValues = $this->GetPossibleValues($aArgs);
 		$aSetKeyValData = array();
 		foreach($aAllowedValues as $sCode => $sLabel)
 		{
@@ -9806,15 +9851,24 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return 255;
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
 		{
-			foreach(explode(',', $proposedValue) as $sCode)
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			// convert also , separated strings
+			if ($sSepItem !== $sDefaultSepItem)
+			{
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
+			}
+			foreach(explode($sSepItem, $proposedValue) as $sCode)
 			{
 				$sValue = trim($sCode);
-				$aValues[] = $sValue;
+				if ($sValue !== '')
+				{
+					$aValues[] = $sValue;
+				}
 			}
 		}
 		return $aValues;
@@ -9835,20 +9889,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param $aCols
-	 * @param string $sPrefix
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function FromImportToValue($aCols, $sPrefix = '')
-	{
-		$sValue = $aCols["$sPrefix"];
-
-		return $this->MakeRealValue($sValue, null);
-	}
-
-	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
@@ -9863,10 +9903,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aAllowedValues = $this->GetPossibleValues();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
 			$aValues = $this->FromStringToArray($proposedValue);
+			foreach ($aValues as $i => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$i]);
+				}
+			}
 			$oSet->SetValues($aValues);
 		}
 		elseif ($proposedValue instanceof ormSet)
@@ -9950,7 +9998,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 *
 	 * @return string
 	 */
@@ -9966,7 +10014,16 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		}
 		if (is_array($value))
 		{
-			return implode(', ', $value);
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			$sRes = implode($sSepItem, $value);
+			if (!empty($sRes))
+			{
+				$value = "{$sSepItem}{$sRes}{$sSepItem}";
+			}
+			else
+			{
+				$value = '';
+			}
 		}
 		return $value;
 	}
@@ -9984,13 +10041,88 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		if ($value instanceof ormSet)
 		{
-			$value = $value->GetValues();
+			$aValues = $value->GetValues();
+			return $this->GenerateViewHtmlForValues($aValues);
 		}
 		if (is_array($value))
 		{
 			return implode(', ', $value);
 		}
 		return $value;
+	}
+
+	/**
+	 * HTML representation of a list of values (read-only)
+	 * accept a list of strings
+	 *
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
+	{
+		if (empty($aValues)) {return '';}
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
+		foreach($aValues as $sValue)
+		{
+			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+			$sAttCode = $this->GetCode();
+			$sLabel = utils::HtmlEntities($this->GetValueLabel($sValue));
+			$sDescription = utils::HtmlEntities($this->GetValueDescription($sValue));
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+			$sFilter = rawurlencode($oFilter->serialize());
+			$sLink = '';
+			if ($bWithLink && $this->bDisplayLink)
+			{
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sLink = ' href="'.$sUrl.'"';
+			}
+			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.
+				'" data-description="'.$sDescription.'">'.$sLabel.'</a>';
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
+	}
+
+	/**
+	 * @param $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 */
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (is_object($value) && ($value instanceof ormSet))
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetLabels();
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+			}
+			$sRes = implode($sSepItem, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
 	}
 
 	public function GetMaxItems()
@@ -10003,6 +10135,260 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return '\\Combodo\\iTop\\Form\\Field\\SetField';
 	}
 }
+
+class AttributeEnumSet extends AttributeSet
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public static function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
+	}
+
+	public function GetMaxSize()
+	{
+		$aRawValues = $this->GetRawPossibleValues();
+		$iMaxItems = $this->GetMaxItems();
+		$aLengths = array();
+		foreach (array_keys($aRawValues) as $sKey)
+		{
+			$aLengths[] = strlen($sKey);
+		}
+		rsort($aLengths, SORT_NUMERIC);
+		$iMaxSize = 2;
+		for ($i = 0; $i < min($iMaxItems, count($aLengths)); $i++)
+		{
+			$iMaxSize += $aLengths[$i] + 1;
+		}
+		return max(255, $iMaxSize);
+	}
+
+	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
+	{
+		/** @var ValueSetEnumPadded $oValSetDef */
+		$oValSetDef = $this->Get('possible_values');
+		if (!$oValSetDef)
+		{
+			return array();
+		}
+
+		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
+		$aLocalizedValues = array();
+		foreach($aRawValues as $sKey => $sValue)
+		{
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+		}
+
+		return $aLocalizedValues;
+	}
+
+	public function GetValueLabel($sValue)
+	{
+		$aValues = $this->GetRawPossibleValues();
+		if (!empty($aValues) && !empty($sValue) && isset($aValues[$sValue]))
+		{
+			$sValue = $aValues[$sValue];
+		}
+
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
+			if (is_null($sLabel))
+			{
+				// Browse the hierarchy again, accepting default (english) translations
+				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, false);
+				if (is_null($sLabel))
+				{
+					$sDefault = trim(str_replace('_', ' ', $sValue));
+					// Browse the hierarchy again, accepting default (english) translations
+					$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sDefault, $sDefault, false);
+				}
+			}
+		}
+
+		return $sLabel;
+	}
+
+	public function GetValueDescription($sValue)
+	{
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'', true /* user language only */);
+			if (strlen($sDescription) == 0)
+			{
+				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+				if ($sParentClass)
+				{
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+						$sDescription = $oAttDef->GetValueDescription($sValue);
+					}
+				}
+			}
+		}
+
+		return $sDescription;
+	}
+
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($bLocalize)
+		{
+			if ($value instanceof ormSet)
+			{
+				$sRes = $this->GenerateViewHtmlForValues($value->GetValues());
+			}
+			else
+			{
+				$sLabel = $this->GetValueLabel($value);
+				$sDescription = $this->GetValueDescription($value);
+				$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			}
+		}
+		else
+		{
+			$sRes = parent::GetAsHtml($value, $oHostObject, $bLocalize);
+		}
+
+		return $sRes;
+	}
+
+	/**
+	 * @param ormSet $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 * @throws \Exception
+	 */
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (is_object($value) && ($value instanceof ormSet))
+		{
+			$aValues = $value->GetValues();
+			if ($bLocalize)
+			{
+				$aLocalizedValues = array();
+				foreach($aValues as $sValue)
+				{
+					$aLocalizedValues[] = $this->GetValueLabel($sValue);
+				}
+				$aValues = $aLocalizedValues;
+			}
+			$sRes = implode($sSepItem, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 *
+	 * @param string $sProposedValue
+	 * @param bool $bLocalizedValue
+	 * @param string $sSepItem
+	 * @param string $sSepAttribute
+	 * @param string $sSepValue
+	 * @param string $sAttributeQualifier
+	 *
+	 * @return mixed null if no match could be found
+	 * @throws \Exception
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if ($bLocalizedValue)
+		{
+			// Lookup for the values matching the input
+			//
+			$aValues = $this->FromStringToArray($sProposedValue);
+			$aFoundValues = array();
+			$aRawValues = $this->GetPossibleValues();
+			foreach ($aValues as $sValue)
+			{
+				$bFound = false;
+				foreach ($aRawValues as $sCode => $sRawValue)
+				{
+					if ($sValue == $sRawValue)
+					{
+						$aFoundValues[] = $sCode;
+						$bFound = true;
+						break;
+					}
+				}
+				if (!$bFound)
+				{
+					// Not found, break the import
+					return null;
+				}
+			}
+
+			return $this->MakeRealValue(implode(',', $aFoundValues), null);
+		}
+		else
+		{
+			return $this->MakeRealValue($sProposedValue, null, false);
+		}
+	}
+
+	/**
+	 * @param string $proposedValue Search string used for MATCHES
+	 *
+	 * @param string $sDefaultSepItem word separator to extract items
+	 *
+	 * @return array of EnumSet codes
+	 * @throws \Exception
+	 */
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			// convert also other separators
+			if ($sSepItem !== $sDefaultSepItem)
+			{
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
+			}
+			foreach(explode($sSepItem, $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				if (strlen($sValue) > 2)
+				{
+					$sLabel = $this->GetValueLabel($sValue);
+					$aValues[$sLabel] = $sValue;
+				}
+			}
+		}
+		return $aValues;
+	}
+}
+
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
@@ -10162,8 +10548,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			if (is_null($aJsonFromWidget))
 			{
 				$proposedValue = trim($proposedValue);
+				$aProposedValues = $this->FromStringToArray($proposedValue);
 				$aValues = array();
-				foreach(explode(',', $proposedValue) as $sValue)
+				foreach($aProposedValues as $sValue)
 				{
 					$sAttCode = trim($sValue);
 					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -10370,8 +10757,9 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim($proposedValue);
+			$aProposedValues = $this->FromStringToArray($proposedValue);
 			$aValues = array();
-			foreach(explode(',', $proposedValue) as $sValue)
+			foreach($aProposedValues as $sValue)
 			{
 				$sAttCode = trim($sValue);
 				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -10520,7 +10908,7 @@ class AttributeTagSet extends AttributeSet
 		return json_encode($aJson);
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
@@ -10962,7 +11350,7 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
-				if ($bWithLink)
+				if ($bWithLink && $this->bDisplayLink)
 				{
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 					$sLink = ' href="'.$sUrl.'"';
@@ -11015,41 +11403,6 @@ class AttributeTagSet extends AttributeSet
 		}
 
 		return $sRes;
-	}
-
-	/**
-	 * @param $value
-	 * @param string $sSeparator
-	 * @param string $sTextQualifier
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 * @param bool $bConvertToPlainText
-	 *
-	 * @return mixed|string
-	 */
-	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
-		$bConvertToPlainText = false
-	) {
-		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			if ($bLocalize)
-			{
-				$aValues = $value->GetLabels();
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-			}
-			$sRes = implode($sSepItem, $aValues);
-		}
-		else
-		{
-			$sRes = '';
-		}
-
-		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
 	}
 
 	/**
@@ -12030,7 +12383,7 @@ class AttributeCustomFields extends AttributeDefinition
 		} catch (Exception $e)
 		{
 			$oForm = new \Combodo\iTop\Form\Form('');
-			$oField = new \Combodo\iTop\Form\Field\LabelField('');
+			$oField = new LabelField('');
 			$oField->SetLabel('Custom field error: '.$e->getMessage());
 			$oForm->AddField($oField);
 			$oForm->Finalize();

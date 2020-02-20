@@ -44,7 +44,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:MyShortcuts' => 'Избранное',
 	'Menu:UserManagement' => 'Управление пользователями',
 	'Menu:Queries' => 'Запросы OQL',
-	'Menu:Configuration' => 'Конфигурация',
+	'Menu:ConfigurationTools' => 'Конфигурация',
 ));
 
 //

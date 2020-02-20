@@ -52,16 +52,16 @@ iTop also offers mass import tools and web services to integrate with your IT
 ## Last releases
 
 ### Versions 2.7.*
- - 2.7.0-beta published on December 18, 2019
+ - 2.7.0-beta2 published on January 29, 2020
  - [Changes since the previous version][62]
  - [New features][63]
  - [Migration notes][64]
- - [Download iTop 2.7.0-beta][65]
+ - [Download iTop 2.7.0-beta2][65]
 
 [62]: https://www.itophub.io/wiki/page?id=2_7_0:release:change_log
 [63]: https://www.itophub.io/wiki/page?id=2_7_0:release:2_7_whats_new
 [64]: https://www.itophub.io/wiki/page?id=2_7_0:install:260_to_270_migration_notes
-[65]: https://sourceforge.net/projects/itop/files/itop/2.7.0-beta
+[65]: https://sourceforge.net/projects/itop/files/itop/2.7.0-beta2
 
 
 ### Versions 2.6.*
@@ -69,12 +69,12 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Changes since the previous version][58]
  - [New features][59]
  - [Migration notes][60]
- - [Download iTop 2.6.1][61]
+ - [Download iTop 2.6.3][61]
 
 [58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
 [59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
 [60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.1
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.3
 
 
 ### Versions 2.5.*
@@ -88,20 +88,6 @@ iTop also offers mass import tools and web services to integrate with your IT
 [55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
 [56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
 [57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
- 
-
-### Versions 2.4.*
- - 2.4.0 published on November 16, 2017
- - [Changes since the previous version][50]
- - [New features][51]
- - [Migration notes][52]
- - [Download iTop 2.4.1][53]
-
-[50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
-[51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
-[52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
-[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
-
 
 
 ## About Us

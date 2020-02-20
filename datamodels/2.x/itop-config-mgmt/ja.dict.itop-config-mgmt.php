@@ -1890,6 +1890,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Server:otherinfo' => '他の情報',
 	'Server:power' => 'Power supply~~',
 	'Person:info' => '情報',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => '通知',
 	'Class:Subnet/Tab:IPUsage' => 'IP 利用',

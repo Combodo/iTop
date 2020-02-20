@@ -1897,6 +1897,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Server:otherinfo' => 'Otra Información',
 	'Server:power' => 'Fuente de Poder',
 	'Person:info' => 'Información General',
+	'UserLocal:info' => 'Información General',
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
 	'Class:Subnet/Tab:IPUsage' => 'Uso de IP',

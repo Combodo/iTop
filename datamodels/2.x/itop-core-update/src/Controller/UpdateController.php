@@ -108,7 +108,8 @@ class UpdateController extends Controller
         $sTransactionId = utils::GetNewTransactionId();
 		$aParams['sTransactionId'] = $sTransactionId;
 
-		$this->DisplayPage($aParams);
+		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
+		$this->DisplaySetupPage($aParams);
 	}
 
 	public function OperationUpdateCoreFiles()
@@ -136,8 +137,18 @@ class UpdateController extends Controller
             'sAjaxURL' => utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true')),
         );
         $this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
+        $this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 
-        $this->DisplayPage($aParams);
+        $this->DisplaySetupPage($aParams);
+    }
+
+    public function OperationRunSetup()
+    {
+	    SetupUtils::CheckSetupToken(true);
+	    $sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
+	    @chmod($sConfigFile, 0770);
+	    $sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
+	    header("Location: $sRedirectURL");
     }
 
     private function GetPreviousInstallations()

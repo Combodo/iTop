@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Page:DefaultTitle' => 'Portal do usuário iTop',
@@ -126,6 +125,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, preencha as seguintes informações:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',

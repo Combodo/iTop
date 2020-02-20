@@ -82,7 +82,7 @@ footer {
   background-size: 100%;
   background-position: center center;
   background-color: #585653;
-  border: 2px solid #fff;
+  border: 2px solid #FFFFFF;
   border-radius: 100%;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
 }
@@ -98,7 +98,6 @@ footer {
 }
 /* Sidebar */
 @media (min-width: 768px) {
-  /* Main content */
   #sidebar {
     position: fixed;
     top: 0px;
@@ -119,15 +118,15 @@ footer {
     background-position: center center;
     background-color: #585653;
     background-repeat: no-repeat;
-    border: 2px solid #fff;
+    border: 2px solid #FFFFFF;
     border-radius: 100%;
   }
   #sidebar .user_card .user_infos {
     font-size: 1em;
-    color: #fff;
+    color: #FFFFFF;
   }
   #sidebar .user_card .user_infos .dropdown-toggle {
-    color: #fff;
+    color: #FFFFFF;
   }
   #sidebar .user_card .user_options.dropdown-menu {
     width: 92%;
@@ -162,6 +161,7 @@ footer {
   #sidebar .logo img {
     max-width: 100%;
     max-height: 50px;
+    /* Main content */
   }
   #main-wrapper {
     margin-top: 20px;
@@ -359,7 +359,7 @@ footer {
   margin-bottom: 8px;
   padding: 0em 1em;
   min-height: 4em;
-  background-color: #fff;
+  background-color: #FFFFFF;
   background-image: none;
   border: none;
   border-radius: 0px;
@@ -379,11 +379,11 @@ footer {
   color: #777;
 }
 .home .tile .tile_title > span.icon {
-  color: #ea7d1e;
+  color: #EA7D1E;
 }
 .home .tile .tile_description {
   display: none;
-  color: #555;
+  color: #555555;
 }
 /**********************************/
 /* ManageBrick badge tile display */
@@ -604,7 +604,7 @@ footer {
 /* Home tile */
 .home .tile.tile_communication {
   padding: 20px;
-  background-color: #ededed;
+  background-color: #EDEDED;
   border: none;
   font-weight: initial;
 }
@@ -793,7 +793,7 @@ table .group-actions {
   height: 55px;
   margin-bottom: 10px;
   text-align: center;
-  color: #fff;
+  color: #FFFFFF;
 }
 .mosaic-group-back {
   font-size: 25px;
@@ -807,7 +807,7 @@ table .group-actions {
   transition: all linear 0.3s;
 }
 .mosaic-item, .mosaic-item:hover, .mosaic-item:active, .mosaic-item:focus, .mosaic-item:visited {
-  color: #fff;
+  color: #FFFFFF;
   text-decoration: none;
 }
 .mosaic-item:active {
@@ -832,16 +832,13 @@ table .group-actions {
   right: 5px;
 }
 .mosaic-group-item-actions > a {
-  color: #fff;
+  color: #FFFFFF;
   text-decoration: none;
 }
 .mosaic-group-item-actions > a:hover, .mosaic-group-item-actions > a:focus {
-  color: #eee;
+  color: #EEEEEE;
 }
 @media (max-width: 768px) {
-  /* All layouts */
-  /* Layout 2 */
-  /* Layout 5/7 */
   .mosaic-group-item > .mosaic-group-item-actions {
     top: 12px;
     right: 6px;
@@ -851,6 +848,7 @@ table .group-actions {
   }
   .mosaic-group-item-actions > a {
     font-size: 20px;
+    /* All layouts */
   }
   .mosaic-item-image {
     width: 55px;
@@ -866,22 +864,17 @@ table .group-actions {
   }
   .mosaic-item-description {
     display: none;
+    /* Layout 2 */
   }
   .mosaic-item-layout-2 .mosaic-item-description {
     display: block;
+    /* Layout 5/7 */
   }
   .mosaic-item-layout-5 .mosaic-item-name, .mosaic-item-layout-7 .mosaic-item-name {
     padding-right: 40px;
   }
 }
 @media (min-width: 768px) {
-  /* All layouts */
-  /* .mosaic-item-image{
-   vertical-align: inherit; Note: This was introduced to avoid image from going down the tile when .mosaic-item-name was way too long, but the .mosaic-item-image glitched by being a little too high. As a very long .mosaic-item-name is extremely rare, we decided that it was not worth it.
-   }*/
-  /* Layout 1 */
-  /* Layout 7 */
-  /* Layout 5 & 7 */
   .mosaic-group-item {
     display: inline-block;
     width: 32%;
@@ -894,8 +887,12 @@ table .group-actions {
     padding: 10px;
   }
   .mosaic-item:hover, .mosaic-item:focus {
-    background-color: #ea7d1e;
+    background-color: #EA7D1E;
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+    /* All layouts */
+    /* .mosaic-item-image{
+     vertical-align: inherit; Note: This was introduced to avoid image from going down the tile when .mosaic-item-name was way too long, but the .mosaic-item-image glitched by being a little too high. As a very long .mosaic-item-name is extremely rare, we decided that it was not worth it.
+     }*/
   }
   .mosaic-item-text .mosaic-item-text-wrapper {
     max-height: 100px;
@@ -911,10 +908,12 @@ table .group-actions {
   .mosaic-item-description {
     overflow: hidden;
     text-overflow: ellipsis;
+    /* Layout 1 */
   }
   .mosaic-item-layout-1 .mosaic-item-name {
     font-weight: inherit;
     font-size: 14px;
+    /* Layout 7 */
   }
   .mosaic-item-layout-7 .mosaic-item-image {
     display: none;
@@ -923,6 +922,7 @@ table .group-actions {
     margin-top: 10px;
     max-height: 40px;
     font-size: 10px;
+    /* Layout 5 & 7 */
   }
   .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
     display: table-cell;
@@ -938,12 +938,12 @@ table .group-actions {
   }
 }
 @media (min-width: 992px) {
-  /* Layout 5 & 7 */
   .mosaic-item {
     padding: 10px 15px;
   }
   .mosaic-group-back {
     font-size: 40px;
+    /* Layout 5 & 7 */
   }
   .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
     width: 105px;
@@ -960,11 +960,11 @@ table .group-actions {
   }
 }
 @media (min-width: 1200px) {
-  /* All layouts */
   .mosaic-group-item {
     width: 24%;
     height: 140px;
     margin-right: 1.3%;
+    /* All layouts */
   }
   .mosaic-item-text .mosaic-item-text-wrapper {
     max-height: 120px;
@@ -1032,7 +1032,7 @@ table .group-actions {
   content: "\002a";
   position: relative;
   left: 3px;
-  color: #ea7d1e;
+  color: #EA7D1E;
   font-size: 0.9em;
 }
 /* ExternalKey */
@@ -1052,8 +1052,8 @@ table .group-actions {
 .caselog_field_entry_header {
   padding: 6px;
   font-size: 0.9em;
-  border-bottom: 1px solid #fff;
-  background-color: #f2f2f2;
+  border-bottom: 1px solid #FFFFFF;
+  background-color: #F2F2F2;
 }
 .caselog_field_entry_button {
   display: block;
@@ -1067,7 +1067,7 @@ table .group-actions {
   cursor: pointer;
 }
 .caselog_field_entry_button:hover {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 .caselog_field_entry_button:before {
   content: "▴";
@@ -1096,7 +1096,7 @@ table .group-actions {
 .form_linkedset_toggler > .glyphicon, .form_upload_toggler > .glyphicon {
   margin-left: 0.5em;
   font-size: 0.85em;
-  color: #ea7d1e;
+  color: #EA7D1E;
   transition: transform 0.2s linear;
 }
 .form_linkedset_toggler > .glyphicon.collapsed, .form_upload_toggler > .glyphicon.collapsed {
@@ -1121,14 +1121,6 @@ table .group-actions {
   padding: 0px;
 }
 /* FileUpload */
-.fileupload_field_content {
-  padding: 8px 23px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
-}
-.fileupload_field_content > div {
-  margin-bottom: 15px;
-}
 .attachments_container .attachments-list thead > tr > th {
   text-align: center;
 }
@@ -1137,25 +1129,17 @@ table .group-actions {
   text-align: left;
   vertical-align: middle;
 }
-.attachments_container .attachments-list tbody > tr > td:first-child {
+.attachments_container .attachments-list tbody > tr > td[role="icon"] {
   text-align: center;
 }
-.attachments_container .attachments-list tbody > tr > td:nth-child(3) {
+.attachments_container .attachments-list tbody > tr > td[role="icon"] img {
+  max-height: 32px;
+}
+.attachments_container .attachments-list tbody > tr > td[role="formatted-size"] {
   text-align: right;
 }
-.attachments_container .attachment {
-  height: 4em;
-}
-.attachments_container .attachment .attachment_name {
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.attachments_container .attachment .btn {
-  margin-top: 3px;
-}
-.attachments_container .attachment:hover {
-  background-color: #e0e0e0;
+.attachments_container .attachments-list tbody > tr > td[role="delete"] {
+  text-align: center;
 }
 .attachment-tooltip {
   width: 350px;
@@ -1286,7 +1270,6 @@ table .group-actions {
   display: none;
 }
 @media (min-width: 768px) {
-  /* Making regular button sticky */
   .form_buttons .form_btn_misc {
     float: left !important;
   }
@@ -1299,6 +1282,7 @@ table .group-actions {
   }
   .form_buttons .form_btn_regular .btn {
     width: inherit;
+    /* Making regular button sticky */
   }
   .form_btn_regular.sticky {
     display: block;
@@ -1307,7 +1291,7 @@ table .group-actions {
     right: -2px;
     /* TODO : SASS this to col-xs-12 padding */
     padding: 15px;
-    background-color: #fff;
+    background-color: #FFFFFF;
     border: 1px solid #ddd;
     border-radius: 0px;
     transition: right 0.3s;
@@ -1323,10 +1307,10 @@ table .group-actions {
   }
 }
 /* CKEditor : Adding BS error feedback */
-.form_field div.cke {
+.form_field .cke {
   border: 1px solid #ddd;
 }
-.form_field.has-error div.cke {
+.form_field.has-error .cke {
   border: 1px solid #b94a48;
   border-radius: 0px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1338,7 +1322,7 @@ table .group-actions {
   margin-bottom: 18px;
   border: 1px solid transparent;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: #FFFFFF;
 }
 .cke_notification_close {
   position: absolute;
@@ -1353,12 +1337,12 @@ table .group-actions {
 .cke_notification_success {
   display: none;
   background-color: #dff0d8;
-  border-color: #d6e9c6;
+  border-color: #58a959;
   color: #468847;
 }
 .cke_notification_warning {
   background-color: #fcf8e3;
-  border-color: #fbeed5;
+  border-color: #ceae78;
   color: #c09853;
 }
 /* CKEditor : Misc */

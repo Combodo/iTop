@@ -55,7 +55,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:MyShortcuts' => '私のショートカット',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:Configuration' => 'Configuration~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //

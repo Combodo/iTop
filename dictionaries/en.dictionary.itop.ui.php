@@ -903,7 +903,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System',
+	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
@@ -1001,8 +1001,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:QueryMenu' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:UniversalSearchMenu' => 'Universal Search', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Search for anything...', // Duplicated into itop-welcome-itil (will be removed from here...)

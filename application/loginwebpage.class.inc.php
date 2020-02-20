@@ -930,6 +930,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				// No rights to be here, redirect to the portal
 				header('Location: '.$ret);
+				die();
 			}
 		}
 		return self::EXIT_CODE_OK;

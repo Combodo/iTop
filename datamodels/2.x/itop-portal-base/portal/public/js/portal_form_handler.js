@@ -140,6 +140,30 @@ $(function()
 							me.element.find('.form_field').removeClass('has-success has-warning has-error');
 							me.element.find('.form_field .help-block').html('');
 
+							// Determine where we go in case validation is successful
+							var sRuleType = me.options.submit_rule.category;
+							var bRedirectInModal = me.options.submit_rule.modal;
+							var sRedirectUrl = me.options.submit_rule.url;
+							// - The validation might want us to be redirect elsewhere
+							if(oValidation.valid)
+							{
+								// Checking if we have to redirect to another page
+								// Typically this happens when applying a stimulus, we redirect to the transition form
+								if(oValidation.redirection !== undefined)
+								{
+									var oRedirection = oValidation.redirection;
+									if(oRedirection.modal !== undefined)
+									{
+										bRedirectInModal = oRedirection.modal;
+									}
+									if(oRedirection.url !== undefined)
+									{
+										sRedirectUrl = oRedirection.url;
+									}
+									sRuleType = 'redirect';
+								}
+							}
+
 							// For each type of messages (error, warning, success)...
 							for(var sMessageType in oMessages)
 							{
@@ -158,13 +182,50 @@ $(function()
 									}
 									else
 									{
-										oHelpBlock = me.element.find('.form_alerts .alert.alert-' + sMessageType);
-										oHelpBlock.show();
+										// Success messages are displayed out of the form as it will be closed
+										if(sMessageType === 'success')
+										{
+											// If not redirecting in a modal, will be set as session message
+											if((sRuleType === 'redirect') && (bRedirectInModal === false) && (sRedirectUrl !== null))
+											{
+												oHelpBlock = null;
+											}
+											// Otherwise, display it in main page
+											else
+											{
+												oHelpBlock = $('#session-messages');
+											}
+										}
+										// Warning and error messages are displayed in the form
+										else
+										{
+											oHelpBlock = me.element.find('.form_alerts .alert.alert-' + sMessageType);
+											oHelpBlock.show();
+										}
 									}
 									// ... add the message to its help block
 									for(var i in oMessages[sMessageType][sFieldId])
 									{
-										oHelpBlock.append($('<p>' + oMessages[sMessageType][sFieldId][i] + '</p>'));
+										var sMessageContent = oMessages[sMessageType][sFieldId][i];
+										if(oHelpBlock === null)
+										{
+											$.post(
+												// Note: We might want to expose some routes directly in JS to ease their use
+												GetAddSessionMessageUrl(),
+												{
+													sSeverity: sMessageType,
+													sContent: sMessageContent,
+												}
+											);
+										}
+										else if(oHelpBlock.attr('id') === 'session-messages')
+										{
+											oHelpBlock.append($('<div class="alert alert-dismissible alert-' + sMessageType + '" data-object-class="' + oData.form.object_class + '" data-object-id="' + oData.form.object_id + '"><button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>' + sMessageContent + '</div>'));
+										}
+										else
+										{
+											oHelpBlock.append($('<p>' + sMessageContent + '</p>'));
+										}
 									}
 								}
 							}
@@ -172,35 +233,18 @@ $(function()
 							// Scrolling to top so the user can see messages
 							$('body').scrollTop(0);
 						
-							// If everything is okay, we close the form and reload it.
+							// If everything is okay, we close the form and apply the submit rule.
 							if(oValidation.valid)
 							{
-								var bRedirectInModal = me.options.submit_rule.modal;
-								var sRedirectUrl = me.options.submit_rule.url;
-
 								$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
 
 								// Checking if we have to redirect to another page
-								// Typically this happens when applying a stimulus, we redirect to the transition form
-								if(oValidation.redirection !== undefined)
-								{
-									var oRedirection = oValidation.redirection;
-									if(oRedirection.modal !== undefined)
-									{
-										bRedirectInModal = oRedirection.modal;
-									}
-									if(oRedirection.url !== undefined)
-									{
-										sRedirectUrl = oRedirection.url;
-									}
-									me._applyRedirectRule(sRedirectUrl, bRedirectInModal);
-								}
-								else if(me.options.submit_rule.category === 'redirect')
+								if(sRuleType === 'redirect')
 								{
 									me._applyRedirectRule(sRedirectUrl, bRedirectInModal);
 								}
 								// Close rule only needs to be applied to non modal forms (modal is always closed on submit)
-								else if(me.options.submit_rule.category === 'close')
+								else if(sRuleType === 'close')
 								{
 									me._applyCloseRule();
 								}

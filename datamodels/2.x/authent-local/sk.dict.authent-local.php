@@ -50,4 +50,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+
+	'UserLocal:password:expiration' => 'The fields below require an extension~~'
 ));

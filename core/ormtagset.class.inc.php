@@ -26,9 +26,6 @@
  */
 final class ormTagSet extends ormSet
 {
-	private $m_bDisplayPartial = false;
-
-
 	/**
 	 * ormTagSet constructor.
 	 *
@@ -557,22 +554,4 @@ final class ormTagSet extends ormSet
 	{
 		return TagSetFieldData::GetTagDataClassName($this->sClass, $this->sAttCode);
 	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function DisplayPartial()
-	{
-		return $this->m_bDisplayPartial;
-	}
-
-	/**
-	 * @param bool $m_bDisplayPartial
-	 */
-	public function SetDisplayPartial($m_bDisplayPartial)
-	{
-		$this->m_bDisplayPartial = $m_bDisplayPartial;
-	}
-
 }

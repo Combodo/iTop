@@ -37,8 +37,8 @@ class CombodoCurrentContactPhotoUrl
 {
 	/** @var \User $oUser */
 	private $oUser;
-	/** @var string $sCombodoPortalInstanceAbsoluteUrl */
-	private $sCombodoPortalInstanceAbsoluteUrl;
+	/** @var string $sCombodoPortalBaseAbsoluteUrl */
+	private $sCombodoPortalBaseAbsoluteUrl;
 	/** @var string|null $sContactPhotoUrl */
 	private $sContactPhotoUrl;
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
@@ -49,13 +49,13 @@ class CombodoCurrentContactPhotoUrl
 	 *
 	 * @param \User                                                     $oUser
 	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
-	 * @param string                                                    $sCombodoPortalInstanceAbsoluteUrl
+	 * @param string                                                    $sCombodoPortalBaseAbsoluteUrl
 	 */
-	public function __construct(User $oUser, ContainerInterface $oContainer, $sCombodoPortalInstanceAbsoluteUrl)
+	public function __construct(User $oUser, ContainerInterface $oContainer, $sCombodoPortalBaseAbsoluteUrl)
 	{
 		$this->oUser = $oUser;
 		$this->oContainer = $oContainer;
-		$this->sCombodoPortalInstanceAbsoluteUrl = $sCombodoPortalInstanceAbsoluteUrl;
+		$this->sCombodoPortalBaseAbsoluteUrl = $sCombodoPortalBaseAbsoluteUrl;
 		$this->sContactPhotoUrl = null;
 	}
 
@@ -82,7 +82,7 @@ class CombodoCurrentContactPhotoUrl
 	private function ComputeContactPhotoUrl()
 	{
 		// Contact
-		$sContactPhotoUrl = "{$this->sCombodoPortalInstanceAbsoluteUrl}img/user-profile-default-256px.png";
+		$sContactPhotoUrl = "{$this->sCombodoPortalBaseAbsoluteUrl}img/user-profile-default-256px.png";
 		// - Checking if we can load the contact
 		try
 		{

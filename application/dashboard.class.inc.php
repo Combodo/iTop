@@ -176,12 +176,6 @@ abstract class Dashboard
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
-        // To avoid collision with other dashlets with the same ID we suffix it. Collisions typically happen with extensions.
-	    // Note: The check is done so we don't append it at each save of the dashboard.
-        if(strpos($sId, 'uniqid_') === false)
-        {
-        	$sId .= '_uniqid_' . uniqid();
-        }
 
 	    $sDashletType = $oDomNode->getAttribute('xsi:type');
 
@@ -831,6 +825,8 @@ class RuntimeDashboard extends Dashboard
 			$aRenderParams = $aExtraParams;
 		}
 
+		$aRenderParams['bCustomized'] = $this->bCustomized;
+
 		parent::Render($oPage, $bEditMode, $aRenderParams);
 
 		if (isset($aExtraParams['query_params']['this->object()']))
@@ -1098,9 +1094,11 @@ EOF
 		{
 			$aRenderParams = $aExtraParams;
 		}
+		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
 		$sJSExtraParams = json_encode($aExtraParams);
 		$oPage->add('<div id="dashboard_editor">');
 		$oPage->add('<div class="ui-layout-center">');
+		$this->SetCustomFlag(true);
 		$this->Render($oPage, true, $aRenderParams);
 		$oPage->add('</div>');
 		$oPage->add('<div class="ui-layout-east">');

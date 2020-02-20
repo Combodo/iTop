@@ -109,9 +109,7 @@ class UserProvider implements ContainerAwareInterface
 	}
 
 	/**
-	 * Sets the container.
-	 *
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $oContainer
+	 * @inheritDoc
 	 */
 	public function setContainer(ContainerInterface $oContainer = null)
 	{

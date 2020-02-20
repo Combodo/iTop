@@ -2030,14 +2030,21 @@ JS
 	/**
 	 * Verify Setup authentication token (from the request parameter 'authent')
 	 *
+	 * @param bool $bRemoveToken
+	 *
 	 * @throws \SecurityException
 	 */
-	public final static function CheckSetupToken()
+	public final static function CheckSetupToken($bRemoveToken = false)
 	{
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-		if (!file_exists(APPROOT.'data/setup/authent') || $sAuthent !== file_get_contents(APPROOT.'data/setup/authent'))
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile))
 		{
 			throw new SecurityException('Setup operations are not allowed outside of the setup');
+		}
+		if ($bRemoveToken)
+		{
+			@unlink($sTokenFile);
 		}
 	}
 

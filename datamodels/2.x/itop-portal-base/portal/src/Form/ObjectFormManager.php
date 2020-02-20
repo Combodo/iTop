@@ -82,20 +82,15 @@ class ObjectFormManager extends FormManager
 	protected $aCallbackUrls = array();
 	/** @var boolean $bIsSubmittable */
 	protected $bIsSubmittable = true;
-	
+
 	/**
 	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
 	 * - formobject_class : The class of the object that is being edited/viewed
 	 * - formmode : view|edit|create
 	 * - values for parent
 	 *
-	 * @param string $sJson
-	 *
-	 * @return $this
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
 	 */
 	static function FromJSON($sJson)
 	{
@@ -327,13 +322,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Creates a JSON string from the current object including :
-	 * - formobject_class
-	 * - formobject_id
-	 * - formmode
-	 * - values for parent
-	 *
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function ToJSON()
 	{
@@ -351,6 +340,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
+	 * @inheritDoc
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @throws \Exception
@@ -954,6 +944,12 @@ class ObjectFormManager extends FormManager
 				$oField->SetDisplayMode($aFieldsExtraData[$sAttCode]['display_mode']);
 			}
 
+			// Overload (AttributeDefinition) flags metadata as they have been changed while building the form
+			$oField->AddMetadata('attribute-flag-hidden', $oField->GetHidden() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-read-only', $oField->GetReadOnly() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-mandatory', $oField->GetMandatory() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-must-change', $oField->GetMustChange() ? 'true' : 'false');
+
 			// Do not add hidden fields as they are of no use, if one is necessary because another depends on it, it will be automatically added.
 			// Note: We do this at the end because during the process an hidden field could have become writable if mandatory and empty for example.
 			if($oField->GetHidden() === false)
@@ -1039,9 +1035,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Calls all form fields OnCancel method in order to delegate them the cleanup;
-	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -1077,9 +1071,7 @@ class ObjectFormManager extends FormManager
 	 *          'errors' => array()
 	 *    )
 	 *
-	 * @param array $aArgs
-	 *
-	 * @return array
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1138,6 +1130,10 @@ class ObjectFormManager extends FormManager
 				{
 					$this->FinalizeAttachments($aArgs['attachmentIds']);
 				}
+
+				// Ending transaction with a commit as everything was fine
+				CMDBSource::Query('COMMIT');
+
 				// Checking if we have to apply a stimulus
 				if (isset($aArgs['applyStimulus']))
 				{
@@ -1159,17 +1155,13 @@ class ObjectFormManager extends FormManager
 						}
 					}
 				}
-				// Removing transaction id from DB
-				// TODO : utils::RemoveTransaction($this->oForm->GetTransactionId()); ?
-				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
 
 				// Resetting caselog fields value, otherwise the value will stay in it after submit.
 				$this->oForm->ResetCaseLogFields();
 
 				if ($bWasModified)
 				{
-					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+					$aData['messages']['success'] += array('_main' => array(Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName())));
 				}
 			}
 			catch (Exception $e)
@@ -1179,6 +1171,11 @@ class ObjectFormManager extends FormManager
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
+			}
+			finally
+			{
+				// Removing transaction id
+				utils::RemoveTransaction($this->oForm->GetTransactionId());
 			}
 		}
 		else
@@ -1196,7 +1193,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * Note : Doesn't update the object, see ObjectFormManager::OnSubmit() for that;
 	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException

@@ -296,8 +296,32 @@ class WebPage implements Page
 		foreach ($aConfig as $sName => $aAttribs)
 		{
 			$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
-			$sValue = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
-			$sHtml .= "<td $sClass>$sValue</td>";
+
+			// Prepare metadata
+			// - From table config.
+			$sMetadata = '';
+			if(isset($aAttribs['metadata']))
+			{
+				foreach($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue)
+				{
+					$sMetadataPropSanitized = str_replace('_', '-', $sMetadataProp);
+					$sMetadataValueSanitized = utils::HtmlEntities($sMetadataValue);
+					$sMetadata .= 'data-'.$sMetadataPropSanitized.'="'.$sMetadataValueSanitized.'" ';
+				}
+			}
+
+			// Prepare value
+			if(is_array($aRow[$sName]))
+			{
+				$sValueHtml = ($aRow[$sName]['value_html'] === '') ? '&nbsp;' : $aRow[$sName]['value_html'];
+				$sMetadata .= 'data-value-raw="'.utils::HtmlEntities($aRow[$sName]['value_raw']).'" ';
+			}
+			else
+			{
+				$sValueHtml = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
+			}
+
+			$sHtml .= "<td $sClass $sMetadata>$sValueHtml</td>";
 		}
 		$sHtml .= "</tr>";
 
@@ -504,15 +528,37 @@ class WebPage implements Page
 	 */
 	public function GetDetails($aFields)
 	{
+		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
+
 		$sHtml = "<div class=\"details\">\n";
 		foreach ($aFields as $aAttrib)
 		{
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
+
+			// Prepare metadata attributes
 			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
 			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
-			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.$aAttrib['value_raw'].'"' : '';
+			$sDataAttributeLabel = isset($aAttrib['attlabel']) ? 'data-attribute-label="'.utils::HtmlEntities($aAttrib['attlabel']).'"' : '';
+			// - Attribute flags
+			$sDataAttributeFlags = '';
+			if(isset($aAttrib['attflags']))
+			{
+				foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
+				{
+					// Note: Skip normal flag as we don't need it.
+					if($sFlagCode === 'normal')
+					{
+						continue;
+					}
+					$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
+					$sFormattedFlagValue = (($aAttrib['attflags'] & $iFlagValue) === $iFlagValue) ? 'true' : 'false';
+					$sDataAttributeFlags .= 'data-attribute-flag-'.$sFormattedFlagCode.'="'.$sFormattedFlagValue.'" ';
+				}
+			}
+			// - Value raw
+			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
 			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
@@ -1474,7 +1520,7 @@ class TabManager
 				{
 					// Sometimes people set an empty tab to force content NOT to be rendered in the previous one. We need to remove them.
 					// Note: Look for "->SetCurrentTab('');" for examples.
-					if (empty($sTabCode))
+					if ($sTabCode === '')
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
@@ -1583,6 +1629,15 @@ EOF
 	{
 		if (!$this->TabExists($sTabContainer, $sTabCode))
 		{
+			// Container
+			if (!array_key_exists($sTabContainer, $this->m_aTabs))
+			{
+				$this->m_aTabs[$sTabContainer] = array(
+					'prefix' => '',
+					'tabs' => array(),
+				);
+			}
+
 			// Common properties
 			$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode] = array(
 				'type' => $sTabType,

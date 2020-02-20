@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Page:DefaultTitle' => 'iTop 用户门户',
@@ -126,6 +125,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
 	'Brick:Portal:Object:Form:Message:Saved' => '已保存',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存 %1$s~~',
 	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',

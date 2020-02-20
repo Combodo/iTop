@@ -100,7 +100,7 @@ class UserLocal extends UserInternal
 			array(
 				'col:col1' =>
 					array(
-						'contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',
+						'fieldset:UserLocal:info' =>  array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',)
 					),
 				'col:col2' =>
 					array(
@@ -169,17 +169,45 @@ class UserLocal extends UserInternal
 
 		if ('password' == $sAttCode)
 		{
-			$sNow = date(\AttributeDate::GetInternalFormat());
-			$this->Set('password_renewed_date', $sNow);
 			$this->ValidatePassword($value);
 		}
 
 		return $result;
 	}
 
+	protected function OnUpdate()
+	{
+		parent::OnUpdate();
+
+		$this->OnWrite();
+	}
+
+	protected function OnInsert()
+	{
+		parent::OnInsert();
+
+		$this->OnWrite();
+	}
+
+	protected function OnWrite()
+	{
+		if (empty($this->m_oPasswordValidity))
+		{
+			return;
+		}
+
+		if (array_key_exists('password_renewed_date', $this->ListChanges()))
+		{
+			return;
+		}
+
+		$sNow = date(\AttributeDate::GetInternalFormat());
+		$this->Set('password_renewed_date', $sNow);
+	}
+
 	public function IsPasswordValid()
 	{
-		if (ContextTag::Check('Setup'))
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
 		{
 			// during the setup, the admin account can have whatever password you want ...
 			return true;
@@ -188,9 +216,10 @@ class UserLocal extends UserInternal
 		return (empty($this->m_oPasswordValidity)) || ($this->m_oPasswordValidity->isPasswordValid());
 	}
 
+
 	public function getPasswordValidityMessage()
 	{
-		if (ContextTag::Check('Setup'))
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
 		{
 			// during the setup, the admin account can have whatever password you want ...
 			return null;
@@ -203,7 +232,6 @@ class UserLocal extends UserInternal
 
 		return $this->m_oPasswordValidity->getPasswordValidityMessage();
 	}
-
 
 	/**
 	 * set the $m_oPasswordValidity based on UserLocalPasswordValidator instances vote.
@@ -265,7 +293,7 @@ class UserLocal extends UserInternal
 		{
 			if (strpos('contactid,login,language,password,status,profile_list,allowed_org_list', $sAttCode) !== false)
 			{
-				// contactid and allowed_org_list are disabled to make sure the portal remains accessible 
+				// contactid and allowed_org_list are disabled to make sure the portal remains accessible
 				$aReasons[] = 'Sorry, this attribute is read-only in the demonstration mode!';
 				$iFlags |= OPT_ATT_READONLY;
 			}
@@ -325,7 +353,24 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 			return new UserLocalPasswordValidity(true);
 		}
 
-		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		$sUserLanguage = Dict::GetUserLanguage();
+		$customMessages = $config->GetModuleSetting('authent-local', 'password_validation.message', null);
+		if (is_string($customMessages) )
+		{
+			$sMessage = $customMessages;
+		}
+		elseif (isset($customMessages) && array_key_exists($sUserLanguage, $customMessages))
+		{
+			$sMessage = $customMessages[$sUserLanguage];
+		}
+		elseif (isset($customMessages) && array_key_exists('EN US', $customMessages))
+		{
+			$sMessage = $customMessages['EN US'];
+		}
+		else
+		{
+			$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		}
 
 		return new UserLocalPasswordValidity(
 			false,

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use AbstractAttachmentsRenderer;
 use AttachmentPlugIn;
+use AttributeDateTime;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Renderer\RenderingOutput;
 use DBObjectSearch;
@@ -57,6 +58,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 	/**
 	 * @inheritDoc
+	 * @throws \CoreException
 	 */
 	public function Render()
 	{
@@ -76,7 +78,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
 		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
 
-		// if collapsed
+		// If collapsed
 		$sCollapseTogglerClass .= ' collapsed';
 		$sCollapseTogglerExpanded = 'false';
 		$sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
@@ -111,6 +113,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
 		$sNoAttachmentLabel = json_encode(Dict::S('Attachments:NoAttachment'));
+		$sDeleteColumnDef = $bIsDeleteAllowed ? '{ targets: [4], orderable: false},' : '';
 		$oOutput->AddJs(
 			<<<JS
 // Collapse handlers
@@ -143,8 +146,8 @@ var buildTable_{$this->oField->GetGlobalId()} = function()
 		"dom": "t",
 	    "order": [[3, "asc"]],
 	    "columnDefs": [
-	        { targets: [4], orderable: false},
-	        { targets: '_all', orderable: true }
+	        $sDeleteColumnDef
+	        { targets: '_all', orderable: true },
 	    ],
 	    "language": {
 			"infoEmpty": $sNoAttachmentLabel,
@@ -159,7 +162,7 @@ JS
 		// TODO : Add max upload size when itop attachment has been refactored
 		if (!$this->oField->GetReadOnly())
 		{
-			$oOutput->AddHtml('<div class="upload_container row">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
+			$oOutput->AddHtml('<div class="upload_container">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
 		}
 		// Ending files container
 		$oOutput->AddHtml('</div>');
@@ -183,8 +186,9 @@ JS
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
 			'{{sFileSize}}',
+			'{{iFileSizeRaw}}',
 			'{{sAttachmentDate}}',
-			'{{sAttachmentCreator}}',
+			'{{iAttachmentDateRaw}}',
 			$bIsDeleteAllowed
 		));
 		$sAttachmentTableId = $this->GetAttachmentsTableId();
@@ -247,7 +251,6 @@ JS
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
-							{search: "{{sAttachmentCreator}}", replace:data.result.contact_id_friendlyname },
 						];
 						var sAttachmentRow = attachmentRowTemplate;
 						$.each(replaces, function(indexInArray, value ) {
@@ -389,15 +392,15 @@ JS
 		}
 		else
 		{
-			$sTableHead = self::GetAttachmentTableHeader();
+			$sTableHead = self::GetAttachmentTableHeader($bIsDeleteAllowed);
 			$oOutput->Addhtml(<<<HTML
-<table id="$sAttachmentTableId" class="attachments-list table table-striped responsive">
+<table id="$sAttachmentTableId" class="attachments-list table table-striped table-bordered responsive" cellspacing="0" width="100%">
 	$sTableHead
 <tbody>
 HTML
 			);
 
-			/** @var Attachment $oAttachment */
+			/** @var \Attachment $oAttachment */
 			while ($oAttachment = $this->oAttachmentsSet->Fetch())
 			{
 				$iAttId = $oAttachment->GetKey();
@@ -423,16 +426,17 @@ HTML
 					}
 				}
 
+				$iFileSizeRaw = $oDoc->GetSize();
 				$sFileSize = $oDoc->GetFormattedSize();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
+				$iAttachmentDateRaw = '';
 				if (!$bIsTempAttachment)
 				{
 					$sAttachmentDate = $oAttachment->Get('creation_date');
+					$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 				}
-
-				$sAttachmentCreator = $oAttachment->Get('contact_id_friendlyname');
 
 				$oOutput->Addhtml(self::GetAttachmentTableRow(
 					$iAttId,
@@ -443,7 +447,9 @@ HTML
 					$sFileName,
 					$sAttachmentMeta,
 					$sFileSize,
+					$iFileSizeRaw,
 					$sAttachmentDate,
+					$iAttachmentDateRaw,
 					$bIsDeleteAllowed
 				));
 			}
@@ -456,20 +462,29 @@ HTML
 		}
 	}
 
-	protected static function GetAttachmentTableHeader()
+	/**
+	 * @param bool $bIsDeleteAllowed
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	protected static function GetAttachmentTableHeader($bIsDeleteAllowed)
 	{
 		$sTitleThumbnail = Dict::S('Attachments:File:Thumbnail');
 		$sTitleFileName = Dict::S('Attachments:File:Name');
 		$sTitleFileSize = Dict::S('Attachments:File:Size');
 		$sTitleFileDate = Dict::S('Attachments:File:Date');
 
+		// Optional column
+		$sDeleteHeaderAsHtml = ($bIsDeleteAllowed) ? '<th role="delete" data-priority="1"></th>' : '';
+
 		return <<<HTML
 	<thead>
-		<th>$sTitleThumbnail</th>
-		<th data-priority="1">$sTitleFileName</th>
-		<th>$sTitleFileSize</th>
-		<th>$sTitleFileDate</th>
-		<th data-priority="1"></th>
+		<th role="icon">$sTitleThumbnail</th>
+		<th role="filename" data-priority="1">$sTitleFileName</th>
+		<th role="formatted-size">$sTitleFileSize</th>
+		<th role="upload-date">$sTitleFileDate</th>
+		$sDeleteHeaderAsHtml
 	</thead>
 HTML;
 	}
@@ -483,29 +498,32 @@ HTML;
 	 * @param string $sFileName
 	 * @param string $sAttachmentMeta
 	 * @param string $sFileSize
+	 * @param integer $iFileSizeRaw
 	 * @param string $sAttachmentDate
+	 * @param integer $iAttachmentDateRaw
 	 * @param boolean $bIsDeleteAllowed
 	 *
 	 * @return string
+	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$sAttachmentDate, $bIsDeleteAllowed
+		$iFileSizeRaw, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
 	) {
-		$sDeleteButton = '';
+		$sDeleteCell = '';
 		if ($bIsDeleteAllowed)
 		{
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
-			$sDeleteButton = '<input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'">';
+			$sDeleteCell = '<td role="delete"><input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'"></td>';
 		}
 
 		return <<<HTML
 	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
-	  <td>$sFileSize</td>
-	  <td>$sAttachmentDate</td>
-	  <td>$sDeleteButton</td>
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass src="$sAttachmentThumbUrl"></a></td>
+	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
+	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
+	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>
+	  $sDeleteCell
 	</tr>
 HTML;
 	}

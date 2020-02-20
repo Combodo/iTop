@@ -521,6 +521,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
 	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
 	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
 
@@ -885,7 +886,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:AdminTools' => 'Admin-Tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administrationswerkzeuge', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System~~',
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',

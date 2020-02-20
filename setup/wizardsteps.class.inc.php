@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -518,9 +518,9 @@ EOF
 		$sInstalledVersion = $aInstalledInfo['product_version'];
 		$sInstalledDataModelVersion = $aInstalledInfo['datamodel_version'];
 
-		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION.'.'.ITOP_REVISION."</h2>");
+		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION_FULL."</h2>");
 
-		if ($sInstalledVersion == (ITOP_VERSION.'.'.ITOP_REVISION))
+		if ($sInstalledVersion == ITOP_VERSION_FULL)
 		{
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
@@ -542,7 +542,7 @@ EOF
 		{
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not seem to be compatible with the installed version ($sInstalledVersion).");
+			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION_FULL.") does not seem to be compatible with the installed version ($sInstalledVersion).");
 			$oPage->p("The upgrade cannot continue, sorry.");
 		}
 		else
@@ -674,7 +674,10 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->p("<img src=\"../images/info.png\"/>&nbsp;An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.");
+				$oPage->add(<<<HTML
+<div class="message">An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.</div>
+HTML
+				);
 			}
 		}
 	}
@@ -1059,7 +1062,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1067,7 +1071,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1186,7 +1191,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1194,7 +1200,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1275,10 +1282,11 @@ class WizStepModulesChoice extends WizardStep
 			$sConfigPath = utils::GetConfigFilePath('production');
 		}
 
-		if ($sConfigPath !== null) // only called if the config file exists : we are updating a previous installation !
+		// only called if the config file exists : we are updating a previous installation !
+		// WARNING : we can't load this config directly, as it might be from another directory with a different approot_url (N°2684)
+		if ($sConfigPath !== null)
 		{
 			$oConfig = new Config($sConfigPath);
-			utils::SetConfig($oConfig);
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		}
 	}

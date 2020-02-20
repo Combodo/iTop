@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2011-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 
 use Combodo\iTop\DesignElement;
@@ -1516,7 +1517,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeClassAttCodeSet')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
@@ -1528,9 +1528,25 @@ EOF
 					// Exclusion list of AttributeDefinition Classes to filter class_field (empty means no exclusion)
 					$aParameters['attribute_definition_exclusion_list'] = $this->GetPropString($oField, 'attribute_definition_exclusion_list', '');
 				}
+				elseif ($sAttType == 'AttributeEnumSet')
+				{
+					$oValues = $oField->GetUniqueElement('values');
+					$oValueNodes = $oValues->getElementsByTagName('value');
+					$aValues = array();
+					foreach($oValueNodes as $oValue)
+					{
+						$aValues[] = $oValue->textContent;
+					}
+					$sValues = '"'.implode(',', $aValues).'"';
+					$aParameters['allowed_values'] = 'null';
+					$aParameters['possible_values'] = "new ValueSetEnumPadded($sValues)";
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+				}
 				elseif ($sAttType == 'AttributeQueryAttCodeSet')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
@@ -1540,7 +1556,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeClassState')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
@@ -2579,10 +2594,10 @@ EOF;
 	/**
 	 * Transform the file references into the corresponding filename (and create the file in the relevant directory)
 	 *
-	 * @param $oNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sRelativePath
+	 * @param \MFElement $oNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sRelativePath
 	 *
 	 * @throws \DOMFormatException
 	 * @throws \Exception
@@ -2623,11 +2638,11 @@ EOF;
 
 
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sNodeName
-	 * @param $sTargetFile
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sNodeName
+	 * @param string $sTargetFile
 	 *
 	 * @throws \Exception
 	 */
@@ -2646,67 +2661,100 @@ EOF;
 			copy($sSourceFile, $sTargetFile);
 		}
 	}
+
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \Exception
 	 */
 	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
-		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme'); 
-		$sThemesDir = $sTempTargetDir.'/branding/themes/';
+		// Make sure temp. target dir. ends with a '/'
+		$sTempTargetDir .= '/';
+
+		// Set imports paths
+		// Note: During compilation, we don't have access to "env-xxx", so we have to set several imports paths:
+		// - The CSS directory for the native imports (eg. "../css/css-variables.scss")
+		// - The SCSS from modules
+		$aImportsPaths = array(
+			APPROOT.'css/',
+			$sTempTargetDir.'/',
+		);
+
+		// Build compiled themes folder
+		$sThemesDir = $sTempTargetDir.'branding/themes/';
 		if(!is_dir($sThemesDir))
 		{
 			SetupUtils::builddir($sThemesDir);
 		}
+
+		// Parsing themes from DM
+		$aThemes = array();
+		/** @var \DOMNodeList $oThemeNodes */
+		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme');
 		foreach($oThemeNodes as $oTheme)
 		{
 			$sThemeId = $oTheme->getAttribute('id');
-			$sThemeDir = $sTempTargetDir.'/branding/themes/'.$sThemeId;
-
-			if(!is_dir($sThemesDir.$sThemeId))
-			{
-				SetupUtils::builddir($sThemesDir.$sThemeId);
-			}
-			
-			$oVariables = $oTheme->GetNodes('variables/variable');
-			$oImports = $oTheme->GetNodes('imports/import');
-			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
-			
 			$aThemeParameters = array(
 				'variables' => array(),
 				'imports' => array(),
 				'stylesheets' => array(),
 			);
-			// json array
-			$sVariablesContent = '';
+
+			/** @var \DOMNodeList $oVariables */
+			$oVariables = $oTheme->GetNodes('variables/variable');
 			foreach($oVariables as $oVariable)
 			{
 				$sVariableId = $oVariable->getAttribute('id');
 				$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
 			}
 
+			/** @var \DOMNodeList $oImports */
+			$oImports = $oTheme->GetNodes('imports/import');
 			foreach($oImports as $oImport)
 			{
 				$sImportId = $oImport->getAttribute('id');
 				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
 			}
-			
+
+			/** @var \DOMNodeList $oStylesheets */
+			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
 			foreach($oStylesheets as $oStylesheet)
 			{
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
-			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aThemeParameters));
+
+			$aThemes[$sThemeId] = $aThemeParameters;
+		}
+
+		// Force to have a default theme if none in the DM
+		if(empty($aThemes))
+		{
+			$aDefaultThemeInfo = ThemeHandler::GetDefaultThemeInformation();
+			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
+		}
+
+		// Compile themes
+		foreach($aThemes as $sThemeId => $aThemeParameters)
+		{
+			$sThemeDir = $sThemesDir.$sThemeId;
+			if(!is_dir($sThemeDir))
+			{
+				SetupUtils::builddir($sThemeDir);
+			}
+
+
+			ThemeHandler::CompileTheme($sThemeId, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 		}
 	}
 
 	/**
-	 * @param $oBrandingNode
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
+	 * @param \MFElement $oBrandingNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \DOMFormatException
 	 * @throws \Exception
@@ -2735,6 +2783,11 @@ EOF;
 		}
 	}
 
+	/**
+	 * @param \MFElement $oPortalsNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 */
 	protected function CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		if ($oPortalsNode)
@@ -2792,7 +2845,14 @@ EOF;
 	{
 		return ($aConf1['rank'] < $aConf2['rank']) ? -1 : 1;
 	}
-	
+
+	/**
+	 * @param \MFElement $oParametersNode
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 *
+	 * @throws \Exception
+	 */
 	protected function CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		if ($oParametersNode)
@@ -3017,7 +3077,7 @@ EOF;
 # Apache 2.4
 <ifModule mod_authz_core.c>
 Require all denied
-	<FilesMatch ".+\.(css|scss|js|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
 	    Require all granted
 	</FilesMatch>
 </ifModule>
@@ -3026,7 +3086,7 @@ Require all denied
 <ifModule !mod_authz_core.c>
 deny from all
 Satisfy All
-	<FilesMatch ".+\.(css|scss|js|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html|php)$">
 	    Order Allow,Deny
 	    Allow from all
 	</FilesMatch>
@@ -3063,6 +3123,7 @@ EOF;
                <add fileExtension=".css" allowed="true" />
                <add fileExtension=".scss" allowed="true" />
                <add fileExtension=".js" allowed="true" />
+               <add fileExtension=".map" allowed="true" />
                <add fileExtension=".png" allowed="true" />
                <add fileExtension=".bmp" allowed="true" />
                <add fileExtension=".gif" allowed="true" />

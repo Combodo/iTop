@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
@@ -57,7 +56,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:MyShortcuts' => '我的快捷方式',
 	'Menu:UserManagement' => '用户管理',
 	'Menu:Queries' => '查询',
-	'Menu:Configuration' => '配置',
+	'Menu:ConfigurationTools' => '配置',
 ));
 
 //

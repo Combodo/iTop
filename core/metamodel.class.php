@@ -919,6 +919,20 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
+	final static public function GetFilterCodeOrigin($sClass, $sAttCode)
+	{
+		self::_check_subclass($sClass);
+		return self::$m_aFilterOrigins[$sClass][$sAttCode];
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 *
@@ -2493,6 +2507,32 @@ abstract class MetaModel
 			}
 		}
 		return array();
+	}
+
+	/**
+	 * Return an hash array of the possible attribute flags (code => value)
+	 *
+	 * Example:
+	 * [
+	 *  "read_only" => OPT_ATT_READONLY,
+	 *  "mandatory" => OPT_ATT_MANDATORY,
+	 *  ...
+	 * ]
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function EnumPossibleAttributeFlags()
+	{
+		return $aPossibleAttFlags = array(
+			'normal' => OPT_ATT_NORMAL,
+			'hidden' => OPT_ATT_HIDDEN,
+			'read_only' => OPT_ATT_READONLY,
+			'mandatory' => OPT_ATT_MANDATORY,
+			'must_change' => OPT_ATT_MUSTCHANGE,
+			'must_prompt' => OPT_ATT_MUSTPROMPT,
+			'slave' => OPT_ATT_SLAVE
+		);
 	}
 
 	/**
@@ -5672,6 +5712,8 @@ abstract class MetaModel
 
 
 	/**
+	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception

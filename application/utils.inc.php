@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -1505,6 +1505,17 @@ class utils
 	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}	
+	
+	/**
+	 * Helper to encapsulation iTop's html_entity_decode
+	 * @param string $sValue
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public static function HtmlEntityDecode($sValue)
+	{
+		return html_entity_decode($sValue, ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -1566,17 +1577,39 @@ class utils
 		clearstatcache();
 		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSassPath))))
 		{
-			$oScss = new Compiler();
-			$oScss->setImportPaths($aImportPaths);
-			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
-			// Temporary disabling max exec time while compiling
-			$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
-			set_time_limit(0);
-			$sCss = $oScss->compile(file_get_contents($sSassPath));
-			set_time_limit($iCurrentMaxExecTime);
+			$sCss = static::CompileCSSFromSASS(file_get_contents($sSassPath), $aImportPaths);
 			file_put_contents($sCssPath, $sCss);
 		}
 		return $sCssRelPath;
+	}
+
+	/**
+	 * Return a string of CSS compiled from the $sSassContent
+	 *
+	 * @param string $sSassContent
+	 * @param array $aImportPaths
+	 * @param array $aVariables
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.0
+	 */
+	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
+	{
+		$oSass = new Compiler();
+		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
+		// Setting our variables
+		$oSass->setVariables($aVariables);
+		// Setting our imports paths
+		$oSass->setImportPaths($aImportPaths);
+		// Temporary disabling max exec time while compiling
+		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
+		set_time_limit(0);
+		// Compiling SASS
+		$sCss = $oSass->compile($sSassContent);
+		set_time_limit($iCurrentMaxExecTime);
+
+		return $sCss;
 	}
 	
 	public static function GetImageSize($sImageData)

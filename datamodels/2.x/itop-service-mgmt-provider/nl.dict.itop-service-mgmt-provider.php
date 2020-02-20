@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,8 +21,8 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @author jbostoen (2018)
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -39,8 +39,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:ServiceManagement+' => 'Overzicht van Service Management',
 	'Menu:Service:Overview' => 'Overzicht',
 	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per servicelevel',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten per status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
 
 	'Menu:ProviderContract' => 'Leverancierscontracten',
@@ -91,7 +91,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ContractType' => 'Soort Contract',
+	'Class:ContractType' => 'Soort contract',
 	'Class:ContractType+' => '',
 ));
 
@@ -325,7 +325,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ServiceSubcategory' => 'Subcategorie Service',
+	'Class:ServiceSubcategory' => 'Subcategorie service',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/Attribute:name' => 'Naam',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
@@ -369,7 +369,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLA/Attribute:organization_name' => 'Naam leverancier',
 	'Class:SLA/Attribute:organization_name+' => 'Naam van de leverancier',
 	'Class:SLA/Attribute:slts_list' => 'SLT\'s',
-	'Class:SLA/Attribute:slts_list+' => 'Alle service level-doelstellingen voor deze SLA',
+	'Class:SLA/Attribute:slts_list+' => 'Alle servicelevel-doelstellingen voor deze SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Klantencontracten',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle klantencontracten die gebruik maken van deze SLA',
 ));
@@ -430,16 +430,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Naam SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT metric~~',
-	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT request type~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'SLT ticket priority~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT value~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Maatstaf SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Soort SLT-verzoek',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Prioriteit SLT-verzoek',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT-waarde',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Eenheid SLT-waarde',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));
 
 //
@@ -513,7 +513,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DeliveryModel/Attribute:description' => 'Omschrijving',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacten',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle contacten (Teams en Personen) voor dit leveringsmodel',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle contacten (teams en personen) voor dit leveringsmodel',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Klanten',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Alle klanten die gebruik maken van dit leveringsmodel',
 ));

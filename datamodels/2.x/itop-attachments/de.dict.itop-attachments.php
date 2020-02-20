@@ -61,3 +61,25 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Attachment/Attribute:contents' => 'Contents~~',
 	'Class:Attachment/Attribute:contents+' => '~~',
 ));
+
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Attachments:File:Thumbnail' => 'Icon~~',
+	'Attachments:File:Name' => 'File name~~',
+	'Attachments:File:Date' => 'Upload date~~',
+	'Attachments:File:Uploader' => 'Uploaded by~~',
+	'Attachments:File:Size' => 'Size~~',
+	'Attachments:File:MimeType' => 'Type~~',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
+	'Class:Attachment/Attribute:user_id' => 'User id~~',
+	'Class:Attachment/Attribute:user_id+' => '~~',
+	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
+	'Class:Attachment/Attribute:contact_id+' => '~~',
+));

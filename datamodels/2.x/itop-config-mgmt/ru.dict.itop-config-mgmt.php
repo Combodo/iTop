@@ -1883,6 +1883,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Server:otherinfo' => 'Дополнительно',
 	'Server:power' => 'Электропитание',
 	'Person:info' => 'Основное',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Персональная информация',
 	'Person:notifiy' => 'Уведомления',
 	'Class:Subnet/Tab:IPUsage' => 'Использование IP-адресов',

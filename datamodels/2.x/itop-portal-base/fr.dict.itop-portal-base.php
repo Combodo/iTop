@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Portal
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Page:DefaultTitle' => 'Portail utilisateur %1$s',
@@ -126,6 +125,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Veuillez compléter les informations suivantes :',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Enregistré',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s enregistré(e)',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Sélection de %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Sélection de %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',

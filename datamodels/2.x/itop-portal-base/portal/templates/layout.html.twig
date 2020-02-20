@@ -325,22 +325,15 @@
 		<div class="container-fluid" id="main-wrapper">
 			<div class="row">
 				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
-
-                    {% if app['combodo.current_user.session_messages']|length > 0 %}
-						<section class="row" id="session-messages">
-							<div class="col-xs-12">
-                                {% for sessionMessage in app['combodo.current_user.session_messages'] %}
-									<div class="{{ sessionMessage['cssClass'] }}">{{ sessionMessage['message'] }}</div>
-                                {% endfor %}
-							</div>
-						</section>
-                    {% endif %}
-
+                    <section class="row">
+						<div class="col-xs-12">
+							{% include 'itop-portal-base/portal/templates/helpers/session_messages/session_messages.html.twig' %}
+						</div>
+					</section>
 					<section class="row" id="main-header">
 						{% block pMainHeader %}
 						{% endblock %}
 					</section>
-
 					<section class="row" id="main-content">
 						{% block pMainContent %}
 						{% endblock %}
@@ -413,6 +406,11 @@
 				var GetAbsoluteUrlAppRoot = function()
 				{
 					return '{{ app['combodo.absolute_url'] }}';
+				};
+				// Note: We might want to expose URLs instead of this kind of stuff... 🤔
+				var GetAddSessionMessageUrl = function()
+				{
+					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
 				};
 				// Helper to add a parameter to an url
 				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)

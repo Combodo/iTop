@@ -75,6 +75,18 @@ try
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
 
+	// N°2780 Fix ContextTag for console
+	// some operations are also used in the portal though
+	switch ($operation)
+	{
+		case 'export_build':
+		case 'export_download':
+			// do nothing : used in portal (export.js in portal-base)
+
+		default:
+			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
+	}
+
 	switch ($operation)
 	{
 		case 'datatable':
@@ -1187,6 +1199,7 @@ EOF
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$aExtraParams['dashboard_div_id'] = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oKPI = new ExecutionKPI();
@@ -1496,7 +1509,13 @@ EOF
 			{
 				$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
 				$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
-				$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").slideToggle("normal"); } );');
+				$oPage->add_ready_script(<<<JS
+$("#toggle_$index").click( function() { 
+	$(this).toggleClass('open');
+	$("#license_$index").slideToggle("normal"); 
+});
+JS
+				);
 				$index++;
 			}
 			$oPage->add('</ul>');

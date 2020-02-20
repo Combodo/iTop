@@ -2,11 +2,11 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2019 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * @author Hipska (2018)
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * This file is part of iTop.
  *
@@ -136,7 +136,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Attribute:related_incident_list+' => 'Alle incidenten gerelateerd aan deze change',
 	'Class:Change/Attribute:child_changes_list' => 'Subchanges',
 	'Class:Change/Attribute:child_changes_list+' => 'Alle subchanges gerelateerd aan deze change',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Hoofdchange friendly name',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Hoofdchange herkenbare naam',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Changetype',
 	'Class:Change/Attribute:parent_id_finalclass_recall+' => '',

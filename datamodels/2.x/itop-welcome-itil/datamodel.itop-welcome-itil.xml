@@ -162,18 +162,18 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="UniversalSearchMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>60</rank>
-      <parent>AdminTools</parent>
+      <rank>35</rank>
+      <parent>Queries</parent>
       <url>$pages/UniversalSearch.php</url>
       <enable_class>ResourceAdminMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
-    <menu id="Configuration" xsi:type="MenuGroup" _delta="define_if_not_exists">
+    <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
-      <parent>Configuration</parent>
+      <parent>ConfigurationTools</parent>
       <oql><![CDATA[SELECT SynchroDataSource]]></oql>
       <do_search>1</do_search>
       <enable_class>SynchroDataSource</enable_class>
@@ -181,7 +181,7 @@
     </menu>
     <menu id="NotificationsMenu" xsi:type="WebPageMenuNode" _delta="define">
       <rank>40</rank>
-      <parent>Configuration</parent>
+      <parent>ConfigurationTools</parent>
       <url>$pages/notifications.php</url>
       <enable_class>Trigger</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>

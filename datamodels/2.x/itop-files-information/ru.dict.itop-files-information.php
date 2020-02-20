@@ -8,7 +8,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Файл %1$s отсутствует',

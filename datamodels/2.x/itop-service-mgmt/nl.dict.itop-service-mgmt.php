@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,8 +21,8 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
- * @author jbostoen (2018)
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions
@@ -39,20 +39,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:ServiceManagement+' => 'Overzicht van Service Management',
 	'Menu:Service:Overview' => 'Overzicht',
 	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per servicelevel',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten per status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
 
 	'Menu:ProviderContract' => 'Leverancierscontracten',
 	'Menu:ProviderContract+' => 'Leverancierscontracten',
 	'Menu:CustomerContract' => 'Klantencontracten',
 	'Menu:CustomerContract+' => 'Klantencontracten',
-	'Menu:ServiceSubcategory' => 'Dienst subcategorieën',
-	'Menu:ServiceSubcategory+' => 'Dienst subcategorieën',
+	'Menu:ServiceSubcategory' => 'Subcategorieën services',
+	'Menu:ServiceSubcategory+' => 'Subcategorieën services',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Dienstelementen',
-	'Menu:ServiceElement+' => 'Dienstelementen',
+	'Menu:ServiceElement' => 'Service-elementen',
+	'Menu:ServiceElement+' => 'Service-elementen',
 	'Menu:SLA' => 'SLA\'s',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLT\'s',
@@ -81,7 +81,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ContractType' => 'Soort Contract',
+	'Class:ContractType' => 'Soort contract',
 	'Class:ContractType+' => '',
 ));
 
@@ -147,7 +147,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CustomerContract' => 'Klantencontract',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => 'Alle services die zijn aangeschaft voor dit contract',
+	'Class:CustomerContract/Attribute:services_list+' => 'Alle services die aangeschaft zijn voor dit contract',
 ));
 
 //
@@ -155,7 +155,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ProviderContract' => 'Leveranciers Contract',
+	'Class:ProviderContract' => 'Leverancierscontract',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI\'s',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Alle configuratie-items die gedekt zijn door dit leverancierscontract',
@@ -240,7 +240,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Service' => 'Dienst',
+	'Class:Service' => 'Service',
 	'Class:Service+' => '',
 	'Class:Service/Attribute:name' => 'Naam',
 	'Class:Service/Attribute:name+' => '',
@@ -272,8 +272,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'Alle klantencontracten die deze service hebben aangeschaft',
 	'Class:Service/Attribute:providercontracts_list' => 'Leverancierscontracten',
 	'Class:Service/Attribute:providercontracts_list+' => 'Alle leverancierscontracten die ondersteuning bieden voor deze service',
-	'Class:Service/Attribute:functionalcis_list' => 'Afhankelijk van CIs',
-	'Class:Service/Attribute:functionalcis_list+' => 'Alle configuratie items die gebruikt worden voor het beschikbaarheid van deze service',
+	'Class:Service/Attribute:functionalcis_list' => 'Afhankelijk van CI\'s',
+	'Class:Service/Attribute:functionalcis_list+' => 'Alle configuratie-items die gebruikt worden voor het beschikbaarheid van deze service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorieën service',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Alle subcategorieën van deze service',
 ));
@@ -317,7 +317,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ServiceSubcategory' => 'Service Subcategorie',
+	'Class:ServiceSubcategory' => 'Subcategorie service',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/Attribute:name' => 'Naam',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
@@ -352,14 +352,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Naam',
 	'Class:SLA/Attribute:name+' => '',
-	'Class:SLA/Attribute:description' => 'omschrijving',
+	'Class:SLA/Attribute:description' => 'Omschrijving',
 	'Class:SLA/Attribute:description+' => '',
 	'Class:SLA/Attribute:org_id' => 'Provider',
 	'Class:SLA/Attribute:org_id+' => '',
 	'Class:SLA/Attribute:organization_name' => 'Naam leverancier',
 	'Class:SLA/Attribute:organization_name+' => 'Naam van de leverancier',
 	'Class:SLA/Attribute:slts_list' => 'SLT\'s',
-	'Class:SLA/Attribute:slts_list+' => 'Alle service level-doelstellingen voor deze SLA',
+	'Class:SLA/Attribute:slts_list+' => 'Alle servicelevel-doelstellingen voor deze SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Klantencontracten',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle klantencontracten die gebruik maken van deze SLA',
 ));
@@ -420,16 +420,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Naam SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
-	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Maatstaf SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Soort SLT-verzoek',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Prioriteit SLT-verzoek',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT-waarde',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Eenheid SLT-waarde',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));
 
 //
@@ -503,7 +503,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DeliveryModel/Attribute:description' => 'Omschrijving',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacten',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle contacten (Teams en Personen) voor dit leveringsmodel',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle contacten (teams en personen) voor dit leveringsmodel',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Klanten',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Alle klanten die gebruik maken van dit leveringsmodel',
 ));

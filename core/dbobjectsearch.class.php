@@ -1798,6 +1798,24 @@ class DBObjectSearch extends DBSearch
 		return $sRet;
 	}
 
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 * @param array $aValues is an array of $sAttCode => $value
+	 * @param array $aArgs
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public function MakeInsertQuery($aValues, $aArgs = array())
+	{
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
+		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$sRet = $oSQLQuery->RenderInsert($aScalarArgs);
+		return $sRet;
+	}
 
 	/**
 	 * Get an SQLObjectQuery from the search. This SQLObjectQuery can be rendered as a select, select group by, update or delete

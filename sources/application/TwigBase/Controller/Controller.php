@@ -56,6 +56,7 @@ abstract class Controller
 	private $m_aDefaultParams;
 	private $m_aLinkedScripts;
 	private $m_aLinkedStylesheets;
+	private $m_aSaas;
 	private $m_aAjaxTabs;
 
 
@@ -69,6 +70,7 @@ abstract class Controller
 	{
 		$this->m_aLinkedScripts = array();
 		$this->m_aLinkedStylesheets = array();
+		$this->m_aSaas = array();
 		$this->m_aAjaxTabs = array();
 		$this->m_aDefaultParams = array();
 		$this->SetViewPath($sViewPath);
@@ -292,6 +294,21 @@ abstract class Controller
 	}
 
 	/**
+	 * Display an AJAX page (ajax_page)
+	 *
+	 * @api
+	 *
+	 * @param array $aParams Params used by the twig template
+	 * @param null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 *
+	 * @throws \Exception
+	 */
+	public function DisplaySetupPage($aParams = array(), $sTemplateName = null)
+	{
+		$this->DisplayPage($aParams, $sTemplateName, 'setup');
+	}
+
+	/**
 	 * Display the twig page based on the name or the operation
 	 *
 	 * @api
@@ -329,6 +346,10 @@ abstract class Controller
 		foreach ($this->m_aLinkedStylesheets as $sLinkedStylesheet)
 		{
 			$this->AddLinkedStylesheetToPage($sLinkedStylesheet);
+		}
+		foreach ($this->m_aSaas as $sSaasRelPath)
+		{
+			$this->AddSaasToPage($sSaasRelPath);
 		}
 		$this->OutputPage();
 	}
@@ -464,17 +485,35 @@ abstract class Controller
 	}
 
 	/**
-	 * Add an AJAX tab to the current page
+	 * Add an linked stylesheet to the current Page
 	 *
 	 * @api
 	 *
-	 * @param string $sLabel Label of the tab
+	 * @param string $sSaasRelPath SCSS Stylesheet relative path to link
+	 */
+	public function AddSaas($sSaasRelPath)
+	{
+		$this->m_aSaas[] = $sSaasRelPath;
+	}
+
+	/**
+	 * Add an AJAX tab to the current page
+	 *
+	 * @param string $sCode Code of the tab
 	 * @param string $sURL URL to call when the tab is activated
 	 * @param bool $bCache If true, cache the result for the current web page
+	 * @param string $sLabel Label of the tab (if null the code is translated)
+	 *
+	 * @api
+	 *
 	 */
-	public function AddAjaxTab($sLabel, $sURL, $bCache = true)
+	public function AddAjaxTab($sCode, $sURL, $bCache = true, $sLabel = null)
 	{
-		$this->m_aAjaxTabs[] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+		if (is_null($sLabel))
+		{
+			$sLabel = Dict::S($sCode);
+		}
+		$this->m_aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
 	}
 
 	/**
@@ -523,6 +562,10 @@ abstract class Controller
 			case 'ajax':
 				$this->m_oPage = new ajax_page($this->GetOperationTitle());
 				break;
+
+			case 'setup':
+				$this->m_oPage = new SetupPage($this->GetOperationTitle());
+				break;
 		}
 	}
 
@@ -564,6 +607,11 @@ abstract class Controller
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
 		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+	}
+
+	private function AddSaasToPage($sSaasRelPath)
+	{
+		$this->m_oPage->add_saas($sSaasRelPath);
 	}
 
 	private function AddAjaxTabToPage($sCode, $sTitle, $sURL, $bCache)

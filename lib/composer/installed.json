@@ -1,17 +1,17 @@
 [
     {
         "name": "combodo/tcpdf",
-        "version": "6.3.2",
-        "version_normalized": "6.3.2.0",
+        "version": "6.3.4",
+        "version_normalized": "6.3.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-            "reference": "2723050de47c8cbd78293656d896c0000442e23a"
+            "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/2723050de47c8cbd78293656d896c0000442e23a",
-            "reference": "2723050de47c8cbd78293656d896c0000442e23a",
+            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
+            "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "replace": {
             "tecnickcom/tcpdf": "self.version"
         },
-        "time": "2020-01-08T16:22:40+00:00",
+        "time": "2020-02-12T14:16:56+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -45,9 +45,14 @@
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "LGPL-3.0"
+            "LGPL-3.0-only"
         ],
         "authors": [
+            {
+                "name": "Nicola Asuni",
+                "email": "info@tecnick.com",
+                "role": "lead"
+            },
             {
                 "name": "Combodo",
                 "email": "contact@combodo.com"

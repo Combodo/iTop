@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -94,6 +94,7 @@ h1 {
 h2 {
 	color: $default-font-color;
 	font-size: 14pt;
+	font-weight: normal;
 }
 h3 {
 	color: #1C94C4;
@@ -241,6 +242,13 @@ h3.clickable.open {
     border-left: 4px solid $message-default-border-color;
     padding: 10px;
 
+	>.message-title {
+		font-weight: bold;
+		margin-right: 5px;
+	}
+	~ .message{
+		margin-top: 6px;
+	}
     &.message-valid{
         color: $message-valid-text-color;
         background-color: $message-valid-bg-color;
@@ -255,10 +263,6 @@ h3.clickable.open {
         color: $message-error-text-color;
         background-color: $message-error-bg-color;
         border-color: $message-error-border-color;
-    }
-    >.message-title {
-        font-weight: bold;
-        margin-right: 5px;
     }
 }
 .text-valid{
@@ -282,21 +286,12 @@ fieldset{
         padding-bottom: 7px;
         width: 100%;
 		color: #3C3C3C;
-        font-size: 12pt;
+        font-size: 11pt;
 		font-weight: bold;
 		border-bottom: 1px solid #D2D2D2;
     }
 }
 
-#details{
-    >.message{
-        margin-bottom: 6px;
-        
-        &:last-of-type{
-            margin-bottom: 0;
-        }
-    }
-}
 .module-selection-banner{
     img{
         max-height: 48px;

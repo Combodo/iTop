@@ -512,6 +512,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'аккаунт не ассоциирован с персоной, имеющей атрибут электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-NoEmail' => 'отсутствует адрес электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-Send' => 'технические проблемы с отправкой электронной почты. Пожалуйста, обратитесь к администратору.',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Восстановление пароля',
 	'UI:ResetPwd-EmailBody' => '<body><p>Вы запросили восстановление пароля iTop.</p><p>Пожалуйста, воспользуйтесь <a href="%1$s">этой ссылкой</a> для задания нового пароля.</p></body>',
 
@@ -876,7 +877,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'Система',
+	'Menu:SystemTools' => 'Система',
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
 	'UI:ChangeManagementMenu+' => 'Управление изменениями',

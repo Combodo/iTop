@@ -1,20 +1,22 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 use Symfony\Component\DependencyInjection\Container;
 
@@ -30,6 +32,7 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     Extensibility
+ * @since       2.7.0
  */
 interface iLoginExtension
 {
@@ -41,6 +44,9 @@ interface iLoginExtension
 	public function ListSupportedLoginModes();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginFSMExtension extends iLoginExtension
 {
 	/**
@@ -58,6 +64,9 @@ interface iLoginFSMExtension extends iLoginExtension
 	public function LoginAction($sLoginState, &$iErrorCode);
 }
 
+/**
+ * @since 2.7.0
+ */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 {
 	public abstract function ListSupportedLoginModes();
@@ -172,6 +181,9 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	}
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLogoutExtension extends iLoginExtension
 {
 	/**
@@ -180,6 +192,9 @@ interface iLogoutExtension extends iLoginExtension
 	public function LogoutAction();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
@@ -188,7 +203,11 @@ interface iLoginUIExtension extends iLoginExtension
 	public function GetTwigContext();
 }
 
-
+/**
+ * @api
+ * @package     Extensibility
+ * @since 2.7.0
+ */
 interface iPreferencesExtension
 {
 	/**
@@ -204,6 +223,33 @@ interface iPreferencesExtension
 	 * @return bool true if the operation has been used
 	 */
 	public function ApplyPreferences(WebPage $oPage, $sOperation);
+}
+
+/**
+ * Extend this class instead of implementing iPreferencesExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPreferencesExtension implements iPreferencesExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function DisplayPreferences(WebPage $oPage)
+	{
+		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function ApplyPreferences(WebPage $oPage, $sOperation)
+	{
+		// Do nothing
+	}
+
 }
 
 /**
@@ -367,6 +413,77 @@ interface iApplicationUIExtension
 }
 
 /**
+ * Extend this class instead of implementing iApplicationUIExtension if you don't need to overload
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormCancel($sTempId)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumUsedAttributes($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetIcon($oObject)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHilightClass($oObject)
+	{
+		return HILIGHT_CLASS_NONE;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+		return array();
+	}
+
+}
+
+/**
  * Implement this interface to perform specific things when objects are manipulated
  *
  * Note that those methods will be called when objects are manipulated, either in a programmatic way
@@ -421,7 +538,10 @@ interface iApplicationObjectExtension
 	 * Invoked when an object is updated into the database. The method is called right <b>after</b> the object has been written to the
 	 * database.
 	 *
-	 * Changes made to the object can be get using {@link $oObject::ListChangesUpdated()}. Do not call {@link \DBObject::ListChanges} for this purpose because it will be empty as the object has already be written to DB!
+	 * Useful methods you can call on $oObject :
+	 *
+	 * * {@see DBObject::ListPreviousValuesForUpdatedAttributes()} : list of changed attributes and their values before the change
+	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
@@ -429,7 +549,7 @@ interface iApplicationObjectExtension
 	 *
 	 * @return void
 	 *
-	 * @since 2.7.0 N°2293 can access object changes by calling {@link $oObject::ListChangesUpdated()}
+	 * @since 2.7.0 N°2293 can access object changes by calling {@see DBObject::ListPreviousValuesForUpdatedAttributes()} on $oObject
 	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 
@@ -458,6 +578,62 @@ interface iApplicationObjectExtension
 	 * @return void
 	 */
 	public function OnDBDelete($oObject, $oChange = null);
+}
+
+/**
+ * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationObjectExtension implements iApplicationObjectExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnIsModified($oObject)
+	{
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToWrite($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToDelete($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBDelete($oObject, $oChange = null)
+	{
+	}
+
 }
 
 /**
@@ -586,7 +762,6 @@ abstract class ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param array $aCssClasses The CSS classes to add to the menu
 	 */
 	public function __construct($sUID, $sLabel)
 	{
@@ -849,6 +1024,41 @@ interface iPageUIExtension
 }
 
 /**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPageUIExtension implements iPageUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNorthPaneHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSouthPaneHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerHtml(iTopWebPage $oPage)
+	{
+		return '';
+	}
+
+}
+
+/**
  * Implement this interface to add content to any enhanced portal page
  *
  * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
@@ -1079,11 +1289,6 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
-	 *
-	 * @param DBObject $oObject The object being reported
-	 * @param string $sAttCode The attribute code (must be valid)
-	 *
-	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{

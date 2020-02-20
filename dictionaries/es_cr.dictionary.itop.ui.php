@@ -533,6 +533,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'La cuenta no está asociada a una persona con correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'Falta dirección de correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-Send' => 'Falla al envar un correo. Por favor contacte al administrador.',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Restablecer contraseña de iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Ha solicitado restablecer su contraseña en iTop.</p><p>Por favor de click en la siguiente liga: <a href="%1$s">proporcione una nueva contraseña</a></p>.',
 
@@ -897,7 +898,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:AdminTools' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System~~',
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Control de Cambios',
 	'UI:ChangeManagementMenu+' => 'Control de Cambios',

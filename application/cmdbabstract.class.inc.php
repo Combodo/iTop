@@ -495,7 +495,10 @@ EOF
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
 		$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
-		$aExtraParams = array('query_params' => $this->ToArgsForQuery());
+		$aExtraParams = array(
+			'query_params' => $this->ToArgsForQuery(),
+			'dashboard_div_id' => $sDivId,
+		);
 		$oDashboard->Render($oPage, false, $aExtraParams, $bCanEdit);
 		$oPage->add('</div>');
 	}
@@ -839,6 +842,7 @@ EOF
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
 
 						if ($bEditMode)
 						{
@@ -941,6 +945,8 @@ EOF
 							// - Attribute code and AttributeDef. class
 							$val['attcode'] = $sAttCode;
 							$val['atttype'] = $sAttDefClass;
+							$val['attlabel'] = $sAttLabel;
+							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
 
 							// - How the field should be rendered
 							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
@@ -1033,7 +1039,7 @@ HTML
 			$this->DisplayBareRelations($oPage, $bEditMode);
 			//$oPage->SetCurrentTab('UI:HistoryTab');
 			//$this->DisplayBareHistory($oPage, $bEditMode);
-			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
+			$oPage->AddAjaxTab('UI:HistoryTab',
 				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
 			$oPage->add(<<<HTML
 </div><!-- End of object-details -->
@@ -2859,7 +2865,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
+	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
@@ -2920,7 +2926,7 @@ HTML
 			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
 		}
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		if ($sButtonsPosition == 'bottom')
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
 		{
 			// bottom: Displays the ticket details BEFORE the actions
 			$oPage->add('<div class="ui-widget-content">');
@@ -3031,7 +3037,7 @@ HTML
 </div><!-- End of object-details -->
 HTML
 		);
-		if ($sButtonsPosition != 'top')
+		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
 			$oPage->add('<div class="ui-widget-content">');
@@ -3215,7 +3221,6 @@ EOF
 				$data = $oDoc->GetData();
 				switch ($oDoc->GetMimeType())
 				{
-					case 'text/html':
 					case 'text/xml':
 						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 						break;
@@ -5124,8 +5129,10 @@ EOF
 	 *
 	 * @return array
 	 * @since 2.7.0
+	 *
+	 * @internal Do NOT use, this is experimental and most likely to be moved elsewhere when we find its rightful place.
 	 */
-	protected static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
 		return array(
 			'AttributeBlob',
 			'AttributeCustomFields',
@@ -5134,7 +5141,9 @@ EOF
 			'AttributeStopWatch',
 			'AttributeSubItem',
 			'AttributeTable',
-			'AttributeText'
+			'AttributeText',
+			'AttributePassword',
+			'AttributeOneWayPassword',
 		);
 	}
 }

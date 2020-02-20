@@ -26,14 +26,14 @@ require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
 clearstatcache(); // Make sure we know what we are doing !
-SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
-SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
 // Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
 ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
 // While running the setup it is desirable to see any error that may happen
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
+
+SetupUtils::ExitMaintenanceMode(false);
 
 /////////////////////////////////////////////////////////////////////
 // Fake functions to protect the first run of the installer

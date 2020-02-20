@@ -100,7 +100,7 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 		switch ($sMode)
 		{
 			case 'view':
-				if (!ContextTag::Check('GUI:Portal') || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
+				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
 				{
 					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
@@ -109,11 +109,11 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 			case 'edit':
 			default:
 				// Checking if user is allowed to edit object, if not we check if it can at least view it.
-				if (!ContextTag::Check('GUI:Portal') || $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sClass, $iId))
+				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sClass, $iId))
 				{
 					$sObjectQueryString = $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
-				elseif (!ContextTag::Check('GUI:Portal') || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
+				elseif (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
 				{
 					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}

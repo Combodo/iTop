@@ -57,7 +57,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:MyShortcuts' => 'My Shortcuts',
 	'Menu:UserManagement' => 'User Management',
 	'Menu:Queries' => 'Queries',
-	'Menu:Configuration' => 'Configuration',
+	'Menu:ConfigurationTools' => 'Configuration',
 ));
 
 //

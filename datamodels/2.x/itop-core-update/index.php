@@ -10,7 +10,7 @@ use Combodo\iTop\CoreUpdate\Controller\UpdateController;
 use ContextTag;
 
 require_once(APPROOT.'application/startup.inc.php');
-new ContextTag('Setup');
+new ContextTag(ContextTag::TAG_SETUP);
 
 $oUpdateController = new UpdateController(MODULESROOT.'itop-core-update/view', 'itop-core-update');
 $oUpdateController->DisableInDemoMode();

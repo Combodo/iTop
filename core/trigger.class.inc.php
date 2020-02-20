@@ -56,13 +56,46 @@ abstract class Trigger extends cmdbAbstractObject
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("action_list", array("linked_class" => "lnkTriggerAction", "ext_key_to_me" => "trigger_id", "ext_key_to_remote" => "action_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array())));
+		$aTags = ContextTag::GetTags();
+		MetaModel::Init_AddAttribute( new AttributeEnumSet("context", array("allowed_values" => null, "possible_values" => new ValueSetEnumPadded($aTags), "sql" => "context", "depends_on" => array(), "is_null_allowed" => true, "max_items" => 12)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('finalclass', 'description', 'context', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass')); // Attributes to be displayed for a list
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+	/**
+	 * Check if the trigger can be used in the current context
+	 *
+	 * @return bool true if context OK
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function IsContextValid()
+	{
+		// Check the context
+		$oContext = $this->Get('context');
+		$bChecked = false;
+		$bValid = false;
+		foreach ($oContext->GetValues() as $sValue)
+		{
+			$bChecked = true;
+			if (ContextTag::Check($sValue))
+			{
+				$bValid = true;
+				break;
+			}
+		}
+		if ($bChecked && !$bValid)
+		{
+			// Trigger does not match the current context
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -73,6 +106,16 @@ abstract class Trigger extends cmdbAbstractObject
 	 */
 	public function DoActivate($aContextArgs)
 	{
+		// Check the context
+		if (!$this->IsContextValid())
+		{
+			// Trigger does not match the current context
+			$sClass = get_class($this);
+			$sName = $this->Get('friendlyname');
+			IssueLog::Debug("Context NOT valid for : {$sClass} '$sName'");
+			return;
+		}
+
 		// Find the related actions
 		$oLinkedActions = $this->Get('action_list');
 		while ($oLink = $oLinkedActions->Fetch())
@@ -133,7 +176,7 @@ abstract class TriggerOnObject extends Trigger
 		MetaModel::Init_AddAttribute(new AttributeOQL("filter", array("allowed_values" => null, "sql" => "filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('default_search', array('description', 'target_class'));  // Default criteria of the search banner
@@ -258,7 +301,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
 	}
@@ -292,7 +335,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeClassState("state", array("class_field" => 'target_class', "allowed_values" => null, "sql" => "state", "default_value" => null, "is_null_allowed" => false, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -326,7 +369,7 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -360,7 +403,7 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'state')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class', 'state')); // Criteria of the std search form
@@ -394,7 +437,7 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -428,7 +471,7 @@ class TriggerOnObjectDelete extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -464,7 +507,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('target_attcodes', array("allowed_values" => null, "class_field" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "max_items" => 20, "min_items" => 0, "attribute_definition_exclusion_list" => "AttributeDashboard,AttributeExternalField,AttributeFinalClass,AttributeFriendlyName,AttributeObsolescenceDate,AttributeObsolescenceFlag,AttributeSubItem", "attribute_definition_list" => null, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
@@ -599,7 +642,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		MetaModel::Init_AddAttribute(new AttributeString("threshold_index", array("allowed_values" => null, "sql" => "threshold_index", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'stop_watch_code', 'threshold_index', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('target_class', 'threshold_index', 'threshold_index')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form

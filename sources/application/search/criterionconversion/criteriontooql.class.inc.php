@@ -200,9 +200,12 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aRawValues[] = $sRawValue;
 			}
 		}
-		$sValue = implode(' ', $aRawValues);
-
-		if (empty($sValue))
+		// This allow to search for complete words
+		if (!empty($aRawValues))
+		{
+			$sValue = implode(' ', $aRawValues).' _';
+		}
+		else
 		{
 			if ($bHasUnDefined)
 			{

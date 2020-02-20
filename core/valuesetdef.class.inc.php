@@ -97,7 +97,7 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
-	protected $m_aExtraConditions;
+	protected $m_oExtraCondition;
 	private $m_bAllowAllData;
 	private $m_aModifierProperties;
 	private $m_bSort;
@@ -116,7 +116,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
 		$this->m_aModifierProperties = $aModifierProperties;
-		$this->m_aExtraConditions = array();
+		$this->m_oExtraCondition = null;
 		$this->m_bSort = true;
 		$this->m_iLimit = 0;
 	}
@@ -124,11 +124,22 @@ class ValueSetObjects extends ValueSetDefinition
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
+		$this->m_bIsLoaded = false;
 	}
 
+	/**
+	 * @param \DBSearch $oFilter
+	 * @deprecated use SetCondition
+	 */
 	public function AddCondition(DBSearch $oFilter)
 	{
-		$this->m_aExtraConditions[] = $oFilter;		
+		$this->SetCondition($oFilter);
+	}
+
+	public function SetCondition(DBSearch $oFilter)
+	{
+		$this->m_oExtraCondition = $oFilter;
+		$this->m_bIsLoaded = false;
 	}
 
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
@@ -141,9 +152,9 @@ class ValueSetObjects extends ValueSetDefinition
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -216,9 +227,9 @@ class ValueSetObjects extends ValueSetDefinition
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
 		if (!$oFilter) return false;
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -350,10 +361,10 @@ class ValueSetEnum extends ValueSetDefinition
 		$this->m_values = $Values;
 	}
 
-	// Helper to export the datat model
+	// Helper to export the data model
 	public function GetValueList()
 	{
-		$this->LoadValues($aArgs = array());
+		$this->LoadValues(null);
 		return $this->m_aValues;
 	}
 
@@ -379,6 +390,29 @@ class ValueSetEnum extends ValueSetDefinition
 		}
 		$this->m_aValues = $aValues;
 		return true;
+	}
+}
+
+class ValueSetEnumPadded extends ValueSetEnum
+{
+	public function __construct($Values)
+	{
+		parent::__construct($Values);
+		if (is_string($Values))
+		{
+			$this->LoadValues(null);
+		}
+		else
+		{
+			$this->m_aValues = $Values;
+		}
+		$aPaddedValues = array();
+		foreach ($this->m_aValues as $sKey => $sVal)
+		{
+			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
+			$aPaddedValues[$sKey] = $sVal;
+		}
+		$this->m_values = $aPaddedValues;
 	}
 }
 

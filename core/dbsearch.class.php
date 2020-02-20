@@ -239,6 +239,12 @@ abstract class DBSearch
 	abstract public function GetClassAlias();
 
 	/**
+	 * @return string
+	 * @internal
+	 */
+	abstract public function GetFirstJoinedClass();
+
+	/**
      * Change the class
      *
      * Defaults to the first selected class (most of the time it is also the first joined class
@@ -1136,21 +1142,22 @@ abstract class DBSearch
      */
 	protected abstract function SetDataFiltered();
 
-    /**
-     * @internal
-     *
-     * @param      $aOrderBy
-     * @param      $aArgs
-     * @param      $aAttToLoad
-     * @param      $aExtendedDataSpec
-     * @param      $iLimitCount
-     * @param      $iLimitStart
-     * @param      $bGetCount
-     * @param null $aGroupByExpr
-     * @param null $aSelectExpr
-     *
-     * @return mixed
-     */
+	/**
+	 * @param      $aOrderBy
+	 * @param      $aArgs
+	 * @param      $aAttToLoad
+	 * @param      $aExtendedDataSpec
+	 * @param      $iLimitCount
+	 * @param      $iLimitStart
+	 * @param      $bGetCount
+	 * @param null $aGroupByExpr
+	 * @param null $aSelectExpr
+	 *
+	 * @return SQLObjectQuery
+	 * @throws \CoreException
+	 * @internal
+	 *
+	 */
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oSearch = $this;

@@ -520,6 +520,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -884,7 +885,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System~~',
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',

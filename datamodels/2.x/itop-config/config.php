@@ -47,7 +47,7 @@ function TestConfig($sContents, $oP)
 
 	/// 2 - only after we are sure that there is no malicious cade, we can perform a syntax check!
 	$oiTopConfigValidator = new iTopConfigSyntaxValidator();
-	$oiTopConfigValidator->Validate($sContents, true);
+	$oiTopConfigValidator->Validate($sContents);
 }
 
 /**

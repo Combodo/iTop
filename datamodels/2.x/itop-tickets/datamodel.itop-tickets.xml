@@ -1043,7 +1043,8 @@
 				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
 				<!-- Available templates are id="layout|home" -->
 				<templates/>
-				<!-- Class used for generating objects view/edit urls (eg. in notifications) -->
+				<!-- Class used for generating objects view/edit urls (eg. in linked sets). -->
+				<!-- Note: Notification placeholders are NOT using this but the "DBObject::RegisterURLMakerClass(<PORTAL_ID>, <CLASS_NAME>)" declarations. -->
 				<urlmaker_class>iTopPortalViewUrlMaker</urlmaker_class>
 				<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
 				<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
@@ -1248,6 +1249,8 @@
 								<group id="opened">
 									<rank>1</rank>
 									<title>Brick:Portal:OngoingRequests:Tab:OnGoing</title>
+									<!-- Optional. A string or dictionary entry to display under the page title for this tab -->
+									<!-- <description>Brick:Portal:OngoingRequests:Tab:OnGoing+</description> -->
 									<condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
 								</group>
 								<group id="resolved">
@@ -1680,6 +1683,7 @@
 						<preset id="2">copy(service_id, service_id)</preset>
 					</presets>
 				</action_rule>
+				<!-- Deprecated, will be removed in iTop 2.8 -->
 				<action_rule id="go-to-open-request-on-submit">
 					<submit xsi:type="goto">
 						<brick>ongoing-tickets-for-portal-user</brick>

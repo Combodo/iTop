@@ -23,6 +23,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
 	'Attachments:Error:FileTooLarge' => 'Файл слишком велик для загрузки. %1$s',
+	'Attachments:Render:Icons' => 'Display as icons~~',
+	'Attachments:Render:Table' => 'Display as list~~',
 ));
 
 //
@@ -44,4 +46,26 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Содержимое',
 	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Attachments:File:Thumbnail' => 'Icon~~',
+	'Attachments:File:Name' => 'File name~~',
+	'Attachments:File:Date' => 'Upload date~~',
+	'Attachments:File:Uploader' => 'Uploaded by~~',
+	'Attachments:File:Size' => 'Size~~',
+	'Attachments:File:MimeType' => 'Type~~',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
+	'Class:Attachment/Attribute:user_id' => 'User id~~',
+	'Class:Attachment/Attribute:user_id+' => '~~',
+	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 ));
