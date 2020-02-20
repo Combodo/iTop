@@ -22,7 +22,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory' => 'Audit-Kategorie',
-	'Class:AuditCategory+' => 'Ein Abschnitt aller Audits',
+	'Class:AuditCategory+' => 'Definition einer Objektgruppe, die durch Regeln überprüft werden soll.',
 	'Class:AuditCategory/Attribute:name' => 'Kategorienname',
 	'Class:AuditCategory/Attribute:name+' => 'Kurzname für diese Kategorie',
 	'Class:AuditCategory/Attribute:description' => 'Beschreibung der Audit-Kategorien',
@@ -44,9 +44,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditRule/Attribute:name+' => 'Kurzname für diese Regel',
 	'Class:AuditRule/Attribute:description' => 'Beschreibung der Audit-Regel',
 	'Class:AuditRule/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Regel',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag Klasse',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Objektklasse',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Feld-Code',
 	'Class:AuditRule/Attribute:query' => 'Durchzuführende Abfrage',
 	'Class:AuditRule/Attribute:query+' => 'Die auszuführende OQL-Abfrage',
 	'Class:AuditRule/Attribute:valid_flag' => 'Gültiges Objekt?',
@@ -97,7 +97,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:contactid' => 'Kontakt (Person)',
 	'Class:User/Attribute:contactid+' => 'Persönliche Details der Geschäftsdaten',
 	'Class:User/Attribute:org_id' => 'Organisation',
-	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
+	'Class:User/Attribute:org_id+' => 'Organisation der verknüpften Person',
 	'Class:User/Attribute:last_name' => 'Nachname',
 	'Class:User/Attribute:last_name+' => 'Nachname des Kontaktes',
 	'Class:User/Attribute:first_name' => 'Vorname',
@@ -126,7 +126,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Mindestens eine Organisation muss diesem Benutzer zugewiesen sein.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Diese Organisation ist nicht erlaubt.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
-	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Error:PersonIsMandatory' => 'Der Kontakt muss angegeben werden.',
 	'Class:UserInternal' => 'Interner Benutzer',
 	'Class:UserInternal+' => 'Benutzer, der innerhalb iTop definiert wird',
 ));
@@ -303,14 +303,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: UserDashboard
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:UserDashboard' => 'User dashboard~~',
-	'Class:UserDashboard+' => '~~',
-	'Class:UserDashboard/Attribute:user_id' => 'User~~',
-	'Class:UserDashboard/Attribute:user_id+' => '~~',
-	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
-	'Class:UserDashboard/Attribute:menu_code+' => '~~',
-	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
-	'Class:UserDashboard/Attribute:contents+' => '~~',
+	'Class:UserDashboard' => 'Benutzer Dashboard',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'Benutzer',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menü-Code',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Inhalt',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -444,8 +444,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Fehler: Ungültige Dashboard-Datei',
 	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
-	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit in der Wartung.',
-	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit im Wartungsmodus.',
+	'UI:Error:MaintenanceTitle' => 'Wartung',
 
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
@@ -512,7 +512,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop kann Ihnen eine Mail senden mit Anweisungen, wie Sie Ihren Account/Passwort zurücksetzen können',
 	'UI:Login:ResetPassword' => 'Jetzt senden!',
 	'UI:Login:ResetPwdFailed' => 'Konnte keine Email versenden: %1$s',
-	'UI:Login:SeparatorOr' => 'Or~~',
+	'UI:Login:SeparatorOr' => 'oder',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' ist kein gültiger Login',
 	'UI:ResetPwd-Error-NotPossible' => 'Passwort-Reset bei externem Benutzerkonto nicht möglich',
@@ -521,7 +521,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
 	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
+	'UI:ResetPwd-EmailSent' => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
 	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
 	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
 
@@ -549,9 +549,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Login' => 'in iTop anmelden',
 	'UI:Login:Error:AccessRestricted' => 'Der iTop-Zugang ist gesperrt. Bitte kontaktieren Sie Ihren iTop-Administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren iTop-Administrator.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
-	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
+	'UI:Login:Error:WrongOrganizationName' => 'Unbekannte Organisation',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Mehrere Kontakte mit gleicher EMail-Adresse',
+	'UI:Login:Error:NoValidProfiles' => 'Kein gültiges Profil ausgewählt',
 	'UI:CSVImport:MappingSelectOne' => 'Bitte wählen',
 	'UI:CSVImport:MappingNotApplicable' => '-- Dieses Feld ignorieren --',
 	'UI:CSVImport:NoData' => 'Keine Daten eingegeben ... bitte geben Sie Daten ein!',
@@ -679,10 +679,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:MoreInfo' => 'Mehr Informationen zur Abfrage: ',
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',
-	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
-	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
-	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
-	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
+	'UI:RunQuery:DevelopedOQL' => 'Generierte OQL',
+	'UI:RunQuery:DevelopedOQLCount' => 'Generierte OQL für Zählung',
+	'UI:RunQuery:ResultSQLCount' => 'Resultierendes SQL für Zählung',
+	'UI:RunQuery:ResultSQL' => 'Resultierendes SQL',
 	'UI:RunQuery:Error' => 'Ein Fehler trat während der Abfrage auf: %1$s auf.',
 	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
 	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von iTop, variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
@@ -771,7 +771,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massenlöschung von %1$d Objekten der %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Sie sind nicht berechtigt, dieses Objekt zu löschen.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Sie sind nicht berechtigt, die folgenden Felder zu aktualisieren: %1$s',
-	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
+	'UI:Error:ActionNotAllowed' => 'Sie dürfen diese Aktion nicht durchführen',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die notwendigen Rechte dazu besitzt.',
 	'UI:Error:CannotDeleteBecause' => 'Dieses Objekt konnte aus folgendem Grund nicht gelöscht werden: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst einige Manuelle Operationen ausgeführt werden müssen (bzgl. Abhängigkeiten des Objekts).',
@@ -886,12 +886,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:AdminTools' => 'Admin-Tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administrationswerkzeuge', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:SystemTools' => 'System~~',
+	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
 	'UI:ChangeManagementMenu:Title' => 'Übersicht an Changes',
-	'UI-ChangeManagementMenu-ChangesByType' => 'Changes nach Typ',
+	'UI-ChangeManagementMenu-ChangesByType' => 'Changes ~nach Typ',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes nach Status',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
@@ -1431,7 +1431,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	// Search form
 	'UI:Search:Toggle' => 'Ein-/Ausklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Automatische Eingabe für diese Klasse deaktiviert',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Obsolete Daten werden wegen ihrer Einstellung nicht angezeigt',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Fügen Sie ein Kriterium in das Suchfeld ein oder klicken Sie auf die Suchschaltfläche, um die Objekte anzuzeigen.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Kriterium hinzufügen',
 	// - Add new criteria button

@@ -47,8 +47,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:QueryMenu+' => '',
 	'Menu:UniversalSearchMenu' => 'Universelle Suche',
 	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...',
-	'Menu:UserManagementMenu' => 'User-Management',
-	'Menu:UserManagementMenu+' => 'User-Management',
+	'Menu:UserManagementMenu' => 'Benutzerverwaltung',
+	'Menu:UserManagementMenu+' => 'Benutzerverwaltung',
 	'Menu:ProfilesMenu' => 'Profile',
 	'Menu:ProfilesMenu+' => 'Profile',
 	'Menu:ProfilesMenu:Title' => 'Profile',
@@ -56,9 +56,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
 	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
 	'Menu:MyShortcuts' => 'Meine Shortcuts',
-	'Menu:UserManagement' => 'User Management~~',
-	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:UserManagement' => 'Benutzerverwaltung',
+	'Menu:Queries' => 'OQL Abfragen',
+	'Menu:ConfigurationTools' => 'Konfiguration',
 ));
 
 //
@@ -66,8 +66,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource' => 'Abstrakte Ressource',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -75,8 +75,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu' => 'Ressource "Admin Menü"',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -84,8 +84,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu' => 'Ressource "Abfrage Ausführen Menü"',
+	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -93,6 +93,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
+	'Class:ResourceSystemMenu+' => '',
 ));
