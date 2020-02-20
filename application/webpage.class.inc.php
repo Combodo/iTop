@@ -120,6 +120,7 @@ class WebPage implements Page
 	protected $a_OutputOptions;
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
+	protected $bAddJSDict;
 
 	/**
 	 * WebPage constructor.
@@ -150,6 +151,7 @@ class WebPage implements Page
 		$this->a_OutputOptions = array();
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
+		$this->bAddJSDict = true;
 		ob_start(); // Start capturing the output
 	}
 
@@ -757,7 +759,10 @@ class WebPage implements Page
 		}
 
 		// Dict entries for JS
-		$this->output_dict_entries();
+		if ($this->bAddJSDict)
+		{
+			$this->output_dict_entries();
+		}
 
 		// JS files
 		foreach ($this->a_linked_scripts as $s_script)
