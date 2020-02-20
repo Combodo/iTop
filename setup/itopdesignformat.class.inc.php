@@ -684,7 +684,12 @@ class iTopDesignFormat
 	 */
 	protected function From16To17($oFactory)
 	{
-		// nothing changed !
+		// N°2275 Clean branding node (move "define" from collection to logos or theme, noe that any other nodes will be seen as "merge")
+		$this->CleanDefineOnCollectionNode('/itop_design/branding',
+			'*[self::main_logo or self::login_logo or self::portal_logo]|themes/theme');
+
+		// N°2275 Clean portal form properties node (move "define" from collection to each property)
+		$this->CleanDefineOnCollectionNode('/itop_design/module_designs/module_design[@id="itop-portal"]/forms/form/properties', '*');
 	}
 
 	/**
@@ -717,6 +722,38 @@ class iTopDesignFormat
 		}
 	}
 
+	/**
+	 * Clean a collection node by removing the _delta="define" on it and moving it to the item nodes.
+	 *
+	 * @param string $sCollectionXPath Absolute XPath to the collection node
+	 * @param string $sItemsRelativeXPath *Relative* XPath to the item nodes from the collection node
+	 *
+	 * @return void
+	 * @since 2.7.0
+	 */
+	private function CleanDefineOnCollectionNode($sCollectionXPath, $sItemsRelativeXPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// Iterate over collections
+		$oCollectionNodeList = $oXPath->query($sCollectionXPath);
+		/** @var \DOMElement $oCollectionNode */
+		foreach ($oCollectionNodeList as $oCollectionNode)
+		{
+			// Move _delta="define" from collection to items
+			if (($oCollectionNode->hasAttribute('_delta')) && ($oCollectionNode->getAttribute('_delta') === "define"))
+			{
+				$oCollectionNode->removeAttribute('_delta');
+
+				$oItemNodeList = $oXPath->query($sItemsRelativeXPath, $oCollectionNode);
+				/** @var \DOMElement $oItemNode */
+				foreach ($oItemNodeList as $oItemNode)
+				{
+					$oItemNode->setAttribute('_delta', 'define');
+				}
+			}
+		}
+	}
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.
