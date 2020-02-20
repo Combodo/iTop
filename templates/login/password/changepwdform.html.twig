@@ -5,6 +5,7 @@
 
 {% block login_content %}
 	<div id="login-content">
+		{% block user_message %}
 		<h1>{{ 'UI:Login:ChangeYourPassword'|dict_s }}</h1>
 		{% if bFailedLogin %}
 			{% if sIssue is not null %}
@@ -13,13 +14,17 @@
 				<p class="hilite">{{ 'UI:Login:IncorrectOldPassword'|dict_s }}</p>
 			{% endif %}
 		{% endif %}
+		{% endblock %}
 		<form method="post">
 			<div id="login-form-content">
 				<div id="login-input">
+				    {% block old_password %}
 					<div>
 						<label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label>
 						<input type="password" id="old_pwd" name="old_pwd" value="" />
 					</div>
+					{% endblock %}
+					{% block new_password %}
 					<div>
 						<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
 						<input type="password" id="new_pwd" name="new_pwd" value="" />
@@ -30,6 +35,7 @@
 						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" />
 						<span class="message"></span>
 					</div>
+					{% endblock %}
 				</div>
 				<div id="login-submit" class="changepwd-submit">
 					<div>
