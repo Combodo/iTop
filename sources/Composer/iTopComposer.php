@@ -19,6 +19,12 @@
  *
  */
 
+namespace  Combodo\iTop\Composer;
+
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class iTopComposer
 {
 
@@ -27,7 +33,7 @@ class iTopComposer
 		$aAllTestDirs = array();
 		$sPath = realpath(APPROOT.'lib');
 
-		$oDirectoryIterator = new RecursiveDirectoryIterator($sPath);
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sPath,  FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS|FilesystemIterator::UNIX_PATHS);
 		$iterator = new RecursiveIteratorIterator(
 			$oDirectoryIterator,
 			RecursiveIteratorIterator::CHILD_FIRST);
@@ -38,18 +44,12 @@ class iTopComposer
 				continue;
 			}
 			$sDirName = $file->getFilename();
-			if (in_array($sDirName, array('.', '..'), true))
-			{
-				continue;
-			}
 			if (!$this->IsTestDir($sDirName))
 			{
 				continue;
 			}
 
-			$sDirPath = $file->getRealpath();
-			$sDirPathWithSlashes = str_replace(DIRECTORY_SEPARATOR, '/', $sDirPath);
-			$aAllTestDirs[] = $sDirPathWithSlashes;
+			$aAllTestDirs[] = $file->getRealpath();
 		}
 
 		return $aAllTestDirs;
@@ -114,6 +114,8 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
+			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/doc/tests',
 		);
 	}
 

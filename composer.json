@@ -50,7 +50,8 @@
     "classmap": [
       "core",
       "application",
-      "sources/application"
+      "sources/application",
+      "sources/Composer"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
