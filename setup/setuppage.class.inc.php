@@ -33,7 +33,6 @@ class SetupPage extends NiceWebPage
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
-		$this->bAddJSDict = false;
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_saas("css/setup.scss");
