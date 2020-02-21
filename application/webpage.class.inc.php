@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+
 /**
  * Generic interface common to CLI and Web pages
  */
@@ -183,6 +185,21 @@ class WebPage implements Page
 	public function add($s_html)
 	{
 		$this->s_content .= $s_html;
+	}
+
+	/**
+	 * Add any rendered text or HTML fragment to the body of the page using a twig template
+	 *
+	 * @param string $sViewPath Absolute path of the templates folder
+	 * @param string $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 * @param array $aParams Params used by the twig template
+	 * @param string $sDefaultType default type of the template ('html', 'xml', ...)
+	 *
+	 * @throws \Exception
+	 */
+	public function add_twig_template($sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
+	{
+		TwigHelper::RenderIntoPage($this, $sViewPath, $sTemplateName, $aParams, $sDefaultType);
 	}
 
 	/**
