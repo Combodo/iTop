@@ -1645,7 +1645,7 @@ EOF;
 	 * @param string $sCssClasses CSS classes to add to the container
 	 *
 	 * @throws \Exception
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
 	{

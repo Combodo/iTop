@@ -1065,7 +1065,7 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
  *
  * @api
  * @package     Extensibility
- * @since 2.4
+ * @since 2.4.0
  */
 interface iPortalUIExtension
 {

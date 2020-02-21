@@ -811,7 +811,7 @@ class BinaryExpression extends Expression
 
 
 /**
- * @since 2.6 N°931 tag fields
+ * @since 2.6.0 N°931 tag fields
  */
 class MatchExpression extends BinaryExpression
 {

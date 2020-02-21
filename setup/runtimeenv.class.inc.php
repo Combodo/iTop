@@ -904,7 +904,7 @@ class RunTimeEnvironment
 	 *
 	 * @param string $sQuery
 	 *
-	 * @since 2.5 N°1001 utf8mb4 switch
+	 * @since 2.5.0 N°1001 utf8mb4 switch
 	 * @uses \SetupUtils::GetSetupQueriesFilePath()
 	 */
 	protected function log_db_query($sQuery)

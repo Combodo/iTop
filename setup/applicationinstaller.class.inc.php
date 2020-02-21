@@ -493,10 +493,12 @@ class ApplicationInstaller
 	 * @param Config $oConfig
 	 * @param string $sBackupFileFormat
 	 * @param string $sSourceConfigFile
+	 * @param string $sMySQLBinDir
 	 *
-	 * @throws \Exception
-	 *
-	 * @since 2.5 uses a {@link Config} object to store DB parameters
+	 * @throws \BackupException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @since 2.5.0 uses a {@link Config} object to store DB parameters
 	 */
 	protected static function DoBackup($oConfig, $sBackupFileFormat, $sSourceConfigFile, $sMySQLBinDir = null)
 	{

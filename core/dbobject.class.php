@@ -116,7 +116,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * @var null|string[] list of warnings thrown during DB write
 	 * @see CheckToWrite()
-	 * @since 2.6 N°659 uniqueness constraints
+	 * @since 2.6.0 N°659 uniqueness constraints
 	 */
 	protected $m_aCheckWarnings = null;
 	protected $m_aDeleteIssues = null;
@@ -645,7 +645,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	public function SetIfNull($sAttCode, $value)
 	{
@@ -1987,7 +1987,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @throws \OQLException
      *
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @api
 	 */
 	protected function DoCheckUniqueness()
@@ -2035,7 +2035,7 @@ abstract class DBObject implements iDisplay
 	 * @return string dict key : Class:$sClassName/UniquenessRule:$sUniquenessRuleId if none then will use Core:UniquenessDefaultError
 	 * Dictionary keys can contain "$this" placeholders
 	 *
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 */
 	protected function GetUniquenessRuleMessage($sUniquenessRuleId)
 	{
@@ -2087,7 +2087,7 @@ abstract class DBObject implements iDisplay
 	 * @return \DBSearch
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @api
 	 */
 	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)

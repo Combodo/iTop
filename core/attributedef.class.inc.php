@@ -3740,7 +3740,7 @@ class AttributeFinalClass extends AttributeString
 
 	/**
 	 * @return bool
-	 * @since 2.7
+	 * @since 2.7.0 N°2272 OQL perf finalclass in all intermediary tables
 	 */
 	public function CopyOnAllTables()
 	{
@@ -10829,7 +10829,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
  * Multi value list of tags
  *
  * @see TagSetFieldData
- * @since 2.6 N°931 tag fields
+ * @since 2.6.0 N°931 tag fields
  */
 class AttributeTagSet extends AttributeSet
 {

@@ -528,7 +528,7 @@ class DBObjectSearch extends DBSearch
 	 *
 	 * @throws \CoreException
 	 *
-	 * @since 2.5 N°1418
+	 * @since 2.5.0 N°1418
 	 */
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{

@@ -543,7 +543,7 @@ abstract class MetaModel
 	 *
 	 * @return array rule id as key, rule properties as value
 	 * @throws \CoreException
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @see #SetUniquenessRuleRootClass that fixes a specific 'root_class' property to know which class is root per rule
 	 */
 	final public static function GetUniquenessRules($sClass, $bClassDefinitionOnly = false)
@@ -688,7 +688,7 @@ abstract class MetaModel
 	 * @param array $aRuleProperties
 	 *
 	 * @return bool
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 */
 	private static function IsUniquenessRuleContainingOnlyDisabledKey($aRuleProperties)
 	{
@@ -3241,7 +3241,7 @@ abstract class MetaModel
 	 *
 	 * @throws \CoreUnexpectedValue if the rule is invalid
 	 *
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @since 2.6.1 N°1968 (joli mois de mai...) disallow overrides of 'attributes' properties
 	 */
 	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = array())
@@ -6799,7 +6799,7 @@ abstract class MetaModel
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws \Exception
 	 *
-	 * @since 2.4 introduction of the archive functionalities
+	 * @since 2.4.0 introduction of the archive functionality
 	 *
 	 * @see MetaModel::GetObject() same but returns null or ArchivedObjectFoundException if object exists but is
 	 *     archived

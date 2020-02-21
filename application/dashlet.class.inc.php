@@ -514,7 +514,7 @@ EOF
  *
  * Used as a fallback in iTop for unknown dashlet classes.
  *
- * @since 2.5
+ * @since 2.5.0
  */
 class DashletUnknown extends Dashlet
 {

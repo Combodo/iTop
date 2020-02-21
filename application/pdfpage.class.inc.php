@@ -40,7 +40,7 @@ class iTopPDF extends TCPDF
 	 *
 	 * @uses \TCPDF::SetFont()
 	 * @uses \iTopPDF::GetPdfFont()
-	 * @since 2.7
+	 * @since 2.7.0
 	 */
 	public function SetFontParams($style, $size, $fontfile='', $subset='default', $out=true)
 	{

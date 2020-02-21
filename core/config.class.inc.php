@@ -361,7 +361,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		'export_pdf_font' => array( // @since 2.7 PR #49
+		'export_pdf_font' => array( // @since 2.7.0 PR #49 / N°1947
 			'type' => 'string',
 			'description' => 'Font used when generating a PDF file',
 			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using

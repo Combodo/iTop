@@ -150,7 +150,7 @@ EOF
 	 * @param bool $bMustNotExist
 	 *
 	 * @see SetSessionMessage()
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	protected function SetSessionMessageFromInstance($sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
 	{
@@ -4025,7 +4025,7 @@ EOF
 	/**
 	 * @param string $sMessageIdPrefix
 	 *
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
 	{

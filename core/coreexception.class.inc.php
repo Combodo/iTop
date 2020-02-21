@@ -115,7 +115,7 @@ class CoreException extends Exception
  * @see \DBObject::DBInsertNoReload()
  * @see \DBObject::DBUpdate()
  *
- * @since 2.6 N°659 uniqueness constraint
+ * @since 2.6.0 N°659 uniqueness constraint
  */
 class CoreCannotSaveObjectException extends CoreException
 {

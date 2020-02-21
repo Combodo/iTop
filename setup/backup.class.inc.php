@@ -80,7 +80,7 @@ class DBBackup
 	/**
 	 * utf8mb4 was added in MySQL 5.5.3 but works with programs like mysqldump only since MySQL 5.5.33
 	 *
-	 * @since 2.5 see N°1001
+	 * @since 2.5.0 see N°1001
 	 */
 	const MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS = '5.5.33';
 
@@ -112,7 +112,7 @@ class DBBackup
 	 * @param Config $oConfig object containing the database configuration.<br>
 	 * If null then uses the default configuration ({@see MetaModel::GetConfig})
 	 *
-	 * @since 2.5 uses a Config object instead of passing each attribute (there were far too many with the addition of MySQL TLS parameters
+	 * @since 2.5.0 uses a Config object instead of passing each attribute (there were far too many with the addition of MySQL TLS parameters
 	 *     !)
 	 */
 	public function __construct($oConfig = null)
@@ -468,7 +468,7 @@ EOF;
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
 	 *
-	 * @since 2.5
+	 * @since 2.5.0
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{

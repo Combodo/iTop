@@ -25,7 +25,7 @@
  * \MFCompiler::CompileClass).<br> Only this abstract class will exists in the DB : the implementations won't had any
  * new field.
  *
- * @since 2.6 N°931 tag fields
+ * @since 2.6.0 N°931 tag fields
  */
 abstract class TagSetFieldData extends cmdbAbstractObject
 {
