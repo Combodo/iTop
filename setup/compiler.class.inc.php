@@ -888,7 +888,7 @@ EOF
 				return $bDefault ? 'true' : 'false';
 			}
 		}
-		return $val == 'true' ? 'true' : 'false';
+		return (($val == 'true') || ($val == '1')) ? 'true' : 'false';
 	}
 
 	/**
