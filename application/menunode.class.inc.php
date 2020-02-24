@@ -263,12 +263,15 @@ EOF
 
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
+	 *
 	 * @param \WebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
+	 *
 	 * @return true if the currently selected menu is one of the submenus
-	 * @throws DictExceptionMissingString
+	 * @throws DictExceptionMissingString*@throws \Exception
+	 * @throws \Exception
 	 */
 	static protected function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
@@ -692,8 +695,8 @@ abstract class MenuNode
 	public abstract function RenderContent(WebPage $oPage, $aExtraParams = array());
 
 	/**
-	 * @param $sHyperlink
-	 * @param $aExtraParams
+	 * @param string $sHyperlink
+	 * @param array $aExtraParams
 	 * @return string
 	 */
 	protected function AddParams($sHyperlink, $aExtraParams)
@@ -737,8 +740,7 @@ class MenuGroup extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
+	 * @inheritDoc
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -776,8 +778,7 @@ class TemplateMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param $aExtraParams
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -786,10 +787,8 @@ class TemplateMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
-	 * @return mixed|void
-	 * @throws DictExceptionMissingString
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -878,12 +877,8 @@ class OQLMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
-	 * @return mixed|void
-	 * @throws CoreException
-	 * @throws DictExceptionMissingString
-	 * @throws OQLException
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -902,11 +897,11 @@ class OQLMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param $sOql
-	 * @param $sTitle
-	 * @param $sUsageId
-	 * @param $bSearchPane
-	 * @param $bSearchOpen
+	 * @param string $sOql
+	 * @param string $sTitle
+	 * @param string $sUsageId
+	 * @param bool $bSearchPane
+	 * @param bool $bSearchOpen
 	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 * @param bool $bEnableBreadcrumb
@@ -979,11 +974,9 @@ class SearchMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
-	 * @param array $aExtraParams
-	 * @return mixed|void
-	 * @throws DictExceptionMissingString
-	 * @throws Exception
+	 * @inheritDoc
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -1039,8 +1032,7 @@ class WebPageMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param array $aExtraParams
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1048,14 +1040,16 @@ class WebPageMenuNode extends MenuNode
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function IsHyperLinkInNewWindow()
 	{
 		return $this->bIsLinkInNewWindow;
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
+	 * @inheritDoc
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -1096,10 +1090,7 @@ class NewObjectMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param string[] $aExtraParams
-	 *
-	 * @return string
-	 * @throws \Exception
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1133,8 +1124,7 @@ class NewObjectMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param string[] $aExtraParams
+	 * @inheritDoc
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -1172,8 +1162,7 @@ class DashboardMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param string[] $aExtraParams
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1192,10 +1181,8 @@ class DashboardMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
-	 * @param string[] $aExtraParams
-	 * @throws CoreException
-	 * @throws Exception
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -1290,8 +1277,7 @@ class DashboardMenuNode extends MenuNode
 class ShortcutContainerMenuNode extends MenuNode
 {
 	/**
-	 * @param string[] $aExtraParams
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1299,15 +1285,14 @@ class ShortcutContainerMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param string[] $aExtraParams
-	 * @return mixed|void
+	 * @inheritDoc
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 	}
 
 	/**
+	 * @inheritDoc
 	 * @throws CoreException
 	 * @throws Exception
 	 */
@@ -1362,9 +1347,7 @@ class ShortcutMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param string[] $aExtraParams
-	 * @return string
-	 * @throws CoreException
+	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1382,10 +1365,8 @@ class ShortcutMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 * @param string[] $aExtraParams
-	 * @return mixed|void
-	 * @throws DictExceptionMissingString
+	 * @inheritDoc
+	 * @throws \Exception
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
@@ -1394,8 +1375,9 @@ class ShortcutMenuNode extends MenuNode
 	}
 
 	/**
-	 * @return string
-	 * @throws CoreException
+	 * @inheritDoc
+	 *
+	 * @throws \Exception
 	 */
 	public function GetTitle()
 	{
@@ -1403,8 +1385,9 @@ class ShortcutMenuNode extends MenuNode
 	}
 
 	/**
-	 * @return string
-	 * @throws CoreException
+	 * @inheritDoc
+	 *
+	 * @throws \Exception
 	 */
 	public function GetLabel()
 	{

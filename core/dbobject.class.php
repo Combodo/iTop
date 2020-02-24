@@ -701,21 +701,22 @@ abstract class DBObject implements iDisplay
 		return $oAttDef->GetLabel();
 	}
 
-    /**
-     * Getter : get a value from the current object of from a related object
-     * 
-     * Get the value of the attribute $sAttCode
-     * This call may involve an object reload if the object was not completely loaded (lazy loading)
-     * 
-     * @api
-     * 
-     * @param string $sAttCode Could be an extended attribute code in the form extkey_id->anotherkey_id->remote_attr
-     *
-     * @return mixed|string
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreException
-     */
+	/**
+	 * Getter : get a value from the current object of from a related object
+	 *
+	 * Get the value of the attribute $sAttCode
+	 * This call may involve an object reload if the object was not completely loaded (lazy loading)
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode Could be an extended attribute code in the form extkey_id->anotherkey_id->remote_attr
+	 *
+	 * @return mixed|string
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function Get($sAttCode)
 	{
 		if (($iPos = strpos($sAttCode, '->')) === false)

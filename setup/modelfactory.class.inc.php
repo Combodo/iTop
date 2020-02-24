@@ -559,6 +559,7 @@ class ModelFactory
 	 * @param bool $bReturnRes
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function Dump($oNode = null, $bReturnRes = false)
 	{
@@ -1063,6 +1064,7 @@ class ModelFactory
 	 * @param string $sValue
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function CreateElement($sTagName, $sValue = '')
 	{
@@ -1258,7 +1260,7 @@ EOF
 	 * @param string $sClassName
 	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
 	 *
-	 * @return null|\DOMElement
+	 * @return \DOMNode
 	 */
 	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
@@ -1275,9 +1277,10 @@ EOF
 	}
 
 	/**
-	 * @param $sWellKnownParent
+	 * @param string $sWellKnownParent
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function AddWellKnownParent($sWellKnownParent)
 	{
@@ -2161,9 +2164,12 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Modify a node and set the flags that will be used to compute the delta
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to set
-	 * @param null $sSearchId
+	 * @param string|null $sSearchId
+	 *
+	 * @return void
 	 *
 	 * @throws \MFException
+	 * @throws \Exception
 	 */
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
@@ -2503,14 +2509,16 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @see DOMDocument::createElement()
 	 *
-	 * @param $sName
+	 * @param string $sName
 	 * @param null $value
 	 * @param null $namespaceURI
 	 *
-	 * @return \DOMNode
+	 * @return \MFElement
+	 * @throws \Exception
 	 */
 	function createElement($sName, $value = null, $namespaceURI = null)
 	{
+		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
 		if (($value !== '') && ($value !== null))
 		{
