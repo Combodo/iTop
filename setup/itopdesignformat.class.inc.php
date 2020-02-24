@@ -691,6 +691,44 @@ class iTopDesignFormat
 
 		// N°2275 Clean portal form properties node (move "define" from collection to each property)
 		$this->CleanDefineOnCollectionNode('/itop_design/module_designs/module_design[@id="itop-portal"]/forms/form/properties', '*');
+
+		// N°2806 Clean legacy portal constants
+		$aConstantsIDsToRemove = array(
+			'PORTAL_POWER_USER_PROFILE',
+			'PORTAL_SERVICECATEGORY_QUERY',
+			'PORTAL_SERVICE_SUBCATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICECATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY',
+			'PORTAL_ALL_PARAMS',
+			'PORTAL_SET_TYPE_FROM',
+			'PORTAL_TYPE_TO_CLASS',
+			'PORTAL_TICKETS_SEARCH_CRITERIA',
+			'PORTAL_TICKETS_SEARCH_FILTER_service_id',
+			'PORTAL_TICKETS_SEARCH_FILTER_caller_id',
+			'PORTAL_INCIDENT_PUBLIC_LOG',
+			'PORTAL_INCIDENT_USER_COMMENT',
+			'PORTAL_INCIDENT_FORM_ATTRIBUTES',
+			'PORTAL_INCIDENT_TYPE',
+			'PORTAL_INCIDENT_LIST_ZLIST',
+			'PORTAL_INCIDENT_CLOSED_ZLIST',
+			'PORTAL_INCIDENT_DETAILS_ZLIST',
+			'PORTAL_INCIDENT_DISPLAY_QUERY',
+			'PORTAL_INCIDENT_DISPLAY_POWERUSER_QUERY',
+			'PORTAL_USERREQUEST_PUBLIC_LOG',
+			'PORTAL_USERREQUEST_USER_COMMENT',
+			'PORTAL_USERREQUEST_FORM_ATTRIBUTES',
+			'PORTAL_USERREQUEST_TYPE',
+			'PORTAL_USERREQUEST_LIST_ZLIST',
+			'PORTAL_USERREQUEST_CLOSED_ZLIST',
+			'PORTAL_USERREQUEST_DETAILS_ZLIST',
+			'PORTAL_USERREQUEST_DISPLAY_QUERY',
+			'PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY',
+		);
+		foreach($aConstantsIDsToRemove as $sConstantIDToRemove)
+		{
+			$sXPath = '/itop_design/constants/constant[@id="'.$sConstantIDToRemove.'"]';
+			$this->RemoveNodeFromXPath($sXPath);
+		}
 	}
 
 	/**
