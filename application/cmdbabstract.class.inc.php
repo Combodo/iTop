@@ -4206,6 +4206,7 @@ EOF
 	{
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
+
 		if ($this->IsNew())
 		{
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -4214,6 +4215,7 @@ EOF
 		{
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
+
 		if ($iFlags & OPT_ATT_HIDDEN)
 		{
 			// The case log is hidden do nothing
@@ -4221,6 +4223,16 @@ EOF
 		else
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$sAttDefClass = get_class($oAttDef);
+			$sAttLabel = $oAttDef->GetLabel();
+			$sAttMetaDataLabel = utils::HtmlEntities($sAttLabel);
+			$sAttMetaDataFlagHidden = (($iFlags & OPT_ATT_HIDDEN) === OPT_ATT_HIDDEN) ? 'true' : 'false';
+			$sAttMetaDataFlagReadOnly = (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY) ? 'true' : 'false';
+			$sAttMetaDataFlagMandatory = (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) ? 'true' : 'false';
+			$sAttMetaDataFlagMustChange = (($iFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE) ? 'true' : 'false';
+			$sAttMetaDataFlagMustPrompt = (($iFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT) ? 'true' : 'false';
+			$sAttMetaDataFlagSlave = (($iFlags & OPT_ATT_SLAVE) === OPT_ATT_SLAVE) ? 'true' : 'false';
+
 			$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)))
@@ -4257,19 +4269,32 @@ EOF
 				$sValue = $this->Get($sAttCode);
 				$sDisplayValue = $this->GetEditValue($sAttCode);
 				$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-				$sHTMLValue = '';
-				if ($sComment != '')
-				{
-					$sHTMLValue = '<span>'.$sComment.'</span><br/>';
-				}
-				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage,
-						$sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
-						$aArgs).'</span>';
+
+				$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+				$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+				$sHTMLValue = <<<HTML
+<div class="field_data">
+	<div class="field_value">
+		$sCommentAsHtml
+		$sFieldAsHtml
+	</div>
+</div>
+HTML;
+
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
-			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');
-			$oPage->add($sHTMLValue);
-			$oPage->add('</fieldset>');
+
+			$oPage->add(<<<HTML
+<fieldset>
+	<legend>{$sAttLabel}</legend>
+	<div class="field_container field_large" data-attribute-code="{$sAttCode}" data-attribute-type="{$sAttDefClass}" data-attribute-label="{$sAttMetaDataLabel}"
+		data-attribute-flag-hidden="{$sAttMetaDataFlagHidden}" data-attribute-flag-read-only="{$sAttMetaDataFlagReadOnly}" data-attribute-flag-mandatory="{$sAttMetaDataFlagMandatory}"
+		data-attribute-flag-must-change="{$sAttMetaDataFlagMustChange}" data-attribute-flag-must-prompt="{$sAttMetaDataFlagMustPrompt}" data-attribute-flag-slave="{$sAttMetaDataFlagSlave}">
+		{$sHTMLValue}
+	</div>
+</fieldset>
+HTML
+			);
 		}
 	}
 
