@@ -1215,6 +1215,16 @@ EOF
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
+		case 'new_dashlet_id':
+			$sDashboardDivId = utils::ReadParam("dashboardid");
+			$iRow = utils::ReadParam("iRow");
+			$iCell = utils::ReadParam("iCell");
+			$sDashletIdOrig = utils::ReadParam("dashletid");
+			$sFinalDashletId = DashboardLayoutMultiCol::GetDashletUniqueId(true, $sDashboardDivId, $iRow, $iCell, $sDashletIdOrig);
+			$oPage = new ajax_page('');
+			$oPage->add($sFinalDashletId);
+			break;
+
 		case 'new_dashlet':
 			require_once(APPROOT.'application/forms.class.inc.php');
 			require_once(APPROOT.'application/dashlet.class.inc.php');

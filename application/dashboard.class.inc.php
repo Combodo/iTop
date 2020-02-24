@@ -1127,7 +1127,7 @@ EOF
 		$sAutoApplyConfirmationMessage = addslashes(Dict::S('UI:AutoApplyConfirmationMessage'));
 		
 		$oPage->add_ready_script(
-<<<EOF
+<<<JS
 window.bLeavingOnUserAction = false;
 
 $('#dashboard_editor').dialog({
@@ -1170,11 +1170,17 @@ $('#dashboard_editor').dialog({
 });
 
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
-	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
-	auto_reload: $sAutoReload, auto_reload_sec: $sAutoReloadSec,
-	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	new_dashlet_parameters: {operation: 'new_dashlet'}
+	dashboard_id: '$sId', 
+	layout_class: '$sLayoutClass', 
+	title: '$sTitle',
+	auto_reload: $sAutoReload, 
+	auto_reload_sec: $sAutoReloadSec,
+	submit_to: '$sUrl', 
+	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_to: '$sUrl', 
+	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	new_dashlet_parameters: {operation: 'new_dashlet'},
+	new_dashletid_parameters: {operation: 'new_dashlet_id'}
 });
 
 dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);
@@ -1212,7 +1218,7 @@ window.onbeforeunload = function() {
 	}
 	// return nothing ! safer for IE
 };
-EOF
+JS
 		);
 		$oPage->add_ready_script("");
 	}
@@ -1352,7 +1358,7 @@ EOF
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
 		$oPage->add_ready_script(
-<<<EOF
+<<<JS
 $('#dashlet_creation_dlg').dialog({
 	width: 600,
 	modal: true,
@@ -1381,7 +1387,7 @@ $('#dashlet_creation_dlg').dialog({
 	],
 	close: function() { $(this).remove(); }
 });
-EOF
+JS
 		);
 	}
 

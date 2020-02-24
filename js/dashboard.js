@@ -11,6 +11,7 @@ $(function()
 	$.widget( "itop.dashboard",
 	{
 		// default options
+		// real values must be provided when instanciating the widget : $node.dashboard(...)
 		options:
 		{
 			dashboard_id: '',
@@ -22,7 +23,8 @@ $(function()
 			submit_parameters: {},
 			render_to: 'index.php',
 			render_parameters: {},
-			new_dashlet_parameters: {}
+			new_dashlet_parameters: {},
+			new_dashletid_parameters: {}
 		},
 	
 		// the constructor
@@ -31,10 +33,10 @@ $(function()
 			var me = this; 
 
 			this.element
-			.addClass('itop-dashboard')
-			.bind('add_dashlet.itop_dashboard', function(event, oParams){
-				me.add_dashlet(oParams);
-			});
+				.addClass('itop-dashboard')
+				.bind('add_dashlet.itop_dashboard', function(event, oParams){
+					me.add_dashlet(oParams);
+				});
 
 			this.ajax_div = $('<div></div>');
 			this.element.after(this.ajax_div);
@@ -103,20 +105,6 @@ $(function()
 			
 			return oState;
 		},
-		_get_new_id: function()
-		{
-			var iMaxId = 0;
-			this.element.find(':itop-dashlet').each(function() {
-				var oDashlet = $(this).data('itopDashlet');
-				if(oDashlet)
-				{
-					var oDashletParams = oDashlet.get_params();
-					var id = parseInt(oDashletParams.dashlet_id, 10);
-					if (id > iMaxId) iMaxId = id;
-				}
-			});
-			return 1 + iMaxId;			
-		},
 		_make_draggable: function()
 		{
 			var me = this;
@@ -155,18 +143,25 @@ $(function()
 		},
 		add_dashlet: function(options)
 		{
+			var $container = options.container,
+				iNumberOfExistingDashletInCell = $container.children("div.dashlet").length,
+				sTempDashletId = iNumberOfExistingDashletInCell+1;
+
+			this.get_dashletid_ajax(options, sTempDashletId);
+		},
+		add_dashlet_prepare: function(options, sFinalDashletId)
+		{
 			// 1) Create empty divs for the dashlet and its properties
 			//
-			var sDashletId = this._get_new_id();
-			var oDashlet = $('<div class="dashlet" id="dashlet_'+sDashletId+'"/>');
+			var oDashlet = $('<div class="dashlet" id="dashlet_'+sFinalDashletId+'"/>');
 			oDashlet.appendTo(options.container);
-			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sDashletId+'"/>');
+			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sFinalDashletId+'"/>');
 			oDashletProperties.appendTo($('#dashlet_properties'));
 
 			// 2) Ajax call to fill the divs with default values
 			//    => in return, it must call add_dashlet_finalize
 			//
-			this.add_dashlet_ajax(options, sDashletId);
+			this.add_dashlet_ajax(options, sFinalDashletId);
 		},
 		add_dashlet_finalize: function(options, sDashletId, sDashletClass)
 		{
@@ -209,6 +204,7 @@ $(function()
 	$.widget( "itop.runtimedashboard", $.itop.dashboard,
 	{
 		// default options
+		// real values must be provided when instanciating the widget : $node.runtimedashboard(...)
 		options:
 		{
 			dashboard_id: '',
@@ -220,7 +216,8 @@ $(function()
 			submit_parameters: {},
 			render_to: 'index.php',
 			render_parameters: {},
-			new_dashlet_parameters: {}
+			new_dashlet_parameters: {},
+			new_dashletid_parameters: {}
 		},
 	
 		// the constructor
@@ -246,6 +243,7 @@ $(function()
 
 			this._superApply(arguments);
 		},
+
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
 		{
@@ -315,6 +313,22 @@ $(function()
                     dialog.dialog( "close" );
                     dialog.remove();
                 }
+			});
+		},
+		// We need a unique dashlet id, we will get it using an ajax query
+		get_dashletid_ajax: function(options, sTempDashletId)
+		{
+			var $container = options.container;
+			var oParams = this.options.new_dashletid_parameters;
+			oParams.dashboardid = options.dashboard_id;
+			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
+			oParams.iCell = $container.data("dashboard-cell-index");
+			oParams.dashletid = sTempDashletId;
+
+			var me = this;
+			$.post(this.options.render_to, oParams, function(data) {
+				sFinalDashletId = data;
+				me.add_dashlet_prepare(options, sFinalDashletId);
 			});
 		},
 		add_dashlet_ajax: function(options, sDashletId)

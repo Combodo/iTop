@@ -46,7 +46,38 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	{
 		$this->iNbCols = 1;
 	}
-	
+
+	/**
+	 *  N°2634 : we must have a unique id per dashlet !
+	 * To avoid collision with other dashlets with the same ID we prefix it with row/cell id
+	 * Collisions typically happen with extensions.
+	 *
+	 * @param boolean $bIsCustomized
+	 * @param string $sDashboardDivId
+	 * @param int $iRow
+	 * @param int $iCell
+	 * @param string $sDashletIdOrig
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.0 N°2735
+	 */
+	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCell, $sDashletIdOrig)
+	{
+		if(strpos($sDashletIdOrig, 'IDrow') !== false)
+		{
+			return $sDashletIdOrig;
+		}
+
+		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCell-$sDashletIdOrig";
+		if ($bIsCustomized)
+		{
+			$sDashletId = 'CUSTOM_'.$sDashletId;
+		}
+
+		return $sDashletId;
+	}
+
 	protected function TrimCell($aDashlets)
 	{
 		$aKeys = array_reverse(array_keys($aDashlets));
@@ -115,7 +146,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
-			$oPage->add('<tr>');
+			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
@@ -128,23 +159,13 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach($aDashlets as $oDashlet)
 						{
-							if ($oDashlet->IsVisible())
+							if ($oDashlet::IsVisible())
 							{
 								$sDashletIdOrig = $oDashlet->GetID();
-								$sDashletId = $sDashletIdOrig;
-								if(strpos($sDashletId, 'IDrow') === false)
-								{
-									$sDashboardDivId = $aExtraParams['dashboard_div_id'];
-									// N°2634 : we must have a unique id per dashlet !
-									// To avoid collision with other dashlets with the same ID we prefix it with row/cell id
-									// Collisions typically happen with extensions.
-									$sDashletId = $sDashboardDivId."_IDrow$iRows-col$iCols-$sDashletId";
-									if (array_key_exists('bCustomized', $aExtraParams) && ((bool)$aExtraParams['bCustomized']) === true)
-									{
-										$sDashletId = 'CUSTOM_'.$sDashletId;
-									}
-									$oDashlet->SetID($sDashletId);
-								}
+								$sDashboardDivId = $aExtraParams['dashboard_div_id'];
+								$bIsCustomized = (array_key_exists('bCustomized', $aExtraParams) && ((bool)$aExtraParams['bCustomized']) === true);
+								$sDashletId = self::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRows, $iCols, $sDashletIdOrig);
+								$oDashlet->SetID($sDashletId);
 								$this->UpdateDashletsUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
 								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
@@ -167,7 +188,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		if ($bEditMode) // Add one row for extensibility
 		{
 			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-cell-index="'.$iCellIdx.'"';
-			$oPage->add('<tr>');
+			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$oPage->add("<td $sStyle>");
