@@ -69,6 +69,9 @@ interface iLoginFSMExtension extends iLoginExtension
  */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 {
+	/**
+	 * @inheritDoc
+	 */
 	public abstract function ListSupportedLoginModes();
 
 	/**
@@ -160,21 +163,41 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnUsersOK(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnConnected(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnError(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;

@@ -1,12 +1,15 @@
 <?php
 
 /**
- * Class LoginForm
- *
  * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class LoginForm
+ *
+ * @since 2.7.0
+ */
 class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 {
 	private $bForceFormOnError = false;
@@ -21,6 +24,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		return array('form');
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function OnReadCredentials(&$iErrorCode)
 	{
 		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'form'))
@@ -51,6 +57,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'form')
@@ -66,6 +75,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'form')
@@ -85,6 +97,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function OnError(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'form')
@@ -94,6 +109,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function OnConnected(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'form')
@@ -105,7 +123,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	}
 
 	/**
-	 * @return LoginTwigContext
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function GetTwigContext()
