@@ -28,7 +28,7 @@
                     {% set iLineCount = iLineCount + 1 %}
                     <tr>
                         <th scope="row">{{ iLineCount }}</th>
-                        <td><a href="{{ sURL }}">{{ aDisplayValue.label_html }}</a></td>
+                        <td><a href="{{ sURL }}">{{ aDisplayValue.label_html|raw }}</a></td>
                         <td>{{ aDisplayValue.value }}</td>
                     </tr>
                 {% endfor %}
