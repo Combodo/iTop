@@ -1,0 +1,22 @@
+parameters:
+  container.autowiring.strict_mode: true
+  foo: bar
+
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Combodo\iTop\:
+    resource: '{%itop.module_root%,%itop.approot%/core,%itop.approot%/application}/*'
+#    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+
+  Config:
+    class: \Config
+    public: true
+
+  _instanceof:
+    iApplicationObjectExtension:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.object_manipulated', priority: 500 }]
