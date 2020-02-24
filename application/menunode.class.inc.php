@@ -270,7 +270,7 @@ EOF
 	 * @param int $iActiveMenu
 	 *
 	 * @return true if the currently selected menu is one of the submenus
-	 * @throws DictExceptionMissingString*@throws \Exception
+	 * @throws DictExceptionMissingString
 	 * @throws \Exception
 	 */
 	static protected function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
