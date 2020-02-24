@@ -1116,7 +1116,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	color: $brand-primary;
 	font-size: 0.9em;
 }
-.form_field .form-control-static img{
+/* Note: We don't put the .form_field selector as it must work for read-only */
+.form-control-static img{
 	max-width: 100% !important;
 	height: initial !important;
 }

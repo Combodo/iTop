@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -15,7 +15,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 /*!
  * Combodo portal template v1.0.0
  */
@@ -1035,6 +1051,11 @@ table .group-actions {
   color: #EA7D1E;
   font-size: 0.9em;
 }
+/* Note: We don't put the .form_field selector as it must work for read-only */
+.form-control-static img {
+  max-width: 100% !important;
+  height: initial !important;
+}
 /* ExternalKey */
 .selectobject .input-group-addon {
   cursor: pointer;
@@ -1248,10 +1269,6 @@ table .group-actions {
 /* BlobField */
 .form_fields .file_open_link {
   margin-left: 10px;
-}
-.form_field .form-control-static img {
-  max-width: 100% !important;
-  height: initial !important;
 }
 .form_buttons {
   padding-top: 20px;

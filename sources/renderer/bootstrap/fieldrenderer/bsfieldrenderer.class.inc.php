@@ -39,7 +39,6 @@ class BsFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = parent::Render();
-		$oOutput->AddCssClass('form_field');
 		$oOutput->AddCssClass('form_field_'.$this->oField->GetDisplayMode());
 
 		return $oOutput;
