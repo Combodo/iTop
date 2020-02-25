@@ -144,8 +144,8 @@ $(function()
 		add_dashlet: function(options)
 		{
 			var $container = options.container,
-				iNumberOfExistingDashletInCell = $container.children("div.dashlet").length,
-				sTempDashletId = iNumberOfExistingDashletInCell+1;
+				iNumberOfExistingDashletsInDashboard = $container.closest("table").find("div.dashlet").length,
+				sTempDashletId = iNumberOfExistingDashletsInDashboard+1;
 
 			this.get_dashletid_ajax(options, sTempDashletId);
 		},
