@@ -141,7 +141,7 @@ table.listResults > tbody > tr.selected:hover > * {
 
 table.listResults > tbody > tr:hover > * {
 	/* hover on lines is currently done toggling td.hover, and having a rule for links */
-	background-color: #fdf5d0;
+	background-color: $table-hover-background;
 	color: $text-color;
 }
 
@@ -1693,12 +1693,12 @@ table.listResults tr.even td.truncated, .wizContainer table.listResults  tr.even
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated, .wizContainer table.listResults  tr.even td.hover.truncated {
-	background: #fdf5d0 url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
+	background: $table-hover-background url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated,  table.listResults tr td.hover.truncated, .wizContainer table.listResults  tr.odd td.hover.truncated, .wizContainer table.listResults  tr td.hover.truncated {
-	background: #fdf5d0 url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
+	background: $table-hover-background url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 table.listResults.truncated {
