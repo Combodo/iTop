@@ -940,15 +940,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'portal_tickets' => array(
-			'type' => 'string',
-			'description' => 'CSV list of classes supported in the portal',
-			// examples... not used
-			'default' => 'UserRequest',
-			'value' => 'UserRequest',
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		),
 		'portal_dispatch_urls' => array(
 			'type' => 'array',
 			'description' => 'Associative array of sPortalId => Home page URL (relatively to the application root)',
