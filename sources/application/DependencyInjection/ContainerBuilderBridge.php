@@ -71,7 +71,7 @@ final class ContainerBuilderBridge
 		$this->debug = $debug;
 	}
 
-	private function GetDefaultContainerConfigDir()
+	public function GetDefaultContainerConfigDir()
 	{
 		return \utils::GetAbsoluteUrlModulesRoot().'/container_builder_bridge/config';
 	}

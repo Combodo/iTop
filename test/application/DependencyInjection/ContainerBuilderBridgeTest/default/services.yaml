@@ -8,12 +8,21 @@ services:
     autowire: true
     autoconfigure: true
 
-  Combodo\iTop\:
-    resource: '{%itop.module_root%,%itop.approot%/core,%itop.approot%/application}/*'
+#  Combodo\iTop\:
+#    resource: '{%itop.module_root%,%itop.approot%/core,%itop.approot%/application,%itop.approot%/sources}/*'
 #    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+
+  Combodo\iTop\EventDispatcher\:
+    resource: '%itop.approot%/sources/EventDispatcher/*'
+
+  Combodo\iTop\EventListener\:
+    resource: '%itop.approot%/sources/EventListener/*'
+
+
+
   itop_event_dispatcher:
-    class: Combodo\iTop\Event\EventDispatcher
+    class: Combodo\iTop\EventDispatcher\EventDispatcher
     public: true
 
 
@@ -29,3 +38,6 @@ services:
 
     Combodo\iTop\Test\Application\DependencyInjection\ContainerBuilderBridgeTest\TestListenDbUpdate:
       tags: [{ name: 'itop.event_listener',  event: 'itop.onUpdate', priority: 0 }]
+
+    Combodo\iTop\EventListener\iDBUpdate:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.onUpdate', priority: 0, method: "onUpdate" }]

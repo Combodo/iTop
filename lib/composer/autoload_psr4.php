@@ -42,4 +42,5 @@ return array(
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Pelago\\' => array($vendorDir . '/pelago/emogrifier/src'),
     'Combodo\\iTop\\Test\\Application\\' => array($baseDir . '/test/application'),
+    'Combodo\\iTop\\' => array($baseDir . '/sources'),
 );

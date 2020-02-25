@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Event\iTopOnUpdate;
+
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
 define('HILIGHT_CLASS_CRITICAL', 'red');
@@ -4003,12 +4005,9 @@ EOF
 
 		try
 		{
-			// Invoke extensions after the update (could be before)
-			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-			{
-				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-			}
+			$event = new iTopOnUpdate($this);
+			MetaModel::dispatch(iTopOnUpdate::NAME, $event);
+
 		}
 		catch (Exception $e)
 		{

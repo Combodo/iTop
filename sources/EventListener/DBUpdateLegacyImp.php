@@ -19,9 +19,23 @@
  *
  */
 
-namespace Combodo\iTop\Event;
+namespace Combodo\iTop\EventListener;
 
-class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
+use Combodo\iTop\Event\iTopOnUpdate;
+
+class DBUpdateLegacyImp implements iDBUpdate
 {
+	public function __construct()
+	{
+	}
 
+	public function onUpdate(iTopOnUpdate $update)
+	{
+		// Invoke extensions after the update (could be before)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
+		foreach (\MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnDBUpdate($update->getDbObject(), null);
+		}
+	}
 }

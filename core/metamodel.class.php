@@ -17,6 +17,9 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
+use Combodo\iTop\Application\DependencyInjection\ContainerBuilderBridge;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
 require_once APPROOT.'core/metamodelmodifier.inc.php';
@@ -118,6 +121,9 @@ abstract class MetaModel
 	// STATIC Members
 	//
 	///////////////////////////////////////////////////////////////////////////
+
+	/** @var ContainerInterface|null */
+	private static $oContainer = null;
 
 	/** @var bool */
 	private static $m_bTraceSourceFiles = false;
@@ -7583,6 +7589,26 @@ abstract class MetaModel
 		}
 
 		return $aRequests;
+	}
+
+	/**
+	 * @return \Symfony\Component\DependencyInjection\ContainerInterface
+	 */
+	public static function getContainer()
+	{
+		if (empty(self::$oContainer))
+		{
+			$oContainerBuilderBridge = new ContainerBuilderBridge(APPROOT.'test/application/DependencyInjection/ContainerBuilderBridgeTest/default');
+			self::$oContainer = $oContainerBuilderBridge->GetContainer();
+		}
+
+		return self::$oContainer;
+	}
+
+	public static function dispatch($name, \Symfony\Component\EventDispatcher\Event $event)
+	{
+		$oDispatcher = self::getContainer()->get('itop_event_dispatcher');
+		$oDispatcher->dispatch($name, $event);
 	}
 }
 
