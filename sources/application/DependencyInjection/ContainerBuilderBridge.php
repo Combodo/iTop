@@ -22,7 +22,6 @@
 namespace Combodo\iTop\Application\DependencyInjection;
 
 
-use Symfony\Component\ClassLoader\ClassCollectionLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -40,8 +39,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\EnvParametersResource;
-use Symfony\Component\HttpKernel\DependencyInjection\AddAnnotatedClassesToCachePass;
 
 final class ContainerBuilderBridge
 {
@@ -75,7 +72,7 @@ final class ContainerBuilderBridge
 	{
 		return array(
 			APPROOT.'env-'.\utils::GetCurrentEnvironment().'/container_builder_bridge/config',
-			__dir__.'/config'
+			__DIR__.'/config'
 		);
 	}
 
