@@ -730,6 +730,8 @@ try
 			{
 				$oP = new NiceWebPage('iTop export');
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
+				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 			}
 			else
 			{
