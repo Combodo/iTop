@@ -62,6 +62,10 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
             'PhpParser\\' => 10,
             'Pelago\\' => 7,
         ),
+        'C' => 
+        array (
+            'Combodo\\iTop\\Test\\Application\\' => 30,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -204,6 +208,10 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Pelago\\' => 
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
+        ),
+        'Combodo\\iTop\\Test\\Application\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/test/application',
         ),
     );
 
@@ -381,6 +389,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
+        'Combodo\\iTop\\Test\\Application\\DependencyInjection\\ContainerBuilderBridgeTest' => __DIR__ . '/../..' . '/test/application/DependencyInjection/ContainerBuilderBridgeTest.php',
+        'Combodo\\iTop\\Test\\Application\\DependencyInjection\\ContainerBuilderBridgeTest\\TestListenDbUpdate' => __DIR__ . '/../..' . '/test/application/DependencyInjection/ContainerBuilderBridgeTest/TestListenDbUpdate.php',
         'Combodo\\iTop\\TwigExtension' => __DIR__ . '/../..' . '/application/twigextension.class.inc.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'ConfigException' => __DIR__ . '/../..' . '/core/config.class.inc.php',

@@ -151,6 +151,8 @@ return array(
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
+    'Combodo\\iTop\\Test\\Application\\DependencyInjection\\ContainerBuilderBridgeTest' => $baseDir . '/test/application/DependencyInjection/ContainerBuilderBridgeTest.php',
+    'Combodo\\iTop\\Test\\Application\\DependencyInjection\\ContainerBuilderBridgeTest\\TestListenDbUpdate' => $baseDir . '/test/application/DependencyInjection/ContainerBuilderBridgeTest/TestListenDbUpdate.php',
     'Combodo\\iTop\\TwigExtension' => $baseDir . '/application/twigextension.class.inc.php',
     'Config' => $baseDir . '/core/config.class.inc.php',
     'ConfigException' => $baseDir . '/core/config.class.inc.php',

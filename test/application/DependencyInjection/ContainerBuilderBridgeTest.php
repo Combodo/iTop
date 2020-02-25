@@ -22,8 +22,11 @@
 namespace Combodo\iTop\Test\Application\DependencyInjection;;
 
 use Combodo\iTop\Application\DependencyInjection\ContainerBuilderBridge;
+use Combodo\iTop\Event\iTopObjectManipulated;
+use Combodo\iTop\Event\iTopOnUpdate;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ContainerBuilderBridgeTest extends ItopTestCase
 {
@@ -40,20 +43,21 @@ class ContainerBuilderBridgeTest extends ItopTestCase
 		$container = $oContainerBuilderBridge->GetContainer();
 		$this->assertInstanceOf($oContainerBuilderBridge->getContainerClass(), $container);
 
-
 		var_dump($container->getServiceIds());
 		var_dump($container->getParameterBag()->all());
-//		$container->compile();
-//		var_dump($container->getServiceIds());
-
-
-
-//		$service_container = $container->get('service_container');
-//		$this->assertInstanceOf($oContainerBuilderBridge->getContainerClass(), $service_container);
-
 
 		$oConfig = $container->get('Config');
 		$this->assertInstanceOf(\Config::class, $oConfig);
+
+
+		$oEventDispatcher = $container->get('itop_event_dispatcher');
+		$this->assertInstanceOf(EventDispatcher::class, $oEventDispatcher);
+
+		$DBObject = $this->createMock(\DBObject::class);
+		$event = new iTopOnUpdate($DBObject);
+		$oEventDispatcher->dispatch(iTopOnUpdate::NAME, $event);
+		$oEventDispatcher->dispatch(iTopObjectManipulated::NAME, $event);
+
 
 
 	}

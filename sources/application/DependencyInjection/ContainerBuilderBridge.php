@@ -38,6 +38,7 @@ use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\EnvParametersResource;
 use Symfony\Component\HttpKernel\DependencyInjection\AddAnnotatedClassesToCachePass;
@@ -97,6 +98,14 @@ final class ContainerBuilderBridge
 		$cache = new ConfigCache($this->containerCacheDir.'/'.$class.'.php', $this->debug);
 
 		$container = $this->buildContainer();
+
+		$this->registerContainerConfiguration($this->getContainerLoader($container));
+
+
+		$container->addCompilerPass(
+			new RegisterListenersPass( 'itop_event_dispatcher', 'itop.event_listener', 'itop.event_subscriber')
+		);
+
 		$container->compile();
 		$this->dumpContainer($cache, $container, $class, $this->getContainerBaseClass());
 
@@ -131,7 +140,6 @@ final class ContainerBuilderBridge
 	{
 		$container = $this->getContainerBuilder();
 
-		$this->registerContainerConfiguration($this->getContainerLoader($container));
 
 
 		return $container;

@@ -67,6 +67,11 @@
       "application/loginurl.class.inc.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Combodo\\iTop\\Test\\Application\\": "test/application"
+    }
+  },
   "conflict": {
     "symfony/symfony": "*"
   },

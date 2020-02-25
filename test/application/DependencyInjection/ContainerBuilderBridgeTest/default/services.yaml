@@ -12,6 +12,11 @@ services:
     resource: '{%itop.module_root%,%itop.approot%/core,%itop.approot%/application}/*'
 #    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
+  itop_event_dispatcher:
+    class: Combodo\iTop\Event\EventDispatcher
+    public: true
+
+
 
   Config:
     class: \Config
@@ -19,4 +24,8 @@ services:
 
   _instanceof:
     iApplicationObjectExtension:
-      tags: [{ name: 'itop.event_listener',  event: 'itop.object_manipulated', priority: 500 }]
+      tags: [{ name: 'itop.event_listener',  event: 'itop.object_manipulated', priority: 0 }]
+
+
+    Combodo\iTop\Test\Application\DependencyInjection\ContainerBuilderBridgeTest\TestListenDbUpdate:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.onUpdate', priority: 0 }]
