@@ -601,11 +601,12 @@ class ModelFactory
 	/**
 	 * To progressively replace LoadModule
 	 *
-	 * @param $oSourceNode
-	 * @param $oTargetParentNode
+	 * @param \MFElement $oSourceNode
+	 * @param \MFDocument|\MFElement $oTargetParentNode
 	 *
 	 * @throws \MFException
 	 * @throws \DOMFormatException
+	 * @throws \Exception
 	 */
 	public function LoadDelta($oSourceNode, $oTargetParentNode)
 	{
@@ -1260,16 +1261,18 @@ EOF
 	 * @param string $sClassName
 	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
 	 *
-	 * @return \DOMNode
+	 * @return \MFElement|null
 	 */
 	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
 		// Check if class among XML classes
+		/** @var \MFElemen|null $oClassNode */
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
 
 		// If not, check if class among exposed meta classes (PHP classes)
 		if (is_null($oClassNode) && ($bIncludeMetas === true))
 		{
+			/** @var \MFElement|null $oClassNode */
 			$oClassNode = $this->GetNodes("/itop_design/meta/classes/class[@id='$sClassName']")->item(0);
 		}
 
@@ -1303,10 +1306,10 @@ EOF
 
 
 	/**
-	 * @param $sClassName
-	 * @param $sAttCode
+	 * @param string $sClassName
+	 * @param string $sAttCode
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function GetField($sClassName, $sAttCode)
@@ -1316,6 +1319,7 @@ EOF
 			return null;
 		}
 		$oClassNode = self::$aLoadedClasses[$sClassName];
+		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
 		{
@@ -1830,6 +1834,7 @@ EOF;
  *
  * @package ModelFactory
  * @property \MFDocument $ownerDocument This is only here for type hinting as iTop replaces \DOMDocument with \MFDocument
+ * @property \MFElement $parentNode This is only here for type hinting as iTop replaces \DOMElement with \MFElement
  */
 class MFElement extends Combodo\iTop\DesignElement
 {
@@ -1999,10 +2004,10 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
 	 *
-	 * @param MFElement $oRefNode The node to search for
+	 * @param \MFElement $oRefNode The node to search for
 	 * @param string $sSearchId substitutes to the value of the 'id' attribute
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
@@ -2014,14 +2019,14 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Find the child node matching the given node under the specified parent.
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 *
-	 * @param DOMNode $oParent
-	 * @param MFElement $oRefNode
+	 * @param \MFElement $oParent
+	 * @param \MFElement $oRefNode
 	 * @param string $sSearchId
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws Exception
 	 */
-	public static function _FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
+	public static function _FindNode(MFElement $oParent, MFElement $oRefNode, $sSearchId = null)
 	{
 		$oRes = null;
 		if ($oParent instanceof DOMDocument)
@@ -2045,6 +2050,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
 
+			/** @var \MFElement|null $oRes */
 			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
 		}
 		else
@@ -2052,6 +2058,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			// Get the first one having the same tag name (ignore others)
 			$sXPath = './'.$oRefNode->tagName;
 
+			/** @var \MFElement|null $oRes */
 			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
 		}
 
@@ -2129,6 +2136,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * @param MFElement $oNode The node (including all subnodes) to add
 	 *
 	 * @throws \MFException
+	 * @throws \Exception
 	 */
 	public function AddChildNode(MFElement $oNode)
 	{
@@ -2340,12 +2348,12 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Merge the current node into the given container
 	 *
-	 * @param DOMNode $oContainer An element or a document
+	 * @param \MFElement $oContainer An element or a document
 	 * @param string $sSearchId The id to consider (could be blank)
 	 * @param bool $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
 	 * @param bool $bIfExists Return null if the node does not exists (or is marked as deleted)
 	 *
-	 * @return DOMNode|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function MergeInto($oContainer, $sSearchId, $bMustExist, $bIfExists = false)
@@ -2487,6 +2495,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @param int $options
 	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
