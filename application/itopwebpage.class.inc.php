@@ -80,6 +80,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/c3.min.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/v4-shims.min.css");
+		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -93,6 +94,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
+		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
 		$this->add_linked_script('../js/property_field.js');
 		$this->add_linked_script('../js/icon_select.js');
@@ -348,6 +350,20 @@ JS
 			$(this).attr('href', $(this).attr('src'))
 		})
 		.magnificPopup({type: 'image', closeOnContentClick: true });
+JS
+		);
+		
+		// Highlight code content created with CKEditor
+		$this->add_ready_script(
+			<<<JS
+		// Highlight code content for HTML AttributeText
+        $("[data-attribute-type='AttributeText'] .HTML pre").each(function(i, block) {
+            hljs.highlightBlock(block);
+        });        
+		// Highlight code content for CaseLogs
+		$("[data-attribute-type='AttributeCaseLog'] .caselog_entry_html pre").each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
 JS
 		);
 

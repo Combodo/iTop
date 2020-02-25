@@ -183,7 +183,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'h4' => array('style'),
 		'nav' => array('style'),
 		'section' => array('style'),
-		'code' => array('style'),
+		'code' => array('style', 'class'),
 		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
 		'thead' => array('style'),
 		'tbody' => array('style'),

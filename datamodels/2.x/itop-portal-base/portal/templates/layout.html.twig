@@ -49,6 +49,7 @@
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/selectize.default.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/magnific-popup.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/c3.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css'|add_itop_version }}" rel="stylesheet">
 		{# - Bootstrap theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
@@ -119,6 +120,8 @@
 		{# CKEditor files for HTML WYSIWYG #}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/ckeditor.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/adapters/jquery.js'|add_itop_version }}"></script>
+		{# Hilighter for code snippets created with CKEditor#}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js'|add_itop_version }}"></script>
 		{# Date-time picker for Bootstrap #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'|add_itop_version }}"></script>
 		{# Typeahead files for autocomplete #}
