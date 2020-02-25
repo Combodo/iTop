@@ -49,11 +49,11 @@ final class ContainerBuilderBridge
 	/** @var string CONFIG_EXTS */
 	const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 	/**
-	 * @var string|null
+	 * @var array
 	 */
 	private $containerConfigDir;
 	/**
-	 * @var null
+	 * @var string
 	 */
 	private $containerCacheDir;
 	/**
@@ -66,14 +66,17 @@ final class ContainerBuilderBridge
 
 	public function __construct($containerConfigDir = null, $containerCacheDir = null, $debug = false)
 	{
-		$this->containerConfigDir = $containerConfigDir ?: $this->GetDefaultContainerConfigDir();
+		$this->containerConfigDir = (array) ($containerConfigDir ?: $this->GetDefaultContainerConfigDir());
 		$this->containerCacheDir = $containerCacheDir ?: $this->GetDefaultContainerCacheDir();
 		$this->debug = $debug;
 	}
 
 	public function GetDefaultContainerConfigDir()
 	{
-		return \utils::GetAbsoluteUrlModulesRoot().'/container_builder_bridge/config';
+		return array(
+			APPROOT.'env-'.\utils::GetCurrentEnvironment().'/container_builder_bridge/config',
+			__dir__.'/config'
+		);
 	}
 
 	private function GetDefaultContainerCacheDir()
@@ -201,8 +204,10 @@ final class ContainerBuilderBridge
 	private function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
 	{
 //		$container->setParameter('container.autowiring.strict_mode', true);
-
-		$loader->load($this->containerConfigDir.'/{services}'.self::CONFIG_EXTS, 'glob');
+		foreach ($this->containerConfigDir as $containerConfigDir)
+		{
+			$loader->load($containerConfigDir.'/{services}'.self::CONFIG_EXTS, 'glob');
+		}
 	}
 
 

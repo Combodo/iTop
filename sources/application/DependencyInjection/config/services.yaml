@@ -1,0 +1,43 @@
+parameters:
+  container.autowiring.strict_mode: true
+  foo: bar
+
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  #  Combodo\iTop\:
+  #    resource: '{%itop.module_root%,%itop.approot%/core,%itop.approot%/application,%itop.approot%/sources}/*'
+  #    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+
+  Combodo\iTop\EventDispatcher\:
+    resource: '%itop.approot%/sources/EventDispatcher/*'
+
+  Combodo\iTop\EventListener\:
+    resource: '%itop.approot%/sources/EventListener/*'
+
+
+
+  itop_event_dispatcher:
+    class: Combodo\iTop\EventDispatcher\EventDispatcher
+    public: true
+
+
+
+  Config:
+    class: \Config
+    public: true
+
+  _instanceof:
+    iApplicationObjectExtension:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.object_manipulated', priority: 0 }]
+
+
+    Combodo\iTop\Test\Application\DependencyInjection\ContainerBuilderBridgeTest\TestListenDbUpdate:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.onUpdate', priority: 0 }]
+
+    Combodo\iTop\EventListener\iDBUpdate:
+      tags: [{ name: 'itop.event_listener',  event: 'itop.onUpdate', priority: 0, method: "onUpdate" }]

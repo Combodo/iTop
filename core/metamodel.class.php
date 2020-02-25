@@ -7598,7 +7598,7 @@ abstract class MetaModel
 	{
 		if (empty(self::$oContainer))
 		{
-			$oContainerBuilderBridge = new ContainerBuilderBridge(APPROOT.'test/application/DependencyInjection/ContainerBuilderBridgeTest/default');
+			$oContainerBuilderBridge = new ContainerBuilderBridge();
 			self::$oContainer = $oContainerBuilderBridge->GetContainer();
 		}
 
