@@ -729,6 +729,10 @@ class iTopDesignFormat
 			$sXPath = '/itop_design/constants/constant[@id="'.$sConstantIDToRemove.'"]';
 			$this->RemoveNodeFromXPath($sXPath);
 		}
+
+		// N°2806 Clean legacy portal "portal" node
+		$sXPath = '/itop_design/portals/portal[@id="legacy_portal"]';
+		$this->RemoveNodeFromXPath($sXPath);
 	}
 
 	/**
