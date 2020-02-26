@@ -2071,7 +2071,6 @@ class Config
 			$bReturn = fclose($hFile);
 
 			utils::SetConfig($this);
-			FileLog::RenameLegacyLogFiles();
 
 			return $bReturn;
 		}

@@ -49,12 +49,21 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
  */
 abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 {
+	/** @var bool */
+	protected static $bFileCheckDone = false;
+	/** @var string */
+	protected $sLogFileFullPath;
+	/** @var string */
 	protected $sFilePath;
+	/** @var string */
 	protected $sFileBaseName;
+	/** @var string */
 	protected $sFileExtension;
 
 	public function __construct($sFileFullPath)
 	{
+		$this->sLogFileFullPath = $sFileFullPath;
+
 		$aPathParts = pathinfo($sFileFullPath);
 
 		$this->sFilePath = $aPathParts['dirname'];
@@ -64,15 +73,49 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 
 	public function GetLogFilePath()
 	{
-		$sFileSuffix = $this->GetFileSuffix();
-
-		return $this->sFilePath
-			.'/'
-			.$this->sFileBaseName
-			.'.'.$sFileSuffix
-			.'.'.$this->sFileExtension;
+		$this->CheckAndRotateLogFile();
+		return $this->sLogFileFullPath;
 	}
 
+	protected function CheckAndRotateLogFile()
+	{
+		if (static::$bFileCheckDone)
+		{
+			return;
+		}
+
+		$oMutex = new iTopMutex('log_rotate_'.$this->sFileBaseName);
+		$oMutex->Lock();
+		$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
+		$oLogDateLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+		$oNow = new DateTime();
+		$bShouldRotate = $this->ShouldRotate($oLogDateLastModified, $oNow);
+		static::$bFileCheckDone = true;
+		if (!$bShouldRotate)
+		{
+			$oMutex->Unlock();
+			return;
+		}
+
+		$sFileSuffix = $this->GetFileSuffix();
+		$sNewLogFileName =
+					$this->sFilePath.DIRECTORY_SEPARATOR
+					.$this->sFileBaseName
+					.'.'.$sFileSuffix
+					.'.'.$this->sFileExtension;
+
+		rename($this->sLogFileFullPath, $sNewLogFileName);
+
+		$oMutex->UnLock();
+	}
+
+	/**
+	 * @param DateTime $oLogDateLastModified
+	 * @param DateTime $oNow
+	 *
+	 * @return bool
+	 */
+	abstract public function ShouldRotate($oLogDateLastModified, $oNow);
 	abstract protected function GetFileSuffix();
 }
 
@@ -84,6 +127,17 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	protected function GetFileSuffix()
 	{
 		return date('Y-m-d');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function ShouldRotate($oLogDateLastModified, $oNow)
+	{
+		$oInterval = $oNow->diff($oLogDateLastModified);
+		$iDaysDiff = $oInterval->d;
+
+		return $iDaysDiff > 0;
 	}
 }
 
@@ -98,6 +152,26 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		$sWeekNumber = date('W');
 
 		return $sWeekYear.'-week'.$sWeekNumber;
+	}
+
+	public function ShouldRotate($oLogDateLastModified, $oNow)
+	{
+		$iLogYear = $oLogDateLastModified->format('Y');
+		$iLogWeek = $oLogDateLastModified->format('W');
+		$iNowYear = $oNow->format('Y');
+		$iNowWeek = $oNow->format('W');
+
+		if ($iLogYear !== $iNowYear)
+		{
+			return true;
+		}
+
+		if ($iLogWeek !== $iNowWeek)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }
 
@@ -151,52 +225,6 @@ class FileLog
 	public function __construct($sFileName = '')
 	{
 		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
-	}
-
-	/**
-	 * Since 2.7.0 with the 'log_filename_builder_impl' param the logs will output to different files name
-	 * As now by default iTop will use {@link WeeklyRotatingLogFileNameBuilder} (rotation each week), to avoid confusion, we're renaming
-	 * the legacy error.log / setup.log.
-	 *
-	 * @since 2.7.0 N°2518
-	 * @uses utils::GetConfig() the config must be persisted !
-	 */
-	public static function RenameLegacyLogFiles()
-	{
-		$oConfig = utils::GetConfig();
-		IssueLog::Enable(APPROOT.'log/error.log'); // refresh log file used
-		$sLogFileNameParam = $oConfig->Get('log_filename_builder_impl');
-		$aConfigValuesNoRotation = array('', 'DefaultLogFileNameBuilder');
-
-		$bIsLogRotationActivated = (!in_array($sLogFileNameParam, $aConfigValuesNoRotation, true));
-		if (!$bIsLogRotationActivated)
-		{
-			return;
-		}
-
-		IssueLog::Warning("Log name builder set to '$sLogFileNameParam', renaming legacy log files");
-		$aLogFilesToRename = array(
-			'log/setup.log' => 'log/setup.LEGACY.log',
-			'log/error.log' => 'log/error.LEGACY.log',
-		);
-		foreach ($aLogFilesToRename as $sLogCurrentName => $sLogNewName)
-		{
-			$sSource = APPROOT.$sLogCurrentName;
-			if (!file_exists($sSource))
-			{
-				IssueLog::Debug("Log file '$sLogCurrentName' (legacy) does not exists, renaming skipped");
-				continue;
-			}
-
-			$sDestination = APPROOT.$sLogNewName;
-			$bResult = rename($sSource, $sDestination);
-			if (!$bResult)
-			{
-				IssueLog::Error("Log file '$sLogCurrentName' (legacy) cannot be renamed to '$sLogNewName'");
-				continue;
-			}
-			IssueLog::Info("Log file '$sLogCurrentName' (legacy) renamed to '$sLogNewName'");
-		}
 	}
 
 	public function Error($sText, $sChannel = '', $aContext = array())
