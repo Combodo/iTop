@@ -27,6 +27,14 @@
 abstract class DashboardLayout
 {
 	abstract public function Render($oPage, $aDashlets, $bEditMode = false);
+
+	/**
+	 * @param int $iCellIdx
+	 *
+	 * @return array Containing 2 scalars: Col number and row number (starting from 0)
+	 * @since 2.7.0
+	 */
+	abstract public function GetDashletCoordinates($iCellIdx);
 	
 	public static function GetInfo()
 	{
@@ -45,37 +53,6 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	public function __construct()
 	{
 		$this->iNbCols = 1;
-	}
-
-	/**
-	 *  N°2634 : we must have a unique id per dashlet !
-	 * To avoid collision with other dashlets with the same ID we prefix it with row/cell id
-	 * Collisions typically happen with extensions.
-	 *
-	 * @param boolean $bIsCustomized
-	 * @param string $sDashboardDivId
-	 * @param int $iRow
-	 * @param int $iCell
-	 * @param string $sDashletIdOrig
-	 *
-	 * @return string
-	 *
-	 * @since 2.7.0 N°2735
-	 */
-	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCell, $sDashletIdOrig)
-	{
-		if(strpos($sDashletIdOrig, 'IDrow') !== false)
-		{
-			return $sDashletIdOrig;
-		}
-
-		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCell-$sDashletIdOrig";
-		if ($bIsCustomized)
-		{
-			$sDashletId = 'CUSTOM_'.$sDashletId;
-		}
-
-		return $sDashletId;
 	}
 
 	protected function TrimCell($aDashlets)
@@ -150,7 +127,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
-				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-cell-index=\"$iCellIdx\">");
+				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-column-index=\"$iCols\" data-dashboard-cell-index=\"$iCellIdx\">");
 				if (array_key_exists($iCellIdx, $aCells))
 				{
 					$aDashlets = $aCells[$iCellIdx];
@@ -161,12 +138,6 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						{
 							if ($oDashlet::IsVisible())
 							{
-								$sDashletIdOrig = $oDashlet->GetID();
-								$sDashboardDivId = $aExtraParams['dashboard_div_id'];
-								$bIsCustomized = (array_key_exists('bCustomized', $aExtraParams) && ((bool)$aExtraParams['bCustomized']) === true);
-								$sDashletId = self::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRows, $iCols, $sDashletIdOrig);
-								$oDashlet->SetID($sDashletId);
-								$this->UpdateDashletsUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
 								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
 						}
@@ -191,7 +162,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
-				$oPage->add("<td $sStyle>");
+				$oPage->add("<td $sStyle data-dashboard-column-index=\"$iCols\">");
 				$oPage->add('&nbsp;');
 				$oPage->add('</td>');
 			}
@@ -201,61 +172,14 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	}
 
 	/**
-	 * Migrate dashlet specific prefs to new format
-	 *      Before 2.7.0 we were using the same for dashboard menu or dashboard attributes, standard or custom :
-	 *          <alias>-<class>|Dashlet<idx_dashlet>
-	 *      Since 2.7.0 it is the following, with a "CUSTOM_" prefix if necessary :
-	 *          * dashboard menu : <dashboard_id>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
-	 *          * dashboard attribute : <class>__<attcode>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
-	 *
-	 * @param \Dashlet $oDashlet
-	 * @param string $sDashletIdOrig
-	 *
-	 * @param array $aExtraParams
-	 *
-	 * @since 2.7.0 N°2735
+	 * @inheritDoc
 	 */
-	private function UpdateDashletsUserPrefs(\Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)
+	public function GetDashletCoordinates($iCellIdx)
 	{
-		$bIsDashletWithListPref = ($oDashlet instanceof  DashletObjectList);
-		if (!$bIsDashletWithListPref)
-		{
-			return;
-		}
-		/** @var \DashletObjectList $oDashlet */
+		$iColNumber = (int) $iCellIdx % $this->iNbCols;
+		$iRowNumber = (int) floor($iCellIdx / $this->iNbCols);
 
-		$bDashletIdInNewFormat = ($sDashletIdOrig === $oDashlet->GetID());
-		if ($bDashletIdInNewFormat)
-		{
-			return;
-		}
-
-		$sNewPrefKey = $this->GetDashletAppUserPrefPrefix($oDashlet, $aExtraParams, $oDashlet->GetID());
-		$sPrefValueForNewKey = appUserPreferences::GetPref($sNewPrefKey, null);
-		$bHasPrefInNewFormat = ($sPrefValueForNewKey !== null);
-		if ($bHasPrefInNewFormat)
-		{
-			return;
-		}
-
-		$sOldPrefKey = $this->GetDashletAppUserPrefPrefix($oDashlet, $aExtraParams, $sDashletIdOrig);
-		$sPrefValueForOldKey = appUserPreferences::GetPref($sOldPrefKey, null);
-		$bHasPrefInOldFormat = ($sPrefValueForOldKey !== null);
-		if (!$bHasPrefInOldFormat)
-		{
-			return;
-		}
-
-		appUserPreferences::SetPref($sNewPrefKey, $sPrefValueForOldKey);
-		appUserPreferences::UnsetPref($sOldPrefKey);
-	}
-
-	private function GetDashletAppUserPrefPrefix(\DashletObjectList $oDashlet, array $aExtraParams, $sDashletId)
-	{
-		$sDataTableId = DashletObjectList::APPUSERPREFERENCE_TABLE_PREFIX.$sDashletId;
-		$oFilter = $oDashlet->GetDBSearch($aExtraParams);
-		$aClassAliases = $oFilter->GetSelectedClasses();
-		return DataTableSettings::GetAppUserPreferenceKey($aClassAliases, $sDataTableId);
+		return array($iColNumber, $iRowNumber);
 	}
 }
 

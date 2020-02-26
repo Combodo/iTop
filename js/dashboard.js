@@ -323,7 +323,7 @@ $(function()
 			var oParams = this.options.new_dashletid_parameters;
 			oParams.dashboardid = me.options.dashboard_id;
 			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
-			oParams.iCell = $container.data("dashboard-cell-index");
+			oParams.iCol = $container.data("dashboard-column-index");
 			oParams.dashletid = sTempDashletId;
 
 			$.post(this.options.render_to, oParams, function(data) {

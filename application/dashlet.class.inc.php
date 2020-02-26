@@ -26,6 +26,9 @@ require_once(APPROOT.'application/forms.class.inc.php');
  */
 abstract class Dashlet
 {
+	/** @var string */
+	const APPUSERPREFERENCES_PREFIX = 'Dashlet';
+
 	protected $oModelReflection;
 	protected $sId;
 	protected $bRedrawNeeded;
@@ -892,7 +895,6 @@ class DashletPlainText extends Dashlet
 
 class DashletObjectList extends Dashlet
 {
-	const APPUSERPREFERENCE_TABLE_PREFIX = 'Dashlet';
 	/**
 	 * @inheritdoc
 	 */
@@ -926,7 +928,7 @@ class DashletObjectList extends Dashlet
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
 			'menu' => $sShowMenu,
-			'table_id' => self::APPUSERPREFERENCE_TABLE_PREFIX.$this->sId,
+			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));

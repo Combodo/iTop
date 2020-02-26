@@ -1218,9 +1218,9 @@ EOF
 		case 'new_dashlet_id':
 			$sDashboardDivId = utils::ReadParam("dashboardid");
 			$iRow = utils::ReadParam("iRow");
-			$iCell = utils::ReadParam("iCell");
+			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
-			$sFinalDashletId = DashboardLayoutMultiCol::GetDashletUniqueId(true, $sDashboardDivId, $iRow, $iCell, $sDashletIdOrig);
+			$sFinalDashletId = Dashboard::GetDashletUniqueId(true, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 			$oPage = new ajax_page('');
 			$oPage->add($sFinalDashletId);
 			break;

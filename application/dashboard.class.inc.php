@@ -46,6 +46,8 @@ abstract class Dashboard
 	protected $aCells;
 	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
+	/** @var bool $bCustomized */
+	protected $bCustomized;
 
 	/**
 	 * Dashboard constructor.
@@ -61,6 +63,7 @@ abstract class Dashboard
 		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
+		$this->bCustomized = false;
 	}
 
 	/**
@@ -400,6 +403,24 @@ abstract class Dashboard
 	}
 
 	/**
+	 * @return bool
+	 * @since 2.7.0
+	 */
+	public function GetCustomFlag()
+	{
+		return $this->bCustomized;
+	}
+
+	/**
+	 * @param bool $bCustomized
+	 * @since 2.7.0
+	 */
+	public function SetCustomFlag($bCustomized)
+	{
+		$this->bCustomized = $bCustomized;
+	}
+
+	/**
 	 * @param \Dashlet $oDashlet
 	 */
 	public function AddDashlet($oDashlet)
@@ -517,8 +538,18 @@ EOF
 
 		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
 
-		$oLayout = new $this->sLayoutClass;
 		/** @var \DashboardLayoutMultiCol $oLayout */
+		$oLayout = new $this->sLayoutClass;
+
+		foreach($this->aCells as $iCellIdx => $aDashlets)
+		{
+			foreach($aDashlets as $oDashlet)
+			{
+				$aDashletCoordinates = $oLayout->GetDashletCoordinates($iCellIdx);
+				$this->PrepareDashletForRendering($oDashlet, $aDashletCoordinates, $aExtraParams);
+			}
+		}
+
 		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
 		{
@@ -632,6 +663,22 @@ EOF
 		return $iNewId + 1;
 	}
 
+	/**
+	 * Prepare dashlet for rendering:
+	 * - Fix ID to unique within the dashboard
+	 *
+	 * @param \Dashlet $oDashlet
+	 * @param array $aCoordinates Contains x, y (starting from 0)
+	 * @param array $aExtraParams
+	 */
+	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
+	{
+		$sDashletIdOrig = $oDashlet->GetID();
+		$sDashboardSanitizedId = utils::Sanitize($this->GetId(), '', 'element_identifier');
+		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
+		$oDashlet->SetID($sDashletIdNew);
+	}
+
     /**
      * @param \DesignerForm $oForm
      * @param array $aExtraParams
@@ -656,6 +703,37 @@ EOF
 	}
 
 	/**
+	 *  N°2634: we must have a unique id per dashlet!
+	 * To avoid collision with other dashlets with the same ID we prefix it with row/cell id
+	 * Collisions typically happen with extensions.
+	 *
+	 * @param boolean $bIsCustomized
+	 * @param string $sDashboardDivId
+	 * @param int $iRow
+	 * @param int $iCol
+	 * @param string $sDashletIdOrig
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.0 N°2735
+	 */
+	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig)
+	{
+		if(strpos($sDashletIdOrig, 'IDrow') !== false)
+		{
+			return $sDashletIdOrig;
+		}
+
+		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCol-$sDashletIdOrig";
+		if ($bIsCustomized)
+		{
+			$sDashletId = 'CUSTOM_'.$sDashletId;
+		}
+
+		return $sDashletId;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function GetId()
@@ -669,8 +747,6 @@ EOF
  */
 class RuntimeDashboard extends Dashboard
 {
-	/** @var bool $bCustomized */
-	protected $bCustomized;
 	/** @var string $sDefinitionFile */
 	private $sDefinitionFile = '';
 	/** @var null $sReloadURL */
@@ -682,16 +758,7 @@ class RuntimeDashboard extends Dashboard
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->bCustomized = false;
 		$this->oMetaModel = new ModelReflectionRuntime();
-	}
-
-	/**
-	 * @param bool $bCustomized
-	 */
-	public function SetCustomFlag($bCustomized)
-	{
-		$this->bCustomized = $bCustomized;
 	}
 
 	/**
@@ -829,8 +896,6 @@ class RuntimeDashboard extends Dashboard
 		{
 			$aRenderParams = $aExtraParams;
 		}
-
-		$aRenderParams['bCustomized'] = $this->bCustomized;
 
 		parent::Render($oPage, $bEditMode, $aRenderParams);
 
@@ -1426,5 +1491,82 @@ JS
 	public function SetReloadURL($sReloadURL)
 	{
 		$this->sReloadURL = $sReloadURL;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
+	{
+		$sDashletIdOrig = $oDashlet->GetID();
+		parent::PrepareDashletForRendering($oDashlet, $aCoordinates);
+		$this->UpdateDashletUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
+	}
+
+	/**
+	 * Migrate dashlet specific prefs to new format
+	 *      Before 2.7.0 we were using the same for dashboard menu or dashboard attributes, standard or custom :
+	 *          <alias>-<class>|Dashlet<idx_dashlet>
+	 *      Since 2.7.0 it is the following, with a "CUSTOM_" prefix if necessary :
+	 *          * dashboard menu : <dashboard_id>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
+	 *          * dashboard attribute : <class>__<attcode>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
+	 *
+	 * @param \Dashlet $oDashlet
+	 * @param string $sDashletIdOrig
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @since 2.7.0 N°2735
+	 */
+	private function UpdateDashletUserPrefs(Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)
+	{
+		$bIsDashletWithListPref = ($oDashlet instanceof  DashletObjectList);
+		if (!$bIsDashletWithListPref)
+		{
+			return;
+		}
+		/** @var \DashletObjectList $oDashlet */
+
+		$bDashletIdInNewFormat = ($sDashletIdOrig === $oDashlet->GetID());
+		if ($bDashletIdInNewFormat)
+		{
+			return;
+		}
+
+		$sNewPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $oDashlet->GetID());
+		$sPrefValueForNewKey = appUserPreferences::GetPref($sNewPrefKey, null);
+		$bHasPrefInNewFormat = ($sPrefValueForNewKey !== null);
+		if ($bHasPrefInNewFormat)
+		{
+			return;
+		}
+
+		$sOldPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $sDashletIdOrig);
+		$sPrefValueForOldKey = appUserPreferences::GetPref($sOldPrefKey, null);
+		$bHasPrefInOldFormat = ($sPrefValueForOldKey !== null);
+		if (!$bHasPrefInOldFormat)
+		{
+			return;
+		}
+
+		appUserPreferences::SetPref($sNewPrefKey, $sPrefValueForOldKey);
+		appUserPreferences::UnsetPref($sOldPrefKey);
+	}
+
+	/**
+	 * @param \DashletObjectList $oDashlet
+	 * @param array $aExtraParams
+	 * @param string $sDashletId
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	private function GetDashletObjectListAppUserPreferencesPrefix(DashletObjectList $oDashlet, $aExtraParams, $sDashletId)
+	{
+		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
+		$oFilter = $oDashlet->GetDBSearch($aExtraParams);
+		$aClassAliases = $oFilter->GetSelectedClasses();
+
+		return DataTableSettings::GetAppUserPreferenceKey($aClassAliases, $sDataTableId);
 	}
 }
