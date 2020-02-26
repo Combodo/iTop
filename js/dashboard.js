@@ -318,14 +318,14 @@ $(function()
 		// We need a unique dashlet id, we will get it using an ajax query
 		get_dashletid_ajax: function(options, sTempDashletId)
 		{
+			var me = this;
 			var $container = options.container;
 			var oParams = this.options.new_dashletid_parameters;
-			oParams.dashboardid = options.dashboard_id;
+			oParams.dashboardid = me.options.dashboard_id;
 			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
 			oParams.iCell = $container.data("dashboard-cell-index");
 			oParams.dashletid = sTempDashletId;
 
-			var me = this;
 			$.post(this.options.render_to, oParams, function(data) {
 				sFinalDashletId = data;
 				me.add_dashlet_prepare(options, sFinalDashletId);
