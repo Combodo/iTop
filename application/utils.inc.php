@@ -275,13 +275,14 @@ class utils
 	/**
 	 * @param string|string[] $value
 	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
-	 *               transaction_id, parameter, raw_data
+	 *               element_identifier, transaction_id, parameter, raw_data
 	 *
 	 * @return string|string[]|bool boolean for :
 	 *   * the 'class' filter (true if valid, false otherwise)
 	 *   * if the filter fails (@see \filter_var())
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
+	 * @since 2.7.0 new 'element_identifier' filter
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -349,6 +350,11 @@ class utils
 
 					}
 				}
+				break;
+
+			// For XML / HTML node identifiers
+			case 'element_identifier':
+				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			default:

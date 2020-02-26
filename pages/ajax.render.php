@@ -1139,7 +1139,7 @@ try
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
@@ -1162,7 +1162,7 @@ EOF
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
 			$sFile = addslashes($oDashboard->GetDefinitionFile());
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
@@ -1199,7 +1199,7 @@ EOF
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$aExtraParams['dashboard_div_id'] = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
+			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oKPI = new ExecutionKPI();

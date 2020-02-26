@@ -842,7 +842,7 @@ class RuntimeDashboard extends Dashboard
 		if (!$bEditMode && !$oPage->IsPrintableVersion())
 		{
 			$sId = $this->GetId();
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
+			$sDivId = utils::Sanitize($sId, '', 'element_identifier');
 			if ($this->GetAutoReload())
 			{
 				$sFile = addslashes($this->GetDefinitionFile());
@@ -905,7 +905,7 @@ EOF
 	protected function RenderSelector($oPage, $aAjaxParams = array())
 	{
 		$sId = $this->GetId();
-		$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
+		$sDivId = utils::Sanitize($sId, '', 'element_identifier');
 		$sExtraParams = json_encode($aAjaxParams);
 
 		$sSelectorHtml = '<div class="dashboard-selector">';

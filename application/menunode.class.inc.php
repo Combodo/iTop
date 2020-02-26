@@ -1190,7 +1190,7 @@ class DashboardMenuNode extends MenuNode
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
 		{
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $this->sMenuId);
+			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
 			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
 			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
