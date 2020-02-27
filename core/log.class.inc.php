@@ -161,7 +161,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	protected function GetRotatedFileName()
 	{
-		$sFileSuffix = $this->GetFileSuffix();
+		$sFileSuffix = $this->GetFileSuffix(static::$oLogFileLastModified);
 		return $this->sFilePath.DIRECTORY_SEPARATOR
 			.$this->sFileBaseName
 			.'.'.$sFileSuffix
@@ -177,10 +177,11 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	abstract public function ShouldRotate($oLogDateLastModified, $oNow);
 
 	/**
+	 * @param DateTime $oDate log file last modification date
+	 *
 	 * @return string suffix for the rotated log file
-	 * @uses oLogDateLastModified
 	 */
-	abstract protected function GetFileSuffix();
+	abstract protected function GetFileSuffix($oDate);
 
 	/**
 	 * @see \LogFileRotationProcess
@@ -200,9 +201,9 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetFileSuffix()
+	protected function GetFileSuffix($oDate)
 	{
-		return date('Y-m-d');
+		return $oDate->format('Y-m-d');
 	}
 
 	/**
@@ -236,10 +237,10 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetFileSuffix()
+	protected function GetFileSuffix($oDate)
 	{
-		$sWeekYear = date('o');
-		$sWeekNumber = date('W');
+		$sWeekYear = $oDate->format('o');
+		$sWeekNumber = $oDate->format('W');
 
 		return $sWeekYear.'-week'.$sWeekNumber;
 	}
@@ -274,7 +275,7 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	{
 		$oOccurrence = clone $oNow;
 		$oOccurrence->modify('Monday next week');
-		$oOccurrence->setTime(0, 0, 0, 0);
+		$oOccurrence->setTime(0, 0, 0);
 
 		return $oOccurrence;
 	}
