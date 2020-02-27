@@ -18,9 +18,9 @@
 
 
 /**
- * @since 2.7.0 N°2518
+ * @since 2.7.0 N°2518 N°2793
  */
-interface ILogFileNameBuilder
+interface iLogFileNameBuilder
 {
 	/**
 	 * @param string $sFileFullPath full path name for the log file
@@ -33,7 +33,7 @@ interface ILogFileNameBuilder
 	public function GetLogFilePath();
 }
 
-class DefaultLogFileNameBuilder implements ILogFileNameBuilder
+class DefaultLogFileNameBuilder implements iLogFileNameBuilder
 {
 	private $sLogFileFullPath;
 
@@ -59,7 +59,7 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
  *
  * @since 2.7.0 N°2518 N°2793
  */
-abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
+abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 {
 	/** @var DateTime */
 	protected static $oLogFileLastModified = null;
@@ -274,7 +274,7 @@ class LogFileNameBuilderFactory
 	 *
 	 * @param string $sFileFullPath
 	 *
-	 * @return \ILogFileNameBuilder
+	 * @return \iLogFileNameBuilder
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
