@@ -22,8 +22,14 @@
  */
 interface ILogFileNameBuilder
 {
+	/**
+	 * @param string $sFileFullPath full path name for the log file
+	 */
 	public function __construct($sFileFullPath);
 
+	/**
+	 * @return string log file path we will write new log entry to
+	 */
 	public function GetLogFilePath();
 }
 
@@ -31,11 +37,17 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
 {
 	private $sLogFileFullPath;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sFileFullPath)
 	{
 		$this->sLogFileFullPath = $sFileFullPath;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function GetLogFilePath()
 	{
 		return $this->sLogFileFullPath;
@@ -60,6 +72,9 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	/** @var string */
 	protected $sFileExtension;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sFileFullPath)
 	{
 		$this->sLogFileFullPath = $sFileFullPath;
@@ -71,12 +86,24 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 		$this->sFileExtension = $aPathParts['extension'];
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function GetLogFilePath()
 	{
 		$this->CheckAndRotateLogFile();
 		return $this->sLogFileFullPath;
 	}
 
+	/**
+	 * Check log last date modified. If too old then rotate the log file (move it to a new name with a suffix)
+	 *
+	 * @uses \filemtime() to get log file date last modified
+	 * @uses \iTopMutex during the whole check
+	 * @uses ShouldRotate to check if we need to rotate
+	 * @uses GetFileSuffix if we need to rotate, the suffix in the target rotated log filename
+	 * @throws \Exception
+	 */
 	protected function CheckAndRotateLogFile()
 	{
 		if (static::$bFileCheckDone)
@@ -110,12 +137,16 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	}
 
 	/**
-	 * @param DateTime $oLogDateLastModified
-	 * @param DateTime $oNow
+	 * @param DateTime $oLogDateLastModified date when the log file was last modified
+	 * @param DateTime $oNow date/time of the log we want to write
 	 *
-	 * @return bool
+	 * @return bool true if the file has older informations and we need to move it to an archive (rotate), false if we don't have to
 	 */
 	abstract public function ShouldRotate($oLogDateLastModified, $oNow);
+
+	/**
+	 * @return string suffix for the rotated log file
+	 */
 	abstract protected function GetFileSuffix();
 }
 
@@ -124,6 +155,9 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
  */
 class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 {
+	/**
+	 * @inheritDoc
+	 */
 	protected function GetFileSuffix()
 	{
 		return date('Y-m-d');
@@ -146,6 +180,9 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
  */
 class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 {
+	/**
+	 * @inheritDoc
+	 */
 	protected function GetFileSuffix()
 	{
 		$sWeekYear = date('o');
@@ -154,6 +191,9 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		return $sWeekYear.'-week'.$sWeekNumber;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function ShouldRotate($oLogDateLastModified, $oNow)
 	{
 		$iLogYear = $oLogDateLastModified->format('Y');
