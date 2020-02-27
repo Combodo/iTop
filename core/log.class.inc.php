@@ -61,8 +61,8 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
  */
 abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 {
-	/** @var bool */
-	protected static $bFileCheckDone = false;
+	/** @var DateTime */
+	protected static $oLogFileLastModified = null;
 	/** @var string */
 	protected $sLogFileFullPath;
 	/** @var string */
@@ -112,21 +112,20 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 */
 	protected function CheckAndRotateLogFile()
 	{
-		if (static::$bFileCheckDone)
-		{
-			return;
-		}
 		if (!file_exists($this->sLogFileFullPath) || !is_readable($this->sLogFileFullPath))
 		{
 			return;
 		}
 
-
-		$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
-		$oLogDateLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+		// test is done each time to cover edge case like session beginning at 23:59 and ending at 00:01
+		// we are caching the file mtime though
+		if (static::$oLogFileLastModified === null)
+		{
+			$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
+			static::$oLogFileLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+		}
 		$oNow = new DateTime();
-		$bShouldRotate = $this->ShouldRotate($oLogDateLastModified, $oNow);
-		static::$bFileCheckDone = true;
+		$bShouldRotate = $this->ShouldRotate(static::$oLogFileLastModified, $oNow);
 		if (!$bShouldRotate)
 		{
 			return;
