@@ -8530,54 +8530,9 @@
           <stylesheet id="main">../css/light-grey.scss</stylesheet>
         </stylesheets>
       </theme>
-      <theme id="basque-red" _delta="define">
-        <variables>
-          <variable id="brand-primary">#C53030</variable>
-          <variable id="hover-background-color">#F6F6F6</variable>
-          <variable id="icons-filter">grayscale(1)</variable>
-          <variable id="search-form-container-bg-color">#4A5568</variable>
-        </variables>
-        <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
-        </imports>
-        <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
-        </stylesheets>
-      </theme>
-      <theme id="ocean-blue" _delta="define">
-        <variables>
-          <variable id="brand-primary">#2B6CB0</variable>
-          <variable id="hover-background-color">#F6F6F6</variable>
-          <variable id="icons-filter">hue-rotate(-139deg)</variable>
-          <variable id="search-form-container-bg-color">#2C5282</variable>
-        </variables>
-        <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
-        </imports>
-        <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
-        </stylesheets>
-      </theme>
       <theme id="test-red" _delta="define">
         <variables>
           <variable id="backoffice-environment-banner-background-color">#C53030</variable>
-          <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
-          <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
-        </variables>
-        <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
-        </imports>
-        <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
-          <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
-        </stylesheets>
-      </theme>
-      <theme id="test-blue" _delta="define">
-        <variables>
-          <variable id="backoffice-environment-banner-background-color">#2B6CB0</variable>
           <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
           <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
