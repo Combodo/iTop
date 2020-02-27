@@ -57,7 +57,7 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
 /**
  * Adds a suffix to the filename
  *
- * @since 2.7.0 N°2518
+ * @since 2.7.0 N°2518 N°2793
  */
 abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 {
@@ -91,7 +91,13 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 */
 	public function GetLogFilePath()
 	{
-		$this->CheckAndRotateLogFile();
+		$iRandomInt = mt_rand(1,20);
+		if ($iRandomInt < 2)
+		{
+			// we don't want to do the check on each call !
+			// a background task is launched, but we have the check here anyway as cron can be disabled
+			$this->CheckAndRotateLogFile();
+		}
 		return $this->sLogFileFullPath;
 	}
 
@@ -99,9 +105,11 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 * Check log last date modified. If too old then rotate the log file (move it to a new name with a suffix)
 	 *
 	 * @uses \filemtime() to get log file date last modified
-	 * @uses \iTopMutex during the whole check
+	 * @uses \flock() during the whole check
+	 * @see https://www.php.net/manual/fr/function.flock.php
 	 * @uses ShouldRotate to check if we need to rotate
 	 * @uses GetFileSuffix if we need to rotate, the suffix in the target rotated log filename
+	 *
 	 * @throws \Exception
 	 */
 	protected function CheckAndRotateLogFile()
@@ -110,9 +118,15 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 		{
 			return;
 		}
+		if (!file_exists($this->sLogFileFullPath) || !is_readable($this->sLogFileFullPath))
+		{
+			return;
+		}
 
-		$oMutex = new iTopMutex('log_rotate_'.$this->sFileBaseName);
-		$oMutex->Lock();
+		// instead of a mutex that would create a useless connection to the DB, using flock
+		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
+		flock($oLogFileHandle, LOCK_EX);
+
 		$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
 		$oLogDateLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
 		$oNow = new DateTime();
@@ -120,7 +134,8 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 		static::$bFileCheckDone = true;
 		if (!$bShouldRotate)
 		{
-			$oMutex->Unlock();
+			flock($oLogFileHandle, LOCK_UN);
+			fclose($oLogFileHandle);
 			return;
 		}
 
@@ -133,7 +148,8 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 
 		rename($this->sLogFileFullPath, $sNewLogFileName);
 
-		$oMutex->UnLock();
+		flock($oLogFileHandle, LOCK_UN);
+		fclose($oLogFileHandle);
 	}
 
 	/**
