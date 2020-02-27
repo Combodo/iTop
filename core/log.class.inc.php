@@ -25,7 +25,7 @@ interface ILogFileNameBuilder
 	/**
 	 * @param string $sFileFullPath full path name for the log file
 	 */
-	public function __construct($sFileFullPath);
+	public function __construct($sFileFullPath = null);
 
 	/**
 	 * @return string log file path we will write new log entry to
@@ -40,7 +40,7 @@ class DefaultLogFileNameBuilder implements ILogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sFileFullPath)
+	public function __construct($sFileFullPath = null)
 	{
 		$this->sLogFileFullPath = $sFileFullPath;
 	}
@@ -75,12 +75,16 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sFileFullPath)
+	public function __construct($sFileFullPath = null)
 	{
 		$this->sLogFileFullPath = $sFileFullPath;
 
-		$aPathParts = pathinfo($sFileFullPath);
+		if (!file_exists($sFileFullPath))
+		{
+			return;
+		}
 
+		$aPathParts = pathinfo($sFileFullPath);
 		$this->sFilePath = $aPathParts['dirname'];
 		$this->sFileBaseName = $aPathParts['filename'];
 		$this->sFileExtension = $aPathParts['extension'];
@@ -100,7 +104,7 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 *
 	 * @uses \filemtime() to get log file date last modified
 	 * @uses \flock() during the whole check
-	 * @see https://www.php.net/manual/fr/function.flock.php
+	 * @link https://www.php.net/manual/fr/function.flock.php
 	 * @uses ShouldRotate to check if we need to rotate
 	 * @uses GetFileSuffix if we need to rotate, the suffix in the target rotated log filename
 	 *
@@ -117,9 +121,6 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 			return;
 		}
 
-		// instead of a mutex that would create a useless connection to the DB, using flock
-		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
-		flock($oLogFileHandle, LOCK_EX);
 
 		$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
 		$oLogDateLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
@@ -128,22 +129,29 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 		static::$bFileCheckDone = true;
 		if (!$bShouldRotate)
 		{
-			flock($oLogFileHandle, LOCK_UN);
-			fclose($oLogFileHandle);
 			return;
 		}
 
+		$sNewLogFileName = $this->GetRotatedFileName();
+
+		// instead of a mutex that would create a useless connection to the DB, using flock
+		if (file_exists($this->sLogFileFullPath))
+		{
+			$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
+			flock($oLogFileHandle, LOCK_EX);
+			rename($this->sLogFileFullPath, $sNewLogFileName);
+			flock($oLogFileHandle, LOCK_UN);
+			fclose($oLogFileHandle);
+		}
+	}
+
+	protected function GetRotatedFileName()
+	{
 		$sFileSuffix = $this->GetFileSuffix();
-		$sNewLogFileName =
-					$this->sFilePath.DIRECTORY_SEPARATOR
-					.$this->sFileBaseName
-					.'.'.$sFileSuffix
-					.'.'.$this->sFileExtension;
-
-		rename($this->sLogFileFullPath, $sNewLogFileName);
-
-		flock($oLogFileHandle, LOCK_UN);
-		fclose($oLogFileHandle);
+		return $this->sFilePath.DIRECTORY_SEPARATOR
+			.$this->sFileBaseName
+			.'.'.$sFileSuffix
+			.'.'.$this->sFileExtension;
 	}
 
 	/**
@@ -158,6 +166,15 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 * @return string suffix for the rotated log file
 	 */
 	abstract protected function GetFileSuffix();
+
+	/**
+	 * @see \LogFileRotationProcess
+	 *
+	 * @param \DateTime $oNow
+	 *
+	 * @return DateTime time when the cron process should run
+	 */
+	abstract public function GetCronProcessNextOccurrence(DateTime $oNow);
 }
 
 /**
@@ -182,6 +199,17 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		$iDaysDiff = $oInterval->d;
 
 		return $iDaysDiff > 0;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCronProcessNextOccurrence(DateTime $oNow)
+	{
+		$oOccurence = clone $oNow;
+		$oOccurence->modify('tomorrow');
+
+		return $oOccurence;
 	}
 }
 
@@ -222,6 +250,18 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		}
 
 		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCronProcessNextOccurrence(DateTime $oNow)
+	{
+		$oOccurence = clone $oNow;
+		$oOccurence->modify('Monday next week');
+		$oOccurence->setTime(0, 0, 0, 0);
+
+		return $oOccurence;
 	}
 }
 
@@ -504,4 +544,38 @@ class ToolsLog extends LogAPI
 	const CHANNEL_DEFAULT = 'ToolsLog';
 
 	protected static $m_oFileLog = null;
+}
+
+
+class LogFileRotationProcess implements iScheduledProcess
+{
+	private function GetLogFileNameBuilder()
+	{
+		$sLogFileNameBuilderImpl = MetaModel::GetConfig()->Get('log_filename_builder_impl');
+		return new $sLogFileNameBuilderImpl;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function Process($iUnixTimeLimit)
+	{
+		$oLogFileNameBuilder = $this->GetLogFileNameBuilder();
+
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNextOccurrence()
+	{
+		$oLogFileNameBuilder = $this->GetLogFileNameBuilder();
+		if (!($oLogFileNameBuilder instanceof RotatingLogFileNameBuilder))
+		{
+			return new DateTime('3000-01-01');
+		}
+
+		/** @var \RotatingLogFileNameBuilder $oLogFileNameBuilder */
+		return $oLogFileNameBuilder->GetCronProcessNextOccurrence(new DateTime());
+	}
 }
