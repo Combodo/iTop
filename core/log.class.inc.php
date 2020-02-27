@@ -91,13 +91,7 @@ abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
 	 */
 	public function GetLogFilePath()
 	{
-		$iRandomInt = mt_rand(1,20);
-		if ($iRandomInt < 2)
-		{
-			// we don't want to do the check on each call !
-			// a background task is launched, but we have the check here anyway as cron can be disabled
-			$this->CheckAndRotateLogFile();
-		}
+		$this->CheckAndRotateLogFile();
 		return $this->sLogFileFullPath;
 	}
 
