@@ -1249,8 +1249,7 @@ $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	render_to: '$sUrl', 
 	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	new_dashlet_parameters: {operation: 'new_dashlet'},
-	new_dashletid_parameters: {operation: 'new_dashlet_id'}
+	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
 dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);

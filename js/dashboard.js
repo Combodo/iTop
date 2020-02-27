@@ -24,7 +24,10 @@ $(function()
 			render_to: 'index.php',
 			render_parameters: {},
 			new_dashlet_parameters: {},
-			new_dashletid_parameters: {}
+			new_dashletid_endpoint: GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php',
+			new_dashletid_parameters: {
+				operation: 'new_dashlet_id'
+			}
 		},
 	
 		// the constructor
@@ -141,13 +144,29 @@ $(function()
 				}
 			});	
 		},
+		// We need a unique dashlet id, we will get it using an ajax query
+		_get_dashletid_ajax: function(options, sTempDashletId)
+		{
+			var me = this;
+			var $container = options.container;
+			var oParams = this.options.new_dashletid_parameters;
+			oParams.dashboardid = me.options.dashboard_id;
+			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
+			oParams.iCol = $container.data("dashboard-column-index");
+			oParams.dashletid = sTempDashletId;
+
+			$.post(this.options.new_dashletid_endpoint, oParams, function(data) {
+				var sFinalDashletId = data;
+				me.add_dashlet_prepare(options, sFinalDashletId);
+			});
+		},
 		add_dashlet: function(options)
 		{
 			var $container = options.container,
 				iNumberOfExistingDashletsInDashboard = $container.closest("table").find("div.dashlet").length,
 				sTempDashletId = iNumberOfExistingDashletsInDashboard+1;
 
-			this.get_dashletid_ajax(options, sTempDashletId);
+			this._get_dashletid_ajax(options, sTempDashletId);
 		},
 		add_dashlet_prepare: function(options, sFinalDashletId)
 		{
@@ -216,8 +235,7 @@ $(function()
 			submit_parameters: {},
 			render_to: 'index.php',
 			render_parameters: {},
-			new_dashlet_parameters: {},
-			new_dashletid_parameters: {}
+			new_dashlet_parameters: {}
 		},
 	
 		// the constructor
@@ -313,22 +331,6 @@ $(function()
                     dialog.dialog( "close" );
                     dialog.remove();
                 }
-			});
-		},
-		// We need a unique dashlet id, we will get it using an ajax query
-		get_dashletid_ajax: function(options, sTempDashletId)
-		{
-			var me = this;
-			var $container = options.container;
-			var oParams = this.options.new_dashletid_parameters;
-			oParams.dashboardid = me.options.dashboard_id;
-			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
-			oParams.iCol = $container.data("dashboard-column-index");
-			oParams.dashletid = sTempDashletId;
-
-			$.post(this.options.render_to, oParams, function(data) {
-				sFinalDashletId = data;
-				me.add_dashlet_prepare(options, sFinalDashletId);
 			});
 		},
 		add_dashlet_ajax: function(options, sDashletId)
