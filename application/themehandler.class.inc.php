@@ -49,26 +49,60 @@ class ThemeHandler
 			),
 		);
 	}
-	
+
 	/**
-	 * Return the absolute URL for the default theme CSS file
+	 * Return the ID of the theme currently defined in the config. file
 	 *
 	 * @return string
-	 * @throws \Exception
 	 */
-	public static function GetDefaultThemeUrl()
+	public static function GetCurrentThemeId()
 	{
 		try
 		{
 			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
+		}
+		catch(CoreException $oCompileException)
+		{
+			// Fallback on our default theme in case the config. is not available yet
+			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$sThemeId = $aDefaultTheme['name'];
+		}
+
+		return $sThemeId;
+	}
+
+	/**
+	 * Return the absolute path of the compiled theme folder.
+	 *
+	 * @param string $sThemeId
+	 *
+	 * @return string
+	 */
+	public static function GetCompiledThemeFolderAbsolutePath($sThemeId)
+	{
+		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/'.$sThemeId.'/';
+	}
+	
+	/**
+	 * Return the absolute URL for the current theme CSS file
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetCurrentThemeUrl()
+	{
+		try
+		{
+			// Try to compile theme defined in the configuration
+			$sThemeId = static::GetCurrentThemeId();
 			static::CompileTheme($sThemeId);
 		}
 		catch(CoreException $oCompileException)
 		{
-			// Fallback on our default theme (should always be compilable)
+			// Fallback on our default theme (should always be compilable) in case the previous theme doesn't exists
 			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
-			$sDefaultThemeDirPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/'.$sThemeId.'/';
+			$sDefaultThemeDirPath = static::GetCompiledThemeFolderAbsolutePath($sThemeId);
 			
 			// Create our theme dir if it doesn't exist (XML theme node removed, renamed etc..)
 			if(!is_dir($sDefaultThemeDirPath))
@@ -113,12 +147,12 @@ class ThemeHandler
 		$sThemeFolderPath = $sWorkingPath.'/branding/themes/'.$sThemeId.'/';
 		$sThemeCssPath = $sThemeFolderPath.'main.css';
 
-		// Save parameters if passed...
+		// Save parameters if passed... (typically during DM compilation)
 		if(is_array($aThemeParameters))
 		{
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
-		// ... Otherwise, retrieve them from compiled DM
+		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
 		else
 		{
 			$aThemeParameters = json_decode(@file_get_contents($sThemeFolderPath.'theme-parameters.json'), true);
