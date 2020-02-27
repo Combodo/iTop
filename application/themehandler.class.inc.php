@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use ScssPhp\ScssPhp\Compiler;
-
 /**
  * Class ThemeHandler
  *
