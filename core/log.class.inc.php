@@ -61,7 +61,11 @@ class DefaultLogFileNameBuilder implements iLogFileNameBuilder
  */
 abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 {
-	/** @var DateTime */
+	/**
+	 * Test is done each time to cover edge case like session beginning at 23:59 and ending at 00:01
+	 * We are caching the file mtime though
+	 * @var DateTime
+	 */
 	protected static $oLogFileLastModified = null;
 	/** @var string */
 	protected $sLogFileFullPath;
@@ -95,8 +99,6 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	public function GetLogFilePath()
 	{
-		// doing the check before opening and writing the log file
-		// there is also a iProcess but cron can be disabled...
 		$this->CheckAndRotateLogFile();
 		return $this->sLogFileFullPath;
 	}
@@ -104,8 +106,12 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	/**
 	 * Check log last date modified. If too old then rotate the log file (move it to a new name with a suffix)
 	 *
-	 * @uses \filemtime() to get log file date last modified
+	 * Doing the check before opening and writing the log file. There is also a iProcess but cron can be disabled...
+	 *
+	 * @uses filemtime() to get log file date last modified
 	 * @uses ShouldRotate to check if we need to rotate
+	 *
+	 * @see \LogFileRotationProcess the iProcess impl
 	 *
 	 * @throws \Exception
 	 */
@@ -116,13 +122,12 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-		// test is done each time to cover edge case like session beginning at 23:59 and ending at 00:01
-		// we are caching the file mtime though
 		if (static::$oLogFileLastModified === null)
 		{
 			$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
 			static::$oLogFileLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
 		}
+
 		$oNow = new DateTime();
 		$bShouldRotate = $this->ShouldRotate(static::$oLogFileLastModified, $oNow);
 		if (!$bShouldRotate)
@@ -130,14 +135,15 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-
 		$this->RotateLogFile();
 	}
 
 	/**
-	 * @uses \flock()
+	 * Rotate current log file
+	 *
+	 * @uses flock() instead of a mutex that would create a useless connection to the DB, using flock
 	 * @link https://www.php.net/manual/fr/function.flock.php
-	 * @uses GetRotatedFileName
+	 * @uses GetRotatedFileName to get rotated file name
 	 */
 	public function RotateLogFile()
 	{
@@ -146,7 +152,6 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-		// instead of a mutex that would create a useless connection to the DB, using flock
 		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
 		flock($oLogFileHandle, LOCK_EX);
 		$sNewLogFileName = $this->GetRotatedFileName();
@@ -157,6 +162,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 
 	/**
 	 * @return string the full path of the rotated log file
+	 * @uses static::$oLogFileLastModified
 	 * @uses GetFileSuffix
 	 */
 	protected function GetRotatedFileName()
@@ -194,7 +200,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 }
 
 /**
- * @since 2.7.0 N°2518
+ * @since 2.7.0 N°2518 N°2793
  */
 class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 {
@@ -230,7 +236,7 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 }
 
 /**
- * @since 2.7.0 N°2518
+ * @since 2.7.0 N°2518 N°2793
  */
 class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 {
@@ -314,7 +320,7 @@ class LogFileNameBuilderFactory
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @since 2.7.0 allow to rotate file (N°2518)
+ * @since 2.7.0 N°2518 N°2793 file log rotation
  */
 class FileLog
 {
@@ -566,7 +572,7 @@ class ToolsLog extends LogAPI
 class LogFileRotationProcess implements iScheduledProcess
 {
 	/**
-	 * Cannot get this list from anywhere as file name is provided by the caller using LogAPI::Enable
+	 * Cannot get this list from anywhere as log file name is provided by the caller using LogAPI::Enable
 	 * @var string[]
 	 */
 	const LOGFILES_TO_ROTATE = array(
