@@ -143,6 +143,8 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 *
 	 * @param DateTime $oLogFileLastModified date when the log file was last modified
 	 *
+	 * @throws \Exception
+	 *
 	 * @uses flock() instead of a mutex that would create a useless connection to the DB, using flock
 	 * @link https://www.php.net/manual/fr/function.flock.php
 	 * @uses GetRotatedFileName to get rotated file name
@@ -154,6 +156,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
+		static::$oLogFileLastModified = new DateTime();
 		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
 		flock($oLogFileHandle, LOCK_EX);
 		$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
