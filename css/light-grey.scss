@@ -391,6 +391,11 @@ table.cke_dialog_contents a.cke_dialog_ui_button_ok {
 .cke_notifications_area {
 	display: none;
 }
+.hljs {
+	padding: 0.9em !important;
+	box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4);
+	border-radius: 3px;
+}
 td a.no-arrow, td a.no-arrow:visited, .SearchDrawer a.no-arrow, .SearchDrawer a.no-arrow:visited {
 	text-decoration:none;
 	color: $text-color;
