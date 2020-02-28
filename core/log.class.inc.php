@@ -64,9 +64,9 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	/**
 	 * Test is done each time to cover edge case like session beginning at 23:59 and ending at 00:01
 	 * We are caching the file mtime though
-	 * @var DateTime
+	 * @var array with full file path as key and DateTime (file last modification time) as value
 	 */
-	protected static $oLogFileLastModified = null;
+	protected static $aLogFileLastModified = array();
 	/** @var string */
 	protected $sLogFileFullPath;
 	/** @var string */
@@ -92,6 +92,21 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 		$this->sFilePath = $aPathParts['dirname'];
 		$this->sFileBaseName = $aPathParts['filename'];
 		$this->sFileExtension = $aPathParts['extension'];
+	}
+
+	protected function GetLastModifiedDateForFile()
+	{
+		if (isset(static::$aLogFileLastModified[$this->sLogFileFullPath]))
+		{
+			return static::$aLogFileLastModified[$this->sLogFileFullPath];
+		}
+
+		return null;
+	}
+
+	protected function SetLastModifiedDateForFile($oDateTime)
+	{
+		static::$aLogFileLastModified[$this->sLogFileFullPath] = $oDateTime;
 	}
 
 	/**
@@ -122,20 +137,20 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-		if (static::$oLogFileLastModified === null)
+		if ($this->GetLastModifiedDateForFile() === null)
 		{
 			$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
-			static::$oLogFileLastModified = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+			$this->SetLastModifiedDateForFile(DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp));
 		}
 
 		$oNow = new DateTime();
-		$bShouldRotate = $this->ShouldRotate(static::$oLogFileLastModified, $oNow);
+		$bShouldRotate = $this->ShouldRotate($this->GetLastModifiedDateForFile(), $oNow);
 		if (!$bShouldRotate)
 		{
 			return;
 		}
 
-		$this->RotateLogFile(static::$oLogFileLastModified);
+		$this->RotateLogFile($this->GetLastModifiedDateForFile());
 	}
 
 	/**
@@ -156,7 +171,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-		static::$oLogFileLastModified = new DateTime();
+		$this->SetLastModifiedDateForFile(new DateTime());
 		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
 		flock($oLogFileHandle, LOCK_EX);
 		$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
