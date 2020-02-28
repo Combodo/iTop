@@ -251,17 +251,27 @@ class ormStopWatch
 		return $sRes;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param \AttributeStopWatch $oAttDef
+	 *
+	 * @return float goal value (in second)
+	 * @uses \iMetricComputer::ComputeMetric()
+	 * @throws \CoreException
+	 */
 	protected function ComputeGoal($oObject, $oAttDef)
 	{
 		$sMetricComputer = $oAttDef->Get('goal_computing');
+		/** @var \iMetricComputer $oComputer */
 		$oComputer = new $sMetricComputer();
+
 		$aCallSpec = array($oComputer, 'ComputeMetric');
 		if (!is_callable($aCallSpec))
 		{
 			throw new CoreException("Unknown class/verb '$sMetricComputer/ComputeMetric'");
 		}
-		$iRet = call_user_func($aCallSpec, $oObject);
-		return $iRet;
+
+		return $oComputer->ComputeMetric($oObject);
 	}
 
 	/**
