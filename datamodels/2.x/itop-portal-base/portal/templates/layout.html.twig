@@ -466,6 +466,10 @@
 			
 			$(document).ready(function(){
 				{% block pPageReadyScripts %}
+					// Add proprietary header to identify our XHR calls
+					$(document).ajaxSend(function(oEvent, oXHR, oOptions) {
+						oXHR.setRequestHeader('X-Combodo-Ajax', 'true');
+					});
 					// Handle AJAX errors (exceptions (500), logout (401), ...)
 					$(document).ajaxError(function(oEvent, oXHR, oSettings, sError){
 					    if(oXHR.status === 401)
