@@ -23,9 +23,9 @@
 interface iLogFileNameBuilder
 {
 	/**
-	 * @param string $sFileFullPath full path name for the log file
+	 * @param string $sLogFileFullPath full path name for the log file
 	 */
-	public function __construct($sFileFullPath = null);
+	public function __construct($sLogFileFullPath = null);
 
 	/**
 	 * @return string log file path we will write new log entry to
@@ -40,9 +40,9 @@ class DefaultLogFileNameBuilder implements iLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sFileFullPath = null)
+	public function __construct($sLogFileFullPath = null)
 	{
-		$this->sLogFileFullPath = $sFileFullPath;
+		$this->sLogFileFullPath = $sLogFileFullPath;
 	}
 
 	/**
@@ -79,19 +79,9 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sFileFullPath = null)
+	public function __construct($sLogFileFullPath = null)
 	{
-		$this->sLogFileFullPath = $sFileFullPath;
-
-		if (!file_exists($sFileFullPath))
-		{
-			return;
-		}
-
-		$aPathParts = pathinfo($sFileFullPath);
-		$this->sFilePath = $aPathParts['dirname'];
-		$this->sFileBaseName = $aPathParts['filename'];
-		$this->sFileExtension = $aPathParts['extension'];
+		$this->sLogFileFullPath = $sLogFileFullPath;
 	}
 
 	protected function GetLastModifiedDateForFile()
@@ -110,7 +100,20 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	}
 
 	/**
+	 * Need to be called when the file is rotated : actually the next call will need to check on the real date modified instead of using
+	 * the previously  cached value !
+	 */
+	public function ResetLastModifiedDateForFile()
+	{
+		static::$aLogFileLastModified[$this->sLogFileFullPath] = null;
+	}
+
+	/**
 	 * @inheritDoc
+	 *
+	 * Doing the check before opening and writing the log file. There is also a iProcess but cron can be disabled...
+	 *
+	 * @see \LogFileRotationProcess the iProcess impl
 	 */
 	public function GetLogFilePath()
 	{
@@ -121,16 +124,9 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	/**
 	 * Check log last date modified. If too old then rotate the log file (move it to a new name with a suffix)
 	 *
-	 * Doing the check before opening and writing the log file. There is also a iProcess but cron can be disabled...
-	 *
 	 * @uses filemtime() to get log file date last modified
-	 * @uses ShouldRotate to check if we need to rotate
-	 *
-	 * @see \LogFileRotationProcess the iProcess impl
-	 *
-	 * @throws \Exception
 	 */
-	protected function CheckAndRotateLogFile()
+	public function CheckAndRotateLogFile()
 	{
 		if (!file_exists($this->sLogFileFullPath) || !is_readable($this->sLogFileFullPath))
 		{
@@ -140,6 +136,10 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 		if ($this->GetLastModifiedDateForFile() === null)
 		{
 			$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
+			if ($iLogDateLastModifiedTimeStamp === false)
+			{
+				return;
+			}
 			$this->SetLastModifiedDateForFile(DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp));
 		}
 
@@ -158,26 +158,24 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 *
 	 * @param DateTime $oLogFileLastModified date when the log file was last modified
 	 *
-	 * @throws \Exception
+	 * @throws \Exception if mutex cannot be acquired
 	 *
-	 * @uses flock() instead of a mutex that would create a useless connection to the DB, using flock
-	 * @link https://www.php.net/manual/fr/function.flock.php
+	 * @uses \iTopMutex instead of flock as doing a rename on a file with a flock cause an error on PHP 5.6.40 Windows (ok on 7.3.15 though)
 	 * @uses GetRotatedFileName to get rotated file name
 	 */
-	public function RotateLogFile($oLogFileLastModified)
+	protected function RotateLogFile($oLogFileLastModified)
 	{
 		if (!file_exists($this->sLogFileFullPath)) // extra check, but useful for cron also !
 		{
 			return;
 		}
 
-		$this->SetLastModifiedDateForFile(new DateTime());
-		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
-		flock($oLogFileHandle, LOCK_EX);
+		$oLock = new iTopMutex('log_rotation_'.$this->sLogFileFullPath);
+		$oLock->Lock();
+		$this->ResetLastModifiedDateForFile();
 		$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
 		rename($this->sLogFileFullPath, $sNewLogFileName);
-		flock($oLogFileHandle, LOCK_UN);
-		fclose($oLogFileHandle);
+		$oLock->Unlock();
 	}
 
 	/**
@@ -189,7 +187,13 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	protected function GetRotatedFileName($oLogFileLastModified)
 	{
+		$aPathParts = pathinfo($this->sLogFileFullPath);
+		$this->sFilePath = $aPathParts['dirname'];
+		$this->sFileBaseName = $aPathParts['filename'];
+		$this->sFileExtension = $aPathParts['extension'];
+
 		$sFileSuffix = $this->GetFileSuffix($oLogFileLastModified);
+
 		return $this->sFilePath.DIRECTORY_SEPARATOR
 			.$this->sFileBaseName
 			.'.'.$sFileSuffix
@@ -610,8 +614,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	public function Process($iUnixTimeLimit)
 	{
 		$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
-		$oYesterdayDate = new DateTime();
-		$oYesterdayDate->modify('yesterday');
+		$oYesterdayDate = new DateTime('yesterday');
 
 		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName)
 		{
@@ -621,7 +624,8 @@ class LogFileRotationProcess implements iScheduledProcess
 
 			/** @var \RotatingLogFileNameBuilder $oLogFileNameBuilder */
 			$oLogFileNameBuilder = new $sLogFileNameBuilder($sLogFileFullPath);
-			$oLogFileNameBuilder->RotateLogFile($oYesterdayDate);
+			$oLogFileNameBuilder->ResetLastModifiedDateForFile();
+			$oLogFileNameBuilder->CheckAndRotateLogFile();
 		}
 	}
 
@@ -630,22 +634,32 @@ class LogFileRotationProcess implements iScheduledProcess
 	 */
 	public function GetNextOccurrence()
 	{
-		$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
-		$oLogFileNameBuilder = new $sLogFileNameBuilder();
-		if (!($oLogFileNameBuilder instanceof RotatingLogFileNameBuilder))
+		try
+		{
+			$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
+		}
+		catch (ProcessException $e)
 		{
 			return new DateTime('3000-01-01');
 		}
 
 		/** @var \RotatingLogFileNameBuilder $oLogFileNameBuilder */
+		$oLogFileNameBuilder = new $sLogFileNameBuilder();
 		return $oLogFileNameBuilder->GetCronProcessNextOccurrence(new DateTime());
 	}
 
 	/**
-	 * @return string
+	 * @return string RotatingLogFileNameBuilder implementation configured
+	 * @throws \ProcessException if the class is invalid
 	 */
 	private function GetLogFileNameBuilderClassName()
 	{
-		return MetaModel::GetConfig()->Get('log_filename_builder_impl');
+		$sLogFileNameBuilder = MetaModel::GetConfig()->Get('log_filename_builder_impl');
+		if (is_a($sLogFileNameBuilder, RotatingLogFileNameBuilder::class, true))
+		{
+			return $sLogFileNameBuilder;
+		}
+
+		throw new ProcessException(self::class.' : The configured filename builder is invalid (log_filename_builder_impl="'.$sLogFileNameBuilder.'")');
 	}
 }
