@@ -135,17 +135,19 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			return;
 		}
 
-		$this->RotateLogFile();
+		$this->RotateLogFile(static::$oLogFileLastModified);
 	}
 
 	/**
 	 * Rotate current log file
 	 *
+	 * @param DateTime $oLogFileLastModified date when the log file was last modified
+	 *
 	 * @uses flock() instead of a mutex that would create a useless connection to the DB, using flock
 	 * @link https://www.php.net/manual/fr/function.flock.php
 	 * @uses GetRotatedFileName to get rotated file name
 	 */
-	public function RotateLogFile()
+	public function RotateLogFile($oLogFileLastModified)
 	{
 		if (!file_exists($this->sLogFileFullPath)) // extra check, but useful for cron also !
 		{
@@ -154,20 +156,22 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 
 		$oLogFileHandle = fopen($this->sLogFileFullPath, 'r');
 		flock($oLogFileHandle, LOCK_EX);
-		$sNewLogFileName = $this->GetRotatedFileName();
+		$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
 		rename($this->sLogFileFullPath, $sNewLogFileName);
 		flock($oLogFileHandle, LOCK_UN);
 		fclose($oLogFileHandle);
 	}
 
 	/**
+	 * @param DateTime $oLogFileLastModified date when the log file was last modified
+	 *
 	 * @return string the full path of the rotated log file
 	 * @uses static::$oLogFileLastModified
 	 * @uses GetFileSuffix
 	 */
-	protected function GetRotatedFileName()
+	protected function GetRotatedFileName($oLogFileLastModified)
 	{
-		$sFileSuffix = $this->GetFileSuffix(static::$oLogFileLastModified);
+		$sFileSuffix = $this->GetFileSuffix($oLogFileLastModified);
 		return $this->sFilePath.DIRECTORY_SEPARATOR
 			.$this->sFileBaseName
 			.'.'.$sFileSuffix
@@ -175,12 +179,12 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	}
 
 	/**
-	 * @param DateTime $oLogDateLastModified date when the log file was last modified
+	 * @param DateTime $oLogFileLastModified date when the log file was last modified
 	 * @param DateTime $oNow date/time of the log we want to write
 	 *
 	 * @return bool true if the file has older informations and we need to move it to an archive (rotate), false if we don't have to
 	 */
-	abstract public function ShouldRotate($oLogDateLastModified, $oNow);
+	abstract public function ShouldRotate($oLogFileLastModified, $oNow);
 
 	/**
 	 * @param DateTime $oDate log file last modification date
@@ -215,9 +219,9 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function ShouldRotate($oLogDateLastModified, $oNow)
+	public function ShouldRotate($oLogFileLastModified, $oNow)
 	{
-		$oInterval = $oNow->diff($oLogDateLastModified);
+		$oInterval = $oNow->diff($oLogFileLastModified);
 		$iDaysDiff = $oInterval->d;
 
 		return $iDaysDiff > 0;
@@ -254,10 +258,10 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	/**
 	 * @inheritDoc
 	 */
-	public function ShouldRotate($oLogDateLastModified, $oNow)
+	public function ShouldRotate($oLogFileLastModified, $oNow)
 	{
-		$iLogYear = $oLogDateLastModified->format('Y');
-		$iLogWeek = $oLogDateLastModified->format('W');
+		$iLogYear = $oLogFileLastModified->format('Y');
+		$iLogWeek = $oLogFileLastModified->format('W');
 		$iNowYear = $oNow->format('Y');
 		$iNowWeek = $oNow->format('W');
 
@@ -588,6 +592,9 @@ class LogFileRotationProcess implements iScheduledProcess
 	public function Process($iUnixTimeLimit)
 	{
 		$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
+		$oYesterdayDate = new DateTime();
+		$oYesterdayDate->modify('yesterday');
+
 		foreach (self::LOGFILES_TO_ROTATE as $sLogFileName)
 		{
 			$sLogFileFullPath = APPROOT
@@ -596,7 +603,7 @@ class LogFileRotationProcess implements iScheduledProcess
 
 			/** @var \RotatingLogFileNameBuilder $oLogFileNameBuilder */
 			$oLogFileNameBuilder = new $sLogFileNameBuilder($sLogFileFullPath);
-			$oLogFileNameBuilder->RotateLogFile();
+			$oLogFileNameBuilder->RotateLogFile($oYesterdayDate);
 		}
 	}
 
