@@ -6,14 +6,30 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DailyRotatingLogFileNameBuilder;
-use DateTime;
 use WeeklyRotatingLogFileNameBuilder;
+use MonthlyRotatingLogFileNameBuilder;
+use DateTime;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class LogFileNameBuilderTest extends ItopTestCase
 {
+	protected function setUp()
+	{
+		parent::setUp();
+
+		require_once APPROOT.'core/log.class.inc.php';
+	}
+
 	public function ShouldRotateProvider()
 	{
 		return array(
+			'DAILY Same day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-01 15:42', false),
+			'DAILY Same week, different day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-02 00:00', true),
+			'DAILY 1 week diff' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-08 00:00', true),
 			'WEEKLY Same week' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-01 00:00', false),
 			'WEEKLY 1 week diff, same month' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-08 00:00', true),
 			'WEEKLY 2 weeks diff, same month' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-15 00:00', true),
@@ -21,9 +37,8 @@ class LogFileNameBuilderTest extends ItopTestCase
 			'WEEKLY same week, different month' => array('WeeklyRotatingLogFileNameBuilder', '2020-01-27 00:00', '2020-02-02 00:00', false),
 			'WEEKLY 1 week diff, different year' => array('WeeklyRotatingLogFileNameBuilder', '2019-12-30 00:00', '2020-01-06 00:00', true),
 			'WEEKLY same week, different year' => array('WeeklyRotatingLogFileNameBuilder', '2019-12-30 00:00', '2020-01-05 00:00', true),
-			'DAILY Same day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-01 15:42', false),
-			'DAILY Same week, different day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-02 00:00', true),
-			'DAILY 1 week diff' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-08 00:00', true),
+			'MONTHLY same month' => array('MonthlyRotatingLogFileNameBuilder', '2020-02-10 00:00', '2020-02-14 00:00', false),
+			'MONTHLY on first day which is a sunday' => array('MonthlyRotatingLogFileNameBuilder', '2020-01-30 00:00', '2020-02-01 00:00', true),
 		);
 	}
 
@@ -56,6 +71,7 @@ class LogFileNameBuilderTest extends ItopTestCase
 			'WEEKLY monday 00:00' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-03 00:00', '2020-02-10 00:00'),
 			'WEEKLY tuesday 12:42' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-04 12:42', '2020-02-10 00:00'),
 			'WEEKLY sunday 12:42' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-02 12:42', '2020-02-03 00:00'),
+			'MONTHLY 12/02 12:42' => array('MonthlyRotatingLogFileNameBuilder', '2020-02-12 12:42', '2020-03-01 00:00'),
 		);
 	}
 

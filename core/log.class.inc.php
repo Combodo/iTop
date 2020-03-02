@@ -332,6 +332,58 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 }
 
 /**
+ * @since 2.7.0 N°2820
+ */
+class MonthlyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function ShouldRotate($oLogFileLastModified, $oNow)
+	{
+		$iLogYear = $oLogFileLastModified->format('Y');
+		$iLogMonth = $oLogFileLastModified->format('n');
+		$iNowYear = $oNow->format('Y');
+		$iNowMonth = $oNow->format('n');
+
+		if ($iLogYear !== $iNowYear)
+		{
+			return true;
+		}
+
+		if ($iLogMonth !== $iNowMonth)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFileSuffix($oDate)
+	{
+		$sWeekYear = $oDate->format('o');
+		$sWeekNumber = $oDate->format('m');
+
+		return $sWeekYear.'-month'.$sWeekNumber;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCronProcessNextOccurrence(DateTime $oNow)
+	{
+		$oOccurrence = clone $oNow;
+		$oOccurrence->modify('first day of next month');
+		$oOccurrence->setTime(0, 0, 0);
+
+		return $oOccurrence;
+	}
+}
+
+/**
  * @since 2.7.0 N°2518
  */
 class LogFileNameBuilderFactory
