@@ -173,6 +173,11 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 		{
 			$oLock = new iTopMutex('log_rotation_'.$this->sLogFileFullPath);
 			$oLock->Lock();
+			if (!$this->IsLogFileExists()) // extra extra check if we were blocked and another process moved the file in the meantime
+			{
+				$oLock->Unlock();
+				return;
+			}
 			$this->ResetLastModifiedDateForFile();
 			$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
 			rename($this->sLogFileFullPath, $sNewLogFileName);
