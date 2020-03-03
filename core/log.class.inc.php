@@ -130,7 +130,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	{
 		if ($this->GetLastModifiedDateForFile() === null)
 		{
-			if ($this->IsLogFileExists())
+			if (!$this->IsLogFileExists())
 			{
 				return;
 			}
@@ -216,11 +216,21 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	}
 
 	/**
-	 * @return bool
+	 * @return bool true if file exists and is readable
 	 */
 	public function IsLogFileExists()
 	{
-		return !file_exists($this->sLogFileFullPath) || !is_readable($this->sLogFileFullPath);
+		if (!file_exists($this->sLogFileFullPath))
+		{
+			return false;
+		}
+
+		if (!is_readable($this->sLogFileFullPath))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
