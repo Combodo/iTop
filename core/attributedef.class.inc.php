@@ -10188,8 +10188,13 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueLabel($sValue)
 	{
+		if ($sValue instanceof ormSet)
+		{
+			$sValue = implode(', ', $sValue->GetValues());
+		}
+
 		$aValues = $this->GetRawPossibleValues();
-		if (!empty($aValues) && !empty($sValue) && isset($aValues[$sValue]))
+		if (is_array($aValues) && is_string($sValue) && isset($aValues[$sValue]))
 		{
 			$sValue = $aValues[$sValue];
 		}
