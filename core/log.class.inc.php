@@ -240,6 +240,8 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	}
 
 	/**
+	 * **Warning :** both DateTime params must have the same timezone set ! Should use the iTop timezone ('timezone' config parameter)
+	 *
 	 * @param DateTime $oLogFileLastModified date when the log file was last modified
 	 * @param DateTime $oNow date/time of the log we want to write
 	 *
