@@ -128,6 +128,10 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	public function CheckAndRotateLogFile()
 	{
+		$oConfig = utils::GetConfig();
+		$sItopTimeZone = $oConfig->Get('timezone');
+		$timezone = new DateTimeZone($sItopTimeZone);
+
 		if ($this->GetLastModifiedDateForFile() === null)
 		{
 			if (!$this->IsLogFileExists())
@@ -140,10 +144,12 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 			{
 				return;
 			}
-			$this->SetLastModifiedDateForFile(DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp));
+			$oDateTime = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+			$oDateTime->setTimezone($timezone);
+			$this->SetLastModifiedDateForFile($oDateTime);
 		}
 
-		$oNow = new DateTime();
+		$oNow = new DateTime('now', $timezone);
 		$bShouldRotate = $this->ShouldRotate($this->GetLastModifiedDateForFile(), $oNow);
 		if (!$bShouldRotate)
 		{
@@ -276,10 +282,22 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	 */
 	public function ShouldRotate($oLogFileLastModified, $oNow)
 	{
-		$oInterval = $oNow->diff($oLogFileLastModified);
-		$iDaysDiff = $oInterval->d;
+		$iLogYear = $oLogFileLastModified->format('Y');
+		$iLogDay = $oLogFileLastModified->format('z');
+		$iNowYear = $oNow->format('Y');
+		$iNowDay = $oNow->format('z');
 
-		return $iDaysDiff > 0;
+		if ($iLogYear !== $iNowYear)
+		{
+			return true;
+		}
+
+		if ($iLogDay !== $iNowDay)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

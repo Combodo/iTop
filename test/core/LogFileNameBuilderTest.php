@@ -17,6 +17,9 @@ use DateTime;
  */
 class LogFileNameBuilderTest extends ItopTestCase
 {
+	const TEST_LOGFILE_PREFIX = 'fileNameBuilder.test';
+	const TEST_LOGFILE_EXTENSION = 'log';
+
 	/**
 	 * @param $sLogFile
 	 * @param \DateTime $oNewModificationDate
@@ -36,9 +39,21 @@ class LogFileNameBuilderTest extends ItopTestCase
 		require_once APPROOT.'core/log.class.inc.php';
 	}
 
+	protected function tearDown()
+	{
+		parent::tearDown();
+
+		// remove log files created in the test
+		$aTestLogFiles = glob(__DIR__.DIRECTORY_SEPARATOR.self::TEST_LOGFILE_PREFIX.'*.'.self::TEST_LOGFILE_EXTENSION);
+		foreach ($aTestLogFiles as $sLogFile)
+		{
+			unlink($sLogFile);
+		}
+	}
+
 	public function testCheckAndRotateLogFile()
 	{
-		$sLogFile = __DIR__.DIRECTORY_SEPARATOR.'fileNameBuilder.test.log';
+		$sLogFile = __DIR__.DIRECTORY_SEPARATOR.self::TEST_LOGFILE_PREFIX.'.'.self::TEST_LOGFILE_EXTENSION;
 		$oFileBuilder = new DailyRotatingLogFileNameBuilder($sLogFile);
 
 		if (file_exists($sLogFile))
@@ -62,29 +77,29 @@ class LogFileNameBuilderTest extends ItopTestCase
 		$this->assertFileExists($sLogFile, 'Test log file modification date is today, original file still exists after rotation call');
 		$this->assertFileNotExists($sRotatedLogFile, 'No rotation occurred yet');
 
-		// changing modification date, but do not reset cached filebuilder date => no change
 		$oTimeYesterday = new DateTime('yesterday');
-		touch($sLogFile, $oTimeYesterday->getTimestamp());
 		$sRotatedLogFile = $oFileBuilder->GetRotatedFileName($oTimeYesterday);
+		$this->ChangeFileModificationDate($sLogFile, $oTimeYesterday);
+
+		// changing modification date, but do not reset cached filebuilder date => no change
 		$oFileBuilder->CheckAndRotateLogFile();
 		$this->assertFileExists($sLogFile, 'Test log file modification date is yesterday but filebuilder use its cache, original file still exists after rotation call');
 		$this->assertFileNotExists($sRotatedLogFile, 'No rotation occurred yet');
 
 		// changing modification date AND resetting filebuilder date cache
-		$oTimeYesterday = new DateTime('yesterday');
-		$this->ChangeFileModificationDate($sLogFile, $oTimeYesterday);
 		$oFileBuilder->ResetLastModifiedDateForFile();
-		$sRotatedLogFile = $oFileBuilder->GetRotatedFileName($oTimeYesterday);
 		$oFileBuilder->CheckAndRotateLogFile();
 		$this->assertFileNotExists($sLogFile, 'Test log file modification date is yesterday, file rotated !');
 		$this->assertFileExists($sRotatedLogFile, 'Rotation was done');
-		unlink($sRotatedLogFile);
+
+		// file cleanup will be done in tearDown !
 	}
 
 	public function ShouldRotateProvider()
 	{
 		return array(
 			'DAILY Same day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-01 15:42', false),
+			'DAILY Same week, different day less 24h diff' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 12:00', '2020-02-02 09:00', true),
 			'DAILY Same week, different day' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-02 00:00', true),
 			'DAILY 1 week diff' => array('DailyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-08 00:00', true),
 			'WEEKLY Same week' => array('WeeklyRotatingLogFileNameBuilder', '2020-02-01 00:00', '2020-02-01 00:00', false),
