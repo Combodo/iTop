@@ -200,7 +200,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 * @uses static::$oLogFileLastModified
 	 * @uses GetFileSuffix
 	 */
-	protected function GetRotatedFileName($oLogFileLastModified)
+	public function GetRotatedFileName($oLogFileLastModified)
 	{
 		$aPathParts = pathinfo($this->sLogFileFullPath);
 		$this->sFilePath = $aPathParts['dirname'];
