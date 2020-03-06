@@ -1912,6 +1912,33 @@ EOF
 			}		
 		}
 
+		// Actions : create EventBeforeUpdate method
+		$oActions = $oClass->GetOptionalElement('actions');
+		if ($oActions !== null)
+		{
+			$aMethodsToLaunch = array();
+			/** @var \MFElement $oAction */
+			foreach($oActions->getElementsByTagName('action') as $oAction)
+			{
+				$sType = $oAction->GetChildText('type');
+				if ($sType !== 'update')
+				{
+					continue;
+				}
+
+				$aMethodsToLaunch[] = '$this->'.$oAction->GetChildText('method').'();';
+			}
+
+			$sMethodsToLaunch = implode("\n", $aMethodsToLaunch);
+			$sMethods .= <<<PHP
+	protected function EventBeforeUpdate()
+	{
+		$sMethodsToLaunch
+	}
+
+PHP;
+		}
+
 		// Relations
 		//
 		$oRelations = $oClass->GetOptionalElement('relations');
@@ -3062,7 +3089,8 @@ EOF;
 	}
 
 	/**
-	 * if no ".htaccess" is present, add a generic one prohibiting access to potentially sensible files (ie: even if it is quite a bad practice, it may happen that a developer put a secret into the xml)
+	 * if no ".htaccess" is present, add a generic one prohibiting access to potentially sensible files (ie: even if it is quite a bad
+	 * practice, it may happen that a developer put a secret into the xml)
 	 *
 	 * @param $sTempTargetDir
 	 * @param $sFinalTargetDir
@@ -3101,7 +3129,8 @@ EOF;
 	}
 
 	/**
-	 *  if no "web.config" is present, add a generic one prohibiting access to potentially sensible files (ie: even if it is quite a bad practice, it may happen that a developer put a secret into the xml)
+	 *  if no "web.config" is present, add a generic one prohibiting access to potentially sensible files (ie: even if it is quite a bad
+	 * practice, it may happen that a developer put a secret into the xml)
 	 *
 	 * @param $sTempTargetDir
 	 * @param $sFinalTargetDir
