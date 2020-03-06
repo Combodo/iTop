@@ -10,8 +10,8 @@ Here are some guidelines that will help us integrate your work!
 ### Subjects
 You are welcome to create pull requests on any of those subjects:
 
-* 🐛 `:bug:` bug fix
-* 🌐 `:globe_with_meridians:` translation / i18n / l10n
+* 🐛 bug fix
+* 🌐 translation / i18n / l10n
 
 If you want to implement a **new feature**, please [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) for review.   
 If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
@@ -27,7 +27,7 @@ If you have an idea you're sure would benefit to all of iTop users, you may
 [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) to submit it, but be warned that there are lots of good 
 reasons to refuse such changes.
 
-### License
+### 📄 License
 iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
 your code must comply with this license.
 
@@ -37,7 +37,7 @@ If you want to use another license, you may [create an extension][wiki new ext].
 [wiki new ext]: https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Astart#by_writing_your_own_extension
 
 
-## Branch model
+## 🔀 Branch model
 
 TL;DR:
 > **create a fork from iTop main repository,  
@@ -80,7 +80,7 @@ That may be different if you want to fix a bug, please use develop anyway and as
 
 ## Coding
 
-### PHP styleguide
+### 🎨 PHP styleguide
 
 Please follow [our guidelines](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Acoding_standards).
 
@@ -88,7 +88,7 @@ Please follow [our guidelines](https://www.itophub.io/wiki/page?id=latest%3Acust
 
 A [dedicated page](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Atranslation) is available in the official wiki.
 
-### Tests
+### ✅ Tests
 
 Please create tests that covers as much as possible the code you're submitting.
 
@@ -117,7 +117,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
     * 💄 `:lipstick:` Updating the UI and style files.  
   
 
-## Pull request
+## 👥 Pull request
 
 When your code is working, please:
 
