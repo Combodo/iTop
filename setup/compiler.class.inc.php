@@ -18,6 +18,7 @@
  */
 
 
+use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -1926,7 +1927,19 @@ EOF
 					continue;
 				}
 
-				$aMethodsToLaunch[] = '$this->'.$oAction->GetChildText('method').'();';
+				$sActionMethodModuleName = DesignDocument::GetItopNodeSourceModule($oAction);
+				$sActionMethodName = $oAction->GetChildText('method');
+				$aMethodsToLaunch[] = <<<PHP
+try {
+	\$this->$sActionMethodName();
+}
+catch (Exception \$eActionMethodException)
+{
+	IssueLog::Error("Exception throwned when updating '$sClass': action '$sActionMethodName' defined in '$sActionMethodModuleName'", 
+		null, 
+		array(\$eActionMethodException->getMessage()));
+}
+PHP;
 			}
 
 			$sMethodsToLaunch = implode("\n", $aMethodsToLaunch);

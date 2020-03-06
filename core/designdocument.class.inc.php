@@ -157,6 +157,32 @@ class DesignDocument extends DOMDocument
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
 		return self::GetItopNodePath($oNode->parentNode).'/'.$sNodeDesc;
 	}
+
+	/**
+	 * @param DesignElement $oNode
+	 *
+	 * @return string
+	 */
+	public static function GetItopNodeSourceModule($oNode)
+	{
+		if ($oNode instanceof \DOMDocument) {return '';}
+		if (is_null($oNode)) {return '';}
+
+		$sNodeAlteredIn = $oNode->getAttribute("_altered_in");
+		if (isset($sNodeAlteredIn))
+		{
+			if ($sNodeAlteredIn === '') { $sNodeAlteredIn = 'DELTA-XML';}
+			return $sNodeAlteredIn;
+		}
+
+		$sNodeCreatedIn = $oNode->getAttribute("_created_in");
+		if (isset($sNodeCreatedIn))
+		{
+			return $sNodeCreatedIn;
+		}
+
+		return self::GetItopNodePath($oNode->parentNode);
+	}
 }
 
 /**
