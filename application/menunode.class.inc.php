@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -293,7 +293,8 @@ EOF
 				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
 				if ($sHyperlink != '')
 				{
-					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+					$sTitle = utils::HtmlEntities($oMenu->GetTitle());
+					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$sTitle.'</a></li>');
 				}
 				else
 				{
@@ -905,7 +906,7 @@ class OQLMenuNode extends MenuNode
 			$oBlock->Display($oPage, 0);
 		}
 		
-		$oPage->add("<p class=\"page-header\">$sIcon ".Dict::S($sTitle)."</p>");
+		$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
 		
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
