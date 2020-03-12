@@ -1902,7 +1902,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Server:otherinfo' => 'Andere informatie',
 	'Server:power' => 'Stroomtoevoer',
 	'Person:info' => 'Globale informatie',
-	'UserLocal:info' => 'Globale informatie~~',
+	'UserLocal:info' => 'Globale informatie',
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
 	'Class:Subnet/Tab:IPUsage' => 'IP-gebruik',
