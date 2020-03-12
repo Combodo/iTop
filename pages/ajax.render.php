@@ -1218,10 +1218,11 @@ EOF
 
 		case 'new_dashlet_id':
 			$sDashboardDivId = utils::ReadParam("dashboardid");
+			$bIsCustomized = utils::ReadParam("isCustomized", "true") === "true";
 			$iRow = utils::ReadParam("iRow");
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
-			$sFinalDashletId = Dashboard::GetDashletUniqueId(true, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
+			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 			$oPage = new ajax_page('');
 			$oPage->add($sFinalDashletId);
 			break;
