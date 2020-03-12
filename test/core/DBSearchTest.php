@@ -56,6 +56,9 @@ class DBSearchTest extends ItopDataTestCase
 	protected function setUp()
 	{
 		parent::setUp();
+
+		require_once(APPROOT.'application/itopwebpage.class.inc.php');
+		require_once(APPROOT.'application/displayblock.class.inc.php');
 	}
 
 	/**
@@ -656,4 +659,33 @@ class DBSearchTest extends ItopDataTestCase
 		static::assertEquals('', $sExceptionClass);
 	}
 
+	/**
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function testSelectInWithVariableExpressions()
+	{
+		$aReq = array(array(1, 0, 0), array(1, 1, 3), array(1, 2, 1), array(1, 0, 1), array(1, 1, 0), array(1, 2, 1));
+		$sOrgs = $this->init_db(3, 4, $aReq);
+		$allOrgIds = explode(",", $sOrgs);
+
+		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
+		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)");
+		self::assertNotNull($oSearch);
+		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids'=> $TwoOrgIdsOnly));
+		static::assertEquals(4, $oSet->Count());
+
+		$_SERVER['REQUEST_URI']='FAKE_REQUEST_URI' ;
+		$_SERVER['REQUEST_METHOD']='FAKE_REQUEST_METHOD';
+		$oP = new \iTopWebPage("test");
+		$oBlock = new \DisplayBlock($oSet->GetFilter(), 'list', false);
+		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array ('menu'=>true, 'display_limit'=>false));
+
+		$iHtmlUserRequestLineCount = substr_count($sHtml, '<tr><td  data-object-class="UserRequest"');
+		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :" . $sHtml);
+		$oP->output();
+	}
 }
