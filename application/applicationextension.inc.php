@@ -533,7 +533,7 @@ interface iApplicationObjectExtension
 	public function OnIsModified($oObject);
 
 	/**
-	 * Invoked to determine wether an object can be written to the database
+	 * Invoked to determine whether an object can be written to the database
 	 *
 	 * The GUI calls this verb and reports any issue.
 	 * Anyhow, this API can be called in other contexts such as the CSV import tool.
