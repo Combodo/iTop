@@ -57,6 +57,7 @@ try
 		case 'cke_img_upload':
 		case 'cke_upload_and_browse':
 		case 'cke_browse':
+		case 'new_dashlet_id':
 			$sRequestedPortalId = null;
 			break;
 
