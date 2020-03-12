@@ -539,7 +539,7 @@ EOF
 		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
-		$oLayout = new $this->sLayoutClass;
+		$oLayout = new $this->sLayoutClass();
 
 		foreach($this->aCells as $iCellIdx => $aDashlets)
 		{
@@ -591,19 +591,25 @@ EOF
 		// Toolbox/palette to edit the properties of each dashlet
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
 
+		/** @var \DashboardLayoutMultiCol $oLayout */
+		$oLayout = new $this->sLayoutClass();
+
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
-		foreach($this->aCells as $aCell)
+		foreach($this->aCells as $iCellIdx => $aCell)
 		{
 			/** @var \Dashlet $oDashlet */
 			foreach($aCell as $oDashlet)
 			{
+
+				$aDashletCoordinates = $oLayout->GetDashletCoordinates($iCellIdx);
 				$sId = $oDashlet->GetID();
+				$sFinalId = static::GetDashletUniqueId($this->bCustomized, $this->GetSanitizedId(), $aDashletCoordinates[1], $aDashletCoordinates[0], $sId);
 				if ($oDashlet->IsVisible())
 				{
-					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sFinalId.'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
-					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');		
+					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
 					$oPage->add('</div>');
 				}
 			}
@@ -674,7 +680,7 @@ EOF
 	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
 	{
 		$sDashletIdOrig = $oDashlet->GetID();
-		$sDashboardSanitizedId = utils::Sanitize($this->GetId(), '', 'element_identifier');
+		$sDashboardSanitizedId = $this->GetSanitizedId();
 		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
 		$oDashlet->SetID($sDashletIdNew);
 	}
@@ -739,6 +745,17 @@ EOF
 	public function GetId()
 	{
 		return $this->sId;
+	}
+
+	/**
+	 * Return a sanitize ID for usages in XML/HTML attributes
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public function GetSanitizedId()
+	{
+		return utils::Sanitize($this->GetId(), '', 'element_identifier');
 	}
 }
 
