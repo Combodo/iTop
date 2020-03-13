@@ -83,6 +83,13 @@ class DBObjectSet implements iDBObjectSetIterator
 	protected $m_oSQLResult;
 	protected $m_bSort;
 
+	protected static $oContainer = null;
+
+
+	public static function setContainer($oContainer)
+	{
+		self::$oContainer = $oContainer;
+	}
 	/**
 	 * Create a new set based on a Search definition.
      *
@@ -970,6 +977,12 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			// Pick the row from the database
 			$aRow = CMDBSource::FetchArray($this->m_oSQLResult);
+
+			if (self::$oContainer)
+			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\QueryDataCollector')->onFetch($this);
+			}
+
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
 				if ($sRequestedClassAlias == $sClassAlias)
