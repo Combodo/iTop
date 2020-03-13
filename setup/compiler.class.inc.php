@@ -1900,6 +1900,7 @@ EOF
 		// Methods
 		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
+		//FIXME verify if EventBeforeUpdate already exists
 		foreach($oMethods->getElementsByTagName('method') as $oMethod)
 		{
 			$sMethodCode = $oMethod->GetChildText('code');
@@ -1922,7 +1923,7 @@ EOF
 			foreach($oActions->getElementsByTagName('action') as $oAction)
 			{
 				$sType = $oAction->GetChildText('type');
-				if ($sType !== 'update')
+				if ($sType !== 'eventBeforeUpdate')
 				{
 					continue;
 				}
