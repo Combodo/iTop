@@ -144,29 +144,27 @@ $(function()
 				}
 			});	
 		},
-		// We need a unique dashlet id, we will get it using an ajax query
-		_get_dashletid_ajax: function(options, sTempDashletId)
-		{
-			var me = this;
-			var $container = options.container;
-			var oParams = this.options.new_dashletid_parameters;
-			oParams.dashboardid = me.options.dashboard_id;
-			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
-			oParams.iCol = $container.data("dashboard-column-index");
-			oParams.dashletid = sTempDashletId;
-
-			$.post(this.options.new_dashletid_endpoint, oParams, function(data) {
-				var sFinalDashletId = data;
-				me.add_dashlet_prepare(options, sFinalDashletId);
-			});
-		},
 		add_dashlet: function(options)
 		{
-			var $container = options.container,
-				iNumberOfExistingDashletsInDashboard = $container.closest("table").find("div.dashlet").length,
-				sTempDashletId = iNumberOfExistingDashletsInDashboard+1;
+			var $container = options.container;
+			var aDashletsIds = $container.closest("table").find("div.dashlet").map(function(){
+				// Note:
+				// - At runtime a unique dashlet ID is generated (see \Dashboard::GetDashletUniqueId) to avoid JS widget collisions
+				// - At design time, the dashlet ID is not touched (same as in the XML datamodel)
+				var sDashletUniqueId = $(this).attr("id");
+				var sDashletIdParts = sDashletUniqueId.split('_');
+				var sDashletOrigId = sDashletIdParts[sDashletIdParts.length - 1];
+				return isNaN(sDashletOrigId) ? 0 : parseInt(sDashletOrigId);
+			}).get();
+			// Note: Use of .apply() to be compatible with IE10
+			var iHighestDashletOrigId = Math.max.apply(null, aDashletsIds);
 
-			this._get_dashletid_ajax(options, sTempDashletId);
+			this._get_dashletid_ajax(options, iHighestDashletOrigId + 1);
+		},
+		// Get the real dashlet ID from the temporary ID
+		_get_dashletid_ajax: function(options, sTempDashletId)
+		{
+			// Do nothing, meant for overloading
 		},
 		add_dashlet_prepare: function(options, sFinalDashletId)
 		{
@@ -331,6 +329,22 @@ $(function()
                     dialog.dialog( "close" );
                     dialog.remove();
                 }
+			});
+		},
+		// We need a unique dashlet id, we will get it using an ajax query
+		_get_dashletid_ajax: function(options, sTempDashletId)
+		{
+			var me = this;
+			var $container = options.container;
+			var oParams = this.options.new_dashletid_parameters;
+			oParams.dashboardid = me.options.dashboard_id;
+			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
+			oParams.iCol = $container.data("dashboard-column-index");
+			oParams.dashletid = sTempDashletId;
+
+			$.post(this.options.new_dashletid_endpoint, oParams, function(data) {
+				var sFinalDashletId = data;
+				me.add_dashlet_prepare(options, sFinalDashletId);
 			});
 		},
 		add_dashlet_ajax: function(options, sDashletId)

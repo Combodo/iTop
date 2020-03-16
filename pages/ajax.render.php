@@ -57,7 +57,6 @@ try
 		case 'cke_img_upload':
 		case 'cke_upload_and_browse':
 		case 'cke_browse':
-		case 'new_dashlet_id':
 			$sRequestedPortalId = null;
 			break;
 
@@ -1218,7 +1217,7 @@ EOF
 
 		case 'new_dashlet_id':
 			$sDashboardDivId = utils::ReadParam("dashboardid");
-			$bIsCustomized = utils::ReadParam("isCustomized", "true") === "true";
+			$bIsCustomized = true; // Only called at runtime when customizing a dashboard
 			$iRow = utils::ReadParam("iRow");
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");

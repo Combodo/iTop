@@ -46,8 +46,6 @@ abstract class Dashboard
 	protected $aCells;
 	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
-	/** @var bool $bCustomized */
-	protected $bCustomized;
 
 	/**
 	 * Dashboard constructor.
@@ -63,7 +61,6 @@ abstract class Dashboard
 		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
-		$this->bCustomized = false;
 	}
 
 	/**
@@ -422,24 +419,6 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @return bool
-	 * @since 2.7.0
-	 */
-	public function GetCustomFlag()
-	{
-		return $this->bCustomized;
-	}
-
-	/**
-	 * @param bool $bCustomized
-	 * @since 2.7.0
-	 */
-	public function SetCustomFlag($bCustomized)
-	{
-		$this->bCustomized = $bCustomized;
-	}
-
-	/**
 	 * @param \Dashlet $oDashlet
 	 */
 	public function AddDashlet($oDashlet)
@@ -619,13 +598,9 @@ EOF
 			/** @var \Dashlet $oDashlet */
 			foreach($aCell as $oDashlet)
 			{
-
-				$aDashletCoordinates = $oLayout->GetDashletCoordinates($iCellIdx);
-				$sId = $oDashlet->GetID();
-				$sFinalId = static::GetDashletUniqueId($this->bCustomized, $this->GetSanitizedId(), $aDashletCoordinates[1], $aDashletCoordinates[0], $sId);
 				if ($oDashlet->IsVisible())
 				{
-					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sFinalId.'" style="display:none">');
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
 					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
@@ -689,20 +664,16 @@ EOF
 	}
 
 	/**
-	 * Prepare dashlet for rendering:
-	 * - Fix ID to unique within the dashboard
+	 * Prepare dashlet for rendering (eg. change its ID or another processing).
+	 * Meant to be overloaded.
 	 *
 	 * @param \Dashlet $oDashlet
-	 * @param array $aCoordinates Contains x, y (starting from 0)
+	 * @param array $aCoordinates
 	 * @param array $aExtraParams
+	 *
+	 * @return void
 	 */
-	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
-	{
-		$sDashletIdOrig = $oDashlet->GetID();
-		$sDashboardSanitizedId = $this->GetSanitizedId();
-		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
-		$oDashlet->SetID($sDashletIdNew);
-	}
+	abstract protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array());
 
     /**
      * @param \DesignerForm $oForm
@@ -744,12 +715,12 @@ EOF
 	 */
 	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletOrigId)
 	{
-		if(strpos($sDashletOrigId, 'IDrow') !== false)
+		if(strpos($sDashletOrigId, '_ID_row') !== false)
 		{
 			return $sDashletOrigId;
 		}
 
-		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCol-$sDashletOrigId";
+		$sDashletId = $sDashboardDivId."_ID_row".$iRow."_col".$iCol."_".$sDashletOrigId;
 		if ($bIsCustomized)
 		{
 			$sDashletId = 'CUSTOM_'.$sDashletId;
@@ -768,6 +739,8 @@ class RuntimeDashboard extends Dashboard
 	private $sDefinitionFile = '';
 	/** @var null $sReloadURL */
 	private $sReloadURL = null;
+	/** @var bool $bCustomized */
+	protected $bCustomized;
 
 	/**
 	 * @inheritDoc
@@ -776,6 +749,25 @@ class RuntimeDashboard extends Dashboard
 	{
 		parent::__construct($sId);
 		$this->oMetaModel = new ModelReflectionRuntime();
+		$this->bCustomized = false;
+	}
+
+	/**
+	 * @return bool
+	 * @since 2.7.0
+	 */
+	public function GetCustomFlag()
+	{
+		return $this->bCustomized;
+	}
+
+	/**
+	 * @param bool $bCustomized
+	 * @since 2.7.0
+	 */
+	public function SetCustomFlag($bCustomized)
+	{
+		$this->bCustomized = $bCustomized;
 	}
 
 	/**
@@ -1515,7 +1507,9 @@ JS
 	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
 	{
 		$sDashletIdOrig = $oDashlet->GetID();
-		parent::PrepareDashletForRendering($oDashlet, $aCoordinates);
+		$sDashboardSanitizedId = $this->GetSanitizedId();
+		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
+		$oDashlet->SetID($sDashletIdNew);
 		$this->UpdateDashletUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
 	}
 
