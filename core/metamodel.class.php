@@ -5701,10 +5701,14 @@ abstract class MetaModel
 		{
 			$sChangeList = implode(', ', $aChangeList);
 			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
-		}
-		foreach($aPostTableAlteration  as $sTable => $aChangeList)
-		{
-			$aCondensedQueries = array_merge($aCondensedQueries, $aChangeList);
+			// Add request right after the ALTER TABLE
+			if (isset($aPostTableAlteration[$sTable]))
+			{
+				foreach ($aPostTableAlteration[$sTable] as $sQuery)
+				{
+					$aCondensedQueries[] = $sQuery;
+				}
+            }
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
