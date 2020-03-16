@@ -339,6 +339,25 @@ abstract class Dashboard
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
+
+	/**
+	 * Return a sanitize ID for usages in XML/HTML attributes
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public function GetSanitizedId()
+	{
+		return utils::Sanitize($this->GetId(), '', 'element_identifier');
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetLayout()
@@ -717,45 +736,26 @@ EOF
 	 * @param string $sDashboardDivId
 	 * @param int $iRow
 	 * @param int $iCol
-	 * @param string $sDashletIdOrig
+	 * @param string $sDashletOrigId
 	 *
 	 * @return string
 	 *
 	 * @since 2.7.0 N°2735
 	 */
-	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig)
+	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletOrigId)
 	{
-		if(strpos($sDashletIdOrig, 'IDrow') !== false)
+		if(strpos($sDashletOrigId, 'IDrow') !== false)
 		{
-			return $sDashletIdOrig;
+			return $sDashletOrigId;
 		}
 
-		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCol-$sDashletIdOrig";
+		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCol-$sDashletOrigId";
 		if ($bIsCustomized)
 		{
 			$sDashletId = 'CUSTOM_'.$sDashletId;
 		}
 
 		return $sDashletId;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function GetId()
-	{
-		return $this->sId;
-	}
-
-	/**
-	 * Return a sanitize ID for usages in XML/HTML attributes
-	 *
-	 * @return string
-	 * @since 2.7.0
-	 */
-	public function GetSanitizedId()
-	{
-		return utils::Sanitize($this->GetId(), '', 'element_identifier');
 	}
 }
 
