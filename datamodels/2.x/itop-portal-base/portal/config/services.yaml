@@ -88,7 +88,13 @@ services:
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
-
+  Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector:
+    public: true
+    tags:
+      - name:     data_collector
+        template: 'itop-portal-base/portal/templates/dataCollector/copycat_doctrine.html.twig'
+        id:       'app.copycat_doctrine.collector'
+        # priority: 300
   Combodo\iTop\Portal\DataCollector\QueryDataCollector:
     public: true
     tags:

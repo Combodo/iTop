@@ -38,9 +38,10 @@ class QueryDataCollector extends DataCollector
 	public function onFetch(\DBObjectSet $DBObjectSet)
 	{
 		$row = array(
-//			'string' => $DBObjectSet->__toString(),
+			'SQL' => $DBObjectSet->GetFilter()->MakeSelectQuery(),
 			'OQL' => $DBObjectSet->GetFilter()->ToOQL(),
 			'count' => $DBObjectSet->Count(),
+			'args' => $DBObjectSet->GetArgs()
 		);
 		$this->data['queries'][] = $row;
 	}
@@ -49,7 +50,7 @@ class QueryDataCollector extends DataCollector
 
 	public function collect(Request $request, Response $response, \Exception $exception = null)
 	{
-		$this->data['count'] = count($this->data['queries']);
+//		$this->data['count'] = count($this->data['queries']);
 	}
 
 
@@ -72,6 +73,5 @@ class QueryDataCollector extends DataCollector
 	{
 		return $this->data['queries'];
 	}
-
 
 }

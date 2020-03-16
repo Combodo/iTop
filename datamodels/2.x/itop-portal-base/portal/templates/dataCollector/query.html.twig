@@ -3,8 +3,8 @@
 {% block toolbar %}
 	{% set icon %}
 		{# this is the content displayed as a panel in the toolbar #}
-		<svg xmlns="http://www.w3.org/2000/svg"> ... </svg>
-		<span class="sf-toolbar-value">Queries</span>
+		<i class="fas fa-database"></i>
+		<span class="sf-toolbar-value">{{ collector.count }} Queries</span>
 	{% endset %}
 
 	{% set text %}
@@ -26,7 +26,7 @@
 {% block menu %}
 	{# This left-hand menu appears when using the full-screen profiler. #}
 	<span class="label">
-        <span class="icon"><img src="..." alt=""/></span>
+        <span class="icon"><i class="fas fa-database"></i></span>
         <strong>Queries</strong>
     </span>
 {% endblock %}
@@ -34,23 +34,20 @@
 
 {% block panel %}
 	{# Optional, for showing the most details. #}
-	<h2>queries</h2>
+	<h2>{{ collector.count }} queries</h2>
 	<table>
-		<tr>
-			<th>collector.count</th>
-		</tr>
-
-		<tr>
-			<td>{{ collector.count }}</td>
-		</tr>
-
 		{% for query in collector.queries %}
 			<tr>
 				<td>
-					{{ query.OQL }}
+					{{ loop.index }}
+				</td>
+				<td>{{ query.OQL }}</td>
+				<td>{{ query.SQL }}</td>
+				<td>{{ query.args|json_encode }}</td>
+				<td>{{ query.count }}</td>
+				<td>
 					{% if query.details.time is defined %}({{ query.details.time }}s.){% endif %}
 				</td>
-				<td>{{ query.count }}</td>
 			</tr>
 		{% endfor %}
 	</table>
