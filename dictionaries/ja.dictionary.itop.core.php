@@ -540,6 +540,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Trigger/Attribute:action_list+' => 'トリガーが発行された場合に動作するアクション',
 	'Class:Trigger/Attribute:finalclass' => 'タイプ',
 	'Class:Trigger/Attribute:finalclass+' => 'タイプ',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

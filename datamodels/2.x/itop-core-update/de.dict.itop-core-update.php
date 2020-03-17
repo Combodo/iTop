@@ -20,28 +20,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:PageTitle' => 'Anwendungsupgrade',
     'itop-core-update:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
     'itop-core-update:UI:ConfirmUpdate' => 'Confirm Upgrade',
     'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der iTop-Core-Dateien',
-    'iTopUpdate:UI:MaintenanceModeActive' => 'Die Anwendung läuft im Wartungsmodus, Benutzerzugriffe sind nicht möglich. Führen sie erneut ein Setup oder Restore der Anwendung aus, um in den normalen Betriebsmodus zurückzukehren.',
-    'itop-core-update:UI:UpdateDone' => 'Upgrade abgeschlossen',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'Die Anwendung läuft im Wartungsmodus, Benutzerzugriffe sind nicht möglich. Führen sie erneut ein Setup oder Restore der Anwendung aus, um in den normalen Betriebsmodus zurückzukehren.',
+	'itop-core-update:UI:UpdateDone' => 'Upgrade abgeschlossen',
 
-    'itop-core-update/Operation:SelectUpdateFile/Title' => 'Upgrade',
-    'itop-core-update/Operation:ConfirmUpdate/Title' => 'Upgrade bestätigen',
-    'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Anwendungsupgrade',
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Upgrade',
+	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Upgrade bestätigen',
+	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Anwendungsupgrade',
+	'itop-core-update/Operation:UpdateDone/Title' => 'Application Upgrade Done~~',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
 	'iTopUpdate:UI:CheckUpdate' => 'Upgrade-Datei überprüfen',
 	'iTopUpdate:UI:ConfirmInstallFile' => 'Installation von %1$s',
 	'iTopUpdate:UI:DoUpdate' => 'Upgrade',
 	'iTopUpdate:UI:CurrentVersion' => 'Installierte Version',
+	'iTopUpdate:UI:NewVersion' => 'Newly installed version~~',
     'iTopUpdate:UI:Back' => 'Zurück',
     'iTopUpdate:UI:Cancel' => 'Abbrechen',
     'iTopUpdate:UI:Continue' => 'Weiter',
-    'iTopUpdate:UI:RunSetup' => 'Setuplauf',
+	'iTopUpdate:UI:RunSetup' => 'Setuplauf',
     'iTopUpdate:UI:WithDBBackup' => 'Datenbankbackup',
     'iTopUpdate:UI:WithFilesBackup' => 'Backup der Anwendungsdateien',
     'iTopUpdate:UI:WithoutBackup' => 'Kein geplantes Backup',
@@ -49,7 +50,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Anwendungsdateien archivieren',
 	'iTopUpdate:UI:UploadArchive' => 'Archivpaket hochladen',
 	'iTopUpdate:UI:ServerFile' => 'Pfad zu Archivpaket, dass bereits auf dem Server liegt',
-    'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Während des Upgrades läuft die Anwendung im read-only Modus',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Während des Upgrades läuft die Anwendung im read-only Modus',
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',
@@ -80,9 +81,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Datenbankbackup',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archivierung der Anwendungsdaten',
     'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Kopieren neuer Dateien',
-    'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Prüfung des Anwendungsupgrades',
-    'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade von Anwendung und Datenbank',
-    'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade Datenbank',
+	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Prüfung des Anwendungsupgrades',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade von Anwendung und Datenbank',
+	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade Datenbank',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktivert',
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade abgeschlossen',
 

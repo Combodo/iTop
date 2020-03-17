@@ -542,6 +542,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é ativado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
