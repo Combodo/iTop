@@ -34,7 +34,10 @@ do
     then
       continue
     fi
-
+    if [ "$subfolder" == "datamodels" -a $(find $l -name module*.php|wc -l) -ne 0 ]
+    then
+      continue
+    fi
     dir=$(dirname $(dirname $l))
     prod=$(echo $l| sed "s|$dir/||1")
     echo $l $subfolder
