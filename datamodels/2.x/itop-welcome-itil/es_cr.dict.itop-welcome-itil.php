@@ -55,7 +55,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
 	'Menu:UserManagement' => 'Gestión de usuarios',
 	'Menu:Queries' => 'Consultas',
-	'Menu:ConfigurationTools' => 'configuración',
+	'Menu:ConfigurationTools' => 'Configuración',
 ));
 
 //
