@@ -88,22 +88,22 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Actualización completada',
 
 	// Errors
-	'iTopUpdate:Error:MissingFunction' => 'Impossible to start upgrade, missing function~~',
-	'iTopUpdate:Error:MissingFile' => 'Missing file: %1$s~~',
-	'iTopUpdate:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-    'iTopUpdate:Error:BadFileFormat' => 'Upgrade file is not a zip file~~',
-    'iTopUpdate:Error:BadFileContent' => 'Upgrade file is not an application archive~~',
-    'iTopUpdate:Error:BadItopProduct' => 'Upgrade file is not compatible with your application~~',
-	'iTopUpdate:Error:Copy' => 'Error, cannot copy \'%1$s\' to \'%2$s\'~~',
-    'iTopUpdate:Error:FileNotFound' => 'File not found~~',
-    'iTopUpdate:Error:NoFile' => 'No file provided~~',
-	'iTopUpdate:Error:InvalidToken' => 'Invalid token~~',
-	'iTopUpdate:Error:UpdateFailed' => 'Upgrade failed ~~',
-	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'The upload max size seems too small for update. Please change the PHP configuration.~~',
+	'iTopUpdate:Error:MissingFunction' => 'Imposible comenzar actualización, función no disponible',
+	'iTopUpdate:Error:MissingFile' => 'Archivo no encontrado: %1$s~~',
+	'iTopUpdate:Error:CorruptedFile' => 'El archivo %1$s está corrupto',
+    'iTopUpdate:Error:BadFileFormat' => 'El archivo de actualización no es un archivo zip',
+    'iTopUpdate:Error:BadFileContent' => 'El archivo de actualización no es correcto',
+    'iTopUpdate:Error:BadItopProduct' => 'El archivo de actualización no es compatible con su producto',
+	'iTopUpdate:Error:Copy' => 'Error, no puedo copiar \'%1$s\' a \'%2$s\'~~',
+    'iTopUpdate:Error:FileNotFound' => 'Archivo no encontrado',
+    'iTopUpdate:Error:NoFile' => 'Archivo no seleccionado',
+	'iTopUpdate:Error:InvalidToken' => 'Token inválido',
+	'iTopUpdate:Error:UpdateFailed' => 'La actualización ha fallado',
+	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'El archivo de actualización parece demasiado pequeño. Por favor cambie la configuración PHP.',
 
-	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'~~',
-	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'~~',
-	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful~~',
+	'iTopUpdate:UI:RestoreArchive' => 'Usted puede restaurar su aplicación desde el archivo \'%1$s\'',
+	'iTopUpdate:UI:RestoreBackup' => 'Usted puede restaurar la base de datos desde \'%1$s\'',
+	'iTopUpdate:UI:UpdateDone' => 'Actualización exitosa',
 	'Menu:iTopUpdate' => 'Actualización de aplicación',
 	'Menu:iTopUpdate+' => 'Actualización de aplicación',
 
@@ -113,5 +113,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'Class:ModuleInstallation/Attribute:version' => 'Versión',
     'Class:ModuleInstallation/Attribute:comment' => 'Commentario',
 ));
-
-
