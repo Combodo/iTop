@@ -49,7 +49,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Llave externa inválida %1$s (columna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Llave externa perdida %1$s (columna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valor inválido para %1$s (columna: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Alunas cuentas de usuario no tienen perfil asignado',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Algunas cuentas de usuario no tienen perfil asignado',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 ));
 
@@ -68,20 +68,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'DBTools:LostAttachments:Button:Analyze' => 'Analizar',
 	'DBTools:LostAttachments:Button:Restore' => 'Restaurar',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta acción no se puede deshacer, por favor confirme que quiere restaurar los archivos seleccionados.',
-	'DBTools:LostAttachments:Button:Busy' => 'Por favor espera...',
+	'DBTools:LostAttachments:Button:Busy' => 'Por favor espere...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => 'Primero, buscaremos adjuntos perdidos/desplazados analizando la base de datos.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analizar resultados:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Genial! Todo parece estar en el lugar correcto.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Algunos adjuntos (%1$d) parecen estar desplazados. Mire la siguiente lista y verifique los que quiera mover.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nombre de archivo',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Ubicación actual',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover a...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultados de restauración:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d adjuntos fueron restaurados.',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Almacenado como imagen en línea',
+	'DBTools:LostAttachments:History' => 'Adjunto "%1$s" restaurado con herramientas de base de datos'
 ));
