@@ -128,10 +128,7 @@ class DatabaseAnalyzer
 		foreach($aClassSelection as $sClass)
 		{
 			// Check uniqueness rules
-			if (method_exists('MetaModel', 'GetUniquenessRules'))
-			{
-				$this->CheckUniquenessRules($sClass, $aErrorsAndFixes);
-			}
+			$this->CheckUniquenessRules($sClass, $aErrorsAndFixes);
 
 			if (!MetaModel::HasTable($sClass))
 			{
@@ -151,6 +148,10 @@ class DatabaseAnalyzer
 
 					$this->CheckRecordsInRootTable($sTable, $sKeyField, $sRootTable, $sRootKey, $sClass, $aErrorsAndFixes);
 					$this->CheckRecordsInChildTable($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
+					if (!MetaModel::IsLeafClass($sClass))
+					{
+						$this->CheckFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
+					}
 				}
 			}
 
@@ -315,6 +316,34 @@ class DatabaseAnalyzer
 		$sSelWrongRecs = "$sSelect $sFilter";
 		$sFixItRequest = "$sDelete $sFilter";
 		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-OrphanRecord', $sRootTable, $sTable), $sRootClass, $aErrorsAndFixes);
+	}
+
+	/**
+	 * Check that the "finalclass" field is correct for all the classes of the hierarchy
+	 *
+	 * @param $sRootClass
+	 * @param $sClass
+	 * @param $sRootTable
+	 * @param $sRootKey
+	 * @param $sTable
+	 * @param $sKeyField
+	 * @param $aErrorsAndFixes
+	 *
+	 * @throws \CoreException
+	 */
+	private function CheckFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, &$aErrorsAndFixes)
+	{
+		$sField = MetaModel::DBGetClassField($sClass);
+		$sRootField = MetaModel::DBGetClassField($sRootClass);
+		$sSelWrongRecs = <<<SQL
+	SELECT `$sTable`.`$sKeyField` AS id
+	FROM `$sTable`
+	JOIN `$sRootTable` ON `$sRootTable`.`$sRootKey` = `$sTable`.`$sKeyField`
+	WHERE `$sTable`.`$sField` != `$sRootTable`.`$sRootField`
+SQL;
+		// Copy the finalclass of the root table
+		$sFixItRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKeyField` = `$sRootTable`.`$sRootKey`";
+		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-FinalClass', $sField, $sTable, $sRootTable), $sClass, $aErrorsAndFixes);
 	}
 
 	/**
