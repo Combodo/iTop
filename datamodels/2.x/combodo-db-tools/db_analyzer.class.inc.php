@@ -104,10 +104,6 @@ class DatabaseAnalyzer
 	 */
 	public function CheckIntegrity($aClassSelection)
 	{
-		// Getting and setting time limit are not symetric:
-		// www.php.net/manual/fr/function.set-time-limit.php#72305
-		$iPreviousTimeLimit = ini_get('max_execution_time');
-
 		$aErrorsAndFixes = array();
 
 		if (empty($aClassSelection))
@@ -125,7 +121,25 @@ class DatabaseAnalyzer
 			$aClassSelection = array_unique($aClassSelection);
 		}
 
-		foreach($aClassSelection as $sClass)
+		// First loop for root classes (other classes are based on root classes)
+		foreach ($aClassSelection as $sClass)
+		{
+			if (!MetaModel::HasTable($sClass))
+			{
+				continue;
+			}
+
+			if (MetaModel::IsRootClass($sClass) && !MetaModel::IsStandaloneClass($sClass))
+			{
+				$sRootClass = MetaModel::GetRootClass($sClass);
+				$sRootTable = MetaModel::DBGetTable($sRootClass);
+				$sRootKey = MetaModel::DBGetKey($sRootClass);
+				// Control that the finalclass is a leaf child class
+				$this->CheckRootFinalClass($sRootClass, $sRootTable, $sRootKey, $aErrorsAndFixes);
+			}
+		}
+
+		foreach ($aClassSelection as $sClass)
 		{
 			// Check uniqueness rules
 			$this->CheckUniquenessRules($sClass, $aErrorsAndFixes);
@@ -141,16 +155,15 @@ class DatabaseAnalyzer
 
 			if (!MetaModel::IsStandaloneClass($sClass))
 			{
+				$sRootTable = MetaModel::DBGetTable($sRootClass);
+				$sRootKey = MetaModel::DBGetKey($sRootClass);
 				if (!MetaModel::IsRootClass($sClass))
 				{
-					$sRootTable = MetaModel::DBGetTable($sRootClass);
-					$sRootKey = MetaModel::DBGetKey($sRootClass);
-
 					$this->CheckRecordsInRootTable($sTable, $sKeyField, $sRootTable, $sRootKey, $sClass, $aErrorsAndFixes);
 					$this->CheckRecordsInChildTable($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
 					if (!MetaModel::IsLeafClass($sClass))
 					{
-						$this->CheckFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
+						$this->CheckIntermediateFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
 					}
 				}
 			}
@@ -175,10 +188,6 @@ class DatabaseAnalyzer
 		}
 		$this->CheckUsers($aErrorsAndFixes);
 
-		if (!is_null($this->iTimeLimitPerOperation))
-		{
-			set_time_limit($iPreviousTimeLimit);
-		}
 		return $aErrorsAndFixes;
 	}
 
@@ -322,6 +331,51 @@ class DatabaseAnalyzer
 	 * Check that the "finalclass" field is correct for all the classes of the hierarchy
 	 *
 	 * @param $sRootClass
+	 * @param $sRootTable
+	 * @param $sRootKey
+	 * @param $aErrorsAndFixes
+	 *
+	 * @throws \CoreException
+	 */
+	private function CheckRootFinalClass($sRootClass, $sRootTable, $sRootKey, &$aErrorsAndFixes)
+	{
+		$aLeafClasses = array();
+		$aAllowedValues = MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
+		foreach ($aAllowedValues as $sAllowedClass)
+		{
+			if (MetaModel::IsLeafClass($sAllowedClass))
+			{
+				$aLeafClasses[] = $sAllowedClass;
+			}
+		}
+		if (empty($aLeafClasses))
+		{
+			return;
+		}
+		$sLeafClasses = implode(",", CMDBSource::Quote($aLeafClasses, true));
+		$sRootField = MetaModel::DBGetClassField($sRootClass);
+		$sSelect = "SELECT DISTINCT `$sRootTable`.`$sRootKey` AS id";
+		$sDelete = "DELETE `$sRootTable`";
+		$sFilter = "FROM `$sRootTable` WHERE `$sRootTable`.`$sRootField` NOT IN ($sLeafClasses)";
+		$sSelWrongRecs = "$sSelect $sFilter";
+		$sFixItRequest = '';
+		foreach ($aLeafClasses as $sLeafClass)
+		{
+			$sTable = MetaModel::DBGetTable($sLeafClass);
+			$sKey = MetaModel::DBGetKey($sLeafClass);
+			$sFixItRequest .= <<<SQL
+UPDATE `$sRootTable` JOIN `$sTable` ON `$sRootTable`.`$sRootKey` =`$sTable`.`$sKey` SET `$sRootTable`.`$sRootField` = '$sLeafClass' WHERE `$sRootTable`.`$sRootField` != '$sLeafClass';
+
+SQL;
+		}
+		$sFixItRequest .= "$sDelete $sFilter;";
+		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-RootFinalClass', $sRootField, $sRootTable), $sRootClass, $aErrorsAndFixes);
+	}
+
+	/**
+	 * Check that the "finalclass" field is correct for all the classes of the hierarchy
+	 *
+	 * @param $sRootClass
 	 * @param $sClass
 	 * @param $sRootTable
 	 * @param $sRootKey
@@ -331,7 +385,7 @@ class DatabaseAnalyzer
 	 *
 	 * @throws \CoreException
 	 */
-	private function CheckFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, &$aErrorsAndFixes)
+	private function CheckIntermediateFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, &$aErrorsAndFixes)
 	{
 		$sField = MetaModel::DBGetClassField($sClass);
 		$sRootField = MetaModel::DBGetClassField($sRootClass);
@@ -345,7 +399,6 @@ SQL;
 		$sFixItRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKeyField` = `$sRootTable`.`$sRootKey`";
 		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-FinalClass', $sField, $sTable, $sRootTable), $sClass, $aErrorsAndFixes);
 	}
-
 	/**
 	 * Check that any external field is pointing to an existing object
 	 *
@@ -484,6 +537,8 @@ SQL;
 	}
 
 	/**
+	 * Check user accounts without profile
+	 *
 	 * @param $aErrorsAndFixes
 	 *
 	 * @throws \CoreException
@@ -491,7 +546,6 @@ SQL;
 	 */
 	private function CheckUsers(&$aErrorsAndFixes)
 	{
-// Check user accounts without profile
 		$sUserTable = MetaModel::DBGetTable('User');
 		$sLinkTable = MetaModel::DBGetTable('URP_UserProfile');
 		$sSelect = "SELECT DISTINCT u.id AS id, u.`login` AS value";
