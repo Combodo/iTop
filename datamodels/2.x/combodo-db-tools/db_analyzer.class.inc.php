@@ -343,7 +343,7 @@ class DatabaseAnalyzer
 		$aAllowedValues = MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
 		foreach ($aAllowedValues as $sAllowedClass)
 		{
-			if (MetaModel::IsLeafClass($sAllowedClass))
+			if (!MetaModel::IsAbstract($sAllowedClass))
 			{
 				$aLeafClasses[] = $sAllowedClass;
 			}
