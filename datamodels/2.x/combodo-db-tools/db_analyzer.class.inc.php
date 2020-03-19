@@ -121,24 +121,6 @@ class DatabaseAnalyzer
 			$aClassSelection = array_unique($aClassSelection);
 		}
 
-		// First loop for root classes (other classes are based on root classes)
-		foreach ($aClassSelection as $sClass)
-		{
-			if (!MetaModel::HasTable($sClass))
-			{
-				continue;
-			}
-
-			if (MetaModel::IsRootClass($sClass) && !MetaModel::IsStandaloneClass($sClass))
-			{
-				$sRootClass = MetaModel::GetRootClass($sClass);
-				$sRootTable = MetaModel::DBGetTable($sRootClass);
-				$sRootKey = MetaModel::DBGetKey($sRootClass);
-				// Control that the finalclass is a leaf child class
-				$this->CheckRootFinalClass($sRootClass, $sRootTable, $sRootKey, $aErrorsAndFixes);
-			}
-		}
-
 		foreach ($aClassSelection as $sClass)
 		{
 			// Check uniqueness rules
@@ -325,51 +307,6 @@ class DatabaseAnalyzer
 		$sSelWrongRecs = "$sSelect $sFilter";
 		$sFixItRequest = "$sDelete $sFilter";
 		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-OrphanRecord', $sRootTable, $sTable), $sRootClass, $aErrorsAndFixes);
-	}
-
-	/**
-	 * Check that the "finalclass" field is correct for all the classes of the hierarchy
-	 *
-	 * @param $sRootClass
-	 * @param $sRootTable
-	 * @param $sRootKey
-	 * @param $aErrorsAndFixes
-	 *
-	 * @throws \CoreException
-	 */
-	private function CheckRootFinalClass($sRootClass, $sRootTable, $sRootKey, &$aErrorsAndFixes)
-	{
-		$aLeafClasses = array();
-		$aAllowedValues = MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
-		foreach ($aAllowedValues as $sAllowedClass)
-		{
-			if (!MetaModel::IsAbstract($sAllowedClass))
-			{
-				$aLeafClasses[] = $sAllowedClass;
-			}
-		}
-		if (empty($aLeafClasses))
-		{
-			return;
-		}
-		$sLeafClasses = implode(",", CMDBSource::Quote($aLeafClasses, true));
-		$sRootField = MetaModel::DBGetClassField($sRootClass);
-		$sSelect = "SELECT DISTINCT `$sRootTable`.`$sRootKey` AS id";
-		$sDelete = "DELETE `$sRootTable`";
-		$sFilter = "FROM `$sRootTable` WHERE `$sRootTable`.`$sRootField` NOT IN ($sLeafClasses)";
-		$sSelWrongRecs = "$sSelect $sFilter";
-		$sFixItRequest = '';
-		foreach ($aLeafClasses as $sLeafClass)
-		{
-			$sTable = MetaModel::DBGetTable($sLeafClass);
-			$sKey = MetaModel::DBGetKey($sLeafClass);
-			$sFixItRequest .= <<<SQL
-UPDATE `$sRootTable` JOIN `$sTable` ON `$sRootTable`.`$sRootKey` =`$sTable`.`$sKey` SET `$sRootTable`.`$sRootField` = '$sLeafClass' WHERE `$sRootTable`.`$sRootField` != '$sLeafClass';
-
-SQL;
-		}
-		$sFixItRequest .= "$sDelete $sFilter;";
-		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-RootFinalClass', $sRootField, $sRootTable), $sRootClass, $aErrorsAndFixes);
 	}
 
 	/**
