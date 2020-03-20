@@ -125,6 +125,12 @@ abstract class MetaModel
 	private static $m_aClassToFile = array();
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
+	protected static $oContainer;
+	
+	public static function GetContainer()
+	{
+		return self::$oContainer;
+	}
 
 	/**
 	 * @return array
@@ -6249,6 +6255,8 @@ abstract class MetaModel
 	 */
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
 	{
+
+		
 		self::$m_sEnvironment = $sEnvironment;
 
 		if (!defined('MODULESROOT'))
@@ -6271,6 +6279,10 @@ abstract class MetaModel
 			{
 				return;
 			}
+
+			$kernel = new Kernel();
+			$kernel->boot();
+			self::$oContainer = $kernel->getContainer();
 		}
 
 		CMDBSource::SelectDB(self::$m_sDBName);

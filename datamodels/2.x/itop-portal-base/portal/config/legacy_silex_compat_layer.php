@@ -26,6 +26,12 @@ use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfig
 use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration\Forms;
 use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration\Lists;
 
+if (! defined('PORTAL_ID'))
+{
+	//this mean that we are currently not inside a portal!
+	return;
+}
+
 // Note: ModuleDesign service is not available yet as this script is processed before services generation,
 // that's why we have to instantiate it manually.
 $oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);

@@ -41,4 +41,5 @@ return array(
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Pelago\\' => array($vendorDir . '/pelago/emogrifier/src'),
+    'Combodo\\' => array($baseDir . '/psr4-compat/Combodo'),
 );

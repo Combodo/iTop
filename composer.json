@@ -47,11 +47,15 @@
     "classmap-authoritative": true
   },
   "autoload": {
+    "psr-4": {
+      "Combodo\\": "psr4-compat/Combodo"
+    },
     "classmap": [
       "core",
       "application",
       "sources/application",
-      "sources/Composer"
+      "sources/Composer",
+      "sources/Kernel"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
