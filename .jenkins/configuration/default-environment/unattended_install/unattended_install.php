@@ -101,7 +101,7 @@ if ($sMode == 'install')
 		$oMysqli = new mysqli($sDBServer, $sDBUser, $sDBPwd);
 		if ($oMysqli->connect_errno)
 		{
-			die("Cannot connect to the MySQL server (".$mysqli->connect_errno . ") ".$mysqli->connect_error."\nExiting");
+			die("Cannot connect to the MySQL server (".$oMysqli->connect_errno . ") ".$oMysqli->connect_error."\nExiting");
 		}
 		else
 		{
