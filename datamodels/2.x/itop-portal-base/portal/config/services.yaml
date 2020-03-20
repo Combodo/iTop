@@ -88,6 +88,9 @@ services:
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
+  Combodo\iTop\Portal\DataCollector\Logger\DebugStack:
+    public: true
+
   Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector:
     public: true
     tags:

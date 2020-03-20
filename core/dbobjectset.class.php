@@ -975,11 +975,17 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows)
 		{
+			if (self::$oContainer)
+			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->startQuery();
+			}
+
 			// Pick the row from the database
 			$aRow = CMDBSource::FetchArray($this->m_oSQLResult);
 
 			if (self::$oContainer)
 			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->stopQuery($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\QueryDataCollector')->onFetch($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
 			}
@@ -1039,11 +1045,17 @@ class DBObjectSet implements iDBObjectSetIterator
 	
 		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows)
 		{
+			if (self::$oContainer)
+			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->startQuery();
+			}
+
 			// Pick the row from the database
 			$aRow = CMDBSource::FetchArray($this->m_oSQLResult);
 
 			if (self::$oContainer)
 			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->stopQuery($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\QueryDataCollector')->onFetch($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
 			}

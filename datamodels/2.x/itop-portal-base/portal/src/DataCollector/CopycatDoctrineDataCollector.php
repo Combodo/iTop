@@ -22,6 +22,7 @@
 namespace Combodo\iTop\Portal\DataCollector;
 
 
+use Combodo\iTop\Portal\DataCollector\Logger\DebugStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -36,7 +37,7 @@ class CopycatDoctrineDataCollector extends DataCollector
 	 * @var array|Data
 	 */
 	protected $data = [
-		'queries' => [],
+		'queries' => ['main' => []],
 		'errors' => [],
 		'entities' => [],
 		'connections' => ['main'], //TODO: remove this concept that do not exists in itop
@@ -55,33 +56,61 @@ class CopycatDoctrineDataCollector extends DataCollector
 			],
 		],
 	];
+	/**
+	 * @var \Combodo\iTop\Portal\DataCollector\Logger\DebugStack
+	 */
+	private $debugStack;
 
+	public function __construct(DebugStack $debugStack)
+	{
+
+		$this->debugStack = $debugStack;
+	}
 
 	public function onFetch(\DBObjectSet $DBObjectSet)
 	{
-		$query = array(
-			'sql' => $DBObjectSet->GetFilter()->MakeSelectQuery(),
-			'OQL' => $DBObjectSet->GetFilter()->ToOQL(),
-			'count' => $DBObjectSet->Count(),
-			'params' => $DBObjectSet->GetArgs(),
-			'explainable' => true,
-			'runnable' => true,
-			'types' => [],
-			'executionMS' => 42, //TODO: compute this
-			'count' => 42, //TODO: compute this
-			'index' => 42, //TODO: compute this
+//		$query = array(
+//			'sql' => $DBObjectSet->GetFilter()->MakeSelectQuery(),
+//			'OQL' => $DBObjectSet->GetFilter()->ToOQL(),
+//			'count' => $DBObjectSet->Count(),
+//			'params' => $DBObjectSet->GetArgs(),
+//			'explainable' => true,
+//			'runnable' => true,
+//			'types' => [],
+//			'executionMS' => rand(1,42) / 100, //TODO: compute this
+//			'count' => 42, //TODO: compute this
+//			'index' => 42, //TODO: compute this
+//
+//		);
+//
+//		$this->data['queries']['main'][] = $query;
 
-		);
 
-		$this->data['queries']['main'][] = $query;
+		usleep(1);;
 	}
 
 
 
 	public function collect(Request $request, Response $response, \Exception $exception = null)
 	{
-//		$this->data['count'] = count($this->data['queries']);
-		usleep(1);;
+		$queries['main'] = [];
+		foreach ($this->debugStack->queries as $i => $query)
+		{
+			$queries['main'][$i] = array_merge(
+				[
+					'explainable' => true,
+					'runnable' => true,
+					'index' => $i,
+				],
+				$query
+			);
+		}
+
+
+		$this->data = [
+			'queries' => $queries,
+			'connections' => 'main',
+		];
 	}
 
 

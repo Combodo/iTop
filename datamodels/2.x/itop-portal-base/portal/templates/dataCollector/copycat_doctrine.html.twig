@@ -6,7 +6,7 @@
 	{% set icon %}
 		{# this is the content displayed as a panel in the toolbar #}
 		<i class="fas fa-database"></i>
-		<span class="sf-toolbar-value">{{ collector.count }} Copycat doctrine</span>
+		<span class="sf-toolbar-value">{{ collector.queryCount }} Copycat doctrine</span>
 	{% endset %}
 
 	{% set text %}
@@ -14,7 +14,7 @@
 		   the toolbar panel #}
 		<div class="sf-toolbar-info-piece">
 			<b>Copycat doctrine count</b>
-			<span>{{ collector.count }}</span>
+			<span>{{ collector.queryCount }}</span>
 		</div>
 
 
