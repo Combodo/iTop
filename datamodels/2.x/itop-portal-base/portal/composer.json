@@ -1,10 +1,6 @@
 {
 	"license": "AGPLv3",
     "config": {
-      "platform": {
-        "php": "5.6.0"
-      },
-      "sort-packages": true,
       "classmap-authoritative": true
     },
 	"autoload": {
