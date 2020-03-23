@@ -48,7 +48,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Combodo\\": "psr4-compat/Combodo"
+      "Combodo\\": "psr4-compat/Combodo",
+      "Combodo\\iTop\\": "src"
     },
     "classmap": [
       "core",

@@ -125,11 +125,23 @@ abstract class MetaModel
 	private static $m_aClassToFile = array();
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
-	protected static $oContainer;
 	
+	/** @var \Symfony\Component\HttpKernel\KernelInterface */
+	protected static $oKernel;
+
+	/**
+	 * @return \Symfony\Component\HttpKernel\KernelInterface
+	 */
+	public static function GetKernel()
+	{
+		return self::$oKernel;
+	}
+	/**
+	 * @return \Symfony\Component\DependencyInjection\ContainerInterface
+	 */
 	public static function GetContainer()
 	{
-		return self::$oContainer;
+		return self::$oKernel->getContainer();
 	}
 
 	/**
@@ -6280,9 +6292,8 @@ abstract class MetaModel
 				return;
 			}
 
-			$kernel = new Kernel();
-			$kernel->boot();
-			self::$oContainer = $kernel->getContainer();
+			self::$oKernel = new Kernel();
+			self::$oKernel->boot();
 		}
 
 		CMDBSource::SelectDB(self::$m_sDBName);
@@ -6293,6 +6304,13 @@ abstract class MetaModel
         }
 
 		ExpressionCache::Warmup();
+
+        
+        $oEvent = new Symfony\Component\EventDispatcher\Event();//TODO: in order to pass data, an actual implementation has to be used, instead of the default one currently instaciated, @see https://github.com/symfony/symfony/blob/5.0/src/Symfony/Contracts/EventDispatcher/Event.php#L19
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $oDispatcher */
+		$oDispatcher = self::GetContainer()->get('event_dispatcher');
+		$oDispatcher->dispatch('metaModel.started', $oEvent);
+		
 	}
 
 	/**

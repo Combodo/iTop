@@ -157,12 +157,13 @@ class Kernel extends BaseKernel
 		$loader->load($sExtensionsConfGlob.'/{services}'.self::CONFIG_EXTS, 'glob');
 		$loader->load($sExtensionsConfGlob.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
 
-		$SPortalBase = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/config';
-
-		$loader->load($SPortalBase.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
-		$loader->load($SPortalBase.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
-		$loader->load($SPortalBase.'/{services}'.self::CONFIG_EXTS, 'glob');
-		$loader->load($SPortalBase.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+//		TODO: the portal conf. cannot be loaded into iTop global because it require some environement to be set, that are not outside a portal
+//		$SPortalBase = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/config';
+//
+//		$loader->load($SPortalBase.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
+//		$loader->load($SPortalBase.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
+//		$loader->load($SPortalBase.'/{services}'.self::CONFIG_EXTS, 'glob');
+//		$loader->load($SPortalBase.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
 	}
 
 	protected function configureRoutes(\Symfony\Component\Routing\RouteCollectionBuilder $routes)
@@ -180,12 +181,12 @@ class Kernel extends BaseKernel
 		$routes->import($sExtensionsConfGlob.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
 		$routes->import($sExtensionsConfGlob.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
 
-
-		$SPortalBase = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/config';
-
-		$routes->import($SPortalBase.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-		$routes->import($SPortalBase.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
-		$routes->import($SPortalBase.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+//		TODO: the portal conf. cannot be loaded into iTop global because it require some environement to be set, that are not outside a portal
+//		$SPortalBase = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/config';
+//
+//		$routes->import($SPortalBase.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
+//		$routes->import($SPortalBase.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
+//		$routes->import($SPortalBase.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
 	}
 
 	// optional, to use the standard Symfony cache directory

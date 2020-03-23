@@ -64,6 +64,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         ),
         'C' => 
         array (
+            'Combodo\\iTop\\' => 13,
             'Combodo\\' => 8,
         ),
     );
@@ -208,6 +209,10 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Pelago\\' => 
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
+        ),
+        'Combodo\\iTop\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'Combodo\\' => 
         array (
@@ -386,8 +391,14 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/Extension.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/TwigHelper.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
+        'Combodo\\iTop\\Controller\\LegacyPageUiController' => __DIR__ . '/../..' . '/src/Controller/LegacyPageUiController.php',
+        'Combodo\\iTop\\DataCollector\\CopycatDoctrineDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/CopycatDoctrineDataCollector.php',
+        'Combodo\\iTop\\DataCollector\\LegacyQueryDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/LegacyQueryDataCollector.php',
+        'Combodo\\iTop\\DataCollector\\Logger\\DebugStack' => __DIR__ . '/../..' . '/src/DataCollector/Logger/DebugStack.php',
+        'Combodo\\iTop\\DataCollector\\QueryDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/QueryDataCollector.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
+        'Combodo\\iTop\\EventListener\\LegacyCodeServiceContainerInjector' => __DIR__ . '/../..' . '/src/EventListener/LegacyCodeServiceContainerInjector.php',
         'Combodo\\iTop\\TwigExtension' => __DIR__ . '/../..' . '/application/twigextension.class.inc.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'ConfigException' => __DIR__ . '/../..' . '/core/config.class.inc.php',

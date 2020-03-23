@@ -977,7 +977,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->startQuery();
+				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->startQuery();
 			}
 
 			// Pick the row from the database
@@ -985,9 +985,9 @@ class DBObjectSet implements iDBObjectSetIterator
 
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->stopQuery($this);
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\QueryDataCollector')->onFetch($this);
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
+				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->stopQuery($this);
+				self::$oContainer->get('Combodo\iTop\DataCollector\QueryDataCollector')->onFetch($this);
+				self::$oContainer->get('Combodo\iTop\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
 			}
 
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)

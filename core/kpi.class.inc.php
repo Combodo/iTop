@@ -349,7 +349,7 @@ class ExecutionKPI
 			self::$m_aStats[$sOperation][$sArguments][] = $aDetails;
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\LegacyQueryDataCollector')->ComputeStats($sOperation, $sArguments, $aDetails);
+				self::$oContainer->get('Combodo\iTop\DataCollector\LegacyQueryDataCollector')->ComputeStats($sOperation, $sArguments, $aDetails);
 			}
 		}
 
