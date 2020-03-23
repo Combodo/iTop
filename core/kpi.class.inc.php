@@ -37,6 +37,18 @@ class ExecutionKPI
 	protected $m_fStarted = null;
 	protected $m_iInitialMemory = null;
 
+	protected static $oContainer = null;
+
+	public function __construct()
+	{
+		$this->ResetCounters();
+	}
+
+	public static function setContainer($oContainer)
+	{
+		self::$oContainer = $oContainer;
+	}
+
 	static public function EnableDuration($iLevel)
 	{
 		if ($iLevel > 0)
@@ -58,8 +70,8 @@ class ExecutionKPI
 	}
 
 	/**
-	 * @param string sUser A user login or * for all users	
-	 */	
+	 * @param string sUser A user login or * for all users
+	 */
 	static public function SetAllowedUser($sUser)
 	{
 		self::$m_sAllowedUser = $sUser;
@@ -80,7 +92,7 @@ class ExecutionKPI
 	static public function GetDescription()
 	{
 		$aFeatures = array();
-		if (self::$m_bEnabled_Duration) $aFeatures[] = 'Duration'; 
+		if (self::$m_bEnabled_Duration) $aFeatures[] = 'Duration';
 		if (self::$m_bEnabled_Memory)   $aFeatures[] = 'Memory usage';
 		$sFeatures = implode(', ', $aFeatures);
 		$sFor = self::$m_sAllowedUser == '*' ? 'EVERYBODY' : "'".trim(self::$m_sAllowedUser)."'";
@@ -271,12 +283,6 @@ class ExecutionKPI
 		self::Report('<a name="end-'.md5($sExecId).'">&nbsp;</a>');
 	}
 
-
-	public function __construct()
-	{
-		$this->ResetCounters();
-	}
-
 	// Get the duration since startup, and reset the counter for the next measure
 	//
 	public function ComputeAndReport($sOperationDesc)
@@ -329,18 +335,24 @@ class ExecutionKPI
 			$fDuration = $fStopped - $this->m_fStarted;
 			if (self::$m_bBlameCaller)
 			{
-				self::$m_aStats[$sOperation][$sArguments][] = array(
+				$aDetails = array(
 					'time' => $fDuration,
 					'callers' => MyHelpers::get_callstack(1),
 				);
 			}
 			else
 			{
-				self::$m_aStats[$sOperation][$sArguments][] = array(
+				$aDetails = array(
 					'time' => $fDuration
 				);
 			}
+			self::$m_aStats[$sOperation][$sArguments][] = $aDetails;
+			if (self::$oContainer)
+			{
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\LegacyQueryDataCollector')->ComputeStats($sOperation, $sArguments, $aDetails);
+			}
 		}
+
 	}
 
 	protected function ResetCounters()

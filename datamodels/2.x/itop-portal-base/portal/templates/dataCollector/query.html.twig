@@ -1,0 +1,54 @@
+{% extends '@!WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+	{% set icon %}
+		{# this is the content displayed as a panel in the toolbar #}
+		<i class="fas fa-database"></i>
+		<span class="sf-toolbar-value">{{ collector.count }} Queries</span>
+	{% endset %}
+
+	{% set text %}
+		{# this is the content displayed when hovering the mouse over
+		   the toolbar panel #}
+		<div class="sf-toolbar-info-piece">
+			<b>Queries count</b>
+			<span>{{ collector.count }}</span>
+		</div>
+
+
+	{% endset %}
+
+	{# the 'link' value set to 'false' means that this panel doesn't
+	   show a section in the web profiler #}
+	{{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+{% endblock %}
+
+{% block menu %}
+	{# This left-hand menu appears when using the full-screen profiler. #}
+	<span class="label">
+        <span class="icon"><i class="fas fa-database"></i></span>
+        <strong>Queries</strong>
+    </span>
+{% endblock %}
+
+
+{% block panel %}
+	{# Optional, for showing the most details. #}
+	<h2>{{ collector.count }} queries</h2>
+	<table>
+		{% for query in collector.queries %}
+			<tr>
+				<td>
+					{{ loop.index }}
+				</td>
+				<td>{{ query.OQL }}</td>
+				<td>{{ query.SQL }}</td>
+				<td>{{ query.args|json_encode }}</td>
+				<td>{{ query.count }}</td>
+				<td>
+					{% if query.details.time is defined %}({{ query.details.time }}s.){% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}

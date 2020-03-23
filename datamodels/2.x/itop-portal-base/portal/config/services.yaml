@@ -81,10 +81,37 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
       calls:
         - [setContainer, ['@service_container']]
+    Combodo\iTop\Portal\EventListener\LegacyCodeServiceContainerInjector:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 600 }]
+      calls:
+        - [setContainer, ['@service_container']]
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
+  Combodo\iTop\Portal\DataCollector\Logger\DebugStack:
+    public: true
 
+  Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector:
+    public: true
+    tags:
+      - name:     data_collector
+        template: 'itop-portal-base/portal/templates/dataCollector/copycat_doctrine.html.twig'
+        id:       'app.copycat_doctrine.collector'
+        # priority: 300
+  Combodo\iTop\Portal\DataCollector\QueryDataCollector:
+    public: true
+    tags:
+      - name:     data_collector
+        template: 'itop-portal-base/portal/templates/dataCollector/query.html.twig'
+        id:       'app.query.collector'
+        # priority: 300
+  Combodo\iTop\Portal\DataCollector\LegacyQueryDataCollector:
+    public: true
+    tags:
+      - name:     data_collector
+        template: 'itop-portal-base/portal/templates/dataCollector/legacy_query.html.twig'
+        id:       'app.legacy_query.collector'
+        # priority: 300
   # Legacy code as a service: since it is not in the auto-wiring path, it needs to be explicitly declared
   ModuleDesign:
     public: true
