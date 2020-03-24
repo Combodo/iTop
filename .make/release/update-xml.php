@@ -1,16 +1,14 @@
 <?php
 
 /*******************************************************************************
- * Tool to automate version update before release
+ * Tool to automate datamodel version update in XML
  *
  * Will update version in the following files :
  *
- * * datamodels/2.x/.../module.*.php
- * * datamodels/2.x/version.xml
- * * css/css-variables.scss $version
+ * datamodels/2.x/.../datamodel.*.xml
  *
  * Usage :
- * `php .make\release\update-versions.php "2.7.0-rc"`
+ * `php .make\release\update-xml.php "1.7"`
  *
  * @since 2.7.0
  ******************************************************************************/
@@ -21,13 +19,6 @@ require_once (__DIR__.'/../../approot.inc.php');
 require_once (__DIR__.DIRECTORY_SEPARATOR.'update.classes.inc.php');
 
 
-
-/** @var \FileVersionUpdater[] $aFilesUpdaters */
-$aFilesUpdaters = array(
-	new iTopVersionFileUpdater(),
-	new CssVariablesFileUpdater(),
-	new DatamodelsModulesFiles(),
-);
 
 if (count($argv) === 1)
 {
@@ -41,7 +32,5 @@ if (empty($sVersionLabel))
 	exit(2);
 }
 
-foreach ($aFilesUpdaters as $oFileVersionUpdater)
-{
-	$oFileVersionUpdater->UpdateAllFiles($sVersionLabel);
-}
+$oFileVersionUpdater = new DatamodelsXmlFiles();
+$oFileVersionUpdater->UpdateAllFiles($sVersionLabel);
