@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
 	<portals>
 		<portal id="itop-portal" _delta="define"><!-- ID must match module_design[id] -->
 			<url>pages/exec.php?exec_module=itop-portal-base&amp;exec_page=index.php&amp;portal_id=itop-portal</url><!-- portal_id must match module_design[id] -->
