@@ -977,7 +977,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->startQuery();
+				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->startQuery($this);
 			}
 
 			// Pick the row from the database

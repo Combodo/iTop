@@ -1,42 +1,35 @@
 <?php
-$sConfigFile = 'conf/production/config-itop.php';
-$sStartPage = './pages/UI.php';
-$sSetupPage = './setup/index.php';
-
-require_once('approot.inc.php');
 
 /**
- * Check that the configuration file exists and has the appropriate access rights
- * If the file does not exist, launch the configuration wizard to create it
- */  
-if (file_exists(dirname(__FILE__).'/'.$sConfigFile))
-{
-	if (!is_readable($sConfigFile))
-	{
-		echo "<p><b>Error</b>: Unable to read the configuration file: '$sConfigFile'. Please check the access rights on this file.</p>";
-	}
-	else if (is_writable($sConfigFile))
-	{
-		require_once (APPROOT.'setup/setuputils.class.inc.php');
-		if (SetupUtils::IsInReadOnlyMode())
-		{
-			echo "<p><b>Warning</b>: the application is currently in maintenance, please wait.</p>";
-			echo "<p>Click <a href=\"$sStartPage\">here</a> to ignore this warning and continue to run iTop in read-only mode.</p>";
-		}
-		else
-		{
-			echo "<p><b>Security Warning</b>: the configuration file '$sConfigFile' should be read-only.</p>";
-			echo "<p>Please modify the access rights to this file.</p>";
-			echo "<p>Click <a href=\"$sStartPage\">here</a> to ignore this warning and continue to run iTop.</p>";
-		}
-	}
-	else
-	{
-		header("Location: $sStartPage");
-	}
-}
-else
-{
-	// Config file does not exist, need to run the setup wizard to create it
-	header("Location: $sSetupPage");
-}
+ * Copyright (C) 2010-2020 Combodo SARL
+ *
+ *   This file is part of iTop.
+ *
+ *   iTop is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   iTop is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with iTop. If not, see <http: *www.gnu.org/licenses/>
+ *
+ */
+
+require_once('approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+
+require_once(APPROOT.'/application/startup.inc.php');
+
+$oKernel = MetaModel::GetKernel();
+$oRequest = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+/** @noinspection PhpUnhandledExceptionInspection */
+$oResponse = $oKernel->handle($oRequest);
+$oResponse->send();
+$oKernel->terminate($oRequest, $oResponse);

@@ -30,9 +30,10 @@ class LegacyPageUiController extends \Symfony\Bundle\FrameworkBundle\Controller\
 	public function IndexAction()
 	{
 		ob_start();
+		chdir('pages');
 		include APPROOT.'pages/UI.php';
+		chdir('..');
 		$sReponse = ob_get_clean();
-
 		$oResponse = new Response($sReponse);
 
 		return $oResponse;

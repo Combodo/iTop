@@ -23,6 +23,8 @@
 namespace Combodo\iTop\DataCollector\Logger;
 
 
+use Symfony\Component\Stopwatch\Stopwatch;
+
 class DebugStack
 {
 	/**
@@ -44,11 +46,20 @@ class DebugStack
 
 	/** @var int */
 	public $currentQuery = 0;
+	/**
+	 * @var null|\Symfony\Component\Stopwatch\Stopwatch
+	 */
+	private $stopwatch;
+
+	public function __construct(Stopwatch $stopwatch = null)
+	{
+		$this->stopwatch = $stopwatch;
+	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function startQuery()
+	public function startQuery(\DBObjectSet $DBObjectSet)
 	{
 		if (! $this->enabled) {
 			return;
@@ -56,6 +67,10 @@ class DebugStack
 
 		$this->start                          = microtime(true);
 		$this->queries[++$this->currentQuery] = [];
+
+		if ($this->stopwatch) {
+			$this->events[spl_object_hash ($DBObjectSet)] = $this->stopwatch->start('DBObjectSet', 'DBObjectSet');
+		}
 	}
 
 	/**
@@ -76,6 +91,11 @@ class DebugStack
 			'executionMS' => microtime(true) - $this->start,
 		];
 
+		if ($this->stopwatch) {
+			$spl_object_hash = spl_object_hash($DBObjectSet);
+			$this->events[$spl_object_hash]->stop();;
+			unset($this->events[$spl_object_hash]);
+		}
 
 	}
 }
