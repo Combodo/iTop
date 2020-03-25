@@ -137,6 +137,9 @@ class Kernel extends BaseKernel
 		$confDir = APPCONF.utils::GetCurrentEnvironment();
 
 
+		$container->setParameter('itop.environment', utils::GetCurrentEnvironment());
+
+
 		$container->addResource(new FileResource($confDir.'/config-symfony-bundles.php'));
 		$container->setParameter('container.autowiring.strict_mode', true);
 		$container->setParameter('container.dumper.inline_class_loader', true);
@@ -156,6 +159,9 @@ class Kernel extends BaseKernel
 		$loader->load($sExtensionsConfGlob.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
 		$loader->load($sExtensionsConfGlob.'/{services}'.self::CONFIG_EXTS, 'glob');
 		$loader->load($sExtensionsConfGlob.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+
+
+
 
 //		TODO: the portal conf. cannot be loaded into iTop global because it require some environement to be set, that are not outside a portal
 //		$SPortalBase = APPROOT.'env-'.utils::GetCurrentEnvironment().'/itop-portal-base/portal/config';

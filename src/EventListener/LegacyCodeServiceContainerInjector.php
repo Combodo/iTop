@@ -40,6 +40,7 @@ class LegacyCodeServiceContainerInjector
 	{
 		\ExecutionKPI::setContainer($this->container);
 		\DBObjectSet::setContainer($this->container);
+		\WebPage::setContainer($this->container);
 	}
 
 }

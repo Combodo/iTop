@@ -1479,6 +1479,11 @@ EOF;
 		}
 		DBSearch::RecordQueryTrace();
 		ExecutionKPI::ReportStats();
+
+		if (self::$oContainer)
+		{
+			self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackWebPage')->stopPage($this);
+		}
 	}
 
 	/**

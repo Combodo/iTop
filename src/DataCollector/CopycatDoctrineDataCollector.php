@@ -22,7 +22,7 @@
 namespace Combodo\iTop\DataCollector;
 
 
-use Combodo\iTop\DataCollector\Logger\DebugStack;
+use Combodo\iTop\DataCollector\Logger\DebugStackDBObjectSet;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -57,11 +57,11 @@ class CopycatDoctrineDataCollector extends DataCollector
 		],
 	];
 	/**
-	 * @var \Combodo\Portal\DataCollector\Logger\DebugStack
+	 * @var \Combodo\Portal\DataCollector\Logger\DebugStackDBObjectSet
 	 */
 	private $debugStack;
 
-	public function __construct(DebugStack $debugStack)
+	public function __construct(DebugStackDBObjectSet $debugStack)
 	{
 
 		$this->debugStack = $debugStack;

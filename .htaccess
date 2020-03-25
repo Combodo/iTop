@@ -34,5 +34,7 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_URI} !pages/UI\.php [NC]
 RewriteRule .? - [L]
 
+RewriteRule ^/?setup/?$ %{ENV:BASE}/setup/index.php [L,R=301]
+
 # Rewrite all other queries to the front controller.
 RewriteRule .? %{ENV:BASE}/index.php [L]

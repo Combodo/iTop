@@ -124,6 +124,13 @@ class WebPage implements Page
 	protected $bHasCollapsibleSection;
 	protected $bAddJSDict;
 
+	protected static $oContainer = null;
+
+
+	public static function setContainer($oContainer)
+	{
+		self::$oContainer = $oContainer;
+	}
 	/**
 	 * WebPage constructor.
 	 *
@@ -132,6 +139,12 @@ class WebPage implements Page
 	 */
 	public function __construct($s_title, $bPrintable = false)
 	{
+
+		if (self::$oContainer)
+		{
+			self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackWebPage')->startPage($this, $s_title);
+		}
+
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
@@ -826,6 +839,11 @@ class WebPage implements Page
 		if (class_exists('ExecutionKPI'))
 		{
 			ExecutionKPI::ReportStats();
+		}
+
+		if (self::$oContainer)
+		{
+			self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackWebPage')->stopPage($this);
 		}
 	}
 

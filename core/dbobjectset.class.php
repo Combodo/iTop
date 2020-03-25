@@ -977,7 +977,8 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->startQuery($this);
+				$sCounter = self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackDBObjectSet')->getUniqueCounter();
+				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackDBObjectSet')->startQuery($sCounter, $this);
 			}
 
 			// Pick the row from the database
@@ -985,7 +986,7 @@ class DBObjectSet implements iDBObjectSetIterator
 
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStack')->stopQuery($this);
+				self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackDBObjectSet')->stopQuery($sCounter, $this);
 				self::$oContainer->get('Combodo\iTop\DataCollector\QueryDataCollector')->onFetch($this);
 				self::$oContainer->get('Combodo\iTop\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
 			}
@@ -1023,6 +1024,8 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $oRetObj;
 	}
 
+
+
     /**
      * Fetch the whole row of objects (if several classes have been specified in the query) and move the cursor to the next position
      *
@@ -1047,7 +1050,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		{
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->startQuery();
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStackDBObjectSet')->startQuery();
 			}
 
 			// Pick the row from the database
@@ -1055,7 +1058,7 @@ class DBObjectSet implements iDBObjectSetIterator
 
 			if (self::$oContainer)
 			{
-				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStack')->stopQuery($this);
+				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\Logger\DebugStackDBObjectSet')->stopQuery($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\QueryDataCollector')->onFetch($this);
 				self::$oContainer->get('Combodo\iTop\Portal\DataCollector\CopycatDoctrineDataCollector')->onFetch($this);
 			}

@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+
+
+/**
+ * Copyright (C) 2010-2020 Combodo SARL
+ *
+ *   This file is part of iTop.
+ *
+ *   iTop is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   iTop is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with iTop. If not, see <http: *www.gnu.org/licenses/>
+ *
+ */
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
+
+require_once('approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+
+require_once(APPROOT.'/application/startup.inc.php');
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
+
+
+$oKernel = MetaModel::GetKernel();
+$application = new Application($oKernel);
+
+set_time_limit(0);
+
+$application->run($input);

@@ -25,14 +25,14 @@ namespace Combodo\iTop\DataCollector\Logger;
 
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class DebugStack
+class DebugStackWebPage
 {
 	/**
-	 * Executed SQL queries.
+	 * generated Pages .
 	 *
 	 * @var mixed[][]
 	 */
-	public $queries = [];
+	public $aWebPage = [];
 
 	/**
 	 * If Debug Stack is enabled (log queries) or not.
@@ -59,40 +59,40 @@ class DebugStack
 	/**
 	 * {@inheritdoc}
 	 */
-	public function startQuery(\DBObjectSet $DBObjectSet)
+	public function startPage(\WebPage $page, $sTitle)
 	{
 		if (! $this->enabled) {
 			return;
 		}
 
 		$this->start                          = microtime(true);
-		$this->queries[++$this->currentQuery] = [];
+		$this->aWebPage[++$this->currentQuery] = [];
 
 		if ($this->stopwatch) {
-			$this->events[spl_object_hash ($DBObjectSet)] = $this->stopwatch->start('DBObjectSet', 'DBObjectSet');
+			$spl_object_hash = spl_object_hash($page);
+			$this->events[$spl_object_hash] = $this->stopwatch->start(get_class($page) . ': '.$sTitle, 'WebPage');
 		}
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function stopQuery(\DBObjectSet $DBObjectSet)
+	public function stopPage(\WebPage $page)
 	{
 		if (! $this->enabled) {
 			return;
 		}
 
-		$this->queries[$this->currentQuery] = [
-			'sql' => $DBObjectSet->GetFilter()->MakeSelectQuery(),
-			'OQL' => $DBObjectSet->GetFilter()->ToOQL(),
-			'count' => $DBObjectSet->Count(),
-			'params' => $DBObjectSet->GetArgs(),
-			'types' => array_map('gettype', $DBObjectSet->GetArgs()),
-			'executionMS' => microtime(true) - $this->start,
+		$this->aWebPage[$this->currentQuery] = [
+			'outputFormat' => $page->GetOutputFormat(),
+			'transactionId' => $page->GetTransactionId(),
+
+			'isPdf' => $page->is_pdf(),
+			'isPrintableVersion' => $page->IsPrintableVersion(),
 		];
 
 		if ($this->stopwatch) {
-			$spl_object_hash = spl_object_hash($DBObjectSet);
+			$spl_object_hash = spl_object_hash($page);
 			$this->events[$spl_object_hash]->stop();;
 			unset($this->events[$spl_object_hash]);
 		}
