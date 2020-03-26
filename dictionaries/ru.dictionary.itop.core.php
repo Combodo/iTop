@@ -195,7 +195,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
