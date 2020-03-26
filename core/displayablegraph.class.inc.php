@@ -111,7 +111,7 @@ class DisplayableNode extends GraphNode
 		return $aNode;
 	}
 	
-	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
+	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$Alpha = 1.0;
 		$oPdf->SetFillColor(200, 200, 200);
@@ -161,8 +161,8 @@ class DisplayableNode extends GraphNode
 				$idx++;
 			}
 		}
-				
-		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
+
+		$oPdf->SetFontParams('', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$height = $oPdf->GetStringHeight(1000, $this->GetProperty('label'));
 		$oPdf->setAlpha(0.6 * $Alpha);
@@ -265,7 +265,7 @@ class DisplayableNode extends GraphNode
 	/**
 	 * Retrieves the list of neighbour nodes, in the given direction: 'up' or 'down'
 	 * @param bool $bDirectionDown
-	 * @return multitype:NULL
+	 * @return mixed|NULL
 	 */
 	protected function GetNextNodes($bDirectionDown = true)
 	{
@@ -532,7 +532,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 		return $aNode;
 	}
 
-	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
+	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$oPdf->SetAlpha(1);
 		if($this->GetProperty('is_reached_count') > $this->GetProperty('threshold'))
@@ -547,9 +547,9 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, 16*$fScale, 0, 360, 'DF');
 
 		$oPdf->SetTextColor(255, 255, 255);
-		$oPdf->SetFont('dejavusans', '', 28 * $fScale, '', true);
+		$oPdf->SetFontParams('', 28 * $fScale, '', true);
 		$sLabel  = (string)$this->GetProperty('label');
-		$width = $oPdf->GetStringWidth($sLabel, 'dejavusans', 'B', 24*$fScale);
+		$width = $oPdf->GetStringWidth($sLabel, iTopPDF::GetPdfFont(), 'B', 24 * $fScale);
 		$height = $oPdf->GetStringHeight(1000, $sLabel);
 		$xPos = (float)$this->x*$fScale - $width/2;
 		$yPos = (float)$this->y*$fScale - $height/2;
@@ -764,7 +764,7 @@ class DisplayableGroupNode extends DisplayableNode
 		return $aNode;
 	}
 	
-	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
+	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
@@ -794,7 +794,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$oPdf->Image($sIconPath, ($this->x - 17)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x + 1)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x -8)*$fScale, ($this->y +1)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
+		$oPdf->SetFontParams('', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$oPdf->SetTextColor(0, 0, 0);
 		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 25)*$fScale, $this->GetProperty('label'));
@@ -1285,7 +1285,7 @@ class DisplayableGraph extends SimpleGraph
 	 * @param hash $aContextDefs
 	 * @return hash An array ('xmin' => , 'xmax' => ,'ymin' => , 'ymax' => ) of the remaining available area to paint the graph
 	 */
-	protected function RenderKey(TCPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax, $aContextDefs)
+	protected function RenderKey(iTopPDF $oPdf, $sComments, $xMin, $yMin, $xMax, $yMax, $aContextDefs)
 	{
 		$fFontSize = 7; // in mm
 		$fIconSize = 6; // in mm
@@ -1296,7 +1296,7 @@ class DisplayableGraph extends SimpleGraph
 		$aIcons = array();
 		$aContexts = array();
 		$aContextIcons = array();
-		$oPdf->SetFont('dejavusans', '', $fFontSize, '', true);
+		$oPdf->SetFontParams('', $fFontSize, '', true);
 		foreach($oIterator as $sId => $oNode)
 		{
 			if ($sClass = $oNode->GetObjectClass())
@@ -1418,16 +1418,24 @@ class DisplayableGraph extends SimpleGraph
 		}
 		return $aContextDefs;
 	}
-	
+
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
+	 *
 	 * @param WebPage $oP
-	 * @param hash $aResults
+	 * @param array $aResults
 	 * @param string $sRelation
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
+	 * @param string $sObjClass
+	 * @param int $iObjKey
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array(), $sObjClass = null, $iObjKey = null, $sContextKey, $aContextParams = array())
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array())
 	{	
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
@@ -1446,7 +1454,7 @@ class DisplayableGraph extends SimpleGraph
 <<<EOF
  <div id="ds_flash" class="search_box">
 	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fa fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
 	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
 		);

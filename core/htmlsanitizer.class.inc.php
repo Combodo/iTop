@@ -79,10 +79,13 @@ abstract class HTMLSanitizer
 
 /**
  * Dummy HTMLSanitizer which does nothing at all!
+ *
  * Can be used if HTML Sanitization is not important
  * (for example when importing "safe" data during an on-boarding)
  * and performance is at stake
  *
+ * **Warning** : this won't filter HTML inserted in iTop at all, so this is a great security issue !
+ * Also, the InlineImage objects processing won't be called.
  */
 class HTMLNullSanitizer extends HTMLSanitizer
 {
@@ -180,7 +183,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'h4' => array('style'),
 		'nav' => array('style'),
 		'section' => array('style'),
-		'code' => array('style'),
+		'code' => array('style', 'class'),
 		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
 		'thead' => array('style'),
 		'tbody' => array('style'),
@@ -203,6 +206,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'q' => array(),
 		'hr' => array('style'),
 		'pre' => array(),
+		'center' => array(),
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -237,6 +241,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
 		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
 		if (!array_key_exists('href', self::$aAttrsWhiteList))
@@ -268,6 +274,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
 		// therefore we have to do the transformation upfront
 		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
+		// Replace badly encoded non breaking space
+		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		

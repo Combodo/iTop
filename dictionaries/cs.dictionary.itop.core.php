@@ -205,6 +205,13 @@ Operátory:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -537,6 +544,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Trigger/Attribute:action_list+' => 'Akce prováděné, když je aktivován trigger',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

@@ -1,83 +1,74 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
+/** Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
- * This file is part of iTop.
+ * @author      Vladimir Kunin <v.b.kunin@gmail.com>
+ * @link        http://community.itop-itsm.ru  iTop Russian Community
+ * @link        https://github.com/itop-itsm-ru/itop-rus
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
 // Database inconsistencies
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools~~',
-	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => 'Database Maintenance Tools~~',
-	'DBTools:ErrorsFound' => 'Errors Found~~',
-	'DBTools:Error' => 'Error~~',
-	'DBTools:Count' => 'Count~~',
-	'DBTools:SQLquery' => 'SQL query~~',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL result~~',
-	'DBTools:NoError' => 'The database is OK~~',
-	'DBTools:HideIds' => 'Error List~~',
-	'DBTools:ShowIds' => 'Detailed view~~',
-	'DBTools:ShowReport' => 'Report~~',
-	'DBTools:IntegrityCheck' => 'Integrity check~~',
+	'Menu:DBToolsMenu' => 'Инструменты БД',
+	'DBTools:Class' => 'Класс',
+	'DBTools:Title' => 'Инструменты обслуживания базы данных',
+	'DBTools:ErrorsFound' => 'Найденные ошибки',
+	'DBTools:Error' => 'Ошибка',
+	'DBTools:Count' => 'Количество',
+	'DBTools:SQLquery' => 'SQL-запрос',
+	'DBTools:FixitSQLquery' => 'SQL-запрос для исправления базы данных (указание)',
+	'DBTools:SQLresult' => 'Результат SQL',
+	'DBTools:NoError' => 'База данных в порядке',
+	'DBTools:HideIds' => 'Список ошибок',
+	'DBTools:ShowIds' => 'Подробный вид',
+	'DBTools:ShowReport' => 'Отчёт',
+	'DBTools:IntegrityCheck' => 'Проверка целостности',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
 
-	'DBTools:Analyze' => 'Analyze~~',
-	'DBTools:Details' => 'Show Details~~',
-	'DBTools:ShowAll' => 'Show All Errors~~',
+	'DBTools:Analyze' => 'Анализировать',
+	'DBTools:Details' => 'Показать подробности',
+	'DBTools:ShowAll' => 'Показать все ошибки',
 
-	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
+	'DBTools:Inconsistencies' => 'Несоответствия базы данных',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all~~',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Сиротская запись в `%1$s`, она должна иметь свой аналог в таблице `%2$s`',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Недопустимый внешний ключ %1$s (столбец: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Отсутствует внешний ключ %1$s (столбец: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-InvalidValue' => 'Недопустимое значение для %1$s (столбец: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Некоторые учетные записи пользователей не имеют профилей',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 ));
 
 // Database Info
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'DBTools:DatabaseInfo' => 'Database Information~~',
-	'DBTools:Base' => 'Base~~',
-	'DBTools:Size' => 'Size~~',
+	'DBTools:DatabaseInfo' => 'Информация о базе данных',
+	'DBTools:Base' => 'База',
+	'DBTools:Size' => 'Размер',
 ));
 
 // Lost attachments
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'DBTools:LostAttachments' => 'Lost attachments~~',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => 'Потерянные вложения',
+	'DBTools:LostAttachments:Disclaimer' => 'Здесь вы можете найти потерянные или ошибочно перемещённые вложения в вашей базе данных. Это не инструмент восстановления данных, он не восстанавливает удаленные данные.',
 
-	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
-	'DBTools:LostAttachments:Button:Restore' => 'Restore~~',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.~~',
-	'DBTools:LostAttachments:Button:Busy' => 'Please wait...~~',
+	'DBTools:LostAttachments:Button:Analyze' => 'Анализировать',
+	'DBTools:LostAttachments:Button:Restore' => 'Восстановить',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Это действие не может быть отменено. Пожалуйста, подтвердите, что вы хотите восстановить выбранные файлы.',
+	'DBTools:LostAttachments:Button:Busy' => 'Пожалуйста, подождите...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => 'Для начала просканируйте базу данных на наличие потерянных вложений.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Результат анализа:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Отлично! Похоже, все в порядке.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Некоторые вложения (%1$d), похоже, находятся не в том месте. Просмотрите следующий список и отметьте те, которые вы хотите переместить.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Файл',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Текущее местоположение',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Переместить в...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Результат восстановления:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d вложения были восстановлены.',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Хранится в качестве "InlineImage"',
+	'DBTools:LostAttachments:History' => 'Вложение "%1$s" восстановлено с помощью инструментов обслуживания БД'
 ));

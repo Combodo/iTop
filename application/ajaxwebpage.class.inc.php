@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Simple web page with no includes, header or fancy formatting, useful to
- * generate HTML fragments when called by an AJAX method
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT."/application/webpage.class.inc.php");
@@ -30,7 +23,7 @@ class ajax_page extends WebPage implements iTabbedPage
 {
     /**
      * Jquery style ready script
-     * @var Hash     
+     * @var array
      */	  
 	protected $m_sReadyScript;
 	protected $m_oTabs;
@@ -57,56 +50,67 @@ class ajax_page extends WebPage implements iTabbedPage
 		utils::InitArchiveMode();
     }
 
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
-	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function AddToTab($sTabContainer, $sTabCode, $sHtml)
 	{
-		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
+		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabCode, $sHtml));
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
 		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
-	public function SetCurrentTab($sTabLabel = '')
-	{
-		return $this->m_oTabs->SetCurrentTab($sTabLabel);
-	}
-	
 	/**
-	 * Add a tab which content will be loaded asynchronously via the supplied URL
-	 * 
-	 * Limitations:
-	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
-	 * Static content cannot be added inside such tabs.
-	 * 
-	 * @param string $sTabLabel The (localised) label of the tab
-	 * @param string $sUrl The URL to load (on the same server)
-	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
-	 * @since 2.0.3
+	 * @inheritDoc
 	 */
-	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
 	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
+		return $this->m_oTabs->SetCurrentTab($sTabCode, $sTabTitle);
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
+	{
+		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function GetCurrentTab()
 	{
 		return $this->m_oTabs->GetCurrentTab();
 	}
 
-	public function RemoveTab($sTabLabel, $sTabContainer = null)
+	/**
+	 * @inheritDoc
+	 */
+	public function RemoveTab($sTabCode, $sTabContainer = null)
 	{
-		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
+		$this->m_oTabs->RemoveTab($sTabCode, $sTabContainer);
 	}
 
 	/**
-	 * Finds the tab whose title matches a given pattern
-	 * @return mixed The name of the tab as a string or false if not found
+	 * @inheritDoc
 	 */
 	public function FindTab($sPattern, $sTabContainer = null)
 	{
@@ -119,21 +123,23 @@ class ajax_page extends WebPage implements iTabbedPage
 	 * that we are using this is not supported... TO DO upgrade
 	 * the whole jquery bundle...
 	 */
-	public function SelectTab($sTabContainer, $sTabLabel)
+	public function SelectTab($sTabContainer, $sTabCode)
 	{
-		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
+		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
-	
+
+	/**
+	 * @param string $sHtml
+	 */
 	public function AddToMenu($sHtml)
 	{
 		$this->m_sMenu .= $sHtml;
 	}
 
-    /**
-     * Echoes the content of the whole page
-     * @return void
-     */	  
-    public function output()
+	/**
+	 * @inheritDoc
+	 */
+	public function output()
     {
     	if (!empty($this->sContentType))
     	{
@@ -214,8 +220,11 @@ PrepareWidgets();
 EOF
 			);
 		}
-        $s_captured_output = $this->ob_get_clean_safe();
-		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
+	    $this->outputCollapsibleSectionInit();
+
+	    $oKPI = new ExecutionKPI();
+	    $s_captured_output = $this->ob_get_clean_safe();
+	    if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
         	// inline content != attachment && html => filter all scripts for malicious XSS scripts
         	echo self::FilterXSS($this->s_content);
@@ -285,10 +294,16 @@ EOF
         	echo self::FilterXSS($s_captured_output);
         }
 
+	    $oKPI->ComputeAndReport('Echoing');
+
         if (class_exists('DBSearch'))
         {
             DBSearch::RecordQueryTrace();
         }
+	    if (class_exists('ExecutionKPI'))
+	    {
+		    ExecutionKPI::ReportStats();
+	    }
     }
 
     /**
@@ -301,7 +316,11 @@ EOF
     {
 	}
 
-    public function add($sHtml)
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function add($sHtml)
     {
         if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
         {
@@ -314,10 +333,9 @@ EOF
     }
 
 	/**
-	 * Records the current state of the 'html' part of the page output
-	 * @return mixed The current state of the 'html' output
-	 */    
-    public function start_capture()
+	 * @inheritDoc
+	 */
+	public function start_capture()
     {
     	$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
 		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
@@ -333,13 +351,10 @@ EOF
 		}
     }
 
-    /**
-     * Returns the part of the html output that occurred since the call to start_capture
-     * and removes this part from the current html output
-     * @param $offset mixed The value returned by start_capture
-     * @return string The part of the html output that was added since the call to start_capture
-     */    
-    public function end_capture($offset)
+	/**
+	 * @inheritDoc
+	 */
+	public function end_capture($offset)
     {
 		if (is_array($offset))
 		{
@@ -360,11 +375,9 @@ EOF
     }
 
 	/**
-	 * Add any text or HTML fragment (identified by an ID) at the end of the body of the page
-	 * This is useful to add hidden content, DIVs or FORMs that should not
-	 * be embedded into each other.	 	 
+	 * @inheritDoc
 	 */
-    public function add_at_the_end($s_html, $sId = '')
+	public function add_at_the_end($s_html, $sId = '')
     {
     	if ($sId != '')
     	{
@@ -372,27 +385,27 @@ EOF
     	}
         $this->s_deferred_content .= $s_html;
     }
-	
+
 	/**
-	 * Adds a script to be executed when the DOM is ready (typical JQuery use)
-	 * NOT implemented in this version of the class.
-	 * @return void	 
-	 */	 	 	
+	 * @inheritDoc
+	 */
 	public function add_ready_script($sScript)
 	{
 		$this->m_sReadyScript .= $sScript."\n";
 	}
-	
+
 	/**
-	 * Cannot be called in this context, since Ajax pages do not share
-	 * any context with the calling page !!
+	 * @inheritDoc
 	 */
 	public function GetUniqueId()
 	{
 		assert(false);
 		return 0;
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);

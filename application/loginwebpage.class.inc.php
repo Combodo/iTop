@@ -24,8 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT.'/application/portaldispatcher.class.inc.php');
 /**
  * Web page used for displaying the login form
  */
@@ -43,8 +41,26 @@ class LoginWebPage extends NiceWebPage
 	const EXIT_CODE_MUSTBEADMIN = 4;
 	const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
 	const EXIT_CODE_NOTAUTHORIZED = 6;
-	
+
+	// Login FSM States
+	const LOGIN_STATE_START = 'start';                          // Entry state
+	const LOGIN_STATE_MODE_DETECTION = 'login mode detection';  // Detect which login plugin to use
+	const LOGIN_STATE_READ_CREDENTIALS = 'read credentials';    // Read the credentials
+	const LOGIN_STATE_CHECK_CREDENTIALS = 'check credentials';  // Check if the credentials are valid
+	const LOGIN_STATE_CREDENTIALS_OK = 'credentials ok';        // User provisioning
+	const LOGIN_STATE_USER_OK = 'user ok';                      // Additional check (2FA)
+	const LOGIN_STATE_CONNECTED = 'connected';                  // User connected
+	const LOGIN_STATE_SET_ERROR = 'prepare for error';	        // Internal state to trigger ERROR state
+	const LOGIN_STATE_ERROR = 'error';                          // An error occurred, next state will be NONE
+
+	// Login FSM Returns
+	const LOGIN_FSM_RETURN = 0;           // End the FSM OK (connected)
+	const LOGIN_FSM_ERROR = 1;        // Error signaled
+	const LOGIN_FSM_CONTINUE = 2;     // Continue FSM
+
 	protected static $sHandlerClass = __class__;
+	private static $iOnExit;
+
 	public static function RegisterHandler($sClass)
 	{
 		self::$sHandlerClass = $sClass;
@@ -75,6 +91,8 @@ class LoginWebPage extends NiceWebPage
 	public function SetStyleSheet()
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
@@ -82,23 +100,11 @@ class LoginWebPage extends NiceWebPage
 		self::$m_sLoginFailedMessage = $sMessage;
 	}
 
-	public function EnableResetPassword()
-	{
-		return MetaModel::GetConfig()->Get('forgot_password');
-	}
-
 	public function DisplayLoginHeader($bMainAppLogo = false)
 	{
-		if ($bMainAppLogo)
-		{
-			$sLogo = 'itop-logo.png';
-			$sBrandingLogo = 'main-logo.png';
-		}
-		else
-		{
-			$sLogo = 'itop-logo-external.png';
-			$sBrandingLogo = 'login-logo.png';
-		}
+		$sLogo = 'itop-logo-external.png';
+		$sBrandingLogo = 'login-logo.png';
+
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?t='.utils::GetCacheBusterTimestamp();
@@ -106,124 +112,72 @@ class LoginWebPage extends NiceWebPage
 		{
 			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?t='.utils::GetCacheBusterTimestamp();
 		}
-		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES,
+				self::PAGES_CHARSET)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}
 
-	public function DisplayLoginForm($sLoginType, $bFailedLogin = false)
+	public function DisplayLoginForm($bFailedLogin = false)
 	{
-		switch($sLoginType)
+		$oTwigContext = new LoginTwigRenderer();
+		$aPostedVars = array_merge(array('login_mode', 'loginop'), $oTwigContext->GetPostedVars());
+
+		$sMessage = Dict::S('UI:Login:IdentifyYourself');
+
+		// Error message
+		if ($bFailedLogin)
 		{
-			case 'cas':
-			utils::InitCASClient();					
-			// force CAS authentication
-			phpCAS::forceAuthentication(); // Will redirect the user and exit since the user is not yet authenticated
-			break;
-			
-			case 'basic':
-			case 'url':
-			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-			$this->add_header('HTTP/1.0 401 Unauthorized');
-			$this->add_header('Content-type: text/html; charset=iso-8859-1');
-			// Note: displayed when the user will click on Cancel
-			$this->add('<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>');
-			break;
-			
-			case 'external':
-			case 'form':
-			default: // In case the settings get messed up...
-			$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
-			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
-	
-			$this->DisplayLoginHeader();
-			$this->add("<div id=\"login\">\n");
-			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
-			if ($bFailedLogin)
+			if (self::$m_sLoginFailedMessage != '')
 			{
-				if (self::$m_sLoginFailedMessage != '')
-				{
-					$this->add("<p class=\"hilite\">".self::$m_sLoginFailedMessage."</p>\n");
-				}
-				else
-				{
-					$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectLoginPassword')."</p>\n");
-				}
+				$sMessage = self::$m_sLoginFailedMessage;
 			}
 			else
 			{
-				$this->add("<p>".Dict::S('UI:Login:IdentifyYourself')."</p>\n");
+				$sMessage = Dict::S('UI:Login:IncorrectLoginPassword');
 			}
-			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$sForgotPwd = $this->EnableResetPassword() ? $this->ForgotPwdLink() : '';
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td style=\"text-align:left\"><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td style=\"text-align:left\"><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"".htmlentities($sAuthPwd, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></span></td></tr>\n");
-			if (strlen($sForgotPwd) > 0)
-			{
-				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">$sForgotPwd</td></tr>\n");
-			}
-			$this->add("</table>\n");
-			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
-
-			$this->add_ready_script('$("#user").focus();');
-						
-			// Keep the OTHER parameters posted
-			foreach($_POST as $sPostedKey => $postedValue)
-			{
-				if (!in_array($sPostedKey, array('auth_user', 'auth_pwd')))
-				{
-					if (is_array($postedValue))
-					{
-						foreach($postedValue as $sKey => $sValue)
-						{
-							$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."[".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n");
-						}
-					}
-					else
-					{
-						$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."\" value=\"".htmlentities($postedValue, ENT_QUOTES, 'UTF-8')."\" />\n");
-					}
-				}	
-			}
-			
-			$this->add("</form>\n");
-			$this->add(Dict::S('UI:Login:About'));
-			$this->add("</div>\n");
-			break;
 		}
-	}
 
-	/**
-	 * Return '' to disable this feature	
-	 */	
-	public function ForgotPwdLink()
-	{
-		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
-		$sHtml = "<a href=\"$sUrl\" target=\"_blank\">".Dict::S('UI:Login:ForgotPwd')."</a>";
-		return $sHtml;
+		// Keep the OTHER parameters posted
+		$aPreviousPostedVars = array();
+		foreach($_POST as $sPostedKey => $postedValue)
+		{
+			if (!in_array($sPostedKey, $aPostedVars))
+			{
+				if (is_array($postedValue))
+				{
+					foreach($postedValue as $sKey => $sValue)
+					{
+						$sName = "{$sPostedKey}[{$sKey}]";
+						$aPreviousPostedVars[$sName] = $sValue;
+					}
+				}
+				else
+				{
+					$aPreviousPostedVars[$sPostedKey] = $postedValue;
+				}
+			}
+		}
+
+		$aVars = array(
+			'bFailedLogin' => $bFailedLogin,
+			'sMessage' => $sMessage,
+			'aPreviousPostedVars' => $aPreviousPostedVars,
+		);
+		$aVars = array_merge($aVars, $oTwigContext->GetDefaultVars());
+
+		$oTwigContext->Render($this, 'login.html.twig', $aVars);
 	}
 
 	public function DisplayForgotPwdForm($bFailedToReset = false, $sFailureReason = null)
 	{
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
-		$this->add("<p>".Dict::S('UI:Login:ForgotPwdForm+')."</p>\n");
-		if ($bFailedToReset)
-		{
-			$this->add("<p class=\"hilite\">".Dict::Format('UI:Login:ResetPwdFailed', htmlentities($sFailureReason, ENT_QUOTES, 'UTF-8'))."</p>\n");
-		}
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
-		$this->add("<form method=\"post\">\n");
-		$this->add("<table>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Login:ResetPassword')."\" /></span></td></tr>\n");
-		$this->add("</table>\n");
-		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"forgot_pwd_go\" />\n");
-		$this->add("</form>\n");
-		$this->add("</div>\n");
 
-		$this->add_ready_script('$("#user").focus();');
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['bFailedToReset'] = $bFailedToReset;
+		$aVars['sFailureReason'] = $sFailureReason;
+
+		$oTwigContext->Render($this, 'forgotpwdform.html.twig', $aVars);
 	}
 
 	protected function ForgotPwdGo()
@@ -235,62 +189,56 @@ class LoginWebPage extends NiceWebPage
 			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
             /** @var UserInternal $oUser */
             $oUser = UserRights::GetUserObject();
-			if ($oUser == null)
+
+			if ($oUser != null)
 			{
-				throw new Exception(Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser));
-			}
-			if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
-			}
-			if (!$oUser->CanChangePassword())
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
-			}
-			
-			$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-			if ($sTo == '')
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+				}
+				if (!$oUser->CanChangePassword())
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+				}
+
+				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+				if ($sTo == '')
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				}
+
+				// This token allows the user to change the password without knowing the previous one
+				$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+				$oUser->Set('reset_pwd_token', $sToken);
+				CMDBObject::SetTrackInfo('Reset password');
+				$oUser->AllowWrite(true);
+				$oUser->DBUpdate();
+
+				$oEmail = new Email();
+				$oEmail->SetRecipientTO($sTo);
+				$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+				$oEmail->SetRecipientFrom($sFrom);
+				$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
+				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
+				$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
+				$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
+				switch ($iRes)
+				{
+					//case EMAIL_SEND_PENDING:
+					case EMAIL_SEND_OK:
+						break;
+
+					case EMAIL_SEND_ERROR:
+					default:
+						IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
+						throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+				}
 			}
 
-			// This token allows the user to change the password without knowing the previous one
-			$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
-			$oUser->Set('reset_pwd_token', $sToken);
-			CMDBObject::SetTrackInfo('Reset password');
-			$oUser->AllowWrite(true);
-			$oUser->DBUpdate();
 
-			$oEmail = new Email();
-			$oEmail->SetRecipientTO($sTo);
-			$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
-			$oEmail->SetRecipientFrom($sFrom);
-			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject'));
-			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
-			$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl));
-			$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
-			switch ($iRes)
-			{
-				//case EMAIL_SEND_PENDING:
-				case EMAIL_SEND_OK:
-					break;
-		
-				case EMAIL_SEND_ERROR:
-				default:
-					IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
-					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
-			}
-
-			$this->DisplayLoginHeader();
-			$this->add("<div id=\"login\">\n");
-			$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
-			$this->add("<p>".Dict::S('UI:ResetPwd-EmailSent')."</p>");
-			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Done')."\" /></td></tr>\n");
-			$this->add("</table>\n");
-			$this->add("</form>\n");
-			$this->add("</div\n");
+			$oTwigContext = new LoginTwigRenderer();
+			$aVars = $oTwigContext->GetDefaultVars();
+			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 		}
 		catch(Exception $e)
 		{
@@ -298,150 +246,118 @@ class LoginWebPage extends NiceWebPage
 		}
 	}
 
-	public function DisplayResetPwdForm()
+	public function DisplayResetPwdForm($sErrorMessage = null)
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 
-		$sAuthUserForDisplay = utils::HtmlEntities($sAuthUser);
-		$sTokenForDisplay = utils::HtmlEntities($sToken);
-
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
-		if ($oUser == null)
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['sToken'] = $sToken;
+		$aVars['sErrorMessage'] = $sErrorMessage;
+
+		if (($oUser == null))
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUserForDisplay)."</p>\n");
+			$aVars['bNoUser'] = true;
 		}
 		else
 		{
+			$aVars['bNoUser'] = false;
+			$aVars['sUserName'] = $oUser->GetFriendlyName();
 			$oEncryptedToken = $oUser->Get('reset_pwd_token');
-			
+
 			if (!$oEncryptedToken->CheckPassword($sToken))
 			{
-				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+				$aVars['bBadToken'] = true;
 			}
 			else
 			{
-				$sUserNameForDisplay = utils::HtmlEntities($oUser->GetFriendlyName());
-				$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $sUserNameForDisplay)."</p>\n");
-	
-				$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
-				$this->add_script(
-<<<EOF
-function DoCheckPwd()
-{
-	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
-	{
-		alert('$sInconsistenPwdMsg');
-		return false;
-	}
-	return true;
-}
-EOF
-				);
-				$this->add("<form method=\"post\">\n");
-				$this->add("<table>\n");
-				$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-				$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
-				$this->add("</table>\n");
-				$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
-				$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".$sAuthUserForDisplay."\" />\n");
-				$this->add("<input type=\"hidden\" name=\"token\" value=\"".$sTokenForDisplay."\" />\n");
-				$this->add("</form>\n");
-				$this->add("</div\n");
+				$aVars['bBadToken'] = false;
 			}
 		}
+
+		$oTwigContext->Render($this, 'resetpwdform.html.twig', $aVars);
 	}
 
 	public function DoResetPassword()
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
-		$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
+		$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
 
 		UserRights::Login($sAuthUser); // Set the user's language
+		/** @var \UserLocal $oUser */
 		$oUser = UserRights::GetUserObject();
 
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
-		if ($oUser == null)
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['sToken'] = $sToken;
+		if (($oUser == null))
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
+			$aVars['bNoUser'] = true;
 		}
 		else
 		{
-			$oEncryptedPassword = $oUser->Get('reset_pwd_token');
-			if (!$oEncryptedPassword->CheckPassword($sToken))
+			$aVars['bNoUser'] = false;
+			$oEncryptedToken = $oUser->Get('reset_pwd_token');
+
+			if (!$oEncryptedToken->CheckPassword($sToken))
 			{
-				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+				$aVars['bBadToken'] = true;
 			}
 			else
 			{
+				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
-				$oUser->Set('reset_pwd_token', '');
+				$oUser->Set('reset_pwd_token', new ormPassword());
 				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
-	
-				$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
-				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:ResetPwd-Login')."</a></p>");
+				$aVars['sUrl'] = utils::GetAbsoluteUrlAppRoot();
 			}
-			$this->add("</div\n");
 		}
+
+		$oTwigContext->Render($this, 'resetpwddone.html.twig', $aVars);
 	}
 
-	public function DisplayChangePwdForm($bFailedLogin = false)
+	public function DisplayChangePwdForm($bFailedLogin = false, $sIssue = null)
 	{
-		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['bFailedLogin'] = $bFailedLogin;
+		$aVars['sIssue'] = $sIssue;
+		$oTwigContext->Render($this, 'changepwdform.html.twig', $aVars);
+	}
 
-		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
-		$this->add_script(<<<EOF
-function GoBack()
-{
-	window.history.back();
-}
-
-function DoCheckPwd()
-{
-	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+	public function DisplayLogoutPage($bPortal, $sTitle = null)
 	{
-		alert('$sInconsistenPwdMsg');
-		return false;
-	}
-	return true;
-}
-EOF
-);
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
-		if ($bFailedLogin)
-		{
-			$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectOldPassword')."</p>\n");
-		}
-		$this->add("<form method=\"post\">\n");
-		$this->add("<table>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
-		$this->add("</table>\n");
-		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_change_pwd\" />\n");
-		$this->add("</form>\n");
-		$this->add("</div>\n");
+		$sUrl = utils::GetAbsoluteUrlAppRoot();
+		$sUrl .= $bPortal ? 'portal/' : 'pages/UI.php';
+		$sTitle = empty($sTitle) ? Dict::S('UI:LogOff:ThankYou') : $sTitle;
+		$sMessage = Dict::S('UI:LogOff:ClickHereToLoginAgain');
+
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['sUrl'] = $sUrl;
+		$aVars['sTitle'] = $sTitle;
+		$aVars['sMessage'] = $sMessage;
+
+		$oTwigContext->Render($this, 'logout.html.twig', $aVars);
+		$this->output();
 	}
 
-	static function ResetSession()
+	public static function ResetSession()
 	{
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
-		unset($_SESSION['login_mode']);
+		unset($_SESSION['login_state']);
+		unset($_SESSION['can_logoff']);
 		unset($_SESSION['archive_mode']);
 		unset($_SESSION['impersonate_user']);
 		UserRights::_ResetSessionCache();
@@ -471,215 +387,523 @@ EOF
         			|\xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
         	)+%xs', $sString);
 	}
-
 	/**
 	 * Attempt a login
-	 * 	 	
+	 *
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
-	 * @return int One of the class constants EXIT_CODE_...
-	 */	
+	 *
+	 * @return int|void One of the class constants EXIT_CODE_...
+	 * @throws \Exception
+	 */
 	protected static function Login($iOnExit)
 	{
+		self::$iOnExit = $iOnExit;
 		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
 		{
 			// Non secured URL... request for a secure connection
-			throw new Exception('Secure connection required!');			
+			throw new Exception('Secure connection required!');
+		}
+		$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
+
+		if (!isset($_SESSION['login_state']) || ($_SESSION['login_state'] == self::LOGIN_STATE_ERROR))
+		{
+			$_SESSION['login_state'] = self::LOGIN_STATE_START;
+		}
+		$sLoginState = $_SESSION['login_state'];
+
+		$sSessionLog = '';
+		if ($bLoginDebug)
+		{
+			IssueLog::Info("---------------------------------");
+			IssueLog::Info($_SERVER['REQUEST_URI']);
+			IssueLog::Info("--> Entering Login FSM with state: [$sLoginState]");
+			$sSessionLog = session_id().' '.utils::GetSessionLog();
+			IssueLog::Info("SESSION: $sSessionLog");
 		}
 
-		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
+		$iErrorCode = self::EXIT_CODE_OK;
 
-		if (isset($_SESSION['auth_user']))
+		// Finite state machine loop
+		while (true)
 		{
-			//echo "User: ".$_SESSION['auth_user']."\n";
-			// Already authentified
-			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
-			if ($bRet)
+			try
 			{
-				return self::EXIT_CODE_OK;
-			}
-			// The user account is no longer valid/enabled
-			 static::ResetSession();
-		}
-		
-		$index = 0;
-		$sLoginMode = '';
-		$sAuthentication = 'internal';
-		while(($sLoginMode == '') && ($index < count($aAllowedLoginTypes)))
-		{
-			$sLoginType = $aAllowedLoginTypes[$index];
-			switch($sLoginType)
-			{
-				case 'cas':
-				utils::InitCASClient();					
-				// check CAS authentication
-				if (phpCAS::isAuthenticated())
+				$aLoginPlugins = self::GetLoginPluginList();
+				if (empty($aLoginPlugins))
 				{
-					$sAuthUser = phpCAS::getUser();
-					$sAuthPwd = '';
-					$sLoginMode = 'cas';
-					$sAuthentication = 'external';
+					throw new Exception("Missing login classes");
 				}
-				break;
-				
-				case 'form':
-				// iTop standard mode: form based authentication
-				$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
-				$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, false, 'raw_data');
-				if (($sAuthUser != '') && ($sAuthPwd !== null))
+
+				/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
+				foreach ($aLoginPlugins as $oLoginFSMExtensionInstance)
 				{
-					$sLoginMode = 'form';
-				}
-				break;
-				
-				case 'basic':
-				// Standard PHP authentication method, works with Apache...
-				// Case 1) Apache running in CGI mode + rewrite rules in .htaccess
-				if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
-				{
-					list($sAuthUser, $sAuthPwd) = explode(':' , base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-					$sLoginMode = 'basic';
-				}
-				else if (isset($_SERVER['PHP_AUTH_USER']))
-				{
-					$sAuthUser = $_SERVER['PHP_AUTH_USER'];
-					// Unfortunately, the RFC is not clear about the encoding...
-					// IE and FF supply the user and password encoded in ISO-8859-1 whereas Chrome provides them encoded in UTF-8
-					// So let's try to guess if it's an UTF-8 string or not... fortunately all encodings share the same ASCII base
-					if (!self::LooksLikeUTF8($sAuthUser))
+					if ($bLoginDebug)
 					{
-						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-						// Supposed to be harmless in case of a plain ASCII string...
-						$sAuthUser = iconv('iso-8859-1', 'utf-8', $sAuthUser);
+						$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+						if ($sCurrSessionLog != $sSessionLog)
+						{
+							$sSessionLog = $sCurrSessionLog;
+							IssueLog::Info("SESSION: $sSessionLog");
+						}
+						IssueLog::Info("Login: state: [$sLoginState] call: ".get_class($oLoginFSMExtensionInstance));
 					}
-					$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
-					if (!self::LooksLikeUTF8($sAuthPwd))
+					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
+					if ($iResponse == self::LOGIN_FSM_RETURN)
 					{
-						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-						// Supposed to be harmless in case of a plain ASCII string...
-						$sAuthPwd = iconv('iso-8859-1', 'utf-8', $sAuthPwd);
+						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
-					$sLoginMode = 'basic';
+					if ($iResponse == self::LOGIN_FSM_ERROR)
+					{
+						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
+						// An error was detected, skip the other plugins turn
+						break;
+					}
+					// The plugin has nothing to do for this state, continue to the next plugin
 				}
-				break;
 
-				case 'external':
-				// Web server supplied authentication
-				$bExternalAuth = false;
-				$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
-				eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
-				if ($sAuthUser && (strlen($sAuthUser) > 0))
-				{
-					$sAuthPwd = ''; // No password in this case the web server already authentified the user...
-					$sLoginMode = 'external';
-					$sAuthentication = 'external';
-				}
-				break;
-
-				case 'url':
-				// Credentials passed directly in the url
-				$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-				$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-				if (($sAuthUser != '') && ($sAuthPwd !== null))
-				{
-					$sLoginMode = 'url';
-				}		
-				break;	
+				// Every plugin has nothing else to do in this state, go forward
+				$sLoginState = self::AdvanceLoginFSMState($sLoginState);
+				$_SESSION['login_state'] = $sLoginState;
 			}
-			$index++;
+			catch (Exception $e)
+			{
+				IssueLog::Error($e->getTraceAsString());
+				static::ResetSession();
+				die($e->getMessage());
+			}
 		}
-		//echo "\nsLoginMode: $sLoginMode (user: $sAuthUser / pwd: $sAuthPwd\n)";
-		if ($sLoginMode == '')
+	}
+
+	/**
+	 * Get plugins list ordered by config 'allowed_login_types'
+	 * Use the login mode to filter plugins
+	 *
+	 * @param string $sInterface 'iLoginFSMExtension' or 'iLogoutExtension'
+	 * @param bool $bFilterWithMode if false do not filter the plugin list with login mode
+	 *
+	 * @return array of plugins
+	 */
+	public static function GetLoginPluginList($sInterface = 'iLoginFSMExtension', $bFilterWithMode = true)
+	{
+		$aAllPlugins = array();
+
+		if ($bFilterWithMode)
 		{
-			// First connection
-			$sDesiredLoginMode = utils::ReadParam('login_mode');
-			if (in_array($sDesiredLoginMode, $aAllowedLoginTypes))
-			{
-				$sLoginMode = $sDesiredLoginMode;
-			}
-			else
-			{
-				$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
-			}
-			if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
-			{
-				// X-Combodo-Ajax is a special header automatically added to all ajax requests
-				// Let's reply that we're currently logged-out
-				header('HTTP/1.0 401 Unauthorized');
-				exit;
-			}
-			if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
-			{
-				header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-				header('HTTP/1.0 401 Unauthorized');
-				header('Content-type: text/html; charset=iso-8859-1');
-				exit;
-			}
-			else if($iOnExit == self::EXIT_RETURN)
-			{
-				if (($sAuthUser !== '') && ($sAuthPwd === null))
-				{
-					return self::EXIT_CODE_MISSINGPASSWORD;
-				}
-				else
-				{
-					return self::EXIT_CODE_MISSINGLOGIN;
-				}
-			}
-			else
-			{
-				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
-				$oPage->output();
-				exit;
-			}
+			$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 		}
 		else
 		{
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $sLoginMode, $sAuthentication))
+			$sCurrentLoginMode = '';
+		}
+
+		/** @var iLoginExtension $oLoginExtensionInstance */
+		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance)
+		{
+			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
+			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : array());
+			foreach ($aLoginModes as $sLoginMode)
 			{
-				//echo "Check Credentials returned false for user $sAuthUser!";
-				self::ResetSession();
-				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
+				// Keep only the plugins for the current login mode + before + after
+				if (empty($sCurrentLoginMode) || ($sLoginMode == $sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after'))
 				{
-					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-					header('HTTP/1.0 401 Unauthorized');
-					header('Content-type: text/html; charset=iso-8859-1');
-					exit;
+					if (!isset($aAllPlugins[$sLoginMode]))
+					{
+						$aAllPlugins[$sLoginMode] = array();
+					}
+					$aAllPlugins[$sLoginMode][] = $oLoginExtensionInstance;
+					break; // Stop here to avoid registering a plugin twice
 				}
-				else if($iOnExit == self::EXIT_RETURN)
-				{
-					return self::EXIT_CODE_WRONGCREDENTIALS;
-				}
-				else
-				{
-					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
-					$oPage->output();
-					exit;
-				}
-			}
-			else
-			{
-				// User is Ok, let's save it in the session and proceed with normal login
-				UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
-				
-				if (MetaModel::GetConfig()->Get('log_usage'))
-				{
-					$oLog = new EventLoginUsage();
-					$oLog->Set('userinfo', UserRights::GetUser());
-					$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
-					$oLog->Set('message', 'Successful login');
-					$oLog->DBInsertNoReload();
-				}
-				
-				$_SESSION['auth_user'] = $sAuthUser;
-				$_SESSION['login_mode'] = $sLoginMode;
-				UserRights::_InitSessionCache();
 			}
 		}
-		return self::EXIT_CODE_OK;
+
+		// Order and filter by the config list of allowed types (allowed_login_types)
+		$aAllowedLoginModes = array_merge(array('before'), MetaModel::GetConfig()->GetAllowedLoginTypes(), array('after'));
+		$aPlugins = array();
+		foreach ($aAllowedLoginModes as $sAllowedMode)
+		{
+			if (isset($aAllPlugins[$sAllowedMode]))
+			{
+				$aPlugins = array_merge($aPlugins, $aAllPlugins[$sAllowedMode]);
+			}
+		}
+		return $aPlugins;
 	}
-	
+
+	/**
+	 * Advance Login Finite State Machine to the next step
+	 *
+	 * @param string $sLoginState Current step
+	 *
+	 * @return string next step
+	 */
+	private static function AdvanceLoginFSMState($sLoginState)
+	{
+		switch ($sLoginState)
+		{
+			case self::LOGIN_STATE_START:
+				return self::LOGIN_STATE_MODE_DETECTION;
+
+			case self::LOGIN_STATE_MODE_DETECTION:
+				return self::LOGIN_STATE_READ_CREDENTIALS;
+
+			case self::LOGIN_STATE_READ_CREDENTIALS:
+				return self::LOGIN_STATE_CHECK_CREDENTIALS;
+
+			case self::LOGIN_STATE_CHECK_CREDENTIALS:
+				return self::LOGIN_STATE_CREDENTIALS_OK;
+
+			case self::LOGIN_STATE_CREDENTIALS_OK:
+				return self::LOGIN_STATE_USER_OK;
+
+			case self::LOGIN_STATE_USER_OK:
+				return self::LOGIN_STATE_CONNECTED;
+
+			case self::LOGIN_STATE_CONNECTED:
+			case self::LOGIN_STATE_ERROR:
+				return self::LOGIN_STATE_START;
+
+			case self::LOGIN_STATE_SET_ERROR:
+				return self::LOGIN_STATE_ERROR;
+		}
+
+		// Default reset to NONE
+		return self::LOGIN_STATE_START;
+	}
+
+	/**
+	 * Login API: Check that credentials correspond to a valid user
+	 * Used only during login process when the password is known
+	 *
+	 * @api
+	 *
+	 * @param string $sAuthUser
+	 * @param string $sAuthPassword
+	 * @param string $sAuthentication ('internal' or 'external')
+	 *
+	 * @return bool (true if User OK)
+	 *
+	 */
+	public static function CheckUser($sAuthUser, $sAuthPassword = '', $sAuthentication = 'external')
+	{
+		$oUser = self::FindUser($sAuthUser, true, ucfirst(strtolower($sAuthentication)));
+		if (is_null($oUser))
+		{
+			return false;
+		}
+
+		return $oUser->CheckCredentials($sAuthPassword);
+	}
+
+	/**
+	 * Login API: Store User info in the session when connection is OK
+	 *
+	 * @api
+	 *
+	 * @param $sAuthUser
+	 * @param $sAuthentication
+	 * @param $sLoginMode
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreCannotSaveObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws CoreWarning
+	 * @throws MySQLException
+	 * @throws OQLException
+	 * @throws \Exception
+	 */
+	public static function OnLoginSuccess($sAuthUser, $sAuthentication, $sLoginMode)
+	{
+		// User is Ok, let's save it in the session and proceed with normal login
+		$bLoginSuccess = UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
+		if (!$bLoginSuccess)
+		{
+			throw new Exception("Bad user");
+		}
+		if (MetaModel::GetConfig()->Get('log_usage')) {
+			$oLog = new EventLoginUsage();
+			$oLog->Set('userinfo', UserRights::GetUser());
+			$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
+			$oLog->Set('message', 'Successful login');
+			$oLog->DBInsertNoReload();
+		}
+
+		$_SESSION['auth_user'] = $sAuthUser;
+		$_SESSION['login_mode'] = $sLoginMode;
+		UserRights::_InitSessionCache();
+	}
+
+	/**
+	 * Login API: Check that an already logger User is still valid
+	 *
+	 * @api
+	 *
+	 * @param int $iErrorCode
+	 *
+	 * @return int LOGIN_FSM_RETURN_OK or LOGIN_FSM_RETURN_ERROR
+	 */
+	public static function CheckLoggedUser(&$iErrorCode)
+	{
+		if (isset($_SESSION['auth_user']))
+		{
+			// Already authenticated
+			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
+			if ($bRet)
+			{
+				$iErrorCode = self::EXIT_CODE_OK;
+				return self::LOGIN_FSM_RETURN;
+			}
+		}
+		// The user account is no longer valid/enabled
+		$iErrorCode = self::EXIT_CODE_WRONGCREDENTIALS;
+
+		return self::LOGIN_FSM_ERROR;
+	}
+
+	/**
+	 * Exit with an HTTP 401 error
+	 */
+	public static function HTTP401Error()
+	{
+		header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
+		header('HTTP/1.0 401 Unauthorized');
+		header('Content-type: text/html; charset='.self::PAGES_CHARSET);
+		// Note: displayed when the user will click on Cancel
+		echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
+		exit;
+	}
+
+	public static function SetLoginModeAndReload($sNewLoginMode)
+	{
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == $sNewLoginMode))
+		{
+			return;
+		}
+		$_SESSION['login_mode'] = $sNewLoginMode;
+		self::HTTPReload();
+	}
+
+	public static function HTTPReload()
+	{
+		$sOriginURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		if (!utils::StartsWith($sOriginURL, utils::GetAbsoluteUrlAppRoot()))
+		{
+			// If the found URL does not start with the configured AppRoot URL
+			$sOriginURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
+		}
+		self::HTTPRedirect($sOriginURL);
+	}
+
+	public static function HTTPRedirect($sURL)
+	{
+		header('HTTP/1.1 307 Temporary Redirect');
+		header('Location: '.$sURL);
+		exit;
+	}
+
+
+	/**
+	 * Provisioning API: Find a User
+	 *
+	 * @api
+	 *
+	 * @param string $sAuthUser
+	 * @param bool $bMustBeValid
+	 * @param string $sType
+	 *
+	 * @return \User|null
+	 */
+	public static function FindUser($sAuthUser, $bMustBeValid = true, $sType = 'External')
+	{
+		try
+		{
+			$aArgs = array('login' => $sAuthUser);
+			$sUserClass = "User$sType";
+			$oSearch = DBObjectSearch::FromOQL("SELECT $sUserClass WHERE login = :login");
+			if ($bMustBeValid)
+			{
+				$oSearch->AddCondition('status', 'enabled');
+			}
+			$oSet = new DBObjectSet($oSearch, array(), $aArgs);
+			if ($oSet->CountExceeds(0))
+			{
+				/** @var User $oUser */
+				$oUser = $oSet->Fetch();
+
+				return $oUser;
+			}
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+		return null;
+	}
+
+	/**
+ 	 * Provisioning API: Find a Person by email
+	 *
+	 * @api
+	 *
+	 * @param string $sEmail
+	 *
+	 * @return \Person|null
+	 */
+	public static function FindPerson($sEmail)
+	{
+		/** @var \Person $oPerson */
+		$oPerson = null;
+		try
+		{
+			$oSearch = new DBObjectSearch('Person');
+			$oSearch->AddCondition('email', $sEmail);
+			$oSet = new DBObjectSet($oSearch);
+			if ($oSet->CountExceeds(1))
+			{
+				throw new Exception(Dict::S('UI:Login:Error:MultipleContactsHaveSameEmail'));
+			}
+			$oPerson = $oSet->Fetch();
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+		return $oPerson;
+	}
+
+	/**
+	 * Provisioning API: Create a person
+	 *
+	 * @api
+	 *
+	 * @param string $sFirstName
+	 * @param string $sLastName
+	 * @param string $sEmail
+	 * @param string $sOrganization
+	 * @param array $aAdditionalParams
+	 *
+	 * @return \Person
+	 */
+	public static function ProvisionPerson($sFirstName, $sLastName, $sEmail, $sOrganization, $aAdditionalParams = array())
+	{
+		/** @var Person $oPerson */
+		$oPerson = null;
+		try
+		{
+			$sOrigin = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sOrigin .= " ({$_SESSION['login_mode']})";
+			}
+			CMDBObject::SetTrackOrigin($sOrigin);
+
+			$oPerson = MetaModel::NewObject('Person');
+			$oPerson->Set('first_name', $sFirstName);
+			$oPerson->Set('name', $sLastName);
+			$oPerson->Set('email', $sEmail);
+			$oOrg = MetaModel::GetObjectByName('Organization', $sOrganization, false);
+			if (is_null($oOrg))
+			{
+				throw new Exception(Dict::S('UI:Login:Error:WrongOrganizationName'));
+			}
+			$oPerson->Set('org_id', $oOrg->GetKey());
+			foreach ($aAdditionalParams as $sAttCode => $sValue)
+			{
+				$oPerson->Set($sAttCode, $sValue);
+			}
+			$oPerson->DBInsert();
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+		return $oPerson;
+	}
+
+	/**
+	 * Provisioning API: Create or update a User
+	 *
+	 * @api
+	 *
+	 * @param string $sAuthUser
+	 * @param Person $oPerson
+	 * @param array $aRequestedProfiles profiles to add to the new user
+	 *
+	 * @return \UserExternal|null
+	 */
+	public static function ProvisionUser($sAuthUser, $oPerson, $aRequestedProfiles)
+	{
+		if (!MetaModel::IsValidClass('URP_Profiles'))
+		{
+			IssueLog::Error("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
+			return null;
+		}
+
+		/** @var UserExternal $oUser */
+		$oUser = null;
+		try
+		{
+			$oUser = MetaModel::GetObjectByName('UserExternal', $sAuthUser, false);
+			if (is_null($oUser))
+			{
+				$oUser = MetaModel::NewObject('UserExternal');
+				$oUser->Set('login', $sAuthUser);
+				$oUser->Set('contactid', $oPerson->GetKey());
+				$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
+			}
+
+			// read all the existing profiles
+			$oProfilesSearch = new DBObjectSearch('URP_Profiles');
+			$oProfilesSet = new DBObjectSet($oProfilesSearch);
+			$aAllProfiles = array();
+			while ($oProfile = $oProfilesSet->Fetch())
+			{
+				$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+			}
+
+			$aProfiles = array();
+			foreach ($aRequestedProfiles as $sRequestedProfile)
+			{
+				$sRequestedProfile = strtolower($sRequestedProfile);
+				if (isset($aAllProfiles[$sRequestedProfile]))
+				{
+					$aProfiles[] = $aAllProfiles[$sRequestedProfile];
+				}
+			}
+
+			if (empty($aProfiles))
+			{
+				throw new Exception(Dict::S('UI:Login:Error:NoValidProfiles'));
+			}
+
+			// Now synchronize the profiles
+			$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
+			$sOrigin = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sOrigin .= " ({$_SESSION['login_mode']})";
+			}
+			foreach ($aProfiles as $iProfileId)
+			{
+				$oLink = new URP_UserProfile();
+				$oLink->Set('profileid', $iProfileId);
+				$oLink->Set('reason', $sOrigin);
+				$oProfilesSet->AddObject($oLink);
+			}
+			$oUser->Set('profile_list', $oProfilesSet);
+			if ($oUser->IsModified())
+			{
+				$oUser->DBWrite();
+			}
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+
+		return $oUser;
+	}
+
 	/**
 	 * Overridable: depending on the user, head toward a dedicated portal
 	 * @param string|null $sRequestedPortalId
@@ -687,7 +911,6 @@ EOF
 	 */	 
 	protected static function ChangeLocation($sRequestedPortalId = null, $iOnExit = self::EXIT_PROMPT)
 	{
-		$fStart = microtime(true);
 		$ret = call_user_func(array(self::$sHandlerClass, 'Dispatch'), $sRequestedPortalId);
 		if ($ret === true)
 		{
@@ -710,6 +933,7 @@ EOF
 				die();
 			}
 		}
+		return self::EXIT_CODE_OK;
 	}
 
 	/**
@@ -784,25 +1008,9 @@ EOF
 		$sMessage = ''; // most of the operations never return, but some can return a message to be displayed
 		if ($operation == 'logoff')
 		{
-			if (isset($_SESSION['login_mode']))
-			{
-				$sLoginMode = $_SESSION['login_mode'];
-			}
-			else
-			{
-				$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
-				if (count($aAllowedLoginTypes) > 0)
-				{
-					$sLoginMode = $aAllowedLoginTypes[0];
-				}
-				else
-				{
-					$sLoginMode = 'form';
-				}
-			}
 			self::ResetSession();
 			$oPage = self::NewLoginWebPage();
-			$oPage->DisplayLoginForm( $sLoginMode, false /* not a failed attempt */);
+			$oPage->DisplayLoginForm(false /* not a failed attempt */);
 			$oPage->output();
 			exit;
 		}
@@ -829,34 +1037,78 @@ EOF
 		}
 		else if ($operation == 'do_reset_pwd')
 		{
-			$oPage = self::NewLoginWebPage();
-			$oPage->DoResetPassword();
+
+			try {
+				$oPage = self::NewLoginWebPage();
+				$oPage->DoResetPassword();
+			}
+			catch (CoreCannotSaveObjectException $e)
+			{
+				$oPage = self::NewLoginWebPage();
+				$oPage->DisplayResetPwdForm($e->getIssue());
+			}
+
 			$oPage->output();
 			exit;
 		}
 		else if ($operation == 'change_pwd')
 		{
-			$sAuthUser = $_SESSION['auth_user'];
-			UserRights::Login($sAuthUser); // Set the user's language
-			$oPage = self::NewLoginWebPage();
-			$oPage->DisplayChangePwdForm();
-			$oPage->output();
-			exit;
-		}
-		if ($operation == 'do_change_pwd')
-		{
-			$sAuthUser = $_SESSION['auth_user'];
-			UserRights::Login($sAuthUser); // Set the user's language
-			$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
-			$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
-			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+			if (isset($_SESSION['auth_user']))
 			{
+				$sAuthUser = $_SESSION['auth_user'];
+				UserRights::Login($sAuthUser); // Set the user's language
 				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+				$oPage->DisplayChangePwdForm();
 				$oPage->output();
 				exit;
 			}
-			$sMessage = Dict::S('UI:Login:PasswordChanged');
+		}
+		else if ($operation == 'check_pwd_policy')
+		{
+			$sAuthUser = $_SESSION['auth_user'];
+			UserRights::Login($sAuthUser); // Set the user's language
+
+			$aPwdMap = array();
+
+			foreach (array('new_pwd', 'retype_new_pwd') as $postedPwd)
+			{
+				$oUser = new UserLocal();
+				$oUser->ValidatePassword($_POST[$postedPwd]);
+
+				$aPwdMap[$postedPwd]['isValid'] = $oUser->IsPasswordValid();
+				$aPwdMap[$postedPwd]['message'] = $oUser->getPasswordValidityMessage();
+			}
+			echo json_encode($aPwdMap);
+			die();
+		}
+		if ($operation == 'do_change_pwd')
+		{
+			if (isset($_SESSION['auth_user']))
+			{
+				$sAuthUser = $_SESSION['auth_user'];
+				UserRights::Login($sAuthUser); // Set the user's language
+				$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
+				$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
+
+				try
+				{
+					if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+					{
+						$oPage = self::NewLoginWebPage();
+						$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+						$oPage->output();
+						exit;
+					}
+				}
+				catch (CoreCannotSaveObjectException $e)
+				{
+					$oPage = self::NewLoginWebPage();
+					$oPage->DisplayChangePwdForm(true, $e->getIssue()); // password policy was not met.
+					$oPage->output();
+					exit;
+				}
+				$sMessage = Dict::S('UI:Login:PasswordChanged');
+			}
 		}
 		return $sMessage;
 	}
@@ -883,4 +1135,13 @@ EOF
 		}
 		return false; // nothing matched !!
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public static function getIOnExit()
+	{
+		return self::$iOnExit;
+	}
+
 } // End of class

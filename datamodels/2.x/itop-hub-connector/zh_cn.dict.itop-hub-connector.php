@@ -77,7 +77,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => '该扩展依赖模块: %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '安装成功!',
 
-	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
+	'iTopHub:InstallationStatus:Installed_Version' => '%1$s 版本: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>未</b> 安装.',
 ));

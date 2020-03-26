@@ -109,6 +109,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'İrtibat (kişi)',
 	'Class:User/Attribute:contactid+' => 'İrtibat detayları',
+	'Class:User/Attribute:org_id' => 'Kurum',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Soyadı',
 	'Class:User/Attribute:last_name+' => 'İrtibatın soyadı',
 	'Class:User/Attribute:first_name' => 'Adı',
@@ -455,6 +457,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hata: "%3$s" durumundaki %2$s nesnesi için "%1$s" uyarısı geçersizdir.',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -521,6 +525,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -529,7 +534,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -557,6 +562,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Login' => 'iTop\'a Giriş',
 	'UI:Login:Error:AccessRestricted' => 'iTop erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
 	'UI:Login:Error:AccessAdmin' => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Birini seçiniz --',
 	'UI:CSVImport:MappingNotApplicable' => '-- alanı ihmal et --',
 	'UI:CSVImport:NoData' => 'Boş veri seti..., veri giriniz!',
@@ -684,6 +692,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:MoreInfo' => 'Sorgu hakkında detaylı bilgi: ',
 	'UI:RunQuery:DevelopedQuery' => 'Yeniden düzenlenen sorgu: ',
 	'UI:RunQuery:SerializedFilter' => 'Özel filtre: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -887,6 +899,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Değişiklik Yönetimi',
 	'UI:ChangeManagementMenu+' => 'Değişiklik Yönetimi',
@@ -1432,6 +1445,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button

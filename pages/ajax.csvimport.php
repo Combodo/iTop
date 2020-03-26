@@ -1,26 +1,20 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Specific to the interactive csv import
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once('../approot.inc.php');
@@ -34,9 +28,12 @@ require_once(APPROOT.'/application/csvpage.class.inc.php');
 /**
  * Determines if the name of the field to be mapped correspond
  * to the name of an external key or an Id of the given class
+ *
  * @param string $sClassName The name of the class
  * @param string $sFieldCode The attribute code of the field , or empty if no match
+ *
  * @return bool true if the field corresponds to an id/External key, false otherwise
+ * @throws \Exception
  */
 function IsIdField($sClassName, $sFieldCode)
 {
@@ -58,10 +55,13 @@ function IsIdField($sClassName, $sFieldCode)
 
 /**
  * Get all the fields xxx->yyy based on the field xxx which is an external key
- * @param string $sExtKeyAttCode Attribute code of the external key
+ *
+ * @param $sAttCode
  * @param AttributeDefinition $oExtKeyAttDef Attribute definition of the external key
  * @param bool $bAdvanced True if advanced mode
- * @return Ash List of codes=>display name: xxx->yyy where yyy are the reconciliation keys for the object xxx 
+ *
+ * @return array List of codes=>display name: xxx->yyy where yyy are the reconciliation keys for the object xxx
+ * @throws \CoreException
  */
 function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bAdvanced)
 {
@@ -94,12 +94,15 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bA
  *       If not in advanced mode, all "id" fields (id and external keys) must be mapped to ":none:" (i.e -- ignore this field --)
  *       External fields that do not correspond to a reconciliation key must be mapped to ":none:"
  *       Otherwise, if a field equals either the 'code' or the 'label' (translated) of a field, then it's mapped automatically
+ *
  * @param string $sClassName Name of the class used for the mapping
  * @param string $sFieldName Name of the field, as it comes from the data file (header line)
  * @param integer $iFieldIndex Number of the field in the sequence
  * @param bool $bAdvancedMode Whether or not advanced mode was chosen
  * @param string $sDefaultChoice If set, this will be the item selected by default
+ *
  * @return string The HTML code corresponding to the drop-down list for this field
+ * @throws \CoreException
  */
 function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode, $sDefaultChoice)
 {
@@ -219,7 +222,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			$sSelected = ' selected';
 		}
 
-		$sHtml .= "<option value=\"$sAttCode\"$sSelected>$sLabel</option>\n";
+		$sHtml .= "<option value=\"$sAttCode\" $sSelected>$sLabel</option>\n";
 	}
 	$sHtml .= "</select>\n";
 	return $sHtml;
@@ -366,7 +369,7 @@ try
 					$sDefaultChoice = $aInitFieldMapping[$index];
 				}
 				$oPage->add('<tr>');
-				$oPage->add("<th>$sField</th>");
+				$oPage->add('<th>'.utils::HtmlEntities($sField).'</th>');
 				$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice).'</td>');
 				$oPage->add('<td>&nbsp;</td>');
 				$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');

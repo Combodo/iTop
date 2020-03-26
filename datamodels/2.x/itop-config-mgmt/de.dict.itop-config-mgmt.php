@@ -1893,6 +1893,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Server:otherinfo' => 'Sonstige Informationen',
 	'Server:power' => 'Stromversorgung',
 	'Person:info' => 'Allgemeine Informationen',
+	'UserLocal:info' => 'Allgemeine Informationen',
 	'Person:personal_info' => 'Persönliche Informationen',
 	'Person:notifiy' => 'Benachrichtigungen',
 	'Class:Subnet/Tab:IPUsage' => 'IP-Nutzung',

@@ -13,7 +13,7 @@ use MetaModel;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  *
- * @since 2.6
+ * @since 2.6.0
  * @package Combodo\iTop\Test\UnitTest\Core
  */
 class MetaModelTest extends ItopDataTestCase

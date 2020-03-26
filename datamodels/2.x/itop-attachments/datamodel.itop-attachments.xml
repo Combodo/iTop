@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="Attachment" _delta="define">
       <parent>DBObject</parent>
@@ -54,32 +54,51 @@
         </indexes>
       </properties>
       <fields>
-        <field id="expire" xsi:type="AttributeDateTime">
-          <sql>expire</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="temp_id" xsi:type="AttributeString">
-          <sql>temp_id</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="item_class" xsi:type="AttributeString">
-          <sql>item_class</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="item_id" xsi:type="AttributeObjectKey">
-          <sql>item_id</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <class_attcode>item_class</class_attcode>
-        </field>
-        <field id="item_org_id" xsi:type="AttributeInteger">
-          <sql>item_org_id</sql>
-          <default_value>0</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="contents" xsi:type="AttributeBlob"/>
+	      <field id="expire" xsi:type="AttributeDateTime">
+		      <sql>expire</sql>
+		      <default_value/>
+		      <is_null_allowed>false</is_null_allowed>
+	      </field>
+	      <field id="temp_id" xsi:type="AttributeString">
+		      <sql>temp_id</sql>
+		      <default_value/>
+		      <is_null_allowed>true</is_null_allowed>
+	      </field>
+	      <field id="item_class" xsi:type="AttributeString">
+		      <sql>item_class</sql>
+		      <default_value/>
+		      <is_null_allowed>false</is_null_allowed>
+	      </field>
+	      <field id="item_id" xsi:type="AttributeObjectKey">
+		      <sql>item_id</sql>
+		      <is_null_allowed>true</is_null_allowed>
+		      <class_attcode>item_class</class_attcode>
+	      </field>
+	      <field id="item_org_id" xsi:type="AttributeInteger">
+		      <sql>item_org_id</sql>
+		      <default_value>0</default_value>
+		      <is_null_allowed>true</is_null_allowed>
+	      </field>
+	      <field id="contents" xsi:type="AttributeBlob"/>
+	      <field id="creation_date" xsi:type="AttributeDateTime">
+		      <sql>creation_date</sql>
+		      <default_value/>
+		      <is_null_allowed>true</is_null_allowed>
+	      </field>
+	      <field id="user_id" xsi:type="AttributeExternalKey">
+		      <sql>user_id</sql>
+		      <is_null_allowed>true</is_null_allowed>
+		      <on_target_delete>DEL_MANUAL</on_target_delete>
+		      <target_class>User</target_class>
+		      <allow_target_creation>false</allow_target_creation>
+	      </field>
+	      <field id="contact_id" xsi:type="AttributeExternalField">
+		      <extkey_attcode>user_id</extkey_attcode>
+		      <target_attcode>contactid</target_attcode>
+		      <dependencies>
+			      <attribute id="user_id"></attribute>
+		      </dependencies>
+	      </field>
       </fields>
       <methods>
         <method id="MapContextParam">
@@ -216,19 +235,22 @@
             </item>
           </items>
         </search>
-        <list>
-          <items>
-            <item id="temp_id">
-              <rank>10</rank>
-            </item>
-            <item id="item_class">
-              <rank>20</rank>
-            </item>
-            <item id="item_id">
-              <rank>30</rank>
-            </item>
-          </items>
-        </list>
+	      <list>
+		      <items>
+			      <item id="temp_id">
+				      <rank>10</rank>
+			      </item>
+			      <item id="item_class">
+				      <rank>20</rank>
+			      </item>
+			      <item id="item_id">
+				      <rank>30</rank>
+			      </item>
+			      <item id="creation_date">
+				      <rank>40</rank>
+			      </item>
+		      </items>
+	      </list>
       </presentation>
     </class>
   </classes>

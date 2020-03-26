@@ -36,7 +36,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachment:Max_Ko' => '(Maximale Dateigröße: %1$s KB)',
 	'Attachments:NoAttachment' => 'Kein Attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar.',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Error:FileTooLarge' => 'Die Datei ist zu groß für den Upload: %1$s',
+	'Attachments:Render:Icons' => 'Als Icons anzeigen',
+	'Attachments:Render:Table' => 'Als Liste anzeigen',
 ));
 
 //
@@ -44,18 +46,40 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:Attachment' => 'Attachment~~',
-	'Class:Attachment+' => '~~',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
-	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
-	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => 'Item class~~',
-	'Class:Attachment/Attribute:item_class+' => '~~',
-	'Class:Attachment/Attribute:item_id' => 'Item~~',
-	'Class:Attachment/Attribute:item_id+' => '~~',
-	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
-	'Class:Attachment/Attribute:item_org_id+' => '~~',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
-	'Class:Attachment/Attribute:contents+' => '~~',
+	'Class:Attachment' => 'Attachment',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => 'Läuft ab',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Temporäre ID',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Itemklasse',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Item Organisation',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Inhalt',
+	'Class:Attachment/Attribute:contents+' => '',
+));
+
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Attachments:File:Thumbnail' => 'Icon',
+	'Attachments:File:Name' => 'Dateiname',
+	'Attachments:File:Date' => 'Upload-Datum',
+	'Attachments:File:Uploader' => 'hochgeladen von',
+	'Attachments:File:Size' => 'Größe',
+	'Attachments:File:MimeType' => 'Typ',
+));
+//
+// Class: Attachment
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Attachment/Attribute:creation_date' => 'Erstellungsdatum',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Benutzer ID',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Kontakt ID',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

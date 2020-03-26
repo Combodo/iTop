@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -833,7 +833,7 @@
         </search>
         <list>
           <items>
-            <item id="first_name">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="org_id">
@@ -1735,7 +1735,7 @@
 			}
 
 			$sCount = ($iTotal > 0) ? ' ('.$iTotal.')' : '';
-			$oPage->SetCurrentTab(Dict::S('Class:FunctionalCI/Tab:OpenedTickets').$sCount);
+			$oPage->SetCurrentTab('Class:FunctionalCI/Tab:OpenedTickets', Dict::S('Class:FunctionalCI/Tab:OpenedTickets').$sCount);
 
 			foreach ($aSearches as $sSubClass => $oSearch)
 			{
@@ -6722,7 +6722,7 @@
 
 		if (!$bEditMode)
 		{
-			$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:IPUsage'));
+			$oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
 	
 			$bit_ip = ip2long($this->Get('ip'));
 			$bit_mask = ip2long($this->Get('ip_mask'));
@@ -6744,7 +6744,7 @@
 			$iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
 			$iFreeCount =  $iCountRange - $iCountUsed;
 	
-			$oPage->SetCurrentTab(Dict::S('Class:Subnet/Tab:FreeIPs'));
+			$oPage->SetCurrentTab('Class:Subnet/Tab:FreeIPs');
 			$oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
 			$oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
 	
@@ -8517,4 +8517,34 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
+  <branding >
+    <themes>
+      <theme id="light-grey" _delta="define">
+        <variables>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+      </theme>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="backoffice-environment-banner-background-color">#C53030</variable>
+          <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
+          <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
 </itop_design>

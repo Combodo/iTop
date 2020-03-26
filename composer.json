@@ -1,13 +1,31 @@
 {
+  "type": "project",
+  "license": "AGPLv3",
   "require": {
     "php": ">=5.6.0",
-    "ext-soap": "*",
-    "ext-json": "*",
-    "ext-zip": "*",
-    "ext-mysqli": "*",
+    "ext-ctype": "*",
     "ext-dom": "*",
+    "ext-gd": "*",
     "ext-iconv": "*",
-    "ext-gd": "*"
+    "ext-json": "*",
+    "ext-mysqli": "*",
+    "ext-soap": "*",
+    "combodo/tcpdf": "6.3.4",
+    "nikic/php-parser": "^3.1",
+    "pear/archive_tar": "1.4.9",
+    "pelago/emogrifier": "2.1.0",
+    "scssphp/scssphp": "1.0.6",
+    "swiftmailer/swiftmailer": "5.4.12",
+    "symfony/console": "3.4.*",
+    "symfony/dotenv": "3.4.*",
+    "symfony/framework-bundle": "3.4.*",
+    "symfony/polyfill-php70": "1.*",
+    "symfony/twig-bundle": "3.4.*",
+    "symfony/yaml": "3.4.*"
+  },
+  "require-dev": {
+    "symfony/stopwatch": "3.4.*",
+    "symfony/web-profiler-bundle": "3.4.*"
   },
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",
@@ -20,6 +38,47 @@
   "config": {
     "platform": {
       "php": "5.6.0"
+    },
+    "vendor-dir": "lib",
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true,
+    "classmap-authoritative": true
+  },
+  "autoload": {
+    "classmap": [
+      "core",
+      "application",
+      "sources/application",
+      "sources/Composer"
+    ],
+    "exclude-from-classmap": [
+      "core/dbobjectsearch.class.php",
+      "core/legacy/dbobjectsearchlegacy.class.php",
+      "core/querybuildercontext.class.inc.php",
+      "core/legacy/querybuildercontextlegacy.class.inc.php",
+      "core/querybuilderexpressions.class.inc.php",
+      "core/legacy/querybuilderexpressionslegacy.class.inc.php",
+      "application/loginform.class.inc.php",
+      "application/loginbasic.class.inc.php",
+      "application/logindefault.class.inc.php",
+      "application/loginexternal.class.inc.php",
+      "application/loginurl.class.inc.php"
+    ]
+  },
+  "conflict": {
+    "symfony/symfony": "*"
+  },
+  "extra": {
+    "symfony": {
+      "allow-contrib": false,
+      "require": "3.4.*"
     }
+  },
+  "scripts": {
+    "post-install-cmd": ["@rmDeniedTestDir"],
+    "post-update-cmd": ["@rmDeniedTestDir"],
+    "rmDeniedTestDir":  "@php .make/composer/rmDeniedTestDir.php"
   }
 }

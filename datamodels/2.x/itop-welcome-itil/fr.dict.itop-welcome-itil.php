@@ -26,7 +26,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop',
 	'Menu:WelcomeMenuPage' => 'Bienvenue',
 	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop',
-	'Menu:AdminTools' => 'Outils d\'admin',
+	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Outils d\'administration',
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',
 	'Menu:DataModelMenu' => 'Modèle de Données',
@@ -53,6 +53,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
 	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
 	'Menu:MyShortcuts' => 'Mes raccourcis',
+	'Menu:UserManagement' => 'Utilisateurs',
+	'Menu:Queries' => 'Requêtes',
+	'Menu:ConfigurationTools' => 'Configuration',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResourceRunQueriesMenu' => 'Menu Requête OQL',
 	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceSystemMenu' => 'Menu System',
+	'Class:ResourceSystemMenu+' => '',
 ));

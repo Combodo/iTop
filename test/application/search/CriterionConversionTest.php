@@ -37,10 +37,19 @@ use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
+use DBObjectSet;
 use DBSearch;
+use Dict;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class CriterionConversionTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
+
 	/**
 	 * @throws \Exception
 	 */
@@ -181,7 +190,7 @@ class CriterionConversionTest extends ItopDataTestCase
 		$oSearchForm = new SearchForm();
 		/** @var \DBObjectSearch $oSearch */
 		$oSearch = DBSearch::FromOQL("SELECT Contact");
-		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+		$aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
 		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields, $oSearch->GetJoinedClasses());
 		$this->debug($aRes);
 		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
@@ -363,6 +372,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` LIKE '%A%')",
 				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'contains', 'values' => array(array('value' => 'A')))),
 			),
+			'string NOT contains' => array(
+				'OQL' => "SELECT Person AS B WHERE B.name NOT LIKE '%A%'",
+				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` NOT LIKE '%A%')",
+				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'NOT LIKE', 'values' => array(array('value' => '%A%')))),
+			),
 			'string regexp' => array(
 				'OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$')",
@@ -460,12 +474,12 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'TagSet Matches' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\'',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Matches2' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\'',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Undefined' => array(
@@ -475,12 +489,12 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'TagSet Undefined and tag' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE (((".TAG_ATTCODE." MATCHES 'tag1 tag2') OR (".TAG_ATTCODE." = '')) AND 1)",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2' OR (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\' OR (`'.TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet equals' => array(
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1' AND `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag2')",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\' AND `'.TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag2 _\')',
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 
@@ -624,12 +638,12 @@ class CriterionConversionTest extends ItopDataTestCase
         $this->debug($sOQL);
 
 
-        \Dict::SetUserLanguage($sLanguageCode);
+        Dict::SetUserLanguage($sLanguageCode);
 
 
         $oSearchForm = new SearchForm();
-        $oSearch = \DBSearch::FromOQL($sOQL);
-        $aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+        $oSearch = DBSearch::FromOQL($sOQL);
+        $aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
         /** @var \DBObjectSearch $oSearch */
         $aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
 
@@ -638,7 +652,7 @@ class CriterionConversionTest extends ItopDataTestCase
         $aNewCriterion = array();
         foreach($aAndCriterion as $aCriteria)
         {
-            if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
+            if ($aCriteria['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
             {
                 unset($aCriteria['oql']);
                 foreach($aFields as $aCatFields)

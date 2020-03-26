@@ -1,0 +1,518 @@
+{# layout.html.twig #}
+{# Base layout #}
+
+{% if app['combodo.current_user'] is defined and app['combodo.current_user'] is not null %}
+	{% set bUserConnected = true %}
+	{% set sUserFullname = app['combodo.current_user'].Get('first_name') ~ ' ' ~ app['combodo.current_user'].Get('last_name') %}
+	{% set sUserEmail = app['combodo.current_user'].Get('email') %}
+	{% set sUserPhotoUrl = app['combodo.current_contact.photo_url'] %}
+{% else %}
+	{% set bUserConnected = false %}
+	{% set sUserFullname = '' %}
+	{% set sUserEmail = '' %}
+	{% set sUserPhotoUrl = app['combodo.portal.base.absolute_url'] ~ 'img/user-profile-default-256px.png' %}
+{% endif %}
+
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{# This block can be used to add your own meta tags by extending the default template #}
+	{% block pPageExtraMetas %}
+	{% endblock %}
+	<title>{% block pPageTitle %}{% if sPageTitle is defined and sPageTitle is not null %}{{ sPageTitle }} - {{ constant('ITOP_APPLICATION_SHORT') }}{% else %}{{ 'Page:DefaultTitle'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}{% endif %}{% endblock %}</title>
+	<link rel="shortcut icon" href="{{ app['combodo.absolute_url'] ~ 'images/favicon.ico'|add_itop_version }}" />
+
+	{% block pPageStylesheets %}
+		{# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/css/bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		{# - Bootstrap Datetime picker #}
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css'|add_itop_version }}" rel="stylesheet">
+		{# - Datatables #}
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/dataTables.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/fixedHeader.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/responsive.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/scroller.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.dataTables.min.css'|add_itop_version }}" rel="stylesheet">
+        {# - Font OpenSans #}
+		<link href="{{ app['combodo.absolute_url'] ~ 'css/font-open-sans/font-open-sans.css'|add_itop_version }}" rel="stylesheet">
+        {# - Font Combodo #}
+		<link href="{{ app['combodo.absolute_url'] ~ 'css/font-combodo/font-combodo.css'|add_itop_version }}" rel="stylesheet">
+        {# - Font awesome #}
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/font-awesome/css/all.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/font-awesome/css/v4-shims.min.css'|add_itop_version }}" rel="stylesheet">
+		{# - Misc libs #}
+		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/css/typeaheadjs.bootstrap.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'css/selectize.default.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'css/magnific-popup.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'css/c3.min.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css'|add_itop_version }}" rel="stylesheet">
+		{# - Bootstrap theme #}
+		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
+		{# - Portal adjustments for BS theme #}
+		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		{# UI Extensions CSS, in an undefined order #}
+        {% if app['ui_extensions_helper'].css_files is defined %}
+            {% for css_file in app['ui_extensions_helper'].css_files %}
+				<link href="{{ css_file|add_itop_version }}" rel="stylesheet">
+            {% endfor %}
+        {% endif %}
+		{# Custom CSS that is supposed to do adjustments to the portal #}
+		{% if app['combodo.portal.instance.conf'].properties.themes.custom is defined %}
+			<link href="{{ app['combodo.portal.instance.conf'].properties.themes.custom|add_itop_version }}" rel="stylesheet">
+		{% endif %}
+		{# Others CSS that will come after the theme/portal/custom, in an undefined order #}
+		{% if app['combodo.portal.instance.conf'].properties.themes.others is defined %}
+			{% for theme in app['combodo.portal.instance.conf'].properties.themes.others %}
+				<link href="{{ theme|add_itop_version }}" rel="stylesheet">
+			{% endfor %}
+		{% endif %}
+	{% endblock %}
+
+	{% block pStyleinline %}
+        {# UI Extensions inline CSS #}
+        {% if app['ui_extensions_helper'].css_inline is not null %}
+			<style>
+				{{ app['ui_extensions_helper'].css_inline|raw }}
+			</style>
+        {% endif %}
+	{% endblock %}
+
+	{% block pPageScripts %}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.min.js'|add_itop_version }}"></script>
+		{% if is_development_environment() %}
+				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.dev.js'|add_itop_version }}"></script>
+		{% else %}
+				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.prod.min.js'|add_itop_version }}"></script>
+		{% endif %}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-ui-1.11.4.custom.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.magnific-popup.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.iframe-transport.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.fileupload.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/utils.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/toolbox.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/d3.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/c3.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/js/bootstrap.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-portal-modal.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
+		{# Visible.js to check if an element is visible on screen #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
+        {# Base64.js #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-base64/js/jquery.base64.min.js'|add_itop_version }}"></script>
+		{# Moment.js with locales#}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/moment-with-locales.min.js'|add_itop_version }}"></script>
+		{# Datatables #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/jquery.dataTables.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.bootstrap.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.fixedHeader.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.responsive.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.scroller.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.select.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/datetime-moment.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/dataTables.accentNeutraliseForFilter.js'|add_itop_version }}"></script>
+        {# Export for Datatables #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/export.js'|add_itop_version }}"></script>
+		{# CKEditor files for HTML WYSIWYG #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/ckeditor.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/adapters/jquery.js'|add_itop_version }}"></script>
+		{# Hilighter for code snippets created with CKEditor#}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js'|add_itop_version }}"></script>
+		{# Date-time picker for Bootstrap #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'|add_itop_version }}"></script>
+		{# Typeahead files for autocomplete #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/js/typeahead.bundle.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/handlebars/js/handlebars.min-768ddbd.js'|add_itop_version }}"></script>
+
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_leave_handler.js'|add_itop_version }}"></script>
+
+		{# Selectize for sets #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/selectize.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-set-widget.js'|add_itop_version }}"></script>
+		{# Form files #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_handler.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_field.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/subform_field.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/field_set.js'|add_itop_version }}"></script>
+		{# Form files for portal #}
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_handler.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_html.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_set.js'|add_itop_version }}"></script>
+		{# Clipboard helper #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/clipboard.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/clipboardwidget.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal-clipboard.js'|add_itop_version }}"></script>
+
+		{# UI Extensions JS, in an undefined order #}
+		{% if app['ui_extensions_helper'].js_files is defined %}
+			{% for js_file in app['ui_extensions_helper'].js_files %}
+				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
+			{% endfor %}
+        {% endif %}
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.tile.tile_badge[data-toggle="tooltip"]').tooltip({'html': true});
+			});
+		</script>
+	{% endblock %}
+</head>
+<body class="{% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
+	{% block pPageBodyWrapper %}
+		{% block pEnvBannerWrapper %}
+			{% if app['combodo.current_environment'] != 'production' %}
+				<div id="envbanner" class="alert alert-danger" role="alert">
+					{{ 'Portal:EnvironmentBanner:Title'|dict_format( app['combodo.current_environment']|upper )|raw }}
+					<button type="button" onclick="window;location.href='{{ app['url_generator'].generate('p_home', {'switch_env': 'production'}) }}'">
+						{{ 'Portal:EnvironmentBanner:GoToProduction'|dict_s|raw }}
+					</button>
+				</div>
+			{% endif %}
+		{% endblock %}
+		
+		{% block pNavigationWrapper %}
+			{# Topbar navigation menu for mobile screens #}
+			{% block pNavigationTopMenuWrapper %}
+				<nav class="navbar navbar-fixed-top navbar-default visible-xs" id="topbar" role="navigation">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							{% block pNavigationTopMenuLogo %}
+								<a class="navbar-brand pull-right" href="{{ get_config_parameter('app_icon_url') }}">
+									{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+										<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+									{% else %}
+										iTop
+									{% endif %}
+								</a>
+							{% endblock %}
+							<p class="navbar-text">
+								<a class="navbar-link user_infos" href="{{ app.url_generator.generate('p_user_profile_brick') }}">
+									<span class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');"></span>
+									<span class="user_fullname">{{ sUserFullname }}</span>
+								</a>
+							</p>
+						</div>
+						<div class="collapse navbar-collapse" id="navbar">
+							<ul class="nav navbar-nav">
+								{% block pNavigationTopBricks %}
+									<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
+										<a href="{{ app.url_generator.generate('p_home') }}">
+											<span class="brick_icon fas fa-home fa-2x"></span>
+											{{ 'Page:Home'|dict_s }}
+										</a>
+									</li>
+									{% for brick in app['brick_collection'].navigation_menu_ordering %}
+										{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+											<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
+												<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
+													<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+													{{ brick.GetTitleNavigationMenu|dict_s }}
+												</a>
+											</li>
+										{% endif %}
+									{% endfor %}
+								{% endblock %}
+								{% if bUserConnected %}
+									<li role="separator" class="divider"></li>
+                                    <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
+										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+											{% set sIconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
+											<li><a href="{{ aPortal.url }}" target="_blank"><span class="brick_icon {{ sIconClass }} fa-2x fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+										{% endif %}
+									{% endfor %}
+									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
+										<li role="separator" class="divider"></li>
+									{% endif %}
+									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+								{% endif %}
+							</ul>
+						</div>
+
+                        {% block pPageUIExtensionNavigationMenuTopbar %}
+                            {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                                {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                            {% endif %}
+                        {% endblock %}
+					</div>
+				</nav>
+			{% endblock %}
+
+			{# Sidebar navigation menu for normal screens #}
+			{% block pNavigationSideMenuWrapper %}
+				<nav class="navbar-default hidden-xs col-sm-3 col-md-2" id="sidebar" role="navigation">
+					<div class="user_card bg-primary">
+						<div class="user_photo" style="background-image: url('{{ sUserPhotoUrl }}');">
+						</div>
+						<div class="user_infos">
+							<div class="user_fullname">{{ sUserFullname }}</div>
+							<div class="user_email dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_options">
+									{{ sUserEmail }}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu user_options" aria-labelledby="user_options">
+									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
+									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
+										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
+											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
+											<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
+										{% endif %}
+									{% endfor %}
+									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
+									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
+										<li role="separator" class="divider"></li>
+									{% endif %}
+									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="menu">
+						{% block pNavigationSideMenu %}
+							<ul class="nav navbar-nav">
+								<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
+									<a href="{{ app.url_generator.generate('p_home') }}">
+										<span class="brick_icon fas fa-home fa-2x"></span>
+										{{ 'Page:Home'|dict_s }}
+									</a>
+								</li>
+								{% for brick in app['brick_collection'].navigation_menu_ordering %}
+									{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
+										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
+											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
+												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
+												{{ brick.GetTitleNavigationMenu|dict_s }}
+											</a>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						{% endblock %}
+					</div>
+
+                    {% block pPageUIExtensionNavigationMenuSidebar %}
+                        {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                            {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                        {% endif %}
+                    {% endblock %}
+
+					{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
+						<div class="logo">
+							{% block pNavigationSideMenuLogo %}
+								{# This is a debug helper to know in which screen size we are #}
+								{% if app['kernel'].debug == true %}
+									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
+								{% endif %}
+								<a href="{{ get_config_parameter('app_icon_url') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
+								</a>
+							{% endblock %}
+						</div>
+					{% endif %}
+				</nav>
+			{% endblock %}
+		{% endblock %}
+		
+		{% block pMainWrapper %}
+		<div class="container-fluid" id="main-wrapper">
+			<div class="row">
+				<div class="col-xs-12 col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
+                    <section class="row">
+						<div class="col-xs-12">
+							{% include 'itop-portal-base/portal/templates/helpers/session_messages/session_messages.html.twig' %}
+						</div>
+					</section>
+					<section class="row" id="main-header">
+						{% block pMainHeader %}
+						{% endblock %}
+					</section>
+					<section class="row" id="main-content">
+						{% block pMainContent %}
+						{% endblock %}
+					</section>
+				</div>
+			</div>
+
+			{% block pPageUIExtensionMainContent %}
+                {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')] is defined %}
+                    {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')]|raw }}
+                {% endif %}
+			{% endblock %}
+		</div>
+		{% endblock %}
+		
+		<footer id="footer-wrapper">
+			{% block pPageFooter%}
+				{#<a href="http://www.combodo.com">iTop &copy; {{ "now"|date('Y') }}</a>#}
+			{% endblock %}
+		</footer>
+	
+		{% block pModalForAllWrapper %}
+			<div class="modal fade" id="modal-for-all" role="dialog" tabindex="-1">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+		{% block pModalForAlert %}
+			<div class="modal fade" id="modal-for-alert" role="dialog" tabindex="-1">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Portal:Button:Close'|dict_s }}"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title"></h4>
+						</div>
+						<div class="modal-body">
+							<div class="alert">
+							</div>
+							<div class="text-right">
+								<button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'Portal:Button:Close'|dict_s }}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+
+		{% block pPageOverlay %}
+			<div id="page_overlay" class="global_overlay">
+				<div class="overlay_content">
+					{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+				</div>
+			</div>
+		{% endblock %}
+
+		{% block pPageUIExtensionBody %}
+			{% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')] is defined %}
+				{{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')]|raw }}
+			{% endif %}
+		{% endblock %}
+	{% endblock %}
+	
+	{% block pPageLiveScripts %}
+		<script type="text/javascript">
+			{% block pPageLiveScriptHelpers %}
+				// Helper to get the application root url
+				var GetAbsoluteUrlAppRoot = function()
+				{
+					return '{{ app['combodo.absolute_url'] }}';
+				};
+				// Note: We might want to expose URLs instead of this kind of stuff... 🤔
+				var GetAddSessionMessageUrl = function()
+				{
+					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
+				};
+				// Helper to add a parameter to an url
+				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
+				{
+					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
+					return sUrl;
+				};
+				// Test is sString is a valid JSON string
+				var IsJSONString = function(sString)
+				{
+					try {
+						JSON.parse(sString);
+					} catch (oException) {
+						return false;
+					}
+					return true;
+				};
+				var GetContentLoaderTemplate = function()
+				{
+					return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
+				};
+				var ShowLoginDialog = function()
+				{
+                    var oModalElem = $('#modal-for-alert').clone();
+                    oModalElem.attr('id', '');
+                    oModalElem.find('.modal-content .modal-header .modal-title').html('{{ 'Error:HTTP:401'|dict_s|escape('js') }}');
+                    oModalElem.find('.modal-content .modal-body .alert').addClass('alert-danger').html('{{ 'Portal:ErrorUserLoggedOut'|dict_s|escape('js') }}');
+
+                    oModalElem.find('.modal-content .modal-body button').replaceWith( $('<button type="button" class="btn btn-primary" onclick="javascript:window.location.reload();">{{ 'UI:LogOff:ClickHereToLoginAgain'|dict_s|escape('js') }}</button>') );
+
+                    oModalElem.appendTo('body');
+                    oModalElem.modal('show');
+				};
+				var ShowErrorDialog = function(sBody, sTitle)
+				{
+				    if(sTitle === undefined)
+					{
+					    sTitle = '{{ 'Error:HTTP:500'|dict_s|escape('js') }}';
+					}
+				    if(sBody === undefined)
+					{
+                        sBody = '{{ 'Error:XHR:Fail'|dict_format(constant('ITOP_APPLICATION_SHORT'))|escape('js') }}';
+					}
+					var oModalElem = $('#modal-for-alert');
+                    oModalElem.find('.modal-content .modal-header .modal-title').html(sTitle);
+                    oModalElem.find('.modal-content .modal-body .alert').addClass('alert-danger').html(sBody);
+                    oModalElem.modal('show');
+				};
+			{% endblock %}
+			
+			$(document).ready(function(){
+				{% block pPageReadyScripts %}
+					// Add proprietary header to identify our XHR calls
+					$(document).ajaxSend(function(oEvent, oXHR, oOptions) {
+						oXHR.setRequestHeader('X-Combodo-Ajax', 'true');
+					});
+					// Handle AJAX errors (exceptions (500), logout (401), ...)
+					$(document).ajaxError(function(oEvent, oXHR, oSettings, sError){
+					    if(oXHR.status === 401)
+						{
+						    ShowLoginDialog();
+						}
+                        else if(oXHR.status === 404)
+                        {
+                            ShowErrorDialog('{{ 'UI:ObjectDoesNotExist'|dict_s|escape('js') }}', '{{ 'Error:HTTP:404'|dict_s|escape('js') }}');
+                        }
+                        else if(oXHR.responseText !== undefined && IsJSONString(oXHR.responseText) === true)
+                        {
+                            var oData = JSON.parse(oXHR.responseText);
+                            // Catching AJAX exception with detailed error.
+                            if( (oData.error_message !== undefined) && (oData.error_title !== undefined) )
+                            {
+                                ShowErrorDialog(oData.error_message, oData.error_title);
+                            }
+                            else
+                            {
+                                ShowErrorDialog();
+                            }
+                        }
+                        else
+                        {
+                            ShowErrorDialog();
+                        }
+					});
+					
+					// Initialize confirmation message handler when a form with touched fields is closed
+					$('body').portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
+				{% endblock %}
+			});
+		</script>
+	{% endblock %}
+
+	{% block pPageExtensionsScripts %}
+        {# UI Extensions inline JS #}
+        {% if app['ui_extensions_helper'].js_inline is not null %}
+			<script type="text/javascript">
+				{{ app['ui_extensions_helper'].js_inline|raw }}
+			</script>
+        {% endif %}
+	{% endblock %}
+</body>
+</html>

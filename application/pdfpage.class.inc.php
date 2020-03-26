@@ -1,15 +1,53 @@
 <?php
-require_once(APPROOT.'lib/tcpdf/tcpdf.php');
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+require_once(APPROOT.'application/utils.inc.php');
 
 /**
  * Custom class derived from TCPDF for providing custom headers and footers
+ *
  * @author denis
  *
  */
 class iTopPDF extends TCPDF
 {
 	protected $sDocumentTitle;
-	
+
+	/**
+	 * Shortcut for {@link TCPDF::SetFont}, to use the font configured
+	 *
+	 * @param string $style
+	 * @param int $size
+	 * @param string $fontfile
+	 * @param string $subset
+	 * @param bool $out
+	 *
+	 * @uses \TCPDF::SetFont()
+	 * @uses \iTopPDF::GetPdfFont()
+	 * @since 2.7.0
+	 */
+	public function SetFontParams($style, $size, $fontfile='', $subset='default', $out=true)
+	{
+		$siTopFont = self::GetPdfFont();
+		$this->SetFont($siTopFont, $style, $size, $fontfile, $subset, $out);
+	}
+
 	public function SetDocumentTitle($sDocumentTitle)
 	{
 		$this->sDocumentTitle = $sDocumentTitle;
@@ -17,26 +55,29 @@ class iTopPDF extends TCPDF
 
 	/**
 	 * Builds the custom header. Called for each new page.
+	 *
 	 * @see TCPDF::Header()
 	 */
 	public function Header()
 	{
 		// Title
 		// Set font
-		$this->SetFont('dejavusans', 'B', 10);
-		
+		$this->SetFontParams('B', 10);
+
 		$iPageNumberWidth = 25;
 		$aMargins = $this->getMargins();
-		
+
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
-		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		$this->SetFont('dejavusans', '', 10);
-		
+		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2 * $iPageNumberWidth, 15, $this->sDocumentTitle,
+			0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->SetFontParams('', 10);
+
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
-		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber' ,$this->page), 0, 'R', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		
+		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber', $this->page), 0, 'R', false, 0 /* $ln */, '',
+			'', true, 0, false, true, 15, 'M' /* $valign */);
+
 		// Branding logo
 		$sBrandingIcon = APPROOT.'images/itop-logo.png';
 		if (file_exists(MODULESROOT.'branding/main-logo.png'))
@@ -51,6 +92,18 @@ class iTopPDF extends TCPDF
 	{
 		// No footer
 	}
+
+	/**
+	 * dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
+	 * @return string font in the config file (export_pdf_font)
+	 */
+	public static function GetPdfFont()
+	{
+		$oConfig = utils::GetConfig();
+		$sPdfFont = $oConfig->Get('export_pdf_font');
+
+		return $sPdfFont;
+	}
 }
 
 /**
@@ -58,49 +111,45 @@ class iTopPDF extends TCPDF
  */
 class PDFPage extends WebPage
 {
-	/**
-	 * Instance of the TCPDF object for creating the PDF
-	 * @var TCPDF
-	 */
+	/** @var \iTopPDF Instance of the TCPDF object for creating the PDF */
 	protected $oPdf;
-	
+
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
 		parent::__construct($s_title);
-		define(K_PATH_FONTS, APPROOT.'lib/tcpdf/fonts');
-		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, 'UTF-8', false);
-		
+		define(K_PATH_FONTS, APPROOT.'lib/combodo/tcpdf/fonts');
+		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
+
 		// set document information
 		$this->oPdf->SetCreator(PDF_CREATOR);
 		$this->oPdf->SetAuthor('iTop');
 		$this->oPdf->SetTitle($s_title);
 		$this->oPdf->SetDocumentTitle($s_title);
-		
+
 		$this->oPdf->setFontSubsetting(true);
-		
-		// Set font
+
 		// dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
-		$this->oPdf->SetFont('dejavusans', '', 10, '', true);
-		
+		$this->oPdf->SetFontParams('', 10, '', true);
+
 		// set auto page breaks
 		$this->oPdf->SetAutoPageBreak(true, 15); // 15 mm break margin at the bottom
 		$this->oPdf->SetTopMargin(15);
-		
+
 		// Add a page, we're ready to start
 		$this->oPdf->AddPage();
-		
+
 		$this->SetContentDisposition('inline', $s_title.'.pdf');
 		$this->SetDefaultStyle();
-		
+
 	}
-	
+
 	/**
 	 * Sets a default style (suitable for printing) to be included each time $this->oPdf->writeHTML() is called
 	 */
 	protected function SetDefaultStyle()
 	{
 		$this->add_style(
-<<<EOF
+			<<<EOF
 table {
 	padding: 2pt;
 }
@@ -124,19 +173,21 @@ td.icon {
 	width: 30px;
 }
 EOF
-		);		
+		);
 	}
-	
+
 	/**
 	 * Get access to the underlying TCPDF object
-	 * @return TCPDF
+	 *
+	 * @return \iTopPDF
 	 */
 	public function get_tcpdf()
 	{
 		$this->flush();
+
 		return $this->oPdf;
 	}
-	
+
 	/**
 	 * Writes the currently buffered HTML content into the PDF. This can be useful:
 	 * - to sync the flow in case you want to access the underlying TCPDF object for some specific/graphic output
@@ -156,39 +207,42 @@ EOF
 			$this->s_content = '';
 		}
 	}
-	
+
 	/**
 	 * Whether or not the page is a PDF page
+	 *
 	 * @return boolean
 	 */
 	public function is_pdf()
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
+	 *
 	 * @return string
 	 * @see WebPage::output()
 	 */
 	public function output()
 	{
 		$this->add_header('Content-type: application/x-pdf');
-    	if (!empty($this->sContentDisposition))
-    	{
+		if (!empty($this->sContentDisposition))
+		{
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
-    	}
-    	foreach($this->a_headers as $s_header)
-        {
-            header($s_header);
-        }
-        $this->flush();
+		}
+		foreach ($this->a_headers as $s_header)
+		{
+			header($s_header);
+		}
+		$this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
-	
+
 	public function get_pdf()
 	{
 		$this->flush();
+
 		return $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
 }

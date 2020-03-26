@@ -1,21 +1,21 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Test\UnitTest;
 /**
@@ -26,17 +26,24 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use PHPUnit\Framework\TestCase;
+use SetupUtils;
 
 define('DEBUG_UNIT_TEST', true);
 
 class ItopTestCase extends TestCase
 {
+	const TEST_LOG_DIR = 'test';
+
     protected function setUp()
 	{
 		@include_once '../approot.inc.php';
         @include_once '../../approot.inc.php';
 		@include_once '../../../approot.inc.php';
 		@include_once '../../../../approot.inc.php';
+		@include_once '../../../../../approot.inc.php';
+		@include_once '../../../../../../approot.inc.php';
+		@include_once '../../../../../../../approot.inc.php';
+		@include_once '../../../../../../../../approot.inc.php';
 
         $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 
@@ -56,4 +63,37 @@ class ItopTestCase extends TestCase
 	        }
         }
     }
+
+	public function GetMicroTime()
+	{
+		list($uSec, $sec) = explode(" ", microtime());
+		return ((float)$uSec + (float)$sec);
+	}
+
+	public function WriteToCsvHeader($sFilename, $aHeader)
+	{
+		$sResultFile = APPROOT.'log/'.$sFilename;
+		if (is_file($sResultFile))
+		{
+			@unlink($sResultFile);
+		}
+		SetupUtils::builddir(dirname($sResultFile));
+		file_put_contents($sResultFile, implode(';', $aHeader)."\n");
+	}
+
+	public function WriteToCsvData($sFilename, $aData)
+	{
+		$sResultFile = APPROOT.'log/'.$sFilename;
+		$file = fopen($sResultFile, 'a');
+		fputs($file, implode(';', $aData)."\n");
+		fclose($file);
+	}
+
+	public function GetTestId()
+	{
+		$sId = str_replace('"', '', $this->getName());
+		$sId = str_replace(' ', '_', $sId);
+		return $sId;
+	}
+
 }

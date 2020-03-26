@@ -33,13 +33,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
 	'Core:AttributeDashboard' => '面板',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard+' => '',
 
 	'Core:AttributePhoneNumber' => '电话号码',
-	'Core:AttributePhoneNumber+' => '~~',
+	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => '报废日期',
-	'Core:AttributeObsolescenceDate+' => '~~',
+	'Core:AttributeObsolescenceDate+' => '',
 
 	'Core:AttributeTagSet' => '清单',
 	'Core:AttributeTagSet+' => '',
@@ -104,8 +104,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
+	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
 
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
@@ -202,6 +202,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -534,6 +541,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -614,8 +623,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -921,7 +930,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:DateTimeFormat' => '日期和时间格式',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => '自定义格式: %1$s',
-	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
+	'Core:BulkExport:PDF:PageNumber' => '第 %1$s 页',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -949,7 +958,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
 
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
+	'Class:TagSetFieldData/Attribute:code' => '代码',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
@@ -994,25 +1003,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:BackgroundTask' => '后台任务',
-	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_date' => '最近运行时间',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
 	'Class:BackgroundTask/Attribute:next_run_date' => '下次运行时间',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '',
 	'Class:BackgroundTask/Attribute:total_exec_count' => '一共执行的次数',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => '最近运行时长',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:min_run_duration' => '最少运行时长',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:max_run_duration' => '最多运行时长',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:average_run_duration' => '平均运行时长',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:running' => '运行中',
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => '状态',
@@ -1032,7 +1041,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:planned' => '已计划',
 	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => '事件',
-	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
 ));

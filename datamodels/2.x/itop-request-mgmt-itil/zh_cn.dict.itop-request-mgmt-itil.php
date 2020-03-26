@@ -258,7 +258,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待批准',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求到本身',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '将该解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
@@ -266,7 +266,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => '该组织的所有用户需求',
+	'Organization:Overview:MyUserRequests' => '我在该组织内发起的需求',
+	'Organization:Overview:Tickets' => '该组织内的所有工单',
 ));

@@ -1,26 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * DisplayBlock and derived class
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/webpage.class.inc.php');
@@ -91,7 +85,7 @@ class DisplayBlock
 	{
 		$oDummyFilter = new DBObjectSearch($oSet->GetClass());
 		$aKeys = array();
-		$oSet->OptimizeColumnLoad(array('id')); // No need to load all the columns just to get the id
+		$oSet->OptimizeColumnLoad(array($oSet->GetClassAlias() => array())); // No need to load all the columns just to get the id
 		while($oObject = $oSet->Fetch())
 		{
 			$aKeys[] = $oObject->GetKey();	
@@ -249,7 +243,7 @@ class DisplayBlock
 				$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
 			} catch (Exception $e)
 			{
-
+				IssueLog::Error('Exception during GetDisplay: ' . $e->getMessage());
 			}
 			$sHtml .= "</div>\n";
 		}
@@ -1886,11 +1880,11 @@ class MenuBlock extends DisplayBlock
 		{
 			if (count($aFavoriteActions) > 0)
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 			else
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 
 			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
@@ -1898,7 +1892,8 @@ class MenuBlock extends DisplayBlock
 			if ($this->m_sStyle == 'details')
 			{
 				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}\"";
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fa fa-search\" onclick='$sSearchAction'></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class',
+						MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fas fa-search\" onclick='$sSearchAction'></span></div>";
 			}
 
 
@@ -1909,7 +1904,8 @@ class MenuBlock extends DisplayBlock
             }
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
 			{
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fa fa-refresh\" onclick=\"$sRefreshAction\"></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'),
+						ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fas fa-sync\" onclick=\"$sRefreshAction\"></span></div>";
 			}
 
 

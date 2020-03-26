@@ -125,6 +125,11 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 function OnSubmit(sFormId)
 {
 	window.bInSubmit=true; // This is a submit, make sure that when the page gets unloaded we don't cancel the action
+
+	if ($('#'+sFormId).data('force_submit')) {
+		return true;
+	}
+
 	var bResult = CheckFields(sFormId, true);
 	if (!bResult)
 	{

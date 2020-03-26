@@ -1,38 +1,39 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Heart beat of the application (process asynchron tasks such as broadcasting email)
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
+
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+// early exit
+if (file_exists(READONLY_MODE_FILE))
+{
+	echo "iTop is read-only. Exiting...\n";
+	exit(EXIT_CODE_ERROR);
+}
+
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
-
-const EXIT_CODE_ERROR = -1;
-const EXIT_CODE_FATAL = -2;
 
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile))
@@ -43,7 +44,7 @@ if (!file_exists($sConfigFile))
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-$oCtx = new ContextTag('CRON');
+$oCtx = new ContextTag(ContextTag::TAG_CRON);
 
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
@@ -96,6 +97,8 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	{
 		// Record (when starting) that this task was started, just in case it crashes during the execution
 		$oTask->Set('latest_run_date', $oDateStarted->format('Y-m-d H:i:s'));
+		// Record the current user running the cron
+		$oTask->Set('system_user', utils::GetCurrentUserName());
 		$oTask->DBUpdate();
 		$sMessage = $oProcess->Process($iTimeLimit);
 	}
@@ -177,9 +180,8 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	/** @var DBObjectSet $oTasks */
 	$oTasks = new DBObjectSet($oSearch);
-	while (
-		/** @var BackgroundTask $oTask */
-	$oTask = $oTasks->Fetch())
+	/** @var BackgroundTask $oTask */
+	while ($oTask = $oTasks->Fetch())
 	{
 		$sTaskClass = $oTask->Get('class_name');
 		// The BackgroundTask can point to a non existing class : this could happen for example if an extension has been removed
@@ -223,18 +225,26 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	while (time() < $iTimeLimit)
 	{
+		// Verify files instead of reloading the full config each time
+		if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE))
+		{
+			$oP->p("Maintenance detected, exiting");
+			exit(EXIT_CODE_ERROR);
+		}
+
 		$oTasks = new DBObjectSet($oSearch);
 		$aTasks = array();
 		while ($oTask = $oTasks->Fetch())
 		{
 			$aTasks[$oTask->Get('class_name')] = $oTask;
 		}
-		
+
 		$oNow = new DateTime();
 		ReorderProcesses($aProcesses, $aTasks, $oNow, $bVerbose, $oP);
-		
+
 		foreach ($aProcesses as $oProcess)
 		{
+
 			$sTaskClass = get_class($oProcess);
 			if (!array_key_exists($sTaskClass, $aTasks))
 			{
@@ -275,13 +285,11 @@ function CronExec($oP, $aProcesses, $bVerbose)
 				try
 				{
 					$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
-				}
-				catch (MySQLHasGoneAwayException $e)
+				} catch (MySQLHasGoneAwayException $e)
 				{
 					$oP->p("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
 					exit(EXIT_CODE_FATAL);
-				}
-				catch (ProcessFatalException $e)
+				} catch (ProcessFatalException $e)
 				{
 					$oP->p("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
 					IssueLog::Error("Cron.php error : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().')');
@@ -347,10 +355,15 @@ function DisplayStatus($oP)
  *       In case the task crashes AND the previous task was very quick (less than 1 second)
  *       both tasks will have the same last_run_date. In this case it is important NOT to start again
  *       by the task that just crashed.
+ *
  * @param iProcess[] $aProcesses
  * @param BackgroundTask[] $aTasks
  * @param DateTime $oNow
+ * @param $bVerbose
  * @param Page $oP
+ *
+ * @throws \ArchivedObjectException
+ * @throws \CoreException
  */
 function ReorderProcesses(&$aProcesses, $aTasks, $oNow, $bVerbose, &$oP)
 {
@@ -504,7 +517,6 @@ if (utils::IsModeCLI())
 }
 else
 {
-	$_SESSION['login_mode'] = 'basic';
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 }
@@ -522,6 +534,10 @@ $aProcesses = array();
 foreach (get_declared_classes() as $sPHPClass)
 {
 	$oRefClass = new ReflectionClass($sPHPClass);
+	if ($oRefClass->isAbstract())
+	{
+		continue;
+	}
 	$oExtensionInstance = null;
 	if ($oRefClass->implementsInterface('iProcess'))
 	{
@@ -561,25 +577,21 @@ try
 {
 	$oConfig = utils::GetConfig();
 	$oMutex = new iTopMutex('cron');
-	if ($oMutex->TryLock())
+	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 	{
-		// Note: testing this now in case some of the background processes forces the read-only mode for a while
-		//       in that case it is better to exit with the check on reentrance (mutex)
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-		{
-			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
-			$oP->Output();
-			exit(EXIT_CODE_ERROR);
-		}
-
-		CronExec($oP, $aProcesses, $bVerbose);
-
-		$oMutex->Unlock();
+		$oP->p("A maintenance is ongoing");
 	}
 	else
 	{
-		// Exit silently
-		$oP->p("Already running...");
+		if ($oMutex->TryLock())
+		{
+			CronExec($oP, $aProcesses, $bVerbose);
+		}
+		else
+		{
+			// Exit silently
+			$oP->p("Already running...");
+		}
 	}
 }
 catch (Exception $e)
@@ -591,8 +603,23 @@ catch (Exception $e)
 		$oP->p($e->getTraceAsString());
 	}
 }
+finally
+{
+	try
+	{
+		$oMutex->Unlock();
+	}
+	catch (Exception $e)
+	{
+		$oP->p("ERROR: '".$e->getMessage()."'");
+		if ($bDebug)
+		{
+			// Might contain verb parameters such a password...
+			$oP->p($e->getTraceAsString());
+		}
+	}
+}
 
 $oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
 $oP->Output();
-?>

@@ -161,6 +161,11 @@ class DBUnionSearch extends DBSearch
 		return $this->aSearches;
 	}
 
+	public function GetFirstJoinedClass()
+	{
+		return $this->GetClass();
+	}
+
 	/**
 	 * Limited to the selected classes
 	 */
@@ -257,6 +262,24 @@ class DBUnionSearch extends DBSearch
 		}
 		return $bRet;
 	}
+
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
+		}
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+	}
+
+
 
 	public function IsAny()
 	{
@@ -383,6 +406,16 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
+	public function Filter($sClassAlias, DBSearch $oFilter)
+	{
+		$aSearches = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+		}
+		return new DBUnionSearch($aSearches);
+	}
+
 	public function Intersect(DBSearch $oFilter)
 	{
 		$aSearches = array();
@@ -454,9 +487,24 @@ class DBUnionSearch extends DBSearch
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * @see DBSearch::ToJSON()
+	 */
+	public function ToJSON()
+	{
+		$sRet = array('unions' => array());
+		foreach ($this->aSearches as $oSearch)
+		{
+			$sRet['unions'][] = $oSearch->ToJSON();
+		}
+		return $sRet;
+	}
+
+	/**
 	 * Returns a new DBUnionSearch object where duplicates queries have been removed based on their OQLs
-	 * 
+	 *
 	 * @return \DBUnionSearch
+	 * @throws \CoreException
 	 */
 	public function RemoveDuplicateQueries()
 	{
@@ -498,7 +546,7 @@ class DBUnionSearch extends DBSearch
 	{
 		if (count($this->aSearches) == 1)
 		{
-			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 		}
 
 		$aSQLQueries = array();
@@ -650,6 +698,8 @@ class DBUnionSearch extends DBSearch
 			$oSearch->SetDataFiltered();
 		}
 	}
+
+
 
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{

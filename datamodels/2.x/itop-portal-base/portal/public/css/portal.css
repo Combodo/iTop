@@ -1,0 +1,1378 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+/*!
+ * Combodo portal template v1.0.0
+ */
+/*******************/
+/* Global settings */
+/*******************/
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px;
+  }
+  body.home {
+    padding-top: 70px;
+  }
+}
+footer {
+  margin: 5em 1em;
+  text-align: center;
+}
+/* Environment banner */
+#envbanner {
+  position: relative;
+  z-index: 10;
+  padding: 5px 15px;
+  text-align: center;
+}
+#envbanner > button {
+  margin-left: 5px;
+  color: #000;
+}
+/* Navigation menu */
+.navbar-nav .dropdown-menu a .glyphicon, .user_infos .dropdown-menu a .glyphicon {
+  margin-right: 15px;
+}
+.nav > li > a > span.brick_icon, .dropdown-menu > li > a > span.brick_icon {
+  margin-right: 20px;
+  vertical-align: sub;
+}
+/* Topbar */
+#topbar .navbar-header {
+  position: relative;
+  z-index: 2;
+}
+#topbar .navbar-collapse {
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+}
+#topbar .navbar-collapse > .navbar-nav {
+  padding-top: 30px;
+}
+#topbar .navbar-brand > img {
+  max-height: 100%;
+}
+#topbar .user_infos {
+  text-decoration: none;
+}
+#topbar .user_photo {
+  position: absolute;
+  display: block;
+  top: 5px;
+  left: 10px;
+  width: 65px;
+  height: 65px;
+  background-size: 100%;
+  background-position: center center;
+  background-color: #585653;
+  border: 2px solid #FFFFFF;
+  border-radius: 100%;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+}
+#topbar .user_fullname {
+  display: inline-block;
+  position: absolute;
+  padding-left: 85px;
+  max-width: 55%;
+  /*color: $white;*/
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+/* Sidebar */
+@media (min-width: 768px) {
+  #sidebar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 0px;
+    /* Overriding BS */
+    height: 100%;
+  }
+  #sidebar .user_card {
+    padding: 30px 0px;
+    text-align: center;
+  }
+  #sidebar .user_card .user_photo {
+    margin: 0px auto 10px auto;
+    width: 80px;
+    height: 80px;
+    background-size: 100%;
+    background-position: center center;
+    background-color: #585653;
+    background-repeat: no-repeat;
+    border: 2px solid #FFFFFF;
+    border-radius: 100%;
+  }
+  #sidebar .user_card .user_infos {
+    font-size: 1em;
+    color: #FFFFFF;
+  }
+  #sidebar .user_card .user_infos .dropdown-toggle {
+    color: #FFFFFF;
+  }
+  #sidebar .user_card .user_options.dropdown-menu {
+    width: 92%;
+    left: 4%;
+  }
+  #sidebar .user_card .user_fullname {
+    font-weight: 600;
+  }
+  #sidebar .menu {
+    max-height: 59%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #sidebar .menu .navbar-nav {
+    width: 100%;
+  }
+  #sidebar .menu .navbar-nav > li {
+    width: 100%;
+  }
+  #sidebar .menu .navbar-nav > li > a > .brick_icon {
+    width: 1.2em;
+    vertical-align: sub;
+    text-align: center;
+    margin-right: 10px;
+  }
+  #sidebar .logo {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+  }
+  #sidebar .logo img {
+    max-width: 100%;
+    max-height: 50px;
+    /* Main content */
+  }
+  #main-wrapper {
+    margin-top: 20px;
+  }
+}
+/* Warning : Not a offical BS breakpoint */
+@media (min-width: 1600px) {
+  #sidebar .user_card .user_photo {
+    width: 120px;
+    height: 120px;
+  }
+  #sidebar .menu .nav > li > a > .brick_icon {
+    margin-right: 20px;
+  }
+}
+/* Overlays*/
+.global_overlay {
+  z-index: 9999;
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+#page_overlay .overlay_content {
+  margin-top: 20em;
+  width: 100%;
+  color: white;
+}
+.overlay_content {
+  text-align: center;
+}
+.content_loader {
+  text-align: center;
+}
+.content_loader .icon {
+  margin-bottom: 0.3em;
+  /*width: 52px;*/
+  height: 38px;
+  /* 50px; */
+  /* Hack to make loader circle perfectly */
+  font-size: 3em;
+  /* 4em; */
+  animation: spin 1.2s linear infinite;
+  -webkit-animation: spin 1.2s linear infinite;
+  -moz-animation: spin 1.2s linear infinite;
+  -ms-animation: spin 1.2s linear infinite;
+}
+.content_loader .message {
+  font-size: 1.5em;
+  /* 2em; */
+}
+.datatables_overlay {
+  padding: 5% 0px !important;
+  background-color: white;
+}
+/******************/
+/* Global classes */
+/******************/
+.vertical-center {
+  /* Make it a flex container */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  /* Align the bootstrap's container vertically */
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+   hence the bootstrap's container won't be aligned to the center anymore.
+   Therefore, we should use the following declarations to get it centered again */
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.text_decoration {
+  vertical-align: baseline;
+  margin-right: 8px;
+}
+/*********************/
+/* Global animations */
+/*********************/
+/* Spin */
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+@-ms-keyframes spin {
+  100% {
+    -ms-transform: rotate(360deg);
+  }
+}
+/*********************/
+/* BS theme override */
+/*********************/
+.list-group.tree {
+  margin-top: 11px;
+  margin-bottom: -11px;
+}
+.list-group.tree .list-group-item {
+  padding-right: 0px;
+  /* To align all actions on the right without indent */
+}
+/******************/
+/* Modal settings */
+/******************/
+#modal-for-alert {
+  z-index: 9999;
+  /* Should always be on top to display errors messages */
+}
+.modal-content .content_loader {
+  margin: 7em 0em;
+  text-align: center;
+}
+/*******************/
+/* Clipboard icons */
+/*******************/
+.url-to-clipboard.url-to-clipboard-icon {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s linear;
+}
+.url-to-clipboard.url-to-clipboard-icon:hover {
+  opacity: 1;
+}
+.url-to-clipboard-tooltip-copied {
+  color: green;
+  margin-right: 3px;
+}
+/**************************/
+/* MagnificPopup settings */
+/**************************/
+.mfp-bg {
+  z-index: 1200;
+}
+.mfp-wrap {
+  z-index: 1210;
+}
+.mfp-img {
+  cursor: pointer;
+  cursor: zoom-out;
+}
+/********************/
+/* Typeahead setting */
+/********************/
+.twitter-typeahead .tt-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .twitter-typeahead .tt-menu {
+    max-height: 300px;
+  }
+}
+.twitter-typeahead .tt-dataset > .content_loader {
+  margin: 10px 0px;
+  text-align: center;
+  font-size: 0.6em;
+}
+.twitter-typeahead .tt-dataset > .content_loader .icon {
+  height: 25px;
+}
+.twitter-typeahead .tt-dataset .no_result {
+  text-align: center;
+  font-style: italic;
+}
+/*****************/
+/* Home settings */
+/*****************/
+.home #main-wrapper {
+  padding-top: 15px;
+}
+.home .tile {
+  display: block;
+  margin-bottom: 8px;
+  padding: 0em 1em;
+  min-height: 4em;
+  background-color: #FFFFFF;
+  background-image: none;
+  border: none;
+  border-radius: 0px;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  line-height: 4em;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.home .tile .tile_decoration {
+  position: absolute;
+  top: 0.3em;
+  left: 2.5em;
+}
+.home .tile .tile_title {
+  font-weight: bold;
+  color: #777;
+}
+.home .tile .tile_title > span.icon {
+  color: #EA7D1E;
+}
+.home .tile .tile_description {
+  display: none;
+  color: #555555;
+}
+/**********************************/
+/* ManageBrick badge tile display */
+/**********************************/
+.home a.tile.tile_badge > div {
+  display: table;
+  width: 100%;
+}
+.home a.tile.tile_badge > div > div {
+  display: table-row;
+}
+.home a.tile.tile_badge > div > div > div {
+  display: table-cell;
+}
+@media (max-width: 768px) {
+  .home a.tile.tile_badge > div > div > div.tile_body div.tile_count {
+    position: absolute;
+    top: 0em;
+    right: 2em;
+    text-align: right;
+    font-size: 1.2em;
+  }
+  .home a.tile.tile_badge > div.tile_description {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .home .tile {
+    display: block;
+    margin-bottom: 25px;
+    padding: 40px 40px 30px 40px;
+    min-height: 10em;
+    text-align: left;
+    transition: all 0.2s linear;
+  }
+  .home .tile:hover {
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  .home .tile .tile_decoration {
+    display: block;
+    position: relative;
+    float: left;
+    top: 1.5em;
+    left: initial;
+    margin: 0px 30px 15px 0px;
+  }
+  .home .tile .tile_body {
+    display: block;
+    padding-left: 4.3em;
+    text-align: left;
+    line-height: 1.5em;
+  }
+  .home .tile .tile_title {
+    margin-bottom: 1em;
+    font-size: 1em;
+  }
+  .home .tile .tile_description {
+    display: block;
+    text-align: left;
+  }
+  .home a.tile.tile_badge {
+    height: 10em;
+    overflow: hidden;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration {
+    top: unset;
+    vertical-align: middle;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+    font-size: 4em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    text-align: right;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_title {
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: 1em;
+    font-weight: normal;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 2em;
+    font-weight: bold;
+    color: #777;
+  }
+  .home a.tile.tile_badge .tile_description {
+    display: none;
+  }
+}
+@media (min-width: 992px) {
+  .home .tile {
+    min-height: 14em;
+    padding: 30px 40px 30px 40px;
+  }
+  .home .tile .tile_decoration > span.icon {
+    font-size: 4em;
+  }
+  .home .tile .tile_body {
+    padding-left: 6.3em;
+  }
+  .home .tile .tile_title {
+    font-size: 1.4em;
+  }
+  .home .tile .tile_description {
+    font-size: 1.2em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_title {
+    font-size: 1.2em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_count {
+    font-size: 3em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+    font-size: 4em;
+  }
+  .home a.tile.tile_badge .tile_description {
+    display: block;
+    font-size: 1em;
+    text-align: center;
+  }
+}
+@media (min-width: 1200px) {
+  .home .tile {
+    margin-bottom: 40px;
+    min-height: 15em;
+    padding: 40px 50px 30px 50px;
+  }
+  .home .tile .tile_decoration {
+    margin: 0px 40px 15px 0px;
+    top: 1.5em;
+  }
+  .home .tile .tile_decoration > span.icon {
+    font-size: 6em;
+  }
+  .home .tile .tile_body {
+    padding-left: 9.1em;
+  }
+  .home .tile .tile_title {
+    font-size: 1.5em;
+  }
+  .home .tile .tile_description {
+    font-size: 1.2em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+    font-size: 6em;
+  }
+}
+/********************/
+/* Modules settings */
+/********************/
+#main-header {
+  text-align: center;
+}
+#main-header-title {
+  margin-bottom: 15px;
+}
+#main-header-title .subtitle {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+#main-header-actions {
+  margin-bottom: 15px;
+}
+/* This is no longer necessary but we keep it just in case */
+/*#main-header-actions .btn-group .btn{
+ padding: 0em 1.5em;
+ line-height: 2.4em;
+ font-size: 14px;
+ background-image: none;
+ }*/
+@media (min-width: 768px) {
+  #main-header:after {
+    clear: both;
+  }
+  #main-header-title {
+    float: left;
+    margin-bottom: 0px;
+    min-height: 6em;
+    text-align: left;
+  }
+  #main-header-actions {
+    float: right;
+    margin-bottom: 0px;
+  }
+}
+.dataTables_wrapper {
+  padding: 10px 10px;
+}
+.dataTable.table td img {
+  max-width: 100%;
+  height: initial !important;
+}
+#brick_content_toolbar {
+  /* margin: 10px 0px 6px 0px; */
+  padding: 10px;
+}
+#brick_content_toolbar > div label {
+  font-weight: normal;
+  white-space: nowrap;
+  text-align: left;
+}
+#brick_content_toolbar > div label input {
+  margin-left: 0.5em;
+  display: inline-block;
+  width: 130px;
+}
+/***********************/
+/* Brick communication */
+/***********************/
+/* Home tile */
+.home .tile.tile_communication {
+  padding: 20px;
+  background-color: #EDEDED;
+  border: none;
+  font-weight: initial;
+}
+.home .tile_communication .carousel {
+  margin-bottom: 0px;
+  width: 100%;
+  height: 200px;
+}
+/**********************/
+/* Brick user profile */
+/**********************/
+#user-profile-wrapper .user_profile_picture .content_loader {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  padding-top: 4em;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  background-color: black;
+  opacity: 0.5;
+}
+#user-profile-wrapper .user_profile_picture .preview {
+  display: inline-block;
+  position: relative;
+  max-width: 175px;
+  max-height: 175px;
+  overflow: hidden;
+}
+#user-profile-wrapper .user_profile_picture .preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+#user-profile-wrapper .user_profile_picture .actions {
+  display: inline-block;
+  vertical-align: top;
+  /*middle;*/
+  margin-left: 5px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn {
+  display: block;
+  position: relative;
+  margin-bottom: 10px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn:last-child {
+  margin-bottom: 0px;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn.btn_edit {
+  overflow: hidden;
+}
+#user-profile-wrapper .user_profile_picture .actions .btn.btn_edit input {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+/****************/
+/* Brick browse */
+/****************/
+/* - Tree mode  */
+/****************/
+#brick_content_tree {
+  position: relative;
+  margin-top: 0px;
+}
+#brick_content_tree .list-group-item {
+  padding-top: 0px;
+}
+#brick_content_tree .list-group-item > .tree-item-wrapper {
+  display: block;
+  padding-top: 10px;
+  color: inherit;
+  text-decoration: inherit;
+  cursor: pointer;
+}
+.list-group-item > .list-group-item-actions {
+  /*display: none; Displaying actions only when hovering was not unanimous in the team */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.list-group-item:hover > .list-group-item-actions, .mosaic-group-item:hover > .mosaic-group-item-actions {
+  display: block;
+}
+.list-group-item .list-group-item-actions a:not(:first-child), .mosaic-group-item .mosaic-group-item-actions a:not(:first-child) {
+  margin-left: 10px;
+}
+.list-group-item .keep-spinning {
+  animation: spin 1s linear infinite;
+  -webkit-animation: spin 1s linear infinite;
+  -moz-animation: spin 1s linear infinite;
+  -ms-animation: spin 1s linear infinite;
+}
+.list-group.tree .list-group-item .list-group-item-description {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.8em;
+}
+/* Secondary actions */
+.list-group-item-actions .group-actions-wrapper, .mosaic-group-item-actions .group-actions-wrapper, table .group-actions-wrapper {
+  text-align: center;
+}
+table .group-actions {
+  position: relative;
+}
+.list-group-item-actions a.glyphicon-menu-hamburger, .mosaic-group-item-actions a.glyphicon-menu-hamburger, table .group-actions a.glyphicon-menu-hamburger {
+  cursor: pointer;
+  text-decoration: none;
+}
+.list-group-item-actions .item-action-wrapper, .mosaic-group-item-actions .item-action-wrapper, table .group-actions .item-action-wrapper {
+  display: none;
+  position: absolute;
+  z-index: 5;
+  bottom: -7px;
+  right: 15px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+}
+.list-group-item-actions .item-action-wrapper .glyphicon, .mosaic-group-item-actions .item-action-wrapper .glyphicon, table .group-actions .item-action-wrapper .glyphicon {
+  margin-right: 0.6em;
+}
+.list-group-item-actions .item-action-wrapper.collapse.in, .mosaic-group-item-actions .item-action-wrapper.collapse.in, table .group-actions .item-action-wrapper.collapse.in {
+  display: block;
+}
+.list-group-item-actions .item-action-wrapper .panel-body > p, .mosaic-group-item-actions .item-action-wrapper .panel-body > p, table .group-actions .item-action-wrapper .panel-body > p {
+  text-align: left;
+  white-space: nowrap;
+}
+.list-group-item-actions .item-action-wrapper .panel-body > p:last-child, .mosaic-group-item-actions .item-action-wrapper .panel-body > p:last-child, table .group-actions .item-action-wrapper .panel-body > p:last-child {
+  margin-bottom: 0px;
+}
+#brick_content_empty {
+  display: none;
+  padding: 40px;
+  font-size: 1.3em;
+  font-style: italic;
+}
+/* Loader */
+#brick_tree_overlay, #brick_mosaic_overlay {
+  display: none;
+  padding: 8% 0px;
+  border-radius: 0px 0px 4px 4px;
+  font-size: 1em;
+}
+/****************************************************************/
+/* - Mosaic mode                                                */
+/*                                                              */
+/* Note: Some of the CSS is factorised in the "Tree mode" part  */
+/*                                                              */
+/* Note: .mosaic-item-layout-x classes are for different        */
+/*   presentation modes. Like in binary, add the values to know */
+/*   which class to use.                                        */
+/*   - 1 is for name                                            */
+/*   - 2 is for description                                     */
+/*   - 4 is for image                                           */
+/*   eg. .mosaic-item-layout-5 when just name and image         */
+/****************************************************************/
+#brick_content_mosaic {
+  position: relative;
+  padding: 10px 10px 1px 10px;
+}
+/* Breadcrumb */
+#mosaic-breadcrumb {
+  margin-bottom: 5px;
+  padding-left: 0px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.mosaic-group {
+  display: none;
+}
+/* Only the first level is showed by default */
+.mosaic-group:first-of-type {
+  display: block;
+}
+.mosaic-group-back, .mosaic-group-item {
+  position: relative;
+  height: 55px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #FFFFFF;
+}
+.mosaic-group-back {
+  font-size: 25px;
+}
+.mosaic-item {
+  display: table;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #585653;
+  transition: all linear 0.3s;
+}
+.mosaic-item, .mosaic-item:hover, .mosaic-item:active, .mosaic-item:focus, .mosaic-item:visited {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.mosaic-item:active {
+  background-color: #9e510f;
+}
+.mosaic-item-image, .mosaic-item-text {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.mosaic-item-image > img {
+  max-width: 85%;
+}
+.mosaic-item-text {
+  max-width: 1px;
+  /* This is an arbitrary value. It is just here to make .mosaic-item-name wrap when there is a very long word in it. */
+  overflow: hidden;
+}
+.mosaic-group-item > .mosaic-group-item-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.mosaic-group-item-actions > a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.mosaic-group-item-actions > a:hover, .mosaic-group-item-actions > a:focus {
+  color: #EEEEEE;
+}
+@media (max-width: 768px) {
+  .mosaic-group-item > .mosaic-group-item-actions {
+    top: 12px;
+    right: 6px;
+  }
+  .mosaic-group-item > .mosaic-group-item-actions > .glyphicon {
+    margin-top: 5px;
+  }
+  .mosaic-group-item-actions > a {
+    font-size: 20px;
+    /* All layouts */
+  }
+  .mosaic-item-image {
+    width: 55px;
+    padding: 10px;
+  }
+  .mosaic-item-image > img {
+    max-height: 30px;
+  }
+  .mosaic-item-name {
+    font-size: 14px;
+    max-height: 50px;
+    overflow: hidden;
+  }
+  .mosaic-item-description {
+    display: none;
+    /* Layout 2 */
+  }
+  .mosaic-item-layout-2 .mosaic-item-description {
+    display: block;
+    /* Layout 5/7 */
+  }
+  .mosaic-item-layout-5 .mosaic-item-name, .mosaic-item-layout-7 .mosaic-item-name {
+    padding-right: 40px;
+  }
+}
+@media (min-width: 768px) {
+  .mosaic-group-item {
+    display: inline-block;
+    width: 32%;
+    height: 120px;
+    margin-right: 1.95%;
+    /* We don't put 2% to keep a margin in case of a bad browser rendering */
+    word-break: break-word;
+  }
+  .mosaic-item {
+    padding: 10px;
+  }
+  .mosaic-item:hover, .mosaic-item:focus {
+    background-color: #EA7D1E;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+    /* All layouts */
+    /* .mosaic-item-image{
+     vertical-align: inherit; Note: This was introduced to avoid image from going down the tile when .mosaic-item-name was way too long, but the .mosaic-item-image glitched by being a little too high. As a very long .mosaic-item-name is extremely rare, we decided that it was not worth it.
+     }*/
+  }
+  .mosaic-item-text .mosaic-item-text-wrapper {
+    max-height: 100px;
+    /* Must be .mosaic-item absolute height (in px) */
+  }
+  .mosaic-item-name {
+    max-height: 100%;
+    /* It's ok if description is pushed down and not visible; but we truncate before it flows out of the tile */
+    overflow: hidden;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .mosaic-item-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Layout 1 */
+  }
+  .mosaic-item-layout-1 .mosaic-item-name {
+    font-weight: inherit;
+    font-size: 14px;
+    /* Layout 7 */
+  }
+  .mosaic-item-layout-7 .mosaic-item-image {
+    display: none;
+  }
+  .mosaic-item-layout-3 .mosaic-item-description, .mosaic-item-layout-7 .mosaic-item-description {
+    margin-top: 10px;
+    max-height: 40px;
+    font-size: 10px;
+    /* Layout 5 & 7 */
+  }
+  .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
+    display: table-cell;
+    width: 65px;
+    padding-left: 5px;
+    padding-right: 10px;
+  }
+  .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
+    max-width: 65px;
+    /* Equals parent element width */
+    max-height: 100px;
+    /* Equals parent element height */
+  }
+}
+@media (min-width: 992px) {
+  .mosaic-item {
+    padding: 10px 15px;
+  }
+  .mosaic-group-back {
+    font-size: 40px;
+    /* Layout 5 & 7 */
+  }
+  .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
+    width: 105px;
+    padding-right: 18px;
+  }
+  .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
+    max-width: 105px;
+    /* Equals parent element width */
+    max-height: 100px;
+    /* Equals parent element height */
+  }
+  .mosaic-item-layout-5 .mosaic-item-name, .mosaic-item-layout-7 .mosaic-item-name {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1200px) {
+  .mosaic-group-item {
+    width: 24%;
+    height: 140px;
+    margin-right: 1.3%;
+    /* All layouts */
+  }
+  .mosaic-item-text .mosaic-item-text-wrapper {
+    max-height: 120px;
+    /* Must be .mosaic-item absolute height (in px) */
+    /* overflow hidden inherited */
+  }
+  .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
+    max-height: 120px;
+    /* Equals parent element height */
+  }
+}
+/* Helper classes to remove margin depending on the screen size */
+@media (min-width: 768px) and (max-width: 992px) {
+  .mosaic-group-item:nth-child(3n) {
+    margin-right: 0px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1200px) {
+  .mosaic-group-item:nth-child(3n) {
+    margin-right: 0px;
+  }
+}
+@media (min-width: 1200px) {
+  .mosaic-group-item:nth-child(4n) {
+    margin-right: 0px;
+  }
+}
+/****************/
+/* - List mode  */
+/****************/
+/****************/
+/* Filter brick */
+/****************/
+.tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+  width: 100%;
+}
+.tile.tile-filter-brick .tile_filterbox input[type="text"] {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    margin-bottom: 5px;
+  }
+}
+@media (min-width: 768px) {
+  .tile.tile-filter-brick .tile_filterbox form {
+    display: table;
+  }
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    display: table-cell;
+  }
+  .tile.tile-filter-brick .tile_filterbox button[type="submit"] {
+    margin-left: 5px;
+  }
+}
+@media (min-width: 992px) {
+  .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
+    display: table-cell;
+  }
+}
+/*********/
+/* Forms */
+/*********/
+.form_field .form_mandatory .control-label:after {
+  content: "\002a";
+  position: relative;
+  left: 3px;
+  color: #EA7D1E;
+  font-size: 0.9em;
+}
+/* Note: We don't put the .form_field selector as it must work for read-only */
+.form-control-static img {
+  max-width: 100% !important;
+  height: initial !important;
+}
+/* ExternalKey */
+.selectobject .input-group-addon {
+  cursor: pointer;
+}
+/* InlineImage */
+.inline-image {
+  cursor: pointer;
+  cursor: zoom-in;
+}
+/* CaseLog field */
+.caselog_field_entry {
+  border: 1px solid #ddd;
+  border-top: none;
+}
+.caselog_field_entry_header {
+  padding: 6px;
+  font-size: 0.9em;
+  border-bottom: 1px solid #FFFFFF;
+  background-color: #F2F2F2;
+}
+.caselog_field_entry_button {
+  display: block;
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  line-height: 15px;
+  font-size: 16px;
+  border: 1px solid #a6a6a6;
+  border-bottom-color: #979797;
+  cursor: pointer;
+}
+.caselog_field_entry_button:hover {
+  background-color: #cccccc;
+}
+.caselog_field_entry_button:before {
+  content: "▴";
+}
+.caselog_field_entry_button.collapsed:before {
+  content: "▾";
+}
+.caselog_field_entry_content {
+  margin: 10px;
+  overflow-x: auto;
+}
+/* collapsable sections*/
+.form_linkedset_toggler, .form_upload_toggler, .form_linkedset_toggler:hover, .form_upload_toggler:hover, .form_linkedset_toggler:focus, .form_upload_toggler:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.form_linkedset_toggler > .text, .form_upload_toggler > .text {
+  margin-left: 0.4em;
+}
+.form_linkedset_toggler > .text:before, .form_upload_toggler > .text:before {
+  content: "(";
+}
+.form_linkedset_toggler > .text:after, .form_upload_toggler > .text:after {
+  content: ")";
+}
+.form_linkedset_toggler > .glyphicon, .form_upload_toggler > .glyphicon {
+  margin-left: 0.5em;
+  font-size: 0.85em;
+  color: #EA7D1E;
+  transition: transform 0.2s linear;
+}
+.form_linkedset_toggler > .glyphicon.collapsed, .form_upload_toggler > .glyphicon.collapsed {
+  transform: rotateZ(-90deg);
+}
+/* - DataTables : Loader */
+.form_linkedset_wrapper .datatables_overlay {
+  padding: 8px !important;
+}
+.form_linkedset_wrapper .overlay_content {
+  font-size: 0.6em;
+}
+.form_linkedset_wrapper .content_loader {
+  margin: 0px;
+}
+.form_linkedset_wrapper .content_loader .icon {
+  height: 23px;
+}
+/* - DataTables : Fit the table in the form */
+.form_linkedset_wrapper .dataTables_wrapper {
+  margin-bottom: 5px;
+  padding: 0px;
+}
+/* FileUpload */
+.attachments_container .attachments-list thead > tr > th {
+  text-align: center;
+}
+.attachments_container .attachments-list tbody > tr > td {
+  padding: 0.5rem 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+.attachments_container .attachments-list tbody > tr > td[role="icon"] {
+  text-align: center;
+}
+.attachments_container .attachments-list tbody > tr > td[role="icon"] img {
+  max-height: 32px;
+}
+.attachments_container .attachments-list tbody > tr > td[role="formatted-size"] {
+  text-align: right;
+}
+.attachments_container .attachments-list tbody > tr > td[role="delete"] {
+  text-align: center;
+}
+.attachment-tooltip {
+  width: 350px;
+  height: 300px;
+}
+.attachment-tooltip img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.upload_container input {
+  display: inline;
+}
+.upload_container .loader {
+  visibility: hidden;
+  margin-left: 7px;
+  font-size: 1.2em;
+  animation: spin 1s linear infinite;
+  -webkit-animation: spin 1s linear infinite;
+  -moz-animation: spin 1s linear infinite;
+  -ms-animation: spin 1s linear infinite;
+}
+#drag_overlay {
+  display: block;
+  top: inherit;
+  bottom: 0px;
+  height: 0px;
+}
+#drag_overlay .overlay_content {
+  margin-top: 5em;
+  width: 100%;
+  color: white;
+}
+#drag_overlay .overlay_content .icon {
+  font-size: 3em;
+}
+#drag_overlay .overlay_content .message {
+  font-size: 1.5em;
+}
+/* Attachments drag & drop zone, only for none mobile devices */
+@media (min-width: 768px) {
+  #drag_overlay.drag_in {
+    animation: show-drop-zone 0.3s ease-out forwards;
+    -webkit-animation: show-drop-zone 0.3s ease-out forwards;
+    -moz-animation: show-drop-zone 0.3s ease-out forwards;
+    -ms-animation: show-drop-zone 0.3s ease-out forwards;
+  }
+  #drag_overlay.drag_out {
+    animation: hide-drop-zone 0.3s ease-out forwards;
+    -webkit-animation: hide-drop-zone 0.3s ease-out forwards;
+    -moz-animation: hide-drop-zone 0.3s ease-out forwards;
+    -ms-animation: hide-drop-zone 0.3s ease-out forwards;
+  }
+  @keyframes show-drop-zone {
+    100% {
+      height: 20%;
+    }
+  }
+  @-webkit-keyframes show-drop-zone {
+    100% {
+      height: 20%;
+    }
+  }
+  @-moz-keyframes show-drop-zone {
+    100% {
+      height: 20%;
+    }
+  }
+  @-ms-keyframes show-drop-zone {
+    100% {
+      height: 20%;
+    }
+  }
+  @keyframes hide-drop-zone {
+    0% {
+      height: 20%;
+    }
+    100% {
+      height: 0%;
+    }
+  }
+  @-webkit-keyframes hide-drop-zone {
+    0% {
+      height: 20%;
+    }
+    100% {
+      height: 0%;
+    }
+  }
+  @-moz-keyframes hide-drop-zone {
+    0% {
+      height: 20%;
+    }
+    100% {
+      height: 0%;
+    }
+  }
+  @-ms-keyframes hide-drop-zone {
+    0% {
+      height: 20%;
+    }
+    100% {
+      height: 0%;
+    }
+  }
+}
+/* BlobField */
+.form_fields .file_open_link {
+  margin-left: 10px;
+}
+.form_buttons {
+  padding-top: 20px;
+  text-align: center;
+}
+.form_buttons .form_btn_misc {
+  margin-bottom: 20px;
+}
+.form_buttons .form_btn_transitions {
+  margin-bottom: 20px;
+}
+.form_buttons .btn .glyphicon {
+  margin-right: 0.5em;
+}
+.form_btn_regular.sticky {
+  display: none;
+}
+@media (min-width: 768px) {
+  .form_buttons .form_btn_misc {
+    float: left !important;
+  }
+  .form_buttons .form_btn_transitions {
+    float: right !important;
+    margin-left: 3px;
+  }
+  .form_buttons .form_btn_regular {
+    text-align: right;
+  }
+  .form_buttons .form_btn_regular .btn {
+    width: inherit;
+    /* Making regular button sticky */
+  }
+  .form_btn_regular.sticky {
+    display: block;
+    position: fixed;
+    bottom: 5em;
+    right: -2px;
+    /* TODO : SASS this to col-xs-12 padding */
+    padding: 15px;
+    background-color: #FFFFFF;
+    border: 1px solid #ddd;
+    border-radius: 0px;
+    transition: right 0.3s;
+  }
+  .form_btn_regular.sticky.closed {
+    right: -75px;
+  }
+  .form_btn_regular.sticky button {
+    display: block;
+  }
+  .form_btn_regular.sticky button:first-child {
+    margin-bottom: 4px;
+  }
+}
+/* CKEditor : Adding BS error feedback */
+.form_field .cke {
+  border: 1px solid #ddd;
+}
+.form_field.has-error .cke {
+  border: 1px solid #b94a48;
+  border-radius: 0px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+/* CKEditor : Styling notifications based on BS alerts */
+.cke_notification {
+  position: relative;
+  padding: 15px;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+}
+.cke_notification_close {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+}
+.cke_notification_message {
+  margin-bottom: 0px;
+  line-height: 1em;
+  font-size: 1em;
+}
+.cke_notification_success {
+  display: none;
+  background-color: #dff0d8;
+  border-color: #58a959;
+  color: #468847;
+}
+.cke_notification_warning {
+  background-color: #fcf8e3;
+  border-color: #ceae78;
+  color: #c09853;
+}
+/* CKEditor : Misc */
+.cke_toolbox_collapser, .cke_toolbox_collapser .cke_arrow {
+  cursor: pointer !important;
+}
+/* DataTables : Selection inputs */
+.dataTable.table th span.row_input, .dataTable.table td span.row_input {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+/* Wiki text (hyperlinks) */
+.wiki_broken_link {
+  text-decoration: line-through;
+}

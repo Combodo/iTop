@@ -41,6 +41,9 @@
          verbose="false">
 
     <testsuites>
+        <testsuite name="Extensions">
+            <directory>../env-production/*/test</directory>
+        </testsuite>
         <testsuite name="Core">
             <directory>core</directory>
         </testsuite>
@@ -49,6 +52,15 @@
         </testsuite>
         <testsuite name="Application">
             <directory>application</directory>
+        </testsuite>
+        <!--testsuite name="OQL">
+            <directory>OQL</directory>
+        </testsuite-->
+        <testsuite name="Status">
+            <directory>status</directory>
+        </testsuite>
+        <testsuite name="CoreExtensions">
+            <directory>coreExtensions</directory>
         </testsuite>
     </testsuites>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -24,6 +24,16 @@
       <parent>AbstractResource</parent>
       <properties>
         <comment>/* RunQueriesMenu menu access control. */</comment>
+        <abstract>true</abstract>
+        <category>grant_by_profile</category>
+      </properties>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="ResourceSystemMenu" _delta="define">
+      <parent>AbstractResource</parent>
+      <properties>
+        <comment>/* System menu access control. */</comment>
         <abstract>true</abstract>
         <category>grant_by_profile</category>
       </properties>
@@ -87,9 +97,14 @@
       <rank>20</rank>
       <parent>WelcomeMenu</parent>
     </menu>
-    <menu id="UserAccountsMenu" xsi:type="OQLMenuNode" _delta="define">
-      <rank>1</rank>
+    <menu id="UserManagement" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>10</rank>
       <parent>AdminTools</parent>
+      <template_file/>
+    </menu>
+    <menu id="UserAccountsMenu" xsi:type="OQLMenuNode" _delta="define">
+      <rank>11</rank>
+      <parent>UserManagement</parent>
       <oql><![CDATA[SELECT User]]></oql>
       <do_search>1</do_search>
       <search_form_open>1</search_form_open>
@@ -97,70 +112,78 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="ProfilesMenu" xsi:type="OQLMenuNode" _delta="define">
-      <rank>2</rank>
-      <parent>AdminTools</parent>
+      <rank>12</rank>
+      <parent>UserManagement</parent>
       <oql><![CDATA[SELECT URP_Profiles]]></oql>
       <do_search>1</do_search>
       <enable_class>URP_Profiles</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
-    <menu id="NotificationsMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>3</rank>
-      <parent>AdminTools</parent>
-      <url>$pages/notifications.php</url>
-      <enable_class>Trigger</enable_class>
-      <enable_action>UR_ACTION_MODIFY</enable_action>
-    </menu>
     <menu id="AuditCategories" xsi:type="OQLMenuNode" _delta="define">
-      <rank>4</rank>
+      <rank>20</rank>
       <parent>AdminTools</parent>
       <oql><![CDATA[SELECT AuditCategory]]></oql>
       <do_search>1</do_search>
       <enable_class>AuditCategory</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
-    <menu id="RunQueriesMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>8</rank>
+    <menu id="Queries" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>30</rank>
       <parent>AdminTools</parent>
+      <template_file/>
+    </menu>
+    <menu id="RunQueriesMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>31</rank>
+      <parent>Queries</parent>
       <url>$pages/run_query.php</url>
       <enable_class>ResourceRunQueriesMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="QueryMenu" xsi:type="OQLMenuNode" _delta="define">
-      <rank>8.5</rank>
-      <parent>AdminTools</parent>
+      <rank>32</rank>
+      <parent>Queries</parent>
       <oql><![CDATA[SELECT Query]]></oql>
       <do_search>1</do_search>
       <enable_class>Query</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="ExportMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>9</rank>
-      <parent>AdminTools</parent>
+      <rank>33</rank>
+      <parent>Queries</parent>
       <url>$webservices/export-v2.php?interactive=1</url>
       <enable_class>ResourceAdminMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="DataModelMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>10</rank>
+      <rank>40</rank>
       <parent>AdminTools</parent>
       <url>$pages/schema.php</url>
       <enable_class>ResourceRunQueriesMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="UniversalSearchMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>11</rank>
-      <parent>AdminTools</parent>
+      <rank>35</rank>
+      <parent>Queries</parent>
       <url>$pages/UniversalSearch.php</url>
       <enable_class>ResourceAdminMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
+    <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
+      <rank>90</rank>
+    </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
-      <rank>12</rank>
-      <parent>AdminTools</parent>
+      <rank>20</rank>
+      <parent>ConfigurationTools</parent>
       <oql><![CDATA[SELECT SynchroDataSource]]></oql>
       <do_search>1</do_search>
       <enable_class>SynchroDataSource</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="NotificationsMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>40</rank>
+      <parent>ConfigurationTools</parent>
+      <url>$pages/notifications.php</url>
+      <enable_class>Trigger</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>

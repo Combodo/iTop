@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 // Portal
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
@@ -65,6 +61,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>~~',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>~~',
 	'Portal:Calendar-FirstDayOfWeek' => 'hu', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
 ));
 
 // UserProfile brick
@@ -128,8 +125,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s~~',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:~~',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)~~',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick

@@ -1,0 +1,15 @@
+{# itop-portal-base/portal/templates/bricks/manage/layout-chart.html.twig #}
+{# Manage brick base layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/manage/layout.html.twig' %}
+
+{% block pPageBodyClass %}{{ parent() }} page_manage_brick{% endblock %}
+
+
+{% block pMainContentHolder %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% include 'itop-portal-base/portal/templates/bricks/manage/mode-' ~ sDisplayMode ~ '.html.twig' with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
+        </div>
+    </div>
+{% endblock %}
+

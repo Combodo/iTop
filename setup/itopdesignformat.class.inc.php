@@ -1,25 +1,30 @@
 <?php
-// Copyright (C) 2014-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
  * The datamodel is supplied as a loaded DOMDocument and modified in-place.
- * 
+ *
+ * To test migration methods check {@link \Combodo\iTop\Test\UnitTest\Setup\TestForITopDesignFormatClass}
+ *
  * Usage:
  * 
  * $oDocument = new DOMDocument();
@@ -34,9 +39,6 @@
  *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
-
-define('ITOP_DESIGN_LATEST_VERSION', '1.6'); // iTop >= 2.6.0
- 
 class iTopDesignFormat
 {
 	protected static $aVersions = array(
@@ -79,6 +81,12 @@ class iTopDesignFormat
 		'1.6' => array(
 			'previous' => '1.5',
 			'go_to_previous' => 'From16To15',
+			'next' => '1.7',
+			'go_to_next' => 'From16To17',
+		),
+		'1.7' => array(
+			'previous' => '1.6',
+			'go_to_previous' => 'From17To16',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -114,7 +122,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Error',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 		$this->bStatus = false;
 	}
@@ -127,7 +135,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Warning',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -139,7 +147,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Info',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -201,7 +209,9 @@ class iTopDesignFormat
 	 * Test the conversion without altering the DOM
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success	 
 	 */
 	public function CheckConvert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -216,7 +226,9 @@ class iTopDesignFormat
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success, False if errors have been encountered (still the DOM may be altered!)
 	 */
 	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -258,7 +270,8 @@ class iTopDesignFormat
 	 * 	 
 	 * @param string $sFrom The source format version
 	 * @param string $sTo The desired format version
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
 	 */
 	protected function DoConvert($sFrom, $sTo, $oFactory = null)
 	{
@@ -312,7 +325,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.0 to 1.1
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From10To11($oFactory)
@@ -367,7 +380,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.1 to 1.0
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From11To10($oFactory)
@@ -437,7 +450,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.1 to 1.2
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From11To12($oFactory)
@@ -446,7 +459,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.2 to 1.1
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From12To11($oFactory)
@@ -504,7 +517,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.2 to 1.3
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From12To13($oFactory)
@@ -513,7 +526,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.3 to 1.2
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From13To12($oFactory)
@@ -566,7 +579,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.3 to 1.4
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From13To14($oFactory)
@@ -575,7 +588,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.4 to 1.3
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From14To13($oFactory)
@@ -609,7 +622,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.5 to 1.4
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From15To14($oFactory)
@@ -628,7 +641,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.4 to 1.5
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From14To15($oFactory)
@@ -636,8 +649,8 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Upgrade the format from version 1.5 to 1.6
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From15To16($oFactory)
@@ -646,8 +659,8 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Downgrade the format from version 1.6 to 1.5
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From16To15($oFactory)
@@ -665,6 +678,90 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath($sPath);
 	}
 
+	/**
+	 * Upgrade the format from version 1.6 to 1.7
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From16To17($oFactory)
+	{
+		// N°2275 Clean branding node (move "define" from collection to logos or theme, noe that any other nodes will be seen as "merge")
+		$this->CleanDefineOnCollectionNode('/itop_design/branding',
+			'*[self::main_logo or self::login_logo or self::portal_logo]|themes/theme');
+
+		// N°2275 Clean portal form properties node (move "define" from collection to each property)
+		$this->CleanDefineOnCollectionNode('/itop_design/module_designs/module_design[@id="itop-portal"]/forms/form/properties', '*');
+
+		// N°2806 Clean legacy portal constants
+		$aConstantsIDsToRemove = array(
+			'PORTAL_POWER_USER_PROFILE',
+			'PORTAL_SERVICECATEGORY_QUERY',
+			'PORTAL_SERVICE_SUBCATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICECATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY',
+			'PORTAL_ALL_PARAMS',
+			'PORTAL_SET_TYPE_FROM',
+			'PORTAL_TYPE_TO_CLASS',
+			'PORTAL_TICKETS_SEARCH_CRITERIA',
+			'PORTAL_TICKETS_SEARCH_FILTER_service_id',
+			'PORTAL_TICKETS_SEARCH_FILTER_caller_id',
+			'PORTAL_INCIDENT_PUBLIC_LOG',
+			'PORTAL_INCIDENT_USER_COMMENT',
+			'PORTAL_INCIDENT_FORM_ATTRIBUTES',
+			'PORTAL_INCIDENT_TYPE',
+			'PORTAL_INCIDENT_LIST_ZLIST',
+			'PORTAL_INCIDENT_CLOSED_ZLIST',
+			'PORTAL_INCIDENT_DETAILS_ZLIST',
+			'PORTAL_INCIDENT_DISPLAY_QUERY',
+			'PORTAL_INCIDENT_DISPLAY_POWERUSER_QUERY',
+			'PORTAL_USERREQUEST_PUBLIC_LOG',
+			'PORTAL_USERREQUEST_USER_COMMENT',
+			'PORTAL_USERREQUEST_FORM_ATTRIBUTES',
+			'PORTAL_USERREQUEST_TYPE',
+			'PORTAL_USERREQUEST_LIST_ZLIST',
+			'PORTAL_USERREQUEST_CLOSED_ZLIST',
+			'PORTAL_USERREQUEST_DETAILS_ZLIST',
+			'PORTAL_USERREQUEST_DISPLAY_QUERY',
+			'PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY',
+		);
+		foreach($aConstantsIDsToRemove as $sConstantIDToRemove)
+		{
+			$sXPath = '/itop_design/constants/constant[@id="'.$sConstantIDToRemove.'"]';
+			$this->RemoveNodeFromXPath($sXPath);
+		}
+
+		// N°2806 Clean legacy portal "portal" node
+		$sXPath = '/itop_design/portals/portal[@id="legacy_portal"]';
+		$this->RemoveNodeFromXPath($sXPath);
+	}
+
+	/**
+	 * Upgrade the format from version 1.4 to 1.5
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To16($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// -- 2314 : remove "themes" nodes
+		$sPath = "/itop_design/branding/themes";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// -- 2746 - remove attributes Enum Set
+		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * @param string $sPath
+	 *
+	 * @return void
+	 */
 	private function RemoveNodeFromXPath($sPath)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
@@ -677,15 +774,48 @@ class iTopDesignFormat
 		}
 	}
 
+	/**
+	 * Clean a collection node by removing the _delta="define" on it and moving it to the item nodes.
+	 *
+	 * @param string $sCollectionXPath Absolute XPath to the collection node
+	 * @param string $sItemsRelativeXPath *Relative* XPath to the item nodes from the collection node
+	 *
+	 * @return void
+	 * @since 2.7.0
+	 */
+	private function CleanDefineOnCollectionNode($sCollectionXPath, $sItemsRelativeXPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// Iterate over collections
+		$oCollectionNodeList = $oXPath->query($sCollectionXPath);
+		/** @var \DOMElement $oCollectionNode */
+		foreach ($oCollectionNodeList as $oCollectionNode)
+		{
+			// Move _delta="define" from collection to items
+			if (($oCollectionNode->hasAttribute('_delta')) && ($oCollectionNode->getAttribute('_delta') === "define"))
+			{
+				$oCollectionNode->removeAttribute('_delta');
+
+				$oItemNodeList = $oXPath->query($sItemsRelativeXPath, $oCollectionNode);
+				/** @var \DOMElement $oItemNode */
+				foreach ($oItemNodeList as $oItemNode)
+				{
+					$oItemNode->setAttribute('_delta', 'define');
+				}
+			}
+		}
+	}
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.
 	 * This prevents generating empty lines in the middle of the XML
+	 *
 	 * @param DOMNode $oNode
 	 */
 	protected function DeleteNode($oNode)
 	{
-		if ( $oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent()) )
+		if ($oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent()))
 		{
 			$oNode->parentNode->removeChild($oNode->nextSibling);
 		}

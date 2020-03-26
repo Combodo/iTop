@@ -203,6 +203,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
+	
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'CRON',
+	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
 
@@ -535,6 +542,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => 'Context',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start',
 ));
 
 //

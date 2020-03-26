@@ -1,0 +1,153 @@
+{# itop-portal-base/portal/templates/bricks/object/mode_create.html.twig #}
+{# Object brick create layout #}
+
+{% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
+{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
+{% set sFormIdSanitized = sFormId|replace({'-': ''}) %}
+{% set sFormDisplayModeClass = (form.display_mode is defined and form.display_mode is not null) ? 'form_' ~ form.display_mode : '' %}
+{% set sFormObjectStateClass = (form.object_state is defined and form.object_state is not null) ? 'form_object_state_' ~ form.object_state : '' %}
+
+<form id="{{ sFormId }}" class="object-details {{ sFormDisplayModeClass }} {{ sFormObjectStateClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}"
+	{% if sMode is defined and sMode is not null %}data-form-mode="{{ sMode }}"{% endif %}
+	{% if form.object_class is defined and form.object_class is not null %}data-object-class="{{ form.object_class }}"{% endif %}
+	{% if form.object_id is defined and form.object_id is not null %}data-object-id="{{ form.object_id }}"{% endif %}
+	{% if form.object_state is defined and form.object_state is not null %}data-object-state="{{ form.object_state }}"{% endif %}>
+	<input type="hidden" name="transaction_id" value="{{ form.transaction_id }}" />
+	<div class="form_alerts">
+		{% block pFormAlerts %}
+			<div class="alert alert-success" role="alert" style="display: none;"></div>
+			<div class="alert alert-warning" role="alert" style="display: none;"></div>
+			<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+		{% endblock %}
+	</div>
+	<div class="form_fields">
+		{% block pFormFields %}
+			{{ form.renderer.GetBaseLayout()|raw }}
+		{% endblock %}
+	</div>
+	<div class="form_buttons">
+		{% block pFormButtons %}
+            {# Misc. buttons #}
+            {% if form.buttons is defined and (form.buttons.actions is defined or form.buttons.links is defined) %}
+				<div class="form_btn_misc">
+                    {% include 'itop-portal-base/portal/templates/bricks/object/plugins_buttons.html.twig' with {'aButtons': form.buttons} %}
+				</div>
+            {% endif %}
+			{# Transition buttons #}
+			{% if form.buttons is defined and form.buttons.transitions is defined and form.buttons.transitions|length > 0 %}
+				<div class="form_btn_transitions">
+				{% for sStimulusCode, sStimulusLabel in form.buttons.transitions %}
+					<button class="btn btn-primary form_btn_transition" type="submit" name="stimulus_code" value="{{ sStimulusCode }}">{{ sStimulusLabel }}</button>
+				{% endfor %}
+				</div>
+			{% endif %}
+			<div class="form_btn_regular">
+				{# If form has editable fields, we display cancel / submit buttons #}
+				{% if form.editable_fields_count is defined and form.editable_fields_count > 0 %}
+					<button class="btn btn-default form_btn_cancel" type="button" value="cancel" title="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
+						<span class="glyphicon glyphicon-remove"></span>
+						{{ 'Portal:Button:Cancel'|dict_s }}
+					</button>
+					{% if form.buttons.submit is defined %}
+						<button class="btn btn-primary form_btn_submit" type="submit" value="submit" title="{{ form.buttons.submit.label }}">
+							<span class="glyphicon glyphicon-ok"></span>
+							{{ form.buttons.submit.label }}
+						</button>
+					{% endif %}
+				{% else %}
+					{# Modal mode #}
+					{% if tIsModal %}
+						<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Close'|dict_s }}" data-dismiss="modal">
+					{% endif %}
+				{% endif %}
+			</div>
+		{% endblock %}
+	</div>
+</form>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		// Form field set declaration
+		var oFieldSet_{{ sFormIdSanitized }} = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
+		// Form handler declaration
+		$('#{{ sFormId }}').portal_form_handler({
+			formmanager_class: "{{ form.formmanager_class|escape('js') }}",
+			formmanager_data: {{ form.formmanager_data|json_encode()|raw }},
+			field_set: oFieldSet_{{ sFormIdSanitized }},
+			submit_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_submit, .form_btn_transition'),
+			cancel_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_cancel'),
+			base_url: "{{ app['combodo.absolute_url'] }}",
+			{% if form.submit_rule is not null %}submit_rule: {{ form.submit_rule|json_encode|raw }}{% endif %},
+			{% if form.cancel_rule is not null %}cancel_rule: {{ form.cancel_rule|json_encode|raw }}{% endif %},
+			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
+			is_modal: {% if tIsModal == true %}true{% else %}false{% endif %}
+		});
+		
+		// Sticky buttons handler
+		{% if sMode != 'view' %}
+			if( $('#{{ sFormId }} .form_btn_regular button').length > 0 )
+			{
+				// Note : This pattern if to prevent performance issues
+				// - Cloning buttons
+				var oNormalRegularButtons_{{ sFormIdSanitized }} = $('#{{ sFormId }} .form_btn_regular');
+				var oStickyRegularButtons_{{ sFormIdSanitized }} = oNormalRegularButtons_{{ sFormIdSanitized }}.clone(true, true);
+				oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('sticky');
+				if(oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon').length > 0)
+				{
+					oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_submit span.glyphicon')[0].outerHTML );
+				}
+				if(oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon').length > 0)
+				{
+					oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel').html( oStickyRegularButtons_{{ sFormIdSanitized }}.find('.form_btn_cancel span.glyphicon')[0].outerHTML );
+				}
+
+				$('#{{ sFormId }}').closest({% if tIsModal == true %}'.modal'{% else %}'#main-content'{% endif %}).append(oStickyRegularButtons_{{ sFormIdSanitized }});
+
+				// - Global timeout for any
+				var oScrollTimeout;
+				// - Scroll handler
+				scrollHandler_{{ sFormIdSanitized }} = function () {
+					if($('#{{ sFormId }} .form_buttons').visible())
+					{
+						oStickyRegularButtons_{{ sFormIdSanitized }}.addClass('closed');
+					}
+					else
+					{
+						oStickyRegularButtons_{{ sFormIdSanitized }}.removeClass('closed');
+					}
+				};
+				// - Event binding for scroll
+				$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('scroll').on('scroll', function () {
+					if (oScrollTimeout) {
+						// Clear the timeout, if one is pending
+						clearTimeout(oScrollTimeout);
+						oScrollTimeout = null;
+					}
+					oScrollTimeout = setTimeout(scrollHandler_{{ sFormIdSanitized }}, 50);
+				});
+				// - Event binding for linkedset collapse
+				$({% if tIsModal == true %}'.modal.in'{% else %}window{% endif %}).off('shown.bs.collapse hidden.bs.collapse').on('shown.bs.collapse hidden.bs.collapse', function () {
+					scrollHandler_{{ sFormIdSanitized }}();
+				});
+				// - Event binding for form building / updating
+				// Note : We do not want to 'off' the event or it will remove listeners from the widget
+				oFieldSet_{{ sFormIdSanitized }}.on('form_built', function(oEvent){
+					scrollHandler_{{ sFormIdSanitized }}();
+				});
+				// - Initial test
+				setTimeout(function(){ scrollHandler_{{ sFormIdSanitized }}(); }, 400);
+
+				// Remove sticky button when closing modal
+				$('#{{ sFormId }}').closest('.modal').on('hide.bs.modal', function () {
+					oStickyRegularButtons_{{ sFormIdSanitized }}.remove();
+				});
+			}
+		{% endif %}
+		
+		{% if tIsModal == true %}
+			// Scroll top (because sometimes when several modals have been opened)
+			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
+			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
+		{% endif %}
+	});
+</script>

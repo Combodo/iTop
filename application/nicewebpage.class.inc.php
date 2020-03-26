@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Class NiceWebPage
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT."/application/webpage.class.inc.php");
@@ -37,17 +30,16 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-3.3.1.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
 		if(utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.dev.js');
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
 		}
 		else
 		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.prod.min.js');
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
@@ -75,6 +67,8 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
 
 	    $this->add_dict_entries('UI:Combo');
 
@@ -122,7 +116,7 @@ class NiceWebPage extends WebPage
 	$("table.listResults").tableHover(); // hover tables
 EOF
 		);
-		$this->add_saas("css/light-grey.scss");
+	    $this->LoadTheme();
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
@@ -232,7 +226,8 @@ EOF
 		foreach($aChoices as $sKey => $sValue)
 		{
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
-			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."</option>");
+			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue,
+					ENT_QUOTES, self::PAGES_CHARSET)."</option>");
 		}
 		$this->add("</select>");
 	}
@@ -254,6 +249,14 @@ EOF
 		}
 		parent::output();
 	}
-}
 
-?>
+	/**
+	 * @throws \Exception
+	 * @since 2.7.0
+	 */
+	protected function LoadTheme()
+	{
+		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
+		$this->add_linked_stylesheet($sCssThemeUrl);
+	}
+}

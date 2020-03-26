@@ -1,25 +1,42 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 /**
  * All the steps of the iTop installation wizard
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ *
+ * WizStepWelcome
+ * WizStepInstallOrUpgrade
+ *    +             +
+ *    |             |
+ *    v             +----->
+ * WizStepLicense          WizStepDetectedInfo
+ * WizStepDBParams           +              +
+ * WizStepAdminAccount       |              |
+ * WizStepMiscParams         v              +------>
+ *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
+ *    |                                            +
+ *    +--->    <-----------------------------------+
+ * WizStepModulesChoice
+ * WizStepSummary
+ * WizStepDone
  */
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -30,7 +47,7 @@ require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 
 /**
- * First step of the iTop Installation Wizard: Welcome screen
+ * First step of the iTop Installation Wizard: Welcome screen, requirements
  */
 class WizStepWelcome extends WizardStep
 {
@@ -57,16 +74,7 @@ class WizStepWelcome extends WizardStep
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		if (!is_dir(APPROOT.'data'))
-		{
-			mkdir(APPROOT.'data');
-		}
-		if (!is_dir(APPROOT.'data/setup'))
-		{
-			mkdir(APPROOT.'data/setup');
-		}
-		$sUID = hash('sha256', rand());
-		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		$sUID = SetupUtils::CreateSetupToken();
 		$this->oWizard->SetParameter('authent', $sUID);
 		return array('class' => 'WizStepInstallOrUpgrade', 'state' => '');
 	}
@@ -78,12 +86,12 @@ class WizStepWelcome extends WizardStep
 		$sMiscOptions = $this->oWizard->GetParameter('misc_options', json_encode($aMiscOptions));
 		$this->oWizard->SetParameter('misc_options', $sMiscOptions);
 
-		$oPage->add("<!--[if lt IE 8]><div id=\"old_ie\"></div><![endif]-->");
+		$oPage->add("<!--[if lt IE 11]><div id=\"old_ie\"></div><![endif]-->");
 		$oPage->add_ready_script(
 <<<EOF
 		if ($('#old_ie').length > 0)
 		{
-			alert("Internet Explorer version 7 or older is NOT supported! (Check that IE is not running in compatibility mode)");
+			alert("Internet Explorer version 10 or older is NOT supported! (Check that IE is not running in compatibility mode)");
 		}
 EOF
 		);
@@ -116,24 +124,25 @@ EOF
 		if (count($aErrors)> 0)
 		{
 			$sStyle = 'style="max-height:196px;overflow:auto;"';
-			$sImage = "stop-mid.png";
 			$sTitle = count($aErrors).' Error(s), '.count($aWarnings).' Warning(s).';
+			$sH2Class = 'text-error';
 		}
 		else if (count($aWarnings)> 0)
 		{
 			$sTitle = count($aWarnings).' Warning(s) '.$sToggleButtons;
-			$sImage = "messagebox_warning-mid.png";
+			$sH2Class = 'text-warning';
 		}
 		else
 		{
 			$sTitle = 'Ok. '.$sToggleButtons;
-			$sImage = "clean-mid.png";
+			$sH2Class = 'text-valid';
 		}
-		$oPage->add('<h2>Prerequisites validation: ');
-		$oPage->add("<img style=\"vertical-align:middle;\" src=\"../images/$sImage\"> ");
-		$oPage->add($sTitle);
-		$oPage->add('</h2>');
-		$oPage->add('<div id="details" '.$sStyle.'>');
+		$oPage->add(
+<<<HTML
+		<h2 class="message">Prerequisites validation: <span class="$sH2Class">$sTitle</span></h2>
+		<div id="details" $sStyle>
+HTML
+		);
 		foreach($aErrors as $sText)
 		{
 			$oPage->error($sText);
@@ -224,7 +233,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
-			$sDBBackupPath = APPROOT.'data/'.ITOP_APPLICATION.strftime('-backup-%Y-%m-%d');
+			$sDBBackupPath = APPROOT.strftime('data/backups/manual/setup-%Y-%m-%d_%H_%M');
 			$bDBBackup = true;
 			$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 			if ($aPreviousInstance['found'])
@@ -258,12 +267,20 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
         $oPage->p('<input id="radio_install" type="radio" name="install_mode" value="install" '.$sChecked.'/><label for="radio_install">&nbsp;Install a new '.ITOP_APPLICATION.'</label>');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
-        $oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade" '.$sChecked.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
-		//$oPage->add('<fieldset  id="upgrade_info"'.$sUpgradeInfoStyle.'>');
-		//$oPage->add('<legend>Information about the previous instance:</legend>');
-		$oPage->add('<table id="upgrade_info"'.$sUpgradeInfoStyle.'>');
-		$oPage->add('<tr><td>Location on the disk:</td><td><input id="previous_version_dir" type="text" name="previous_version_dir" value="'.htmlentities($sPreviousVersionDir,
-				ENT_QUOTES, 'UTF-8').'" style="width: 98%;"/></td></tr>');
+		$sDisabled = (($sInstallMode == 'install') && (empty($sPreviousVersionDir))) ? ' disabled' : '';
+        $oPage->p('<input id="radio_update" type="radio" name="install_mode" value="upgrade" '.$sChecked.$sDisabled.'/><label for="radio_update">&nbsp;Upgrade an existing '.ITOP_APPLICATION.' instance</label>');
+
+        $sUpgradeDir = utils::HtmlEntities($sPreviousVersionDir);
+		$oPage->add(<<<HTML
+<table id="upgrade_info"'.$sUpgradeInfoStyle.'>
+	<tr>
+		<td>Location on the disk:</td>
+		<td><input id="previous_version_dir_display" type="text" value="$sUpgradeDir" style="width: 98%;" disabled>
+		<input type="hidden" name="previous_version_dir" value="$sUpgradeDir"></td>
+	</tr>
+HTML
+		);
+
 		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix,
 			$sTlsEnabled, $sTlsCA, null);
 
@@ -275,17 +292,19 @@ class WizStepInstallOrUpgrade extends WizardStep
 			if ($oCheck->iSeverity == CheckResult::ERROR)
 			{
 				$bCanBackup = false;
-				$sMySQLDumpMessage .= '<img src="../images/error.png"/>&nbsp;<b> Warning:</b> '.$oCheck->sLabel;
+				$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
 			}
 			else
 			{
-				$sMySQLDumpMessage .= '<img src="../images/validation_ok.png"/> '.$oCheck->sLabel.' ';
+				$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
 			}
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
 		$sDisabled = $bCanBackup ? '' : ' disabled ';
         $oPage->add('<tr><td colspan="2"><input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">&nbsp;Backup the '.ITOP_APPLICATION.' database before upgrading</label></td></tr>');
-		$oPage->add('<tr><td colspan="2">Save the backup to: <input id="db_backup_path" type="text" name="db_backup_path" '.$sDisabled.'value="'.htmlentities($sDBBackupPath, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
+		$oPage->add('<tr><td style="width: 8rem; text-align: right;">Save the backup to:</td><td><input id="db_backup_path" type="text" name="db_backup_path" 
+'.$sDisabled.'value="'
+			.htmlentities($sDBBackupPath, ENT_QUOTES, 'UTF-8').'" style="width: 98%;"/></td></tr>');
 		$fFreeSpace = SetupUtils::CheckDiskSpace($sDBBackupPath);
 		$sMessage = '';
 		if ($fFreeSpace !== false)
@@ -299,12 +318,11 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		//$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
-<<<EOF
+<<<JS
 	$("#radio_update").bind('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
 	$("#radio_install").bind('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
-	$("#previous_version_dir").bind('change keyup', function() { WizardAsyncAction('check_path', { previous_version_dir: $('#previous_version_dir').val() }); });
 	$("#db_backup_path").bind('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
-EOF
+JS
 		);
 	}
 
@@ -416,7 +434,6 @@ class WizStepDetectedInfo extends WizardStep
 
 		$this->oWizard->SetParameter('mode', 'upgrade');
 		$this->oWizard->SetParameter('upgrade_type', $sUpgradeType);
-		$this->oWizard->SaveParameter('copy_extensions_from', '');
 		$bDisplayLicense = $this->oWizard->GetParameter('display_license');
 
 		switch ($sUpgradeType)
@@ -501,15 +518,15 @@ EOF
 		}
 		else if (strcasecmp($aInstalledInfo['product_name'], ITOP_APPLICATION) != 0)
 		{
-			$oPage->p("<b>Warning: The installed products seem different. Are you sure the you want to upgrade {$aInstalledInfo['product_name']} with ".ITOP_APPLICATION."?</b>");
+			$oPage->p("<b>Warning: The installed products seem different. Are you sure that you want to upgrade {$aInstalledInfo['product_name']} with ".ITOP_APPLICATION."?</b>");
 		}
 
 		$sInstalledVersion = $aInstalledInfo['product_version'];
 		$sInstalledDataModelVersion = $aInstalledInfo['datamodel_version'];
 
-		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION.'.'.ITOP_REVISION."</h2>");
+		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION_FULL."</h2>");
 
-		if ($sInstalledVersion == (ITOP_VERSION.'.'.ITOP_REVISION))
+		if ($sInstalledVersion == ITOP_VERSION_FULL)
 		{
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
@@ -531,7 +548,7 @@ EOF
 		{
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION.'.'.ITOP_REVISION.") does not seem to be compatible with the installed version ($sInstalledVersion).");
+			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION_FULL.") does not seem to be compatible with the installed version ($sInstalledVersion).");
 			$oPage->p("The upgrade cannot continue, sorry.");
 		}
 		else
@@ -610,35 +627,19 @@ EOF
 			{
 				// No changes detected... or no way to tell because of the lack of a manifest or previous source dir
 				// Use the "compatible" datamodel as-is.
-				$oPage->p("<img src=\"../images/validation_ok.png\"/>&nbsp;The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.");
-				$oPage->add('<input type="hidden" name="upgrade_type" value="use-compatible">');
-				$oPage->add('<input type="hidden" name="datamodel_path" value="'.htmlentities($sCompatibleDMDir, ENT_QUOTES, 'UTF-8').'">');
-				$oPage->add('<input type="hidden" name="datamodel_version" value="'.htmlentities($sUpgradeDMVersion, ENT_QUOTES, 'UTF-8').'">');
+				$sCompatibleDMDirToDisplay = utils::HtmlEntities($sCompatibleDMDir);
+				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion); 
+				$oPage->add(
+<<<HTML
+<div class="message message-valid">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
+<input type="hidden" name="upgrade_type" value="use-compatible">
+<input type="hidden" name="datamodel_path" value="$sCompatibleDMDirToDisplay">
+<input type="hidden" name="datamodel_version" value="$sUpgradeDMVersionToDisplay">
+HTML
+				);
+
 			}
 
-			// Check if there are "extensions" to preserve and if it's possible
-			if (is_dir($sPreviousVersionDir.'/extensions'))
-			{
-				$aExtensions = glob($sPreviousVersionDir.'/extensions/*', GLOB_ONLYDIR);
-				if (($aExtensions !== false) && (count($aExtensions)>0) && (realpath($sPreviousVersionDir.'/extensions') != realpath(APPROOT.'extensions')) )
-				{
-					$aWritableDirs = array('extensions');
-					$aErrors = SetupUtils::CheckWritableDirs($aWritableDirs);
-					if (count($aErrors) > 0)
-					{
-						$oPage->p("Cannot copy the extensions from '$sPreviousVersionDir/extensions' to '".APPROOT."extensions' due to the following access rights issue(s):");
-						foreach($aErrors as $sDir => $oCheckResult)
-						{
-							$oPage->p('<img src="../images/error.png"/>&nbsp;'.$oCheckResult->sLabel);
-						}
-					}
-					else
-					{
-						$oPage->p("<b>Note:</b> The extensions present in '$sPreviousVersionDir/extensions' will be copied to '".APPROOT."extensions'.");
-						$oPage->add('<input type="hidden" name="copy_extensions_from" value="'.htmlentities($sPreviousVersionDir.'/extensions', ENT_QUOTES, 'UTF-8').'">');
-					}
-				}
-			}
 			$oPage->add_ready_script(
 <<<EOF
 	$("#changes_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
@@ -656,7 +657,10 @@ EOF
 			);
 			if ($oMutex->IsLocked())
 			{
-				$oPage->p("<img src=\"../images/error.png\"/>&nbsp;An iTop CRON process is being executed on the target database. It is highly recommended to stop any iTop CRON process prior to running the setup program.");
+				$oPage->add(<<<HTML
+<div class="message">An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.</div>
+HTML
+				);
 			}
 		}
 	}
@@ -998,7 +1002,7 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add('</fieldset>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Path to Graphviz\' dot application</legend>');
-		$oPage->add('<table>');
+		$oPage->add('<table style="width: 100%;">');
 		$oPage->add('<tr><td>Path: </td><td><input id="graphviz_path" name="graphviz_path" type="text" size="35" maxlength="1024" value="'.htmlentities($sGraphvizPath, ENT_QUOTES, 'UTF-8').'"><span id="v_graphviz_path"/></td><tr>');
 		$oPage->add('<tr><td colspan="2"><a href="http://www.graphviz.org" target="_blank">Graphviz</a> is required to display the impact analysis graph (i.e. impacts / depends on).</td><tr>');
 		$oPage->add('<tr><td colspan="2"><span id="graphviz_status"></span></td><tr>');
@@ -1041,7 +1045,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1049,7 +1054,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1132,7 +1138,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 		$oPage->add('</fieldset>');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Path to Graphviz\' dot application</legend>');
-		$oPage->add('<table>');
+		$oPage->add('<table style="width: 100%;">');
 		$oPage->add('<tr><td>Path: </td><td><input id="graphviz_path" name="graphviz_path" type="text" size="35" maxlength="1024" value="'.htmlentities($sGraphvizPath, ENT_QUOTES, 'UTF-8').'"><span id="v_graphviz_path"/></td><tr>');
 		$oPage->add('<tr><td colspan="2"><a href="http://www.graphviz.org" target="_blank">Graphviz</a> is required to display the impact analysis graph (i.e. impacts / depends on).</td><tr>');
 		$oPage->add('<tr><td colspan="2"><span id="graphviz_status"></span></td><tr>');
@@ -1168,7 +1174,8 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
 				break;
 
@@ -1176,7 +1183,8 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1257,7 +1265,9 @@ class WizStepModulesChoice extends WizardStep
 			$sConfigPath = utils::GetConfigFilePath('production');
 		}
 
-		if ($sConfigPath !== null) // only called if the config file exists : we are updating a previous installation !
+		// only called if the config file exists : we are updating a previous installation !
+		// WARNING : we can't load this config directly, as it might be from another directory with a different approot_url (N°2684)
+		if ($sConfigPath !== null)
 		{
 			$oConfig = new Config($sConfigPath);
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
@@ -1327,9 +1337,14 @@ class WizStepModulesChoice extends WizardStep
 		$this->DisplayStep($oPage);
 	}
 
+	/**
+	 * @param \SetupPage $oPage
+	 *
+	 * @throws \Exception
+	 */
 	protected function DisplayStep($oPage)
 	{
-		// Sanity check (not stopper, to let developpers go further...)
+		// Sanity check (not stopper, to let developers go further...)
 		try
 		{
 			SetupUtils::AnalyzeInstallation($this->oWizard, true);
@@ -1345,6 +1360,15 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
 		$oPage->add_style(".choice-disabled { color: #999; }");
+
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		$sManualInstallError = SetupUtils::CheckManualInstallDirEmpty($aModules,
+			$this->oWizard->GetParameter('extensions_dir', 'extensions'));
+		if ($sManualInstallError !== '')
+		{
+			$oPage->warning($sManualInstallError);
+		}
+
 		$oPage->add('<table class="module-selection-banner"><tr>');
 		$sBannerPath = isset($aStepInfo['banner']) ? $aStepInfo['banner'] : '';
 		if (!empty($sBannerPath))
@@ -1368,12 +1392,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add('</tr></table>');
 
 		// Build the default choices
-		$aDefaults = array();
-		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		$aDefaults = $this->GetDefaults($aStepInfo, $aModules);
-		//echo "<pre>aStepInfo:\n ".print_r($aStepInfo, true)."</pre>";
-		//echo "<pre>aDefaults:\n ".print_r($aDefaults, true)."</pre>";
-
 		$index = $this->GetStepIndex();
 
 		// retrieve the saved selection
@@ -2106,7 +2125,7 @@ class WizStepSummary extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
-<<<EOF
+			<<<CSS
 #params_summary {
 	height: 200px;
 	overflow: auto;
@@ -2147,7 +2166,7 @@ class WizStepSummary extends WizardStep
 #installation_progress {
 	display: none;
 }
-EOF
+CSS
 		);
 
 		$aInstallParams = $this->BuildConfig();
@@ -2268,7 +2287,7 @@ EOF
 		}
 
 		$oPage->add_ready_script(
-<<<EOF
+			<<<JS
 	$("#params_summary div").addClass('closed');
 	$("#params_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
 	$("#btn_next").bind("click.install", function(event) {
@@ -2277,7 +2296,7 @@ EOF
 			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
 	});
 	$("#wiz_form").data("installation_status", "not started")
-EOF
+JS
 		);
 	}
 
@@ -2328,22 +2347,6 @@ EOF
 			$aCopies[] = array('source' => $sSourceDir, 'destination' => 'modules'); // Source is an absolute path, destination is relative to APPROOT
 			$aCopies[] = array('source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal'); // Source is an absolute path, destination is relative to APPROOT
 			$sSourceDir = APPROOT.'modules';
-		}
-
-		if (($sMode == 'upgrade'))
-		{
-			// Copy the previous extensions, if any
-			$sPreviousExtensionsDir = $this->oWizard->GetParameter('copy_extensions_from');
-			if (is_dir($sPreviousExtensionsDir))
-			{
-				// Copy the extensions one by one to merge them with the existing extensions in /extensions
-				$aExtensions = glob($sPreviousExtensionsDir.'/*', GLOB_ONLYDIR);
-				foreach($aExtensions as $sDirPath)
-				{
-					$sExtName = basename($sDirPath);
-					$aCopies[] = array('source' => $sDirPath, 'destination' => 'extensions/'.$sExtName); // Source is an absolute path, destination is relative to APPROOT
-				}
-			}
 		}
 
 		$aInstallParams = array (
@@ -2411,7 +2414,7 @@ EOF
 	$("#wiz_form").data("installation_status", "running");
 	WizardUpdateButtons();
 	$('#setup_msg').html('$sMessage');
-	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
 	
 	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
 	ExecuteStep('{$aRes['next-step']}');
@@ -2424,7 +2427,7 @@ EOF
 			$oPage->add_ready_script(
 <<<EOF
 	$("#wiz_form").data("installation_status", "completed");
-	$('#progress').progression( {Current:100, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:100, Maximum: 100} );
 	WizardUpdateButtons();
 	$("#btn_next").unbind("click.install");
 	$("#btn_next").click();
@@ -2533,9 +2536,9 @@ class WizStepDone extends WizardStep
 
 		// Form goes here.. No back button since the job is done !
 		$oPage->add('<table id="placeholder" style="width:600px;border:0;padding:0;"><tr>');
-		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Free: Register your iTop version.\" href=\"http://www.combodo.com/register?product=iTop&version=".urlencode(ITOP_VERSION." revision ".ITOP_REVISION)."\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
-		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"http://www.combodo.com/itopsupport\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
-		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/itoptraining\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
+		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Subscribe to Combodo Newsletter.\" href=\"https://www.combodo.com/newsletter-subscription?var_mode=recalcul\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-register.gif\"/></td></a>");
+		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"https://support.combodo.com\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
+		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/training\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
 		$oPage->add('</tr></table>');
 
 		$oConfig = new Config(utils::GetConfigFilePath());

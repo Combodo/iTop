@@ -1896,6 +1896,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Server:otherinfo' => 'Outras informações',
 	'Server:power' => 'Fonte de alimentação',
 	'Person:info' => 'Informações gerais',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Informação pessoal',
 	'Person:notifiy' => 'Notificação',
 	'Class:Subnet/Tab:IPUsage' => 'IP usado',

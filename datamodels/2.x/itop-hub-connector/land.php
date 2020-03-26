@@ -238,9 +238,12 @@ function DoInstall(WebPage $oPage)
     $oPage->add('</div>');
     
     $oPage->add('</div>'); // module-selection-body
-    
-    
-    $oPage->add_linked_stylesheet('../css/font-awesome/css/font-awesome.min.css');
+
+
+	$oPage->add_linked_stylesheet('../css/font-awesome/css/all.min.css');
+	$oPage->add_linked_stylesheet('../css/font-awesome/css/v4-shims.min.css');
+
+
     $oPage->add('<div id="hub_installation_widget"></div>');
     $oPage->add('<fieldset id="database-backup-fieldset"><legend>'.Dict::S('iTopHub:DBBackupLabel').'</legend>');
     $oPage->add('<div id="backup_form"><input id="backup_checkbox" type="checkbox" checked><label for="backup_checkbox"> '.Dict::S('iTopHub:DBBackupSentence').'</label></div>');
@@ -252,7 +255,7 @@ function DoInstall(WebPage $oPage)
     $sStatusPageUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', array('operation' => 'done'));
     
     $aWidgetParams = array(
-        'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php'),
+        'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php', array('maintenance' => true)),
         'iframe_url' => $sIframeUrl, 
         'redirect_after_completion_url' => $sStatusPageUrl,
         'mysql_bindir' => MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''),

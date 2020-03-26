@@ -1,0 +1,154 @@
+# Copyright (C) 2010-2020 Combodo SARL
+#
+#  This file is part of iTop.
+#
+#  iTop is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  iTop is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+imports:
+  - { resource: "legacy_silex_compat_layer.php" }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+  # Replace default url generator service
+  router.options.generator_base_class: Combodo\iTop\Portal\Routing\UrlGenerator
+
+  # Used in templates
+  combodo.current_environment:        '%env(string:COMBODO_CURRENT_ENVIRONMENT)%'
+  combodo.absolute_url:               '%env(string:COMBODO_ABSOLUTE_URL)%'
+  combodo.modules.absolute_url:       '%env(string:COMBODO_MODULES_ABSOLUTE_URL)%'
+  combodo.modules.absolute_path:      !php/const MODULESROOT
+  combodo.portal.base.absolute_url:   '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_URL)%'
+  combodo.portal.base.absolute_path:  '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_PATH)%'
+  combodo.portal.instance.absolute_url: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
+  combodo.portal.instance.id:         '%env(string:PORTAL_ID)%'
+
+services:
+  # Default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false       # Allows optimizing the container by removing unused services; this also means
+                        # fetching services directly from the container via $container->get() won't work.
+                        # The best practice is to be explicit about your dependencies anyway.
+    bind:
+      $bDebug:            '%kernel.debug%'
+      $sPortalCachePath:  '%kernel.cache_dir%/'
+      $sPortalId:         '%env(string:PORTAL_ID)%'
+      $sCombodoPortalBaseAbsoluteUrl:     '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_URL)%'
+      $aCombodoPortalInstanceConf:        '%combodo.portal.instance.conf%'
+      $sCombodoPortalInstanceAbsoluteUrl: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
+
+  # Makes classes in src/ available to be used as services
+  # This creates a service per class whose id is the fully-qualified class name
+  Combodo\iTop\Portal\:
+    resource: '../src/*'
+    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+  # Controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  Combodo\iTop\Portal\Controller\:
+    resource: '../src/Controller'
+    tags: ['controller.service_arguments']
+
+  # Tag services without defining them (see https://symfony.com/doc/current/service_container/tags.html#autoconfiguring-tags)
+  _instanceof:
+    Combodo\iTop\Portal\EventListener\UserProvider:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 500 }]
+      calls:
+        - [setContainer, ['@service_container']]
+    Combodo\iTop\Portal\EventListener\ApplicationContextSetUrlMakerClass:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 400 }]
+    Combodo\iTop\Portal\EventListener\ApplicationContextSetPluginPropertyClass:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 300 }]
+    Combodo\iTop\Portal\EventListener\CssFromSassCompiler:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
+    Combodo\iTop\Portal\EventListener\ExceptionListener:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
+      calls:
+        - [setContainer, ['@service_container']]
+
+  # Add more service definitions when explicit configuration is needed
+  # Please note that last definitions always *replace* previous ones
+
+  # Legacy code as a service: since it is not in the auto-wiring path, it needs to be explicitly declared
+  ModuleDesign:
+    public: true
+    class: ModuleDesign
+    arguments:
+      - '%combodo.portal.instance.id%'
+
+  # Decoration
+  # - Compatibility layer with Silex\Application which was used almost everywhere in the portal's templates
+  Combodo\iTop\Portal\Twig\AppVariable:
+    decorates: twig.app_variable
+    arguments:
+      - '@Combodo\iTop\Portal\Twig\AppVariable.inner'
+      - '@service_container'
+
+  # Standard services
+  combodo.current_contact.photo_url:
+    public: true
+    class: Combodo\iTop\Portal\VariableAccessor\CombodoCurrentContactPhotoUrl
+    arguments: ['@combodo.current_user', '@service_container']
+  # Note: This service is initialized with a UserLocal object as it needs a class that can be instantiated.
+  # Anyway, it will be replaced with the real class by UserProvider in onKernelRequestEvent.
+  # Note: Services relying on this one should use \User in their signature and not \UserLocal.
+  combodo.current_user:
+    public: true
+    class: UserLocal
+
+  # Aliases
+  brick_collection:
+    alias: Combodo\iTop\Portal\Brick\BrickCollection
+    public: true
+  request_manipulator:
+    alias: Combodo\iTop\Portal\Helper\RequestManipulatorHelper
+    public: true
+  scope_validator:
+    alias: Combodo\iTop\Portal\Helper\ScopeValidatorHelper
+    public: true
+  security_helper:
+    alias: Combodo\iTop\Portal\Helper\SecurityHelper
+    public: true
+  context_manipulator:
+    alias: Combodo\iTop\Portal\Helper\ContextManipulatorHelper
+    public: true
+  navigation_rule_helper:
+    alias: Combodo\iTop\Portal\Helper\NavigationRuleHelper
+    public: true
+  ui_extensions_helper:
+    alias: Combodo\iTop\Portal\Helper\UIExtensionsHelper
+    public: true
+  lifecycle_validator:
+    alias: Combodo\iTop\Portal\Helper\LifecycleValidatorHelper
+    public: true
+  url_generator:
+    alias: router
+    public: true
+  object_form_handler:
+    alias: Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper
+    public: true
+  browse_brick:
+    alias: Combodo\iTop\Portal\Helper\BrowseBrickHelper
+    public: true
+  brick_controller_helper:
+    alias: Combodo\iTop\Portal\Helper\BrickControllerHelper
+    public: true
+  session_message_helper:
+    alias: Combodo\iTop\Portal\Helper\SessionMessageHelper
+    public: true

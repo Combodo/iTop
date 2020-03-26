@@ -37,7 +37,9 @@ use Exception;
  */
 class ItopTicketTest extends ItopDataTestCase
 {
-    /**
+	const CREATE_TEST_ORG = true;
+
+	/**
      * @throws Exception
      */
     protected function setUp()
@@ -745,7 +747,7 @@ class ItopTicketTest extends ItopDataTestCase
      *        +====>Person2
      * </pre>
      *
-     * @throws ArchivedObjectException
+     * @throws \ArchivedObjectException
      * @throws Exception
      */
     public function testUpdateImpactedItems_Redundancy_two_tickets()
@@ -849,7 +851,7 @@ class ItopTicketTest extends ItopDataTestCase
      *        +====>Person2
      * </pre>
      *
-     * @throws ArchivedObjectException
+     * @throws \ArchivedObjectException
      * @throws Exception
      */
     public function testUpdateImpactedItems_Redundancy_two_tickets2()

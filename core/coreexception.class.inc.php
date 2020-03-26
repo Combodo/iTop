@@ -115,7 +115,7 @@ class CoreException extends Exception
  * @see \DBObject::DBInsertNoReload()
  * @see \DBObject::DBUpdate()
  *
- * @since 2.6 N°659 uniqueness constraint
+ * @since 2.6.0 N°659 uniqueness constraint
  */
 class CoreCannotSaveObjectException extends CoreException
 {
@@ -183,6 +183,30 @@ class CoreCannotSaveObjectException extends CoreException
 	}
 }
 
+/**
+ * @since 2.7.0 N°2555
+ */
+class CorePortalInvalidActionRuleException extends CoreException
+{
+
+}
+
+/**
+ * @since 2.7.0 N°2555
+ */
+class CoreOqlException extends CoreException
+{
+
+}
+
+/**
+ * @since 2.7.0 N°2555
+ */
+class CoreOqlMultipleResultsForbiddenException extends CoreOqlException
+{
+
+}
+
 class CoreWarning extends CoreException
 {
 }
@@ -199,7 +223,27 @@ class SecurityException extends CoreException
  * Throwned when querying on an object that exists in the database but is archived
  *
  * @see N.1108
+ * @since 2.5.1
  */
 class ArchivedObjectException extends CoreException
+{
+}
+
+/**
+ * A parameter stored in the {@link Config} is invalid
+ *
+ * @since 2.7.0
+ */
+class InvalidConfigParamException extends CoreException
+{
+}
+
+
+/**
+ * Throwned when the password is not valid
+ *
+ * @since 2.7.0
+ */
+class InvalidPasswordAttributeOneWayPassword extends CoreException
 {
 }

@@ -1,0 +1,65 @@
+{# itop-portal-base/portal/templates/bricks/layout.html.twig #}
+{# Brick base layout #}
+{% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
+
+{% block pPageTitle %}
+	{# Overloading the default template's title to show the brick's title #}
+	{% if oBrick is defined and oBrick is not null and oBrick.GetTitle() != '' %}
+		{{ oBrick.GetTitle()|dict_s }} - {{ constant('ITOP_APPLICATION_SHORT') }}
+	{% else %}
+		{{ parent() }}
+	{% endif %}
+{% endblock %}
+
+{% block pPageBodyClass %}{{ parent() }} {% if oBrick is defined and oBrick is not null %}page_brick_of_id_{{ oBrick.GetId() }}{% endif %}{% endblock %}
+
+{% block pMainHeader %}
+	<div class="col-xs-12">
+		<div id="main-header-title">
+			<h2>
+				{% block pMainHeaderTitle %}{% endblock %}
+				{% block pMainHeaderSubtitle %}
+					{% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
+						<small class="subtitle">{{ sBrickSubtitle }}</small>
+					{% endif %}
+				{% endblock %}
+			</h2>
+		</div>
+		<div id="main-header-actions">
+			{% block pMainHeaderActions %}
+			{% endblock %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block pMainContent %}
+<div class="col-xs-12">
+	{% block pMainContentHolder%}
+	{% endblock %}
+</div>
+{% endblock %}
+
+{% block pPageLiveScriptHelpers %}
+    {{ parent() }}
+
+	// Helpers used for brick's opening target
+	var SetActionUrl = function(oElem, sUrl)
+	{
+		oElem.attr('href', sUrl);
+	};
+	var SetActionOpeningTarget = function(oElem, sMode)
+	{
+		if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_MODAL') }}')
+		{
+			oElem.attr('data-toggle', 'modal').attr('data-target', '#modal-for-all');
+		}
+		else if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_SELF') }}')
+		{
+			oElem.attr('target', '_self');
+		}
+		else if(sMode === '{{ constant('Combodo\\iTop\\Portal\\Brick\\PortalBrick::ENUM_OPENING_TARGET_NEW') }}')
+		{
+			oElem.attr('target', '_blank');
+		}
+	};
+{% endblock %}

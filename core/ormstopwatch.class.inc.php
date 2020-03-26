@@ -251,17 +251,27 @@ class ormStopWatch
 		return $sRes;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param \AttributeStopWatch $oAttDef
+	 *
+	 * @return float goal value (in second)
+	 * @uses \iMetricComputer::ComputeMetric()
+	 * @throws \CoreException
+	 */
 	protected function ComputeGoal($oObject, $oAttDef)
 	{
 		$sMetricComputer = $oAttDef->Get('goal_computing');
+		/** @var \iMetricComputer $oComputer */
 		$oComputer = new $sMetricComputer();
+
 		$aCallSpec = array($oComputer, 'ComputeMetric');
 		if (!is_callable($aCallSpec))
 		{
 			throw new CoreException("Unknown class/verb '$sMetricComputer/ComputeMetric'");
 		}
-		$iRet = call_user_func($aCallSpec, $oObject);
-		return $iRet;
+
+		return $oComputer->ComputeMetric($oObject);
 	}
 
 	/**
@@ -525,10 +535,10 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
 		
 						$sNow = date(AttributeDateTime::GetSQLFormat());
-						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < '$sNow'";
+						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < :now";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
-						$oSet = new DBObjectSet($oFilter);
-						$oSet->OptimizeColumnLoad(array($sAttCode));
+						$oSet = new DBObjectSet($oFilter, array(), array('now' => $sNow));
+						$oSet->OptimizeColumnLoad(array($sClass => array($sAttCode)));
 						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
 						{
 							$sClass = get_class($oObj);
@@ -590,9 +600,8 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							if($oObj->IsModified())
 							{
 								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
-					
-								$oMyChange = CMDBObject::GetCurrentChange();
-								$oObj->DBUpdateTracked($oMyChange);
+
+								$oObj->DBUpdate();
 							}
 
 							// Activate any existing trigger

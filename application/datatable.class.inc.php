@@ -1,25 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Data Table to display a set of objects in a tabular manner in HTML
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 class DataTable
@@ -36,8 +31,13 @@ class DataTable
 	/**
 	 * @param $iListId mixed Unique ID for this div/table in the page
 	 * @param $oSet DBObjectSet The set of data to display
-	 * @param $aClassAliases Hash The list of classes/aliases to be displayed in this set $sAlias => $sClassName
+	 * @param $aClassAliases array The list of classes/aliases to be displayed in this set $sAlias => $sClassName
 	 * @param $sTableId mixed A string (or null) identifying this table in order to persist its settings
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 */
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
@@ -50,7 +50,19 @@ class DataTable
 		$this->oDefaultSettings = null;
 		$this->bShowObsoleteData = $oSet->GetShowObsoleteData();
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DataTableSettings $oSettings
+	 * @param $bActionsMenu
+	 * @param $sSelectMode
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
 	public function Display(WebPage $oPage, DataTableSettings $oSettings, $bActionsMenu, $sSelectMode, $bViewLink, $aExtraParams)
 	{
 		$this->oDefaultSettings = $oSettings;
@@ -119,7 +131,23 @@ class DataTable
 		
 		return $this->GetAsHTML($oPage, $oCustomSettings->iDefaultPageSize, $oCustomSettings->iDefaultPageSize, 0, $oCustomSettings->aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $iPageSize
+	 * @param $iDefaultPageSize
+	 * @param $iPageIndex
+	 * @param $aColumns
+	 * @param $bActionsMenu
+	 * @param $bToolkitMenu
+	 * @param $sSelectMode
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function GetAsHTML(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex, $aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams)
 	{
 		$sObjectsCount = $this->GetObjectCount($oPage, $sSelectMode);
@@ -198,7 +226,13 @@ class DataTable
 		}
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $sSelectMode
+	 *
+	 * @return string
+	 */
 	protected function GetObjectCount(WebPage $oPage, $sSelectMode)
 	{
 		if (($sSelectMode == 'single') || ($sSelectMode == 'multiple'))
@@ -211,6 +245,15 @@ class DataTable
 		}
 		return $sHtml;		
 	}
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $iPageSize
+	 * @param $iDefaultPageSize
+	 * @param $iPageIndex
+	 *
+	 * @return string
+	 */
 	protected function GetPager(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex)
 	{
 		$sHtml = '';
@@ -295,7 +338,17 @@ class DataTable
 EOF;
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 */
 	protected function GetActionsMenu(WebPage $oPage, $aExtraParams)
 	{
 		$oMenuBlock = new MenuBlock($this->oSet->GetFilter(), 'list');
@@ -303,13 +356,20 @@ EOF;
 		$sHtml = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	protected function GetToolkitMenu(WebPage $oPage, $aExtraParams)
 	{
 		if (!$oPage->IsPrintableVersion())
 		{
 			$sMenuTitle = Dict::S('UI:ConfigureThisList');
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png?t='.utils::GetCacheBusterTimestamp().'"><ul>';
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
 	
 			$oMenuItem1 = new JSPopupMenuItem('iTop::ConfigureList', $sMenuTitle, "$('#datatable_dlg_".$this->iListId."').dialog('open');");
 			$aActions = array(
@@ -326,7 +386,15 @@ EOF;
 		}
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $aColumns
+	 * @param $bViewLink
+	 * @param $iDefaultPageSize
+	 *
+	 * @return string
+	 */
 	protected function GetTableConfigDlg(WebPage $oPage, $aColumns, $bViewLink, $iDefaultPageSize)
 	{
 		$sHtml = "<div id=\"datatable_dlg_{$this->iListId}\" style=\"display: none;\">";
@@ -362,23 +430,42 @@ EOF;
 
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param $oSetting
+	 *
+	 * @return array
+	 */
 	public function GetAsHash($oSetting)
 	{
 		$aSettings = array('iDefaultPageSize' => $oSetting->iDefaultPageSize, 'oColumns' => $oSetting->aColumns);
 		return $aSettings;
 	}
-	
+
+	/**
+	 * @param array $aColumns
+	 * @param string $sSelectMode
+	 * @param bool $bViewLink
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
+	 */
 	protected function GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink)
 	{
 		$aAttribs = array();
 		if ($sSelectMode == 'multiple')
 		{
-			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+			$aAttribs['form::select'] = array(
+				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>",
+				'description' => Dict::S('UI:SelectAllToggle+'),
+				'metadata' => array(),
+			);
 		}
 		else if ($sSelectMode == 'single')
 		{
-			$aAttribs['form::select'] = array('label' => "", 'description' => '');
+			$aAttribs['form::select'] = array('label' => '', 'description' => '', 'metadata' => array());
 		}
 
 		foreach($this->aClassAliases as $sAlias => $sClassName)
@@ -389,19 +476,55 @@ EOF;
 				{
 					if ($sAttCode == '_key_')
 					{
-						$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
+						$sAttLabel = MetaModel::GetName($sClassName);
+
+						$aAttribs['key_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => '',
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 					else
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => $oAttDef->GetOrderByHint());
+						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
+
+						$aAttribs[$sAttCode.'_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => $oAttDef->GetOrderByHint(),
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_code' => $sAttCode,
+								'attribute_type' => $sAttDefClass,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 				}
 			}
 		}
 		return $aAttribs;
 	}
-	
+
+	/**
+	 * @param $aColumns
+	 * @param $sSelectMode
+	 * @param $iPageSize
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
 	protected function GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
 		$bLocalize = true;
@@ -411,6 +534,7 @@ EOF;
 		}
 
 		$aValues = array();
+		$aAttDefsCache = array();
 		$this->oSet->Seek(0);
 		$iMaxObjects = $iPageSize;
 		while (($aObjects = $this->oSet->FetchAssoc()) && ($iMaxObjects != 0))
@@ -451,11 +575,41 @@ EOF;
 						{
 							if ($sAttCode == '_key_')
 							{
-								$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+								$aRow['key_'.$sAlias] = array(
+									'value_raw' => $aObjects[$sAlias]->GetKey(),
+									'value_html' => $aObjects[$sAlias]->GetHyperLink(),
+								);
 							}
 							else
 							{
-								$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								// Prepare att. def. classes cache to avoid retrieving AttDef for each row
+								if(!isset($aAttDefsCache[$sClassName][$sAttCode]))
+								{
+									$aAttDefClassesCache[$sClassName][$sAttCode] = get_class(MetaModel::GetAttributeDef($sClassName, $sAttCode));
+								}
+
+								// Only retrieve raw (stored) value for simple fields
+								$bExcludeRawValue = false;
+								foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+								{
+									if (is_a($aAttDefClassesCache[$sClassName][$sAttCode], $sAttDefClassToExclude, true))
+									{
+										$bExcludeRawValue = true;
+										break;
+									}
+								}
+
+								if($bExcludeRawValue)
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								}
+								else
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = array(
+										'value_raw' => $aObjects[$sAlias]->Get($sAttCode),
+										'value_html' => $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize),
+									);
+								}
 							}
 						}
 					}
@@ -484,7 +638,25 @@ EOF;
 		}
 		return $aValues;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $aColumns
+	 * @param $sSelectMode
+	 * @param $iPageSize
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
 	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
 		$iNbPages = ($iPageSize < 1) ? 1 : ceil($this->iNbObjects / $iPageSize);
@@ -496,7 +668,7 @@ EOF;
 
 		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 
-		$sHtml = '<table class="listContainer">';
+		$sHtml = '<table class="listContainer object-list">';
 
 		foreach($this->oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
 		{
@@ -585,7 +757,12 @@ EOF
 		}
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $iDefaultPageSize
+	 * @param $iStart
+	 */
 	public function UpdatePager(WebPage $oPage, $iDefaultPageSize, $iStart)
 	{
 		$iPageSize = $iDefaultPageSize;
@@ -609,11 +786,48 @@ EOF
  */
 class PrintableDataTable extends DataTable
 {
+	/**
+	 * @param \WebPage $oPage
+	 * @param $iPageSize
+	 * @param $iDefaultPageSize
+	 * @param $iPageIndex
+	 * @param $aColumns
+	 * @param $bActionsMenu
+	 * @param $bToolkitMenu
+	 * @param $sSelectMode
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function GetAsHTML(WebPage $oPage, $iPageSize, $iDefaultPageSize, $iPageIndex, $aColumns, $bActionsMenu, $bToolkitMenu, $sSelectMode, $bViewLink, $aExtraParams)
 	{
 		return $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, -1, $bViewLink, $aExtraParams);
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $aColumns
+	 * @param $sSelectMode
+	 * @param $iPageSize
+	 * @param $bViewLink
+	 * @param $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
 		$iNbPages = ($iPageSize < 1) ? 1 : ceil($this->iNbObjects / $iPageSize);
@@ -638,7 +852,13 @@ class DataTableSettings implements Serializable
 	public $iDefaultPageSize;
 	public $aColumns;
 
-	
+
+	/**
+	 * DataTableSettings constructor.
+	 *
+	 * @param $aClassAliases
+	 * @param null $sTableId
+	 */
 	public function __construct($aClassAliases, $sTableId = null)
 	{
 		$this->aClassAliases = $aClassAliases;
@@ -646,14 +866,22 @@ class DataTableSettings implements Serializable
 		$this->iDefaultPageSize = 10;
 		$this->aColumns = array();
 	}
-	
+
+	/**
+	 * @param $iDefaultPageSize
+	 * @param $aSortOrder
+	 * @param $aColumns
+	 */
 	protected function Init($iDefaultPageSize, $aSortOrder, $aColumns)
 	{
 		$this->iDefaultPageSize = $iDefaultPageSize;
 		$this->aColumns = $aColumns;
 		$this->FixVisibleColumns();
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function serialize()
 	{
 		// Save only the 'visible' columns
@@ -679,7 +907,12 @@ class DataTableSettings implements Serializable
 			)
 		);
 	}
-	
+
+	/**
+	 * @param string $sData
+	 *
+	 * @throws \Exception
+	 */
 	public function unserialize($sData)
 	{
 		$aData = unserialize($sData);
@@ -712,7 +945,16 @@ class DataTableSettings implements Serializable
 		}
 		$this->FixVisibleColumns();		
 	}
-	
+
+	/**
+	 * @param $aClassAliases
+	 * @param $bViewLink
+	 * @param $aDefaultLists
+	 *
+	 * @return \DataTableSettings
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	static public function GetDataModelSettings($aClassAliases, $bViewLink, $aDefaultLists)
 	{
 		$oSettings = new DataTableSettings($aClassAliases);
@@ -762,7 +1004,10 @@ class DataTableSettings implements Serializable
 		$oSettings->Init($iDefaultPageSize, $aSortOrder, $aColumns);
 		return $oSettings;
 	}
-	
+
+	/**
+	 * @throws \CoreException
+	 */
 	protected function FixVisibleColumns()
 	{
 		foreach($this->aClassAliases as $sAlias => $sClass)
@@ -799,7 +1044,15 @@ class DataTableSettings implements Serializable
 			}
 		}		
 	}
-	
+
+	/**
+	 * @param $aClassAliases
+	 * @param null $sTableId
+	 * @param bool $bOnlyOnTable
+	 *
+	 * @return \DataTableSettings|null
+	 * @throws \Exception
+	 */
 	static public function GetTableSettings($aClassAliases, $sTableId = null, $bOnlyOnTable = false)
 	{
 		$pref = null;
@@ -828,7 +1081,10 @@ class DataTableSettings implements Serializable
 		
 		return $oSettings;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function GetSortOrder()
 	{
 		$aSortOrder = array();
@@ -846,7 +1102,12 @@ class DataTableSettings implements Serializable
 		}
 		return $aSortOrder;
 	}
-	
+
+	/**
+	 * @param null $sTargetTableId
+	 *
+	 * @return bool
+	 */
 	public function Save($sTargetTableId = null)
 	{
 		$sSaveId = is_null($sTargetTableId) ? $this->sTableId : $sTargetTableId;
@@ -857,6 +1118,9 @@ class DataTableSettings implements Serializable
 		return true;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function SaveAsDefault()
 	{
 		$sSettings = $this->serialize();
@@ -886,18 +1150,43 @@ class DataTableSettings implements Serializable
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param null $sTableId
+	 *
+	 * @return string
+	 */
 	protected function GetPrefsKey($sTableId = null)
 	{
-		if ($sTableId == null) $sTableId = '*';
+		return static::GetAppUserPreferenceKey($this->aClassAliases, $sTableId);
+	}
+
+	public static function GetAppUserPreferenceKey($aClassAliases, $sTableId)
+	{
+		if ($sTableId === null)
+		{
+			$sTableId = '*';
+		}
+
 		$aKeys = array();
-		foreach($this->aClassAliases as $sAlias => $sClass)
+		foreach($aClassAliases as $sAlias => $sClass)
 		{
 			$aKeys[] = $sAlias.'-'.$sClass;
 		}
 		return implode('/', $aKeys).'|'.$sTableId;
 	}
-	
+
+	/**
+	 * @param $sAlias
+	 * @param $sAttCode
+	 * @param $oAttDef
+	 * @param $bChecked
+	 * @param $sSort
+	 *
+	 * @return array|bool
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	protected function GetFieldData($sAlias, $sAttCode, $oAttDef, $bChecked, $sSort)
 	{
 		$ret = false;

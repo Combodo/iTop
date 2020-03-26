@@ -17,14 +17,23 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
-require_once(APPROOT.'core/modulehandler.class.inc.php');
-require_once(APPROOT.'core/querybuildercontext.class.inc.php');
-require_once(APPROOT.'core/querymodifier.class.inc.php');
-require_once(APPROOT.'core/metamodelmodifier.inc.php');
-require_once(APPROOT.'core/computing.inc.php');
-require_once(APPROOT.'core/relationgraph.class.inc.php');
-require_once(APPROOT.'core/apc-compat.php');
-require_once(APPROOT.'core/expressioncache.class.inc.php');
+require_once APPROOT.'core/modulehandler.class.inc.php';
+require_once APPROOT.'core/querymodifier.class.inc.php';
+require_once APPROOT.'core/metamodelmodifier.inc.php';
+require_once APPROOT.'core/computing.inc.php';
+require_once APPROOT.'core/relationgraph.class.inc.php';
+require_once APPROOT.'core/apc-compat.php';
+require_once APPROOT.'core/expressioncache.class.inc.php';
+
+
+/**
+ * We need to have all iLoginFSMExtension/iLoginUIExtension impl loaded ! Cannot use autoloader...
+ */
+require_once APPROOT.'application/loginform.class.inc.php';
+require_once APPROOT.'application/loginbasic.class.inc.php';
+require_once APPROOT.'application/logindefault.class.inc.php';
+require_once APPROOT.'application/loginexternal.class.inc.php';
+require_once APPROOT.'application/loginurl.class.inc.php';
 
 /**
  * Metamodel
@@ -534,7 +543,7 @@ abstract class MetaModel
 	 *
 	 * @return array rule id as key, rule properties as value
 	 * @throws \CoreException
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @see #SetUniquenessRuleRootClass that fixes a specific 'root_class' property to know which class is root per rule
 	 */
 	final public static function GetUniquenessRules($sClass, $bClassDefinitionOnly = false)
@@ -679,7 +688,7 @@ abstract class MetaModel
 	 * @param array $aRuleProperties
 	 *
 	 * @return bool
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 */
 	private static function IsUniquenessRuleContainingOnlyDisabledKey($aRuleProperties)
 	{
@@ -910,6 +919,20 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
+	final static public function GetFilterCodeOrigin($sClass, $sAttCode)
+	{
+		self::_check_subclass($sClass);
+		return self::$m_aFilterOrigins[$sClass][$sAttCode];
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 *
@@ -935,7 +958,7 @@ abstract class MetaModel
 	 * @param string $sClass Name of the class
 	 * @param string $sAttCode Code of the attributes
 	 *
-	 * @return Array List of attribute codes that depend on the given attribute, empty array if none.
+	 * @return array List of attribute codes that depend on the given attribute, empty array if none.
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
@@ -1084,15 +1107,28 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Get "finalclass" DB field name
 	 * @param string $sClass
 	 *
-	 * @return mixed
+	 * @return string
 	 * @throws \CoreException
 	 */
 	final static public function DBGetClassField($sClass)
 	{
 		self::_check_subclass($sClass);
+
+		// Leaf classes have no "finalclass" field.
+	    // Non Leaf classes have the same field as the root class
+		if (!self::IsLeafClass($sClass))
+		{
+			$sClass = MetaModel::GetRootClass($sClass);
+		}
 		return self::$m_aClassParams[$sClass]["db_finalclass_field"];
+	}
+
+	final public static function IsLeafClass($sClass)
+	{
+		return empty(self::$m_aChildClasses[$sClass]);
 	}
 
 	/**
@@ -1104,16 +1140,7 @@ abstract class MetaModel
 	final static public function IsStandaloneClass($sClass)
 	{
 		self::_check_subclass($sClass);
-
-		if (count(self::$m_aChildClasses[$sClass]) == 0)
-		{
-			if (count(self::$m_aParentClasses[$sClass]) == 0)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return (empty(self::$m_aChildClasses[$sClass]) && empty(self::$m_aParentClasses[$sClass]));
 	}
 
 	/**
@@ -1187,7 +1214,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var \AttributeDefinition[]
+	 * @var \AttributeDefinition[][]
 	 */
 	private static $m_aAttribDefs = array();
 	/**
@@ -1404,7 +1431,7 @@ abstract class MetaModel
 	 * @param string $sClass Class name
 	 * @param string $sAttCode Attribute code
 	 *
-	 * @return AttributeDefinition the AttributeDefinition of the $sAttCode attribute of the $sClass class
+	 * @return \AttributeDefinition the AttributeDefinition of the $sAttCode attribute of the $sClass class
 	 * @throws Exception
 	 */
 	final static public function GetAttributeDef($sClass, $sAttCode)
@@ -2197,10 +2224,10 @@ abstract class MetaModel
 					}
 				}
 			}
-			else
-			{
+			//else
+			//{
 				// Cannot take the legacy system into account... simply ignore it
-			}
+			//}
 		} // foreach class
 
 		// Perform the up/down reconciliation for the legacy definitions
@@ -2483,6 +2510,32 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return an hash array of the possible attribute flags (code => value)
+	 *
+	 * Example:
+	 * [
+	 *  "read_only" => OPT_ATT_READONLY,
+	 *  "mandatory" => OPT_ATT_MANDATORY,
+	 *  ...
+	 * ]
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function EnumPossibleAttributeFlags()
+	{
+		return $aPossibleAttFlags = array(
+			'normal' => OPT_ATT_NORMAL,
+			'hidden' => OPT_ATT_HIDDEN,
+			'read_only' => OPT_ATT_READONLY,
+			'mandatory' => OPT_ATT_MANDATORY,
+			'must_change' => OPT_ATT_MUSTCHANGE,
+			'must_prompt' => OPT_ATT_MUSTPROMPT,
+			'slave' => OPT_ATT_SLAVE
+		);
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param string $sState
 	 * @param string $sAttCode
@@ -2696,6 +2749,7 @@ abstract class MetaModel
 	 */
 	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
+		/** @var \AttributeExternalKey $oAttDef */
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains, $iAdditionalValue);
 	}
@@ -2780,7 +2834,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
+		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -3187,7 +3241,7 @@ abstract class MetaModel
 	 *
 	 * @throws \CoreUnexpectedValue if the rule is invalid
 	 *
-	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @since 2.6.1 N°1968 (joli mois de mai...) disallow overrides of 'attributes' properties
 	 */
 	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = array())
@@ -4149,6 +4203,10 @@ abstract class MetaModel
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
 		//
 		$aModifierProperties = array();
+		/**
+		 * @var string $sPluginClass
+		 * @var iQueryModifier $oQueryModifier
+		 */
 		foreach(MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
 		{
 			// Lowest precedence: the application context
@@ -4378,8 +4436,7 @@ abstract class MetaModel
 		{
 			$iChildId = $aValues['id'];
 			$iLeft = $iCurrIndex++;
-			//FIXME calling ourselves but no return statement in this method ?!!???
-			$aChildren = self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
+			self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
 			$iRight = $iCurrIndex++;
 			$sSQL = "UPDATE `$sTable` SET `$sLeft` = $iLeft, `$sRight` = $iRight WHERE id= $iChildId";
 			CMDBSource::Query($sSQL);
@@ -5070,7 +5127,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Determines wether the target DB is frozen or not
+	 * Determines whether the target DB is frozen or not
 	 *
 	 * @return bool
 	 */
@@ -5402,6 +5459,14 @@ abstract class MetaModel
 						else
 						{
 							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
+							$aAdditionalRequests = self::GetAdditionalRequestAfterAlter($sClass, $sTable, $sField);
+							if (!empty($aAdditionalRequests))
+							{
+								foreach ($aAdditionalRequests as $sAdditionalRequest)
+								{
+									$aPostTableAlteration[$sTable][] = $sAdditionalRequest;
+								}
+							}
 						}
 
 						if ($bIndexNeeded)
@@ -5489,10 +5554,10 @@ abstract class MetaModel
 						//
 						$bToBeChanged = false;
 						$sActualFieldSpec = CMDBSource::GetFieldSpec($sTable, $sField);
-						if (strcasecmp($sDBFieldSpec, $sActualFieldSpec) != 0)
+						if (!CMDBSource::IsSameFieldTypes($sDBFieldSpec, $sActualFieldSpec))
 						{
 							$bToBeChanged = true;
-							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldSpec' while expecting '$sDBFieldSpec'";
+							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found <code>$sActualFieldSpec</code> while expecting <code>$sDBFieldSpec</code>";
 						}
 						if ($bToBeChanged)
 						{
@@ -5636,10 +5701,14 @@ abstract class MetaModel
 		{
 			$sChangeList = implode(', ', $aChangeList);
 			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
-		}
-		foreach($aPostTableAlteration  as $sTable => $aChangeList)
-		{
-			$aCondensedQueries = array_merge($aCondensedQueries, $aChangeList);
+			// Add request right after the ALTER TABLE
+			if (isset($aPostTableAlteration[$sTable]))
+			{
+				foreach ($aPostTableAlteration[$sTable] as $sQuery)
+				{
+					$aCondensedQueries[] = $sQuery;
+				}
+            }
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
@@ -5647,6 +5716,8 @@ abstract class MetaModel
 
 
 	/**
+	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception
@@ -5836,10 +5907,10 @@ abstract class MetaModel
 			{
 				$sAction = $aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'];
 
-				if ($sAction == 'Delete')
-				{
+				//if ($sAction == 'Delete')
+				//{
 					// No need to update, the record will be deleted!
-				}
+				//}
 
 				if ($sAction == 'Update')
 				{
@@ -6229,6 +6300,10 @@ abstract class MetaModel
 	{
 		self::$m_oConfig = $oConfiguration;
 
+		// N°2478 utils has his own private attribute
+		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
+		utils::SetConfig($oConfiguration);
+
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{
@@ -6262,7 +6337,7 @@ abstract class MetaModel
 			&& function_exists('apc_store');
 
 		DBSearch::EnableQueryCache(self::$m_oConfig->GetQueryCacheEnabled(), self::$m_bUseAPCCache, self::$m_oConfig->Get('apc_cache.query_ttl'));
-		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries());
+		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries() || self::$m_oConfig->Get('log_kpi_record_oql'));
 		DBSearch::EnableQueryIndentation(self::$m_oConfig->Get('query_indentation_enabled'));
 		DBSearch::EnableOptimizeQuery(self::$m_oConfig->Get('query_optimization_enabled'));
 
@@ -6294,6 +6369,11 @@ abstract class MetaModel
 		// Romain: this is the only way I've found to cope with the fact that
 		//         classes have to be derived from cmdbabstract (to be editable in the UI)
 		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
+
+		if (!defined('MODULESROOT'))
+		{
+			define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
+		}
 
 		require_once(APPROOT.'core/autoload.php');
 		require_once(APPROOT.'env-'.self::$m_sEnvironment.'/autoload.php');
@@ -6656,6 +6736,10 @@ abstract class MetaModel
 		else
 		{
 			// do the job for the real target class
+			if (!class_exists($aRow[$sClassAlias."finalclass"]))
+			{
+				throw new CoreException("Class {$aRow[$sClassAlias."finalclass"]} derived from $sClass does not exist anymore, please remove corresponding tables in the database", array('row' => $aRow));
+			}
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
@@ -6674,7 +6758,7 @@ abstract class MetaModel
 	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
 	 * @param null $aModifierProperties
 	 *
-	 * @return \cmdbAbstractObject null if : (the object is not found) or (archive mode disabled and object is archived and
+	 * @return \DBObject null if : (the object is not found) or (archive mode disabled and object is archived and
 	 *     $bMustBeFound=false)
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws ArchivedObjectException if archive mode disabled and result is archived and $bMustBeFound=true
@@ -6719,7 +6803,7 @@ abstract class MetaModel
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws \Exception
 	 *
-	 * @since 2.4 introduction of the archive functionalities
+	 * @since 2.4.0 introduction of the archive functionality
 	 *
 	 * @see MetaModel::GetObject() same but returns null or ArchivedObjectFoundException if object exists but is
 	 *     archived
@@ -6883,10 +6967,11 @@ abstract class MetaModel
 	 * Instantiate a persistable object (not yet persisted)
 	 *
 	 * @api
+	 *
 	 * @param string $sClass A persistable class
 	 * @param array|null $aValues array of attcode => attribute value to preset
 	 *
-	 * @return DBObject
+	 * @return \cmdbAbstractObject
 	 * @throws \CoreException
 	 */
 	public static function NewObject($sClass, $aValues = null)
@@ -6905,6 +6990,8 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated 2.7.0 N°1627, use ItopCounter::incRootClass($sClass) instead
+	 *
 	 * @param string $sClass
 	 *
 	 * @return int
@@ -6912,10 +6999,7 @@ abstract class MetaModel
 	 */
 	public static function GetNextKey($sClass)
 	{
-		$sRootClass = MetaModel::GetRootClass($sClass);
-		$sRootTable = MetaModel::DBGetTable($sRootClass);
-
-		return CMDBSource::GetNextInsertId($sRootTable);
+		return ItopCounter::IncClass($sClass);
 	}
 
 	/**
@@ -6970,7 +7054,7 @@ abstract class MetaModel
 	 * Surpasses BulkDelete as it can handle abstract classes, but has the other limitation as it bypasses standard
 	 * objects handlers
 	 *
-	 * @param string $oFilter Scope of objects to wipe out
+	 * @param \DBSearch $oFilter Scope of objects to wipe out
 	 *
 	 * @return int The count of deleted objects
 	 * @throws \CoreException
@@ -7043,7 +7127,7 @@ abstract class MetaModel
 
 		if ($bSkipLinkingClasses)
 		{
-			$aLinksClasses = self::EnumLinksClasses();
+			$aLinksClasses = array_keys(self::GetLinkClasses());
 		}
 
 		// 1-N links (referencing my class), array of sClass => array of sAttcode
@@ -7081,12 +7165,12 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
+	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
 	 * The only difference with EnumLinkingClasses is the output format
 	 *
+	 * @see MetaModel::GetLinkClasses
 	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
 	 *
-	 * @see MetaModel::GetLinkClasses
 	 */
 	public static function EnumLinksClasses()
 	{
@@ -7115,15 +7199,16 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
+	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
 	 * The only difference with EnumLinksClasses is the output format
 	 *
-	 * @param string $sClass
+	 * @see MetaModel::GetLinkClasses
+	 *
+	 *@param string $sClass
 	 *
 	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
 	 * @throws \CoreException
 	 *
-	 * @see MetaModel::GetLinkClasses
 	 */
 	public static function EnumLinkingClasses($sClass = "")
 	{
@@ -7165,14 +7250,14 @@ abstract class MetaModel
 	}
 
 	/**
-	 * This function has two siblings that will be soon deprecated:
-	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
-	 *
 	 * Using GetLinkClasses is the recommended way to determine if a class is
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
 	 *
-	 * @return array external key code => target class
+	 * This function has two siblings that will be soon deprecated:
+	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
+	 *
+	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
 	 */
 	public static function GetLinkClasses()
@@ -7311,19 +7396,31 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sInterface
+	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
 	 *
 	 * @return array classes=>instance implementing the given interface
 	 */
-	public static function EnumPlugins($sInterface)
+	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			return self::$m_aExtensionClasses[$sInterface];
-		}
-		else
+		if (!array_key_exists($sInterface, self::$m_aExtensionClasses))
 		{
 			return array();
 		}
+
+		if (is_null($sFilterInstanceOf))
+		{
+			return self::$m_aExtensionClasses[$sInterface];
+		}
+
+		$fFilterCallback = function ($instance) use ($sFilterInstanceOf)
+		{
+			return $instance instanceof $sFilterInstanceOf;
+		};
+
+		return array_filter(
+			self::$m_aExtensionClasses[$sInterface],
+			$fFilterCallback
+		);
 	}
 
 	/**
@@ -7469,6 +7566,28 @@ abstract class MetaModel
 		return $sRet;
 	}
 
+	private static function GetAdditionalRequestAfterAlter($sClass, $sTable, $sField)
+	{
+		$aRequests = array();
+
+		// Copy finalclass fields from root class to intermediate classes
+		if ($sField == self::DBGetClassField($sClass))
+		{
+			$sRootClass = MetaModel::GetRootClass($sClass);
+			$sRootTable = self::DBGetTable($sRootClass);
+			$sKey = self::DBGetKey($sClass);
+			$sRootKey = self::DBGetKey($sRootClass);
+			$sRootField = self::DBGetClassField($sRootClass);
+			if ($sTable != $sRootTable)
+			{
+				// Copy the finalclass of the root table
+				$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
+				$aRequests[] = $sRequest;
+			}
+		}
+
+		return $aRequests;
+	}
 }
 
 

@@ -1,0 +1,134 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<div class="page_header"><h1>{{ 'iTopUpdate:UI:PageTitle'|dict_s }}</h1></div>
+
+<div class="display_block display-files">
+    <fieldset>
+        <legend>{{ 'iTopUpdate:UI:Status'|dict_s }}</legend>
+
+        <div id="header-requirements" class="header_message message_info">
+            <div>
+                <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
+            </div>
+        </div>
+
+        <table style="vertical-align:top" class="one-col-details" data-mode="view">
+            <tbody>
+            <tr>
+                <td style="vertical-align:top" class="">
+
+                    {{ include('DisplayCurrentVersion.html.twig') }}
+
+                    <div class="details">
+                        <div class="field_container field_small">
+                            <div class="field_label label"><span title="">{{ 'iTopUpdate:UI:DiskFreeSpace'|dict_s }}</span></div>
+                            <div class="field_data"><div class="field_value">{{ sDiskFreeSpace }}</div></div>
+                        </div>
+                    </div>
+
+                    <div class="details">
+                        <div class="field_container field_small">
+                            <div class="field_label label"><span title="">{{ 'iTopUpdate:UI:ItopDiskSpace'|dict_s }}</span></div>
+                            <div class="field_data"><div id="itop-disk-space" class="field_value"><i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></div></div>
+                        </div>
+                    </div>
+
+                    <div class="details">
+                        <div class="field_container field_small">
+                            <div class="field_label label"><span title="">{{ 'iTopUpdate:UI:DBDiskSpace'|dict_s }}</span></div>
+                            <div class="field_data"><div id="db-disk-space" class="field_value"><i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></div></div>
+                        </div>
+                    </div>
+
+                    <div class="details">
+                        <div class="field_container field_small">
+                            <div class="field_label label"><span title="">{{ 'iTopUpdate:UI:FileUploadMaxSize'|dict_s }}</span></div>
+                            <div class="field_data"><div class="field_value">{{ sFileUploadMaxSize }}</div></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ 'iTopUpdate:UI:SelectUpdateFile'|dict_s }}</legend>
+
+        <div class="details">
+            <form enctype="multipart/form-data" method="post">
+                <input type="hidden" name="operation" value="ConfirmUpdate"/>
+                <input type="hidden" name="transaction_id" value="{{ sTransactionId }}">
+
+                <div id="header-file-size" class="header_message message_error" style="display: none">
+                    <div>
+                        <span>{{ 'iTopUpdate:Error:FileUploadMaxSizeTooSmall'|dict_s }}</span>
+                    </div>
+                    <div>
+                        <span>{{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}</span>
+                    </div>
+                    <div>
+                        <span>{{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}</span>
+                    </div>
+                </div>
+
+                <div class="field_container field_large">
+                    <div class="field_data">
+                        <div class="upload_container">
+                            <input type="file" id="file" name="file"/>
+                        </div>
+                    </div>
+
+                    <div id="dobackup-warning" class="header_message message_info" style="display: none">{{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}</div>
+                    <div class="field_data">
+                        <label id="dobackup-label" for="doBackup">{{ 'iTopUpdate:UI:DoBackup:Label'|dict_s }}</label>
+                        <input type="checkbox" id="doBackup" name="doBackup" checked="checked" value="1"/>
+                    </div>
+                    <div class="field_data">
+                        <label id="dofilesarchive-label" for="doFilesArchive">{{ 'iTopUpdate:UI:DoFilesArchive'|dict_s }}</label>
+                        <input type="checkbox" id="doFilesArchive" name="doFilesArchive" checked="checked" value="1"/>
+                    </div>
+                </div>
+                <p><input id="check-update" type="submit" value="{{ 'iTopUpdate:UI:CheckUpdate'|dict_s }}" disabled="disabled"/> <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i></p>
+            </form>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ 'iTopUpdate:UI:History'|dict_s }}</legend>
+
+        <div class="details">
+            {% for aInstall in aPreviousInstall %}
+                {% if loop.first %}
+                    <table class="listResults">
+                        <tr>
+                            <th>{{ 'Class:ModuleInstallation/Attribute:name'|dict_s }}</th>
+                            <th>{{ 'Class:ModuleInstallation/Attribute:version'|dict_s }}</th>
+                            <th>{{ 'Class:ModuleInstallation/Attribute:installed'|dict_s }}</th>
+                            <th>{{ 'Class:ModuleInstallation/Attribute:comment'|dict_s }}</th>
+                        </tr>
+                {% endif %}
+
+                {% if (loop.index0 % 2) == 0 %}
+                    {% set sRowClass = "odd" %}
+                {% else %}
+                    {% set sRowClass = "even" %}
+                {% endif %}
+
+                        <tr class="{{ sRowClass }}">
+                            <td>{{ aInstall.name }}</td>
+                            <td>{{ aInstall.version }}</td>
+                            <td>{{ aInstall.installed }}</td>
+                            <td>{{ aInstall.comment }}</td>
+                        </tr>
+
+                {% if loop.last %}
+                    </table>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </fieldset>
+
+</div>

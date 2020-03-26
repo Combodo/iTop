@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <menus>
+    <menu id="iTopUpdate" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>60</rank>
+      <parent>SystemTools</parent>
+      <url>$pages/exec.php?exec_module=itop-core-update&amp;exec_page=index.php&amp;c[menu]=iTopUpdate&amp;maintenance=true</url>
+      <enable_admin_only>1</enable_admin_only>
+    </menu>
+  </menus>
+</itop_design>

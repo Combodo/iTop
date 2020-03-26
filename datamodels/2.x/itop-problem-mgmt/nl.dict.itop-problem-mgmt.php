@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  *
  * @author Hipska (2018)
- * @author jbostoen (2018)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  * 
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0

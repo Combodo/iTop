@@ -166,7 +166,14 @@ class apcFile
 		}
 		else
 		{
-			if (!@unlink($sCache))
+			if (is_file($sCache))
+			{
+				if (!@unlink($sCache))
+				{
+					return false;
+				}
+			}
+			else
 			{
 				return false;
 			}
@@ -209,8 +216,14 @@ class apcFile
 			return false;
 		}
 
-		@unlink(self::GetCacheFileName($sKey));
-		@unlink(self::GetCacheFileName('-'.$sKey));
+		if (is_file(self::GetCacheFileName($sKey)))
+		{
+			@unlink(self::GetCacheFileName($sKey));
+		}
+		if (is_file(self::GetCacheFileName('-'.$sKey)))
+		{
+			@unlink(self::GetCacheFileName('-'.$sKey));
+		}
 		if ($iTTL > 0)
 		{
 			// hint for ttl management
@@ -312,6 +325,10 @@ class apcFile
 	 */
 	static protected function ReadCacheLocked($sFilename)
 	{
+		if (!is_file($sFilename))
+		{
+			return false;
+		}
 		$file = @fopen($sFilename, 'r');
 		if ($file === false)
 		{

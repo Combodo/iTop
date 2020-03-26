@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-config/2.6.3',
+	'itop-config/2.7.0',
 	array(
 		// Identification
 		//
@@ -20,7 +20,10 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-config.php',
-		),
+			'src/Validator/ConfigNodesVisitor.php',
+			'src/Validator/iTopConfigAstValidator.php',
+			'src/Validator/iTopConfigSyntaxValidator.php',
+),
 		'webservice' => array(),
 		'dictionary' => array(
 			'en.dict.itop-config.php',

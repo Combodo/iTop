@@ -1,0 +1,123 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+function UpdateProgress(sMessage, iPercent) {
+    $('#setup_msg').html(sMessage);
+    $('#progress').progression({
+        Current: iPercent,
+        Maximum: 100,
+        aBackgroundImg: "{{ sProgressImage }}",
+        aTextColor: '#000000'
+    });
+}
+
+var oGetCurrentVersion = {
+    method: "POST",
+    url: "{{ sAjaxURL|raw }}",
+    data: {
+        "operation": "GetCurrentVersion"
+    },
+    dataType: "json",
+    success: function(data)
+    {
+        var oCurrentVersion = $("#current-version");
+        if (oCurrentVersion)
+        {
+            oCurrentVersion.html(data.sVersion);
+        }
+    }
+}
+
+function GetAjaxRequest(sOperation)
+{
+    oAjaxRequest = {
+        method: "POST",
+        url: "{{ sAjaxURL|raw }}",
+        data: {
+            "operation": sOperation,
+            "authent": "{{ sSetupToken }}"
+        },
+        dataType: "json"
+    };
+
+    if (sOperation === "Backup")
+    {
+        oAjaxRequest.success = function() {
+            $("#do_backup_done").show(300);
+        };
+    }
+
+    if (sOperation === "FilesArchive")
+    {
+        oAjaxRequest.success = function() {
+            $("#do_files_archive_done").show(300);
+        };
+    }
+
+    return oAjaxRequest;
+}
+
+{% set aSteps = ['EnterMaintenance', 'Backup', 'FilesArchive', 'CopyFiles', 'CheckCompile', 'Compile', 'UpdateDatabase', 'ExitMaintenance', 'UpdateDone'] %}
+
+aStepsName = [];
+
+{% for sStep in aSteps %}
+aStepsName.push({{ ('iTopUpdate:UI:SetupMessage:' ~ sStep)|dict_s|json_encode|raw }});
+{% endfor %}
+
+var sBackupStep;
+{% if bDoBackup %}
+sBackupStep = "Backup";
+{% endif %}
+
+var sFilesArchiveStep;
+{% if bDoFilesArchive %}
+sFilesArchiveStep = "FilesArchive";
+{% endif %}
+
+var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "CheckCompile", "Compile", "UpdateDatabase", "ExitMaintenance", null];
+
+var iNextStep = 0;
+function ExecNextStep() {
+    if (iNextStep < aStepsAjaxOperation.length)
+    {
+        var sAjaxOperation = aStepsAjaxOperation[iNextStep];
+        var iPercent = (iNextStep + 1) * 100 / aStepsAjaxOperation.length;
+        UpdateProgress(aStepsName[iNextStep], iPercent);
+        iNextStep++;
+        if (sAjaxOperation) {
+            $.ajax(GetAjaxRequest(sAjaxOperation))
+                .done(function () {
+                    setTimeout(ExecNextStep, 500);
+                })
+                .fail(function ( jqXHR) {
+                    if (jqXHR && jqXHR.responseJSON) {
+                        $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }}+" "+jqXHR.responseJSON.sError);
+                    }
+                    else
+                    {
+                        $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }});
+                    }
+                    $('#progress').hide();
+                    $("#setup_error_outer").show();
+                    $("#run_setup").show();
+                    $("#setup_continue").hide();
+                });
+        }
+        else
+        {
+            setTimeout(ExecNextStep, 500);
+        }
+    }
+    else
+    {
+        $.ajax(oGetCurrentVersion);
+        $("#setup_continue").removeAttr("disabled");
+        $('#installation_progress').hide(300);
+        $('#new_version').show();
+        $("#current_version").removeClass("message-info").addClass("message-valid");
+    }
+}
+
+ExecNextStep();
+

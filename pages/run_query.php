@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Tools to design OQL queries and test them
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once('../approot.inc.php');
@@ -117,10 +110,6 @@ try
 		$oFilter = DBObjectSearch::unserialize($sExpression);
 		$sExpression = $oFilter->ToOQL();
 	}
-	else
-	{
-		// leave $sExpression as is
-	}
 
 	$oFilter = null;
 	$aArgs = array();
@@ -160,10 +149,7 @@ try
 				}
 			}
 			$oFilter->SetInternalParams($aArgs);
-		}
-		elseif ($sSyntaxError)
-		{
-			// Query arguments taken from the page args
+			$aRealArgs = $aArgs;
 		}
 	}
 
@@ -228,6 +214,56 @@ EOF
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
 		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
 		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').htmlentities($oFilter->serialize(), ENT_QUOTES, 'UTF-8'));
+
+
+		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
+
+		// Avoid adding all the fields for counts or "group by" requests
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass))
+			{
+				$sMainClass = $sClass;
+			}
+		}
+
+		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
+
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
+		{
+			// OQL Developed for Count
+			$oP->p('');
+			$oP->p(Dict::S('UI:RunQuery:DevelopedOQLCount'));
+			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
+			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+		}
+		
+		// SQL Count
+		$oP->p('');
+		$oP->p(Dict::S('UI:RunQuery:ResultSQLCount'));
+		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
+		$oP->p("<pre>$sSQL</pre>");
+
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
+		{
+			// OQL Developed
+			$oP->p('');
+			$oP->p(Dict::S('UI:RunQuery:DevelopedOQL'));
+			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
+			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+		}
+
+		// SQL
+		$oP->p('');
+		$oP->p(Dict::S('UI:RunQuery:ResultSQL'));
+		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
+		$oP->p("<pre>$sSQL</pre>");
+
 		$oP->EndCollapsibleSection();
 	}
 	elseif ($sSyntaxError)
@@ -236,10 +272,10 @@ EOF
 		{
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
-			if (count($aSuggestedWords) > 0)
+			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0)
 			{
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
-		
+
 				if (strlen($sSuggestedWord) > 0)
 				{
 					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
@@ -272,4 +308,4 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
+

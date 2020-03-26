@@ -1,24 +1,25 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+// Copyright (c) 2010-2018 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//
+// Database inconsistencies
 Dict::Add('FR FR', 'French', 'Français', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'Outils BDD',
+	'Menu:DBToolsMenu' => 'Intégrité base de données',
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Outils maintenance base de données',
 	'DBTools:ErrorsFound' => 'Erreurs trouvées',
@@ -46,6 +47,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valeur invalide pour %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Certains comptes utilisateurs n\'ont aucun profile',
 	'DBAnalyzer-Fetch-Count-Error' => 'Erreur de récupération dans `%1$s`, %2$d enregistrements récupérés / %3$d comptés',
+	'DBAnalyzer-Integrity-FinalClass' => 'Le champ `%2$s`.`%1$s` doit avoir la même valeur que `%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Le champ `%2$s`.`%1$s` doit contenir une classe valide',
 ));
 
 // Database Info

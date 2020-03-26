@@ -18,12 +18,7 @@
  */
 
 @include_once('../../approot.inc.php');
-@include_once('../approot.inc.php');
-require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/itopwebpage.class.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 require_once('db_analyzer.class.inc.php');
 
@@ -53,13 +48,13 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	}
 	$sClassSelection = utils::ReadParam('class_selection', '');
 
-	$oP->SetCurrentTab(Dict::S('DBTools:Inconsistencies'));
+	$oP->SetCurrentTab('DBTools:Inconsistencies');
 
 	$bRunAnalysis = intval(utils::ReadParam('run_analysis', '0'));
 	if ($bRunAnalysis)
 	{
 		$oDBAnalyzer = new DatabaseAnalyzer();
-		$aResults = $oDBAnalyzer->CheckIntegrity($aClassSelection, $iShowId);
+		$aResults = $oDBAnalyzer->CheckIntegrity($aClassSelection);
 		if (empty($aResults))
 		{
 			$oP->p('<div class="header_message message_ok">'.Dict::S('DBTools:NoError').'</div>');
@@ -68,7 +63,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 
 	$oP->add('<div style="padding: 15px; background: #ddd;">');
 	$oP->add("<form>");
-	$oP->add("<table border=0>");
+	$oP->add('<table style="border=0;">');
 
 	$oP->add("<tr><td>");
 	$sChecked = ($iShowId == 0) ? 'checked' : '';
@@ -276,64 +271,6 @@ function DisplayInconsistenciesReport($aResults)
 }
 
 /**
- * @return float
- * @throws MySQLException
- * @throws MySQLHasGoneAwayException
- */
-function GetDatabaseSize()
-{
-	$sShema = CMDBSource::DBName();
-
-	$sReq = <<<EOF
-SELECT round(sum(data_length+index_length)/1024/1024,2) AS sz
-FROM information_schema.tables 
-WHERE table_schema = '$sShema';
-EOF;
-
-	$oResult = CMDBSource::Query($sReq);
-	if ($oResult !== false)
-	{
-		$aRow = $oResult->fetch_assoc();
-		$sSize = $aRow['sz'];
-		return $sSize;
-	}
-
-	return 0;
-}
-
-/**
- * @param iTopWebPage $oP
- * @param ApplicationContext $oAppContext
- *
- * @return \iTopWebPage
- * @throws \MySQLException
- * @throws \MySQLHasGoneAwayException
- */
-function DisplayDatabaseInfo(iTopWebPage &$oP, ApplicationContext &$oAppContext)
-{
-	// Build HTML
-	$oP->SetCurrentTab(Dict::S('DBTools:DatabaseInfo'));
-
-	$oP->add('<div style="padding: 15px; background: #ddd;">');
-	$oP->add('<table class="listResults"><tr><th>'.Dict::S('DBTools:Base').'</th><th>'.Dict::S('DBTools:Size').'</th></tr>');
-
-	$oP->add('<tr>');
-	$oP->add('<td>');
-	$oP->add(CMDBSource::DBName());
-	$oP->add('</td>');
-	$oP->add('<td>');
-	$fSize = GetDatabaseSize();
-	$oP->add("$fSize MB");
-	$oP->add('</td>');
-	$oP->add('</tr>');
-	$oP->add('</table>');
-
-	$oP->add('</div>');
-
-	return $oP;
-}
-
-/**
  * @param iTopWebPage $oP
  * @param ApplicationContext $oAppContext
  *
@@ -356,7 +293,7 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 	$bDoRestore = in_array($sStepName, array('restore'));
 
 	// Build HTML
-	$oP->SetCurrentTab(Dict::S('DBTools:LostAttachments'));
+	$oP->SetCurrentTab('DBTools:LostAttachments');
 
 	$oP->add('<div class="db-tools-tab-content">');
 	$oP->add('<div class="dbt-lostattachments">');
@@ -581,9 +518,6 @@ EOF
 	);
 	$oP->AddTabContainer('db-tools');
 	$oP->SetCurrentTabContainer('db-tools');
-
-	// Database Info
-	$oP = DisplayDatabaseInfo($oP, $oAppContext);
 
 	// DB Inconsistences
 	$oP = DisplayDBInconsistencies($oP, $oAppContext);

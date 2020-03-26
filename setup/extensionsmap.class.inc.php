@@ -244,11 +244,13 @@ class iTopExtensionsMap
 	}
 	
 	/**
-	 * Read (recursively) a directory to find if it contains extensions (or modules) 
+	 * Read (recursively) a directory to find if it contains extensions (or modules)
+	 *
 	 * @param string $sSearchDir The directory to scan
 	 * @param string $sSource The 'source' value for the extensions found in this directory
 	 * @param string|null $sParentExtensionId Not null if the directory is under a declared extension
-	 * @return boolean
+	 *
+	 * @return boolean false if we cannot open dir
 	 */
 	protected function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
 	{
@@ -343,6 +345,10 @@ class iTopExtensionsMap
 							$oExtension->bVisible = $bVisible;
 							$this->AddExtension($oExtension);							
 						}
+
+						closedir($hDir);
+
+						return true; // we found a module, no more digging necessary !
 					}
 				}
 			}

@@ -54,6 +54,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:UserAccountsMenu+' => 'User Accounts~~',
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
 	'Menu:MyShortcuts' => 'Mine Genveje',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //
@@ -81,4 +84,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

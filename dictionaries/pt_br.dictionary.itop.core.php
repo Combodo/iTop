@@ -203,6 +203,13 @@ Operadores:<br/>
 
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => 'Etiquetas',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -535,6 +542,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é ativado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1036,4 +1045,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Aula final',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
 ));

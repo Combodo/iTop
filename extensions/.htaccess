@@ -1,0 +1,20 @@
+# Apache 2.4
+<ifModule mod_authz_core.c>
+Require all denied
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html)$">
+	    Require all granted
+	</FilesMatch>
+</ifModule>
+
+# Apache 2.2
+<ifModule !mod_authz_core.c>
+deny from all
+Satisfy All
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot|html)$">
+	    Order Allow,Deny
+	    Allow from all
+	</FilesMatch>
+</ifModule>
+
+# Apache 2.2 and 2.4
+IndexIgnore *

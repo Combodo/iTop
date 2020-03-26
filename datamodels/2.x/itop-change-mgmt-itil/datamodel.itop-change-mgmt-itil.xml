@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="Change" _delta="define">
       <parent>Ticket</parent>
@@ -902,6 +902,17 @@
         </states>
       </lifecycle>
       <methods>
+				<method id="GetTicketRefFormat">
+					<static>true</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+        public static function GetTicketRefFormat()
+        {
+                return 'C-%06d';
+        }
+        ]]></code>
+				</method>
         <method id="SetClosureDate">
           <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead

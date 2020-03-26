@@ -20,8 +20,33 @@ abstract class Parameters
 		}
 		return $default;
 	}
-	
-	protected function Set($sCode, $value)
+
+	/**
+	 * @return array to use with {@see Config::UpdateFromParams}
+	 */
+	public function GetParamForConfigArray()
+	{
+		$aDBParams = $this->Get('database');
+		$aParamValues = array(
+			'mode' => $this->Get('mode'),
+			'db_server' => $aDBParams['server'],
+			'db_user' => $aDBParams['user'],
+			'db_pwd' => $aDBParams['pwd'],
+			'db_name' => $aDBParams['name'],
+			'new_db_name' => $aDBParams['name'],
+			'db_prefix' => $aDBParams['prefix'],
+			'db_tls_enabled' => $aDBParams['db_tls_enabled'],
+			'db_tls_ca' => $aDBParams['db_tls_ca'],
+			'application_path' => $this->Get('url', ''),
+			'language' => $this->Get('language', ''),
+			'graphviz_path' => $this->Get('graphviz_path', ''),
+			'source_dir' => $this->Get('source_dir', ''),
+		);
+
+		return $aParamValues;
+	}
+
+	public function Set($sCode, $value)
 	{
 		$this->aData[$sCode] = $value;
 	}
@@ -200,4 +225,5 @@ class XMLParameters extends Parameters
 		}
 		return $sRet;
 	}
+
 }

@@ -80,7 +80,7 @@ $MySettings = array(
 
 	'db_host' => '',
 
-	'db_name' => 'itop_ci_main',
+	'db_name' => 'itop_ci',
 
 	'db_pwd' => 'IKnowYouSeeMeInJenkinsConf',
 
@@ -93,10 +93,6 @@ $MySettings = array(
 	'deadline_format' => '$difference$',
 
 	'default_language' => 'EN US',
-
-	// disable_attachments_download_legacy_portal: Disable attachments download from legacy portal
-	//	default: true
-	'disable_attachments_download_legacy_portal' => true,
 
 	// draft_attachments_lifetime: Lifetime (in seconds) of drafts' attachments and inline images: after this duration, the garbage collector will delete them.
 	//	default: 3600
@@ -251,6 +247,9 @@ $MySettings = array(
  *
  */
 $MyModuleSettings = array(
+	'authent-local' => array (
+		'password_validation.pattern' => '',
+	),
 	'itop-attachments' => array (
 		'allowed_classes' => array (
 			0 => 'Ticket',

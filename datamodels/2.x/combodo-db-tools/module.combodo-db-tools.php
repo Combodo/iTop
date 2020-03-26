@@ -21,9 +21,10 @@
 // iTop module definition file
 //
 
+/** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-db-tools/1.0.7',
+	'combodo-db-tools/2.7.0',
 	array(
 		// Identification
 		//
@@ -32,14 +33,16 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(),
-		'mandatory' => true,
-		'visible' => false,
+		'dependencies' => array(
+		),
+		'mandatory' => false,
+		'visible' => true,
 
 		// Components
 		//
 		'datamodel' => array(
 			'model.combodo-db-tools.php',
+            'src/Service/DBToolsUtils.php'
 		),
 		'webservice' => array(),
 		'data.struct' => array(),

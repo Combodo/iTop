@@ -53,6 +53,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserAccountsMenu+' => 'Contas usuários',
 	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
 	'Menu:MyShortcuts' => 'Meus atalhos',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResourceRunQueriesMenu' => 'Menu de consultas de execução de recursos',
 	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

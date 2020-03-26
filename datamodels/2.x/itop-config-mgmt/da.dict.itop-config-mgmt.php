@@ -1891,6 +1891,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Server:otherinfo' => 'Øvrig Information',
 	'Server:power' => 'Power supply~~',
 	'Person:info' => 'Almindelig Information',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
 	'Class:Subnet/Tab:IPUsage' => 'IP Brug',

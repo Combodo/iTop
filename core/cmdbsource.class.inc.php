@@ -64,7 +64,7 @@ class MySQLException extends CoreException
 /**
  * Class MySQLQueryHasNoResultException
  *
- * @since 2.5
+ * @since 2.5.0
  */
 class MySQLQueryHasNoResultException extends MySQLException
 {
@@ -74,7 +74,7 @@ class MySQLQueryHasNoResultException extends MySQLException
 /**
  * Class MySQLHasGoneAwayException
  *
- * @since 2.5
+ * @since 2.5.0
  * @see itop bug 1195
  * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
  */
@@ -99,6 +99,14 @@ class MySQLHasGoneAwayException extends MySQLException
 	}
 }
 
+/**
+ * @since 2.7.0 N°679
+ */
+class MySQLNoTransactionException extends MySQLException
+{
+
+}
+
 
 /**
  * CMDBSource
@@ -118,17 +126,23 @@ class CMDBSource
 	protected static $m_sDBName;
 	/**
 	 * @var boolean
-	 * @since 2.5 N°1260 MySQL TLS first implementation
+	 * @since 2.5.0 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_bDBTlsEnabled;
 	/**
 	 * @var string
-	 * @since 2.5 N°1260 MySQL TLS first implementation
+	 * @since 2.5.0 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+
+	/**
+	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
+	 * @since 2.7.0 N°679
+	 */
+	protected static $m_iTransactionLevel = 0;
 
 	/**
 	 * SQL charset & collation declaration for text columns
@@ -137,7 +151,7 @@ class CMDBSource
 	 * use expression as value)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.1 N°1001 switch to utf8mb4
 	 */
 	public static function GetSqlStringColumnDefinition()
 	{
@@ -289,11 +303,11 @@ class CMDBSource
 		$iConnectInfoCount = count($aConnectInfo);
 		if ($bUsePersistentConnection && ($iConnectInfoCount == 3))
 		{
-			$iPort = $aConnectInfo[2];
+			$iPort = (int)($aConnectInfo[2]);
 		}
 		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
 		{
-			$iPort = $aConnectInfo[1];
+			$iPort = (int)($aConnectInfo[1]);
 		}
 		else
 		{
@@ -408,6 +422,14 @@ class CMDBSource
 	{
 		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
 		return $aVersions[0];
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function GetServerInfo()
+	{
+		return mysqli_get_server_info ( self::$m_oMysqli );
 	}
 
 	/**
@@ -554,11 +576,6 @@ class CMDBSource
 			return $aRes;
 		}
 
-		// Stripslashes
-		if (get_magic_quotes_gpc())
-		{
-			$value = stripslashes($value);
-		}
 		// Quote if not a number or a numeric string
 		if ($bAlways || is_string($value))
 		{
@@ -568,27 +585,88 @@ class CMDBSource
 	}
 
 	/**
+	 * MariaDB returns "'value'" for enum, while MySQL returns "value" (without the surrounding single quotes)
+	 *
+	 * @param string $sValue
+	 *
+	 * @return string without the surrounding quotes
+	 * @since 2.7.0 N°2490
+	 */
+	private static function RemoveSurroundingQuotes($sValue)
+	{
+		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
+		{
+			$sValue = substr($sValue, 1, -1);
+		}
+
+		return $sValue;
+	}
+
+	/**
 	 * @param string $sSQLQuery
 	 *
-	 * @return \mysqli_result
+	 * @return \mysqli_result|null
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.0 N°679 handles nested transactions
 	 */
 	public static function Query($sSQLQuery)
+	{
+		if (preg_match('/^START TRANSACTION;?$/i', $sSQLQuery))
+		{
+			self::StartTransaction();
+
+			return null;
+		}
+		if (preg_match('/^COMMIT;?$/i', $sSQLQuery))
+		{
+			self::Commit();
+
+			return null;
+		}
+		if (preg_match('/^ROLLBACK;?$/i', $sSQLQuery))
+		{
+			self::Rollback();
+
+			return null;
+		}
+
+
+		return self::DBQuery($sSQLQuery);
+	}
+
+	/**
+	 * Send the query directly to the DB. **Be extra cautious with this !**
+	 *
+	 * Use {@link Query} if you're not sure.
+	 *
+	 * @internal
+	 *
+	 * @param string $sSql
+	 *
+	 * @return bool|\mysqli_result
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°679
+	 */
+	private static function DBQuery($sSql)
 	{
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSQLQuery);
+			$oResult = self::$m_oMysqli->query($sSql);
 		}
-		catch(mysqli_sql_exception $e)
+		catch (mysqli_sql_exception $e)
 		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSQLQuery, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
-		$oKPI->ComputeStats('Query exec (mySQL)', $sSQLQuery);
+		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if ($oResult === false)
 		{
-			$aContext = array('query' => $sSQLQuery);
+			$aContext = array('query' => $sSql);
 
 			$iMySqlErrorNo = self::$m_oMysqli->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
@@ -599,11 +677,138 @@ class CMDBSource
 
 			throw new MySQLException('Failed to issue SQL query', $aContext);
 		}
-	
+
 		return $oResult;
 	}
 
 	/**
+	 * If nested transaction, we are not starting a new one : only one global transaction will exist.
+	 *
+	 * Indeed [the official documentation](https://dev.mysql.com/doc/refman/5.6/en/commit.html) states :
+	 *
+	 * > Beginning a transaction causes any pending transaction to be committed
+	 *
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @since 2.7.0 N°679
+	 */
+	private static function StartTransaction()
+	{
+		$bHasExistingTransactions = self::IsInsideTransaction();
+		if (!$bHasExistingTransactions)
+		{
+			self::DBQuery('START TRANSACTION');
+		}
+
+		self::AddTransactionLevel();
+	}
+
+	/**
+	 * Sends the COMMIT to the db only if we are at the root transaction level
+	 *
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLNoTransactionException if called with no opened transaction
+	 * @since 2.7.0 N°679
+	 */
+	private static function Commit()
+	{
+		if (!self::IsInsideTransaction())
+		{
+			// should not happen !
+			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
+		}
+
+		self::RemoveLastTransactionLevel();
+
+		if (self::IsInsideTransaction())
+		{
+			return;
+		}
+		self::DBQuery('COMMIT');
+	}
+
+	/**
+	 * Sends the ROLLBACK to the db only if we are at the root transaction level
+	 *
+	 * The parameter allows to send a ROLLBACK whatever the current transaction level is
+	 *
+	 * @internal
+	 * @see m_iTransactionLevel
+	 *
+	 * @throws \MySQLNoTransactionException if called with no opened transaction
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @since 2.7.0 N°679
+	 */
+	private static function Rollback()
+	{
+		if (!self::IsInsideTransaction())
+		{
+			// should not happen !
+			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
+		}
+		self::RemoveLastTransactionLevel();
+		if (self::IsInsideTransaction())
+		{
+			return;
+		}
+
+		self::DBQuery('ROLLBACK');
+	}
+
+	/**
+	 * @api
+	 * @see m_iTransactionLevel
+	 * @return bool true if there is one transaction opened, false otherwise (not a single 'START TRANSACTION' sent)
+	 * @since 2.7.0 N°679
+	 */
+	public static function IsInsideTransaction()
+	{
+		return (self::$m_iTransactionLevel > 0);
+	}
+
+	/**
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @since 2.7.0 N°679
+	 */
+	private static function AddTransactionLevel()
+	{
+		++self::$m_iTransactionLevel;
+	}
+
+	/**
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveLastTransactionLevel()
+	{
+		if (self::$m_iTransactionLevel === 0)
+		{
+			return;
+		}
+
+		--self::$m_iTransactionLevel;
+	}
+
+	/**
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveAllTransactionLevels()
+	{
+		self::$m_iTransactionLevel = 0;
+	}
+
+	/**
+	 *
+	 * @deprecated 2.7.0 N°1627 use ItopCounter instead
+	 *
 	 * @param string $sTable
 	 *
 	 * @return int
@@ -638,6 +843,13 @@ class CMDBSource
 		return false;
 	}
 
+	/**
+	 * @param $sSQLQuery
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DeleteFrom($sSQLQuery)
 	{
 		self::Query($sSQLQuery);
@@ -915,6 +1127,83 @@ class CMDBSource
 	}
 
 	/**
+	 * There may have some differences between DB : for example in MySQL 5.7 we have "INT", while in MariaDB >= 10.2 you get "int DEFAULT 'NULL'"
+	 *
+	 * We still do a case sensitive comparison for enum values !
+	 *
+	 * A better solution would be to generate SQL field definitions ({@link GetFieldSpec} method) based on the DB used... But for
+	 * now (N°2490 / SF #1756 / PR #91) we did implement this simpler solution
+	 *
+	 * @param string $sItopGeneratedFieldType
+	 * @param string $sDbFieldType
+	 *
+	 * @return bool true if same type and options (case sensitive comparison only for type options), false otherwise
+	 * @since 2.7.0 N°2490
+	 */
+	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
+	{
+		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
+
+		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
+		{
+			return false;
+		}
+
+		if (strcmp($sItopFieldTypeOptions, $sDbFieldTypeOptions) !== 0)
+		{
+			// case sensitive comp as we need to check case for enum possible values for example
+			return false;
+		}
+
+		// remove the default value NULL added by MariadDB
+		$sMariaDbDefaultNull = ' DEFAULT \'NULL\'';
+		if (utils::EndsWith($sDbFieldOtherOptions, $sMariaDbDefaultNull))
+		{
+			$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -strlen($sMariaDbDefaultNull));
+		}
+		// remove quotes around default values (always present in MariaDB)
+		$sDbFieldOtherOptions = preg_replace_callback(
+			'/( DEFAULT )\'([^\']+)\'/',
+			function ($aMatches) use ($sItopFieldDataType) {
+				// ENUM default values should keep quotes, but all other numeric values don't have quotes
+				if (is_numeric($aMatches[2]) && ($sItopFieldDataType !== 'ENUM'))
+				{
+					return $aMatches[1].$aMatches[2];
+				}
+
+				return $aMatches[0];
+			},
+			$sDbFieldOtherOptions);
+
+		if (strcasecmp($sItopFieldOtherOptions, $sDbFieldOtherOptions) !== 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $sCompleteFieldType sql field type, for example 'VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 *
+	 * @return string[] consisting of 3 items :
+	 *      1. data type : for example 'VARCHAR'
+	 *      2. type value : for example '255'
+	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 */
+	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
+	{
+		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?$/', $sCompleteFieldType, $aMatches);
+
+		$sDataType = $aMatches[1];
+		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
+		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
+
+		return array($sDataType, $sTypeOptions, $sOtherOptions);
+	}
+
+	/**
 	 * @param string $sTable
 	 * @param string $sField
 	 *
@@ -965,7 +1254,8 @@ class CMDBSource
 		}
 		elseif (is_string($aFieldData["Default"]) == 'string')
 		{
-			$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"]);
+			$sDefaultValue = static::RemoveSurroundingQuotes($aFieldData["Default"]);
+			$sRet .= ' DEFAULT '.self::Quote($sDefaultValue);
 		}
 
 		return $sRet;
@@ -1100,20 +1390,20 @@ class CMDBSource
 	 * @return string query to upgrade table charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.0 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
 	 */
 	public static function DBCheckTableCharsetAndCollation($sTableName)
 	{
 		$sDBName = self::DBName();
-		$sTableInfoQuery = "SELECT C.character_set_name, T.table_collation
+		$sTableInfoQuery = "SELECT C.CHARACTER_SET_NAME, T.TABLE_COLLATION
 			FROM information_schema.`TABLES` T inner join information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` C
 				ON T.table_collation = C.collation_name
 			WHERE T.table_schema = '$sDBName'
   			AND T.table_name = '$sTableName';";
 		$aTableInfo = self::QueryToArray($sTableInfoQuery);
-		$sTableCharset = $aTableInfo[0]['character_set_name'];
-		$sTableCollation = $aTableInfo[0]['table_collation'];
+		$sTableCharset = $aTableInfo[0]['CHARACTER_SET_NAME'];
+		$sTableCollation = $aTableInfo[0]['TABLE_COLLATION'];
 
 		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
 		{
@@ -1250,14 +1540,14 @@ class CMDBSource
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.0 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 */
 	public static function DBCheckCharsetAndCollation()
 	{
 		$sDBName = CMDBSource::DBName();
 		$sDBInfoQuery = "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
-			FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
+			FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
 		$aDBInfo = CMDBSource::QueryToArray($sDBInfoQuery);
 		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
 		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];

@@ -53,6 +53,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

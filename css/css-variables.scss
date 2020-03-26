@@ -1,5 +1,24 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.6.3";
+$version: "v2.7.0";
+$approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
 $gray-base:              #000 !default;
@@ -20,33 +39,88 @@ $combodo-orange-darker:		darken($combodo-orange, 18%) !default;
 $combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
 $combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
 
-// Vars
-$highlight-color: $combodo-orange;
-$grey-color: #555555;
-$complement-color: #1c94c4;
-$complement-light: #d6e8ef;
-$frame-background-color: $gray-extra-light;
-$text-color: #000;
-$box-radius: 0px;
-$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15);
+// Brand colors
+// - Bases
+$brand-primary: 	$combodo-orange !default;
+$brand-secondary: 	$combodo-dark-gray !default;
+// - Shades
+$brand-primary-lightest:	lighten($brand-primary, 15%) !default;
+$brand-primary-lighter:		lighten($brand-primary, 10%) !default;
+$brand-primary-light:		lighten($brand-primary, 6%) !default;
+$brand-primary-dark:		darken($brand-primary, 6%) !default;
+$brand-primary-darker:		darken($brand-primary, 10%) !default;
+$brand-primary-darkest:		darken($brand-primary, 15%) !default;
+$brand-secondary-lightest:	lighten($brand-secondary, 15%) !default;
+$brand-secondary-lighter:	lighten($brand-secondary, 10%) !default;
+$brand-secondary-light:		lighten($brand-secondary, 6%) !default;
+$brand-secondary-dark:		darken($brand-secondary, 6%) !default;
+$brand-secondary-darker:	darken($brand-secondary, 10%) !default;
+$brand-secondary-darkest:	darken($brand-secondary, 15%) !default;
 
-$hyperlink-color: $complement-color;
-$hyperlink-text-decoration: none;
+// Vars
+$highlight-color: $brand-primary !default;
+$grey-color: #555555 !default;
+$complement-color: #1c94c4 !default;
+$complement-light: #d6e8ef !default;
+$frame-background-color: $gray-extra-light !default;
+$text-color: #000 !default;
+$box-radius: 0px !default;
+$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
+$body-background-color : $white !default;
+
+$hyperlink-color: $complement-color !default;
+$hyperlink-text-decoration: none !default;
 
 ////////////
 // Search //
-$search-criteria-box-color: #2D2D2D;
-$search-criteria-box-picto-color: #E87C1E;
-$search-criteria-box-bg-color: #EEEEEE;
-$search-criteria-box-hover-color: $white;
-$search-criteria-box-border-color: #CCCCCC;
-$search-criteria-box-border: 1px solid $search-criteria-box-border-color;
-$search-criteria-box-radius: 1px;
+$search-form-container-color: $white !default;
+$search-form-container-bg-color: $complement-color !default;
 //
-$search-add-criteria-box-color: $search-criteria-box-color;
-$search-add-criteria-box-bg-color: $white;
-$search-add-criteria-box-hover-color: $gray-extra-light;
+$search-criteria-box-color: #2D2D2D !default;
+$search-criteria-box-picto-color: $brand-primary !default;
+$search-criteria-box-bg-color: #EEEEEE !default;
+$search-criteria-box-hover-color: $white !default;
+$search-criteria-box-border-color: #CCCCCC !default;
+$search-criteria-box-border: 1px solid $search-criteria-box-border-color !default;
+$search-criteria-box-radius: 1px !default;
+$search-criteria-more-less-details-color: #3F7294 !default;
 //
-$search-button-box-color: $combodo-orange;
-$search-button-box-bg-color: $white;
-$search-button-box-bg-hover-color: $gray-extra-light;
+$search-add-criteria-box-color: $search-criteria-box-color !default;
+$search-add-criteria-box-bg-color: $white !default;
+$search-add-criteria-box-hover-color: $gray-extra-light !default;
+//
+$search-button-box-color: $brand-primary !default;
+$search-button-box-bg-color: $white !default;
+$search-button-box-bg-hover-color: $gray-extra-light !default;
+
+/////////////
+// Buttons //
+/////////////
+// Toggle button
+$toggle-button-bg-color: #CCCCCC !default;
+$toggle-button-bg-checked-color: $brand-primary !default;
+$toggle-button-slider-bg-color: #FFFFFF !default;
+
+// Console elements
+$summary-details-background: $grey-color !default; 
+$main-header-background: $frame-background-color !default;
+$table-even-background: $frame-background-color !default;
+$table-hover-background: #fdf5d0 !default;
+$popup-menu-highlight-color: $highlight-color !default;
+$popup-menu-text-color: #000 !default;
+$popup-menu-background-color: #fff !default;
+$popup-menu-text-higlight-color: #fff !default;
+$breadcrumb-color: $grey-color !default;
+$breadcrumb-highlight-color: $highlight-color !default;
+
+// jQuery UI widgets vars
+$primary-text-color: #333333 !default;
+$secondary-text-color: $grey-color !default;
+$error-text-color: $white !default;
+$highlight-text-color: #363636 !default;
+$hover-background-color: #fde17c !default;
+$border-highlight-color: $brand-primary-dark !default;
+$highlight-item-color: $white !default;
+$content-color: #eeeeee !default; 
+$default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
+$icons-filter: hue-rotate(0deg) !default;

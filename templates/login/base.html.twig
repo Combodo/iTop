@@ -1,0 +1,50 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+
+{% block body %}
+	{% import "macros.twig" as Macro %}
+	<div id="login-body">
+		{% block login_header %}
+			<div id="login-header">
+				{{ Macro.BlockExtension(aPluginFormData, 'login_header') }}
+			</div>
+		{% endblock login_header %}
+		{% block login_logo %}
+			<div id="login-logo">
+				<a href="{{ sIconUrl }}">
+					<img title="{{ sVersionShort }}" src="{{ sDisplayIcon }}" alt="logo"/>
+				</a>
+			</div>
+		{% endblock login_logo %}
+		{% block login_content_outer %}
+			{% block login_content %}
+			{% endblock login_content %}
+			{% block login_additional_content %}
+				<div id="login-additional-content">
+					{{ Macro.BlockExtension(aPluginFormData, 'login_additional_content') }}
+				</div>
+			{% endblock login_additional_content %}
+		{% endblock login_content_outer %}
+		{% block login_footer %}
+			<div id="login-footer">
+				{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
+			</div>
+		{% endblock login_footer %}
+	</div>
+{% endblock body %}
+
+{% block script %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockExtension(aPluginFormData, 'script') }}
+{% endblock script %}
+
+{% block ready_script %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockExtension(aPluginFormData, 'ready_script') }}
+{% endblock ready_script %}
+
+{% block css %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockExtension(aPluginFormData, 'css') }}
+{% endblock css %}

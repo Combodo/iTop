@@ -88,6 +88,25 @@ class iTopMutex
 		$this->InitMySQLSession();
 	}
 
+	/**
+	 * Get instance of self but with an escaped $sName
+	 *
+	 * this is meant to be used with non trusted string such as user inputs.
+	 *
+	 * @param mixed ...$aArgs smae as __construct()
+	 *
+	 * @return \iTopMutex
+	 * @since 2.7.0
+	 *
+	 */
+	public static function GetInstanceFromUserInput(...$aArgs)
+	{
+		$aArgs[0] = \CMDBSource::Quote($aArgs[0]);
+
+		return new iTopMutex(...$aArgs);
+	}
+
+
 	public function __destruct()
 	{
 		if ($this->bLocked)

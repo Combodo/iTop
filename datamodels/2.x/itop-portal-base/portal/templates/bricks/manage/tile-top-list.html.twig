@@ -1,0 +1,40 @@
+{# itop-portal-dashlet-basic/tile.html.twig #}
+{# Topx List tile layout #}
+
+<div class="col-xs-12 col-sm-{{ oBrick.GetWidth }}">
+    {% block pTileWrapper %}
+        <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': oBrick.GetDefaultDisplayMode}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
+        {% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
+        {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
+        class="tile{# vertical-center#}"
+        id="brick-{{ oBrick.GetId }}"
+        data-brick-id="{{ oBrick.GetId }}">
+        <div style="background-color:#fff;padding:0.25em;">
+            <div class="tile_title">
+                <span class="icon fas fa-signal fa-rotate-270"></span> {{ oBrick.GetTitle()|dict_s }}
+                ({{ iCount }})</span> </div>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{{ 'Brick:Portal:Manage:Group'|dict_s }}</th>
+                    <th scope="col">{{ ('Brick:Portal:Manage:fct:' ~ sFct)|dict_s }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set iLineCount = 0 %}
+                {% for aDisplayValue in aDisplayValues %}
+                    {% set sURL = aUrls[iLineCount] %}
+                    {% set iLineCount = iLineCount + 1 %}
+                    <tr>
+                        <th scope="row">{{ iLineCount }}</th>
+                        <td><a href="{{ sURL }}">{{ aDisplayValue.label_html|raw }}</a></td>
+                        <td>{{ aDisplayValue.value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </a>
+    {% endblock %}
+</div>

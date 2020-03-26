@@ -41,14 +41,14 @@ class BasicServices extends WebServicesBase
 	 */
 	static public function GetVersion()
 	{
-		if (ITOP_REVISION == '$WCREV$')
+		if (ITOP_REVISION == 'svn')
 		{
 			$sVersionString = ITOP_VERSION.' [dev]';
 		}
 		else
 		{
 			// This is a build made from SVN, let display the full information
-			$sVersionString = ITOP_VERSION."-".ITOP_REVISION." ".ITOP_BUILD_DATE;
+			$sVersionString = ITOP_VERSION_FULL." ".ITOP_BUILD_DATE;
 		}
 
 		return $sVersionString;
@@ -172,11 +172,8 @@ class BasicServices extends WebServicesBase
 
 		try
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", "Administrator");
-			$iChangeId = $oMyChange->DBInsertNoReload();
-	
+			CMDBObject::SetTrackInfo('Administrator');
+
 			$oNewTicket = MetaModel::NewObject($sClass);
 			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);
@@ -231,7 +228,7 @@ class BasicServices extends WebServicesBase
 			$this->MyObjectSetScalar('impact', 'impact', $sImpact, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
 
-			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
+			$this->MyObjectInsert($oNewTicket, 'created', $oRes);
 		}
 		catch (CoreException $e)
 		{

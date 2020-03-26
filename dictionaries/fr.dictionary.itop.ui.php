@@ -93,8 +93,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
 	'Class:User/Attribute:finalclass+' => 'Nom de la classe instanciable',
-	'Class:User/Attribute:contactid' => 'Contact (personne)',
+	'Class:User/Attribute:contactid' => 'Personne',
 	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Organisation',
+	'Class:User/Attribute:org_id+' => 'Organisation de la personne associée',
 	'Class:User/Attribute:last_name' => 'Nom',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Prénom',
@@ -441,6 +443,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
+	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
+	'UI:Error:MaintenanceTitle' => 'Maintenance',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
@@ -507,6 +511,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
 	'UI:Login:ResetPassword' => 'Envoyer le message',
 	'UI:Login:ResetPwdFailed' => 'Impossible de vous faire parvenir le message: %1$s',
+	'UI:Login:SeparatorOr' => 'Ou',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'le compte \'%1$s\' est inconnu.',
 	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans iTop.',
@@ -515,9 +520,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'il manque un attribut de type "email" sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-NoEmail' => 'il manque une adresse email sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-Send' => 'erreur technique lors de l\'envoi de l\'email. Veuillez contacter l\'administrateur de l\'application.',
-	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email...',
+	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email. Si vous ne recevez pas d\'email, merci de vérifier le login saisi',
 	'UI:ResetPwd-EmailSubject' => 'Changer votre mot de passe iTop',
-	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe iTop sans connaitre le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
+	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe iTop sans connaître le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Nouveau mot de passe',
 	'UI:ResetPwd-Error-InvalidToken' => 'Désolé, le mot de passe a déjà été modifié avec le lien que vous avez suivi, ou bien vous avez reçu plusieurs emails. Dans ce cas, veillez à utiliser le tout dernier lien reçu.',
@@ -543,6 +548,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
+	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
 	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
@@ -670,6 +678,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur la requête : ',
 	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
 	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',
+	'UI:RunQuery:DevelopedOQL' => 'OQL développé',
+	'UI:RunQuery:DevelopedOQLCount' => 'OQL développé pour le compte',
+	'UI:RunQuery:ResultSQLCount' => 'SQL généré pour le compte',
+	'UI:RunQuery:ResultSQL' => 'SQL généré',
 	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
@@ -791,7 +803,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:WelcomeToITop' => 'Bienvenue dans iTop',
 	'UI:DetailsPageTitle' => 'iTop - %2$s - Détails de %1$s',
 	'UI:ErrorPageTitle' => 'iTop - Erreur',
-	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
+	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (ou vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, ou contactez votre administrateur.',
 	'Tag:Archived' => 'Archivé',
 	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
@@ -873,6 +885,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:AdminTools' => 'Outils d\'admin', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'Système',
 
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu+' => 'Gestion du Changement',
@@ -936,7 +949,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <ol>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet de la classe spécifiée est <b>créé</b>, <b>mis à jour</b> ou <b>supprimé</b>.</li>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet d\'une classe donnée <b>entre</b> ou <b>sort</b> d\'un <b>état</b> spécifié.</li>
-	<li>Certains déclencheurs sont exécutés lorsqu\'un <b>seuil</b> sur <b>TTO</b> ou <b>TTR</b>a été <b>atteint</b>.</li>
+	<li>Certains déclencheurs sont exécutés lorsqu\'un <b>seuil</b> sur <b>TTO</b> ou <b>TTR</b> a été <b>atteint</b>.</li>
 </ol>
 </p>
 <p>
@@ -1416,7 +1429,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
-	'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Conformément à vos préférences utilisateur, vous ne voyez pas les données obsolètes',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Ajoutez des critères dans le formulaire de recherche ou cliquez sur le bouton rechercher pour voir les objets.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button

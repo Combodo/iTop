@@ -37,6 +37,8 @@ use DBObject;
  */
 class DBObjectTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
+
 	protected function setUp()
 	{
 		parent::setUp();

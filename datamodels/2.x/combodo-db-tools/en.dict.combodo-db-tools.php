@@ -1,6 +1,9 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -15,12 +18,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 // Database inconsistencies
 Dict::Add('EN US', 'English', 'English', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools',
+	'Menu:DBToolsMenu' => 'Database integrity',
 	'DBTools:Class' => 'Class',
 	'DBTools:Title' => 'Database Maintenance Tools',
 	'DBTools:ErrorsFound' => 'Errors Found',
@@ -48,6 +52,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
+	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value than `%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class',
 ));
 
 // Database Info

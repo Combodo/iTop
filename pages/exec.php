@@ -1,35 +1,20 @@
 <?php
-// Copyright (C) 2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Execute a module page - this is an alternative to invoking /myItop/env-production/myModule/somePage.php
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * The recommended way to build an URL to a module page is to invoke utils::GetAbsoluteUrlModulePage()
- * or its javascript equivalent GetAbsoluteUrlModulePage()
- * 
- * To be compatible with this mechanism, the called page must include approot
- * with an absolute path OR not include it at all (losing the direct access to the page)
- * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
- * require_once(__DIR__.'/../../approot.inc.php');
- *  
- * @copyright   Copyright (C) 2013 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once('../approot.inc.php');

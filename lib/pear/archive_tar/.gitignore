@@ -1,0 +1,10 @@
+# composer related
+composer.lock
+composer.phar
+vendor
+# IDE
+.idea
+# eclipse
+.buildpath
+.project
+.settings

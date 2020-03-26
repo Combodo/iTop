@@ -86,17 +86,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:finalclass' => 'Тип аккаунта',
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Персона',
-	'Class:User/Attribute:contactid+' => 'Персона из списка контактов',
+	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Организация',
+	'Class:User/Attribute:org_id+' => 'Организация связанной персоны',
 	'Class:User/Attribute:last_name' => 'Фамилия',
-	'Class:User/Attribute:last_name+' => 'Фамилия соответсвующего контакта',
+	'Class:User/Attribute:last_name+' => 'Фамилия связанной персоны',
 	'Class:User/Attribute:first_name' => 'Имя',
-	'Class:User/Attribute:first_name+' => 'Имя соответсвующего контакта',
+	'Class:User/Attribute:first_name+' => 'Имя связанной персоны',
 	'Class:User/Attribute:email' => 'email',
-	'Class:User/Attribute:email+' => 'email соответсвующего контакта',
+	'Class:User/Attribute:email+' => 'email связанной персоны',
 	'Class:User/Attribute:login' => 'Логин',
-	'Class:User/Attribute:login+' => 'строка идентификации пользователя',
+	'Class:User/Attribute:login+' => 'Уникальный логин пользователя',
 	'Class:User/Attribute:language' => 'Язык',
-	'Class:User/Attribute:language+' => 'язык пользователя',
+	'Class:User/Attribute:language+' => 'Язык пользователя',
 	'Class:User/Attribute:language/Value:EN US' => 'Английский',
 	'Class:User/Attribute:language/Value:EN US+' => 'Английский (США)',
 	'Class:User/Attribute:language/Value:FR FR' => 'Французский',
@@ -433,6 +435,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Ошибка: недействительный стимул "%1$s" на объекте %2$s в состоянии "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Ошибка: недопустимый файл дашборда',
 	'UI:Error:InvalidDashboard' => 'Ошибка: недопустимый дашборд',
+	'UI:Error:MaintenanceMode' => 'Приложение в режиме технического обслуживания',
+	'UI:Error:MaintenanceTitle' => 'Техническое обслуживание',
 
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',
@@ -499,6 +503,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Login:ForgotPwdForm+' => 'Введите свой логин для входа в систему и нажмите "Отправить". iTop отправит email с инструкциями по восстановлению пароля на ваш электронный адрес.',
 	'UI:Login:ResetPassword' => 'Отправить',
 	'UI:Login:ResetPwdFailed' => 'Не удалось отправить email: %1$s',
+	'UI:Login:SeparatorOr' => 'или',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'учетная запись с логином "%1$s" не найдена.',
 	'UI:ResetPwd-Error-NotPossible' => 'восстановление пароля для внешних учётных записей недоступно.',
@@ -507,7 +512,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'аккаунт не ассоциирован с персоной, имеющей атрибут электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-NoEmail' => 'отсутствует адрес электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-Send' => 'технические проблемы с отправкой электронной почты. Пожалуйста, обратитесь к администратору.',
-	'UI:ResetPwd-EmailSent' => 'Пожалуйста, проверьте свой почтовый ящик и следуйте инструкциям.',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Восстановление пароля',
 	'UI:ResetPwd-EmailBody' => '<body><p>Вы запросили восстановление пароля iTop.</p><p>Пожалуйста, воспользуйтесь <a href="%1$s">этой ссылкой</a> для задания нового пароля.</p></body>',
 
@@ -535,6 +540,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Login' => 'Войти',
 	'UI:Login:Error:AccessRestricted' => 'Доступ к iTop ограничен. Пожалуйста, свяжитесь с администратором iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Доступ ограничен для лиц с административными привилегиями. Пожалуйста, свяжитесь с администратором iTop.',
+	'UI:Login:Error:WrongOrganizationName' => 'Неизвестная организация',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Несколько контактов имеют один и тот же адрес электронной почты',
+	'UI:Login:Error:NoValidProfiles' => 'Нет допустимого профиля',
 	'UI:CSVImport:MappingSelectOne' => '-- выбрать один --',
 	'UI:CSVImport:MappingNotApplicable' => '-- игнорировать это поле --',
 	'UI:CSVImport:NoData' => 'Пустой набор данных..., пожалуйста введите что-нибудь!',
@@ -660,11 +668,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RunQuery:HeaderOQLExpression+' => 'Запрос в синтаксисе OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Оценка выражения: ',
 	'UI:RunQuery:MoreInfo' => 'Подробная информация о запросе: ',
-	'UI:RunQuery:DevelopedQuery' => 'Переработанное выражение запроса: ',
-	'UI:RunQuery:SerializedFilter' => 'Сериализованные фильты: ',
+	'UI:RunQuery:DevelopedQuery' => 'Декомпилированный запрос OQL: ',
+	'UI:RunQuery:SerializedFilter' => 'Сериализованная версия: ',
+	'UI:RunQuery:DevelopedOQL' => 'Подготовленный OQL: ',
+	'UI:RunQuery:DevelopedOQLCount' => 'Подготовленный OQL для count: ',
+	'UI:RunQuery:ResultSQLCount' => 'Результирующий SQL для count: ',
+	'UI:RunQuery:ResultSQL' => 'Результирующий SQL: ',
 	'UI:RunQuery:Error' => 'Ошибка при выполнении запроса: %1$s',
-	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
+	'UI:Query:UrlForExcel' => 'URL-адрес для использования в веб-запросах MS-Excel',
+	'UI:Query:UrlV1' => 'Список полей был оставлен неопределенным. Страница <em>export-V2.php</em> не может быть вызван без этой информации. Поэтому URL-адрес, предложенный здесь ниже, указывает на устаревшую страницу: <em>export.php</ем>. Эта устаревшая версия экспорта имеет следующее ограничение: список экспортируемых полей может варьироваться в зависимости от формата вывода и модели данных iTop. если вы хотите гарантировать, что список экспортируемых столбцов будет оставаться стабильным в долгосрочной перспективе, то вы должны указать значение атрибута "Экспорт. поля" и использовать страницу <em>export-V2.php</ем>.',
 	'UI:Schema:Title' => 'iTop схема объектов',
 	'UI:Schema:CategoryMenuItem' => 'Категория <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Отношения',
@@ -865,6 +877,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'Система',
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
 	'UI:ChangeManagementMenu+' => 'Управление изменениями',
@@ -923,21 +936,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
 	'UI:NotificationsMenu:Help' => 'Помощь',
-	'UI:NotificationsMenu:HelpContent' => '<p>В iTop уведомления полностью настраиваемые. Они основаны на двух наборах объектов: <i>триггеры</i> и <i>действия</i>.</p>
-<p><i><b>Триггеры</b></i> оперделяют когда уведомление будет выполнено. Есть 3 типа триггеров обробатывающих 3 разных фазы жизненного цикла объекта:
+	'UI:NotificationsMenu:HelpContent' => '<p>В iTop полностью настраиваемые уведомления, которые основаны на двух наборах объектов: <i>триггерах и действиях</i>.</p>
+<p><i><b>Триггеры</b></i> определяют, когда необходимо выполнить действия. Базовые триггеры доступны как часть ядра iTop, другие триггеры добавляются дополнительными расширениями:
 <ol>
-	<li>"OnCreate" триггеры сработают когда объект заданного класса будет создан</li>
-	<li>"OnStateEnter" триггеры сработают перед тем как объект заданного класса войдёт в заданное состояние (выйдет из другого состояния)</li>
-	<li>"OnStateLeave" триггеры сработают когда объекты заданного класса выйдут из заданного состояния</li>
+	<li>триггеры на создание/обновление/удаление объекта срабатывают при <b>создании</b>, <b>обновлении</b> или <b>удалении</b> объекта целевого класса;</li>
+	<li>триггеры на изменение статуса срабатывают, когда объект целевого класса <b>входит</b> или <b>выходит</b> из указанного <b>статуса</b>;</li>
+	<li>триггеры на пороговое значение срабатывают при <b>достижении порога</b> указанным секундомером <b>TTO</b> или <b>TTR</b>.</li>
 </ol>
 </p>
 <p>
-<i><b>Действия</b></i> определяют, какое действие будет выполнено при срабатывании триггера. Пока есть только одно действие, которое состоит в отправке сообщения на электронную почту.
-Эти действия также определяют шаблон, который будет использован для отправки электронного сообщения, а также другие параметры сообщения, такие как получатель, важность и т.д.
+<i><b>Действия</b></i> определяют, что произойдет при срабатывании триггера. Базовое действие в iTop – <b>Уведомление по email</b>, дополнительные действия добавляются расширениями.
+Действие <b>Уведомление по email</b> задаёт шаблон сообщения, который будет использоваться для отправки письма, а также другие параметры, такие как получатели, важность и т.д.
 </p>
-<p>Специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a> доступна для тестирования и устранения неполадок в настройках почты.</p>
-<p>Чтобы быть выполненными, действия необходимо ассоциировать с триггерами.
-При ассоциации с триггером, каждое действие получает "порядковый" номер, который определяет порядок выполнения действий.</p>',
+<p>Для тестирования и устранения неполадок в настройках почты доступна специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a>.</p>
+<p>Для выполнения действия связываются с триггерами. При связывании с триггером каждому действию присваивается порядковый номер, который указывает на очерёдность выполнения действий при срабатывании триггера.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Триггеры',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Доступные триггеры',
 	'UI:NotificationsMenu:OnCreate' => 'При создании объекта',
@@ -971,11 +983,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserManagementMenu' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu' => 'Учетные записи', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)	
 
@@ -1410,6 +1422,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Search form
 	'UI:Search:Toggle' => 'Развернуть / Свернуть',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Автоматический запуск поиска отключен для данного класса',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Устаревшие данные скрыты в соответствии с вашими предпочтениями',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Добавьте критерии поиска или нажмите кнопку поиска, чтобы просмотреть объекты.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Добавить критерий',
 	// - Add new criteria button

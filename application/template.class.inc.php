@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Class DisplayTemplate
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
@@ -191,7 +184,7 @@ class DisplayTemplate
 			break;
 			
 			case 'itoptab':
-				$oPage->SetCurrentTab(Dict::S(str_replace('_', ' ', $aAttributes['name'])));
+				$oPage->SetCurrentTab($aAttributes['name'], str_replace('_', ' ', $aAttributes['name']));
 				$oTemplate = new DisplayTemplate($sContent);
 				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');

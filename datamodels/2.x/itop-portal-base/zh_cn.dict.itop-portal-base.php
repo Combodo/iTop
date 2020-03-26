@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
@@ -41,7 +37,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Error:HTTP:401' => '认证',
 	'Error:HTTP:404' => '页面找不到',
 	'Error:HTTP:500' => 'Oops! 发生了一个错误.',
-	'Error:HTTP:GetHelp' => '如果问题仍然存在，请联系管理员.',
+	'Error:HTTP:GetHelp' => '如果问题仍然存在,请联系管理员.',
 	'Error:XHR:Fail' => '无法加载数据, 请联系管理员',
 	'Portal:ErrorUserLoggedOut' => '您已退出，请重新登录.',
 	'Portal:Datatables:Language:Processing' => '请稍后...',
@@ -65,6 +61,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us~~', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
 ));
 
 // UserProfile brick
@@ -75,7 +72,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:UserProfile:Password:Title' => '密码',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => '新密码',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => '确认密码',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => '要修改密码，请联系管理员',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => '要修改密码,请联系管理员',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => '无法修改密码, 请联系管理员',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => '个体信息',
 	'Brick:Portal:UserProfile:Photo:Title' => '头像',
@@ -128,8 +125,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
 	'Brick:Portal:Object:Form:Message:Saved' => '已保存',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存 %1$s~~',
 	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick

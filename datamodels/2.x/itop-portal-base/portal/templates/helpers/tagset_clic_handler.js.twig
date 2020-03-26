@@ -1,0 +1,23 @@
+/**
+ * When clicking on a TagSet item in a list (BrowseBrick or ManageBrick), filters the list using the item label
+ * @since 2.6.0 N°931 AttributeTagSet
+ */
+$("#main-content").on("click", ".table.dataTable .attribute.attribute-set.attribute-tag-set > .attribute-set-item", function () {
+	var $this = $(this),
+		$dataTableWrapper = $this.closest(".dataTables_wrapper"),
+		$searchField = $dataTableWrapper.find(".dataTables_filter input.form-control"),
+		iNbInputsFound = $searchField.length;
+
+	if (iNbInputsFound === 0)
+	{
+		return;
+	}
+	if (iNbInputsFound > 1)
+	{
+		return;
+	}
+
+	var sTagLabel = $this.text();
+	$searchField.prop("value", sTagLabel);
+	$searchField.trigger("keyup");
+});

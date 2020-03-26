@@ -18,8 +18,9 @@
 /**
  * Localized data
  *
- * @author Hipska (2018)
- * @author jbostoen (2018)
+ * @author Hipska (2018, 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -47,11 +48,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserRequest:OpenRequests' => 'Alle open verzoeken',
 	'Menu:UserRequest:OpenRequests+' => 'Alle open verzoeken',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Verzoeken toegewezen aan mij',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Verzoeken van de afgelopen 14 dagen (per type)',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Verzoeken van de afgelopen 14 dagen (per soort)',
 	'UI-RequestManagementOverview-Last-14-days' => 'Verzoeken van de afgelopen 14 dagen (per dag)',
 	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Open verzoeken per status',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Open verzoeken per medewerker',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per type',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'Open verzoeken per soort',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
 ));
@@ -77,11 +78,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:status+' => '',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nieuw',
 	'Class:UserRequest/Attribute:status/Value:new+' => '',
-	'Class:UserRequest/Attribute:status/Value:escalated_tto' => 'Geëscaleerd TTO',
+	'Class:UserRequest/Attribute:status/Value:escalated_tto' => 'Geëscaleerde TTO',
 	'Class:UserRequest/Attribute:status/Value:escalated_tto+' => '',
 	'Class:UserRequest/Attribute:status/Value:assigned' => 'Toegewezen',
 	'Class:UserRequest/Attribute:status/Value:assigned+' => '',
-	'Class:UserRequest/Attribute:status/Value:escalated_ttr' => 'Geëscaleerd TTR',
+	'Class:UserRequest/Attribute:status/Value:escalated_ttr' => 'Geëscaleerde TTR',
 	'Class:UserRequest/Attribute:status/Value:escalated_ttr+' => '',
 	'Class:UserRequest/Attribute:status/Value:waiting_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Attribute:status/Value:waiting_for_approval+' => '',
@@ -163,7 +164,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Laatste in afwachting op',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'cumulatedpending',
+	'Class:UserRequest/Attribute:cumulatedpending' => 'Opgetelde wachttijd',
 	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
@@ -171,13 +172,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:ttr+' => '',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'TTO-deadline',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
-	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO gepasseerd',
+	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO overschreden',
 	'Class:UserRequest/Attribute:sla_tto_passed+' => '',
 	'Class:UserRequest/Attribute:sla_tto_over' => 'SLA TTO over',
 	'Class:UserRequest/Attribute:sla_tto_over+' => '',
 	'Class:UserRequest/Attribute:ttr_escalation_deadline' => 'TTR-deadline',
 	'Class:UserRequest/Attribute:ttr_escalation_deadline+' => '',
-	'Class:UserRequest/Attribute:sla_ttr_passed' => 'SLA TTR gepasseerd',
+	'Class:UserRequest/Attribute:sla_ttr_passed' => 'SLA TTR overschreden',
 	'Class:UserRequest/Attribute:sla_ttr_passed+' => '',
 	'Class:UserRequest/Attribute:sla_ttr_over' => 'SLA TTR over',
 	'Class:UserRequest/Attribute:sla_ttr_over+' => '',
@@ -217,13 +218,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. change',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. hoofdincident',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Alle verzoeken die gerelateerd zijn aan dit hoofdverzoek',
 	'Class:UserRequest/Attribute:public_log' => 'Publieke log',
 	'Class:UserRequest/Attribute:public_log+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction' => 'Gebruikerstevredenheid',
+	'Class:UserRequest/Attribute:user_satisfaction' => 'Klanttevredenheid',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Erg tevreden',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => 'Erg tevreden',
@@ -235,7 +236,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => 'Erg ontevreden',
 	'Class:UserRequest/Attribute:user_comment' => 'Reactie gebruiker',
 	'Class:UserRequest/Attribute:user_comment+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Herkenbare naam hoofdverzoek',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => 'Wijs toe',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
@@ -247,7 +248,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Stimulus:ev_reject+' => '',
 	'Class:UserRequest/Stimulus:ev_pending' => 'In afwachting',
 	'Class:UserRequest/Stimulus:ev_pending+' => '',
-	'Class:UserRequest/Stimulus:ev_timeout' => 'Timeout',
+	'Class:UserRequest/Stimulus:ev_timeout' => 'Time-out',
 	'Class:UserRequest/Stimulus:ev_timeout+' => '',
 	'Class:UserRequest/Stimulus:ev_autoresolve' => 'Automatisch oplossen',
 	'Class:UserRequest/Stimulus:ev_autoresolve+' => '',
@@ -261,10 +262,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan niet naar zichzelf verwijzen als hoofdverzoek',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan het verzoek niet aan zichzelf toewijzen als hoofdincident',
 
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (los subverzoeken op)',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 ));
 
 

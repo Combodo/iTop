@@ -1,8 +1,8 @@
 # Phpdoc dokuwiki template
-This directory contains a template rendering iTop phpdoc as wiki pages.
+This directory contains a template for rendering iTop phpdoc as dokuwiki pages.
 
 
-conventional tag that you should use:
+Conventional tags that you should use:
  * `@internal` : exclude from the documentation.
  * `@api` : it means that a method is an api, thus it may be interacted with.
  * `@see` : it points to another documented method
@@ -14,7 +14,7 @@ conventional tag that you should use:
 
 ## Special instructions
 
-some tags where added : 
+Some iTop specific tags were added : 
  * `@api-advanced`: it means that a method is an `@api` but mark it also as "complex" to use
  * `@overwritable-hook`: used to mark a method as "designed to be extended"
  * `@extension-hook`: not used for now 
@@ -23,7 +23,7 @@ some tags where added :
  
 ### known limitations:
 #### `@see` tags must be very specific: 
-   * always prefix class members with `ClassName::` 
+   * always prefix class members (attributes or methods) with `ClassName::` (do not use self) 
    * for methods always suffix them with `()`, 
    * do not reference variables since they are not documented. If you have to, always prefix them with `$`
  
@@ -39,12 +39,12 @@ examples:
 #### Do not use inline tags, they do not work properly, example: 
 ```
 /** 
- * This is a texts with ans inline tag {@see [FQSEN] [<description>]} it must never be used 
+ * This is a texts with an inline tag {@see [FQSEN] [<description>]} it must never be used 
  */
 ```
    
 #### The `@example` tag must respect this very precise syntax 
- * the sentence in the first line (next to the tag) is the title, it  must be enclose by double quotes 
+ * the sentence in the first line (next to the tag) is the title, it  must be enclosed by double quotes 
  * the following lines are the sample code. 
  * 💔 since we simply hack the official tag, this syntax must be respected carefully 💔
 example: 
@@ -82,14 +82,15 @@ Then, **for a method** of an eligible class:
 
 ## Installation
 ```
+cd .doc
 composer require phpdocumentor/phpdocumentor:~2 --dev
 ```
 
 ## Generation
-`.doc/bin/build-doc-object-manipulation` and `.doc/bin/build-doc-extensions` contains examples of doc. generation, beware: they have to be called from iTop root directory:
+`./bin/build-doc-object-manipulation` and `./bin/build-doc-extensions` contains examples of doc. generation, beware: they have to be called from the .doc directory:
 ```shell
-cd /path/to/itop/
-./.doc/bin/build-doc-object-manipulation
+cd /path/to/itop/.doc
+./bin/build-doc-object-manipulation
 ``` 
 
 the resulting documentation is written into `data/phpdocumentor/output`
@@ -100,4 +101,3 @@ the resulting documentation is written into `data/phpdocumentor/output`
  * the generated files have to be placed under an arbitrary directory of `[/path/to/dokuwiki]/data/pages`.
  * the html has to be activated [config:htmlok](https://www.dokuwiki.org/config:htmlok)
  * the generated files have to be in lowercase
- 

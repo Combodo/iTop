@@ -1,0 +1,297 @@
+{# itop-portal-base/portal/templates/bricks/object/mode_search_regular.html.twig #}
+{# Object brick regular search layout #}
+
+{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_search_form' %}
+{% set sTableId = 'search_content_table_' ~ sFormId %}
+{% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
+{% set bMultipleSelect = (bMultipleSelect is defined and bMultipleSelect == true) ? true : false %}
+
+<div id="{{ sFormId }}">
+	{#<div class="form_alerts"></div>#}
+	<div class="form_fields">
+		<table id="{{ sTableId }}" class="table table-striped table-bordered responsive" cellspacing="0" width="100%">
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div class="form_buttons">
+		{% block pFormButtons %}
+			<div class="form_btn_regular">
+				<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
+				<input class="btn btn-primary form_btn_submit" type="button" value="{{ 'Portal:Button:Submit'|dict_s }}">
+			</div>
+		{% endblock %}
+	</div>
+</div>
+
+<script type="text/javascript">
+	var oColumnProperties = {{ aColumnProperties|raw }};
+	var oRawDatas = {{ aResults.aItems|raw }};
+	var oTable;
+	// Used for ajax throttling
+	var iSearchThrottle = 600;
+	var oKeyTimeout;
+	var aKeyTimeoutFilteredKeys = [9, 16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Tab, Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
+	// Used for form
+	var oSelectedItems = {};
+
+	// Show a loader inside the table
+	var showTableLoader = function()
+	{
+		$('#{{ sTableId }} > tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+	};
+	// Columns definition for the table from the oLevelsProperties
+	var getColumnsDefinition = function()
+	{
+		var aColumnsDefinition = [];
+		
+		// Checkbox / Radio
+		aColumnsDefinition.push({
+				"width": "auto",
+				"searchable": false,
+				"sortable": false,
+				"title": "",
+				"type": "html",
+				"data": "",
+				"render": function(data, type, row){ return '<span class="row_input"><input type="{{ (bMultipleSelect) ? 'checkbox' : 'radio' }}" name="{{ sTargetAttCode }}" /></span>'; }
+		});
+
+		for(sKey in oColumnProperties)
+		{
+			// Object attribute
+			aColumnsDefinition.push({
+				"width": "auto",
+				"searchable": true,
+				"sortable": false,
+				"title": oColumnProperties[sKey].title,
+				"defaultContent": "",
+				"type": "html",
+				"data": "attributes."+sKey+".att_code",
+				"render": function(data, type, row){
+					var cellElem;
+
+					// Preparing the cell data
+					if(row.attributes[data].url !== undefined)
+					{
+						cellElem = $('<a></a>');
+						cellElem.attr('target', '_blank').attr('href', row.attributes[data].url);
+					}
+					else
+					{
+						cellElem = $('<span></span>');
+					}
+					cellElem.attr('data-object-id', row.id).html('<span>' + row.attributes[data].value + '</span>');
+					
+					return cellElem.prop('outerHTML');
+				},
+			});
+		}
+
+		return aColumnsDefinition;
+	};
+	
+	$(document).ready(function(){
+		showTableLoader();
+		
+		// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
+		// We would just have to override / complete the necessary elements
+		oTable = $('#{{ sTableId }}').DataTable({
+			"language": {
+				"processing":	  "{{ 'Portal:Datatables:Language:Processing'|dict_s }}",
+				"search":		  "{{ 'Portal:Datatables:Language:Search'|dict_s }}",
+				"lengthMenu":	  "{{ 'Portal:Datatables:Language:LengthMenu'|dict_s }}",
+				"zeroRecords":	 "{{ 'Portal:Datatables:Language:ZeroRecords'|dict_s }}",
+				"info":			"{{ 'Portal:Datatables:Language:Info'|dict_s }}",
+				"infoEmpty":	   "{{ 'Portal:Datatables:Language:InfoEmpty'|dict_s }}",
+				"infoFiltered":	"({{ 'Portal:Datatables:Language:InfoFiltered'|dict_s }})",
+				"emptyTable":	  "{{ 'Portal:Datatables:Language:EmptyTable'|dict_s }}",
+				"paginate": {
+					"first":	  "{{ 'Portal:Datatables:Language:Paginate:First'|dict_s }}",
+					"previous":   "{{ 'Portal:Datatables:Language:Paginate:Previous'|dict_s }}",
+					"next":	   "{{ 'Portal:Datatables:Language:Paginate:Next'|dict_s }}",
+					"last":	   "{{ 'Portal:Datatables:Language:Paginate:Last'|dict_s }}"
+				},
+				"aria": {
+					"sortAscending":  ": {{ 'Portal:Datatables:Language:Sort:Ascending'|dict_s }}",
+					"sortDescending": ": {{ 'Portal:Datatables:Language:Sort:Descending'|dict_s }}"
+				}
+			},
+			"lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+			"displayLength": {{ constant('Combodo\\iTop\\Portal\\Controller\\ObjectController::DEFAULT_LIST_LENGTH') }},
+			"order": [[1, "asc"]],
+			"dom": '<"row"<"col-sm-6"l><"col-sm-6"<f><"visible-xs"p>>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
+			"columns": getColumnsDefinition(),
+			"select": {
+				"style": "{{ (bMultipleSelect) ? 'multi' : 'os' }}"
+			},
+			"rowId": "id",
+			"rowCallback": function(oRow, oData){
+				// TODO : Remove this when it will be fixed in datatables;
+				// Note : This is an ugly hack from datatables.net to ensure that selected rows are marked selected when using server-side processing (pagination / search / sorting)
+				// See more here http://datatables.net/release-datatables/examples/server_side/select_rows.html
+				if(oData.id in oSelectedItems)
+				{
+					$(oRow).addClass('selected');
+					$(oRow).find('td:first-child input').prop('checked', true);
+				}
+
+				// Opening in a new modal on click
+				$(oRow).find('a').off('click').on('click', function(oEvent){
+					// Prevents link opening.
+					oEvent.preventDefault();
+					// Prevents row selection
+					oEvent.stopPropagation();
+
+					// Creating a new modal
+					CombodoPortalToolbox.OpenModal({
+						content: {
+							endpoint: $(this).attr('href'),
+						},
+					});
+				});
+			},
+			"drawCallback": function(settings){
+				// Hiding pagination if only one page
+				if($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+				{
+					$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+				}
+				else
+				{
+					$(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+				}
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}",
+				"type": "POST",
+				"data": function(d){
+					d.sFormPath = '{{ aSource.sFormPath }}';
+					d.sFieldId = '{{ aSource.sFieldId }}';
+					d.aObjectIdsToIgnore = {{ aSource.aObjectIdsToIgnore|json_encode()|raw }};
+					d.iPageNumber = Math.floor(d.start/d.length) + 1;
+					d.iListLength = d.length;
+					d.columns = null;
+					d.orders = null;
+					if(d.search.value)
+					{
+						d.sSearchValue = d.search.value;
+					}
+					{% if aSource.sFormManagerClass is not null and aSource.sFormManagerData is not null %}
+						// Retrieving form data 
+						d.formmanager_class = "{{ aSource.sFormManagerClass|escape('js') }}";
+						d.formmanager_data = {{ aSource.sFormManagerData|json_encode()|raw }};
+						// Retrieving values from source form
+						d.current_values = $('[data-form-path="{{aSource.sFormPath}}"][data-field-id="{{aSource.sFieldId}}"]').closest('.portal_form_handler').portal_form_handler('getCurrentValues');
+					{% endif %}
+				},
+				"error": function(oData, sError, sThrow){
+				    // Error returned by the framework
+					if(oData.responseJSON !== undefined && oData.responseJSON !== null)
+					{
+						var oResponse = oData.responseJSON;
+						// If we encounter an error
+						if(oResponse.exception !== undefined)
+						{
+							{# Hiding modal in case of error as the general AJAX error handler will display a message #}
+                            {% if tIsModal is defined and tIsModal == true %}
+                            	$('#{{ sFormId }}').closest('.modal').modal('hide');
+                            {% endif %}
+						}
+					}
+					// Global failure
+					else
+					{
+						{# Hiding modal in case of error as the general AJAX error handler will display a message #}
+                        {% if tIsModal is defined and tIsModal == true %}
+                        	$('#{{ sFormId }}').closest('.modal').modal('hide');
+                        {% endif %}
+					}
+				}
+			}
+		});
+		
+		// Handles items selection/deselection
+		oTable.off('select').on('select', function(oEvent, dt, type, indexes){
+			var aData = oTable.rows(indexes).data().toArray();
+			
+			// Checking input
+			$('#{{ sTableId }} tr[role="row"].selected td:first-child input').prop('checked', true);
+			// Saving values in temp array
+			for(var i in aData)
+			{
+				var iItemId = aData[i].id;
+				if(!(iItemId in oSelectedItems))
+				{
+					oSelectedItems[iItemId] = $('<textarea></textarea>').html(aData[i].name).text();
+				}
+			}
+		});
+		oTable.off('deselect').on('deselect', function(oEvent, dt, type, indexes){
+			var aData = oTable.rows(indexes).data().toArray();
+			
+			// Checking input
+			$('#{{ sTableId }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+			// Saving values in temp array
+			for(var i in aData)
+			{
+				var iItemId = aData[i].id;
+				if(iItemId in oSelectedItems)
+				{
+					delete oSelectedItems[iItemId];
+				}
+			}
+		});
+
+		// Overrides filter input to apply throttle. Otherwise, an ajax request is send each time a key is pressed
+		// Also removes accents from search string
+		// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
+		$('#{{ sTableId }}_filter input').off().on('keyup', function(event){
+			var me = this;
+			
+			// We trigger the search only if those keys where not pressed
+			if(aKeyTimeoutFilteredKeys.indexOf(event.which) < 0)
+			{
+				clearTimeout(oKeyTimeout);
+				oKeyTimeout = setTimeout(function() {
+					oTable.search(me.value.latinise()).draw();
+				}, iSearchThrottle);
+			}
+		});
+		
+		// Shows a loader in the table when processing
+		$('#{{ sTableId }}').on('processing.dt', function(event, settings, processing){
+			if(processing === true)
+			{
+				showTableLoader();
+			}
+		});
+		
+		// Handles submit button
+		$('#{{ sFormId }} .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
+			// Extracting value(s) to be send back to the source form
+			{% if bMultipleSelect %}
+				var oData = {values: oSelectedItems};
+			{% else %}
+				var oData = {value: {}};
+				var sItemId = Object.keys(oSelectedItems)[0];
+				var sItemName = oSelectedItems[sItemId];
+				
+				oData.value[sItemId] = sItemName;
+			{% endif %}
+			
+			// Triggering value setting on the source field
+			$('[data-form-path="{{aSource.sFormPath}}"][data-field-id="{{aSource.sFieldId}}"]').triggerHandler('set_current_value', oData);
+			
+			// Closing the modal
+			{% if tIsModal is defined and tIsModal == true %}
+				$('#{{ sFormId }}').closest('.modal').modal('hide');
+			{% endif %}
+		});
+		
+		{% if tIsModal is defined and tIsModal == true %}
+			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
+		{% endif %}
+	});
+</script>

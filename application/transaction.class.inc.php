@@ -195,9 +195,8 @@ class privUITransactionSession
 class privUITransactionFile
 {
 	/**
-	 * Create a new transaction id, store it in the session and return its id
-	 * @param void
-	 * @return int The identifier of the new transaction
+	 * @return int The new transaction identifier
+	 * @throws \Exception
 	 */
 	public static function GetNewTransactionId()
 	{
@@ -207,7 +206,9 @@ class privUITransactionFile
 			{
 				throw new Exception('The directory "'.APPROOT.'data" must be writable to the application.');
 			}
-			if (!@mkdir(APPROOT.'data/transactions'))
+			// condition avoids race condition N°2345
+			// See https://github.com/kalessil/phpinspectionsea/blob/master/docs/probable-bugs.md#mkdir-race-condition
+			if (!mkdir($concurrentDirectory = APPROOT.'data/transactions') && !is_dir($concurrentDirectory))
 			{
 				throw new Exception('Failed to create the directory "'.APPROOT.'data/transactions". Ajust the rights on the parent directory or let an administrator create the transactions directory and give the web sever enough rights to write into it.');
 			}

@@ -190,6 +190,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => 'Тег',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -522,6 +529,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -728,16 +737,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica~~',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)~~',
 	'Core:SynchroAtt:attcode' => 'Атрибут',
-	'Core:SynchroAtt:attcode+' => 'Field of the object',
-	'Core:SynchroAtt:reconciliation' => 'Reconciliation ?~~',
-	'Core:SynchroAtt:reconciliation+' => 'Used for searching',
-	'Core:SynchroAtt:update' => 'Обновить?',
-	'Core:SynchroAtt:update+' => 'Used to update the object',
-	'Core:SynchroAtt:update_policy' => 'Политика обновлений~~',
-	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field',
-	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key~~',
-	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation',
-	'Core:SyncDataExchangeComment' => '(Data Synchro)~~',
+	'Core:SynchroAtt:attcode+' => 'Поле объекта',
+	'Core:SynchroAtt:reconciliation' => 'Сопоставление ?',
+	'Core:SynchroAtt:reconciliation+' => 'Атрибуты, используемые для поиска существуюущего объекта',
+	'Core:SynchroAtt:update' => 'Обновление ?',
+	'Core:SynchroAtt:update+' => 'Атрибуты, которые будут обновляться при синхронизации',
+	'Core:SynchroAtt:update_policy' => 'Политика обновления',
+	'Core:SynchroAtt:update_policy+' => 'Поведение обновляемого атрибута',
+	'Core:SynchroAtt:reconciliation_attcode' => 'Ключ сопоставления',
+	'Core:SynchroAtt:reconciliation_attcode+' => 'Код атрибута для сопоставления с внешним ключом',
+	'Core:SyncDataExchangeComment' => '(Синхронизация)',
 	'Core:Synchro:ListOfDataSources' => 'Список данных:~~',
 	'Core:Synchro:LastSynchro' => 'Последняя синхронизация:',
 	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source~~',

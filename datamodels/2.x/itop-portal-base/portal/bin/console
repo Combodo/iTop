@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+
+use Combodo\iTop\Portal\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true))
+{
+	echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
+}
+
+set_time_limit(0);
+
+if (!defined('APPROOT'))
+{
+	if (file_exists(__DIR__.'/../../../../approot.inc.php'))
+	{
+		require_once __DIR__.'/../../../../approot.inc.php';   // When in env-xxxx folder
+	}
+	else
+	{
+		require_once __DIR__.'/../../../../../approot.inc.php';   // When in datamodels/x.x folder
+	}
+}
+require_once APPROOT.'lib/autoload.php';
+
+if (!class_exists(Application::class))
+{
+	throw new RuntimeException('You need to add "symfony/framework-bundle" as a Composer dependency.');
+}
+
+// Remove --portal_id from CLI params to avoid SF CLI conflicts
+// Note: The parameter is needed when calling the bin/console to determine which portal to select
+$aCleanedArgv = $_SERVER['argv'];
+foreach ($aCleanedArgv as $iArg => $sArg)
+{
+	if (preg_match('/^--portal_id=(.*)$/', $sArg, $aMatches))
+	{
+		unset($aCleanedArgv[$iArg]);
+		break;
+	}
+}
+
+$oInput = new ArgvInput($aCleanedArgv);
+if (null !== $sEnv = $oInput->getParameterOption(['--env', '-e'], null, true))
+{
+	putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $sEnv);
+}
+
+if ($oInput->hasParameterOption('--no-debug', true))
+{
+	putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
+}
+
+require_once MODULESROOT.'itop-portal-base/portal/config/bootstrap.php';
+
+$oKernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
+$oApplication = new Application($oKernel);
+/** @noinspection PhpUnhandledExceptionInspection */
+$oApplication->run($oInput);

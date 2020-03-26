@@ -1,0 +1,11 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<div>
+		<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}</label>
+		<input id="user" type="text" name="auth_user" tabindex="1" value="{{ aData.sAuthUser }}" autofocus>
+</div>
+<div>
+		<label for="pwd">{{ 'UI:Login:PasswordPrompt'|dict_s }}</label>
+		<input id="pwd" type="password" name="auth_pwd" tabindex="2" autocomplete="off" value="{{ aData.sAuthPwd }}">
+</div>

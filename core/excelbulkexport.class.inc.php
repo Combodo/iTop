@@ -193,7 +193,7 @@ EOF
                 $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
                 $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
             }
-            else if ($value instanceOf ormTagSet)
+            else if ($value instanceOf ormSet)
             {
                 $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
                 $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);

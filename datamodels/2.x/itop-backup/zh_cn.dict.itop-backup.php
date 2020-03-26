@@ -22,8 +22,8 @@
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
-	'bkp-backup-running' => '备份正在进行，请稍后...',
-	'bkp-restore-running' => '还原正在进行，请稍等...',
+	'bkp-backup-running' => '备份正在进行,请稍后...',
+	'bkp-restore-running' => '还原正在进行,请稍等...',
 
 	'Menu:BackupStatus' => '定时备份',
 	'bkp-status-title' => '定时备份',

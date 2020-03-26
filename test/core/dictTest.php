@@ -29,7 +29,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
 use Exception;
-use PHPUnit\Framework\TestCase;
 
 
 /**

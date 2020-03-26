@@ -209,10 +209,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number+' => '同一组织内的员工号必须唯一',
+	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工号',
+	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
+	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
 ));
 
 //
@@ -238,7 +238,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:name' => '名称',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => '组织',
-	'Class:Document/Attribute:org_id+' => '~~',
+	'Class:Document/Attribute:org_id+' => '',
 	'Class:Document/Attribute:org_name' => '组织名称',
 	'Class:Document/Attribute:org_name+' => '',
 	'Class:Document/Attribute:documenttype_id' => '文档类型',
@@ -365,8 +365,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => '生产',
 	'Class:PhysicalDevice/Attribute:status/Value:production+' => '生产',
-	'Class:PhysicalDevice/Attribute:status/Value:stock' => '空闲',
-	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '空闲',
+	'Class:PhysicalDevice/Attribute:status/Value:stock' => '闲置',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '闲置',
 	'Class:PhysicalDevice/Attribute:brand_id' => '品牌',
 	'Class:PhysicalDevice/Attribute:brand_id+' => '',
 	'Class:PhysicalDevice/Attribute:brand_name' => '品牌名称',
@@ -496,8 +496,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DatacenterDevice/Attribute:redundancy' => '冗余',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => '该设备运行正常至少需要一路电源 (A 或 B)',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => '所有电源正常，该设备才正常',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => '至少 %1$s %% 路电源正常，设备才正常',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => '所有电源正常,该设备才正常',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => '至少 %1$s %% 路电源正常,设备才正常',
 ));
 
 //
@@ -507,9 +507,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkDevice' => '网络设备',
 	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '网络类型',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => '网络设备类型',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '网络类型名称',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => '网络设备类型名称',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => '设备',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => '连接到该网络设备的所有设备',
@@ -868,8 +868,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:VirtualDevice/Attribute:status/Value:production' => '生产',
 	'Class:VirtualDevice/Attribute:status/Value:production+' => '生产',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => '库存',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => '库存',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => '闲置',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => '闲置',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => '逻辑卷',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => '该设备使用的所有逻辑卷',
 ));
@@ -912,9 +912,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
 	'Class:Farm/Attribute:hypervisor_list+' => '集群由哪些Hypervisor 组成',
 	'Class:Farm/Attribute:redundancy' => '高可用性',
-	'Class:Farm/Attribute:redundancy/disabled' => '所有Hypervisor 正常，集群才正常',
-	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个Hypervisor 是正常的，集群才是正常的',
-	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的Hypervisor 是正常的，集群才正常',
+	'Class:Farm/Attribute:redundancy/disabled' => '所有Hypervisor 正常,集群才正常',
+	'Class:Farm/Attribute:redundancy/count' => '至少 %1$s 个Hypervisor 是正常的,集群才是正常的',
+	'Class:Farm/Attribute:redundancy/percent' => '至少 %1$s %% 的Hypervisor 是正常的,集群才正常',
 ));
 
 //
@@ -1599,7 +1599,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => '设备名称',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
-	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
+	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ));
 
@@ -1895,6 +1895,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Server:otherinfo' => '其它信息',
 	'Server:power' => '电力供应',
 	'Person:info' => '基本信息',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
 	'Class:Subnet/Tab:IPUsage' => 'IP 使用率',

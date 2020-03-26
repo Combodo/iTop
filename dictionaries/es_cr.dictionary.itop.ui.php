@@ -108,6 +108,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:User/Attribute:finalclass+' => 'Tipo de Cuenta',
 	'Class:User/Attribute:contactid' => 'Contacto (persona)',
 	'Class:User/Attribute:contactid+' => 'Detalles personales de la información de negocio',
+	'Class:User/Attribute:org_id' => 'Organización',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Apellidos',
 	'Class:User/Attribute:last_name+' => 'Apellidos',
 	'Class:User/Attribute:first_name' => 'Nombre',
@@ -454,6 +456,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: estimulo invalido "%1$s" en objeto %2$s en estado "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Cuenta',
 	'UI:GroupBy:Count+' => 'Número de Elementos',
@@ -520,6 +524,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop puede enviarle un correo en el cual encontrará las instrucciones a seguir para restablecer su contraseña.',
 	'UI:Login:ResetPassword' => 'Enviar Ahora',
 	'UI:Login:ResetPwdFailed' => 'Error al enviar correo-e: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' no es un usuario válido',
 	'UI:ResetPwd-Error-NotPossible' => 'Cuentas externas no permiten restablecimiento de contraseña.',
@@ -528,7 +533,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'La cuenta no está asociada a una persona con correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'Falta dirección de correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-Send' => 'Falla al envar un correo. Por favor contacte al administrador.',
-	'UI:ResetPwd-EmailSent' => 'Por favor verifique su buzón de correo y siga las instrucciones...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Restablecer contraseña de iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Ha solicitado restablecer su contraseña en iTop.</p><p>Por favor de click en la siguiente liga: <a href="%1$s">proporcione una nueva contraseña</a></p>.',
 
@@ -556,6 +561,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Login' => 'Entrar',
 	'UI:Login:Error:AccessRestricted' => 'El acceso a iTop está restringido. Por favor contacte al Administrador de iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Acceso restringido a usuarios con privilegio de administrador. Por favor contacte al Administrador de iTop.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- seleccione uno --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore este campo --',
 	'UI:CSVImport:NoData' => 'Conjunto de datos vacío..., por favor provea algun dato.',
@@ -683,6 +691,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:RunQuery:MoreInfo' => 'Más información acerca de la consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Expresión de consulta rediseñada: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro de serialización: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Ha ocurrido un error al ejecutar la consulta: %1$s',
 	'UI:Query:UrlForExcel' => 'URL para usarse en consultas web de MS-Excel',
 	'UI:Query:UrlV1' => 'La lista de campos se ha dejado sin especificación. La página <em>export-V2.php</em> no puede ser invocada sin está información. Por lo tanto, el URL sugerido abajo apunta a la página legada: <em>export.php</em>. Esta versión legada de exportación tiene la siguiente limitación: la lista de campos exportados puede variar, dependiendo del formato de salida y el modelo de datos de iTop. Desea garantizar que la lista de columnas exportadas permanenzcan estables durante la ejecución, entonces debe especificar un valor para el atributo "Campos" y utilice la página <em>export-V2.php</em>.',
@@ -886,6 +898,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:AdminTools' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Control de Cambios',
 	'UI:ChangeManagementMenu+' => 'Control de Cambios',
@@ -1433,6 +1446,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar/ Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto enviar ha sido deshabilitado para esta clase',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Agregar nuevo criterio',
 	// - Add new criteria button

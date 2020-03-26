@@ -1,24 +1,39 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 
-require_once('dbobjectsearch.class.php');
-require_once('dbunionsearch.class.php');
+$bUseLegacyDBSearch = utils::GetConfig()->Get('use_legacy_dbsearch');
+
+if ($bUseLegacyDBSearch)
+{
+	// excluded from autoload
+	require_once (APPROOT.'core/legacy/querybuilderexpressionslegacy.class.inc.php');
+	require_once (APPROOT.'core/legacy/querybuildercontextlegacy.class.inc.php');
+	require_once(APPROOT.'core/legacy/dbobjectsearchlegacy.class.php');
+}
+else
+{
+	// excluded from autoload
+	require_once (APPROOT.'core/querybuilderexpressions.class.inc.php');
+	require_once (APPROOT.'core/querybuildercontext.class.inc.php');
+	require_once(APPROOT.'core/dbobjectsearch.class.php');
+}
 
 /**
  * An object search
@@ -224,6 +239,12 @@ abstract class DBSearch
 	abstract public function GetClassAlias();
 
 	/**
+	 * @return string
+	 * @internal
+	 */
+	abstract public function GetFirstJoinedClass();
+
+	/**
      * Change the class
      *
      * Defaults to the first selected class (most of the time it is also the first joined class
@@ -256,6 +277,10 @@ abstract class DBSearch
 	 * @return bool True if the alias has been found and changed
 	 */
 	abstract public function RenameAlias($sOldName, $sNewName);
+
+	abstract public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array());
+
+	abstract public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
     /**
      * @internal
@@ -419,11 +444,27 @@ abstract class DBSearch
 	 */
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
-    /**
+	/**
+	 * Filter this search with another search.
+	 * Initial search is unmodified.
+	 * The difference with Intersect, is that an alias can be provided,
+	 * the filtered class does not need to be the first joined class,
+	 * it can be any class of the search.
+	 *
+	 * @param string $sClassAlias class being filtered
+	 * @param DBSearch $oFilter Filter to apply
+	 *
+	 * @return DBSearch The filtered search
+	 * @throws \CoreException
+	 */
+	abstract public function Filter($sClassAlias, DBSearch $oFilter);
+
+	/**
      * Filter the result
      *
      * The filter is performed by returning only the values in common with the given $oFilter
      * The impact on the resulting query performance/viability can be significant.
+     * Only the first joined class can be filtered.
      *
      * @internal
      *
@@ -442,7 +483,7 @@ abstract class DBSearch
      *
      * @param DBSearch   $oFilter        The join is performed against $oFilter selected class
      * @param integer    $iDirection     can be either DBSearch::JOIN_POINTING_TO or DBSearch::JOIN_REFERENCED_BY
-     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode wetheir it is compared aginst the current DBSearch or $oFilter depend of $iDirection
+     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode whether it is compared against the current DBSearch or $oFilter depend of $iDirection
      * @param integer    $iOperatorCode  See DBSearch::AddCondition_PointingTo()
      * @param array|null $aRealiasingMap Map of aliases from the attached query, that could have been renamed by the optimization process
      *
@@ -669,6 +710,15 @@ abstract class DBSearch
      */
     abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
 
+    /**
+     * Export the DBSearch as a structure (array of arrays...) suitable for a conversion to JSON
+     *
+     * @internal
+     *
+     * @return mixed[string]
+     */
+    abstract public function ToJSON();
+
 	static protected $m_aOQLQueries = array();
 
     /**
@@ -704,12 +754,13 @@ abstract class DBSearch
      *
 	 * @param string $sQuery The OQL to convert to a DBSearch
 	 * @param mixed[string]  $aParams array of <mixed> params index by <string> name
+	 * @param ModelReflection|null $oMetaModel The MetaModel to use when checking the consistency of the OQL
      *
 	 * @return DBObjectSearch|DBUnionSearch
      *
 	 * @throws OQLException
 	 */
-	static public function FromOQL($sQuery, $aParams = null)
+	static public function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
 	{
 		if (empty($sQuery))
 		{
@@ -751,7 +802,10 @@ abstract class DBSearch
 			$oOql = new OqlInterpreter($sQuery);
 			$oOqlQuery = $oOql->ParseQuery();
 	
-			$oMetaModel = new ModelReflectionRuntime();
+			if ($oMetaModel === null)
+			{
+				$oMetaModel = new ModelReflectionRuntime();
+			}
 			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
 	
 			$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);
@@ -931,13 +985,15 @@ abstract class DBSearch
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
 			$sRes = $oSQLQuery->RenderGroupBy($aScalarArgs, $bBeautifulSQL, $aOrderBy, $iLimitCount, $iLimitStart);
 		}
-		catch (Exception $e)
+		// Catch CoreException to add info before throwing again
+		// Other exceptions will be thrown directly
+		catch (CoreException $e)
 		{
 			// Add some information...
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
 		}
-		$this->AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $sRes);
+		$this->AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sRes);
 		return $sRes;
 	}
 
@@ -947,7 +1003,7 @@ abstract class DBSearch
      *
      * @internal
      *
-	 * @param array|hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 * @param null $aAttToLoad
 	 * @param null $aExtendedDataSpec
@@ -1024,8 +1080,8 @@ abstract class DBSearch
 		}
 		try
 		{
-			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
-			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
+			// $bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
+			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, true);
 			if ($sClassAlias == '_itop_')
 			{
 				IssueLog::Info('SQL Query (_itop_): '.$sRes);
@@ -1037,8 +1093,41 @@ abstract class DBSearch
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
 		}
-		$this->AddQueryTraceSelect($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
+		$this->AddQueryTraceSelect($oSQLQuery->GetSourceOQL(), $aOrderBy, $aScalarArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
 		return $sRes;
+	}
+
+	/**
+	 * @param bool $bMustHaveOneResultMax if true will throw a CoreOqlMultipleResultsFound if multiple results
+	 * @param array $aOrderBy
+	 * @param array $aSearchParams
+	 *
+	 * @return null|\DBObject query result
+	 * @throws \CoreOqlMultipleResultsForbiddenException if multiple results found and parameter enforce the check
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
+	{
+		$oSet = new DBObjectSet($this, array(), $aSearchParams, null, 2);
+		$oFirstResult = $oSet->Fetch();
+		if ($oFirstResult === null) // useless but here for readability ;)
+		{
+			return null;
+		}
+
+		if ($bMustHaveOneResultMax)
+		{
+			$oSecondResult = $oSet->Fetch();
+			if ($oSecondResult !== null)
+			{
+				throw new CoreOqlMultipleResultsForbiddenException(
+					'Search returned multiple results, this is forbidden. Query was: '.$this->ToOQL());
+			}
+		}
+
+		return $oFirstResult;
 	}
 
     /**
@@ -1053,38 +1142,42 @@ abstract class DBSearch
      */
 	protected abstract function SetDataFiltered();
 
-    /**
-     * @internal
-     *
-     * @param      $aOrderBy
-     * @param      $aArgs
-     * @param      $aAttToLoad
-     * @param      $aExtendedDataSpec
-     * @param      $iLimitCount
-     * @param      $iLimitStart
-     * @param      $bGetCount
-     * @param null $aGroupByExpr
-     * @param null $aSelectExpr
-     *
-     * @return mixed
-     */
+	/**
+	 * @param      $aOrderBy
+	 * @param      $aArgs
+	 * @param      $aAttToLoad
+	 * @param      $aExtendedDataSpec
+	 * @param      $iLimitCount
+	 * @param      $iLimitStart
+	 * @param      $bGetCount
+	 * @param null $aGroupByExpr
+	 * @param null $aSelectExpr
+	 *
+	 * @return SQLObjectQuery
+	 * @throws \CoreException
+	 * @internal
+	 *
+	 */
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oSearch = $this;
 		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
 		{
-			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
-			if ($oVisibleObjects === false)
+			foreach ($this->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
-				// Make sure this is a valid search object, saying NO for all
-				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
-			}
-			if (is_object($oVisibleObjects))
-			{
-				$oVisibleObjects->AllowAllData();
-				$oSearch = $this->Intersect($oVisibleObjects);
-				/** @var DBSearch $oSearch */
-				$oSearch->SetDataFiltered();
+				$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
+				if ($oVisibleObjects === false)
+				{
+					// Make sure this is a valid search object, saying NO for all
+					$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
+				}
+				if (is_object($oVisibleObjects))
+				{
+					$oVisibleObjects->AllowAllData();
+					$oSearch = $this->Filter($sClassAlias, $oVisibleObjects);
+					/** @var DBSearch $oSearch */
+					$oSearch->SetDataFiltered();
+				}
 			}
 		}
 		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
@@ -1226,61 +1319,112 @@ abstract class DBSearch
 		self::$m_bOptimizeQueries = $bEnabled;
 	}
 
-    /**
-     * @internal
-     *
-     * @param $aOrderBy
-     * @param $aArgs
-     * @param $aAttToLoad
-     * @param $aExtendedDataSpec
-     * @param $iLimitCount
-     * @param $iLimitStart
-     * @param $bGetCount
-     * @param $sSql
-     *
-     * @throws MySQLException
-     */
-	protected function AddQueryTraceSelect($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
+	/**
+	 * @param $sOql
+	 * @param $aOrderBy
+	 * @param $aArgs
+	 * @param $aAttToLoad
+	 * @param $aExtendedDataSpec
+	 * @param $iLimitCount
+	 * @param $iLimitStart
+	 * @param $bGetCount
+	 * @param $sSql
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @internal
+	 *
+	 */
+	protected function AddQueryTraceSelect($sOql, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
 		if (self::$m_bTraceQueries)
 		{
 			$aQueryData = array(
 				'type' => 'select',
-				'filter' => $this,
 				'order_by' => $aOrderBy,
-				'args' => $aArgs,
 				'att_to_load' => $aAttToLoad,
-				'extended_data_spec' => $aExtendedDataSpec,
 				'limit_count' => $iLimitCount,
 				'limit_start' => $iLimitStart,
 				'is_count' => $bGetCount
 			);
-			$sOql = $this->ToOQL(true, $aArgs);
-			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+
+			DBSearch::EnableQueryTrace(false);
+			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
+			DBSearch::EnableQueryTrace(true);
+
+			if (!empty($aAttToLoad))
+			{
+				$aAttToLoadNames = array();
+				foreach ($aAttToLoad as $sClass => $aAttributes)
+				{
+					$aAttToLoadNames[$sClass] = array();
+					foreach ($aAttributes as $sAttCode => $oAttDef)
+					{
+						$aAttToLoadNames[$sClass][] = $sAttCode;
+					}
+				}
+			}
+			else
+			{
+				$aAttToLoadNames = null;
+			}
+			$aQueryData['att_to_load'] = $aAttToLoadNames;
+
+			$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
+			if ($hLogFile !== false)
+			{
+				flock($hLogFile,LOCK_EX);
+				fwrite($hLogFile,serialize($aQueryData)."\n");
+				fflush($hLogFile);
+				flock($hLogFile,LOCK_UN);
+				fclose($hLogFile);
+			}
 		}
 	}
 
-    /**
-     * @internal
-     *
-     * @param $aArgs
-     * @param $aGroupByExpr
-     * @param $sSql
-     *
-     * @throws MySQLException
-     */
-	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $sSql)
+	/**
+	 * @param $aArgs
+	 * @param $aGroupByExpr
+	 * @param $bExcludeNullValues
+	 * @param $aSelectExpr
+	 * @param $aOrderBy
+	 * @param $iLimitCount
+	 * @param $iLimitStart
+	 * @param $sSql
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @internal
+	 *
+	 */
+	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sSql)
 	{
 		if (self::$m_bTraceQueries)
 		{
 			$aQueryData = array(
 				'type' => 'group_by',
-				'filter' => $this,
-				'args' => $aArgs,
-				'group_by_expr' => $aGroupByExpr
+				'order_by' => $aOrderBy,
+				'group_by_expr' => $aGroupByExpr,
+				'exclude_null_values' => $bExcludeNullValues,
+				'select_expr' => $aSelectExpr,
+				'limit_count' => $iLimitCount,
+				'limit_start' => $iLimitStart,
 			);
-			$sOql = $this->ToOQL(true, $aArgs);
-			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+
+			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
+			$aQueryData['group_by_expr'] = Expression::ConvertArrayToOQL($aQueryData['group_by_expr'], $aArgs);
+			$aQueryData['select_expr'] = Expression::ConvertArrayToOQL($aQueryData['select_expr'], $aArgs);
+
+			$hLogFile = @fopen(APPROOT.'log/oql_group_by_records.txt', 'a');
+			if ($hLogFile !== false)
+			{
+				flock($hLogFile,LOCK_EX);
+				fwrite($hLogFile,serialize($aQueryData)."\n");
+				fflush($hLogFile);
+				flock($hLogFile,LOCK_UN);
+				fclose($hLogFile);
+			}
 		}
 	}
 
@@ -1424,15 +1568,16 @@ abstract class DBSearch
 	}
 
 	/**
-	 * Experimental!
-	 * @todo implement the change tracking
-     *
-     * @internal
+	 * Updates archive_flag and archive_date fields in the whole class hierarchy
 	 *
-	 * @param $bArchive
+	 * @see \DBObject::DBWriteArchiveFlag()
+	 *
+	 * @param boolean $bArchive
+	 *
 	 * @throws Exception
+	 * @todo implement the change tracking
 	 */
-	function DBBulkWriteArchiveFlag($bArchive)
+	public function DBBulkWriteArchiveFlag($bArchive)
 	{
 		$sClass = $this->GetClass();
 		if (!MetaModel::IsArchivable($sClass))

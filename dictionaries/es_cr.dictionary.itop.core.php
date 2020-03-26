@@ -33,23 +33,23 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard' => 'Panel de Control',
+	'Core:AttributeDashboard+' => 'Panel de control y supervisión',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber' => 'Número telefónico',
 	'Core:AttributePhoneNumber+' => '~~',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate' => 'Fecha de Obsolescencia',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet' => 'Lista de etiquetas',
 	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog' => 'Bitácora',
 	'Core:AttributeCaseLog+' => '~~',
 
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
@@ -201,8 +201,15 @@ Operadores:<br/>
 	'Core:FriendlyName-Label' => 'Nombre común',
 	'Core:FriendlyName-Description' => 'Nombre común',
 
-	'Core:AttributeTag' => 'Tags~~',
+	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -535,6 +542,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Trigger/Attribute:action_list+' => 'Acciones realizadas cuando se activó el disparador',
 	'Class:Trigger/Attribute:finalclass' => 'Clase',
 	'Class:Trigger/Attribute:finalclass+' => 'Clase',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -604,8 +613,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+	'Class:TriggerOnObjectDelete' => 'Disparador (eliminando un objecto)',
+	'Class:TriggerOnObjectDelete+' => 'Disparador al eliminar un objecto de la clase dada [o una clase hija] ',
 ));
 
 //
@@ -613,10 +622,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate' => 'Disparador (actualizando un objecto)',
+	'Class:TriggerOnObjectUpdate+' => 'Disparador al actualizar un objeto de la clase dada [o una clase hija]',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos objetivo',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Campos que serán monitorizados',
 ));
 
 //
@@ -899,13 +908,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:BulkExport:PageSize-A4' => 'A4',
 	'Core:BulkExport:PageSize-A3' => 'A3',
 	'Core:BulkExport:PageSize-Letter' => 'Carta',
-	'Core:BulkExport:PDFPageOrientation' => 'Orientaciónd de Página:',
+	'Core:BulkExport:PDFPageOrientation' => 'Orientación de la Página:',
 	'Core:BulkExport:PageOrientation-L' => 'Horizontal',
 	'Core:BulkExport:PageOrientation-P' => 'Vertical',
 	'Core:BulkExport:XMLFormat' => 'Archivo XML (*.xml)',
 	'Core:BulkExport:XMLOptions' => 'Opciones XML',
-	'Core:BulkExport:SpreadsheetFormat' => 'Formato hoja tabular HTML (*.html)',
-	'Core:BulkExport:SpreadsheetOptions' => 'Opcioens Hoja Tabular',
+	'Core:BulkExport:SpreadsheetFormat' => 'Formato Tabla HTML (*.html)',
+	'Core:BulkExport:SpreadsheetOptions' => 'Opciones de Tabla',
 	'Core:BulkExport:OptionNoLocalize' => 'Código de exportación en lugar de etiqueta',
 	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos ligados',
 	'Core:BulkExport:OptionFormattedText' => 'Conservar formato de texto',
@@ -915,8 +924,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:BulkExportMessageEmptyOQL' => 'Por favor ingrese una consulta OQL válida.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Por favor seleccione un entrada válida de la libreta de consultas.',
 	'Core:BulkExportQueryPlaceholder' => 'Escriba una consulta OQL aquí...',
-	'Core:BulkExportCanRunNonInteractive' => 'Click aquí para ejecutar la exportación en mode no interactivo.',
-	'Core:BulkExportLegacyExport' => 'Click aqui para acdesar a la exportación tradicional.',
+	'Core:BulkExportCanRunNonInteractive' => 'Click aquí para ejecutar la exportación en modo no interactivo.',
+	'Core:BulkExportLegacyExport' => 'Click aquí para acceder a la exportación tradicional.',
 	'Core:BulkExport:XLSXOptions' => 'Opciones Excel',
 	'Core:BulkExport:TextFormat' => 'Compos texto conteniendo algunas marcas HTML',
 	'Core:BulkExport:DateTimeFormat' => 'Formato de fecha y hora',
@@ -947,29 +956,29 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TagSetFieldData
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData' => '%2$s para la clase %1$s',
 	'Class:TagSetFieldData+' => '~~',
 
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:code' => 'Código',
+	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Debe contener al menos tres caracteres alfanuméricos',
+	'Class:TagSetFieldData/Attribute:label' => 'Etiqueta',
+	'Class:TagSetFieldData/Attribute:label+' => 'Etiqueta mostrada',
+	'Class:TagSetFieldData/Attribute:description' => 'Descripción',
+	'Class:TagSetFieldData/Attribute:description+' => 'Descripción de la etiqueta',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Clase',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Clase de objeto',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de campo',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Etiquetas es uso no pueden ser borradas',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Los códigos o las etiquetas deben ser únicos',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'El código de la etiqueta debe contener entre 3 y %1$d caracteres alfanuméricos',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'El código elegido es una palabra reservada',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'La etiqueta no odebe contener \'%1$s\' y no puede estar vacía',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Códigos de etiqueta en uso no pueden ser borrados',
 	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Uso de la etiqueta (%1$d)~~',
+	'Core:TagSetFieldData:NoEntryFound' => 'No hay entradas para esta etiqueta',
 ));
 
 //

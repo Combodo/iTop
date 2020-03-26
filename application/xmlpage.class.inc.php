@@ -42,7 +42,7 @@ class XMLPage extends WebPage
 		parent::__construct($s_title);
 		$this->m_bPassThrough = $bPassThrough;
 		$this->m_bHeaderSent = false;
-		$this->add_header("Content-type: text/xml; charset=utf-8");
+		$this->add_header("Content-type: text/xml; charset=".self::PAGES_CHARSET);
 		$this->add_header("Cache-control: no-cache");
 		$this->add_header("Content-location: export.xml");
 	}	
@@ -53,8 +53,9 @@ class XMLPage extends WebPage
 		{
 			// Get the unexpected output but do nothing with it
 			$sTrash = $this->ob_get_clean_safe();
-					
-			$this->s_content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n".trim($this->s_content);
+
+			$sCharset = self::PAGES_CHARSET;
+			$this->s_content = "<?xml version=\"1.0\" encoding=\"$sCharset\"?".">\n".trim($this->s_content);
 			$this->add_header("Content-Length: ".strlen($this->s_content));
 			foreach($this->a_headers as $s_header)
 			{
@@ -87,7 +88,8 @@ class XMLPage extends WebPage
 				{
 					header($s_header);
 				}
-				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?".">\n";
+				$sCharset = self::PAGES_CHARSET;
+				echo "<?xml version=\"1.0\" encoding=\"$sCharset\"?".">\n";
 				echo trim($s_captured_output);
 				echo trim($this->s_content);
 				echo $sText;

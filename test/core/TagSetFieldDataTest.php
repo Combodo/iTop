@@ -10,8 +10,17 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
+use DeleteException;
+use Exception;
+use MetaModel;
 use TagSetFieldData;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class TagSetFieldDataTest extends ItopDataTestCase
 {
 	// Need database COMMIT in order to create the FULLTEXT INDEX of MySQL
@@ -61,7 +70,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		try
 		{
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag4', 'Fourth');
-		} catch (\CoreException $e)
+		} catch (CoreException $e)
 		{
 			$this->debug($e->getMessage());
 		}
@@ -72,7 +81,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		try
 		{
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag4', 'zembrek');
-		} catch (\CoreException $e)
+		} catch (CoreException $e)
 		{
 			$this->debug($e->getMessage());
 		}
@@ -83,7 +92,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		try
 		{
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'zembrek', 'Fourth');
-		} catch (\CoreException $e)
+		} catch (CoreException $e)
 		{
 			$this->debug($e->getMessage());
 		}
@@ -110,17 +119,8 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to delete the tag, must complain !
-		try
-		{
-			$oTagData->DBDelete();
-		} catch (\DeleteException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$this->expectException(DeleteException::class);
+		$oTagData->DBDelete();
 	}
 
 	/**
@@ -208,19 +208,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to change the code of the tag, must complain !
-		try
-		{
-			$oTagData->Set('code', 'tag1');
-			$oTagData->DBWrite();
-
-		} catch (\CoreException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$oTagData->Set('code', 'tag1');
+		$this->expectException(CoreException::class);
+		$oTagData->DBWrite();
 	}
 
 	/**
@@ -231,7 +221,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	public function testMaxTagCodeLength()
 	{
 		/** @var \AttributeTagSet $oAttdef */
-		$oAttdef = \MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+		$oAttdef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
 
 		$iMaxLength = $oAttdef->GetTagCodeMaxLength();
 		$sTagCode = str_repeat('a', $iMaxLength);
@@ -244,7 +234,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		try
 		{
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
-		} catch (\CoreException $e)
+		} catch (CoreException $e)
 		{
 			$this->debug('Awaited: '.$e->getMessage());
 			static::assertTrue(true);
@@ -257,7 +247,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	public function testMaxTagsAllowed()
 	{
 		/** @var \AttributeTagSet $oAttDef */
-		$oAttDef = \MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+		$oAttDef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
 		$iMaxTags = $oAttDef->GetMaxItems();
 		for ($i = 0; $i < $iMaxTags; $i++)
 		{
@@ -275,7 +265,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 				$sValue .= "$sTagCode ";
 				$oObjWithTagSet->Set(TAG_ATTCODE, $sValue);
 				$oObjWithTagSet->DBWrite();
-			} catch (\Exception $e)
+			} catch (Exception $e)
 			{
 				// Should fail on the last iteration
 				static::assertEquals($iMaxTags, $i);

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
-	<constants>
-		<constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="redefine"><![CDATA[{"service_request":"UserRequest","incident":"Incident"}]]></constant>
-		<constant id="PORTAL_INCIDENT_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
-		<constant id="PORTAL_INCIDENT_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
-		<constant id="PORTAL_INCIDENT_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency]]></constant>
-		<constant id="PORTAL_INCIDENT_TYPE" xsi:type="string" _delta="define"><![CDATA[]]></constant>
-		<constant id="PORTAL_INCIDENT_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
-		<constant id="PORTAL_INCIDENT_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
-		<constant id="PORTAL_INCIDENT_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
-		<constant id="PORTAL_INCIDENT_DISPLAY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Incident WHERE org_id = :contact->org_id AND caller_id = :contact->id]]></constant>
-		<constant id="PORTAL_INCIDENT_DISPLAY_POWERUSER_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Incident WHERE org_id = :contact->org_id]]></constant>
-	</constants>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
 	<classes>
 		<class id="Incident" _delta="define">
 			<parent>Ticket</parent>
@@ -947,6 +935,17 @@
 				</states>
 			</lifecycle>
 			<methods>
+				<method id="GetTicketRefFormat">
+					<static>true</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+        public static function GetTicketRefFormat()
+        {
+                return 'I-%06d';
+        }
+        ]]></code>
+				</method>
 				<method id="SetAssignedDate">
 					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
@@ -1085,17 +1084,17 @@
 			if (MetaModel::IsValidClass('KnownError'))
 			{
 				//Search for known errors
-				$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));
+				$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
 				$iTicketID = $this->GetKey();;
 				$oKnownErrorSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT KnownError AS ke JOIN lnkErrorToFunctionalCI AS l1 ON l1.error_id=ke.id JOIN FunctionalCI AS ci ON l1.functionalci_id=ci.id JOIN lnkFunctionalCIToTicket AS l2 ON l2.functionalci_id=ci.id WHERE l2.ticket_id=$iTicketID"));
 				$iNumberKE=$oKnownErrorSet->count();
 				if ($iNumberKE > 0)
 				{
-					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
+					$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList', Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
 				}
 				else
 				{
-					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));	
+					$oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
 				}			
 				self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
 			}

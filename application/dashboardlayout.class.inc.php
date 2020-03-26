@@ -26,14 +26,17 @@
 
 abstract class DashboardLayout
 {
-	public function __construct()
-	{
-		
-	}
-	
 	abstract public function Render($oPage, $aDashlets, $bEditMode = false);
+
+	/**
+	 * @param int $iCellIdx
+	 *
+	 * @return array Containing 2 scalars: Col number and row number (starting from 0)
+	 * @since 2.7.0
+	 */
+	abstract public function GetDashletCoordinates($iCellIdx);
 	
-	static public function GetInfo()
+	public static function GetInfo()
 	{
 		return array(
 			'label' => '',
@@ -51,7 +54,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	{
 		$this->iNbCols = 1;
 	}
-	
+
 	protected function TrimCell($aDashlets)
 	{
 		$aKeys = array_reverse(array_keys($aDashlets));
@@ -61,7 +64,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		{
 			/** @var \Dashlet $oDashlet */
 			$oDashlet = $aDashlets[$aKeys[$idx]];
-			if ($oDashlet->IsVisible())
+			if ($oDashlet::IsVisible())
 			{
 				$bNoVisibleFound = false;
 			}
@@ -110,20 +113,21 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	{
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
-		
+
 		$oPage->add('<table style="width:100%;table-layout:fixed;"><tbody>');
 		$iCellIdx = 0;
 		$fColSize = 100 / $this->iNbCols;
 		$sStyle = $bEditMode ? 'border: 1px #ccc dashed; width:'.$fColSize.'%;' : 'width: '.$fColSize.'%;';
 		$sClass = $bEditMode ? 'layout_cell edit_mode' : 'dashboard';
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
+
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
-			$oPage->add('<tr>');
+			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
-				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-cell-index=\"$iCellIdx\">");
+				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-column-index=\"$iCols\" data-dashboard-cell-index=\"$iCellIdx\">");
 				if (array_key_exists($iCellIdx, $aCells))
 				{
 					$aDashlets = $aCells[$iCellIdx];
@@ -132,7 +136,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach($aDashlets as $oDashlet)
 						{
-							if ($oDashlet->IsVisible())
+							if ($oDashlet::IsVisible())
 							{
 								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
 							}
@@ -155,16 +159,27 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		if ($bEditMode) // Add one row for extensibility
 		{
 			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-cell-index="'.$iCellIdx.'"';
-			$oPage->add('<tr>');
+			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
-				$oPage->add("<td $sStyle>");
+				$oPage->add("<td $sStyle data-dashboard-column-index=\"$iCols\">");
 				$oPage->add('&nbsp;');
 				$oPage->add('</td>');
 			}
 			$oPage->add('</tr>');
 		}
 		$oPage->add('</tbody></table>');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetDashletCoordinates($iCellIdx)
+	{
+		$iColNumber = (int) $iCellIdx % $this->iNbCols;
+		$iRowNumber = (int) floor($iCellIdx / $this->iNbCols);
+
+		return array($iColNumber, $iRowNumber);
 	}
 }
 

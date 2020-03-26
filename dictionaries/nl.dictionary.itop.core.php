@@ -21,8 +21,8 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author Hipska (2018)
- * @author jbostoen (2018)
+ * @author Hipska (2018, 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2019 - 2020)
  * 
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -32,9 +32,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:DeletedObjectTip' => 'Het object is verwijderd op %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Object niet gevonden (klasse: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het zou eerder verwijderd kunnen zijn en de log zou kunnen zijn opgeschoond.',
+	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het kan al eerder verwijderd zijn waardoor ook de historiek al gewist is.',
 
-	'Core:UniquenessDefaultError' => 'De regel \'%1$s\' die unieke waardes afdwingt, geeft een fout',
+	'Core:UniquenessDefaultError' => 'De regel \'%1$s\' die unieke waardes afdwingt, blokkeert deze actie',
 
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
@@ -62,7 +62,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeMetaEnum+' => '',
 
 	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten [subklasse] van dezelfde klasse',
+	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten (subklasse) van dezelfde klasse',
 
 	'Core:AttributeInteger' => 'Integer',
 	'Core:AttributeInteger+' => 'Numerieke waarde (kan negatief zijn)',
@@ -70,8 +70,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeDecimal' => 'Decimaal',
 	'Core:AttributeDecimal+' => 'Decimale waarde (kan negatief zijn)',
 
-	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean' => 'Booleaanse (Ja/Nee) waarde',
+	'Core:AttributeBoolean+' => 'Booleaanse (Ja/Nee) waarde',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Ja',
 	'Core:AttributeBoolean/Value:no' => 'Nee',
@@ -87,7 +87,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Core:AttributeObsolescenceFlag' => 'Buiten dienst',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Ja',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Dit object is uitgesloten uit impact-analyses en verborgen in zoekresultaten.',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Dit object is uitgesloten bij impactanalyses en verborgen in zoekresultaten.',
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Nee',
 	'Core:AttributeObsolescenceFlag/Label' => 'Buiten dienst',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Automatisch toegepast op andere attributen',
@@ -109,8 +109,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributePassword' => 'Wachtwoord',
 	'Core:AttributePassword+' => 'Wachtwoord van een extern apparaat',
 
-	'Core:AttributeEncryptedString' => 'Gecodeerde string',
-	'Core:AttributeEncryptedString+' => 'String gecodeerd met een lokale sleutel (key)',
+	'Core:AttributeEncryptedString' => 'Versleutelde tekstregel',
+	'Core:AttributeEncryptedString+' => 'Tekstregel versleuteld met een lokale sleutel (key)',
 	'Core:AttributeEncryptUnknownLibrary' => 'De encryptie-bibliotheek (%1$s) is onbekend',
 	'Core:AttributeEncryptFailedToDecrypt' => '** fout bij decryptie **',
 
@@ -118,7 +118,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeText+' => 'Meerdere regels tekst',
 
 	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => 'HTML-string',
+	'Core:AttributeHTML+' => 'HTML-code',
 
 	'Core:AttributeEmailAddress' => 'E-mailadres',
 	'Core:AttributeEmailAddress+' => 'E-mailadres',
@@ -129,17 +129,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Language-expressie',
 
-	'Core:AttributeEnum' => 'Enum',
-	'Core:AttributeEnum+' => 'Lijst van voorgedefineerde alfanumerieke teksten',
+	'Core:AttributeEnum' => 'Oplijsting',
+	'Core:AttributeEnum+' => 'Lijst van voorgedefineerde alfanumerieke waardes',
 
 	'Core:AttributeTemplateString' => 'Sjabloon tekstregel',
-	'Core:AttributeTemplateString+' => 'String die de procurators bevat',
+	'Core:AttributeTemplateString+' => 'String die de plaatshouders bevat',
 
 	'Core:AttributeTemplateText' => 'Sjabloon tekstvak',
-	'Core:AttributeTemplateText+' => 'Tekst die de procurators bevat',
+	'Core:AttributeTemplateText+' => 'Tekst die de plaatshouders bevat',
 
 	'Core:AttributeTemplateHTML' => 'Sjabloon HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML die de procurators bevat',
+	'Core:AttributeTemplateHTML+' => 'HTML die de plaatshouders bevat',
 
 	'Core:AttributeDateTime' => 'Datum/tijd',
 	'Core:AttributeDateTime+' => 'Datum en tijd (jaar-maand-dag hh:mm:ss)',
@@ -201,14 +201,21 @@ Operators:<br/>
 	'Core:AttributePropertySet' => 'Eigenschappen',
 	'Core:AttributePropertySet+' => 'Lijst van ongeschreven eigenschappen (naam en waarde)',
 
-	'Core:AttributeFriendlyName' => 'Friendly name',
-	'Core:AttributeFriendlyName+' => 'Automatisch aangemaakt attribuut; de friendly name is na verscheidene attributen verwerkt',
+	'Core:AttributeFriendlyName' => 'Herkenbare naam',
+	'Core:AttributeFriendlyName+' => 'Automatisch aangemaakt attribuut. De herkenbare naam is gebaseerd op verschillende attributen van het object.',
 
-	'Core:FriendlyName-Label' => 'Referentie',
-	'Core:FriendlyName-Description' => 'Referentie',
+	'Core:FriendlyName-Label' => 'Herkenbare naam',
+	'Core:FriendlyName-Description' => 'Herkenbare naam',
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
+	
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'CRON',
+	'Core:Context=GUI:Portal' => 'Portaal',
 ));
 
 
@@ -223,11 +230,11 @@ Operators:<br/>
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChange' => 'Aanpassing',
-	'Class:CMDBChange+' => 'Volgen van aanpassingen',
+	'Class:CMDBChange+' => 'Opvolging van aanpassingen',
 	'Class:CMDBChange/Attribute:date' => 'datum',
 	'Class:CMDBChange/Attribute:date+' => 'De datum en tijd waarop de aanpassingen zijn waargenomen ',
-	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
-	'Class:CMDBChange/Attribute:userinfo+' => 'gedefineerde info van de gebruiker',
+	'Class:CMDBChange/Attribute:userinfo' => 'Info',
+	'Class:CMDBChange/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
 ));
 
 //
@@ -235,19 +242,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOp' => 'Pas de handeling aan',
-	'Class:CMDBChangeOp+' => 'Pas het volgen van de handeling aan',
-	'Class:CMDBChangeOp/Attribute:change' => 'Pas aan',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Pas aan',
-	'Class:CMDBChangeOp/Attribute:date' => 'datum',
-	'Class:CMDBChangeOp/Attribute:date+' => 'datum en tijd van de aanpassing',
-	'Class:CMDBChangeOp/Attribute:userinfo' => 'gebruiker',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => 'wie heeft deze aanpassing doorgevoerd',
-	'Class:CMDBChangeOp/Attribute:objclass' => 'objectklasse',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'objectklasse',
-	'Class:CMDBChangeOp/Attribute:objkey' => 'object-id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'object-id',
-	'Class:CMDBChangeOp/Attribute:finalclass' => 'type',
+	'Class:CMDBChangeOp' => 'Aanpassingsactie',
+	'Class:CMDBChangeOp+' => 'Opvolging van uitgevoerde aanpassingen',
+	'Class:CMDBChangeOp/Attribute:change' => 'Aanpassing',
+	'Class:CMDBChangeOp/Attribute:change+' => 'Aanpassing',
+	'Class:CMDBChangeOp/Attribute:date' => 'Tijdstip',
+	'Class:CMDBChangeOp/Attribute:date+' => 'Tijdstip van de aanpassing',
+	'Class:CMDBChangeOp/Attribute:userinfo' => 'Info',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
+	'Class:CMDBChangeOp/Attribute:objclass' => 'Objectklasse',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'Objectklasse',
+	'Class:CMDBChangeOp/Attribute:objkey' => 'ID Object',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID Object',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'Soort',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
@@ -256,8 +263,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpCreate' => 'objectcreatie',
-	'Class:CMDBChangeOpCreate+' => 'historiek van objectcreatie',
+	'Class:CMDBChangeOpCreate' => 'Aanmaken object',
+	'Class:CMDBChangeOpCreate+' => 'Historiek van aanmaken van het object',
 ));
 
 //
@@ -265,8 +272,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpDelete' => 'verwijderen object',
-	'Class:CMDBChangeOpDelete+' => 'historiek van het verwijderen van objecten',
+	'Class:CMDBChangeOpDelete' => 'Verwijderen object',
+	'Class:CMDBChangeOpDelete+' => 'Historiek van verwijderen van het object',
 ));
 
 //
@@ -274,10 +281,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpSetAttribute' => 'aanpassing van het object',
-	'Class:CMDBChangeOpSetAttribute+' => 'historiek van de aanpassing van de objecteigenschappen',
+	'Class:CMDBChangeOpSetAttribute' => 'Aanpassen object',
+	'Class:CMDBChangeOpSetAttribute+' => 'Historiek van het aanpassen van de objecteigenschappen',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribuut',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code van de aangepaste eigenschap',
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Code van de aangepaste eigenschap',
 ));
 
 //
@@ -285,12 +292,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpSetAttributeScalar' => 'Aanpassing van de eigenschap',
-	'Class:CMDBChangeOpSetAttributeScalar+' => 'historiek van gewijzigde eigenschappen',
+	'Class:CMDBChangeOpSetAttributeScalar' => 'Aanpassen objecteigenschap',
+	'Class:CMDBChangeOpSetAttributeScalar+' => 'Historiek van gewijzigde eigenschappen',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Vorige waarde',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Vorige waarde van het attribuut',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Vorige waarde van de eigenschap',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nieuwe waarde',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Nieuwe waarde van het attribuut',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Nieuwe waarde van de eigenschap',
 ));
 // Used by CMDBChangeOp... & derived classes
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -313,10 +320,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => 'dataverandering',
-	'Class:CMDBChangeOpSetAttributeBlob+' => 'historiek van dataverandering',
+	'Class:CMDBChangeOpSetAttributeBlob' => 'Aanpassen data',
+	'Class:CMDBChangeOpSetAttributeBlob+' => 'Historiek van data-aanpassingen',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Vorige data',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'eerdere inhoud van het attribuut',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Vorige inhoud van de eigenschap',
 ));
 
 //
@@ -324,10 +331,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOpSetAttributeText' => 'tekstverandering',
-	'Class:CMDBChangeOpSetAttributeText+' => 'historiek van tekstverandering',
+	'Class:CMDBChangeOpSetAttributeText' => 'Aanpassen tekst',
+	'Class:CMDBChangeOpSetAttributeText+' => 'Historiek van tekstaanpassingen',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Vorige data',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'eerdere inhoud van het attribuut',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Vorige inhoud van de eigenschap',
 ));
 
 //
@@ -335,14 +342,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Event' => 'Log Event',
-	'Class:Event+' => 'Een intern event van de applicatie',
+	'Class:Event' => 'Gebeurtenis',
+	'Class:Event+' => 'Een interne gebeurtenis binnen de applicatie',
 	'Class:Event/Attribute:message' => 'Inhoud',
-	'Class:Event/Attribute:message+' => 'Korte beschrijving van het event',
-	'Class:Event/Attribute:date' => 'Datum',
-	'Class:Event/Attribute:date+' => 'Datum en tijdstip waarop de veranderingen zijn vastgelegd',
-	'Class:Event/Attribute:userinfo' => 'Gebruikersinfo',
-	'Class:Event/Attribute:userinfo+' => 'Identificatie van de gebruiker die de actie uitvoerde die het event triggerde',
+	'Class:Event/Attribute:message+' => 'Korte beschrijving van de gebeurtenis',
+	'Class:Event/Attribute:date' => 'Tijdstip',
+	'Class:Event/Attribute:date+' => 'Tijdstip waarop de veranderingen zijn gebeurd',
+	'Class:Event/Attribute:userinfo' => 'Info',
+	'Class:Event/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
 	'Class:Event/Attribute:finalclass' => 'Type',
 	'Class:Event/Attribute:finalclass+' => '',
 ));
@@ -352,14 +359,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventNotification' => 'Notificatie van het event',
-	'Class:EventNotification+' => 'Spoor van de notificatie die is verstuurd',
+	'Class:EventNotification' => 'Gebeurtenis - melding',
+	'Class:EventNotification+' => 'Historiek van de melding die getriggerd werd',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'gebruikersaccount',
-	'Class:EventNotification/Attribute:action_id' => 'gebruiker',
-	'Class:EventNotification/Attribute:action_id+' => 'gebruikersaccount',
-	'Class:EventNotification/Attribute:object_id' => 'Object id',
-	'Class:EventNotification/Attribute:object_id+' => 'object id (klasse gedefineerd door de trigger?)',
+	'Class:EventNotification/Attribute:trigger_id+' => 'De trigger die de melding veroorzaakte',
+	'Class:EventNotification/Attribute:action_id' => 'Gebruiker',
+	'Class:EventNotification/Attribute:action_id+' => 'De gebruiker die de melding veroorzaakte',
+	'Class:EventNotification/Attribute:object_id' => 'ID object',
+	'Class:EventNotification/Attribute:object_id+' => 'ID object (klasse gedefineerd door de trigger)',
 ));
 
 //
@@ -367,8 +374,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventNotificationEmail' => 'E-mail emission event',
-	'Class:EventNotificationEmail+' => 'Spoor van de e-mail die is verstuurd',
+	'Class:EventNotificationEmail' => 'Gebeurtenis - versturen van e-mail',
+	'Class:EventNotificationEmail+' => 'Historiek van de e-mail die verstuurd is',
 	'Class:EventNotificationEmail/Attribute:to' => 'Aan',
 	'Class:EventNotificationEmail/Attribute:to+' => 'Aan',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
@@ -390,19 +397,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventIssue' => 'Probleem van het event',
-	'Class:EventIssue+' => 'Log van een probleem (waarschuwing, fout, etc.)',
+	'Class:EventIssue' => 'Gebeurtenis - probleem',
+	'Class:EventIssue+' => 'Log van een probleem (waarschuwing, fout, ...)',
 	'Class:EventIssue/Attribute:issue' => 'Probleem',
-	'Class:EventIssue/Attribute:issue+' => 'Wat er gebeurde',
+	'Class:EventIssue/Attribute:issue+' => 'Wat er gebeurd is',
 	'Class:EventIssue/Attribute:impact' => 'Impact',
-	'Class:EventIssue/Attribute:impact+' => 'Wat zijn de gevolgen',
+	'Class:EventIssue/Attribute:impact+' => 'Wat de gevolgen zijn',
 	'Class:EventIssue/Attribute:page' => 'Pagina',
 	'Class:EventIssue/Attribute:page+' => 'HTTP entry point',
 	'Class:EventIssue/Attribute:arguments_post' => 'POST-argumenten',
 	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST-argumenten',
 	'Class:EventIssue/Attribute:arguments_get' => 'URL-argumenten',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET-argumenten',
-	'Class:EventIssue/Attribute:callstack' => 'Callstack',
+	'Class:EventIssue/Attribute:callstack' => 'Call stack',
 	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'Meer informatie',
@@ -413,12 +420,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventWebService' => 'Web service event',
+	'Class:EventWebService' => 'Gebeurtenis - web service',
 	'Class:EventWebService+' => 'Log van een webservice-aanroep',
 	'Class:EventWebService/Attribute:verb' => 'Werkwoord',
 	'Class:EventWebService/Attribute:verb+' => 'Naam van de handeling',
 	'Class:EventWebService/Attribute:result' => 'Resultaat',
-	'Class:EventWebService/Attribute:result+' => 'Totaal succes/falen',
+	'Class:EventWebService/Attribute:result+' => 'Succes/falen',
 	'Class:EventWebService/Attribute:log_info' => 'Infolog',
 	'Class:EventWebService/Attribute:log_info+' => 'Resultaat infolog',
 	'Class:EventWebService/Attribute:log_warning' => 'Waarschuwingslog',
@@ -430,7 +437,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventRestService' => 'REST/JSON aanroep',
+	'Class:EventRestService' => 'Gebeurtenis - REST/JSON API-aanroep',
 	'Class:EventRestService+' => 'Log van een aangeroepen REST/JSON-service',
 	'Class:EventRestService/Attribute:operation' => 'Handeling',
 	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
@@ -451,7 +458,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:EventLoginUsage' => 'Gebruik van logins',
+	'Class:EventLoginUsage' => 'Gebeurtenis - gebruik van login',
 	'Class:EventLoginUsage+' => 'Verbinding met de applicatie',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
 	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
@@ -466,21 +473,21 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Action' => 'Custom Actie',
+	'Class:Action' => 'Actie',
 	'Class:Action+' => 'Door gebruiker gedefinieerde actie',
 	'Class:Action/Attribute:name' => 'Naam',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Beschrijving',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'In productie of ?',
+	'Class:Action/Attribute:status+' => 'De status van deze actie',
 	'Class:Action/Attribute:status/Value:test' => 'Wordt getest',
 	'Class:Action/Attribute:status/Value:test+' => 'Wordt getest',
 	'Class:Action/Attribute:status/Value:enabled' => 'In productie',
 	'Class:Action/Attribute:status/Value:enabled+' => 'In productie',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactief',
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inactief',
-	'Class:Action/Attribute:trigger_list' => 'Verwante Triggers',
+	'Class:Action/Attribute:trigger_list' => 'Gerelateerde triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers gelinkt aan deze actie',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
@@ -491,8 +498,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ActionNotification' => 'Notificatie',
-	'Class:ActionNotification+' => 'Notificatie (abstract)',
+	'Class:ActionNotification' => 'Melding',
+	'Class:ActionNotification+' => 'Melding (abstract)',
 ));
 
 //
@@ -500,7 +507,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ActionEmail' => 'E-mail notificatie',
+	'Class:ActionEmail' => 'E-mailmelding',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
@@ -534,13 +541,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger' => 'Trigger',
-	'Class:Trigger+' => 'Custom event handler',
+	'Class:Trigger+' => 'Aanleiding tot het uitvoeren van een actie',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',
 	'Class:Trigger/Attribute:description+' => 'Beschrijving in één regel',
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',
 	'Class:Trigger/Attribute:action_list+' => 'Acties uitgevoerd nadat de trigger is geactiveerd',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -631,8 +640,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnThresholdReached' => 'Trigger (op drempelwaarde)',
-	'Class:TriggerOnThresholdReached+' => 'Trigger op Stop-Watch drempelwaarde bereikt',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch',
+	'Class:TriggerOnThresholdReached+' => 'Trigger op Stopwatch drempelwaarde bereikt',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopwatch',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Drempelwaarde',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
@@ -643,7 +652,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkTriggerAction' => 'Actie/Trigger',
+	'Class:lnkTriggerAction' => 'Link Actie / Trigger',
 	'Class:lnkTriggerAction+' => 'Link tussen een trigger en een actie',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Actie',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'De actie die moet worden uitgevoerd',
@@ -665,36 +674,36 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:name+' => 'Naam',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschrijving',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
-	'Class:SynchroDataSource/Attribute:scope_class' => 'Target klasse',
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Doelklasse',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Gebruiker',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Verwittig dit contact',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Verwittig dit contact',
-	'Class:SynchroDataSource/Attribute:url_icon' => 'Hyperlink van de Icoon',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink een (kleine) afbeelding die de applicatie waarmee iTop is gesynchroniseerd',
-	'Class:SynchroDataSource/Attribute:url_application' => 'Hyperlink van de applicatie',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink naar het iTop object in de externe applicatie waarmee iTop is gesynchroniseerd (indien van toepassing). Mogelijke procurators: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'Pictogram (hyperlink)',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink een pictogram die de applicatie voorstelt waarmee wordt gesynchroniseerd',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Applicatie (hyperlink)',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink naar de externe applicatie waarmee wordt gesynchroniseerd (indien van toepassing). Beschikbare plaatshouders: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation-beleid',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Vernieuwingsinterval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Het volledige herladen van alle data moet minstens om deze tijd gebeuren.',
-	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Actie op nul',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Actie bij nul',
 	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Actie die wordt ondernomen wanneer de zoekopdracht geen object geeft',
-	'Class:SynchroDataSource/Attribute:action_on_one' => 'Actie op één',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Actie bij één',
 	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Action die wordt ondernomen wanneer de zoekopdracht precies één object geeft',
-	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Actie op meerdere',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Actie bij meerdere',
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Actie die wordt ondernomen wanneer de zoekopdracht meerdere objecten geeft',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Gebruikers toegestaan',
-	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Wie is geautoriseerd om gesynchroniseerde objecten te verwijderen',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Toegestane gebruikers',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'De gebruikers die geautoriseerd zijn om gesynchroniseerde objecten te verwijderen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Niemand',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Alleen administrators',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Alleen beheerders',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Alle geautoriseerde gebruikers',
 	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Updateregels',
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Syntax: field_name:value; ...',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Retentietijd',
-	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Hoe lang een overbodig object wordt bewaard voordat deze wordt verwijderd',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Hoe lang een overbodig object wordt bewaard voordat het wordt verwijderd',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Datatabel',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Naam van de tabel waarin de gesynchroniseerde data wordt opgeslagen. Wanneer deze wordt leeggelaten zal een standaard naam worden opgegeven.',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Naam van de tabel waarin de gesynchroniseerde data wordt opgeslagen. Als deze wordt leeggelaten, dan zal een standaard naam worden opgegeven.',
 	'SynchroDataSource:Description' => 'Beschrijving',
-	'SynchroDataSource:Reconciliation' => 'Search &amp; reconciliation',
+	'SynchroDataSource:Reconciliation' => 'Zoeken &amp; reconciliation',
 	'SynchroDataSource:Deletion' => 'Regels voor het verwijderen',
 	'SynchroDataSource:Status' => 'Status',
 	'SynchroDataSource:Information' => 'Informatie',
@@ -712,7 +721,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:SynchroReconcile:No' => 'Nee',
 	'Core:SynchroUpdate:Yes' => 'Ja',
 	'Core:SynchroUpdate:No' => 'Nee',
-	'Core:Synchro:LastestStatus' => 'Laatste Status',
+	'Core:Synchro:LastestStatus' => 'Meest recente status',
 	'Core:Synchro:History' => 'Synchronisatiegeschiedenis',
 	'Core:Synchro:NeverRun' => 'Deze synchro heeft nog niet gelopen. Er is nog geen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'De laatste synchronisatie eindigde op %1$s.',
@@ -738,12 +747,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:Nb_Replica' => 'Replica verwerkt: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
 	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Tenminste één reconciliation-sleutel (key) moet worden opgegeven, of de reconciliation policy moet zijn dat de primaire sleutel (key) wordt gebruikt.',
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Een retention period voor het verwijderen moet worden opgegeven, omdat alle objecten verwijderd worden nadat ze gemarkeerd zijn als overbodig',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Een retentieperiode voor het verwijderen moet worden opgegeven, omdat alle objecten verwijderd worden nadat ze gemarkeerd zijn als overbodig',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Overbodige objecten moeten worden geüpdatet, maar er is geen update opgegeven.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'De tabel %1$s bestaat al in de database. Gebruik een andere naam voor deze synchro-datatabel.',
-	'Core:SynchroReplica:PublicData' => 'Publieke Data',
-	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
-	'Core:SynchroReplica:BackToDataSource' => 'Ga terug naar de Synchro Data Source: %1$s',
+	'Core:SynchroReplica:PublicData' => 'Publieke data',
+	'Core:SynchroReplica:PrivateDetails' => 'Privéetails',
+	'Core:SynchroReplica:BackToDataSource' => 'Ga terug naar de Synchronisatie-databron: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'Lijst van Replica',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primaire sleutel)',
 	'Core:SynchroAtt:attcode' => 'Attribuut',
@@ -782,7 +791,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Vorige waarde',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Meest recente invoer',
-	'Class:SynchroDataSource' => 'Synchro Databron',
+	'Class:SynchroDataSource' => 'Synchronisatie-databron',
 	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementatie',
 	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Overbodig',
 	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Productie',
@@ -806,7 +815,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Iedereen mag deze objecten verwijderen',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Niemand',
 	'Class:SynchroAttribute' => 'Synchro Attribuut',
-	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchro Databron',
+	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Synchronisatie-databron',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Attribuutcode',
 	'Class:SynchroAttribute/Attribute:update' => 'Update',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
@@ -821,7 +830,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroAttLinkSet/Attribute:row_separator' => 'Scheidingsteken rijen',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator' => 'Scheidingsteken attributen',
 	'Class:SynchroLog' => 'Synchronisatielog',
-	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchro Databron',
+	'Class:SynchroLog/Attribute:sync_source_id' => 'Synchronisatie-databron',
 	'Class:SynchroLog/Attribute:start_date' => 'Begindatum',
 	'Class:SynchroLog/Attribute:end_date' => 'Einddatum',
 	'Class:SynchroLog/Attribute:status' => 'Status',
@@ -845,9 +854,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroLog/Attribute:last_error' => 'Laatste foutmelding',
 	'Class:SynchroLog/Attribute:traces' => 'Logs',
 	'Class:SynchroReplica' => 'Synchro Replica',
-	'Class:SynchroReplica/Attribute:sync_source_id' => 'Synchro Databron',
-	'Class:SynchroReplica/Attribute:dest_id' => 'Bestemming van het object (ID)',
-	'Class:SynchroReplica/Attribute:dest_class' => 'Type bestemming',
+	'Class:SynchroReplica/Attribute:sync_source_id' => 'Synchronisatie-databron',
+	'Class:SynchroReplica/Attribute:dest_id' => 'Doelobject (ID)',
+	'Class:SynchroReplica/Attribute:dest_class' => 'Doelklasse',
 	'Class:SynchroReplica/Attribute:status_last_seen' => 'Laatst gezien',
 	'Class:SynchroReplica/Attribute:status' => 'Status',
 	'Class:SynchroReplica/Attribute:status/Value:modified' => 'Aangepast',
@@ -917,12 +926,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:OptionFormattedText' => 'Behoud tekstopmaak',
 	'Core:BulkExport:ScopeDefinition' => 'Definitie van de te exporteren objecten',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook invoer:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Favoriete query:',
 	'Core:BulkExportMessageEmptyOQL' => 'Gelieve een geldige OQL-query op te geven.',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Gelieve een geldige Phrasebook-invoer op te geven',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Gelieve een geldige favoriete query op te geven',
 	'Core:BulkExportQueryPlaceholder' => 'Typ hier een OQL-query...',
-	'Core:BulkExportCanRunNonInteractive' => 'Klik hier om de export uit te voeren in non-interactieve mode',
-	'Core:BulkExportLegacyExport' => 'Klik hier om de oude export te gebruiken',
+	'Core:BulkExportCanRunNonInteractive' => 'Voer de export uit in non-interactieve mode',
+	'Core:BulkExportLegacyExport' => 'Gebruik oude export-methode',
 	'Core:BulkExport:XLSXOptions' => 'Opties voor Excel',
 	'Core:BulkExport:TextFormat' => 'Tekstvelden die HTML-opmaak bevatten',
 	'Core:BulkExport:DateTimeFormat' => 'Datum- en tijdformaat',

@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
@@ -28,13 +29,17 @@ use UserRights;
 use utils;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Renderer\FieldRenderer;
-use Combodo\iTop\Renderer\RenderingOutput;
 
+/**
+ * Class ConsoleSimpleFieldRenderer
+ *
+ * @author Romain Quetiez <romain.quetiez@combodo.com>
+ */
 class ConsoleSimpleFieldRenderer extends FieldRenderer
 {
 	public function Render()
 	{
-		$oOutput = new RenderingOutput();
+		$oOutput = parent::Render();
 		$sFieldClass = get_class($this->oField);
 
 		if ($sFieldClass == 'Combodo\\iTop\\Form\\Field\\HiddenField')
@@ -102,7 +107,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 							$oOutput->AddJs(
 <<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage'});
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'});
 EOF
 							);
 							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))

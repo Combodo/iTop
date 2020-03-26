@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
 	<constants>
 		<constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
-		<constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
-		<constant id="PORTAL_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_SERVICE_SUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory WHERE service_id = :svc_id AND ServiceSubcategory.status != 'obsolete']]></constant>
-		<constant id="PORTAL_VALIDATE_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id AND Sub.status != 'obsolete']]></constant>
-		<constant id="PORTAL_ALL_PARAMS" xsi:type="string" _delta="define"><![CDATA[from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,emergency,moreinfo,caller_id,start_date,end_date,duration,impact_duration]]></constant>
-		<constant id="PORTAL_SET_TYPE_FROM" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-		<constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_FILTER_service_id" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_FILTER_caller_id" xsi:type="string" _delta="define"><![CDATA[SELECT Person WHERE org_id = :org_id]]></constant>
 	</constants>
 	<classes>
 		<class id="Ticket" _delta="define">
@@ -53,6 +42,14 @@
 				   </attributes>
 				 </index>
 				</indexes>
+				<uniqueness_rules>
+					<rule id="ref">
+						<attributes>
+							<attribute id="ref"/>
+						</attributes>
+						<is_blocking>false</is_blocking>
+					</rule>
+				</uniqueness_rules>
 			</properties>
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
@@ -205,13 +202,10 @@
 					<code><![CDATA[
     public function DBInsertNoReload()
     {
-          $oMutex = new iTopMutex('ticket_insert');
-          $oMutex->Lock();
-          $iNextId = MetaModel::GetNextKey(get_class($this));
+          $iNextId = ItopCounter::IncClass(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
-          $this->Set('ref', $sRef);
+          $this->SetIfNull('ref', $sRef);
           $iKey = parent::DBInsertNoReload();
-          $oMutex->Unlock();
           return $iKey;
     }
         ]]></code>
@@ -223,31 +217,18 @@
 					<code><![CDATA[
         protected function MakeTicketRef($iNextId)
         {
-                switch(get_class($this))
-                {
-                        case 'UserRequest':
-                        $sFormat = 'R-%06d';
-                        break;
-
-                        case 'Incident':
-                        $sFormat = 'I-%06d';
-                        break;
-
-                        case 'Change':
-                        case 'RoutineChange':
-                        case 'EmergencyChange':
-                        case 'NormalChange':
-                        $sFormat = 'C-%06d';
-                        break;
-
-                        case 'Problem':
-                        $sFormat = 'P-%06d';
-                        break;
-
-                        default:
-                        $sFormat = 'T-%06d';
-                }
-                return sprintf($sFormat, $iNextId);
+                return sprintf(static::GetTicketRefFormat(), $iNextId);
+        }
+        ]]></code>
+				</method>
+				<method id="GetTicketRefFormat">
+					<static>true</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+        public static function GetTicketRefFormat()
+        {
+                return 'T-%06d';
         }
         ]]></code>
 				</method>
@@ -1062,7 +1043,8 @@
 				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
 				<!-- Available templates are id="layout|home" -->
 				<templates/>
-				<!-- Class used for generating objects view/edit urls (eg. in notifications) -->
+				<!-- Class used for generating objects view/edit urls (eg. in linked sets). -->
+				<!-- Note: Notification placeholders are NOT using this but the "DBObject::RegisterURLMakerClass(<PORTAL_ID>, <CLASS_NAME>)" declarations. -->
 				<urlmaker_class>iTopPortalViewUrlMaker</urlmaker_class>
 				<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
 				<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
@@ -1086,16 +1068,16 @@
 						<default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
 					</title>
 					<decoration_class>
-						<default>fa fa-user fa-2x</default>
+						<default>fas fa-user fa-2x</default>
 					</decoration_class>
 					<!-- Show / hide some of the user profile forms by setting the tag value to true|false -->
 					<!--<show_picture_form>true</show_picture_form>-->
 					<!--<show_preferences_form>true</show_preferences_form>-->
 					<!--<show_password_form>true</show_password_form>-->
 					<form>
-						<!-- Optionnal tag to list the fields. If empty only fields from <twig> tag will be displayed, if ommited fields from zlist details will. -->
+						<!-- Optional tag to list the fields. If empty only fields from <twig> tag will be displayed, if omitted fields from zlist details will. -->
 						<fields />
-						<!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+						<!-- Optional tag to specify the form layout. Fields that are not positioned in the layout will be placed at the end of the form -->
 						<twig>
 							<!-- data-field-id attribute must be an attribute code of the class -->
 							<!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
@@ -1177,10 +1159,12 @@
 													<!-- (eg. \Ticket::FromServiceSubcategory($oOrigin) that should return either a UserRequest or Incident regarding the request type) -->
 													<class>UserRequest</class>
 													<!-- Optional tag that can be used on any action type -->
-													<!--<title>Créer un ticket</title>-->
+													<!--<title>Create a ticket</title>-->
 													<!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
 													<!--<opening_target>modal</opening_target>-->
 													<icon_class>fc fc-new-request fc-1-6x fc-flip-horizontal</icon_class>
+													<!-- Optional tag to order actions -->
+													<!--<rank>1</rank>-->
 													<rules>
 														<rule id="contact-to-userrequest"/>
 														<rule id="servicesubcategory-to-userrequest"/>
@@ -1204,8 +1188,10 @@
 						</availables>
 						<default>list</default>
 					</browse_modes>
+					<!-- Optional. Set the default number of item lists will display. -->
+					<!-- <default_list_length>20</default_list_length> -->
 					<data_loading>auto</data_loading>
-					<!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
+					<!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressively at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
 				</brick>
 				<brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
 					<active>true</active>
@@ -1259,10 +1245,12 @@
 							<!--<attribute>operational_status</attribute>-->
 							<!-- attribute xor groups tag -->
 							<groups>
-								<!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambigious for the generated query. -->
+								<!-- Can be used only with ../oql tag, not ../class tag. Reason is that we can't know the class alias to apply to the condition's fields. We might have an exception saying that the field in ambiguous for the generated query. -->
 								<group id="opened">
 									<rank>1</rank>
 									<title>Brick:Portal:OngoingRequests:Tab:OnGoing</title>
+									<!-- Optional. A string or dictionary entry to display under the page title for this tab -->
+									<!-- <description>Brick:Portal:OngoingRequests:Tab:OnGoing+</description> -->
 									<condition><![CDATA[SELECT Ticket AS T WHERE operational_status NOT IN ('closed', 'resolved')]]></condition>
 								</group>
 								<group id="resolved">
@@ -1274,6 +1262,8 @@
 						</tabs>
 						<!-- Implicit grouping on y axis by finalclass -->
 					</grouping>
+					<!-- Optional. Set the default number of item lists will display. -->
+					<!-- <default_list_length>20</default_list_length> -->
 					<data_loading>full</data_loading>
 					<export>
             			<export_default_fields>true</export_default_fields>
@@ -1385,6 +1375,13 @@
 				</form>
 				<form id="ticket-create">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+							<submit>
+								<default>go-to-open-requests</default>
+							</submit>
+						</navigation_rules>
+					</properties>
 					<fields />
 					<twig>
 						<div class="row">
@@ -1426,10 +1423,18 @@
 				<form id="ticket-edit">
 					<class>Ticket</class>
 					<properties>
-						<!--Display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
+						<!-- Optional, display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side
+						layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
 						<!--<display_mode>cosy</display_mode>-->
-						<!-- When set to false, submit button is hidden when transitions are available on the object (in creation and edit mode). Default is false. -->
+						<!-- Optional, when set to false, submit button is hidden when transitions are available on the object (in creation and edit
+						mode). Default is false. -->
 						<!--<always_show_submit>false</always_show_submit>-->
+						<!-- Optional, navigation rules to define where to go when clicking on the submit/cancel buttons of the form -->
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
 					</properties>
 					<fields></fields>
 					<twig>
@@ -1487,6 +1492,13 @@
 				</form>
 				<form id="ticket-reopen">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
+					</properties>
 					<fields />
 					<twig>
 						<div>
@@ -1505,6 +1517,13 @@
 				</form>
 				<form id="ticket-apply-stimulus">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
+					</properties>
 					<fields />
 					<twig />
 					<modes>
@@ -1664,17 +1683,55 @@
 						<preset id="2">copy(service_id, service_id)</preset>
 					</presets>
 				</action_rule>
+				<!-- Deprecated, will be removed in iTop 2.8 -->
 				<action_rule id="go-to-open-request-on-submit">
 					<submit xsi:type="goto">
 						<brick>ongoing-tickets-for-portal-user</brick>
 					</submit>
 				</action_rule>
 			</action_rules>
-		</module_design>
-	</module_designs>
-	<module_parameters>
-		<parameters id="itop-portal" _delta="define">
-			<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+			<navigation_rules>
+				<!-- Close form (either the modal or the whole page) -->
+				<navigation_rule id="close-form" xsi:type="close" />
+				<!-- Go to the homepage -->
+				<navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" />
+				<!-- Open a manage brick (simple method) -->
+				<navigation_rule id="go-to-open-requests" xsi:type="go-to-manage-brick">
+					<!-- Mandatory, ID of the ManageBrick to go to -->
+					<id>ongoing-tickets-for-portal-user</id>
+					<!-- Optional, must be an ID of the available display modes of the brick (//brick/display_modes/availables/mode) -->
+					<!-- <display_mode>list</mode> -->
+					<!-- Optional, must be an ID of the grouping tab of the brick (//brick/grouping/tabs/groups/group)-->
+					<!-- <grouping_tab>resolved</grouping_tab> -->
+					<!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+					<!-- <filter>:this->caller_id_friendlyname</filter> -->
+				</navigation_rule>
+				<!-- Open a browse brick -->
+				<navigation_rule id="go-to-services" xsi:type="go-to-browse-brick">
+				 <!-- Mandatory, ID of the BrowseBrick to go to -->
+				 <id>services</id>
+				 <!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
+				 <!-- <browse_mode>tree</browse_mode> -->
+				 <!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+				 <!-- <filter>computer</filter> -->
+				</navigation_rule>
+				<!-- Open a brick, developer method -->
+				<!-- <navigation_rule id="go-to-open-requests-alternate-way" xsi:type="go-to-brick"> -->
+					<!-- <route> -->
+						<!-- <id>p_manage_brick_display_as</id> -->
+						<!-- <params> -->
+							<!-- <param id="sBrickId">ongoing-tickets-for-portal-user</param> -->
+							<!-- <param id="sDisplayMode">pie-chart</param> -->
+							<!-- <param id="sGroupingTab">resolved</param> -->
+							<!-- </params> -->
+					<!-- </route> -->
+				<!-- </navigation_rule> -->
+</navigation_rules>
+</module_design>
+</module_designs>
+<module_parameters>
+<parameters id="itop-portal" _delta="define">
+<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
 		</parameters>
 	</module_parameters>
 </itop_design>

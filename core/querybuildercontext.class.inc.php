@@ -31,10 +31,24 @@ class QueryBuilderContext
 	protected $m_aModifierProperties;
 	protected $m_aSelectedClasses;
 	protected $m_aFilteredTables;
+	protected $m_sEmptyClassAlias;
 
+	/** @var \QueryBuilderExpressions */
 	public $m_oQBExpressions;
 
-	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
+	/**
+	 * QueryBuilderContext constructor.
+	 *
+	 * @param $oFilter
+	 * @param $aModifierProperties
+	 * @param array $aGroupByExpr
+	 * @param array $aSelectedClasses
+	 * @param array $aSelectExpr
+	 * @param array $aAttToLoad
+	 *
+	 * @throws \CoreException
+	 */
+	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null, $aAttToLoad = null)
 	{
 		$this->m_oRootFilter = $oFilter;
 		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter, $aGroupByExpr, $aSelectExpr);
@@ -52,6 +66,37 @@ class QueryBuilderContext
 		{
 			// For the unions, the selected classes can be upper in the hierarchy (lowest common ancestor)
 			$this->m_aSelectedClasses = $aSelectedClasses;
+		}
+
+		// Add all the attribute of interest
+		foreach ($this->m_aSelectedClasses as $sClassAlias => $sClass)
+		{
+			$sTableAlias = $sClassAlias;
+			if (empty($sTableAlias))
+			{
+				$sTableAlias = $this->GenerateClassAlias("$sClass", $sClass);
+				$this->m_sEmptyClassAlias = $sTableAlias;
+			}
+			// default to the whole list of attributes + the very std id/finalclass
+			$this->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sTableAlias));
+			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
+			{
+				$sSelectedClass = $this->GetSelectedClass($sClassAlias);
+				$aAttList = MetaModel::ListAttributeDefs($sSelectedClass);
+			}
+			else
+			{
+				$aAttList = $aAttToLoad[$sClassAlias];
+			}
+			foreach ($aAttList as $sAttCode => $oAttDef)
+			{
+				if (!$oAttDef->IsScalar())
+				{
+					continue;
+				}
+				$oExpression = new FieldExpression($sAttCode, $sTableAlias);
+				$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, $oExpression);
+			}
 		}
 	}
 
@@ -103,4 +148,14 @@ class QueryBuilderContext
 	{
 		return $this->m_aFilteredTables;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetEmptyClassAlias()
+	{
+		return $this->m_sEmptyClassAlias;
+	}
+
+
 }

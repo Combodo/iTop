@@ -1,6 +1,9 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -15,69 +18,72 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ *
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
 // Database inconsistencies
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools~~',
-	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => 'Database Maintenance Tools~~',
-	'DBTools:ErrorsFound' => 'Errors Found~~',
-	'DBTools:Error' => 'Error~~',
-	'DBTools:Count' => 'Count~~',
-	'DBTools:SQLquery' => 'SQL query~~',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL result~~',
-	'DBTools:NoError' => 'The database is OK~~',
-	'DBTools:HideIds' => 'Error List~~',
-	'DBTools:ShowIds' => 'Detailed view~~',
-	'DBTools:ShowReport' => 'Report~~',
-	'DBTools:IntegrityCheck' => 'Integrity check~~',
-	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'Menu:DBToolsMenu' => 'Databasetools',
+	'DBTools:Class' => 'Klasse',
+	'DBTools:Title' => 'Onderhoudstools voor de database',
+	'DBTools:ErrorsFound' => 'Fouten gevonden',
+	'DBTools:Error' => 'Fout',
+	'DBTools:Count' => 'Aantal',
+	'DBTools:SQLquery' => 'SQL-query',
+	'DBTools:FixitSQLquery' => 'SQL-query die mogelijk het probleem verhelpt',
+	'DBTools:SQLresult' => 'Resultaat SQL-query',
+	'DBTools:NoError' => 'De database is OK',
+	'DBTools:HideIds' => 'Overzicht fouten',
+	'DBTools:ShowIds' => 'Gedetailleerde weergave',
+	'DBTools:ShowReport' => 'Rapport',
+	'DBTools:IntegrityCheck' => 'Integriteitscheck',
+	'DBTools:FetchCheck' => 'Opvraag-check (fetch) (long)',
 
-	'DBTools:Analyze' => 'Analyze~~',
-	'DBTools:Details' => 'Show Details~~',
-	'DBTools:ShowAll' => 'Show All Errors~~',
+	'DBTools:Analyze' => 'Analyseer',
+	'DBTools:Details' => 'Toon details',
+	'DBTools:ShowAll' => 'Toon alle fouten',
 
-	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
+	'DBTools:Inconsistencies' => 'Inconsistenties in database',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all~~',
-	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Wees-record in "%1$s", het zou een verwant record moeten hebben in de tabel "%2$s"',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Ongeldige externe sleutel %1$s (kolom: "%2$s.%3$s")',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Ontbrekende externe sleutel %1$s (kolom: "%2$s.%3$s")',
+	'DBAnalyzer-Integrity-InvalidValue' => 'Ongeldige waarde voor %1$s (kolom: "%2$s.%3$s")',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Sommige gebruikersaccounts hebben geen profiel',
+	'DBAnalyzer-Fetch-Count-Error' => 'Opvraag-fout in "%1$s", %2$d records opgevraagd / %3$d geteld',
 ));
 
 // Database Info
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'DBTools:DatabaseInfo' => 'Database Information~~',
-	'DBTools:Base' => 'Base~~',
-	'DBTools:Size' => 'Size~~',
+	'DBTools:DatabaseInfo' => 'Database-informatie',
+	'DBTools:Base' => 'Base',
+	'DBTools:Size' => 'Grootte',
 ));
 
 // Lost attachments
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'DBTools:LostAttachments' => 'Lost attachments~~',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => 'Verloren bijlages',
+	'DBTools:LostAttachments:Disclaimer' => 'Zoek hier verloren or verkeerd geplaatste bijlages. Dit is geen recovery-tool, het kan geen gewiste data herstellen.',
 
-	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
-	'DBTools:LostAttachments:Button:Restore' => 'Restore~~',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.~~',
-	'DBTools:LostAttachments:Button:Busy' => 'Please wait...~~',
+	'DBTools:LostAttachments:Button:Analyze' => 'Analyseer',
+	'DBTools:LostAttachments:Button:Restore' => 'Herstel',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Deze actie kan niet ongedaan worden gemaakt. Bevestig dat je de bijlages wil herstellen.',
+	'DBTools:LostAttachments:Button:Busy' => 'Even geduld...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => 'Zoek eerst verloren/verkeerd geplaatste bijlages door de database te analyseren.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultaten analyse:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Perfect, alles lijkt op de juiste plaats te staan!',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Somme bijlages (%1$d) lijken verkeerd te staan. Overloop de lijst en duid aan welke je wil verplaatsen.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Bestandsnaam',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Huidige locatie',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Verplaats naar ...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultaten herstel:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d bijlages werden hersteld.',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Opgeslagen als afbeelding in tekst',
+	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools'
 ));

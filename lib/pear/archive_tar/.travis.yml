@@ -1,0 +1,37 @@
+sudo: false
+language: php
+matrix:
+  include:
+  - php: 5.2
+    dist: precise
+  - php: 5.3
+    dist: precise
+  - php: 5.4
+    dist: trusty
+  - php: 5.5
+    dist: trusty
+  - php: 5.6
+    dist: trusty
+  - php: 7.0
+    dist: trusty
+  - php: 7.1
+    dist: trusty
+  - php: 7.2
+    dist: trusty
+  - php: 7.3
+    dist: trusty
+  - php: 7.4snapshot
+  - php: master
+
+jobs:
+  allow_failures:
+    - php: 7.4snapshot
+    - php: master
+
+install:
+#  - pear upgrade --force --alldeps pear/pear
+  - pear install -f package.xml
+script:
+  - pear version
+  - pear run-tests -qr tests/
+  - for i in `find tests/ -name '*.out'`; do echo "$i"; cat "$i"; done

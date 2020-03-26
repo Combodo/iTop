@@ -84,7 +84,7 @@ $(function()
 		backup: function()
 		{
 			var me = this;
-			$('#hub-installation-progress-text').html('<i class="fa fa-database"></i> '+this.options.labels.database_backup);
+			$('#hub-installation-progress-text').html('<i class="fas fa-database"></i> '+this.options.labels.database_backup);
 			$.post(this.options.self_url, {operation: 'do_backup'}, function(data) { me._on_backup(data) }, 'json');						
 		},
 		_on_backup: function(data)
@@ -102,7 +102,7 @@ $(function()
 		},
 		compile: function()
 		{
-			$('#hub-installation-progress-text').html('<i class="fa fa-cogs"></i> '+this.options.labels.extensions_installation);
+			$('#hub-installation-progress-text').html('<i class="fas fa-cogs"></i> '+this.options.labels.extensions_installation);
 			var me = this;
 			var aExtensionCodes = [];
 			var aExtensionDirs = [];
@@ -124,7 +124,7 @@ $(function()
 		},
 		move_to_prod: function()
 		{
-			$('#hub-installation-progress-text').html('<i class="fa fa-cogs"></i> '+this.options.labels.extensions_installation);
+			$('#hub-installation-progress-text').html('<i class="fas fa-cogs"></i> '+this.options.labels.extensions_installation);
 			var me = this;
 			$.post(this.options.self_url, {operation: 'move_to_production', authent: this.options.authent}, function(data) { me._on_move_to_prod(data) }, 'json');
 		},
@@ -133,7 +133,7 @@ $(function()
 			if (data.code == 0)
 			{
 				this._reportSuccess(data.message);
-				$('#hub-installation-progress-text').html('<i class="fa fa-trophy"></i> '+this.options.labels.installation_successful);
+				$('#hub-installation-progress-text').html('<i class="fas fa-trophy"></i> '+this.options.labels.installation_successful);
 				// Report the installation status to iTop Hub
 				$('#at_the_end').append('<iframe style="border:0; width:200px; height: 20px;" src="'+this.options.iframe_url+'">Support of IFRAMES required, sorry</iframe>');
 				if (this.options.redirect_after_completion_url != '')
@@ -171,7 +171,7 @@ $(function()
 		},
 		_reportError: function(sMessage)
 		{
-			$('#hub-installation-progress-text').html('<span style="color:red; font-size:12pt; line-height:18pt;"><i class="fa fa-exclamation-triangle"></i> '+this.options.labels.rollback+'</span><br/><span style="color:#666; display:block; padding:10px;max-height:10em; overflow: auto;padding-top:0; margin-top:10px; text-align:left;">'+sMessage+'</span>');
+			$('#hub-installation-progress-text').html('<span style="color:red; font-size:12pt; line-height:18pt;"><i class="fas'+' fa-exclamation-triangle"></i> '+this.options.labels.rollback+'</span><br/><span style="color:#666; display:block; padding:10px;max-height:10em; overflow: auto;padding-top:0; margin-top:10px; text-align:left;">'+sMessage+'</span>');
 			$('#hub_start_installation').val('Go Back to iTop');
 			$('#hub_start_installation').prop('disabled', false);
 			$('#hub-installation-progress').hide();

@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 
 /**
@@ -24,7 +25,7 @@
  * \MFCompiler::CompileClass).<br> Only this abstract class will exists in the DB : the implementations won't had any
  * new field.
  *
- * @since 2.6 N°931 tag fields
+ * @since 2.6.0 N°931 tag fields
  */
 abstract class TagSetFieldData extends cmdbAbstractObject
 {
@@ -183,7 +184,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		}
 
 		// Check that the code is not a MySQL stop word
-		$sSQL = "SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD";
+		$sSQL = "SELECT value FROM information_schema.INNODB_FT_DEFAULT_STOPWORD";
 		try
 		{
 			$aResults = CMDBSource::QueryToArray($sSQL);
@@ -318,7 +319,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oFilter);
 			$iCount = $oSet->Count();
-			$oPage->SetCurrentTab(Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
+			$oPage->SetCurrentTab('Core:TagSetFieldData:WhereIsThisTagTab', Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
 
 			if ($iCount === 0)
 			{

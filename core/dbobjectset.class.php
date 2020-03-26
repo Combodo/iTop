@@ -89,7 +89,8 @@ class DBObjectSet implements iDBObjectSetIterator
      * @api
 	 * 
 	 * @param DBSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
-	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending (true for ASC, false, for DESC)
+	 *    Example : array('name' => true, 'id' => false)
 	 * @param array $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
 	 * @param array $aExtendedDataSpec
 	 * @param int $iLimitCount Maximum number of rows to load (i.e. equivalent to MySQL's LIMIT start, count)
@@ -217,73 +218,81 @@ class DBObjectSet implements iDBObjectSetIterator
      */
 	public function OptimizeColumnLoad($aAttToLoad)
 	{
-		if (is_null($aAttToLoad))
+		// Check that the structure is an array of array
+		if (!is_array($aAttToLoad))
 		{
 			$this->m_aAttToLoad = null;
+			return;
 		}
-		else
+		foreach ($aAttToLoad as $sAlias => $aAttCodes)
 		{
-			// Complete the attribute list with the attribute codes
-			$aAttToLoadWithAttDef = array();
-			foreach($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+			if (!is_array($aAttCodes))
 			{
-				$aAttToLoadWithAttDef[$sClassAlias] = array();
-				if (array_key_exists($sClassAlias, $aAttToLoad))
+				$this->m_aAttToLoad = null;
+				return;
+			}
+		}
+
+		// Complete the attribute list with the attribute codes
+		$aAttToLoadWithAttDef = array();
+		foreach($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aAttToLoadWithAttDef[$sClassAlias] = array();
+			if (array_key_exists($sClassAlias, $aAttToLoad))
+			{
+				$aAttList = $aAttToLoad[$sClassAlias];
+				foreach($aAttList as $sAttToLoad)
 				{
-					$aAttList = $aAttToLoad[$sClassAlias];
-					foreach($aAttList as $sAttToLoad)
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
+					$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
+					if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
 					{
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad);
-						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad] = $oAttDef;
-						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
+						// Add the external key friendly name anytime
+						$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
+						$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+
+						if (MetaModel::IsArchivable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
 						{
-							// Add the external key friendly name anytime
-							$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_friendlyname');
-							$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_friendlyname'] = $oFriendlyNameAttDef;
+							// Add the archive flag if necessary
+							$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_archive_flag');
+							$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_archive_flag'] = $oArchiveFlagAttDef;
+						}
 
-							if (MetaModel::IsArchivable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
-							{
-								// Add the archive flag if necessary
-								$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_archive_flag');
-								$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_archive_flag'] = $oArchiveFlagAttDef;
-							}
-
-							if (MetaModel::IsObsoletable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
-							{
-								// Add the obsolescence flag if necessary
-								$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_obsolescence_flag');
-								$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_obsolescence_flag'] = $oObsoleteFlagAttDef;
-							}
+						if (MetaModel::IsObsoletable($oAttDef->GetTargetClass(EXTKEY_ABSOLUTE)))
+						{
+							// Add the obsolescence flag if necessary
+							$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, $sAttToLoad.'_obsolescence_flag');
+							$aAttToLoadWithAttDef[$sClassAlias][$sAttToLoad.'_obsolescence_flag'] = $oObsoleteFlagAttDef;
 						}
 					}
 				}
-				// Add the friendly name anytime
-				$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
-				$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
+			}
+			// Add the friendly name anytime
+			$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
+			$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;
 
-				if (MetaModel::IsArchivable($sClass))
-				{
-					// Add the archive flag if necessary
-					$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, 'archive_flag');
-					$aAttToLoadWithAttDef[$sClassAlias]['archive_flag'] = $oArchiveFlagAttDef;
-				}
-
-				if (MetaModel::IsObsoletable($sClass))
-				{
-					// Add the obsolescence flag if necessary
-					$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, 'obsolescence_flag');
-					$aAttToLoadWithAttDef[$sClassAlias]['obsolescence_flag'] = $oObsoleteFlagAttDef;
-				}
-
-				// Make sure that the final class is requested anytime, whatever the specification (needed for object construction!)
-				if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttToLoadWithAttDef[$sClassAlias]))
-				{
-					$aAttToLoadWithAttDef[$sClassAlias]['finalclass'] = MetaModel::GetAttributeDef($sClass, 'finalclass');
-				}
+			if (MetaModel::IsArchivable($sClass))
+			{
+				// Add the archive flag if necessary
+				$oArchiveFlagAttDef = MetaModel::GetAttributeDef($sClass, 'archive_flag');
+				$aAttToLoadWithAttDef[$sClassAlias]['archive_flag'] = $oArchiveFlagAttDef;
 			}
 
-			$this->m_aAttToLoad = $aAttToLoadWithAttDef;
+			if (MetaModel::IsObsoletable($sClass))
+			{
+				// Add the obsolescence flag if necessary
+				$oObsoleteFlagAttDef = MetaModel::GetAttributeDef($sClass, 'obsolescence_flag');
+				$aAttToLoadWithAttDef[$sClassAlias]['obsolescence_flag'] = $oObsoleteFlagAttDef;
+			}
+
+			// Make sure that the final class is requested anytime, whatever the specification (needed for object construction!)
+			if (!MetaModel::IsStandaloneClass($sClass) && !array_key_exists('finalclass', $aAttToLoadWithAttDef[$sClassAlias]))
+			{
+				$aAttToLoadWithAttDef[$sClassAlias]['finalclass'] = MetaModel::GetAttributeDef($sClass, 'finalclass');
+			}
 		}
+
+		$this->m_aAttToLoad = $aAttToLoadWithAttDef;
 	}
 
     /**
@@ -971,7 +980,15 @@ class DBObjectSet implements iDBObjectSetIterator
 					}
 					else
 					{
-						$oRetObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+						try
+						{
+							$oRetObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+						}
+						catch (CoreException $e)
+						{
+							$this->m_iCurrRow++;
+							$oRetObj = $this->Fetch($sRequestedClassAlias);
+						}
 					}
 					break;
 				}

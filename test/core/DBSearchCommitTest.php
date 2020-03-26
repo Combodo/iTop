@@ -9,6 +9,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSet;
 use DBSearch;
 
 /**
@@ -28,7 +29,6 @@ class DBSearchCommitTest extends ItopDataTestCase
 
 	/**
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
@@ -47,14 +47,14 @@ class DBSearchCommitTest extends ItopDataTestCase
 
 		$oSearch = DBSearch::FromOQL("SELECT ".TAG_CLASS);
 		$oSearch->AddCondition(TAG_ATTCODE, 'tag1', 'MATCHES');
-		$oSet = new \DBObjectSet($oSearch);
+		$oSet = new DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
 
 
 		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1 tag2');
 		$oObjWithTagSet->DBWrite();
 
-		$oSet = new \DBObjectSet($oSearch);
+		$oSet = new DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
 	}
 

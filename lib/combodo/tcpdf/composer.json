@@ -1,0 +1,44 @@
+{
+  "name": "combodo/tcpdf",
+  "replace": {
+    "tecnickcom/tcpdf": "self.version"
+  },
+  "homepage": "https://github.com/combodo-itop-libs/TCPDF",
+  "type": "library",
+  "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
+  "license": "LGPL-3.0-only",
+  "authors": [
+    {
+      "name": "Nicola Asuni",
+      "email": "info@tecnick.com",
+      "role": "lead"
+    },
+    {
+      "name": "Combodo",
+      "email": "contact@combodo.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "classmap": [
+      "config",
+      "include",
+      "tcpdf.php",
+      "tcpdf_parser.php",
+      "tcpdf_import.php",
+      "tcpdf_barcodes_1d.php",
+      "tcpdf_barcodes_2d.php",
+      "include/tcpdf_colors.php",
+      "include/tcpdf_filters.php",
+      "include/tcpdf_font_data.php",
+      "include/tcpdf_fonts.php",
+      "include/tcpdf_images.php",
+      "include/tcpdf_static.php",
+      "include/barcodes/datamatrix.php",
+      "include/barcodes/pdf417.php",
+      "include/barcodes/qrcode.php"
+    ]
+  }
+}

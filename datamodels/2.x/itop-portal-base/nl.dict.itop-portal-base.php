@@ -1,24 +1,23 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license	 http://opensource.org/licenses/AGPL-3.0
- * @author jbostoen (2018)
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+/**
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  */
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -37,7 +36,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Button:Delete' => 'Verwijderen',
 	'Portal:EnvironmentBanner:Title' => 'Je werkt momenteel in de <strong>%1$s</strong>-omgeving',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Keer terug naar de productie-omgeving',
-	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:400' => 'Ongeldig verzoek',
 	'Error:HTTP:401' => 'Aanmelden is vereist',
 	'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
 	'Error:HTTP:500' => 'Oeps! Er is een fout opgetreden',
@@ -65,6 +64,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
 ));
 
 // UserProfile brick
@@ -76,7 +76,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Nieuw wachtwoord',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Bevestig nieuw wachtwoord',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Neem contact op met de beheerder om jouw wachtwoord te wijzgen',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Jouw wachtwoord kan niet worden gewijzigd, neem contact op met de beheerder',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Jouw wachtwoord kan niet gewijzigd worden. Neem contact op met de beheerder',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persoonlijke informatie',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));
@@ -128,8 +128,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul de volgende informatie in:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s opgeslagen',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Kopieer link naar object',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Gekopieerd'
 ));
 
 // CreateBrick brick
@@ -140,7 +144,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Filter brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+	'Brick:Portal:Filter:Name' => 'Voorfilteren van een bouwsteen',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));

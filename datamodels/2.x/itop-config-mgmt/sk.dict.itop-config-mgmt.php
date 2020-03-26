@@ -1895,6 +1895,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Server:otherinfo' => 'Iné informácie',
 	'Server:power' => 'Power supply~~',
 	'Person:info' => 'Všeobecné informácie',
+	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
 	'Class:Subnet/Tab:IPUsage' => 'Využívanosť IP adries',

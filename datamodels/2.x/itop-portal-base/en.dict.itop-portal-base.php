@@ -1,9 +1,6 @@
 <?php
 /**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,7 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 // Portal
@@ -66,6 +62,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost',
 ));
 
 // UserProfile brick
@@ -78,12 +75,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your %1$s administrator',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal information',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));
 
 // AggregatePageBrick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
 ));
 
@@ -126,11 +123,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, complete the following information:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied'
 ));
 
 // CreateBrick brick

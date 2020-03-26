@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
@@ -25,7 +26,6 @@ use UserRights;
 use AttributeDateTime;
 use AttributeText;
 use InlineImage;
-use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Field\MultipleChoicesField;
@@ -35,20 +35,15 @@ use Combodo\iTop\Form\Field\MultipleChoicesField;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class BsSimpleFieldRenderer extends FieldRenderer
+class BsSimpleFieldRenderer extends BsFieldRenderer
 {
 
     /**
-     * Returns a RenderingOutput for the FieldRenderer's Field
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     *
-     * @throws \Exception
+     * @inheritDoc
      */
 	public function Render()
 	{
-		$oOutput = new RenderingOutput();
-		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+		$oOutput = parent::Render();
 
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
@@ -155,6 +150,14 @@ EOF
 					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField')
 					{
 						$this->PreparingCaseLogEntries($oOutput);
+						// Trigger highlighter for all code blocks in this caselog
+						$oOutput->AddJs(
+							<<<JS
+   $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .caselog_field_entry_content > pre").each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+JS
+						);
 					}
 					$oOutput->AddHtml('</div>');
 
@@ -168,7 +171,9 @@ EOF
 						$oOutput->AddJs(
 <<<EOF
 							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage'});
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'}).editor.on("change", function(){
+                                	$('#{$this->oField->GetGlobalId()}').trigger("change");
+                              });
 EOF
 						);
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
@@ -352,6 +357,14 @@ EOF
                             $oOutput->AddHtml('<div class="form_field_control">');
                             $oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
                             $oOutput->AddHtml('</div>');
+                            // Trigger highlighter for all code blocks in this html text field 
+                            $oOutput->AddJs(
+                            <<<JS
+$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .HTML pre").each(function(i, block) {
+    hljs.highlightBlock(block);
+});
+JS
+							);
 						}
 
 						// Adding hidden input
@@ -381,6 +394,14 @@ EOF
 
                         // Closing container
                         $oOutput->AddHtml('</div>');
+                        // Trigger highlighter for all code blocks in this caselog
+						$oOutput->AddJs(
+							<<<JS
+   $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .caselog_field_entry_content pre").each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+JS
+						);
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\BlobField':

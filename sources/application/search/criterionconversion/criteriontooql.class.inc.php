@@ -157,6 +157,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
+		if (($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC) && ($sValue === '0'))
+		{
+			return "({$sRef} = '0')";
+		}
+
 		if (empty($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined'])))
 		{
 			return "1";
@@ -195,9 +200,12 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aRawValues[] = $sRawValue;
 			}
 		}
-		$sValue = implode(' ', $aRawValues);
-
-		if (empty($sValue))
+		// This allow to search for complete words
+		if (!empty($aRawValues))
+		{
+			$sValue = implode(' ', $aRawValues).' _';
+		}
+		else
 		{
 			if ($bHasUnDefined)
 			{

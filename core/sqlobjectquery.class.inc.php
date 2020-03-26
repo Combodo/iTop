@@ -318,7 +318,40 @@ class SQLObjectQuery extends SQLQuery
 		return "UPDATE $sFrom SET $sValues WHERE $sWhere";
 	}
 
-	// Interface, build the SQL query
+
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 *
+	 * @param array $aArgs
+	 * @return string
+	 * @throws CoreException
+	 */
+	public function RenderInsert($aArgs = array())
+	{
+		$this->PrepareRendering();
+		$aJoinInfo = reset($this->__aFrom);
+
+		if ($aJoinInfo['jointype'] != 'first' || count($this->__aFrom) > 1)
+		{
+			throw new CoreException('Cannot render insert');
+		}
+
+		$sFrom   = "`{$aJoinInfo['tablename']}`";
+
+		$sColList = '`'.implode('`,`', array_keys($this->m_aValues)).'`';
+
+		$aSetValues = array();
+		foreach ($this->__aSetValues as $sFieldSpec => $value)
+		{
+			$aSetValues[] = CMDBSource::Quote($value);
+		}
+		$sValues = implode(',', $aSetValues);
+
+		return "INSERT INTO $sFrom ($sColList) VALUES  ($sValues)";
+	}
+
 
 	/**
 	 * @param array $aOrderBy
@@ -363,11 +396,11 @@ class SQLObjectQuery extends SQLQuery
 				$sCountFields = implode(', ', $aCountFields);
 				// Count can be limited for performance reason, in this case the total amount is not important,
 				// we only need to know if the number of entries is greater than a certain amount.
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
 			}
 			else
 			{
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
 			}
 		}
 		else
@@ -424,7 +457,21 @@ class SQLObjectQuery extends SQLQuery
 		{
 			$sLimit = '';
 		}
-		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
+		if (count($this->__aSelectedIdFields) > 0)
+		{
+			$aCountFields = array();
+			foreach ($this->__aSelectedIdFields as $sFieldExpr)
+			{
+				$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+			}
+			$sCountFields = implode(', ', $aCountFields);
+			$sCountClause = "DISTINCT $sCountFields";
+		}
+		else
+		{
+			$sCountClause = '*';
+		}
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT($sCountClause) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
 		return $sSQL;
 	}
 

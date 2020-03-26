@@ -38,4 +38,19 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserLocal+' => 'Utente autenticato da iTop',
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'user authentication string',
+
+	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
+	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Can expire~~',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Never expire~~',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
+
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+
+	'UserLocal:password:expiration' => 'The fields below require an extension~~'
 ));

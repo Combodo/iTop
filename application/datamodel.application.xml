@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
   <portals>
-    <portal id="legacy_portal" _delta="define">
-      <url>portal/index.php</url>
-      <rank>1.0</rank>
-      <handler/>
-      <allow>
-      </allow>
-      <deny/>
-    </portal>
     <portal id="backoffice" _delta="define">
       <url>pages/UI.php</url>
       <rank>2.0</rank>
@@ -22,6 +14,11 @@
   <menus>
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
+    </menu>
+    <menu id="SystemTools" xsi:type="MenuGroup" _delta="define">
+      <rank>100</rank>
+      <enable_class>ResourceSystemMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
 </itop_design>

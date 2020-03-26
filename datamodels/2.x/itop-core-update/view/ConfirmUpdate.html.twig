@@ -1,0 +1,78 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<div class="display_block display-files">
+    {% if bSuccess %}
+
+        <fieldset id="update_progress">
+            <legend>{{ 'iTopUpdate:UI:Status'|dict_s }}</legend>
+            <div class="message message-valid">
+                {{ sQuestion }}
+            </div>
+
+            {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
+            <p>{{ 'iTopUpdate:UI:CurrentVersion'|dict_s }}</p>
+            <div>
+                {{ sVersion }}
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{ 'iTopUpdate:UI:Backup'|dict_s }}</legend>
+            {% if bDoBackup or bDoFilesArchive %}
+                {% if bDoBackup %}
+                    <p>{{ 'iTopUpdate:UI:WithDBBackup'|dict_s }}</p>
+                    <div>
+                        {{ sBackupFile }}
+                    </div>
+                {% endif %}
+                {% if bDoFilesArchive %}
+                    <p>{{ 'iTopUpdate:UI:WithFilesBackup'|dict_s }}</p>
+                    <div>
+                        {{ sItopArchive }}
+                    </div>
+                {% endif %}
+            {%  else %}
+                <div class="message message-warning">
+                    {{ 'iTopUpdate:UI:WithoutBackup'|dict_s }}
+                </div>
+            {% endif %}
+         </fieldset>
+
+        <fieldset>
+            <legend>{{ 'iTopUpdate:UI:Action'|dict_s }}</legend>
+            <div class="message message-warning">
+                {{ 'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s }}
+            </div>
+            <div>
+                <form enctype="multipart/form-data" method="post" class="form-inline">
+                    <input id="cancel-update" type="submit" value="{{ 'iTopUpdate:UI:Cancel'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"/>
+                </form>
+                <form enctype="multipart/form-data" method="post" class="form-inline">
+                    <input id="do-update" type="submit" value="{{ 'iTopUpdate:UI:DoUpdate'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"/> <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                    <input type="hidden" name="operation" value="UpdateCoreFiles"/>
+                    <input type="hidden" name="transaction_id" value="{{ sTransactionId }}">
+                    <input type="hidden" name="filename" value="{{ sName }}">
+                    <input type="hidden" name="doBackup" value="{{ bDoBackup }}">
+                    <input type="hidden" name="doFilesArchive" value="{{ bDoFilesArchive }}">
+                </form>
+            </div>
+        </fieldset>
+
+    {% else %}
+
+        <fieldset>
+            <div class="message message-error">
+                <div>
+                    <span>{{ sError }}</span>
+                </div>
+            </div>
+
+            <form enctype="multipart/form-data" method="post">
+                <p><input type="submit" value="{{ 'iTopUpdate:UI:Back'|dict_s }}"/></p>
+            </form>
+
+        </fieldset>
+
+    {% endif %}
+</div>

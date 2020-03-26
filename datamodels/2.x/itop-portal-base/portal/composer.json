@@ -1,0 +1,13 @@
+{
+	"license": "AGPLv3",
+	"autoload": {
+		"psr-4": {
+			"Combodo\\iTop\\Portal\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Combodo\\iTop\\Portal\\Tests\\": "tests/"
+		}
+	}
+}

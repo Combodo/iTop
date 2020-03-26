@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * UserRightsProfile
- * User management Module, basing the right on profiles and a matrix (similar to UserRightsMatrix, but profiles and other decorations have been added) 
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 define('ADMIN_PROFILE_NAME', 'Administrator');
@@ -179,7 +172,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		parent::DisplayBareRelations($oPage, $bEditMode);
 		if (!$bEditMode)
 		{
-			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
+			$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
 			$this->DoShowGrantSumary($oPage);
 		}
 	}
@@ -437,8 +430,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		CMDBObject::SetTrackInfo('Initialization');
 
-		$oChange = CMDBObject::GetCurrentChange();
-
 		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
@@ -446,7 +437,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oOrg = new Organization();
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
-			$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
+			$iOrgId = $oOrg->DBInsertNoReload();
 
 			// Support drastic data model changes: no Person class  (or not writable)!
 			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
@@ -463,7 +454,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					$oContact->Set('phone', '+00 000 000 000');
 				}
 				$oContact->Set('email', 'my.email@foo.org');
-				$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
+				$iContactId = $oContact->DBInsertNoReload();
 			}
 		}
 
@@ -482,14 +473,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		if (is_object($oAdminProfile))
 		{
 			$oUserProfile = new URP_UserProfile();
-			//$oUserProfile->Set('userid', $iUserId);
 			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
 			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-			//$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
 			$oSet = DBObjectSet::FromObject($oUserProfile);
 			$oUser->Set('profile_list', $oSet);
 		}
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$iUserId = $oUser->DBInsertNoReload();
 		return true;
 	}
 

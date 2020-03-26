@@ -53,6 +53,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario',
 	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario',
 	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
+	'Menu:UserManagement' => 'Gestión de usuarios',
+	'Menu:Queries' => 'Consultas',
+	'Menu:ConfigurationTools' => 'configuración',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+
+    <module_parameters>
+        <parameters id="authent-local" _delta="define">
+            <password_validation.pattern>^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$</password_validation.pattern>
+	          <password_validation.message type="hash"></password_validation.message>
+        </parameters>
+    </module_parameters>
+</itop_design>

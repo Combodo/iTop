@@ -1,28 +1,22 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * CSV Import Page
- * Wizard to import CSV (or TSV) data into the database
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
+
 try
 {
 	ini_set('memory_limit', '256M');
@@ -43,16 +37,18 @@ try
 
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
+	 *
 	 * @param string $sName The name of the select in the HTML form
-	 * @param string $sDefaulfValue The defaut value (i.e the value selected by default)
+	 * @param $sDefaultValue
 	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
 	 * @param integer $iActionCode The ActionCode (from UserRights) to check for authorization for the classes
+	 *
 	 * @return string The HTML fragment corresponding to the select tag
 	 */
 	function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
 		$sHtml = "<select id=\"select_$sName\" name=\"$sName\">";
-		$sHtml .= "<option tyle=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">".Dict::S('UI:CSVImport:ClassesSelectOne')."</option>\n";
+		$sHtml .= "<option style=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">".Dict::S('UI:CSVImport:ClassesSelectOne')."</option>\n";
 		$aValidClasses = array();
 		$aClassCategories = array('bizmodel');
 		if (UserRights::IsAdministrator())
@@ -66,10 +62,10 @@ try
 			if ( (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) &&
 			     (!MetaModel::IsAbstract($sClassName)) )
 			{
-				$sSelected = ($sClassName == $sDefaultValue) ? " selected" : "";
+				$sSelected = ($sClassName == $sDefaultValue) ? "selected" : "";
 				$sDescription = MetaModel::GetClassDescription($sClassName);
 				$sDisplayName = MetaModel::GetName($sClassName);
-				$aValidClasses[$sDisplayName] = "<option style=\"width: ".$iWidthPx."px;\" title=\"$sDescription\" value=\"$sClassName\"$sSelected>$sDisplayName</option>";
+				$aValidClasses[$sDisplayName] = "<option style=\"width: ".$iWidthPx."px;\" title=\"$sDescription\" value=\"$sClassName\" $sSelected >$sDisplayName</option>";
 			}
 		}
 		}
@@ -98,7 +94,7 @@ try
 	 * Returns the number of occurences of each char from the set in the specified string
 	 * @param string $sString The input data
 	 * @param array $aSet The set of characters to count
-	 * @return hash 'char' => nb of occurences
+	 * @return array 'char' => nb of occurences
 	 */
 	function CountCharsFromSet($sString, $aSet)
 	{
@@ -161,7 +157,7 @@ try
 	/**
 	 * Try to predict the CSV parameters based on the input data
 	 * @param string $sCSVData The input data
-	 * @return hash 'separator' => the_guessed_separator, 'qualifier' => the_guessed_text_qualifier
+	 * @return array 'separator' => the_guessed_separator, 'qualifier' => the_guessed_text_qualifier
 	 */
 	function GuessParameters($sCSVData)
 	{
@@ -177,7 +173,6 @@ try
 	 * @param WebPage $oP The Page for the output
 	 * @param string $sClass The class of objects to synchronize
 	 * @param integer $iCount The number of objects to synchronize
-	 * @return none
 	 */
 	 function DisplaySynchroBanner(WebPage $oP, $sClass, $iCount)
 	 {
@@ -452,9 +447,6 @@ try
 							case 'CellStatus_Issue':
 							case 'CellStatus_SearchIssue':
 							case 'CellStatus_NullIssue':
-							$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
-							break;
-							
 							case 'CellStatus_Ambiguous':
 							$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
 							break;
@@ -585,7 +577,7 @@ try
 			$iCount = count($aRes);
 			//$oPage->add('<input type="submit" value="'.Dict::S('UI:Button:DoImport').'" onClick="$(\'#wizForm\').block();"/></p>');
 			$sConfirm = $bShouldConfirm ? 'true' : 'false';
-			$oPage->add('<input type="button" value="'.Dict::S('UI:Button:DoImport')."\" onClick=\"return DoSubmit($sConfirm);\"/></p>");
+			$oPage->add('<input type="button" value="'.Dict::S('UI:Button:DoImport')."\" onClick=\"return DoSubmit({$sConfirm})\"/></p>");
 		}
 		else
 		{
@@ -1162,27 +1154,27 @@ EOF
 		$oPage->add('<h2>'.Dict::S('UI:Title:CSVImportStep2').'</h2>');
 		$oPage->add('<div class="wizContainer">');
 		$oPage->add('<table><tr><td style="vertical-align:top;padding-right:30px;">');
-		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" id="csv_options">');
+		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post" class="csv_options">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:SeparatorCharacter').'</h3>');
-		$oPage->add('<p><input type="radio" name="separator" value="," onClick="DoPreview()"'.IsChecked($sSeparator, ',').'/> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value=";" onClick="DoPreview()"'.IsChecked($sSeparator, ';').'/> '.Dict::S('UI:CSVImport:SeparatorSemicolon+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value="tab" onClick="DoPreview()"'.IsChecked($sSeparator, "\t").'/> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
-		$oPage->add('<input type="radio" name="separator" value="other"  onClick="DoPreview()"'.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onClick="DoPreview()"/>');
+		$oPage->add('<p><input type="radio" name="separator" value="," onClick="DoPreview()" '.IsChecked($sSeparator, ',').' /> '.Dict::S('UI:CSVImport:SeparatorComma+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value=";" onClick="DoPreview()" '.IsChecked($sSeparator, ';').' /> '.Dict::S('UI:CSVImport:SeparatorSemicolon+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value="tab" onClick="DoPreview()" '.IsChecked($sSeparator, "\t").' /> '.Dict::S('UI:CSVImport:SeparatorTab+').'<br/>');
+		$oPage->add('<input type="radio" name="separator" value="other"  onClick="DoPreview()" '.IsChecked($sOtherSeparator, '', true).'/> '.Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator" id="other_separator" value="'.$sOtherSeparator.'" onClick="DoPreview()"/>');
 		$oPage->add('</p>');
 		$oPage->add('</td><td style="vertical-align:top;padding-right:30px;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:TextQualifierCharacter').'</h3>');
-		$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onClick="DoPreview()"'.IsChecked($sTextQualifier, '"').'/> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
-		$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onClick="DoPreview()"'.IsChecked($sTextQualifier, "'").'/> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
-		$oPage->add('<input type="radio" name="text_qualifier" value="other"  onClick="DoPreview()"'.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
+		$oPage->add('<p><input type="radio" name="text_qualifier" value="&#34;" onClick="DoPreview()" '.IsChecked($sTextQualifier, '"').' /> '.Dict::S('UI:CSVImport:QualifierDoubleQuote+').'<br/>');
+		$oPage->add('<input type="radio" name="text_qualifier" value="&#39;"  onClick="DoPreview()" '.IsChecked($sTextQualifier, "'").' /> '.Dict::S('UI:CSVImport:QualifierSimpleQuote+').'<br/>');
+		$oPage->add('<input type="radio" name="text_qualifier" value="other"  onClick="DoPreview()" '.IsChecked($sOtherTextQualifier, '', true).'/> '.Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>');
 		$oPage->add('</p>');
 		$oPage->add('</td><td style="vertical-align:top;padding-right:30px;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:CommentsAndHeader').'</h3>');
-		$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onClick="DoPreview()"'.IsChecked($bHeaderLine, 1).'/> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
-		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onClick="DoPreview()"'.IsChecked($bBoxSkipLines, 1).'/> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
+		$oPage->add('<p><input type="checkbox" name="header_line" id="box_header" value="1" onClick="DoPreview()" '.IsChecked($bHeaderLine, 1).' /> '.Dict::S('UI:CSVImport:TreatFirstLineAsHeader').'<p>');
+		$oPage->add('<p><input type="checkbox" name="box_skiplines" value="1" id="box_skiplines" onClick="DoPreview()" '.IsChecked($bBoxSkipLines, 1).' /> '.Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">').'<p>');
 		$oPage->add('</td><td style="vertical-align:top;">');
 		$oPage->add('<h3>'.Dict::S('UI:CSVImport:DateAndTimeFormats').'</h3>');
-		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_std" value="default"'.IsChecked($sDateTimeFormat, 'default').'/><label for="radio_date_time_std"> '.Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8'), date((string)AttributeDateTime::GetFormat())).'</label><p>');
-		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_custom" value="custom"'.IsChecked($sDateTimeFormat, 'custom').'/><label for="radio_date_time_custom"> '.Dict::Format('UI:CSVImport:CustomDateTimeFormat', '<input type="text" size="15" name="custom_date_time_format" id="custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'">').'</label><p>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_std" value="default" '.IsChecked($sDateTimeFormat, 'default').' /><label for="radio_date_time_std"> '.Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8'), date((string)AttributeDateTime::GetFormat())).'</label><p>');
+		$oPage->add('<p><input type="radio" name="date_time_format" id="radio_date_time_custom" value="custom" '.IsChecked($sDateTimeFormat, 'custom').' /><label for="radio_date_time_custom"> '.Dict::Format('UI:CSVImport:CustomDateTimeFormat', '<input type="text" size="15" name="custom_date_time_format" id="custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'">').'</label><p>');
 		$oPage->add('</td></tr></table>');
 		$oPage->add('<input type="hidden" name="csvdata_truncated" id="csvdata_truncated" value="'.htmlentities($sCSVDataTruncated, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="csvdata" id="csvdata" value="'.htmlentities($sUTF8Data, ENT_QUOTES, 'UTF-8').'"/>');
@@ -1326,16 +1318,16 @@ EOF
 				'<p><input type="file" name="csvdata"/></p>';
 				
 		$sFileLoadHtml .= '<p>'.Dict::S('UI:CSVImport:Encoding').': ';
-		$sFileLoadHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,Sans-serif">'; // IE 8 has some troubles if the font is different
+		$sFileLoadHtml .= '<select name="encoding" style="font-family:Arial,Helvetica,sans-serif">'; // IE 8 has some troubles if the font is different
 		$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 		foreach($aPossibleEncodings as $sIconvCode => $sDisplayName )
 		{
 			$sSelected  = '';
 			if ($sEncoding == $sIconvCode)
 			{
-				$sSelected = ' selected';
+				$sSelected = 'selected';
 			}
-			$sFileLoadHtml .= '<option value="'.$sIconvCode.'"'.$sSelected.'>'.$sDisplayName.'</option>';
+			$sFileLoadHtml .= '<option value="'.$sIconvCode.'" '.$sSelected.' >'.$sDisplayName.'</option>';
 		}
 		$sFileLoadHtml .= '</select></p>';
 		$sFileLoadHtml .= '<p><input type="submit" value="'.Dict::S('UI:Button:Next').'"/></p>'.
@@ -1452,7 +1444,7 @@ EOF
 		if (Utils::GetConfig()->Get('csv_import_history_display'))
 		{
 			$oPage->SetCurrentTabContainer('tabs1');
-			$oPage->AddAjaxTab(Dict::S('UI:History:BulkImports'), utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */);
+			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */);
 		}
 	}
 			

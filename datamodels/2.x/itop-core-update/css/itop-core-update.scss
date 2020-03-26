@@ -1,0 +1,103 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+$link-hover-color: #EA7D1E !default;
+
+fieldset {
+  margin-top: 0;
+  legend {
+    margin-top: 0;
+  }
+  ~ fieldset {
+    margin-top: 13px;
+  }
+  p, div {
+    margin: 7px 0;
+  }
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+  background: #555555;
+  border: 1px solid #555555;
+  color: #EEEEEE;
+  font-weight: bold;
+}
+.ui-button:hover, .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover,
+.ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-focus .ui-state-focus {
+  background: $link-hover-color;
+  border: 1px solid $link-hover-color;
+  color: #EEEEEE;
+  font-weight: bold;
+}
+.ui-button:disabled, .ui-button:disabled:hover {
+  background: #55555533;
+  border: 1px solid #55555533;
+  color: #EEEEEE;
+  font-weight: bold;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+  border-bottom-right-radius: 0;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+  border-bottom-left-radius: 0;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+  border-top-right-radius: 0;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+  border-top-left-radius: 0;
+}
+.ui-widget {
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 1.1em;
+}
+.ui-button, .ui-button:link, .ui-button:visited, .ui-button:hover, .ui-button:active {
+  padding: 0.3em 1em;
+  text-decoration: none;
+}
+.ui-button {
+  cursor: pointer;
+  display: inline-block;
+  line-height: normal;
+  margin-right: 0.1em;
+  overflow: visible;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.form-inline {
+  display: inline-block;
+  margin-top: 13px;
+}
+
+#progress {
+  margin: 5px auto;
+  display:block;
+  width: 280px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+
+  .progress {
+    margin: 0;
+  }
+
+  .text {
+    margin: 0;
+  }
+}

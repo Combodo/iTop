@@ -1,63 +1,20 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Entry point for all the REST services
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * -------------------------------------------------- 
- * Create an object
- * -------------------------------------------------- 
- * POST itop/webservices/rest.php
- * {
- * 	operation: 'object_create',
- * 	comment: 'Synchronization from blah...',
- * 	class: 'UserRequest',
- * 	results: 'id, friendlyname',
- * 	fields:
- * 	{
- * 		org_id: 'SELECT Organization WHERE name = "Demo"',
- * 		caller_id:
- * 		{
- * 			name: 'monet',
- * 			first_name: 'claude',
- * 		}
- * 		title: 'Houston, got a problem!',
- * 		description: 'The fridge is empty'
- * 		contacts_list:
- * 		[
- * 			{
- * 				role: 'pizza delivery',
- * 				contact_id:
- * 				{
- * 					finalclass: 'Person',
- * 					name: 'monet',
- * 					first_name: 'claude'
- * 				}
- * 			}
- * 		]
- * 	}
- * }
+ * This file is part of iTop.
  *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @link https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json REST service documentation
- * @example https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json_playground
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
@@ -109,18 +66,24 @@ if (!function_exists('json_last_error_msg')) {
 // Main
 //
 $oP = new ajax_page('rest');
-$oCtx = new ContextTag('REST/JSON');
+$oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 $sProvider = '';
+
+$oKPI = new ExecutionKPI();
 try
 {
 	utils::UseParamFile();
-
+        
+	$oKPI->ComputeAndReport('Data model loaded');
+        
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
-	if ($iRet == LoginWebPage::EXIT_CODE_OK)
+        $oKPI->ComputeAndReport('User login');
+        
+        if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
 		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
@@ -172,9 +135,11 @@ try
 	{
 		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
 	}
+	$oKPI->ComputeAndReport('Parameters validated');
 
 
 	/** @var iRestServiceProvider[] $aProviders */
+	$oKPI = new ExecutionKPI();
 	$aProviders = array();
 	foreach(get_declared_classes() as $sPHPClass)
 	{
@@ -199,6 +164,7 @@ try
 			);
 		}
 	}
+	$oKPI->ComputeAndReport('iRestServiceProvider loaded with operations');
 
 	if (count($aOpToRestService) == 0)
 	{
@@ -230,6 +196,7 @@ try
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
+	$oKPI->ComputeAndReport('Operation finished');
 }
 catch(Exception $e)
 {
@@ -243,6 +210,7 @@ catch(Exception $e)
 		$oResult->code = $e->GetCode();
 	}
 	$oResult->message = "Error: ".$e->GetMessage();
+	$oKPI->ComputeAndReport('Exception catched');
 }
 
 // Output the results
@@ -272,6 +240,8 @@ else
 }
 $oP->Output();
 
+$oKPI->ComputeAndReport('REST outputed');
+
 // Log usage
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
@@ -293,4 +263,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
+	$oKPI->ComputeAndReport('Log inserted');
 }
+
+ExecutionKPI::ReportStats();

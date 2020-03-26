@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright (C) 2010-2018 Combodo SARL
+ * Copyright (C) 2013-2019 Combodo SARL
  *
  * This file is part of iTop.
  *
- *  iTop is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as published by
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
  */
 
 use Combodo\iTop\Application\Search\AjaxSearchException;
@@ -67,12 +65,6 @@ try
 		$sHiddenCriteria = '';
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
-
-	if (isset($aListParams['debug']))
-	{
-		$sOQL = $oFilter->ToOQL();
-		$oPage->add("<div class=\"header_message message_info\">$sOQL</div>\n");
-	}
 
 	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
@@ -125,6 +117,13 @@ try
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
 
+
+	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
+	{
+		$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
+		$oPage->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
+		$oPage->EndCollapsibleSection();
+	}
 
 	$oPage->output();
 

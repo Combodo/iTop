@@ -1,21 +1,23 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+// Copyright (c) 2010-2018 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//
+// Copyright 2018 David Gümbel, ITOMIG GmbH, david.guembel @ itomig DE
+// Database inconsistencies
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'DB Tools',
@@ -25,7 +27,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:Error' => 'Fehler',
 	'DBTools:Count' => 'Anzahl',
 	'DBTools:SQLquery' => 'SQL Query',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
+	'DBTools:FixitSQLquery' => 'SQL Query zur Fehlerbehebung (Indikation)',
 	'DBTools:SQLresult' => 'SQL Ergebnis',
 	'DBTools:NoError' => 'Die Datenbank ist OK',
 	'DBTools:HideIds' => 'Fehler',

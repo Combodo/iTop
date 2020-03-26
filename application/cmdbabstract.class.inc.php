@@ -1,28 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Abstract class that implements some common and useful methods for displaying
- * the objects
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -51,10 +43,22 @@ require_once(APPROOT.'sources/application/search/criterionconversionabstract.cla
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
+/**
+ * Class cmdbAbstractObject
+ */
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
+	/** @var string ENUM_OBJECT_MODE_VIEW */
+	const ENUM_OBJECT_MODE_VIEW = 'view';
+	/** @var string ENUM_OBJECT_MODE_EDIT */
+	const ENUM_OBJECT_MODE_EDIT = 'edit';
+	/** @var string ENUM_OBJECT_MODE_CREATE */
+	const ENUM_OBJECT_MODE_CREATE = 'create';
+	/** @var string ENUM_OBJECT_MODE_STIMULUS */
+	const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
-	static $iGlobalFormId = 1;
+	protected static $iGlobalFormId = 1;
 	protected $aFieldsMap;
 
 	/**
@@ -63,6 +67,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @var bool
 	 */
 	protected $bAllowWrite;
+	/**
+	 * @var bool
+	 */
+	protected $bAllowDelete;
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -71,11 +79,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @param string $sClassAlias
 	 * @param array $aAttToLoad
 	 * @param array $aExtendedDataSpec
+	 *
+	 * @throws \CoreException
 	 */
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 		$this->bAllowWrite = false;
+		$this->bAllowDelete = false;
 	}
 
 	/**
@@ -91,6 +102,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		return 'UI.php';
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DBObject $oObj
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 */
 	public static function ReloadAndDisplay($oPage, $oObj, $aParams)
 	{
 		$oAppContext = new ApplicationContext();
@@ -132,7 +150,7 @@ EOF
 	 * @param bool $bMustNotExist
 	 *
 	 * @see SetSessionMessage()
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	protected function SetSessionMessageFromInstance($sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
 	{
@@ -143,7 +161,7 @@ EOF
 	}
 
 	/**
-	 * Set a message diplayed to the end-user next time this object will be displayed
+	 * Set a message displayed to the end-user next time this object will be displayed
 	 * Messages are uniquely identified so that plugins can override standard messages (the final work is given to the
 	 * last plugin to set the message for a given message id) In practice, standard messages are recorded at the end
 	 * but they will not overwrite existing messages
@@ -176,7 +194,19 @@ EOF
 		}
 	}
 
-	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -321,7 +351,7 @@ EOF
 				}
 				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fa fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fas fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 				$sTip = addslashes($sTip);
 				$oPage->add_ready_script("$('#$sSynchroTagId').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'topLeft' }, position: { corner: { target: 'bottomMiddle', tooltip: 'topLeft' }} } );");
 			}
@@ -331,13 +361,13 @@ EOF
 		{
 			$sLabel = htmlentities(Dict::S('Tag:Archived'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fa fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fas fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 		elseif ($this->IsObsolete())
 		{
 			$sLabel = htmlentities(Dict::S('Tag:Obsolete'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Obsolete+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fa fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 
 		$sObjectIcon = $this->GetIcon();
@@ -367,7 +397,17 @@ EOF
 		);
 	}
 
-	function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
+	/**
+	 * Display history tab of an object
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 *
+	 * @throws \CoreException
+	 */
+	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
@@ -378,7 +418,18 @@ EOF
 		$oBlock->Display($oPage, 'history');
 	}
 
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	/**
+	 * Display properties tab of an object
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param string $sPrefix
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 
@@ -419,7 +470,7 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @throws \Exception
@@ -444,7 +495,10 @@ EOF
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
 		$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
-		$aExtraParams = array('query_params' => $this->ToArgsForQuery());
+		$aExtraParams = array(
+			'query_params' => $this->ToArgsForQuery(),
+			'dashboard_div_id' => $sDivId,
+		);
 		$oDashboard->Render($oPage, false, $aExtraParams, $bCanEdit);
 		$oPage->add('</div>');
 	}
@@ -460,8 +514,9 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		$aRedundancySettings = $this->FindVisibleRedundancySettings();
 
@@ -483,7 +538,7 @@ EOF
 				{
 					continue;
 				}
-				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode());
+				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(), true, 'Class:'.$sClass.'/Attribute:'.$sAttCode);
 				continue;
 			}
 
@@ -505,7 +560,7 @@ EOF
 			{
 				$sCount = " ($iCount)";
 			}
-			$oPage->SetCurrentTab($oAttDef->GetLabel().$sCount);
+			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
 			if ($this->IsNew())
 			{
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -673,19 +728,20 @@ EOF
 			if (count($aTriggers) > 0)
 			{
 				$iId = $this->GetKey();
-				$sTriggersList = implode(',', $aTriggers);
+				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
 				$aNotifSearches = array();
 				$iNotifsCount = 0;
 				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
 				foreach($aNotificationClasses as $sNotifClass)
 				{
-					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
-					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass]);
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
 					$iNotifsCount += $oNotifSet->Count();
 				}
-				// Display notifications regarding the object: on block per subclass to have the intersting columns
+				// Display notifications regarding the object: on block per subclass to have the interesting columns
 				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
-				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
+				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
 				foreach($aNotificationClasses as $sNotifClass)
 				{
@@ -697,7 +753,22 @@ EOF
 		}
 	}
 
-	function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param string $sPrefix
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$sClass = get_class($this);
@@ -734,7 +805,7 @@ EOF
 				$aTableClasses[] = 'one-col-details';
 			}
 
-			$oPage->SetCurrentTab(Dict::S($sTab));
+			$oPage->SetCurrentTab($sTab);
 			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ',
 					$aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
@@ -769,6 +840,10 @@ EOF
 					}
 					foreach($aFields as $sAttCode)
 					{
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
+
 						if ($bEditMode)
 						{
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
@@ -779,7 +854,6 @@ EOF
 								// the caller may override some flags if needed
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
-							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 							{
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
@@ -794,7 +868,6 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode,
 										);
 									}
 									else
@@ -841,7 +914,6 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode,
 										);
 									}
 								}
@@ -852,29 +924,14 @@ EOF
 										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
 										'comments' => $sComments,
 										'infos' => $sInfos,
-										'attcode' => $sAttCode,
 									);
 									$aFieldsMap[$sAttCode] = $sInputId;
-								}
-
-								// Checking how the field should be rendered
-								// Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
-								// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
-								if (in_array($oAttDef->GetEditClass(),
-									array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-								{
-									$val['layout'] = 'large';
-								}
-								else
-								{
-									$val['layout'] = 'small';
 								}
 							}
 							else
 							{
 								$val = null; // Skip this field
 							}
-
 						}
 						else
 						{
@@ -884,6 +941,28 @@ EOF
 
 						if ($val != null)
 						{
+							// Add extra data for markup generation
+							// - Attribute code and AttributeDef. class
+							$val['attcode'] = $sAttCode;
+							$val['atttype'] = $sAttDefClass;
+							$val['attlabel'] = $sAttLabel;
+							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
+
+							// - How the field should be rendered
+							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+
+							// - For simple fields, we get the raw (stored) value as well
+							$bExcludeRawValue = false;
+							foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+							{
+								if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
+								{
+									$bExcludeRawValue = true;
+									break;
+								}
+							}
+							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
+
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
@@ -924,17 +1003,21 @@ EOF
 	 */
 	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
-		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
+		$sClass = get_class($this);
+		$iKey = $this->GetKey();
+		$sMode = static::ENUM_OBJECT_MODE_VIEW;
+
+		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate($sClass));
 		if (!empty($sTemplate))
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
 			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
 			//       but the preferred method is to use '$id$'
 			$oTemplate->Render($oPage, array(
-				'class_name' => MetaModel::GetName(get_class($this)),
-				'class' => get_class($this),
-				'pkey' => $this->GetKey(),
-				'id' => $this->GetKey(),
+				'class_name' => MetaModel::GetName($sClass),
+				'class' => $sClass,
+				'pkey' => $iKey,
+				'id' => $iKey,
 				'name' => $this->GetName(),
 			));
 		}
@@ -942,23 +1025,38 @@ EOF
 		{
 			// Object's details
 			// template not found display the object using the *old style*
-			$oPage->add('<div id="search-widget-results-outer">');
+			$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+HTML
+			);
 			$this->DisplayBareHeader($oPage, $bEditMode);
 			/** @var \iTopWebPage $oPage */
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+			$oPage->SetCurrentTab('UI:PropertiesTab');
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
-			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
+			//$oPage->SetCurrentTab('UI:HistoryTab');
 			//$this->DisplayBareHistory($oPage, $bEditMode);
-			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
-				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
-			$oPage->add('</div>');
+			$oPage->AddAjaxTab('UI:HistoryTab',
+				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
+			$oPage->add(<<<HTML
+</div><!-- End of object-details -->
+HTML
+			);
 		}
 	}
 
-	function DisplayPreview(WebPage $oPage)
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
+	 */
+	public function DisplayPreview(WebPage $oPage)
 	{
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -973,6 +1071,14 @@ EOF
 		$oPage->details($aDetails);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ApplicationException
+	 * @throws \CoreException
+	 */
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
@@ -1015,16 +1121,18 @@ EOF
 	/**
 	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
 	 *
-	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
+	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
+	 *
 	 * @param CMDBObjectSet The set of objects to display
 	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
+	 *
+	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
 	 *
 	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
 	 *     pagination or table sorting !
 	 *
+	 * @throws \CoreException*@throws \Exception
 	 * @throws \ApplicationException
-	 * @throws \CoreException
-	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -1172,6 +1280,18 @@ EOF
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		if (empty($aExtraParams['currentId']))
@@ -1272,12 +1392,37 @@ EOF
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
-	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 * @param string $sCharset
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams, $sCharset));
 	}
 
-	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
+	/**
+	 * @param \DBObjectSet $oSet
+	 * @param array $aParams
+	 * @param string $sCharset
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
+	public static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
@@ -1406,7 +1551,14 @@ EOF
 		return $sHtml;
 	}
 
-	static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 */
+	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
 	}
@@ -1414,8 +1566,19 @@ EOF
 	/**
 	 * Spreadsheet output: designed for end users doing some reporting
 	 * Then the ids are excluded and replaced by the corresponding friendlyname
+	 *
+	 * @param \DBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
-	static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
+	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
 		$aFields = null;
 		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0))
@@ -1599,7 +1762,18 @@ EOF
 		return $sHtml;
 	}
 
-	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$bLocalize = true;
 		if (isset($aParams['localize_values']))
@@ -1666,6 +1840,14 @@ EOF
 		$oPage->add("</Set>\n");
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	public static function DisplaySearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 
@@ -1689,7 +1871,7 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param \AttributeDefinition $oAttDef
@@ -1807,12 +1989,12 @@ EOF
 
 					$aStyles = array();
 					$sStyle = '';
-					$sWidth = $oAttDef->GetWidth('width', '');
+					$sWidth = $oAttDef->GetWidth();
 					if (!empty($sWidth))
 					{
 						$aStyles[] = 'width:'.$sWidth;
 					}
-					$sHeight = $oAttDef->GetHeight('height', '');
+					$sHeight = $oAttDef->GetHeight();
 					if (!empty($sHeight))
 					{
 						$aStyles[] = 'height:'.$sHeight;
@@ -1859,12 +2041,12 @@ EOF
 				case 'CaseLog':
 					$aStyles = array();
 					$sStyle = '';
-					$sWidth = $oAttDef->GetWidth('width', '');
+					$sWidth = $oAttDef->GetWidth();
 					if (!empty($sWidth))
 					{
 						$aStyles[] = 'width:'.$sWidth;
 					}
-					$sHeight = $oAttDef->GetHeight('height', '');
+					$sHeight = $oAttDef->GetHeight();
 					if (!empty($sHeight))
 					{
 						$aStyles[] = 'height:'.$sHeight;
@@ -1903,7 +2085,7 @@ EOF
 					$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 					$aConfig['language'] = $sLanguage;
 					$aConfig['contentsLanguage'] = $sLanguage;
-					$aConfig['extraPlugins'] = 'disabler';
+					$aConfig['extraPlugins'] = 'disabler,codesnippet';
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 					$sConfigJS = json_encode($aConfig);
 
@@ -2258,15 +2440,32 @@ EOF
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 
+		// Note: In 2.8, remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
 		$sOwnershipToken = null;
 		$iKey = $this->GetKey();
 		$sClass = get_class($this);
-		if ($iKey > 0)
+		$sMode = ($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE;
+
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2301,13 +2500,22 @@ EOF
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
 		{
 			$sClassLabel = MetaModel::GetName($sClass);
+			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
+				$this->GetName());
+
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
-			$oPage->add("<div class=\"page_header\">\n");
-			$oPage->add("<h1>".$this->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-					$this->GetName())."</h1>\n");
-			$oPage->add("</div>\n");
-			$oPage->add("<div class=\"wizContainer\">\n");
+
+			$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+	<div class="page_header">
+		<h1>{$this->GetIcon()} $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+			);
 		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
@@ -2334,7 +2542,7 @@ EOF
 		}
 		else
 		{
-			if ($iKey > 0)
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 			{
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			}
@@ -2350,7 +2558,7 @@ EOF
 		}
 		else
 		{
-			if ($iKey > 0)
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 			{
 				$sOperation = 'apply_modify';
 			}
@@ -2359,7 +2567,7 @@ EOF
 				$sOperation = 'apply_new';
 			}
 		}
-		if ($iKey > 0)
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			// The object already exists in the database, it's a modification
 			$sButtons = "<input id=\"{$sPrefix}_id\" type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
@@ -2421,7 +2629,17 @@ EOF
 							$sStateCode).'</option>';
 				}
 				$sStatesSelection .= '</select>';
-				$oPage->add_ready_script("$('.state_select_{$this->m_iFormId}').change( function() { oWizardHelper$sPrefix.ReloadObjectCreationForm('form_{$this->m_iFormId}', $(this).val()); } );");
+				$sStatesSelection .= '<input type="hidden" id="obj_state_orig" name="obj_state_orig" value="'.$this->GetState().'"/>';
+				$oPage->add_ready_script(<<<JAVASCRIPT
+$('.state_select_{$this->m_iFormId}').change( function() {
+	if ($('#obj_state_orig').val() != $(this).val()) {
+		$('.state_select_{$this->m_iFormId}').val($(this).val());
+		$('#form_{$this->m_iFormId}').data('force_submit', true);
+		$('#form_{$this->m_iFormId}').submit();
+	}
+});
+JAVASCRIPT
+			);
 			}
 		}
 
@@ -2449,14 +2667,14 @@ EOF
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap))
 		{
 			$aFieldsMap = array();
 		}
-		if ($iKey > 0)
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
@@ -2497,7 +2715,12 @@ EOF
 
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
 		{
-			$oPage->add("</div>\n");
+			// Close wizContainer and object-details
+			$oPage->add(<<<HTML
+	</div><!-- End of wizContainer -->
+</div><!-- End of object-details -->
+HTML
+			);
 		}
 
 		$iFieldsCount = count($aFieldsMap);
@@ -2548,6 +2771,20 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sClass
+	 * @param null $oObjectToClone
+	 * @param array $aArgs
+	 * @param array $aExtraParams
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
 	{
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
@@ -2614,10 +2851,26 @@ EOF
 		return $oObj->DisplayModifyForm($oPage, $aExtraParams);
 	}
 
-	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sStimulus
+	 * @param null $aPrefillFormParam
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
+		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+
 		$aTransitions = $this->EnumTransitions();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		if (!isset($aTransitions[$sStimulus]))
@@ -2626,6 +2879,7 @@ EOF
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
 				$this->GetName(), $this->GetStateLabel()));
 		}
+
 		// Check for concurrent access lock
 		$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 		$sOwnershipToken = null;
@@ -2648,12 +2902,22 @@ EOF
 		}
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-		$oPage->add("<div class=\"page_header\">\n");
-		$oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
-		$oPage->set_title($sActionLabel);
-		$oPage->add("</div>\n");
-		$oPage->add("<h1>$sActionDetails</h1>\n");
+
+		// Get info on current state
+		$sCurrentState = $this->GetState();
 		$sTargetState = $aTransitions[$sStimulus]['target_state'];
+
+		$oPage->set_title($sActionLabel);
+		$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
+	<div class="page_header">
+		<h1>$sActionLabel - <span class="hilite">{$this->GetName()}</span></h1>
+	</div>
+	<h1>$sActionDetails</h1>
+HTML
+		);
+
 		$aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		if ($aPrefillFormParam != null)
 		{
@@ -2662,7 +2926,7 @@ EOF
 			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
 		}
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		if ($sButtonsPosition == 'bottom')
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
 		{
 			// bottom: Displays the ticket details BEFORE the actions
 			$oPage->add('<div class="ui-widget-content">');
@@ -2768,8 +3032,12 @@ EOF
 		$oPage->add("<button type=\"button\" class=\"action cancel\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().", '', '$sOwnershipToken')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 		$oPage->add("</form>\n");
-		$oPage->add("</div>\n");
-		if ($sButtonsPosition != 'top')
+		$oPage->add(<<<HTML
+	</div>
+</div><!-- End of object-details -->
+HTML
+		);
+		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
 			$oPage->add('<div class="ui-widget-content">');
@@ -2864,7 +3132,7 @@ EOF
 		return $aDetails;
 	}
 
-	static function FlattenZList($aList)
+	public static function FlattenZList($aList)
 	{
 		$aResult = array();
 		foreach($aList as $value)
@@ -2926,20 +3194,7 @@ EOF
 				'label' => '<span title="'.MetaModel::GetDescription($sClass,
 						$sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
 				'value' => $sDisplayValue,
-				'attcode' => $sAttCode,
 			);
-
-			// Checking how the field should be rendered
-			// Note: For edit mode, this is done in self::GetBareProperties()
-			// Note 2: Shouldn't this be a AttDef property instead of an array to maintain?
-			if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-			{
-				$retVal['layout'] = 'large';
-			}
-			else
-			{
-				$retVal['layout'] = 'small';
-			}
 		}
 
 		return $retVal;
@@ -2966,7 +3221,6 @@ EOF
 				$data = $oDoc->GetData();
 				switch ($oDoc->GetMimeType())
 				{
-					case 'text/html':
 					case 'text/xml':
 						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 						break;
@@ -3751,17 +4005,19 @@ EOF
 		{
 			// Invoke extensions after the update (could be before)
 			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 			}
-		} catch (Exception $e)
+		}
+		catch (Exception $e)
 		{
-			unset($aUpdateReentrance[$sKey]);
 			throw $e;
 		}
-
-		unset($aUpdateReentrance[$sKey]);
+		finally
+		{
+			unset($aUpdateReentrance[$sKey]);
+		}
 
 		return $res;
 	}
@@ -3769,7 +4025,7 @@ EOF
 	/**
 	 * @param string $sMessageIdPrefix
 	 *
-	 * @since 2.6
+	 * @since 2.6.0
 	 */
 	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
 	{
@@ -3835,6 +4091,16 @@ EOF
 	}
 
 	/**
+	 * Bypass the check of the user rights when deleting this object
+	 *
+	 * @param bool $bAllow True to bypass the checks, false to restore the default behavior
+	 */
+	public function AllowDelete($bAllow = true)
+	{
+		$this->bAllowDelete = $bAllow;
+	}
+
+	/**
 	 * @inheritdoc
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -3885,6 +4151,9 @@ EOF
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
 		parent::DoCheckToDelete($oDeletionPlan);
@@ -3903,23 +4172,41 @@ EOF
 
 		// User rights
 		//
-		$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE,
-			DBObjectSet::FromObject($this));
-		if (!$bDeleteAllowed)
+		if (! $this->bAllowDelete)
 		{
-			// Security issue
-			$this->m_bSecurityIssue = true;
-			$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
+			$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE, DBObjectSet::FromObject($this));
+
+			if (!$bDeleteAllowed)
+			{
+				// Security issue
+				$this->m_bSecurityIssue = true;
+				$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
+			}
 		}
 	}
 
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
+	 *
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sComment
+	 * @param string $sPrefix
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
+
 		if ($this->IsNew())
 		{
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -3928,6 +4215,7 @@ EOF
 		{
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
+
 		if ($iFlags & OPT_ATT_HIDDEN)
 		{
 			// The case log is hidden do nothing
@@ -3935,6 +4223,16 @@ EOF
 		else
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$sAttDefClass = get_class($oAttDef);
+			$sAttLabel = $oAttDef->GetLabel();
+			$sAttMetaDataLabel = utils::HtmlEntities($sAttLabel);
+			$sAttMetaDataFlagHidden = (($iFlags & OPT_ATT_HIDDEN) === OPT_ATT_HIDDEN) ? 'true' : 'false';
+			$sAttMetaDataFlagReadOnly = (($iFlags & OPT_ATT_READONLY) === OPT_ATT_READONLY) ? 'true' : 'false';
+			$sAttMetaDataFlagMandatory = (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) ? 'true' : 'false';
+			$sAttMetaDataFlagMustChange = (($iFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE) ? 'true' : 'false';
+			$sAttMetaDataFlagMustPrompt = (($iFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT) ? 'true' : 'false';
+			$sAttMetaDataFlagSlave = (($iFlags & OPT_ATT_SLAVE) === OPT_ATT_SLAVE) ? 'true' : 'false';
+
 			$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)))
@@ -3951,10 +4249,11 @@ EOF
 					{
 						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
 						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
-						$sTip .= "<div class='synchro-source'>";
-						$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
-						$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
+						$sTip .= "<div class=\"synchro-source\">";
+						$sTip .= "<div class=\"synchro-source-title\">Synchronized with {$aRow['name']}</div>";
+						$sTip .= "<div class=\"synchro-source-description\">$sDescription</div>";
 					}
+					$sTip = addslashes($sTip);
 					$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 				}
 
@@ -3970,19 +4269,32 @@ EOF
 				$sValue = $this->Get($sAttCode);
 				$sDisplayValue = $this->GetEditValue($sAttCode);
 				$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-				$sHTMLValue = '';
-				if ($sComment != '')
-				{
-					$sHTMLValue = '<span>'.$sComment.'</span><br/>';
-				}
-				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage,
-						$sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
-						$aArgs).'</span>';
+
+				$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+				$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+				$sHTMLValue = <<<HTML
+<div class="field_data">
+	<div class="field_value">
+		$sCommentAsHtml
+		$sFieldAsHtml
+	</div>
+</div>
+HTML;
+
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
-			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');
-			$oPage->add($sHTMLValue);
-			$oPage->add('</fieldset>');
+
+			$oPage->add(<<<HTML
+<fieldset>
+	<legend>{$sAttLabel}</legend>
+	<div class="field_container field_large" data-attribute-code="{$sAttCode}" data-attribute-type="{$sAttDefClass}" data-attribute-label="{$sAttMetaDataLabel}"
+		data-attribute-flag-hidden="{$sAttMetaDataFlagHidden}" data-attribute-flag-read-only="{$sAttMetaDataFlagReadOnly}" data-attribute-flag-mandatory="{$sAttMetaDataFlagMandatory}"
+		data-attribute-flag-must-change="{$sAttMetaDataFlagMustChange}" data-attribute-flag-must-prompt="{$sAttMetaDataFlagMustPrompt}" data-attribute-flag-slave="{$sAttMetaDataFlagSlave}">
+		{$sHTMLValue}
+	</div>
+</fieldset>
+HTML
+			);
 		}
 	}
 
@@ -4303,6 +4615,20 @@ EOF
 
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
+	 *
+	 * @param \WebPage $oP
+	 * @param string $sClass
+	 * @param array $aSelectedObj
+	 * @param string $sCustomOperation
+	 * @param bool $bPreview
+	 * @param string $sCancelUrl
+	 * @param array $aContextData
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \OQLException
 	 */
 	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
 	{
@@ -4427,13 +4753,14 @@ EOF
 	 *
 	 * @param \WebPage $oP
 	 * @param $sClass
-	 * @param $aObjects
+	 * @param \DBObject[] $aObjects
 	 * @param $bPreview
 	 * @param $sCustomOperation
 	 * @param array $aContextData
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public static function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array())
 	{
@@ -4447,7 +4774,7 @@ EOF
 			}
 			else
 			{
-				$oObj->DBDeleteTracked(CMDBObject::GetCurrentChange(), null, $oDeletionPlan);
+				$oObj->DBDelete($oDeletionPlan);
 			}
 		}
 
@@ -4729,6 +5056,8 @@ EOF
 	/**
 	 * Find redundancy settings that can be viewed and modified in a tab
 	 * Settings are distributed to the corresponding link set attribute so as to be shown in the relevant tab
+	 *
+	 * @throws \Exception
 	 */
 	protected function FindVisibleRedundancySettings()
 	{
@@ -4800,6 +5129,46 @@ EOF
 			}, 'json');
 		}, $iInterval);
 EOF
+		);
+	}
+
+	/**
+	 * Return an array of AttributeDefinition EditClass that should be rendered as large field in the UI
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	protected static function GetAttEditClassesToRenderAsLargeField(){
+		return array(
+			'CaseLog',
+			'CustomFields',
+			'HTML',
+			'OQLExpression',
+			'Text',
+		);
+	}
+
+	/**
+	 * Return an array of AttributeDefinition classes that should be excluded from the markup metadata when priting raw value (typically large values)
+	 * This markup is mostly aimed at CSS/JS hooks for extensions and Behat tests
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 *
+	 * @internal Do NOT use, this is experimental and most likely to be moved elsewhere when we find its rightful place.
+	 */
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+		return array(
+			'AttributeBlob',
+			'AttributeCustomFields',
+			'AttributeDashboard',
+			'AttributeLinkedSet',
+			'AttributeStopWatch',
+			'AttributeSubItem',
+			'AttributeTable',
+			'AttributeText',
+			'AttributePassword',
+			'AttributeOneWayPassword',
 		);
 	}
 }
