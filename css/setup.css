@@ -92,12 +92,8 @@ a:hover {
   margin-right: 20px;
 }
 #header h1 {
-  vertical-align: middle;
   height: 54px;
   margin: 0;
-}
-#header h1 a {
-  float: left;
 }
 #setup {
   width: 600px;
