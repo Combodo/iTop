@@ -305,11 +305,11 @@ class EMail
 			switch(strtolower($sKey))
 			{
 				case 'return-path':
-					$this->m_oMessage->setReturnPath($sValue)
+					$this->m_oMessage->setReturnPath($sValue);
 					break;
 
 				default:
-				$oHeaders->addTextHeader($sKey, $sValue);
+					$oHeaders->addTextHeader($sKey, $sValue);
 			}
 		}
 	}
