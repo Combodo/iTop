@@ -128,7 +128,17 @@ try
 		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
 	
-	if ($sJsonString == null)
+	if ($sJsonString === null)
+	{
+		$aNonJsonDataKeysList = array('auth_user', 'auth_pwd');
+		$sJsonString = $_REQUEST;
+		foreach ($aNonJsonDataKeysList as $sNonJsonDataKey)
+		{
+			unset($sJsonString[$sNonJsonDataKey]);
+		}
+	}
+
+	if ($sJsonString === null)
 	{
 		throw new Exception("Missing parameter 'json_data'", RestResult::MISSING_JSON);
 	}
