@@ -70,6 +70,8 @@ $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
+
+// Can be a either a string or an array
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 $sProvider = '';
 
