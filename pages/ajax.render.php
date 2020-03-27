@@ -1197,7 +1197,7 @@ EOF
 			break;
 
 		case 'dashboard_editor':
-			$sId = utils::ReadParam('id', '', false, 'raw_data');
+			$sId = utils::ReadParam('id', '', false, 'element_identifier');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
@@ -1217,10 +1217,11 @@ EOF
 
 		case 'new_dashlet_id':
 			$sDashboardDivId = utils::ReadParam("dashboardid");
+			$bIsCustomized = true; // Only called at runtime when customizing a dashboard
 			$iRow = utils::ReadParam("iRow");
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
-			$sFinalDashletId = Dashboard::GetDashletUniqueId(true, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
+			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
 			$oPage = new ajax_page('');
 			$oPage->add($sFinalDashletId);
 			break;

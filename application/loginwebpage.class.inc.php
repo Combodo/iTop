@@ -316,7 +316,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
-				$oUser->Set('reset_pwd_token', '');
+				$oUser->Set('reset_pwd_token', new ormPassword());
 				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
 				$aVars['sUrl'] = utils::GetAbsoluteUrlAppRoot();

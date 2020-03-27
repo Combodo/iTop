@@ -277,8 +277,7 @@ class ObjectFormHandlerHelper
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
-				->SetFormProperties($aFormProperties)
-				->SetIsSubmittable(isset($aFormData['buttons']['submit']) || ($sMode === self::ENUM_MODE_CREATE));
+				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
 

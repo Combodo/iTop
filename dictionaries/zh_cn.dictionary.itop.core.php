@@ -541,6 +541,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

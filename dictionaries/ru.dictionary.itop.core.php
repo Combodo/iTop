@@ -529,6 +529,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

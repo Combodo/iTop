@@ -539,6 +539,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

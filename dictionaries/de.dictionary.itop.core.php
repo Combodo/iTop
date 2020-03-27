@@ -202,7 +202,7 @@ Operatoren:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
-
+	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -541,6 +541,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Trigger/Attribute:action_list+' => 'Aktionen, die ausgeführt werden, wenn der Trigger aktiviert ist',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
