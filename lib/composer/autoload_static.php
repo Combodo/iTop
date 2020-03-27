@@ -396,6 +396,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\DataCollector\\CopycatDoctrineDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/CopycatDoctrineDataCollector.php',
         'Combodo\\iTop\\DataCollector\\LegacyQueryDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/LegacyQueryDataCollector.php',
         'Combodo\\iTop\\DataCollector\\Logger\\DebugStackDBObjectSet' => __DIR__ . '/../..' . '/src/DataCollector/Logger/DebugStackDBObjectSet.php',
+        'Combodo\\iTop\\DataCollector\\Logger\\DebugStackGeneric' => __DIR__ . '/../..' . '/src/DataCollector/Logger/DebugStackGeneric.php',
         'Combodo\\iTop\\DataCollector\\Logger\\DebugStackWebPage' => __DIR__ . '/../..' . '/src/DataCollector/Logger/DebugStackWebPage.php',
         'Combodo\\iTop\\DataCollector\\QueryDataCollector' => __DIR__ . '/../..' . '/src/DataCollector/QueryDataCollector.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',

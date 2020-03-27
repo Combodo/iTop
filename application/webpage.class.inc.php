@@ -142,7 +142,7 @@ class WebPage implements Page
 
 		if (self::$oContainer)
 		{
-			self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackWebPage')->startPage($this, $s_title);
+			self::$oContainer->get('Combodo\iTop\DataCollector\Logger\DebugStackWebPage')->startPage($this);
 		}
 
 		$this->s_title = $s_title;

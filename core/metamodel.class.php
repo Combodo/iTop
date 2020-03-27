@@ -6267,8 +6267,18 @@ abstract class MetaModel
 	 */
 	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
 	{
+		self::$oKernel = new Kernel();
+		self::$oKernel->boot();
 
-		
+		MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->start('MetaModelStartup', 'MetaModelStartup', 'MetaModelStartup');//TODO: fix this line: it does not work, since the timing is not displayed in the profiler timing panel
+
+		/** @var \Symfony\Component\EventDispatcher\EventDispatcher $oDispatcher */
+		$oDispatcher = self::GetContainer()->get('event_dispatcher');
+
+		$oEvent = new Symfony\Component\EventDispatcher\Event();//TODO: in order to pass data, an actual implementation has to be used, instead of the default one currently instaciated, @see https://github.com/symfony/symfony/blob/5.0/src/Symfony/Contracts/EventDispatcher/Event.php#L19
+		$oDispatcher->dispatch('metaModel.beforeStart', $oEvent);
+
+
 		self::$m_sEnvironment = $sEnvironment;
 
 		if (!defined('MODULESROOT'))
@@ -6291,9 +6301,6 @@ abstract class MetaModel
 			{
 				return;
 			}
-
-			self::$oKernel = new Kernel();
-			self::$oKernel->boot();
 		}
 
 		CMDBSource::SelectDB(self::$m_sDBName);
@@ -6305,12 +6312,12 @@ abstract class MetaModel
 
 		ExpressionCache::Warmup();
 
-        
         $oEvent = new Symfony\Component\EventDispatcher\Event();//TODO: in order to pass data, an actual implementation has to be used, instead of the default one currently instaciated, @see https://github.com/symfony/symfony/blob/5.0/src/Symfony/Contracts/EventDispatcher/Event.php#L19
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $oDispatcher */
-		$oDispatcher = self::GetContainer()->get('event_dispatcher');
-		$oDispatcher->dispatch('metaModel.started', $oEvent);
-		
+		$oDispatcher->dispatch('metaModel.AfterStart', $oEvent);
+
+
+
+		MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->stop('MetaModelStartup');
 	}
 
 	/**

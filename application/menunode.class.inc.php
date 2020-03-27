@@ -75,6 +75,8 @@ class ApplicationMenu
 	{
 		if (!self::$bAdditionalMenusLoaded)
 		{
+			MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->start('ApplicationMenu::LoadAdditionalMenus', 'ApplicationMenu::LoadAdditionalMenus', 'MenuNode');
+
 			// Build menus from module handlers
 			//
 			/** @var \ModuleHandlerApiInterface $oPHPClass */
@@ -92,6 +94,8 @@ class ApplicationMenu
 			}
 
 			self::$bAdditionalMenusLoaded = true;
+			MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->stop('ApplicationMenu::LoadAdditionalMenus');
+
 		}
 	}
 
@@ -1186,6 +1190,8 @@ class DashboardMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
+		MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->start($this, 'RenderContent', 'MenuNode');
+
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
@@ -1231,6 +1237,8 @@ class DashboardMenuNode extends MenuNode
 		{
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
+
+		MetaModel::GetContainer()->get('Combodo\iTop\DataCollector\Logger\DebugStackGeneric')->stop($this);
 	}
 
 	/**

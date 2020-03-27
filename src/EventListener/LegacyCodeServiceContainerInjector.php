@@ -36,7 +36,7 @@ class LegacyCodeServiceContainerInjector
 	 *
 	 * @throws \Exception
 	 */
-	public function onMetaModelStarted(\Symfony\Component\EventDispatcher\Event $oEvent)
+	public function onMetaModelBeforeStart(\Symfony\Component\EventDispatcher\Event $oEvent)
 	{
 		\ExecutionKPI::setContainer($this->container);
 		\DBObjectSet::setContainer($this->container);

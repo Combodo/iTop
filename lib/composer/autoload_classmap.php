@@ -153,6 +153,7 @@ return array(
     'Combodo\\iTop\\DataCollector\\CopycatDoctrineDataCollector' => $baseDir . '/src/DataCollector/CopycatDoctrineDataCollector.php',
     'Combodo\\iTop\\DataCollector\\LegacyQueryDataCollector' => $baseDir . '/src/DataCollector/LegacyQueryDataCollector.php',
     'Combodo\\iTop\\DataCollector\\Logger\\DebugStackDBObjectSet' => $baseDir . '/src/DataCollector/Logger/DebugStackDBObjectSet.php',
+    'Combodo\\iTop\\DataCollector\\Logger\\DebugStackGeneric' => $baseDir . '/src/DataCollector/Logger/DebugStackGeneric.php',
     'Combodo\\iTop\\DataCollector\\Logger\\DebugStackWebPage' => $baseDir . '/src/DataCollector/Logger/DebugStackWebPage.php',
     'Combodo\\iTop\\DataCollector\\QueryDataCollector' => $baseDir . '/src/DataCollector/QueryDataCollector.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',

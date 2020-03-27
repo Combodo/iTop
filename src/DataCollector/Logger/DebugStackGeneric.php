@@ -25,27 +25,8 @@ namespace Combodo\iTop\DataCollector\Logger;
 
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class DebugStackWebPage
+class DebugStackGeneric
 {
-	/**
-	 * generated Pages .
-	 *
-	 * @var mixed[][]
-	 */
-	public $aWebPage = [];
-
-	/**
-	 * If Debug Stack is enabled (log queries) or not.
-	 *
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/** @var float|null */
-	public $start = null;
-
-	/** @var int */
-	public $currentQuery = 0;
 	/**
 	 * @var null|\Symfony\Component\Stopwatch\Stopwatch
 	 */
@@ -59,43 +40,36 @@ class DebugStackWebPage
 	/**
 	 * {@inheritdoc}
 	 */
-	public function startPage(\WebPage $page)
+	public function start($IdOrObject, $sName, $sCategory)
 	{
-		if (! $this->enabled) {
-			return;
-		}
-
-		$this->start                          = microtime(true);
-		$this->aWebPage[++$this->currentQuery] = [];
+		$sEventId = $this->getEventIdFrom($IdOrObject);
 
 		if ($this->stopwatch) {
-			$spl_object_hash = spl_object_hash($page);
-			$this->events[$spl_object_hash] = $this->stopwatch->start(get_class($page), 'WebPage');
+			$this->events[$sEventId] = $this->stopwatch->start($sName , $sCategory);
 		}
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function stopPage(\WebPage $page)
+	public function stop($IdOrObject)
 	{
-		if (! $this->enabled) {
-			return;
-		}
-
-		$this->aWebPage[$this->currentQuery] = [
-			'outputFormat' => $page->GetOutputFormat(),
-			'transactionId' => $page->GetTransactionId(),
-
-			'isPdf' => $page->is_pdf(),
-			'isPrintableVersion' => $page->IsPrintableVersion(),
-		];
+		$sEventId = $this->getEventIdFrom($IdOrObject);
 
 		if ($this->stopwatch) {
-			$spl_object_hash = spl_object_hash($page);
-			$this->events[$spl_object_hash]->stop();;
-			unset($this->events[$spl_object_hash]);
+			$this->events[$sEventId]->stop();;
+			unset($this->events[$sEventId]);
 		}
 
+	}
+
+	private function getEventIdFrom($IdOrObject)
+	{
+		if (is_object($IdOrObject))
+		{
+			return spl_object_hash($IdOrObject);
+		}
+
+		return $IdOrObject;
 	}
 }
