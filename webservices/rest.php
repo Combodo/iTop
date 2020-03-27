@@ -130,7 +130,7 @@ try
 	
 	if ($sJsonString === null)
 	{
-		$aNonJsonDataKeysList = array('auth_user', 'auth_pwd');
+		$aNonJsonDataKeysList = array('version', 'auth_user', 'auth_pwd', 'callback');
 		$sJsonString = $_REQUEST;
 		foreach ($aNonJsonDataKeysList as $sNonJsonDataKey)
 		{
