@@ -636,12 +636,15 @@ HTML
 		$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sHKAttCode = MetaModel::IsHierarchicalClass($this->sTargetClass);
-		$this->DumpTree($oPage, $oSet, $sHKAttCode, $currValue);
+		$bHasChildLeafs = $this->DumpTree($oPage, $oSet, $sHKAttCode, $currValue);
 
 		$oPage->add('</td></tr></table>');
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
+		if ($bHasChildLeafs)
+		{
+			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
+		}
 
 		$oPage->add("<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
 		$oPage->add("<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
@@ -678,6 +681,18 @@ HTML
 		}
 	}
 
+	/**
+	 * @param WebPage $oP
+	 * @param \DBObjectSet $oSet
+	 * @param string $sParentAttCode
+	 * @param string $currValue
+	 *
+	 * @return bool true if there are at least one child leaf, false if only roots nodes are present
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
 	function DumpTree($oP, $oSet, $sParentAttCode, $currValue)
 	{
 		$aTree = array();
@@ -706,6 +721,9 @@ HTML
 		{
 			$this->DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue);
 		}
+
+		$bHasOnlyRootNodes = (count($aTree) === 1);
+		return !$bHasOnlyRootNodes;
 	}
 
 	function DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue)
