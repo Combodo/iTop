@@ -837,7 +837,8 @@ class DisplayBlock
 
 				foreach($aStates as $sStateValue)
 				{
-					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
+					$sHtmlValue=$aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
+					$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
 
 					$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 						? $aCountsQueryResults[$sStateValue]
