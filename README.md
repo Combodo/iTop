@@ -127,6 +127,7 @@ We would like to give a special thank you to the people from the community who c
  - Rosenke, Stephan
  - Seki, Shoji
  - Shilov, Vladimir
+ - Tahri, Ahmed R. (Ousret)
  - Tulio, Marco
  - Turrubiates, Miguel
 
