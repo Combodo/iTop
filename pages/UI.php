@@ -909,6 +909,14 @@ HTML
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
+				IssueLog::Trace('Object not updated (empty class or id)', $sClass, array(
+					'$operation' => $operation,
+					'$id' => $id,
+					'$sTransactionId' => $sTransactionId,
+					'$sUser' => UserRights::GetUser(),
+					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				));
+
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 			$bDisplayDetails = true;
@@ -918,6 +926,14 @@ HTML
 				$bDisplayDetails = false;
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+
+				IssueLog::Trace('Object not updated (id not found)', $sClass, array(
+					'$operation' => $operation,
+					'$id' => $id,
+					'$sTransactionId' => $sTransactionId,
+					'$sUser' => UserRights::GetUser(),
+					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				));
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
@@ -925,6 +941,14 @@ HTML
 				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+
+				IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
+					'$operation' => $operation,
+					'$id' => $id,
+					'$sTransactionId' => $sTransactionId,
+					'$sUser' => UserRights::GetUser(),
+					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				));
 			}
 			else
 			{
@@ -932,14 +956,37 @@ HTML
 				$sMessage = '';
 				$sSeverity = 'ok';
 
+
 				if (!$oObj->IsModified() && empty($aErrors))
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 					$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 					$sSeverity = 'info';
+
+
+					IssueLog::Trace('Object updated', $sClass, array(
+						'$operation' => $operation,
+						'$id' => $id,
+						'$sTransactionId' => $sTransactionId,
+						'$aErrors' => $aErrors,
+						'IsModified' => $oObj->IsModified(),
+						'$sUser' => UserRights::GetUser(),
+						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					));
 				}
 				else
 				{
+
+					IssueLog::Trace('Object not updated (see either $aErrors or IsModified)', $sClass, array(
+						'$operation' => $operation,
+						'$id' => $id,
+						'$sTransactionId' => $sTransactionId,
+						'$aErrors' => $aErrors,
+						'IsModified' => $oObj->IsModified(),
+						'$sUser' => UserRights::GetUser(),
+						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					));
+
 					try
 					{
 						if (!empty($aErrors))
@@ -1102,6 +1149,13 @@ HTML
 		$aWarnings = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
+			IssueLog::Trace('Object not created (empty class)', $sClass, array(
+				'$operation' => $operation,
+				'$sTransactionId' => $sTransactionId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
+
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
 		if (!utils::IsTransactionValid($sTransactionId, false))
@@ -1109,6 +1163,14 @@ HTML
 			$sUser = UserRights::GetUser();
 			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
+
+			IssueLog::Trace('Object not created (invalid transaction_id)', $sClass, array(
+				'$operation' => $operation,
+				'$id' => $id,
+				'$sTransactionId' => $sTransactionId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
 		}
 		else
 		{
@@ -1139,6 +1201,16 @@ HTML
 			{
 				if (!empty($aErrors) || !empty($aWarnings))
 				{
+					IssueLog::Trace('Object not created (see either $aErrors or $aWarnings)', $sClass, array(
+						'$operation' => $operation,
+						'$id' => $id,
+						'$sTransactionId' => $sTransactionId,
+						'$aErrors' => $aErrors,
+						'$aWarnings' => $aWarnings,
+						'$sUser' => UserRights::GetUser(),
+						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					));
+
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 				}
 

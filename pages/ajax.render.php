@@ -1021,6 +1021,16 @@ try
 			{
 				$bReleaseLock = iTopOwnershipLock::ReleaseLock($sObjClass, $iObjKey, $sToken);
 			}
+
+			IssueLog::Trace('on_form_cancel', $sObjClass, array(
+				'$iObjKey' => $iObjKey,
+				'$sTransactionId' => $iTransactionId,
+				'$sTempId' => $sTempId,
+				'$sToken' => $sToken,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
+
 			break;
 
 		case 'dashboard':
@@ -2650,6 +2660,16 @@ EOF
 							$aResult['width'] = $aDimensions['width'];
 							$aResult['height'] = $aDimensions['height'];
 						}
+
+						IssueLog::Trace('InlineImage created', 'InlineImage', array(
+							'$operation' => $operation,
+							'$aResult' => $aResult,
+							'secret' => $oAttachment->Get('secret'),
+							'temp_id' => $sTempId,
+							'item_class' => $sObjClass,
+							'user' => $sUser = UserRights::GetUser(),
+							'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+						));
 					}
 					else
 					{
@@ -2690,6 +2710,15 @@ EOF
 					$oAttachment->Set('contents', $oDoc);
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
+
+					IssueLog::Trace('InlineImage created', 'InlineImage', array(
+						'$operation' => $operation,
+						'secret' => $oAttachment->Get('secret'),
+						'temp_id' => $sTempId,
+						'item_class' => $sObjClass,
+						'user' => $sUser = UserRights::GetUser(),
+						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					));
 				}
 
 			} catch (FileUploadException $e)

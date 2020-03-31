@@ -176,13 +176,35 @@ class InlineImage extends DBObject
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+			$aInlineImagesId = array();
 			while($oInlineImage = $oSet->Fetch())
 			{
+				$aInlineImagesId[] = $oInlineImage->GetKey();
 				$oInlineImage->SetItem($oObject);
 				$oInlineImage->Set('temp_id', '');
 				$oInlineImage->DBUpdate();
 			}
+
+			IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesDebugTrace for a list of updated id)', 'InlineImage', array(
+				'$sObjectClass' => get_class($oObject),
+				'$sTransactionId' => $iTransactionId,
+				'$sTempId' => $sTempId,
+				'$aInlineImagesId' => $aInlineImagesId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
 		}
+		else
+		{
+			IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', 'InlineImage', array(
+				'$sObjectClass' => get_class($oObject),
+				'$sTransactionId' => $iTransactionId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
+		}
+
+
 // For tracing issues with Inline Images... but beware not all updates are interactive, so this trace happens when creating objects non-interactively (REST, Synchro...)
 // 		else
 //		{
@@ -208,10 +230,20 @@ class InlineImage extends DBObject
 		$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
 		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
+		$aInlineImagesId = array();
 		while($oInlineImage = $oSet->Fetch())
 		{
+			$aInlineImagesId[] = $oInlineImage->GetKey();
+
 			$oInlineImage->DBDelete();
 		}
+
+		IssueLog::Trace('OnFormCancel', 'InlineImage', array(
+			'$sTempId' => $sTempId,
+			'$aInlineImagesId' => $aInlineImagesId,
+			'$sUser' => UserRights::GetUser(),
+			'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+		));
 	}
 	
 	/**
@@ -617,6 +649,18 @@ class InlineImageGC implements iBackgroundProcess
 			/** @var \ormDocument $oDocument */
 			$oDocument = $oResult->Get('contents');
 			IssueLog::Info($sClass.' GC: Removed temp. file '.$oDocument->GetFileName().' on "'.$oResult->Get('item_class').'" #'.$oResult->Get('item_id').' as it has expired.');
+
+			IssueLog::Trace('DeleteExpiredDocuments', 'InlineImage', array(
+				'$sClass' => $sClass,
+				'$sDateLimit' => $sDateLimit,
+				'temp_id' => $oResult->Get('temp_id'),
+				'secret' => $oResult->Get('secret'),
+				'item_id' => $oResult->Get('item_id'),
+				'item_class' => $oResult->Get('item_class'),
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			));
+
 			$oResult->DBDelete();
 			$iProcessed++;
 		}
