@@ -309,12 +309,18 @@ EOF
 			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
+
 		//Fetch classes names for autocomplete purpose
+		// - Encode as JSON to escape quotes and other characters
+		$sClassLabelAndCodeAsJSON = json_encode("$sLabelClassName ($sClassName)");
+		$sClassLabelAsJSON = json_encode($sLabelClassName);
+		$sClassCodeAsJSON = json_encode($sClassName);
+		// - Push to autocomplete
 		$oPage->add_script(
 			<<<EOF
-	autocompleteClassLabelAndCode.push("$sLabelClassName ($sClassName)");
-	autocompleteClassLabel.push("$sLabelClassName");
-	autocompleteClassCode.push("$sClassName");
+	autocompleteClassLabelAndCode.push($sClassLabelAndCodeAsJSON);
+	autocompleteClassLabel.push($sClassLabelAsJSON);
+	autocompleteClassCode.push($sClassCodeAsJSON);
 EOF
 		);
 	}
