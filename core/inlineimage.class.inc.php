@@ -191,7 +191,7 @@ class InlineImage extends DBObject
 				'$sTempId' => $sTempId,
 				'$aInlineImagesId' => $aInlineImagesId,
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 		}
 		else
@@ -200,7 +200,7 @@ class InlineImage extends DBObject
 				'$sObjectClass' => get_class($oObject),
 				'$sTransactionId' => $iTransactionId,
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 		}
 
@@ -242,7 +242,7 @@ class InlineImage extends DBObject
 			'$sTempId' => $sTempId,
 			'$aInlineImagesId' => $aInlineImagesId,
 			'$sUser' => UserRights::GetUser(),
-			'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 		));
 	}
 	
@@ -658,7 +658,7 @@ class InlineImageGC implements iBackgroundProcess
 				'item_id' => $oResult->Get('item_id'),
 				'item_class' => $oResult->Get('item_class'),
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 
 			$oResult->DBDelete();

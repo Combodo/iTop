@@ -914,7 +914,7 @@ HTML
 					'$id' => $id,
 					'$sTransactionId' => $sTransactionId,
 					'$sUser' => UserRights::GetUser(),
-					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				));
 
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
@@ -932,7 +932,7 @@ HTML
 					'$id' => $id,
 					'$sTransactionId' => $sTransactionId,
 					'$sUser' => UserRights::GetUser(),
-					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				));
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
@@ -947,7 +947,7 @@ HTML
 					'$id' => $id,
 					'$sTransactionId' => $sTransactionId,
 					'$sUser' => UserRights::GetUser(),
-					'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				));
 			}
 			else
@@ -971,7 +971,7 @@ HTML
 						'$aErrors' => $aErrors,
 						'IsModified' => $oObj->IsModified(),
 						'$sUser' => UserRights::GetUser(),
-						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 					));
 				}
 				else
@@ -984,7 +984,7 @@ HTML
 						'$aErrors' => $aErrors,
 						'IsModified' => $oObj->IsModified(),
 						'$sUser' => UserRights::GetUser(),
-						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 					));
 
 					try
@@ -1153,7 +1153,7 @@ HTML
 				'$operation' => $operation,
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -1169,7 +1169,7 @@ HTML
 				'$id' => $id,
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 		}
 		else
@@ -1208,7 +1208,7 @@ HTML
 						'$aErrors' => $aErrors,
 						'$aWarnings' => $aWarnings,
 						'$sUser' => UserRights::GetUser(),
-						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 					));
 
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));

@@ -1028,7 +1028,7 @@ try
 				'$sTempId' => $sTempId,
 				'$sToken' => $sToken,
 				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 			));
 
 			break;
@@ -2668,7 +2668,7 @@ EOF
 							'temp_id' => $sTempId,
 							'item_class' => $sObjClass,
 							'user' => $sUser = UserRights::GetUser(),
-							'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+							'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 						));
 					}
 					else
@@ -2717,7 +2717,7 @@ EOF
 						'temp_id' => $sTempId,
 						'item_class' => $sObjClass,
 						'user' => $sUser = UserRights::GetUser(),
-						'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
+						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 					));
 				}
 
