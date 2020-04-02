@@ -422,6 +422,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Insert' => 'Insert',
 	'UI:Button:More' => 'More',
 	'UI:Button:Less' => 'Less',
+	'UI:Button:Wait' => 'Please wait while updating fields',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',

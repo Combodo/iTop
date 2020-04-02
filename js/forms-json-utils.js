@@ -143,6 +143,13 @@ var oFormErrors = { err_form0: 0 };
 
 function CheckFields(sFormId, bDisplayAlert)
 {
+// if some fields are in wait, no submit is allowed
+	if ($('#'+sFormId+' .blockMsg').length>0)
+	{
+		alert(Dict.S('UI:Button:Wait'));
+		return false;
+	}
+
 	$('#'+sFormId+' :submit').prop('disable', true);
 	$('#'+sFormId+' :button[type=submit]').prop('disable', true);
 	firstErrorId = '';
@@ -171,6 +178,7 @@ function CheckFields(sFormId, bDisplayAlert)
 			$('#'+oFormErrors['input_'+sFormId]).focus();
 		}
 	}
+
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
 }
 

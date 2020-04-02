@@ -405,6 +405,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Insert' => 'Insérer',
 	'UI:Button:More' => 'Plus',
 	'UI:Button:Less' => 'Moins',
+	'UI:Button:Wait' => 'Patientez pendant la mise à jour des champs',
 
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
