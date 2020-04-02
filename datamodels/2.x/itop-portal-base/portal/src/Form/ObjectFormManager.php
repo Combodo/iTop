@@ -1136,6 +1136,7 @@ class ObjectFormManager extends FormManager
 
 				if ($bWasModified)
 				{
+					//=if (isNew) because $bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified())
 					if(!$bActivateTriggers)
 					{
 						$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
