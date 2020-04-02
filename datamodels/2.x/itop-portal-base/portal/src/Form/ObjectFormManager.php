@@ -1136,7 +1136,14 @@ class ObjectFormManager extends FormManager
 
 				if ($bWasModified)
 				{
-					$aData['messages']['success'] += array('_main' => array(Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName())));
+					if(!$bActivateTriggers)
+					{
+						$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
+					}
+					else
+					{
+						$aData['messages']['success'] += array('_main' => array(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($this->oObject)), $this->oObject->GetName())));
+					}
 				}
 			}
 			catch (Exception $e)
