@@ -2148,20 +2148,30 @@ EOF
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<div class=\"field_input_zone field_input_document\">\n";
 					$sHTMLValue .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
+					$sHTMLValue .= "<input type=\"hidden\" id=\"do_remove_{$iId}\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]\" value=\"0\"/>\n";
+
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName,
 							ENT_QUOTES, 'UTF-8')."\"/>\n";
-					$sHTMLValue .= "<span id=\"name_$iInputId\"'>".htmlentities($sFileName, ENT_QUOTES,
-							'UTF-8')."</span><br/>\n";
+					$sHTMLValue .= "<span id=\"name_$iInputId\"' >".htmlentities($sFileName, ENT_QUOTES,
+							'UTF-8')."</span>&#160;&#160;";
+					$sHTMLValue .= "<div title=\"".htmlentities(Dict::S('UI:Button:RemoveDocument'), ENT_QUOTES, 'UTF-8'). "\" id=\"remove_attr_$iId\" class=\"button\" onClick=\"$('#file_$iId').val('');UpdateFileName('$iId', '');\" style=\"display: contents;\">";
+					$sHTMLValue .= "<div class=\"ui-icon ui-icon-trash\"></div></div>";
+					$sHTMLValue .= "</div>";
+					$sHTMLValue .= "<br/>\n";
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
 					$sHTMLValue .= "</div>\n";
 					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
+					if ($sFileName == '')
+					{
+						$oPage->add_ready_script("$('#remove_attr_{$iId}').hide();");
+					}
 					break;
 
 				case 'Image':
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
-					$oDocument = $value; // Value is an ormDocument object
+					$oDocument = $value; // Value is an ormDocument objectm
 					$sDefaultUrl = $oAttDef->Get('default_image');
 					if (is_object($oDocument) && !$oDocument->IsEmpty())
 					{
@@ -3175,11 +3185,18 @@ EOF
 				if ($oAttDef->GetEditClass() == 'Document')
 				{
 					$oDocument = $this->Get($sAttCode);
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					if (!$oDocument->IsEmpty())
+					{
+						$sDisplayValue = $this->GetAsHTML($sAttCode);
+						$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
+								$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+						$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
+								$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					}
+					else
+					{
+						$sDisplayValue ='';
+					}
 				}
 				elseif ($oAttDef instanceof AttributeDashboard)
 				{
@@ -3518,14 +3535,6 @@ EOF
 			switch ($oAttDef->GetEditClass())
 			{
 				case 'Document':
-					// There should be an uploaded file with the named attr_<attCode>
-					$oDocument = $value['fcontents'];
-					if (!$oDocument->IsEmpty())
-					{
-						// A new file has been uploaded
-						$this->Set($sAttCode, $oDocument);
-					}
-					break;
 				case 'Image':
 					// There should be an uploaded file with the named attr_<attCode>
 					if ($value['remove'])
@@ -3751,7 +3760,8 @@ EOF
 		switch ($oAttDef->GetEditClass())
 		{
 			case  'Document':
-				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'), 'remove' => $aOtherData['remove']);
 				break;
 
 			case 'Image':

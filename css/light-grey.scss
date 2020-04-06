@@ -2371,6 +2371,16 @@ fieldset .details>.field_container {
 								display: inline-block;
 								margin-bottom: 2px;
 							}
+
+							.button{
+								cursor: pointer;
+								margin-bottom: 3px;
+								padding: 2px;
+								.ui-icon {
+									background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffffff_256x240.png?v=" + $version);
+									background-color: $highlight-color;
+								}
+							}
 						}
 
 						&.field_input_image{

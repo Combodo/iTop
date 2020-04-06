@@ -1428,6 +1428,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
 
+	'UI:Button:RemoveDocument' => 'Supprimer le document',
+
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
 	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> La soumission automatique a été desactivée pour cette classe',
