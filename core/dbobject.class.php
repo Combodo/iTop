@@ -2914,9 +2914,9 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-	/*
-	* Persist an object to the DB, for the first time
-	*
+	/**
+	 * Persist an object to the DB, for the first time
+	 *
      * @api
      * @see DBWrite
      *
