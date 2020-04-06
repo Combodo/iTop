@@ -2019,14 +2019,14 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Find the child node matching the given node under the specified parent.
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 *
-	 * @param \MFElement $oParent
+	 * @param \DOMNode $oParent
 	 * @param \MFElement $oRefNode
 	 * @param string $sSearchId
 	 *
 	 * @return \MFElement|null
 	 * @throws Exception
 	 */
-	public static function _FindNode(MFElement $oParent, MFElement $oRefNode, $sSearchId = null)
+	public static function _FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
 	{
 		$oRes = null;
 		if ($oParent instanceof DOMDocument)
