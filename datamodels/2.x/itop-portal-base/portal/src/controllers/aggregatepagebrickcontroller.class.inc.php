@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use IssueLog;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -81,7 +82,8 @@ class AggregatePageBrickController
 			$oPortalBrick = $this->GetBrickFromId($aPortalInstanceBricks, $sBrickId);
 			if (!isset($oPortalBrick))
 			{
-				throw new \Exception("AggregatePageBrick : non existing brick '$sBrickId'");
+				IssueLog::Warning('AggregatePageBrick: Could not display "'.$sBrickId.'", either wrong id or user profile not allowed');
+				continue;
 			}
 			$aAggregatePageBricks[] = $oPortalBrick;
 		}
