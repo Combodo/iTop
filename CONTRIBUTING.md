@@ -47,8 +47,8 @@ When we first start with Git, we were using the [GitFlow](https://nvie.com/posts
 Here are the branches we use and their meaning : 
 
 - `develop`: ongoing development version
-- `release/\*`: if present, that means we are working on a alpha/beta/rc version for shipping
-- `support/\*`: maintenance branches for older versions
+- `release/*`: if present, that means we are working on a alpha/beta/rc version for shipping
+- `support/*`: maintenance branches for older versions
 
 For example, if no version is currently prepared for shipping we could have:
 
