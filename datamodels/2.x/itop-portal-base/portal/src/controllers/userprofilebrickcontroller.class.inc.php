@@ -19,19 +19,19 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Brick\UserProfileBrick;
+use Combodo\iTop\Portal\Form\PasswordFormManager;
+use Combodo\iTop\Portal\Form\PreferencesFormManager;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Exception;
 use FileUploadException;
 use IssueLog;
-use utils;
 use MetaModel;
-use UserRights;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Brick\UserProfileBrick;
-use Combodo\iTop\Portal\Form\PreferencesFormManager;
-use Combodo\iTop\Portal\Form\PasswordFormManager;
-use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
+use UserRights;
+use utils;
 
 /**
  * Class UserProfileBrickController
@@ -159,7 +159,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oApp['url_generator']->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PreferencesFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
@@ -232,7 +232,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oApp['url_generator']->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PasswordFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
