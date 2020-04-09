@@ -351,6 +351,11 @@ class utils
 
 					}
 				}
+			break;
+
+			// For XML / HTML node identifiers
+			case 'element_identifier':
+				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			default:
