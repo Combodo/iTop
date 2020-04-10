@@ -1197,7 +1197,7 @@ EOF
 			break;
 
 		case 'dashboard_editor':
-			$sId = utils::ReadParam('id', '', false, 'element_identifier');
+			$sId = utils::ReadParam('id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
