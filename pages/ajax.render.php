@@ -763,7 +763,6 @@ try
 						}
 						else
 						{
-							$iFlags = MetaModel::GetAttributeFlags($sClass, $oObj->GetState(), $sAttCode);
 							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix), false);
 							// Make sure that we immediately validate the field when we reload it
 							$oPage->add_ready_script("$('#$sId').trigger('validate');");
