@@ -566,6 +566,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnPortalUpdate' => 'トリガー（ポータルから更新された時）',
 	'Class:TriggerOnPortalUpdate+' => 'エンドユーザがポータルから更新した場合のトリガー',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //

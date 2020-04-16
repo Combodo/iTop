@@ -566,6 +566,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnPortalUpdate' => 'Déclencheur sur mise à jour depuis le portail',
 	'Class:TriggerOnPortalUpdate+' => '',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Attributs cible',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

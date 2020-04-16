@@ -565,6 +565,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:TriggerOnPortalUpdate' => 'Spúštač (pri aktualizácií z portálu)',
 	'Class:TriggerOnPortalUpdate+' => '',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //

@@ -567,6 +567,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnPortalUpdate' => '触发器 (工单更新时)',
 	'Class:TriggerOnPortalUpdate+' => '终端用户更新工单时触发',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => '目标字段',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

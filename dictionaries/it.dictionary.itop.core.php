@@ -568,6 +568,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (dopo l\'aggiornamento dal portale )',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger sull\'aggiornamento dell\'utente dal portale',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //

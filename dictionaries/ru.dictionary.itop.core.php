@@ -555,6 +555,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TriggerOnPortalUpdate' => 'Триггер на обновление из портала',
 	'Class:TriggerOnPortalUpdate+' => 'Триггер на обновление объекта пользователем портала',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Отслеживаемые поля',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => 'Поля объекта, при обновлении которых сработает триггер',
 ));
 
 //

@@ -568,6 +568,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

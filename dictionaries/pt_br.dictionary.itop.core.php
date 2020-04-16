@@ -568,6 +568,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnPortalUpdate' => 'Gatilho (quando atualizado a partir do portal)',
 	'Class:TriggerOnPortalUpdate+' => 'Gatilho de uma atualização do usuário final a partir do portal',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Campos de destino',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

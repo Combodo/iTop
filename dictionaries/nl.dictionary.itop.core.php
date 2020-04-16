@@ -574,6 +574,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (als er vanuit het portaal geüpdatet wordt)',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger op de update van de eindgebruiker van het portaal',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Doelvelden',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

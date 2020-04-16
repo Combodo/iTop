@@ -567,6 +567,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (bei Update aus dem Portal)',
 	'Class:TriggerOnPortalUpdate+' => '',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Ziel-Felder',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

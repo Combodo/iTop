@@ -229,6 +229,7 @@ abstract class TriggerOnObject extends Trigger
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function DoActivate($aContextArgs)
 	{
@@ -237,7 +238,7 @@ abstract class TriggerOnObject extends Trigger
 		{
 			/** @var \DBObject $oObject */
 			$oObject = $aContextArgs['this->object()'];
-			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListChanges());
+			$bGo = $this->IsTargetObject($oObject->GetKey(), $this->GetChanges($oObject));
 		}
 		if ($bGo)
 		{
@@ -273,6 +274,20 @@ abstract class TriggerOnObject extends Trigger
 
 		return $bRet;
 	}
+
+	/**
+	 * Get changes of given object
+	 * could be overloaded by a child class
+	 *
+	 * @param \DBObject $oObject
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	protected function GetChanges(DBObject $oObject)
+	{
+		return $oObject->ListChanges();
+	}
 }
 
 /**
@@ -282,6 +297,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 {
 	/**
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public static function Init()
 	{
@@ -299,11 +315,99 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('target_attcodes', array("allowed_values" => null, "class_field" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "max_items" => 20, "min_items" => 0, "attribute_definition_exclusion_list" => "AttributeDashboard,AttributeExternalField,AttributeFinalClass,AttributeFriendlyName,AttributeObsolescenceDate,AttributeObsolescenceFlag,AttributeSubItem", "attribute_definition_list" => null, "depends_on" => array('target_class'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
+	}
+
+	/**
+	 * @param $iObjectId
+	 * @param array $aChanges
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function IsTargetObject($iObjectId, $aChanges = array())
+	{
+		if (!parent::IsTargetObject($iObjectId, $aChanges))
+		{
+			return false;
+		}
+
+		// Check the attribute
+		$oAttCodeSet = $this->Get('target_attcodes');
+		$aAttCodes = $oAttCodeSet->GetValues();
+		if (empty($aAttCodes))
+		{
+			return true;
+		}
+
+		foreach($aAttCodes as $sAttCode)
+		{
+			if (array_key_exists($sAttCode, $aChanges))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 */
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		// Remove unwanted attribute codes
+		$aChanges = $this->ListChanges();
+		if (isset($aChanges['target_attcodes']))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'target_attcodes');
+			$aArgs = array('this' => $this);
+			$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
+
+			/** @var \ormSet $oValue */
+			$oValue = $this->Get('target_attcodes');
+			$aValues = $oValue->GetValues();
+			$bChanged = false;
+			foreach($aValues as $key => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$key]);
+					$bChanged = true;
+				}
+			}
+			if ($bChanged)
+			{
+				$oValue->SetValues($aValues);
+				$this->Set('target_attcodes', $oValue);
+			}
+		}
+	}
+
+	/**
+	 * Get changes of given object using {@see DBObject::ListPreviousValuesForUpdatedAttributes()}
+	 *
+	 * @param \DBObject $oObject
+	 *
+	 * @return array
+	 */
+	protected function GetChanges(DBObject $oObject)
+	{
+		return $oObject->ListPreviousValuesForUpdatedAttributes();
 	}
 }
 

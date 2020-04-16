@@ -570,6 +570,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger \'aktualizace přes portál\'',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger při aktualizaci koncovým uživatelem přes portál',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //

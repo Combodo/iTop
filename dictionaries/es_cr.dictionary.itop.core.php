@@ -568,6 +568,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:TriggerOnPortalUpdate' => 'Disparador (cuando se actualiza desde el portal)',
 	'Class:TriggerOnPortalUpdate+' => 'Disparador cuando un usuario actualiza desde el portal',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Campos objetivo',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => 'Campos que serán monitorizados',
 ));
 
 //

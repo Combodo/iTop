@@ -568,6 +568,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (Når opdateret fra portalen)',
 	'Class:TriggerOnPortalUpdate+' => '',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //

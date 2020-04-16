@@ -576,6 +576,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)~~',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnPortalUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //
