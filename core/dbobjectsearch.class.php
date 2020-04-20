@@ -223,9 +223,9 @@ class DBObjectSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bFound = false;
-		if (array_key_exists($sOldName, $this->m_aClasses))
+		if (!array_key_exists($sOldName, $this->m_aClasses))
 		{
-			$bFound = true;
+			return false;
 		}
 		if (array_key_exists($sNewName, $this->m_aClasses))
 		{
