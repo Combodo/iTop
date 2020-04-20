@@ -1068,7 +1068,6 @@ class DBObjectSearch extends DBSearch
 	{
 		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
 		{
-			$oSearch->ResetCondition();
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
 			return $oSearch->GetCriteria();
 		}
