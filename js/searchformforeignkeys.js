@@ -47,7 +47,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').prop('disabled', false);
 
-
 		$('<div id="dlg_'+me.id+'"></div>').appendTo(document.body);
 
 		// me.trace(dialog);
@@ -169,7 +168,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		var theMap = {
 			sTargetClass: me.sTargetClass,
 			iInputId: me.id,
-			sFilter: me.sFilter
+			sFilter: me.sfilter,
 			// bSearchMode: me.bSearchMode
 		};
 
@@ -262,6 +261,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
+		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id).data().itopDatatable.options.sFilter;
 		theMap["class"] = me.sTargetClass;
 		theMap['operation'] = 'GetFullListForeignKeysFromSelection';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');

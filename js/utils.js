@@ -244,6 +244,17 @@ function UpdateFileName(id, sNewFileName) {
 	$('#'+id).val(sNewFileName);
 	$('#'+id).trigger('validate');
 	$('#name_'+id).text(sNewFileName);
+	if(sNewFileName=='')
+	{
+		$('#do_remove_'+id).val('1');
+		$('#remove_attr_' + id).hide();
+	}
+	else
+	{
+		$('#do_remove_'+id).val('0');
+		$('#remove_attr_' + id).show();
+	}
+
 	return true;
 }
 

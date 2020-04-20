@@ -553,14 +553,12 @@ JS
 
 /**
  * Garbage collector for cleaning "old" temporary InlineImages (and Attachments).
- * This background process runs every hour and deletes all temporary InlineImages and Attachments
- * whic are are older than one hour.
  */
 class InlineImageGC implements iBackgroundProcess
 {
     public function GetPeriodicity()
     {
-        return 1; // Runs every 8 hours
+        return 1;
     }
 
 	/**
@@ -593,6 +591,9 @@ class InlineImageGC implements iBackgroundProcess
 	}
 
 	/**
+	 * Remove $sClass instance based on their `expire` field value.
+	 * This `expire` field contains current time + draft_attachments_lifetime config parameter, it is initialized on object creation.
+	 *
 	 * @param string $sClass
 	 * @param int $iTimeLimit
 	 * @param string $sDateLimit

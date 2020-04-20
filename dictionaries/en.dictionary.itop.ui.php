@@ -422,6 +422,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Insert' => 'Insert',
 	'UI:Button:More' => 'More',
 	'UI:Button:Less' => 'Less',
+	'UI:Button:Wait' => 'Please wait while updating fields',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
@@ -1446,6 +1447,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',

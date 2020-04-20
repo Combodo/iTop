@@ -207,7 +207,7 @@ Operatoren:<br/>
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Konsole',
-	'Core:Context=CRON' => 'CRON',
+	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 ));
 

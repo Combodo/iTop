@@ -44,6 +44,7 @@ use MissingQueryArgument;
 use TrueExpression;
 use utils;
 use WebPage;
+use UserRights;
 
 class SearchForm
 {
@@ -131,7 +132,10 @@ class SearchForm
 				$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
 				foreach($aSubClasses as $sSubclassName)
 				{
-					$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
+					if (UserRights::IsActionAllowed($sSubclassName, UR_ACTION_READ))
+					{
+						$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
+					}
 				}
 				$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 				ksort($aOptions);

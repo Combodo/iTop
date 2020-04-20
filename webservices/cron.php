@@ -479,11 +479,11 @@ set_time_limit(0); // Some background actions may really take long to finish (li
 
 if (utils::IsModeCLI())
 {
-	$oP = new CLIPage("iTop - CRON");
+	$oP = new CLIPage("iTop - cron");
 }
 else
 {
-	$oP = new WebPage("iTop - CRON");
+	$oP = new WebPage("iTop - cron");
 }
 
 try
