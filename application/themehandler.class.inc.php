@@ -116,7 +116,9 @@ class ThemeHandler
 	}
 
 	/**
-	 * Compile the $sThemeId theme
+	 * Compile the $sThemeId theme, the actual compilation is skipped when either
+	 * 1) The produced CSS file exists and is more recent than any of its components (imports, stylesheets)
+	 * 2) The produced CSS file exists and its signature is equal to the expected signature (imports, stylesheets, variables)
 	 *
 	 * @param string $sThemeId
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
@@ -168,23 +170,130 @@ class ThemeHandler
 		{
 			$sTmpThemeScssContent .= '@import "'.$sImport.'";'."\n";
 
-			$iImportLastModified = @filemtime($sWorkingPath.$sImport);
+			$sFile = static::FindStylesheetFile($sImport, $aImportsPaths);
+			$iImportLastModified = @filemtime($sFile);
 			$iStyleLastModified = $iStyleLastModified < $iImportLastModified ? $iImportLastModified : $iStyleLastModified;
 		}
 		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
 		{
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
 
-			$iStylesheetLastModified = @filemtime($sWorkingPath.$sStylesheet);
+			$sFile = static::FindStylesheetFile($sStylesheet, $aImportsPaths);
+			$iStylesheetLastModified = @filemtime($sFile);
 			$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 		}
 
 		// Checking if our compiled css is outdated
-		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && (@filemtime($sThemeCssPath) < $iStyleLastModified)))
+		$iFilemetime = @filemtime($sThemeCssPath);
+		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
 		{
-			$sTmpThemeCssContent = utils::CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths, $aThemeParameters['variables']);
-			file_put_contents($sThemeCssPath, $sTmpThemeCssContent);
+			// Dates don't match. Second chance: check if the already compiled stylesheet exists and is consistent based on its signature
+			$sActualSignature = static::ComputeSignature($aThemeParameters, $aImportsPaths);
+			if (file_exists($sThemeCssPath))
+			{
+				$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
+				if($sActualSignature == $sPrecompiledSignature)
+				{
+					touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
+				}
+			}
+			else
+			{
+				// Alas, we really need to recompile
+				// Add the signature to the generated CSS file so that the file can be used as a precompiled stylesheet if needed
+				$sSignatureComment =
+<<<CSS
+/*
+=== SIGNATURE BEGIN ===
+$sActualSignature
+=== SIGNATURE END ===
+ */
+ 
+CSS
+			;
+				$sTmpThemeCssContent = utils::CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths, $aThemeParameters['variables']);
+				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
+			}
 		}
+	}
+
+	/**
+	 * Compute the signature of a theme defined by its theme parameters. The signature is a JSON structure of
+	 * 1) one MD5 of all the variables/values (JSON encoded)
+	 * 2) the MD5 of each stylesheet file
+	 * 3) the MD5 of each import file
+	 * 
+	 * @param string[] $aThemeParameters
+	 * @param string[] $aImportsPaths
+	 * @return string
+	 */
+	private static function ComputeSignature($aThemeParameters, $aImportsPaths)
+	{
+		$aSignature = array(
+			'variables' => md5(json_encode($aThemeParameters['variables'])),
+			'stylesheets' => array(),
+			'imports' => array(),
+		);
+
+		foreach ($aThemeParameters['imports'] as $key => $sImport)
+		{
+			$sFile = static::FindStylesheetFile($sImport, $aImportsPaths);
+			$aSignature['stylesheets'][$key] = md5_file($sFile);
+		}
+		foreach ($aThemeParameters['stylesheets'] as $key => $sStylesheet)
+		{
+			$sFile = static::FindStylesheetFile($sStylesheet, $aImportsPaths);
+			$aSignature['stylesheets'][$key] = md5_file($sFile);
+		}
+		return json_encode($aSignature);
+	}
+
+	/**
+	 * Extract the signature for a generated CSS file. The signature MUST be alone one line immediately
+	 * followed (on the next line) by the === SIGNATURE END === pattern
+	 * 
+	 * Note the signature can be place anywhere in the CSS file (obviously inside a CSS comment !) but the
+	 * function will be faster if the signature is at the beginning of the file (since the file is scanned from the start)
+	 * 
+	 * @param string $sFile
+	 * @return string
+	 */
+	private static function GetSignature($sFilepath)
+	{
+		$sPreviousLine = '';
+		$hFile = @fopen($sFilepath, "r");
+		if ($hFile !== false)
+		{
+			$sLine = '';
+			do
+			{
+				$sPreviousLine = $sLine;
+				$sLine = rtrim(fgets($hFile)); // Remove the trailing \n
+			}
+			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ==='));
+			fclose($hFile);
+		}
+		return $sPreviousLine;
+	}
+
+	/**
+	 * Find the given file in the list of ImportsPaths directory
+	 * @param string $sFile
+	 * @param string[] $aImportsPaths
+	 * @throws Exception
+	 * @return string
+	 */
+	private static function FindStylesheetFile($sFile, $aImportsPaths)
+	{
+		foreach($aImportsPaths as $sPath)
+		{
+			$sImportedFile = realpath($sPath.'/'.$sFile);
+			if (file_exists($sImportedFile))
+			{
+				return $sImportedFile;
+			}
+		}
+		return ''; // Not found, fail silently, maybe the SCSS compiler knowns better...
 	}
 }
 
