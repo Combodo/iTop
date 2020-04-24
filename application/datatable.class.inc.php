@@ -21,7 +21,7 @@ class DataTable
 {
 	protected $iListId;		// Unique ID inside the web page
 	/** @var string */
-	private $sDatatableContenerId;
+	private $sDatatableContainerId;
 	protected $sTableId;	// identifier for saving the settings (combined with the class aliases)
 	protected $oSet;		// The set of objects to display
 	protected $aClassAliases;	// The aliases (alias => class) inside the set
@@ -44,7 +44,7 @@ class DataTable
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
 		$this->iListId = utils::GetSafeId($iListId); // Make a "safe" ID for jQuery
-		$this->sDatatableContenerId = 'datatable_'.utils::GetSafeId($iListId);
+		$this->sDatatableContainerId = 'datatable_'.utils::GetSafeId($iListId);
 		$this->oSet = $oSet;
 		$this->aClassAliases = $aClassAliases;
 		$this->sTableId = $sTableId;
@@ -168,7 +168,7 @@ class DataTable
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
 		
-		$sHtml = "<table id=\"{$this->sDatatableContenerId}\" class=\"datatable\">";
+		$sHtml = "<table id=\"{$this->sDatatableContainerId}\" class=\"datatable\">";
 		$sHtml .= "<tr><td>";
 		$sHtml .= "<table style=\"width:100%;\">";
 		$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
@@ -204,7 +204,7 @@ class DataTable
 			$aOptions['oDefaultSettings'] = $this->GetAsHash($this->oDefaultSettings);
 		}
 		$sJSOptions = json_encode($aOptions);
-		$oPage->add_ready_script("$('#{$this->sDatatableContenerId}').datatable($sJSOptions);");
+		$oPage->add_ready_script("$('#{$this->sDatatableContainerId}').datatable($sJSOptions);");
 
 		return $sHtml;
 	}
@@ -421,15 +421,15 @@ EOF;
 		$sHtml .= "<input id=\"dtbl_dlg_all_{$this->iListId}\" type=\"radio\" name=\"scope\" $sGenericChecked value=\"defaults\"><label for=\"dtbl_dlg_all_{$this->iListId}\">&nbsp;".Dict::S('UI:ForAllLists').'</label></p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= '<table style="width:100%"><tr><td style="text-align:center;">';
-		$sHtml .= '<button type="button" onclick="$(\'#'.$this->sDatatableContenerId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
+		$sHtml .= '<button type="button" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
 		$sHtml .= '</td><td style="text-align:center;">';
-		$sHtml .= '<button type="submit" onclick="$(\'#'.$this->sDatatableContenerId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
+		$sHtml .= '<button type="submit" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
 		$sHtml .= '</td></tr></table>';
 		$sHtml .= "</form>";
 		$sHtml .= "</div>";
 		
 		$sDlgTitle = addslashes(Dict::S('UI:ListConfigurationTitle'));
-		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#{$this->sDatatableContenerId}').datatable('onDlgCancel'); } });");
+		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#{$this->sDatatableContainerId}').datatable('onDlgCancel'); } });");
 
 		return $sHtml;
 	}
@@ -749,7 +749,7 @@ EOF;
 		$sOQL = addslashes($this->oSet->GetFilter()->serialize());
 		$oPage->add_ready_script(
 <<<JS
-var oTable = $('#{$this->sDatatableContenerId} table.listResults');
+var oTable = $('#{$this->sDatatableContainerId} table.listResults');
 oTable.tableHover();
 oTable
 	.tablesorter({ $sHeaders widgets: ['myZebra', 'truncatedList']})
@@ -761,7 +761,7 @@ oTable
 		extra_params: '$sExtraParams',
 		select_mode: '$sSelectModeJS',
 		displayKey: $sDisplayKey,
-		table_id: '{$this->sDatatableContenerId}',
+		table_id: '{$this->sDatatableContainerId}',
 		columns: $sJSColumns,
 		class_aliases: $sJSClassAliases $sCssCount
 	});
