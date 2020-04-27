@@ -134,7 +134,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Пожалуйста, укажите следующую информацию:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Сохранено',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s cохранено~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s сохранено',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
