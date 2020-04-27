@@ -52,12 +52,6 @@ class DBSearchIntersectTest extends ItopDataTestCase
 	{
 		$aTests = array();
 
-		$aTests['Test union #2902'] = array(
-			'left' => "SELECT `L-1` FROM ServiceFamily AS `L-1` WHERE 1",
-			'right' => "SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)",
-			'alias' => "L-1",
-			'result' => "SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)");
-
 		$aTests['Multiple selected classes inverted'] = array(
 			'left' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person WHERE org_id = 3",
