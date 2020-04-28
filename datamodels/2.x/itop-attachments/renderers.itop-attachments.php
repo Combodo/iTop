@@ -69,6 +69,14 @@ abstract class AbstractAttachmentsRenderer
 	 */
 	const MAX_SIZE_FOR_PREVIEW = 500000;
 
+	/**
+	 * Attachments list container HTML id, that must be generated in {@link RenderEditAttachmentsList}
+	 *
+	 * @since 2.7.0-2 N°2968 ajax buttons (on especially the #attachment_plugin hidden input) should not be refreshed
+	 *             so we are refreshing only the content of this container
+	 */
+	const ATTACHMENTS_LIST_CONTAINER_ID = 'AttachmentsListContainer';
+
 	/** @var \WebPage */
 	protected $oPage;
 	/**
@@ -129,13 +137,38 @@ abstract class AbstractAttachmentsRenderer
 	}
 
 	/**
+	 * Can be overriden to change display order, but must generate an HTML container of ID {@link ATTACHMENTS_LIST_CONTAINER_ID} for JS refresh.
+	 *
 	 * @param int[] $aAttachmentsDeleted Attachments id that should be deleted after form submission
 	 *
-	 * @return string
+	 * @return void will print using {@link oPage}
 	 */
-	abstract public function RenderEditAttachmentsList($aAttachmentsDeleted = array());
+	public function RenderEditAttachmentsList($aAttachmentsDeleted = array())
+	{
+		$this->AddUploadButton();
 
-	abstract public function RenderViewAttachmentsList();
+		$this->oPage->add('<div id="'.self::ATTACHMENTS_LIST_CONTAINER_ID.'">');
+		$this->AddAttachmentsListContent(true, $aAttachmentsDeleted);
+		$this->oPage->add('</div>');
+	}
+
+	/**
+	 * Generates the attachments list content
+	 *
+	 * @param bool $bWithDeleteButton
+	 * @param array $aAttachmentsDeleted
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	abstract public function AddAttachmentsListContent($bWithDeleteButton, $aAttachmentsDeleted = array());
+
+	public function RenderViewAttachmentsList()
+	{
+		$this->AddAttachmentsListContent(false, array());
+	}
 
 	protected function AddUploadButton()
 	{
@@ -154,9 +187,9 @@ abstract class AbstractAttachmentsRenderer
 
 		$this->oPage->add_ready_script(
 			<<<JS
-	function RefreshAttachmentsDisplay()
+	function RefreshAttachmentsDisplay(dataUpload)
 	{
-		var sContentNode = '#AttachmentsContent',
+		var sContentNode = '#AttachmentsContent>div#AttachmentsListContainer',
 			aAttachmentsDeletedHiddenInputs = $('table.attachmentsList>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
 			aAttachmentsDeletedIds = aAttachmentsDeletedHiddenInputs.map(function() { return $(this).val() }).toArray();
 		$(sContentNode).block();
@@ -172,6 +205,8 @@ abstract class AbstractAttachmentsRenderer
 		   function(data) {
 			 $(sContentNode).html(data);
 			 $(sContentNode).unblock();
+			 
+			 $('#attachment_plugin').trigger('add_attachment', [dataUpload.result.att_id, dataUpload.result.msg, false]);
 			}
 		 );
 	}
@@ -181,7 +216,17 @@ abstract class AbstractAttachmentsRenderer
 		formData: { operation: 'add', temp_id: '$this->sTransactionId', obj_class: '$sClass' },
         dataType: 'json',
 		pasteZone: null, // Don't accept files via Chrome's copy/paste
-        done: RefreshAttachmentsDisplay,
+        done: function(e, data) {
+			if(typeof(data.result.error) != 'undefined')
+			{
+				if(data.result.error !== '')
+				{
+					alert(data.result.error);
+					return;
+				}
+			}
+			RefreshAttachmentsDisplay(data);
+		},
 	    send: function(e, data){
 	        // Don't send attachment if size is greater than PHP post_max_size, otherwise it will break the request and all its parameters (\$_REQUEST, \$_POST, ...)
 	        // Note: We loop on the files as the data structures is an array but in this case, we only upload 1 file at a time.
@@ -325,16 +370,7 @@ JS;
  */
 class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 {
-	/**
-	 * @param bool $bWithDeleteButton
-	 * @param array $aAttachmentsDeleted
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 */
-	private function AddAttachmentsTable($bWithDeleteButton, $aAttachmentsDeleted = array())
+	public function AddAttachmentsListContent($bWithDeleteButton, $aAttachmentsDeleted = array())
 	{
 		if ($this->GetAttachmentsCount() === 0)
 		{
@@ -521,23 +557,5 @@ JS
 	</tr>
 HTML
 		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function RenderEditAttachmentsList($aAttachmentsDeleted = array())
-	{
-		$this->AddUploadButton();
-
-		$this->AddAttachmentsTable(true, $aAttachmentsDeleted);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function RenderViewAttachmentsList()
-	{
-		$this->AddAttachmentsTable(false);
 	}
 }

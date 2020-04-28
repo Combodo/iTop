@@ -46,7 +46,7 @@ function RenderAttachments(ajax_page $oPage, $iTransactionId)
 		: AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
 	if ($bEditMode && !$bIsReadOnlyState)
 	{
-		$oAttachmentsRenderer->RenderEditAttachmentsList($aAttachmentsDeleted);
+		$oAttachmentsRenderer->AddAttachmentsListContent(true, $aAttachmentsDeleted);
 	}
 	else
 	{
