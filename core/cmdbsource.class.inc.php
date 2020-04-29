@@ -705,6 +705,7 @@ class CMDBSource
 		}
 
 		// Get error info
+		$sUser = UserRights::GetUser();
 		$oError = self::$m_oMysqli->query("SHOW ENGINE INNODB STATUS");
 		$aData = array();
 		if ($oError !== false)
@@ -713,16 +714,17 @@ class CMDBSource
 		}
 
 		// log !
+		$sMessage = "deadlock detected: user= $sUser; errno=$iMySqlErrorNo";
 		$aLogContext = array(
-			'userinfo' => UserRights::GetUser(),
-			'issue' => 'Database DeadLock',
-			'impact' => 'Request execution failed',
+			'userinfo' => $sUser,
+			'errno' => $iMySqlErrorNo,
+			'ex_msg' => $e->getMessage(),
 			'callstack' => $e->getTrace(),
 			'data' => $aData[0],
 		);
-		DeadLockLog::Info($e->getMessage(), $iMySqlErrorNo, $aLogContext);
+		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($e->getMessage(), 'DeadLock', $aLogContext['data']);
+		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
 	}
 
 	/**
