@@ -544,6 +544,7 @@ abstract class LogAPI
 	const LEVEL_OK          = 'Ok';
 	const LEVEL_DEBUG       = 'Debug';
 	const LEVEL_TRACE       = 'Trace';
+	const LEVEL_DEFAULT     = self::LEVEL_TRACE;
 
 	protected static $aLevelsPriority = array(
 		self::LEVEL_ERROR   => 400,
@@ -648,14 +649,14 @@ abstract class LogAPI
 		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
 		if (!$oConfig instanceof Config)
 		{
-			return self::LEVEL_OK;
+			return self::LEVEL_DEFAULT;
 		}
 
 		$sLogLevelMin = $oConfig->Get('log_level_min');
 
 		if (empty($sLogLevelMin))
 		{
-			return self::LEVEL_OK;
+			return self::LEVEL_DEFAULT;
 		}
 
 		if (!is_array($sLogLevelMin))
@@ -673,7 +674,7 @@ abstract class LogAPI
 			return $sLogLevelMin[$sChannel];
 		}
 
-		return self::LEVEL_OK;
+		return self::LEVEL_DEFAULT;
 	}
 
 }
