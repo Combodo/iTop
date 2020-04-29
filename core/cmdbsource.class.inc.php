@@ -683,6 +683,10 @@ class CMDBSource
 		return $oResult;
 	}
 
+	/**
+	 * @param \Exception $e
+	 * @since 2.7.1
+	 */
 	private static function LogDeadLock(Exception $e)
 	{
 		// Deadlock detection
