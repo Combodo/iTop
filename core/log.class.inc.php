@@ -699,6 +699,27 @@ class ToolsLog extends LogAPI
 	protected static $m_oFileLog = null;
 }
 
+/**
+ * @see \CMDBSource::LogDeadLock()
+ * @since 2.7.1
+ */
+class DeadLockLog extends LogAPI
+{
+	const CHANNEL_DEFAULT   = 'iTopDeadlocks';
+
+	/** @var \FileLog we want our own instance ! */
+	protected static $m_oFileLog = null;
+
+	public static function Enable($sTargetFile = null)
+	{
+		if (empty($sTargetFile))
+		{
+			$sTargetFile = APPROOT.'log/itop-deadlocks.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+}
+
 
 class LogFileRotationProcess implements iScheduledProcess
 {
