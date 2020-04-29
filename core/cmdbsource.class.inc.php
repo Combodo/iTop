@@ -691,51 +691,52 @@ class CMDBSource
 	{
 		// Deadlock detection
 		$iMySqlErrorNo = self::$m_oMysqli->errno;
-		if (($iMySqlErrorNo == 1213) || ($iMySqlErrorNo == 1205))
+		if (!in_array($iMySqlErrorNo, array(1205, 1213)))
 		{
-			// Try to log the deadlock
-			$oError = self::$m_oMysqli->query("SHOW ENGINE INNODB STATUS");
-			$aData = array();
-			if ($oError !== false)
-			{
-				$aData = $oError->fetch_all(MYSQLI_ASSOC);
-			}
-			if (MetaModel::IsLogEnabledIssue())
-			{
-				if (MetaModel::IsValidClass('EventIssue'))
-				{
-					try
-					{
-						$bInTransaction = self::IsInsideTransaction();
-						if ($bInTransaction)
-						{
-							// In order to log the error, we have to rollback the current transaction
-							// Else the caller will rollback our log
-							self::DBQuery('ROLLBACK');
-						}
-						$oLog = new EventIssue();
-						$oLog->Set('message', $e->getMessage());
-						$oLog->Set('userinfo', UserRights::GetUser());
-						$oLog->Set('issue', 'Database DeadLock');
-						$oLog->Set('impact', 'Request execution failed');
-						$oLog->Set('callstack', $e->getTrace());
-						$oLog->Set('data', $aData[0]);
-						$oLog->DBInsertNoReload();
-						if ($bInTransaction)
-						{
-							self::DBQuery('START TRANSACTION');
-						}
-					}
-					catch(Exception $e1)
-					{
-						IssueLog::Error("Failed to log database deadlock issue into the DB\n".$e1->getMessage());
-					}
-				}
-			}
-			IssueLog::Error($e->getMessage());
-			IssueLog::Error(print_r($aData[0], true));
+			return;
 		}
 
+		// Try to log the deadlock
+		$oError = self::$m_oMysqli->query("SHOW ENGINE INNODB STATUS");
+		$aData = array();
+		if ($oError !== false)
+		{
+			$aData = $oError->fetch_all(MYSQLI_ASSOC);
+		}
+		if (MetaModel::IsLogEnabledIssue())
+		{
+			if (MetaModel::IsValidClass('EventIssue'))
+			{
+				try
+				{
+					$bInTransaction = self::IsInsideTransaction();
+					if ($bInTransaction)
+					{
+						// In order to log the error, we have to rollback the current transaction
+						// Else the caller will rollback our log
+						self::DBQuery('ROLLBACK');
+					}
+					$oLog = new EventIssue();
+					$oLog->Set('message', $e->getMessage());
+					$oLog->Set('userinfo', UserRights::GetUser());
+					$oLog->Set('issue', 'Database DeadLock');
+					$oLog->Set('impact', 'Request execution failed');
+					$oLog->Set('callstack', $e->getTrace());
+					$oLog->Set('data', $aData[0]);
+					$oLog->DBInsertNoReload();
+					if ($bInTransaction)
+					{
+						self::DBQuery('START TRANSACTION');
+					}
+				}
+				catch(Exception $e1)
+				{
+					IssueLog::Error("Failed to log database deadlock issue into the DB\n".$e1->getMessage());
+				}
+			}
+		}
+		IssueLog::Error($e->getMessage());
+		IssueLog::Error(print_r($aData[0], true));
 	}
 
 	/**
