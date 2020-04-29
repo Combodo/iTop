@@ -705,7 +705,9 @@ class ToolsLog extends LogAPI
  */
 class DeadLockLog extends LogAPI
 {
-	const CHANNEL_DEFAULT   = 'iTopDeadlocks';
+	const CHANNEL_WAIT_TIMEOUT = 'iTopDeadlLock_1205WaitTimeout';
+	const CHANNEL_DEADLOCK_FOUND = 'iTopDeadlock_1213DeadlockFound';
+	const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
 
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
@@ -717,6 +719,36 @@ class DeadLockLog extends LogAPI
 			$sTargetFile = APPROOT.'log/itop-deadlocks.log';
 		}
 		parent::Enable($sTargetFile);
+	}
+
+	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
+	{
+		switch ($iMysqlErrorNo)
+		{
+			case 1205:
+				return self::CHANNEL_WAIT_TIMEOUT;
+				break;
+			case 1213:
+				return  self::CHANNEL_DEADLOCK_FOUND;
+				break;
+			default:
+				return self::CHANNEL_DEFAULT;
+				break;
+		}
+	}
+
+	/**
+	 * @param int $iMySQLErrNo will be converted to channel using {@link GetChannelFromMysqlErrorNo}
+	 * @param string $sMessage
+	 * @param null $iMysqlErroNo
+	 * @param array $aContext
+	 *
+	 * @throws \Exception
+	 */
+	public static function Log($iMySQLErrNo, $sMessage, $iMysqlErroNo = null, $aContext = array())
+	{
+		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErroNo);
+		parent::Log($iMySQLErrNo, $sMessage, $sChannel, $aContext);
 	}
 }
 
