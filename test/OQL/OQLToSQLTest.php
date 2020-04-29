@@ -341,6 +341,7 @@ class OQLToSQLTest extends ItopDataTestCase
 		);
 
 		$aData =  array(
+			"SELECT UNION 5.6" => array("SELECT `Organization` AS `Organization` WHERE ((`Organization`.`status` != 'inactive') AND (`Organization`.`id` = '1')) UNION SELECT `Organization` AS `Organization` WHERE ((`Organization`.`id` = '1') AND (`Organization`.`id` = '1'))", array(), array(), array(), null, null, 3, 0),
 			"SELECT WebServer 150" => array("SELECT `WebServer` FROM WebServer AS `WebServer` WHERE 1", array(), array(), $aAttToLoad150, null, null, 3, 0),
 			"SELECT WebServer 151" => array("SELECT `WebServer` FROM WebServer AS `WebServer` WHERE 1", array(), array(), array(), null, null, 3, 0),
 			"SELECT L JOIN 176" => array("SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1", unserialize('a:1:{s:14:"L.friendlyname";b:1;}'), array(), null, null, 3, 0),
