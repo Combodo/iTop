@@ -751,6 +751,10 @@ class iTopDesignFormat
 		// -- 2314 : remove "themes" nodes
 		$sPath = "/itop_design/branding/themes";
 		$this->RemoveNodeFromXPath($sPath);
+
+		// -- 2746 - remove attributes Enum Set
+		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	/**

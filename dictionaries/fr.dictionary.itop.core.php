@@ -206,7 +206,7 @@ Opérateurs :<br/>
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
-	'Core:Context=CRON' => 'CRON',
+	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
@@ -1051,6 +1051,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
  'Core:Context=Synchro+' => 'Synchro',
  'Core:Context=Setup+' => 'Setup',
  'Core:Context=GUI:Console+' => 'GUI:Console',
- 'Core:Context=CRON+' => 'CRON',
+ 'Core:Context=CRON+' => 'cron',
  'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));

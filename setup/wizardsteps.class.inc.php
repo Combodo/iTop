@@ -658,7 +658,7 @@ EOF
 			if ($oMutex->IsLocked())
 			{
 				$oPage->add(<<<HTML
-<div class="message">An iTop CRON process is being executed on the target database. iTop CRON process will be stopped during the setup execution.</div>
+<div class="message">An iTop cron process is being executed on the target database. iTop cron process will be stopped during the setup execution.</div>
 HTML
 				);
 			}

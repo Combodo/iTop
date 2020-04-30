@@ -2371,6 +2371,16 @@ fieldset .details>.field_container {
 								display: inline-block;
 								margin-bottom: 2px;
 							}
+
+							.button{
+								cursor: pointer;
+								margin-bottom: 3px;
+								padding: 2px;
+								.ui-icon {
+									background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffffff_256x240.png?v=" + $version);
+									background-color: $highlight-color;
+								}
+							}
 						}
 
 						&.field_input_image{
@@ -3547,7 +3557,7 @@ table.listResults .originColor{
 
 	background: #fdfdfd none;
 	border-radius: 2px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(241, 241, 241, 0.7);
 
 	color: $gray-darker;
 	text-shadow: none;

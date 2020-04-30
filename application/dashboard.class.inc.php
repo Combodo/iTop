@@ -46,8 +46,6 @@ abstract class Dashboard
 	protected $aCells;
 	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
-	/** @var bool $bCustomized */
-	protected $bCustomized;
 
 	/**
 	 * Dashboard constructor.
@@ -63,7 +61,6 @@ abstract class Dashboard
 		$this->aCells = array();
 		$this->oDOMNode = null;
 		$this->sId = $sId;
-		$this->bCustomized = false;
 	}
 
 	/**
@@ -339,6 +336,25 @@ abstract class Dashboard
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
+
+	/**
+	 * Return a sanitize ID for usages in XML/HTML attributes
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public function GetSanitizedId()
+	{
+		return utils::Sanitize($this->GetId(), '', 'element_identifier');
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetLayout()
@@ -400,24 +416,6 @@ abstract class Dashboard
 	public function SetAutoReloadInterval($iAutoReloadSec)
 	{
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$iAutoReloadSec);
-	}
-
-	/**
-	 * @return bool
-	 * @since 2.7.0
-	 */
-	public function GetCustomFlag()
-	{
-		return $this->bCustomized;
-	}
-
-	/**
-	 * @param bool $bCustomized
-	 * @since 2.7.0
-	 */
-	public function SetCustomFlag($bCustomized)
-	{
-		$this->bCustomized = $bCustomized;
 	}
 
 	/**
@@ -539,7 +537,7 @@ EOF
 		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
-		$oLayout = new $this->sLayoutClass;
+		$oLayout = new $this->sLayoutClass();
 
 		foreach($this->aCells as $iCellIdx => $aDashlets)
 		{
@@ -591,19 +589,21 @@ EOF
 		// Toolbox/palette to edit the properties of each dashlet
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
 
+		/** @var \DashboardLayoutMultiCol $oLayout */
+		$oLayout = new $this->sLayoutClass();
+
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
-		foreach($this->aCells as $aCell)
+		foreach($this->aCells as $iCellIdx => $aCell)
 		{
 			/** @var \Dashlet $oDashlet */
 			foreach($aCell as $oDashlet)
 			{
-				$sId = $oDashlet->GetID();
 				if ($oDashlet->IsVisible())
 				{
-					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
-					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');		
+					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
 					$oPage->add('</div>');
 				}
 			}
@@ -664,20 +664,16 @@ EOF
 	}
 
 	/**
-	 * Prepare dashlet for rendering:
-	 * - Fix ID to unique within the dashboard
+	 * Prepare dashlet for rendering (eg. change its ID or another processing).
+	 * Meant to be overloaded.
 	 *
 	 * @param \Dashlet $oDashlet
-	 * @param array $aCoordinates Contains x, y (starting from 0)
+	 * @param array $aCoordinates
 	 * @param array $aExtraParams
+	 *
+	 * @return void
 	 */
-	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
-	{
-		$sDashletIdOrig = $oDashlet->GetID();
-		$sDashboardSanitizedId = utils::Sanitize($this->GetId(), '', 'element_identifier');
-		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
-		$oDashlet->SetID($sDashletIdNew);
-	}
+	abstract protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array());
 
     /**
      * @param \DesignerForm $oForm
@@ -711,34 +707,26 @@ EOF
 	 * @param string $sDashboardDivId
 	 * @param int $iRow
 	 * @param int $iCol
-	 * @param string $sDashletIdOrig
+	 * @param string $sDashletOrigId
 	 *
 	 * @return string
 	 *
 	 * @since 2.7.0 N°2735
 	 */
-	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig)
+	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletOrigId)
 	{
-		if(strpos($sDashletIdOrig, 'IDrow') !== false)
+		if(strpos($sDashletOrigId, '_ID_row') !== false)
 		{
-			return $sDashletIdOrig;
+			return $sDashletOrigId;
 		}
 
-		$sDashletId = $sDashboardDivId."_IDrow$iRow-col$iCol-$sDashletIdOrig";
+		$sDashletId = $sDashboardDivId."_ID_row".$iRow."_col".$iCol."_".$sDashletOrigId;
 		if ($bIsCustomized)
 		{
 			$sDashletId = 'CUSTOM_'.$sDashletId;
 		}
 
 		return $sDashletId;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function GetId()
-	{
-		return $this->sId;
 	}
 }
 
@@ -751,6 +739,8 @@ class RuntimeDashboard extends Dashboard
 	private $sDefinitionFile = '';
 	/** @var null $sReloadURL */
 	private $sReloadURL = null;
+	/** @var bool $bCustomized */
+	protected $bCustomized;
 
 	/**
 	 * @inheritDoc
@@ -759,6 +749,25 @@ class RuntimeDashboard extends Dashboard
 	{
 		parent::__construct($sId);
 		$this->oMetaModel = new ModelReflectionRuntime();
+		$this->bCustomized = false;
+	}
+
+	/**
+	 * @return bool
+	 * @since 2.7.0
+	 */
+	public function GetCustomFlag()
+	{
+		return $this->bCustomized;
+	}
+
+	/**
+	 * @param bool $bCustomized
+	 * @since 2.7.0
+	 */
+	public function SetCustomFlag($bCustomized)
+	{
+		$this->bCustomized = $bCustomized;
 	}
 
 	/**
@@ -1498,7 +1507,9 @@ JS
 	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
 	{
 		$sDashletIdOrig = $oDashlet->GetID();
-		parent::PrepareDashletForRendering($oDashlet, $aCoordinates);
+		$sDashboardSanitizedId = $this->GetSanitizedId();
+		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
+		$oDashlet->SetID($sDashletIdNew);
 		$this->UpdateDashletUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
 	}
 

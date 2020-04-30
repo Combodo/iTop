@@ -316,7 +316,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
-				$oUser->Set('reset_pwd_token', '');
+				$oUser->Set('reset_pwd_token', new ormPassword());
 				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
 				$aVars['sUrl'] = utils::GetAbsoluteUrlAppRoot();
@@ -790,12 +790,13 @@ class LoginWebPage extends NiceWebPage
 		$oPerson = null;
 		try
 		{
-			$sOrigin = 'External User provisioning';
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
 			if (isset($_SESSION['login_mode']))
 			{
-				$sOrigin .= " ({$_SESSION['login_mode']})";
+				$sInfo .= " ({$_SESSION['login_mode']})";
 			}
-			CMDBObject::SetTrackOrigin($sOrigin);
+			CMDBObject::SetTrackInfo($sInfo);
 
 			$oPerson = MetaModel::NewObject('Person');
 			$oPerson->Set('first_name', $sFirstName);
@@ -843,6 +844,14 @@ class LoginWebPage extends NiceWebPage
 		$oUser = null;
 		try
 		{
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sInfo .= " ({$_SESSION['login_mode']})";
+			}
+			CMDBObject::SetTrackInfo($sInfo);
+
 			$oUser = MetaModel::GetObjectByName('UserExternal', $sAuthUser, false);
 			if (is_null($oUser))
 			{

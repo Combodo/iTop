@@ -112,6 +112,26 @@ class DBSearchIntersectTest extends ItopDataTestCase
 			'alias' => "P",
 			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `L1` ON `P`.location_id = `L1`.id WHERE (`L1`.`org_id` = 3)");
 
+		$aTests['Test Subclass1'] = array(
+			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "U",
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE (((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)) AND ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)))");
+
+		$aTests['Test Subclass and join'] = array(
+			'left' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id  WHERE `UserRequest`.agent_id = 3",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "UserRequest",
+			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id WHERE (((`UserRequest`.`agent_id` = 3) AND (`UserRequest`.`org_id` = 3)) AND ((`UserRequest`.`agent_id` = 3) AND (`UserRequest`.`org_id` = 3)))");
+
+		$aTests['Test Subclass and union'] = array(
+			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3 UNION SELECT `T` FROM Ticket AS `T` WHERE `T`.agent_id = 3 ",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "U",
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE (((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)) AND ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3))) UNION SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`agent_id` = 3) AND (`T`.`org_id` = 3))");
+
+
+
 		return $aTests;
 	}
 

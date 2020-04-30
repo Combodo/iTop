@@ -491,6 +491,18 @@ class utils
 
 		// Paginated selection
 		$aSelectedIds = utils::ReadParam('storedSelection', array());
+		$aSelectedObjIds = utils::ReadParam('selectObject', array());
+
+		//it means that the user has selected all the results of the search query
+		if (count($aSelectedObjIds) > 0 )
+		{
+			$sFilter=utils::ReadParam("sFilter",'',false,'raw_data');
+			if ($sFilter!='')
+			{
+				$oFullSetFilter=DBSearch::unserialize($sFilter);
+
+			}
+		}
 		if (count($aSelectedIds) > 0 )
 		{
 			if ($sSelectionMode == 'positive')

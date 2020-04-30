@@ -32,6 +32,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:NoAttachment' => 'No attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty. Check that your server disk is not full.',
 	'Attachments:Render:Icons' => 'Display as icons',
 	'Attachments:Render:Table' => 'Display as list',
 ));
