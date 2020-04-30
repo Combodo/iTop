@@ -706,11 +706,15 @@ class CMDBSource
 
 		// Get error info
 		$sUser = UserRights::GetUser();
-		$oError = self::$m_oMysqli->query("SHOW ENGINE INNODB STATUS");
-		$aData = array();
+		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
 		if ($oError !== false)
 		{
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
+			$sInnodbStatus = $aData[0];
+		}
+		else
+		{
+			$sInnodbStatus = 'Get status query cannot execute';
 		}
 
 		// log !
@@ -720,7 +724,7 @@ class CMDBSource
 			'errno' => $iMySqlErrorNo,
 			'ex_msg' => $e->getMessage(),
 			'callstack' => $e->getTrace(),
-			'data' => $aData[0],
+			'data' => $sInnodbStatus,
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
