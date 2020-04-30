@@ -25,6 +25,7 @@
  */
 class ThemeHandler
 {
+	private static $oCompileCSSService;
 	/**
 	 * Return default theme name and parameters
 	 *
@@ -185,33 +186,47 @@ class ThemeHandler
 
 		// Checking if our compiled css is outdated
 		$iFilemetime = @filemtime($sThemeCssPath);
-		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
+		$bFileExists = file_exists($sThemeCssPath);
+		$bVarSignatureChanged=false;
+		if ($bFileExists)
+		{
+			$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
+			//check variable signature has changed which is independant from any file modification
+			if (!empty($sPrecompiledSignature)){
+				$sPreviousVariableSignature = static::GetVarSignature($sPrecompiledSignature);
+				$sCurrentVariableSignature = md5(json_encode($aThemeParameters['variables']));
+				$bVarSignatureChanged= ($sPreviousVariableSignature!==$sCurrentVariableSignature);
+			}
+		}
+
+
+		if (!$bFileExists || $bVarSignatureChanged || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
 		{
 			// Dates don't match. Second chance: check if the already compiled stylesheet exists and is consistent based on its signature
 			$sActualSignature = static::ComputeSignature($aThemeParameters, $aImportsPaths);
-			if (file_exists($sThemeCssPath))
+			if (!empty($sPrecompiledSignature) && $sActualSignature == $sPrecompiledSignature)
 			{
-				$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
-				if($sActualSignature == $sPrecompiledSignature)
-				{
-					touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
-				}
+				touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
 			}
 			else
 			{
 				// Alas, we really need to recompile
 				// Add the signature to the generated CSS file so that the file can be used as a precompiled stylesheet if needed
 				$sSignatureComment =
-<<<CSS
+					<<<CSS
 /*
 === SIGNATURE BEGIN ===
 $sActualSignature
 === SIGNATURE END ===
- */
- 
-CSS
-			;
-				$sTmpThemeCssContent = utils::CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths, $aThemeParameters['variables']);
+*/
+
+CSS;
+				if (!self::$oCompileCSSService)
+				{
+					self::$oCompileCSSService = new CompileCSSService();
+				}
+				$sTmpThemeCssContent = self::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
+					$aThemeParameters['variables']);
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
 			}
 		}
@@ -222,10 +237,12 @@ CSS
 	 * 1) one MD5 of all the variables/values (JSON encoded)
 	 * 2) the MD5 of each stylesheet file
 	 * 3) the MD5 of each import file
-	 * 
+	 *
 	 * @param string[] $aThemeParameters
 	 * @param string[] $aImportsPaths
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	private static function ComputeSignature($aThemeParameters, $aImportsPaths)
 	{
@@ -251,14 +268,15 @@ CSS
 	/**
 	 * Extract the signature for a generated CSS file. The signature MUST be alone one line immediately
 	 * followed (on the next line) by the === SIGNATURE END === pattern
-	 * 
+	 *
 	 * Note the signature can be place anywhere in the CSS file (obviously inside a CSS comment !) but the
 	 * function will be faster if the signature is at the beginning of the file (since the file is scanned from the start)
-	 * 
-	 * @param string $sFile
+	 *
+	 * @param $sFilepath
+	 *
 	 * @return string
 	 */
-	private static function GetSignature($sFilepath)
+	public static function GetSignature($sFilepath)
 	{
 		$sPreviousLine = '';
 		$hFile = @fopen($sFilepath, "r");
@@ -274,6 +292,16 @@ CSS
 			fclose($hFile);
 		}
 		return $sPreviousLine;
+	}
+
+	public static function GetVarSignature($JsonSignature)
+	{
+		$aJsonArray = json_decode($JsonSignature, true);
+		if (array_key_exists('variables', $aJsonArray))
+		{
+			return $aJsonArray['variables'];
+		}
+		return false;
 	}
 
 	/**
@@ -295,5 +323,25 @@ CSS
 		}
 		return ''; // Not found, fail silently, maybe the SCSS compiler knowns better...
 	}
+
+	public static function mockCompileCSSService($oCompileCSSServiceMock)
+	{
+		self::$oCompileCSSService = $oCompileCSSServiceMock;
+	}
+}
+
+class CompileCSSService
+{
+	/**
+	 * CompileCSSService constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	public function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array()){
+		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
+	}
+
 }
 
