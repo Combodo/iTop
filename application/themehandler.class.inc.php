@@ -25,6 +25,7 @@
  */
 class ThemeHandler
 {
+	private static $oCompileCSSService;
 	/**
 	 * Return default theme name and parameters
 	 *
@@ -108,7 +109,7 @@ class ThemeHandler
 				SetupUtils::builddir($sDefaultThemeDirPath);
 			}
 			
-			static::CompileTheme($sThemeId, $aDefaultTheme['parameters']);
+			static::CompileTheme($sThemeId, false, $aDefaultTheme['parameters']);
 		}
 
 		// Return absolute url to theme compiled css
@@ -121,13 +122,14 @@ class ThemeHandler
 	 * 2) The produced CSS file exists and its signature is equal to the expected signature (imports, stylesheets, variables)
 	 *
 	 * @param string $sThemeId
+	 * @param bool $bSetup : indicated whether compilation is performed in setup context (true) or when loading a page/theme (false)
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
 	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
 	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
 	 */
-	public static function CompileTheme($sThemeId, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	public static function CompileTheme($sThemeId, $bSetup=false, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
 	{
 		// Default working path
 		if($sWorkingPath === null)
@@ -150,6 +152,11 @@ class ThemeHandler
 		// Save parameters if passed... (typically during DM compilation)
 		if(is_array($aThemeParameters))
 		{
+			if (!is_dir($sThemeFolderPath))
+			{
+				mkdir($sWorkingPath.'/branding/');
+				mkdir($sWorkingPath.'/branding/themes/');
+			}
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
 		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
@@ -185,33 +192,52 @@ class ThemeHandler
 
 		// Checking if our compiled css is outdated
 		$iFilemetime = @filemtime($sThemeCssPath);
-		if (!file_exists($sThemeCssPath) || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
+		$bFileExists = file_exists($sThemeCssPath);
+		$bVarSignatureChanged=false;
+		if ($bFileExists && $bSetup)
+		{
+			$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
+			//check variable signature has changed which is independant from any file modification
+			if (!empty($sPrecompiledSignature)){
+				$sPreviousVariableSignature = static::GetVarSignature($sPrecompiledSignature);
+				$sCurrentVariableSignature = md5(json_encode($aThemeParameters['variables']));
+				$bVarSignatureChanged= ($sPreviousVariableSignature!==$sCurrentVariableSignature);
+			}
+		}
+
+		if (!$bFileExists || $bVarSignatureChanged || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
 		{
 			// Dates don't match. Second chance: check if the already compiled stylesheet exists and is consistent based on its signature
 			$sActualSignature = static::ComputeSignature($aThemeParameters, $aImportsPaths);
-			if (file_exists($sThemeCssPath))
+
+			if ($bFileExists && !$bSetup)
 			{
 				$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
-				if($sActualSignature == $sPrecompiledSignature)
-				{
-					touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
-				}
+			}
+
+			if (!empty($sPrecompiledSignature) && $sActualSignature == $sPrecompiledSignature)
+			{
+				touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
 			}
 			else
 			{
 				// Alas, we really need to recompile
 				// Add the signature to the generated CSS file so that the file can be used as a precompiled stylesheet if needed
 				$sSignatureComment =
-<<<CSS
+					<<<CSS
 /*
 === SIGNATURE BEGIN ===
 $sActualSignature
 === SIGNATURE END ===
- */
- 
-CSS
-			;
-				$sTmpThemeCssContent = utils::CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths, $aThemeParameters['variables']);
+*/
+
+CSS;
+				if (!self::$oCompileCSSService)
+				{
+					self::$oCompileCSSService = new CompileCSSService();
+				}
+				$sTmpThemeCssContent = self::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
+					$aThemeParameters['variables']);
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
 			}
 		}
@@ -222,12 +248,14 @@ CSS
 	 * 1) one MD5 of all the variables/values (JSON encoded)
 	 * 2) the MD5 of each stylesheet file
 	 * 3) the MD5 of each import file
-	 * 
+	 *
 	 * @param string[] $aThemeParameters
 	 * @param string[] $aImportsPaths
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
-	private static function ComputeSignature($aThemeParameters, $aImportsPaths)
+	public static function ComputeSignature($aThemeParameters, $aImportsPaths)
 	{
 		$aSignature = array(
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
@@ -251,14 +279,15 @@ CSS
 	/**
 	 * Extract the signature for a generated CSS file. The signature MUST be alone one line immediately
 	 * followed (on the next line) by the === SIGNATURE END === pattern
-	 * 
+	 *
 	 * Note the signature can be place anywhere in the CSS file (obviously inside a CSS comment !) but the
 	 * function will be faster if the signature is at the beginning of the file (since the file is scanned from the start)
-	 * 
-	 * @param string $sFile
+	 *
+	 * @param $sFilepath
+	 *
 	 * @return string
 	 */
-	private static function GetSignature($sFilepath)
+	public static function GetSignature($sFilepath)
 	{
 		$sPreviousLine = '';
 		$hFile = @fopen($sFilepath, "r");
@@ -274,6 +303,16 @@ CSS
 			fclose($hFile);
 		}
 		return $sPreviousLine;
+	}
+
+	public static function GetVarSignature($JsonSignature)
+	{
+		$aJsonArray = json_decode($JsonSignature, true);
+		if (array_key_exists('variables', $aJsonArray))
+		{
+			return $aJsonArray['variables'];
+		}
+		return false;
 	}
 
 	/**
@@ -295,5 +334,25 @@ CSS
 		}
 		return ''; // Not found, fail silently, maybe the SCSS compiler knowns better...
 	}
+
+	public static function mockCompileCSSService($oCompileCSSServiceMock)
+	{
+		self::$oCompileCSSService = $oCompileCSSServiceMock;
+	}
+}
+
+class CompileCSSService
+{
+	/**
+	 * CompileCSSService constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	public function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array()){
+		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
+	}
+
 }
 
