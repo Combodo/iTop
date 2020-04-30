@@ -119,7 +119,18 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
-	
+
+	/**
+	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
+	 *   Message: Lock wait timeout exceeded; try restarting transaction
+	 */
+	const ERRNO_1205 = 1205;
+	/**
+	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
+	 *   Message: Deadlock found when trying to get lock; try restarting transaction
+	 */
+	const ERRNO_1213 = 1213;
+
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -684,13 +695,6 @@ class CMDBSource
 	}
 
 	/**
-	 * Will log if MySQL error if one of the following :
-	 *
-	 * * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
-	 *   Message: Lock wait timeout exceeded; try restarting transaction
-	 * * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
-	 *   Message: Deadlock found when trying to get lock; try restarting transaction
-	 *
 	 * @param \Exception $e
 	 *
 	 * @since 2.7.1
@@ -699,7 +703,7 @@ class CMDBSource
 	{
 		// checks MySQL error code
 		$iMySqlErrorNo = self::$m_oMysqli->errno;
-		if (!in_array($iMySqlErrorNo, array(1205, 1213)))
+		if (!in_array($iMySqlErrorNo, array(self::ERRNO_1205, self::ERRNO_1213)))
 		{
 			return;
 		}
