@@ -308,7 +308,7 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('tomorrow');
+		$oOccurrence->modify('tomorrow midnight');
 
 		return $oOccurrence;
 	}
@@ -359,8 +359,7 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('Monday next week');
-		$oOccurrence->setTime(0, 0, 0);
+		$oOccurrence->modify('Monday next week midnight');
 
 		return $oOccurrence;
 	}
@@ -411,8 +410,7 @@ class MonthlyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('first day of next month');
-		$oOccurrence->setTime(0, 0, 0);
+		$oOccurrence->modify('first day of next month midnight');
 
 		return $oOccurrence;
 	}
