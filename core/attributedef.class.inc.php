@@ -7015,6 +7015,15 @@ class AttributeExternalField extends AttributeDefinition
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	function IsSearchable()
+	{
+		if ($this->IsFriendlyName())
+		{
+			return true;
+		}
+		return parent::IsSearchable();
+	}
+
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
