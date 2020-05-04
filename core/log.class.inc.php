@@ -646,7 +646,7 @@ abstract class LogAPI
 	 * @param $sChannel
 	 *
 	 * @return string one of the LEVEL_* const value
-	 * @uses LEVEL_DEFAULT
+	 * @uses \LogAPI::LEVEL_DEFAULT
 	 */
 	private static function GetMinLogLevel($sChannel)
 	{
