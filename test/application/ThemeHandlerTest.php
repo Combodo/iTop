@@ -115,11 +115,11 @@ JSON;
 		if($readFromParamAttributeFromJson)
 		{
 			copy($expectJsonFilePath, $this->jsonThemeParamFile);
-			ThemeHandler::CompileTheme('basque-red', null, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+			ThemeHandler::CompileTheme('basque-red', true, null, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 		}
 		else
 		{
-			ThemeHandler::CompileTheme('basque-red', $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+			ThemeHandler::CompileTheme('basque-red', true, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 		}
 		$this->assertTrue(is_file($this->cssPath));
 		$this->assertEquals($expectedThemeParamJson, file_get_contents($this->jsonThemeParamFile));
@@ -151,7 +151,7 @@ JSON;
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
-		ThemeHandler::CompileTheme('basque-red', json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+		ThemeHandler::CompileTheme('basque-red', true, json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 	}
 
 	public function CompileThemesProviderEmptyArray()
@@ -180,7 +180,7 @@ JSON;
 	 * @throws \CoreException
 	 * @dataProvider CompileThemesProvider
 	 */
-	public function testCompileThemes($ThemeParametersJson, $CompileCSSFromSASSCount, $missingFile=0, $filesTouchedRecently=0, $fileMd5sumModified=0, $fileToTest=null, $expected_maincss_path=null)
+	public function testCompileThemes($ThemeParametersJson, $CompileCSSFromSASSCount, $missingFile=0, $filesTouchedRecently=0, $fileMd5sumModified=0, $fileToTest=null, $expected_maincss_path=null, $bSetup=true)
 	{
 		$fileToTest=$this->tmpDir.'/'.$fileToTest;
 		$cssPath = $this->tmpDir . '/branding/themes/basque-red/main.css';
@@ -207,7 +207,7 @@ JSON;
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
-		ThemeHandler::CompileTheme('basque-red', json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+		ThemeHandler::CompileTheme('basque-red', $bSetup, json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 
 		if ($CompileCSSFromSASSCount==1)
 		{
@@ -228,7 +228,9 @@ JSON;
 		$stylesheet_maincss="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";
 		$stylesheet_file_path = '/branding/css/light-grey.scss';
 		return array(
-			"variables list modified sans touch de fichier" => array($modifiedVariableThemeParameterJson, 1,0,1,0,$import_file_path, $varchanged_maincss),
+			"setup context: variables list modified without any file touched" => array($modifiedVariableThemeParameterJson, 1,0,0,0,$import_file_path, $varchanged_maincss),
+			"setup context: variables list modified with files touched" => array($modifiedVariableThemeParameterJson, 1,0,1,0,$import_file_path, $varchanged_maincss, false),
+			"itop page/theme loading; variables list modified sans touch de fichier" => array($modifiedVariableThemeParameterJson, 0,0,0,0,$import_file_path, $varchanged_maincss, false),
 			//imports
 			"import file missing" => array($initialThemeParamJson, 0, 1, 0, 0, $import_file_path),
 			"import file touched" => array($initialThemeParamJson, 0, 0, 1, 0, $import_file_path),

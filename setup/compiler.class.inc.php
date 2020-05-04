@@ -2759,7 +2759,7 @@ EOF;
 			{
 				$this->Log("Precompiled file not found: '$sPrecompiledFile'");
 			}
-			ThemeHandler::CompileTheme($sThemeId, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
+			ThemeHandler::CompileTheme($sThemeId, true, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 		}
 		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
 	}
