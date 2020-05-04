@@ -82,7 +82,8 @@ interface iScheduledProcess extends iProcess
  *
  * Other info (module name and time default value) should be provided using a method that needs to be implemented.
  *
- * @since 2.7.0
+ * @since 2.7.0 PR #89
+ * @since 2.7.0-2 N°2580 Fix {@link GetNextOccurrence} returning wrong value
  */
 abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 {
@@ -191,7 +192,8 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 		}
 		$oNow = new DateTime();
 		$iNextPos = false;
-		for ($iDay = $oNow->format('N'); $iDay <= 7; $iDay++)
+		$sDay = $oNow->format('N');
+		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
 		{
 			$iNextPos = array_search($iDay, $aDays, true);
 			if ($iNextPos !== false)
