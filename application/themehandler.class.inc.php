@@ -152,6 +152,10 @@ class ThemeHandler
 		// Save parameters if passed... (typically during DM compilation)
 		if(is_array($aThemeParameters))
 		{
+			if (!is_dir($sThemeFolderPath))
+			{
+				mkdir($sThemeFolderPath);
+			}
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
 		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
