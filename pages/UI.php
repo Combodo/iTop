@@ -921,10 +921,13 @@ HTML
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
+				//TODO: since $bDisplayDetails= true, there will be an redirection, thus, the content generated here is ignored, only the $sMessage and $sSeverity are used afeter the redirection 
 				$sUser = UserRights::GetUser();
 				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+				$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+				$sSeverity = 'error';
 			}
 			else
 			{
@@ -988,6 +991,8 @@ HTML
 				else
 				{
 					// Nothing more to do
+					$sMessage = isset($sMessage) ? $sMessage : '';
+					$sSeverity = isset($sSeverity) ? $sSeverity : null;
 					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
 				}
 				
