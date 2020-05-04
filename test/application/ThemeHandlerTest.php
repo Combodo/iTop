@@ -1,4 +1,5 @@
 <?php
+
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
@@ -18,6 +19,7 @@ class ThemeHandlerTest extends ItopTestCase
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
+		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 
 		$this->compileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->compileCSSServiceMock);
@@ -213,6 +215,9 @@ JSON;
 		}
 	}
 
+	/**
+	 * @return array
+	 */
 	public function CompileThemesProvider()
 	{
 		$modifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
@@ -235,5 +240,92 @@ JSON;
 		);
 	}
 
+	/**
+	 * @param $xmlDataCusto
+	* @dataProvider providePrecompiledStyleSheets
+	 * @throws \Exception
+	 */
+	public function testValidatePrecompiledStyles($xmlDataCusto)
+	{
+		echo "=== datamodel custo: $xmlDataCusto\n";
+		$oDom = new MFDocument();
+		$oDom->load($xmlDataCusto);
+		/**DOMNodeList **/$oThemeNodes=$oDom->GetNodes("/itop_design/branding/themes/theme");
+		$this->assertNotNull($oThemeNodes);
+
+		// Parsing themes from DM
+		foreach($oThemeNodes as $oTheme)
+		{
+			$sPrecompiledStylesheet = $oTheme->GetChildText('precompiled_stylesheet', '');
+			if (empty($sPrecompiledStylesheet))
+			{
+				continue;
+			}
+
+			$sThemeId = $oTheme->getAttribute('id');
+
+			echo "===  theme: $sThemeId ===\n";
+			$precompiledSig= ThemeHandler::GetSignature(dirname(__FILE__)."/../../datamodels/2.x/".$sPrecompiledStylesheet);
+			echo "  precompiled signature: $precompiledSig\n";
+			$this->assertFalse(empty($precompiledSig), "Signature in precompiled theme '".$sThemeId."' is not retrievable (cf precompiledsheet $sPrecompiledStylesheet / datamodel $xmlDataCusto)");
+
+			$aThemeParameters = array(
+				'variables' => array(),
+				'imports' => array(),
+				'stylesheets' => array(),
+				'precompiled_stylesheet' => '',
+			);
+
+			$aThemeParameters['precompiled_stylesheet'] = $sPrecompiledStylesheet;
+			/** @var \DOMNodeList $oVariables */
+			$oVariables = $oTheme->GetNodes('variables/variable');
+			foreach($oVariables as $oVariable)
+			{
+				$sVariableId = $oVariable->getAttribute('id');
+				$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
+			}
+
+			/** @var \DOMNodeList $oImports */
+			$oImports = $oTheme->GetNodes('imports/import');
+			foreach($oImports as $oImport)
+			{
+				$sImportId = $oImport->getAttribute('id');
+				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
+			}
+
+			/** @var \DOMNodeList $oStylesheets */
+			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
+			foreach($oStylesheets as $oStylesheet)
+			{
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
+			$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, array(APPROOT.'datamodels'));
+			echo "  current signature: $compiled_json_sig\n";
+			$this->assertEquals($precompiledSig, $compiled_json_sig, "Precompiled signature does not match currently compiled one on theme '".$sThemeId."' (cf precompiledsheet $sPrecompiledStylesheet / datamodel $xmlDataCusto)");
+		}
+
+	}
+
+	public function providePrecompiledStyleSheets()
+	{
+		$datamodelfiles=glob(dirname(__FILE__)."/../../datamodels/2.x/**/datamodel*.xml");
+		$test_set = array();
+
+		foreach ($datamodelfiles as $datamodelfile)
+		{
+			if (is_file($datamodelfile) &&
+				$datamodelfile=="/var/www/html/iTop/test/application/../../datamodels/2.x/itop-config-mgmt/datamodel.itop-config-mgmt.xml")
+			{
+				$content=file_get_contents($datamodelfile);
+				if (strpos($content, "precompiled_stylesheet")!==false)
+				{
+					$test_set[$datamodelfile]=array($datamodelfile);
+				}
+			}
+		}
+
+		return $test_set;
+	}
 
 }
