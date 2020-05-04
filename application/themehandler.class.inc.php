@@ -244,7 +244,7 @@ CSS;
 	 * @return string
 	 * @throws \Exception
 	 */
-	private static function ComputeSignature($aThemeParameters, $aImportsPaths)
+	public static function ComputeSignature($aThemeParameters, $aImportsPaths)
 	{
 		$aSignature = array(
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
