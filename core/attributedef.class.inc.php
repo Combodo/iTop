@@ -156,7 +156,7 @@ abstract class AttributeDefinition
 	 */
 	public function IsSearchable()
 	{
-		return static::SEARCH_WIDGET_TYPE != static::SEARCH_WIDGET_TYPE_RAW;
+		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
 	/** @var string */
