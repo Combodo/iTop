@@ -154,7 +154,8 @@ class ThemeHandler
 		{
 			if (!is_dir($sThemeFolderPath))
 			{
-				mkdir($sThemeFolderPath);
+				mkdir($sWorkingPath.'/branding/');
+				mkdir($sWorkingPath.'/branding/themes/');
 			}
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
