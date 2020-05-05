@@ -225,6 +225,7 @@ class ValueSetObjects extends ValueSetDefinition
 		else
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
+			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		}
 		if (!$oFilter) return false;
 		if (!is_null($this->m_oExtraCondition))
