@@ -979,7 +979,7 @@ abstract class DBSearch
 		$aAttToLoad = array();
 		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr, $aSelectExpr);
 
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		try
 		{
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
@@ -997,6 +997,10 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	function GetExpectedArguments()
+	{
+		return $this->GetCriteria()->ListParameters();
+	}
 
 	/**
      * Generate a SQL query from the current search
@@ -1076,7 +1080,7 @@ abstract class DBSearch
 		else
 		{
 			// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
-			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		}
 		try
 		{
