@@ -156,7 +156,7 @@ abstract class AttributeDefinition
 	 */
 	public function IsSearchable()
 	{
-		return static::SEARCH_WIDGET_TYPE != static::SEARCH_WIDGET_TYPE_RAW;
+		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
 	/** @var string */
@@ -7013,6 +7013,15 @@ class AttributeExternalField extends AttributeDefinition
 		}
 
 		return self::SEARCH_WIDGET_TYPE_RAW;
+	}
+
+	function IsSearchable()
+	{
+		if ($this->IsFriendlyName())
+		{
+			return true;
+		}
+		return parent::IsSearchable();
 	}
 
 	public static function ListExpectedParams()
