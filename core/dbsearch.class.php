@@ -507,6 +507,7 @@ abstract class DBSearch
 		}
 		else
 		{
+			/** @var \DBObjectSearch $oFilter */
 			if ($iDirection === static::JOIN_POINTING_TO)
 			{
 				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
