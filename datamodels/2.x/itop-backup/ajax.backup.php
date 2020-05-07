@@ -31,6 +31,26 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');
 
+
+/**
+ * @param WebPage $oPage
+ * @param string $sHtmlErrorMessage the whole HTML error, cinluding div/p/...
+ * @param int|string $exitCode
+ *
+ * @uses \die() https://www.php.net/manual/fr/function.die.php
+ *
+ * @since 2.6.5 2.7.1 N°2989
+ */
+function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
+{
+	$oPage->add($sHtmlErrorMessage);
+	$oPage->output();
+
+	die($exitCode);
+}
+
+
+
 try
 {
 	$sOperation = utils::ReadParam('operation', '');
@@ -48,22 +68,21 @@ try
 
 			if (utils::GetConfig()->Get('demo_mode'))
 			{
-				$oPage->add("<div data-error-stimulus=\"Error\">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
+				DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>');
 			}
-			else
+
+			try
 			{
-				try
-				{
-					set_time_limit(0);
-					$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
-					$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
-				}
-				catch (Exception $e)
-				{
-					$oPage->p('Error: '.$e->getMessage());
-					IssueLog::Error($sOperation.' - '.$e->getMessage());
-				}
+				set_time_limit(0);
+				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 			}
+			catch (Exception $e)
+			{
+				$oPage->p('Error: '.$e->getMessage());
+				IssueLog::Error($sOperation.' - '.$e->getMessage());
+			}
+
 			$oPage->output();
 			break;
 
@@ -85,23 +104,22 @@ try
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-			if (!$oRestoreMutex->IsLocked())
+			if ($oRestoreMutex->IsLocked())
 			{
-				$sFile = utils::ReadParam('file', '', false, 'raw_data');
-				$sToken = str_replace(' ', '', (string)microtime());
-				$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
-				file_put_contents($sTokenFile, $sFile);
+				DisplayErrorAndDie($oPage, '<p>'.Dict::S('bkp-restore-running').'</p>');
+			}
 
-				$oPage->add_ready_script(
-					<<<EOF
-	$("#restore_token").val('$sToken');
-EOF
-				);
-			}
-			else
-			{
-				$oPage->p(Dict::S('bkp-restore-running'));
-			}
+			$sFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sToken = str_replace(' ', '', (string)microtime());
+			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
+			file_put_contents($sTokenFile, $sFile);
+
+			$oPage->add_ready_script(
+				<<<JS
+$("#restore_token").val('$sToken');
+JS
+			);
+
 			$oPage->output();
 			break;
 
@@ -123,51 +141,54 @@ EOF
 
 			if (utils::GetConfig()->Get('demo_mode'))
 			{
-				$oPage->add("<div data-error-stimulus=\"Error\">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
+				DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, iTop is in <b>demonstration mode</b>: the feature is disabled.</div>');
 			}
-			else
+
+			$sToken = utils::ReadParam('token', '', false, 'raw_data');
+			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
+			if (!is_file($sTokenFile))
 			{
-				$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-				$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-				IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
-				$oRestoreMutex->Lock();
-				IssueLog::Info('Backup Restore - LOCK acquired, executing...');
-				try
-				{
-					set_time_limit(0);
-
-					// Get the file and destroy the token (single usage)
-					$sToken = utils::ReadParam('token', '', false, 'raw_data');
-					$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
-					if (!is_file($sTokenFile))
-					{
-						throw new Exception("Error: missing token file: '$sTokenFile'");
-					}
-					$sFile = file_get_contents($sTokenFile);
-					unlink($sTokenFile);
-
-					// Loading config file : we don't have the MetaModel but we have the current env !
-					$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
-					$oItopConfig = new Config($sConfigFilePath, true);
-					$sMySQLBinDir = $oItopConfig->GetModuleSetting('itop-backup', 'mysql_bindir', '');
-
-					$oDBRS = new DBRestore($oItopConfig);
-					$oDBRS->SetMySQLBinDir($sMySQLBinDir);
-
-					$sBackupDir = APPROOT.'data/backups/';
-					$sBackupFile = $sBackupDir.$sFile;
-					$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
-
-					IssueLog::Info('Backup Restore - Done, releasing the LOCK');
-					$oRestoreMutex->Unlock();
-				}
-				catch (Exception $e)
-				{
-					$oRestoreMutex->Unlock();
-					$oPage->p('Error: '.$e->getMessage());
-					IssueLog::Error($sOperation.' - '.$e->getMessage());
-				}
+				IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
+				DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sTokenFile'</p>");
 			}
+
+			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
+			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
+			$oRestoreMutex->Lock();
+			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
+			try
+			{
+				set_time_limit(0);
+
+				// Get the file and destroy the token (single usage)
+				$sFile = file_get_contents($sTokenFile);
+				unlink($sTokenFile);
+
+				// Loading config file : we don't have the MetaModel but we have the current env !
+				$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
+				$oItopConfig = new Config($sConfigFilePath, true);
+				$sMySQLBinDir = $oItopConfig->GetModuleSetting('itop-backup', 'mysql_bindir', '');
+
+				$oDBRS = new DBRestore($oItopConfig);
+				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
+
+				$sBackupDir = APPROOT.'data/backups/';
+				$sBackupFile = $sBackupDir.$sFile;
+				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
+
+				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
+			}
+			catch (Exception $e)
+			{
+				$oPage->p('Error: '.$e->getMessage());
+				IssueLog::Error($sOperation.' - '.$e->getMessage());
+			}
+			finally
+			{
+				$oRestoreMutex->Unlock();
+			}
+
 			$oPage->output();
 			break;
 
@@ -185,14 +206,11 @@ EOF
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';
 			$sPathNoDotDotPattern = "/^((?![\/\\\\]\.\.[\/\\\\]).)*$/";
-			if(preg_match($sPathNoDotDotPattern, $sBackupDir.$sFile) == 1)
-			{
-				$oBackup->DownloadBackup($sBackupDir.$sFile);
-			}
-			else
+			if(preg_match($sPathNoDotDotPattern, $sBackupDir.$sFile) != 1)
 			{
 				throw new InvalidParameterException('Invalid file path');
 			}
+			$oBackup->DownloadBackup($sBackupDir.$sFile);
 			break;
 	}
 }
