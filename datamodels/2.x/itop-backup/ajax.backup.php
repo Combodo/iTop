@@ -141,11 +141,14 @@ JS
 			}
 
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
-			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
-			if (!is_file($sTokenFile))
+			$sBasePath = APPROOT.'/data/';
+			$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
+			$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
+			if (($tokenRealPath === false) || (!is_file($tokenRealPath)))
 			{
 				IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
-				DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sTokenFile'</p>");
+				$sEscapedToken = utils::HtmlEntities($sToken);
+				DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");
 			}
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
@@ -158,8 +161,8 @@ JS
 				set_time_limit(0);
 
 				// Get the file and destroy the token (single usage)
-				$sFile = file_get_contents($sTokenFile);
-				unlink($sTokenFile);
+				$sFile = file_get_contents($tokenRealPath);
+				unlink($tokenRealPath);
 
 				// Loading config file : we don't have the MetaModel but we have the current env !
 				$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);

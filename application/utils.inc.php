@@ -2048,4 +2048,33 @@ class utils
 	{
 		return ITOP_REVISION  === 'svn';
 	}
+
+	/**
+	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
+	 * @param string $sBasePath for example '/var/www/html/itop/data/'
+	 *
+	 * @return bool false if path :
+	 *      * invalid
+	 *      * not allowed
+	 *      * not contained in base path
+	 *    Otherwise return the real path (see realpath())
+	 *
+	 * @since 2.6.5 2.7.0 N°2538
+	 */
+	final public static function RealPath($sPath, $sBasePath)
+	{
+		$sFileRealPath = realpath($sPath);
+		if ($sFileRealPath === false)
+		{
+			return false;
+		}
+
+		$sRealBasePath = realpath($sBasePath); // avoid problems when having '/' on Windows for example
+		if (!self::StartsWith($sFileRealPath, $sRealBasePath))
+		{
+			return false;
+		}
+
+		return $sFileRealPath;
+	}
 }
