@@ -544,7 +544,7 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sPrevString = $this->Get('prevstring');
+			$sPrevString = $this->GetAsHTML('prevstring');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevString);
 		}
 		return $sResult;
