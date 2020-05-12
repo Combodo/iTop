@@ -353,7 +353,7 @@ try
 				$aRow['nb_errors'] = "n/a"; 
 				$aRow['percent_ok'] = '';
 				$aRow['class'] = 'red';				
-				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), $e->getMessage());
+				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
 				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
 				$aResults[] = $aRow;					
 
