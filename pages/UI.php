@@ -1003,6 +1003,9 @@ HTML
 				else
 				{
 					// Nothing more to do
+					$sMessage = isset($sMessage) ? $sMessage : '';
+					$sSeverity = isset($sSeverity) ? $sSeverity : null;
+					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
 				}
 				
 				$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
