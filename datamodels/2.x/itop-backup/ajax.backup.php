@@ -50,6 +50,11 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 try
 {
 	$sOperation = utils::ReadParam('operation', '');
+	$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+	if (!utils::IsTransactionValid($sTransactionId, false))
+	{
+		throw new Exception("Error: invalid Transaction ID. The operation '$sOperation' was NOT performed!");
+	}
 
 	switch ($sOperation)
 	{

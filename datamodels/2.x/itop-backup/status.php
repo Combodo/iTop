@@ -40,11 +40,6 @@ require_once(APPROOT.'application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
-//$sOperation = utils::ReadParam('operation', 'menu');
-//$oAppContext = new ApplicationContext();
-
-
-
 try
 {
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
@@ -287,6 +282,7 @@ try
 	$oBackupExec = new BackupExec();
 	$oNext = $oBackupExec->GetNextOccurrence();
 	$oP->p(Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'), $oNext->Format('H:i')));
+	$oP->add('<input type="hidden" name="transaction_id" id="transaction_id" value="'.utils::GetNewTransactionId().'">');
 	$oP->p('<button onclick="LaunchBackupNow();">'.Dict::S('bkp-button-backup-now').'</button>');
 	$oP->add('<div id="backup_success" class="header_message message_ok" style="display: none;"></div>');
 	$oP->add('<div id="backup_errors" class="header_message message_error" style="display: none;"></div>');
@@ -308,6 +304,7 @@ try
 	
 	$oP->add_script(
 <<<EOF
+
 function LaunchBackupNow()
 {
 	$('#backup_success').hide();
@@ -319,6 +316,7 @@ function LaunchBackupNow()
 
 		var oParams = {};
 		oParams.operation = 'backup';
+		oParams.transaction_id = $('#transaction_id').val();
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 			if (data.search(/error|exceptio|notice|warning/i) != -1)
 			{
@@ -344,7 +342,8 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 
 		var oParams = {};
 		oParams.operation = 'restore_get_token';
-		oParams.file = sBackupFile;
+		oParams.file = sBackupFile;		
+		oParams.transaction_id = $('#transaction_id').val();
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 			// Get the value of restore_token
@@ -354,6 +353,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 			oParams.operation = 'restore_exec';
 			oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
 			oParams.environment = '$sEnvironment'; // needed to load the config
+			oParams.transaction_id = $('#transaction_id').val();
 			if (oParams.token.length > 0)
 			{
 				$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
