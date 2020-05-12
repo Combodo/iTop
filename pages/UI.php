@@ -568,7 +568,6 @@ try
 						$sFullText = trim($aMatches[2]);
 					}
 				}
-				$sFullText = str_replace('_', '\_', $sFullText);
 				if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
 				{
 					// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
@@ -600,7 +599,7 @@ try
 					break;
 				}
 				$sFullText = implode(' ', $aFullTextNeedles);
-				$sFullText = str_replace('\_', '_', $sFullText);
+
 				// Sanity check of the accelerators
 				/** @var array $aAccelerators */
 				$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');

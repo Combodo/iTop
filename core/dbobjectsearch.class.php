@@ -632,7 +632,10 @@ class DBObjectSearch extends DBSearch
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
 		$this->AddConditionExpression($oNewCond);
-		$this->m_aParams[$sQueryParam] = $sNeedle;
+		//replace in order to search the character "_" ("_" in mysql is like "%" for only one character).
+		$sFullText = str_replace('_', '\_', $sNeedle);
+
+		$this->m_aParams[$sQueryParam] = $sFullText;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
