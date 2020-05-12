@@ -92,6 +92,10 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		{
 			$oObj->DBUpdate();
 		}
+		else
+		{
+			throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
+		}
 		ReloadAndDisplay($oP, $oObj);
 	}
 	else
@@ -975,7 +979,6 @@ HTML
 						// - 2) Ok, there was some trouble indeed
 						$sMessage = $e->getMessage();
 						$sSeverity = 'error';
-						$bDisplayDetails = true;
 					}
 					utils::RemoveTransaction($sTransactionId);
 				}
@@ -986,14 +989,20 @@ HTML
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
-					ApplyNextAction($oP, $oObj, $sNextAction);
+					try
+					{
+						ApplyNextAction($oP, $oObj, $sNextAction);
+					}
+					catch (ApplicationException $e)
+					{
+						$sMessage = $e->getMessage();
+						$sSeverity = 'info';
+						ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
+					}
 				}
 				else
 				{
 					// Nothing more to do
-					$sMessage = isset($sMessage) ? $sMessage : '';
-					$sSeverity = isset($sSeverity) ? $sSeverity : null;
-					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
 				}
 				
 				$bLockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -1161,7 +1170,16 @@ HTML
 				if (!empty($sNextAction))
 				{
 					$oP->add("<h1>$sMessage</h1>");
-					ApplyNextAction($oP, $oObj, $sNextAction);
+					try
+					{
+						ApplyNextAction($oP, $oObj, $sNextAction);
+					}
+					catch (ApplicationException $e)
+					{
+						$sMessage = $e->getMessage();
+						$sSeverity = 'info';
+						ReloadAndDisplay($oP, $oObj, 'create', $sMessage, $sSeverity);
+					}
 				}
 				else
 				{
@@ -1560,7 +1578,8 @@ EOF
 			throw new ApplicationException(Dict::S('UI:Error:ActionNotAllowed'));
 		}
 
-			$oObj = MetaModel::GetObject($sClass, $id, false);
+		/** @var \cmdbAbstractObject $oObj */
+		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
 			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
@@ -1568,7 +1587,16 @@ EOF
 				'stimulus' => $sStimulus,
 				'origin' => 'console'
 			);
-			$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
+			try
+			{
+				$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
+			}
+			catch(ApplicationException $e)
+			{
+				$sMessage = $e->getMessage();
+				$sSeverity = 'info';
+				ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
+			}
 		}
 		else
 		{
@@ -1589,6 +1617,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
+		/** @var \cmdbAbstractObject $oObj */
 		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
@@ -1688,7 +1717,15 @@ EOF
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
-						$oObj->DisplayStimulusForm($oP, $sStimulus);
+						try
+						{
+							$oObj->DisplayStimulusForm($oP, $sStimulus);
+						}
+						catch(ApplicationException $e)
+						{
+							$sMessage = $e->getMessage();
+							$sSeverity = 'info';
+						}
 						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
 						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 					}
