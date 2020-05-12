@@ -124,12 +124,12 @@ class CMDBSource
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
 	 *   Message: Lock wait timeout exceeded; try restarting transaction
 	 */
-	const ERRNO_1205 = 1205;
+	const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
 	/**
 	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
 	 *   Message: Deadlock found when trying to get lock; try restarting transaction
 	 */
-	const ERRNO_1213 = 1213;
+	const MYSQL_ERRNO_DEADLOCK = 1213;
 
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
@@ -703,7 +703,7 @@ class CMDBSource
 	{
 		// checks MySQL error code
 		$iMySqlErrorNo = self::$m_oMysqli->errno;
-		if (!in_array($iMySqlErrorNo, array(self::ERRNO_1205, self::ERRNO_1213)))
+		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
 		{
 			return;
 		}
