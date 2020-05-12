@@ -35,6 +35,7 @@ ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
 try
 {
+	$sTransactionId = utils::GetNewTransactionId();
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 
@@ -181,7 +182,13 @@ try
 		}
 		else
 		{
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
+				array(
+					'operation' => 'download',
+					'file' => $sFilePath,
+					'transaction_id' => $sTransactionId,
+				)
+			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
@@ -229,7 +236,13 @@ try
 		}
 		else
 		{
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
+				array(
+					'operation' => 'download',
+					'file' => $sFilePath,
+					'transaction_id' => $sTransactionId,
+				)
+			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
@@ -275,7 +288,6 @@ try
 	$oBackupExec = new BackupExec();
 	$oNext = $oBackupExec->GetNextOccurrence();
 	$oP->p(Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'), $oNext->Format('H:i')));
-	$oP->add('<input type="hidden" name="transaction_id" id="transaction_id" value="'.utils::GetNewTransactionId().'">');
 	$oP->p('<button onclick="LaunchBackupNow();">'.Dict::S('bkp-button-backup-now').'</button>');
 	$oP->add('<div id="backup_success" class="header_message message_ok" style="display: none;"></div>');
 	$oP->add('<div id="backup_errors" class="header_message message_error" style="display: none;"></div>');
@@ -294,10 +306,9 @@ try
 	$sDBSubName = addslashes(MetaModel::GetConfig()->Get('db_subname'));
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
-	
-	$oP->add_script(
-<<<EOF
 
+	$oP->add_script(
+<<<JS
 function LaunchBackupNow()
 {
 	$('#backup_success').hide();
@@ -309,7 +320,7 @@ function LaunchBackupNow()
 
 		var oParams = {};
 		oParams.operation = 'backup';
-		oParams.transaction_id = $('#transaction_id').val();
+		oParams.transaction_id = "$sTransactionId";
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 			if (data.search(/error|exceptio|notice|warning/i) != -1)
 			{
@@ -336,7 +347,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 		var oParams = {};
 		oParams.operation = 'restore_get_token';
 		oParams.file = sBackupFile;		
-		oParams.transaction_id = $('#transaction_id').val();
+		oParams.transaction_id = "$sTransactionId";
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 			// Get the value of restore_token
@@ -346,7 +357,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 			oParams.operation = 'restore_exec';
 			oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
 			oParams.environment = '$sEnvironment'; // needed to load the config
-			oParams.transaction_id = $('#transaction_id').val();
+			oParams.transaction_id = "$sTransactionId";
 			if (oParams.token.length > 0)
 			{
 				$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
@@ -373,7 +384,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 		});
 	}
 }
-EOF
+JS
 	);
 
 	if (MetaModel::GetConfig()->Get('demo_mode'))
