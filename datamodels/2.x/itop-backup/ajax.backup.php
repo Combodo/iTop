@@ -44,34 +44,79 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 }
 
 
+
+
+
+
+$sOperation = utils::ReadParam('operation', '');
+
+$oPage = new ajax_page('');
+$oPage->no_cache();
+$oPage->SetContentType('text/html');
+
+
+
+/**
+ * Check security
+ */
+switch ($sOperation)
+{
+	/**
+	 * Can't use normal check methods (DoLogin for ex) as the datamodel can't be loaded here
+	 * So we're only using a token generated in the restore_token operation
+	 */
+	case 'restore_exec':
+		IssueLog::Enable(APPROOT.'log/error.log');
+		if (utils::GetConfig()->Get('demo_mode'))
+		{
+			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+		}
+
+		$sToken = utils::ReadParam('token', '', false, 'raw_data');
+		$sBasePath = APPROOT.'/data/';
+		$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
+		$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
+		if (($tokenRealPath === false) || (!is_file($tokenRealPath)))
+		{
+			IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
+			$sEscapedToken = utils::HtmlEntities($sToken);
+			DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");
+		}
+
+		break;
+
+	default:
+		require_once(APPROOT.'/application/startup.inc.php');
+		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+		LoginWebPage::DoLogin();
+
+		$sTransactionId = utils::ReadParam('transaction_id', '', true, 'transaction_id');
+		// the consumer page is not reloaded after download, we need to keep the transaction_id
+		$bRemoveTransactionId = ($sOperation !== 'download');
+		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId))
+		{
+			DisplayErrorAndDie($oPage, "<div data-error-stimulus=\"Error\">Error: invalid Transaction ID. The operation '$sOperation' was NOT performed!</div>");
+		}
+
+		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
+
+		if (utils::GetConfig()->Get('demo_mode'))
+		{
+			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+		}
+		break;
+}
+
+
 /**
  * Backup from an interactive session
  */
 try
 {
-	$sOperation = utils::ReadParam('operation', '');
-	$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-	if (!utils::IsTransactionValid($sTransactionId, false))
-	{
-		throw new Exception("Error: invalid Transaction ID. The operation '$sOperation' was NOT performed!");
-	}
-
 	switch ($sOperation)
 	{
 		case 'backup':
-			require_once(APPROOT.'/application/startup.inc.php');
-			require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-			LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-			ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
-			$oPage = new ajax_page("");
-			$oPage->no_cache();
-			$oPage->SetContentType('text/html');
-
-			if (utils::GetConfig()->Get('demo_mode'))
-			{
-				DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
-			}
-
 			try
 			{
 				set_time_limit(0);
@@ -94,15 +139,6 @@ try
 		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
 		 */
 		case 'restore_get_token':
-			require_once(APPROOT.'/application/startup.inc.php');
-			require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-			LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-			ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
-
-			$oPage = new ajax_page("");
-			$oPage->no_cache();
-			$oPage->SetContentType('text/html');
-
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 			if ($oRestoreMutex->IsLocked())
@@ -111,7 +147,7 @@ try
 			}
 
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sToken = str_replace(' ', '', (string)microtime());
+			$sToken = str_replace(' ', '', (string)microtime()); //TODO use transactionid value !
 			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
 			file_put_contents($sTokenFile, $sFile);
 
@@ -134,28 +170,6 @@ JS
 			require_once(APPROOT.'/setup/backup.class.inc.php');
 			require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
-			IssueLog::Enable(APPROOT.'log/error.log');
-
-			$oPage = new ajax_page("");
-			$oPage->no_cache();
-			$oPage->SetContentType('text/html');
-
-			if (utils::GetConfig()->Get('demo_mode'))
-			{
-				DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
-			}
-
-			$sToken = utils::ReadParam('token', '', false, 'raw_data');
-			$sBasePath = APPROOT.'/data/';
-			$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
-			$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
-			if (($tokenRealPath === false) || (!is_file($tokenRealPath)))
-			{
-				IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
-				$sEscapedToken = utils::HtmlEntities($sToken);
-				DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");
-			}
-
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
@@ -167,7 +181,6 @@ JS
 
 				// Get the file and destroy the token (single usage)
 				$sFile = file_get_contents($tokenRealPath);
-				unlink($tokenRealPath);
 
 				// Loading config file : we don't have the MetaModel but we have the current env !
 				$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
@@ -190,6 +203,7 @@ JS
 			}
 			finally
 			{
+				unlink($tokenRealPath);
 				$oRestoreMutex->Unlock();
 			}
 
@@ -197,15 +211,6 @@ JS
 			break;
 
 		case 'download':
-			require_once(APPROOT.'/application/startup.inc.php');
-			require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-			LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-			ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
-
-			if (utils::GetConfig()->Get('demo_mode'))
-			{
-				throw new Exception(ITOP_APPLICATION_SHORT.' is in demonstration mode: the feature is disabled');
-			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';
