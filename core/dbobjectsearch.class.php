@@ -1036,7 +1036,7 @@ class DBObjectSearch extends DBSearch
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (($this->GetFirstJoinedClass() == $oFilter->GetFirstJoinedClass()))
+		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(),$this->GetFirstJoinedClass()))
 		{
 			return $this->Intersect($oFilter);
 		}
