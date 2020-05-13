@@ -89,6 +89,10 @@ try
 				try
 				{
 					$oDoc = utils::ReadPostedDocument('file');
+					if ($oDoc->IsEmpty())
+					{
+						throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
+					}
 					/** @var Attachment $oAttachment */
 					$oAttachment = MetaModel::NewObject('Attachment');
 					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));

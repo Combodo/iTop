@@ -208,7 +208,7 @@ Operadores:<br/>
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'CRON~~',
+	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
@@ -542,6 +542,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é ativado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //

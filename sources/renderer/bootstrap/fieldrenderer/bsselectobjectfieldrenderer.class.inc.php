@@ -176,7 +176,7 @@ EOF
 					// - Opening input group
 					$oOutput->AddHtml('<div class="input-group selectobject">');
 					// - Rendering autocomplete search
-					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
+					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . '" class="form-control" />');
 					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
 					// - Rendering buttons
 					//   - Rendering hierarchy button
@@ -207,14 +207,15 @@ EOF
 							// Updating autocomplete field
 							me.element.find('#{$this->oField->GetGlobalId()}').val(sItemId);
 							me.element.find('#{$sAutocompleteFieldId}').val(sItemName);
-							oAutocompleteSource_{$this->oField->GetId()}.index.datums[sItemId] = {id: sItemId, name: sItemName};
+							oAutocompleteSource_{$this->oField->GetId()}.index.datums[sItemId] = {id: sItemId, name: sItemName};							
+							$('#$sAutocompleteFieldId').typeahead('val', sItemName);							
 //console.log('callback', oData);
 							// Triggering field change event
 							me.element.closest(".field_set").trigger("field_change", {
 								id: me.element.find('#{$this->oField->GetGlobalId()}').attr("id"),
 								name: me.element.find('#{$this->oField->GetGlobalId()}').attr("name"),
 								value: me.element.find('#{$this->oField->GetGlobalId()}').val()
-							});
+							});							
 						}
 					});
 EOF
@@ -426,7 +427,7 @@ JS
 						},
 					},
 				};
-			
+
 				if($('.modal[data-source-element="{$sSearchButtonId}"]').length === 0)
 				{
 					oOptions['attributes'] = {'data-source-element': '{$sSearchButtonId}'};

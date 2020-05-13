@@ -304,8 +304,12 @@ class EMail
 			$oHeaders = $this->m_oMessage->getHeaders();
 			switch(strtolower($sKey))
 			{
+				case 'return-path':
+					$this->m_oMessage->setReturnPath($sValue);
+					break;
+
 				default:
-				$oHeaders->addTextHeader($sKey, $sValue);
+					$oHeaders->addTextHeader($sKey, $sValue);
 			}
 		}
 	}

@@ -1,5 +1,8 @@
 {
 	"license": "AGPLv3",
+    "config": {
+      "classmap-authoritative": true
+    },
 	"autoload": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\": "src/"

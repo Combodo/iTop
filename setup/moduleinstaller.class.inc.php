@@ -147,6 +147,12 @@ abstract class ModuleInstallerAPI
 							{
 								$aCurrentValues = explode("','", $aMatches[1]);
 							}
+							else
+							{
+								// not an enum currently : return !
+								// we could update values, but a clear error message will be displayed when altering the column
+								return;
+							}
 						}
 						if (!in_array($sFrom, $aNewValues))
 						{

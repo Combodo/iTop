@@ -185,15 +185,7 @@ $(function()
 					.trigger('itop.search.criteria_enum.autocomplete.submit');
 			});
 
-			// - Check / Uncheck all toggler
-			oTogglerElem.on('click', function(oEvent){
-				// Check / uncheck all allowed values
-				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
-				oOpContentElem.find('.sfc_opc_mc_item:visible input:checkbox').prop('checked', bChecked);
 
-				// Apply criteria
-				//me._apply();
-			});
 
 			if(this._hasAutocompleteAllowedValues())
 			{
@@ -208,11 +200,20 @@ $(function()
 		{
 			var me = this;
 
+
 			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
 			var oTogglerElem = oOpContentElem.find('.sfc_opc_mc_toggler');
 			var oFilterElem = oOpContentElem.find('.sf_filter');
 			var oAllowedValuesElem = oOpContentElem.find('.sfc_opc_mc_items');
 			var oDynamicListElem = oOpContentElem.find('.sfc_opc_mc_items_dynamic');
+
+			// - Check / Uncheck all toggler
+			oTogglerElem.on('click', function(oEvent){
+				// Check / uncheck all allowed values
+				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
+				oOpContentElem.find('.sfc_opc_mc_item:visible input:checkbox').prop('checked', bChecked);
+			});
+
 
 			// DOM elements
 			// - Filter
@@ -295,9 +296,62 @@ $(function()
 			var oValuesWrapperElem = oOpContentElem.find('.sfc_opc_mc_items_wrapper');
 			var oAllowedValuesElem = oValuesWrapperElem.find('.sfc_opc_mc_items');
 
+			// - Check / Uncheck all toggler
+			oTogglerElem.on('click', function(oEvent){
+				// Check / uncheck all allowed values
+				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
+				if(bChecked)
+				{
+					// - Apply on check
+					oAllowedValuesElem.find('.sfc_opc_mc_item input').each(function(){
+						if(!$(this).find("input[type=\"checkbox\"]").is(":checked"))
+						{
+							var oItemElem = $(this).closest('.sfc_opc_mc_item');
+
+							// Hide item
+							oItemElem.hide();
+
+							// Copy item to selected items list
+							var oValues = {};
+							oValues[oItemElem.find('input:checkbox').val()] = oItemElem.text();
+							me._addSelectedValues(oValues);
+						}
+					});
+				}
+				else
+				{
+					// - Apply on uncheck
+					oAllowedValuesElem.find('.sfc_opc_mc_item').each(function(){
+						if(!$(this).is(":visible"))
+						{
+							// Show item among allowed values (if still there, could have been removed by another search needle)
+							var oAllowedValueElem = oAllowedValuesElem.find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]');
+							if (oAllowedValueElem.length > 0)
+							{
+								oAllowedValuesElem.find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]')
+									.show()
+									.find('input:checkbox')
+									.prop('checked', false);
+							}
+
+							// Remove item from selected values
+							$(this).closest(".sfc_opc_mc_items_wrapper").find('.sfc_opc_mc_items_selected').find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]').remove();
+						}
+					});
+					oAllowedValuesElem.closest(".sfc_opc_mc_items_wrapper").find('.sfc_opc_mc_items_selected').find('.sfc_opc_mc_item').each(function(){
+						//$(this).add(oAllowedValuesElem);
+						$(this).remove();
+					});
+
+					me._refreshSelectedValues();
+				}
+
+			});
 			// DOM
 			// - Hide toggler for now
 			oTogglerElem.hide();
+			//but when there are values under the search, this checkbox must come back
+
 
 			// - Set typing hint
 			this._setACTypingHint();
@@ -379,7 +433,6 @@ $(function()
 							.done(function(oResponse, sStatus, oXHR){
 								me._onACSearchSuccess(oResponse);
 
-
 								if (Object.keys(oResponse).length >= 150)
 								{
                                     me._emptyACTempHint();
@@ -406,16 +459,26 @@ $(function()
 									});
 
                                     me._onACSearchContainsSuccess(oResponseContains);
+
+
                                 });
 							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
-							.always(function(oResponse, sStatus, oXHR){ me._onACSearchAlways(); });
+							.always(function(oResponse, sStatus, oXHR){
+								me._onACSearchAlways();
+								if (me.element.find('.sfc_opc_mc_item').length>0)
+								{
+									oTogglerElem.show();
+								}
+								else
+								{
+									oTogglerElem.hide();
+								}
+							});
 
 						oFilterElem.find('.sff_reset').show();
 					}, me.options.autocomplete.xhr_throttle);
 				}
-
-				me._updateTogglerLabel();
 			});
 
 			// - Apply on check
@@ -464,6 +527,11 @@ $(function()
 			oFilterElem.find('.sff_search_dialog').on('click', function(){
 				oForeignKeysWidgetCurrent.ShowModalSearchForeignKeys();
 			});
+
+			var oTogglerTextElem = this.element.find('.sfc_opc_mc_toggler label span');
+			var sFilterVal = this.element.find('.sf_filter input[type="text"]').val();
+
+			oTogglerTextElem.text( oTogglerTextElem.attr('data-label-filtered'));
 		},
 		_computeTitle: function(sTitle)
 		{
@@ -794,6 +862,15 @@ $(function()
 				oSelectedValuesElem.hide();
 			}
 
+			var oTogglerElem= this.element.find('.sfc_opc_multichoices').find('.sfc_opc_mc_toggler');
+			if (this.element.find('.sfc_opc_mc_item').length>0)
+			{
+				oTogglerElem.show();
+			}
+			else
+			{
+				oTogglerElem.hide();
+			}
 			// TODO: Reorder
 			// oSelectedValuesElem.html('');
 			// var aSortedValues = this._sortValuesByLabel(this.options.values);

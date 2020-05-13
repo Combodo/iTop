@@ -37,56 +37,67 @@ If you want to use another license, you may [create an extension][wiki new ext].
 [wiki new ext]: https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Astart#by_writing_your_own_extension
 
 
-## 🔀 Branch model
+## 🔀 iTop branch model
 
-TL;DR:
-> **create a fork from iTop main repository,  
-> create a branch based on the develop branch**
+When we first start with Git, we were using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. As
+ there was some confusions about branches to use for current developed release and previous maintained release, and also because we were
+ using just a very few of the GitFlow commands, we decided to add just a little modification to this branch model : since april 2020
+  we don't have anymore a `master` branch.
 
-We are using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. That means we have in our repo those
-main branches:
+Here are the branches we use and their meaning : 
 
-- develop: ongoing development version
-- release/\*: if present, that means we are working on a beta version
-- master: previous stable version
-- support/\*: maintenance branches for older versions
+- `develop`: ongoing development version
+- `release/*`: if present, that means we are working on a alpha/beta/rc version for shipping
+- `support/*`: maintenance branches for older versions
 
-For example, if no beta version is currently ongoing we could have:
+For example, if no version is currently prepared for shipping we could have:
 
-- develop containing future 2.8.0 version
-- master containing 2.7.x maintenance version
-- support/2.6 containing 2.6.x maintenance version
-- support/2.5 containing 2.5.x maintenance version
+- `develop` containing future 2.8.0 version
+- `support/2.7`: 2.7.x maintenance version
+- `support/2.6`: 2.6.x maintenance version
+- `support/2.5`: 2.5.x maintenance version
 
 In this example, when 2.8.0-beta is shipped that will become:
 
-- develop: future 2.9.0 version
-- release/2.8: 2.8.0-beta
-- master: 2.7.x maintenance version
-- support/2.6 containing 2.6.x maintenance version
-- support/2.5 containing 2.5.x maintenance version
+- `develop`: future 2.9.0 version
+- `release/2.8`: 2.8.0-beta
+- `support/2.7`: 2.7.x maintenance version
+- `support/2.6`: 2.6.x maintenance version
+- `support/2.5`: 2.5.x maintenance version
 
 And when 2.8.0 final will be out:
 
-- develop: future 2.9.0 version
-- master: 2.8.x maintenance version
-- support/2.7 : 2.7.x maintenance version
-- support/2.6 containing 2.6.x maintenance version
-- support/2.5 containing 2.5.x maintenance version
+- `develop`: future 2.9.0 version
+- `support/2.8`: 2.8.x maintenance version (will host developments for 2.8.1)
+- `support/2.7`: 2.7.x maintenance version
+- `support/2.6`: 2.6.x maintenance version
+- `support/2.5`: 2.5.x maintenance version
 
-Most of the time you should based your developments on the develop branch.  
-That may be different if you want to fix a bug, please use develop anyway and ask in your PR if rebase is possible.
+Also note that we have a "micro-version" concept : each of those versions have a very small amount of modifications. They are made from
+ `support/*` branches as well. For example 2.6.2-1 and 2.6.2-2 were made from the `support/2.6.2` branch. 
 
 
 ## Coding
 
-### 🎨 PHP styleguide
-
-Please follow [our guidelines](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Acoding_standards).
-
 ### 🌐 Translations
 
 A [dedicated page](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Atranslation) is available in the official wiki.
+
+### Where to start ?
+
+1. Create a fork from our repository (see [Working with forks - GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks))
+2. Create a branch in this fork, based on the develop branch
+3. Code !
+
+Do create a dedicated branch for each modification you want to propose : if you don't it will be very hard to merge back your work !
+
+Most of the time you should based your developments on the develop branch.    
+That may be different if you want to fix a bug, please use develop anyway and ask in your PR if rebase is possible.
+
+
+### 🎨 PHP styleguide
+
+Please follow [our guidelines](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Acoding_standards).
 
 ### ✅ Tests
 

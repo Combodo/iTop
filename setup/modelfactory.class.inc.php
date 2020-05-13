@@ -261,7 +261,7 @@ class MFModule
 			while (($sFile = readdir($hDir)) !== false)
 			{
 				$aMatches = array();
-				if (preg_match("/^[^\\.]+.dict.".$this->sName.".php$/i", $sFile,
+				if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
 					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
 				{
 					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
@@ -1855,7 +1855,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Extracts some nodes from the DOM (active nodes only !!!)
 	 *
 	 * @param string $sXPath A XPath expression
-	 * @param $sId
+	 * @param string $sId
 	 *
 	 * @return DOMNodeList
 	 */
@@ -1867,7 +1867,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Returns the node directly under the given node
 	 *
-	 * @param $sTagName
+	 * @param string $sTagName
 	 * @param bool $bMustExist
 	 *
 	 * @return MFElement
@@ -1903,7 +1903,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param string $sElementName
 	 *
-	 * @return array|null|string
+	 * @return array|string if no subnode is found, return current node text, else return results as array
 	 * @throws \DOMFormatException
 	 */
 	public function GetNodeAsArrayOfItems($sElementName = 'items')
@@ -2068,6 +2068,8 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Check if the current node is under a node 'added' or 'altered'
 	 * Usage: In such a case, the change must not be tracked
+	 *
+	 * @return boolean true if `_alteration` flag is set on any parent of the current node
 	 */
 	public function IsInDefinition()
 	{
@@ -2104,14 +2106,14 @@ class MFElement extends Combodo\iTop\DesignElement
 		return false;
 	}
 
-	static $aTraceAttributes = null;
+	protected static $aTraceAttributes = null;
 
 	/**
 	 * Enable/disable the trace on changed nodes
 	 *
 	 * @param array aAttributes Array of attributes (key => value) to be added onto any changed node
 	 */
-	static public function SetTrace($aAttributes = null)
+	public static function SetTrace($aAttributes = null)
 	{
 		self::$aTraceAttributes = $aAttributes;
 	}
@@ -2582,9 +2584,9 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	}
 
 	/**
-	 * @param $sXPath
-	 * @param $sId
-	 * @param null $oContextNode
+	 * @param string $sXPath
+	 * @param string $sId
+	 * @param \DOMNode $oContextNode
 	 *
 	 * @return \DOMNodeList
 	 */

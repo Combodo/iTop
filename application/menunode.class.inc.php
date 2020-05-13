@@ -304,7 +304,7 @@ EOF
 						$sLinkTarget .= ' target="_blank"';
 					}
 					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
-					$sTitle = $oMenu->GetTitle();
+					$sTitle = utils::HtmlEntities($oMenu->GetTitle());
 					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
 				}
 				else
@@ -922,7 +922,7 @@ class OQLMenuNode extends MenuNode
 			$oBlock->Display($oPage, 0);
 		}
 		
-		$oPage->add("<p class=\"page-header\">$sIcon ".Dict::S($sTitle)."</p>");
+		$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
 		
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);

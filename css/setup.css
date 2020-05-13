@@ -33,7 +33,7 @@
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 @keyframes bg-pan-left {
@@ -41,7 +41,7 @@
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 /* Theme */
@@ -51,7 +51,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 10pt;
-  font-family: Tahoma, Verdana, Arial, Helvetica;
+  font-family: Tahoma, Verdana, Arial, Helvetica, serif;
   overflow-y: auto;
 }
 h1 {
@@ -92,9 +92,7 @@ a:hover {
   margin-right: 20px;
 }
 #header h1 {
-  vertical-align: middle;
   height: 54px;
-  noline-height: 54px;
   margin: 0;
 }
 #setup {
@@ -153,8 +151,6 @@ td.input {
 }
 table.formTable {
   border: 0;
-  cellpadding: 2px;
-  cellspacing: 0;
 }
 .wizlabel, .wizinput {
   color: #000;

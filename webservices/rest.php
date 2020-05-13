@@ -79,7 +79,7 @@ try
 	utils::UseParamFile();
         
 	$oKPI->ComputeAndReport('Data model loaded');
-        
+
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
         $oKPI->ComputeAndReport('User login');
         
@@ -130,11 +130,26 @@ try
 	{
 		throw new Exception("Missing parameter 'json_data'", RestResult::MISSING_JSON);
 	}
-	$aJsonData = @json_decode($sJsonString);
-	if ($aJsonData == null)
+
+	if (is_string($sJsonString))
 	{
-		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
-	}
+        $aJsonData = @json_decode($sJsonString);
+    }
+	elseif(is_array($sJsonString))
+    {
+        $aJsonData = (object) $sJsonString;
+        $sJsonString = json_encode($aJsonData);
+    }
+	else
+    {
+        $aJsonData = null;
+    }
+
+    if ($aJsonData == null)
+    {
+        throw new Exception('Parameter json_data is not a valid JSON structure', RestResult::INVALID_JSON);
+    }
+
 	$oKPI->ComputeAndReport('Parameters validated');
 
 

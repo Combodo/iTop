@@ -1584,7 +1584,7 @@ EOF
 						$sTabs .= "<div class=\"printable-tab\" id=\"$sTabId\"><h2 class=\"printable-tab-title\">$sTabTitleForHtml</h2><div class=\"printable-tab-content\">".$sTabHtml."</div></div>\n";
 						$oPage->add_ready_script(
 							<<< EOF
-oHiddeableChapters['$sTabId'] = '$sTabCodeForJs';
+oHiddeableChapters['$sTabId'] = '$sTabTitleForHtml';
 EOF
 						);
 						$i++;

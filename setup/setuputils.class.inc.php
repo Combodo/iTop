@@ -113,6 +113,7 @@ class SetupUtils
 					'openssl' => 'Strong encryption will not be used.',
 				),
 			'ldap' => 'LDAP authentication will be disabled.',
+			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
 		);
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !

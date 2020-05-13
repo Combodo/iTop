@@ -62,6 +62,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Attachment/Attribute:contents+' => '',
 ));
 
+
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:File:Thumbnail' => 'Icon',
 	'Attachments:File:Name' => 'Dateiname',

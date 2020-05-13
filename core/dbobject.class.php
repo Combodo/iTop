@@ -2914,9 +2914,9 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-	/*
-	* Persist an object to the DB, for the first time
-	*
+	/**
+	 * Persist an object to the DB, for the first time
+	 *
      * @api
      * @see DBWrite
      *
@@ -3851,7 +3851,32 @@ abstract class DBObject implements iDisplay
 	 */	 	
 	public function Copy($sDestAttCode, $sSourceAttCode)
 	{
-		$this->Set($sDestAttCode, $this->Get($sSourceAttCode));
+		$oTypeValueToCopy = MetaModel::GetAttributeDef(get_class($this), $sSourceAttCode);
+		$oTypeValueDest = MetaModel::GetAttributeDef(get_class($this), $sDestAttCode);
+		if ($oTypeValueToCopy instanceof AttributeText && $oTypeValueDest instanceof AttributeText)
+		{
+			if ($oTypeValueToCopy->GetFormat() == $oTypeValueDest->GetFormat())
+			{
+				$sValueToCopy = $this->Get($sSourceAttCode);
+			}
+			else
+			{
+				if ($oTypeValueToCopy->GetFormat() == 'text')// and $oTypeValueDest->GetFormat()=='HTML'
+				{
+					$sValueToCopy = $this->GetAsHTML($sSourceAttCode);
+				}
+				else
+				{// $oTypeValueToCopy->GetFormat() == 'HTML' and $oTypeValueDest->GetFormat()=='Text'
+					$sValueToCopy = utils::HtmlToText($this->Get($sSourceAttCode));
+				}
+			}
+		}
+		else
+		{
+			$sValueToCopy = $this->Get($sSourceAttCode);
+		}
+		$this->Set($sDestAttCode, $sValueToCopy);
+
 		return true;
 	}
 

@@ -80,8 +80,6 @@ class ObjectFormManager extends FormManager
 	protected $aFormProperties;
 	/** @var array $aCallbackUrls */
 	protected $aCallbackUrls = array();
-	/** @var boolean $bIsSubmittable */
-	protected $bIsSubmittable = true;
 
 	/**
 	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
@@ -222,29 +220,7 @@ class ObjectFormManager extends FormManager
 
 		return $this;
 	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function GetIsSubmittable()
-	{
-		return $this->bIsSubmittable;
-	}
 
-	/**
-	 *
-	 * @param boolean $bIsSubmittable
-	 *
-	 * @return $this
-	 */
-	public function SetIsSubmittable($bIsSubmittable)
-	{
-		$this->bIsSubmittable = $bIsSubmittable;
-
-		return $this;
-	}
-	
 	/**
 	 *
 	 * @return string
@@ -663,8 +639,7 @@ class ObjectFormManager extends FormManager
 			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
 			if ($oField !== null)
 			{
-				// If a form is in edit mode and can't be submitted to update an object (only transitions available), we have no reason to allow fields to be editable
-				if ($this->sMode !== static::ENUM_MODE_VIEW && $this->GetIsSubmittable())
+				if ($this->sMode !== static::ENUM_MODE_VIEW)
 				{
 					// Field dependencies
 					$aFieldDependencies = $oAttDef->GetPrerequisiteAttributes();
@@ -1161,7 +1136,15 @@ class ObjectFormManager extends FormManager
 
 				if ($bWasModified)
 				{
-					$aData['messages']['success'] += array('_main' => array(Dict::Format('Brick:Portal:Object:Form:Message:ObjectSaved', $this->oObject->GetName())));
+					//=if (isNew) because $bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified())
+					if(!$bActivateTriggers)
+					{
+						$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
+					}
+					else
+					{
+						$aData['messages']['success'] += array('_main' => array(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($this->oObject)), $this->oObject->GetName())));
+					}
 				}
 			}
 			catch (Exception $e)

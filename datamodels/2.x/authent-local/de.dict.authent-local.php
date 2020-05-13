@@ -38,6 +38,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Passworterneuerung',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
+
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort muss mindestens 8 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.',
+
 	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine iTop Erweiterung'
 ));

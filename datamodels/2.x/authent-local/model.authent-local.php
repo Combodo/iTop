@@ -249,6 +249,14 @@ class UserLocal extends UserInternal
 			$config =  MetaModel::GetConfig();
 		}
 
+		//if the $proposedValue is an ormPassword, then it cannot be checked
+		//this if is even more permissive as we can only check against strings
+		if (!is_string($proposedValue) && !empty($proposedValue))
+		{
+			$this->m_oPasswordValidity = new UserLocalPasswordValidity(true);
+			return;
+		}
+
 		if (null == $aValidatorCollection)
 		{
 			$aValidatorCollection = MetaModel::EnumPlugins('iModuleExtension', 'UserLocalPasswordValidator');

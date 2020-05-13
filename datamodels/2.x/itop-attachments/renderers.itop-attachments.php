@@ -173,7 +173,7 @@ abstract class AbstractAttachmentsRenderer
 			 $(sContentNode).html(data);
 			 $(sContentNode).unblock();
 			}
-		 );
+		 )
 	}
 	
     $('#file').fileupload({
@@ -181,8 +181,20 @@ abstract class AbstractAttachmentsRenderer
 		formData: { operation: 'add', temp_id: '$this->sTransactionId', obj_class: '$sClass' },
         dataType: 'json',
 		pasteZone: null, // Don't accept files via Chrome's copy/paste
-        done: RefreshAttachmentsDisplay,
-	    send: function(e, data){
+        done: function (e, data) {
+			if(typeof(data.result.error) != 'undefined')
+			{
+				if(data.result.error !== '')
+				{
+					alert(data.result.error);
+				}
+				else
+				{
+				    RefreshAttachmentsDisplay();
+				}
+			}
+		},
+		send: function(e, data){
 	        // Don't send attachment if size is greater than PHP post_max_size, otherwise it will break the request and all its parameters (\$_REQUEST, \$_POST, ...)
 	        // Note: We loop on the files as the data structures is an array but in this case, we only upload 1 file at a time.
 	        var iTotalSizeInBytes = 0;

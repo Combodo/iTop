@@ -639,14 +639,8 @@ class ObjectController extends BrickController
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%'.$sQuery.'%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
-		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
-		{
-			$oSet->SetLimit(static::DEFAULT_LIST_LENGTH);
-		}
-		else
-		{
-			$oSet->SetLimit($oTargetAttDef->GetMaximumComboLength()); // TODO : Is this the right limit value ? We might want to use another parameter
-		}
+		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_display_limit'));
+
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
 		{

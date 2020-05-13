@@ -422,6 +422,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Insert' => 'Insert',
 	'UI:Button:More' => 'More',
 	'UI:Button:Less' => 'Less',
+	'UI:Button:Wait' => 'Please wait while updating fields',
+	'UI:Treeview:CollapseAll' => 'Collapse All',
+	'UI:Treeview:ExpandAll' => 'Expand All',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
@@ -804,12 +807,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Deletion of %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Deletion of %1$d objects of class %2$s',
 	'UI:Delete:CannotDeleteBecause' => 'Could not be deleted: %1$s',
-	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automaticaly deleted, but this is not feasible: %1$s',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automatically deleted, but this is not feasible: %1$s',
 	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Must be deleted manually, but this is not feasible: %1$s',
-	'UI:Delete:WillBeDeletedAutomatically' => 'Will be automaticaly deleted',
+	'UI:Delete:WillBeDeletedAutomatically' => 'Will be automatically deleted',
 	'UI:Delete:MustBeDeletedManually' => 'Must be deleted manually',
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Should be automatically updated, but: %1$s',
-	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'will be automaticaly updated (reset: %1$s)',
+	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'will be automatically updated (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objects/links are referencing %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'To ensure Database integrity, any reference should be further eliminated',
@@ -1446,6 +1449,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',

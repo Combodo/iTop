@@ -837,7 +837,8 @@ class DisplayBlock
 
 				foreach($aStates as $sStateValue)
 				{
-					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
+					$sHtmlValue=$aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
+					$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
 
 					$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 						? $aCountsQueryResults[$sStateValue]
@@ -946,7 +947,7 @@ class DisplayBlock
 			$iChartCounter++;
 	
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
-			$sTitle = isset($aExtraParams['chart_title']) ? '<h1 style="text-align:center">'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1>' : '';
+			$sTitle = isset($aExtraParams['chart_title']) ? '<div class="main_header"><h1>&#160;'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1></div>' : '';
 			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';

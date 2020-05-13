@@ -34,7 +34,13 @@ do
     then
       continue
     fi
-
+    if [ "$subfolder" == "datamodels" ]
+    then
+      if [ $(find $l -name module*.php|wc -l) -ne 0 -o $(echo "$l"|grep -c "itop-portal-base") -ne 0 ]
+      then
+        continue
+      fi
+    fi
     dir=$(dirname $(dirname $l))
     prod=$(echo $l| sed "s|$dir/||1")
     echo $l $subfolder
