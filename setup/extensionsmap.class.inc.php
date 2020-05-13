@@ -277,7 +277,6 @@ class iTopExtensionsMap
 				$oExtension->sVersion = $oXml->Get('version');
 				$oExtension->bMandatory = ($oXml->Get('mandatory') == 'true');
 				$oExtension->sMoreInfoUrl = $oXml->Get('more_info_url');
-				$oExtension->sVersion = $oXml->Get('version');
 				$oExtension->sSource = $sSource;
 				$oExtension->sSourceDir = $sSearchDir;
 				
