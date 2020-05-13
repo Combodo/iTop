@@ -313,10 +313,9 @@ try
 			// We're doing it for real, let's create a change
 			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
 			CMDBObject::SetTrackInfo($sUserString);
-			CMDBObject::SetTrackOrigin('csv-interactive');
-			
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
+		CMDBObject::SetTrackOrigin('csv-interactive');
 	
 		$oBulk = new BulkChange(
 			$sClassName,
