@@ -96,7 +96,8 @@ switch ($sOperation)
 		$bRemoveTransactionId = ($sOperation !== 'download');
 		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId))
 		{
-			DisplayErrorAndDie($oPage, "<div data-error-stimulus=\"Error\">Error: invalid Transaction ID. The operation '$sOperation' was NOT performed!</div>");
+			$sEscapedOperation = utils::HtmlEntities($sOperation);
+			DisplayErrorAndDie($oPage, "<div data-error-stimulus=\"Error\">Error: invalid Transaction ID. The operation '$sEscapedOperation' was NOT performed!</div>");
 		}
 
 		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
