@@ -9641,7 +9641,7 @@ class AttributePropertySet extends AttributeTable
 				$sValue = '*****';
 			}
 			$sRes .= "<TR>";
-			$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$sValue));
+			$sCell = str_replace("\n", "<br>\n", Str::pure2html(@(string)$sValue));
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
 			$sRes .= "</TR>";
 		}
