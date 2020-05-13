@@ -2050,6 +2050,39 @@ class utils
 	}
 
 	/**
+	 * helper to test if a string starts with another
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function StartsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack))
+		{
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	/**
+	 * helper to test if a string ends with another
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function EndsWith($haystack, $needle) {
+		if (strlen($needle) > strlen($haystack))
+		{
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
+
+	/**
 	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
 	 * @param string $sBasePath for example '/var/www/html/itop/data/'
 	 *
