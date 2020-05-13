@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2016-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Monitor the backup
+ * Copyright (C) 2010-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2016-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
@@ -40,13 +33,9 @@ require_once(APPROOT.'application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
-//$sOperation = utils::ReadParam('operation', 'menu');
-//$oAppContext = new ApplicationContext();
-
-
-
 try
 {
+	$sTransactionId = utils::GetNewTransactionId();
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 
@@ -193,7 +182,13 @@ try
 		}
 		else
 		{
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
+				array(
+					'operation' => 'download',
+					'file' => $sFilePath,
+					'transaction_id' => $sTransactionId,
+				)
+			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
@@ -241,7 +236,13 @@ try
 		}
 		else
 		{
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php', array('operation' => 'download', 'file' => $sFilePath));
+			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
+				array(
+					'operation' => 'download',
+					'file' => $sFilePath,
+					'transaction_id' => $sTransactionId,
+				)
+			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
@@ -305,9 +306,9 @@ try
 	$sDBSubName = addslashes(MetaModel::GetConfig()->Get('db_subname'));
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
-	
+
 	$oP->add_script(
-<<<EOF
+<<<JS
 function LaunchBackupNow()
 {
 	$('#backup_success').hide();
@@ -319,6 +320,7 @@ function LaunchBackupNow()
 
 		var oParams = {};
 		oParams.operation = 'backup';
+		oParams.transaction_id = "$sTransactionId";
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 			if (data.search(/error|exceptio|notice|warning/i) != -1)
 			{
@@ -344,7 +346,8 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 
 		var oParams = {};
 		oParams.operation = 'restore_get_token';
-		oParams.file = sBackupFile;
+		oParams.file = sBackupFile;		
+		oParams.transaction_id = "$sTransactionId";
 		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
 
 			// Get the value of restore_token
@@ -354,6 +357,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 			oParams.operation = 'restore_exec';
 			oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
 			oParams.environment = '$sEnvironment'; // needed to load the config
+			oParams.transaction_id = "$sTransactionId";
 			if (oParams.token.length > 0)
 			{
 				$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
@@ -380,7 +384,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 		});
 	}
 }
-EOF
+JS
 	);
 
 	if (MetaModel::GetConfig()->Get('demo_mode'))
