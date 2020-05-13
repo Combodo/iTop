@@ -134,9 +134,10 @@ try
 			break;
 
 		/*
-		 * Fix a token :
+		 * Fix a specific token :
 		 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
-		 *  So as \LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+		 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+		 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
 		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
 		 */
 		case 'restore_get_token':
@@ -148,7 +149,7 @@ try
 			}
 
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sToken = str_replace(' ', '', (string)microtime()); //TODO use transactionid value !
+			$sToken = str_replace(' ', '', (string)microtime()).$sTransactionId;
 			$sTokenFile = APPROOT.'/data/restore.'.$sToken.'.tok';
 			file_put_contents($sTokenFile, $sFile);
 
