@@ -5257,10 +5257,6 @@ abstract class DBObject implements iDisplay
 					throw new Exception('Missing argument #1: stimulus');
 				}
 				$sStimulus = $aParams[0];
-				if (!in_array($sStimulus, MetaModel::EnumStimuli(get_class($this))))
-				{
-					throw new Exception("Unknown stimulus ".get_class($this)."::".$sStimulus);
-				}
 				$this->ApplyStimulus($sStimulus);
 				break;
 
