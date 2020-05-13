@@ -1272,7 +1272,7 @@ abstract class DashletGroupBy extends Dashlet
 					break;
 			}
 
-			$oPage->add('<div style="text-align:center" class="dashlet-content">');
+			$oPage->add('<div class="dashlet-content">');
 			if ($sHtmlTitle != '')
 			{
 				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
