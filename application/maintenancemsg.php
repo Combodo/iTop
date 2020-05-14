@@ -34,7 +34,7 @@ function _MaintenanceSetupPageMessage($sTitle, $sMessage)
 	@include_once(APPROOT.'setup/setuppage.class.inc.php');
 	if (class_exists('SetupPage'))
 	{
-		$oP = new SetupPage($sTitle);
+		$oP = new ErrorPage($sTitle);
 		$oP->p("<h2 class=\"center\">$sMessage</h2>");
 		$oP->add_ready_script(
 <<<JS
