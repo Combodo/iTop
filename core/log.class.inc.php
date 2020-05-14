@@ -705,8 +705,8 @@ class ToolsLog extends LogAPI
  */
 class DeadLockLog extends LogAPI
 {
-	const CHANNEL_WAIT_TIMEOUT = 'iTopDeadlLock_1205WaitTimeout';
-	const CHANNEL_DEADLOCK_FOUND = 'iTopDeadlock_1213DeadlockFound';
+	const CHANNEL_WAIT_TIMEOUT = 'Deadlock-WaitTimeout';
+	const CHANNEL_DEADLOCK_FOUND = 'Deadlock-Found';
 	const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
 
 	/** @var \FileLog we want our own instance ! */

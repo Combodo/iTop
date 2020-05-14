@@ -727,7 +727,7 @@ class CMDBSource
 			'userinfo' => $sUser,
 			'errno' => $iMySqlErrorNo,
 			'ex_msg' => $e->getMessage(),
-			'callstack' => $e->getTrace(),
+			'callstack' => $e->getTrace(), //TODO replace by https://www.php.net/manual/en/exception.gettraceasstring.php
 			'data' => $sInnodbStatus,
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
