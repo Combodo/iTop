@@ -704,6 +704,59 @@ class ToolsLog extends LogAPI
 	protected static $m_oFileLog = null;
 }
 
+/**
+ * @see \CMDBSource::LogDeadLock()
+ * @since 2.7.1
+ */
+class DeadLockLog extends LogAPI
+{
+	const CHANNEL_WAIT_TIMEOUT = 'Deadlock-WaitTimeout';
+	const CHANNEL_DEADLOCK_FOUND = 'Deadlock-Found';
+	const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
+
+	/** @var \FileLog we want our own instance ! */
+	protected static $m_oFileLog = null;
+
+	public static function Enable($sTargetFile = null)
+	{
+		if (empty($sTargetFile))
+		{
+			$sTargetFile = APPROOT.'log/deadlocks.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+
+	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
+	{
+		switch ($iMysqlErrorNo)
+		{
+			case 1205:
+				return self::CHANNEL_WAIT_TIMEOUT;
+				break;
+			case 1213:
+				return  self::CHANNEL_DEADLOCK_FOUND;
+				break;
+			default:
+				return self::CHANNEL_DEFAULT;
+				break;
+		}
+	}
+
+	/**
+	 * @param int $iMySQLErrNo will be converted to channel using {@link GetChannelFromMysqlErrorNo}
+	 * @param string $sMessage
+	 * @param null $iMysqlErroNo
+	 * @param array $aContext
+	 *
+	 * @throws \Exception
+	 */
+	public static function Log($iMySQLErrNo, $sMessage, $iMysqlErroNo = null, $aContext = array())
+	{
+		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErroNo);
+		parent::Log($iMySQLErrNo, $sMessage, $sChannel, $aContext);
+	}
+}
+
 
 class LogFileRotationProcess implements iScheduledProcess
 {

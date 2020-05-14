@@ -119,7 +119,18 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
-	
+
+	/**
+	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
+	 *   Message: Lock wait timeout exceeded; try restarting transaction
+	 */
+	const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
+	/**
+	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
+	 *   Message: Deadlock found when trying to get lock; try restarting transaction
+	 */
+	const MYSQL_ERRNO_DEADLOCK = 1213;
+
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -683,55 +694,45 @@ class CMDBSource
 		return $oResult;
 	}
 
+	/**
+	 * @param \Exception $e
+	 *
+	 * @since 2.7.1
+	 */
 	private static function LogDeadLock(Exception $e)
 	{
-		// Deadlock detection
+		// checks MySQL error code
 		$iMySqlErrorNo = self::$m_oMysqli->errno;
-		if (($iMySqlErrorNo == 1213) || ($iMySqlErrorNo == 1205))
+		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
 		{
-			// Try to log the deadlock
-			$oError = self::$m_oMysqli->query("SHOW ENGINE INNODB STATUS");
-			$aData = array();
-			if ($oError !== false)
-			{
-				$aData = $oError->fetch_all(MYSQLI_ASSOC);
-			}
-			if (MetaModel::IsLogEnabledIssue())
-			{
-				if (MetaModel::IsValidClass('EventIssue'))
-				{
-					try
-					{
-						$bInTransaction = self::IsInsideTransaction();
-						if ($bInTransaction)
-						{
-							// In order to log the error, we have to rollback the current transaction
-							// Else the caller will rollback our log
-							self::DBQuery('ROLLBACK');
-						}
-						$oLog = new EventIssue();
-						$oLog->Set('message', $e->getMessage());
-						$oLog->Set('userinfo', UserRights::GetUser());
-						$oLog->Set('issue', 'Database DeadLock');
-						$oLog->Set('impact', 'Request execution failed');
-						$oLog->Set('callstack', $e->getTrace());
-						$oLog->Set('data', $aData[0]);
-						$oLog->DBInsertNoReload();
-						if ($bInTransaction)
-						{
-							self::DBQuery('START TRANSACTION');
-						}
-					}
-					catch(Exception $e1)
-					{
-						IssueLog::Error("Failed to log database deadlock issue into the DB\n".$e1->getMessage());
-					}
-				}
-			}
-			IssueLog::Error($e->getMessage());
-			IssueLog::Error(print_r($aData[0], true));
+			return;
 		}
 
+		// Get error info
+		$sUser = UserRights::GetUser();
+		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
+		if ($oError !== false)
+		{
+			$aData = $oError->fetch_all(MYSQLI_ASSOC);
+			$sInnodbStatus = $aData[0];
+		}
+		else
+		{
+			$sInnodbStatus = 'Get status query cannot execute';
+		}
+
+		// log !
+		$sMessage = "deadlock detected: user= $sUser; errno=$iMySqlErrorNo";
+		$aLogContext = array(
+			'userinfo' => $sUser,
+			'errno' => $iMySqlErrorNo,
+			'ex_msg' => $e->getMessage(),
+			'callstack' => $e->getTraceAsString(),
+			'data' => $sInnodbStatus,
+		);
+		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
+
+		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
 	}
 
 	/**

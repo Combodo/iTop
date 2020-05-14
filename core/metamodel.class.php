@@ -6371,6 +6371,7 @@ abstract class MetaModel
 			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
 
 			ToolsLog::Enable(APPROOT.'log/tools.log');
+			DeadLockLog::Enable();
 		}
 		else
 		{
