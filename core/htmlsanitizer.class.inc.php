@@ -160,53 +160,65 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aTagsWhiteList = array(
-		'html' => array(),
-		'body' => array(),
 		'a' => array('href', 'name', 'style', 'target', 'title'),
-		'p' => array('style'),
-		'blockquote' => array('style'),
-		'br' => array(),
-		'span' => array('style'),
-		'div' => array('style'),
 		'b' => array(),
-		'i' => array(),
-		'u' => array(),
+		'big' => array(),
+		'blockquote' => array('style'),
+		'body' => array(),
+		'br' => array(),
+		'center' => array(),
+		'cite' => array(),
+		'code' => array('style', 'class'),
+		'del' => array(),
+		'div' => array('style'),
 		'em' => array(),
-		'strong' => array(),
-		'img' => array('src', 'style', 'alt', 'title'),
-		'ul' => array('style'),
-		'ol' => array('style'),
-		'li' => array('style'),
+		'fieldset' => array('style'),
+		'font' => array('face', 'color', 'style', 'size'),
 		'h1' => array('style'),
 		'h2' => array('style'),
 		'h3' => array('style'),
 		'h4' => array('style'),
+		'hr' => array('style'),
+		'html' => array(),
+		'i' => array(),
+		'img' => array('src', 'style', 'alt', 'title'),
+		'ins' => array(),
+		'kbd' => array(),
+		'legend' => array('style'),
+		'li' => array('style'),
 		'nav' => array('style'),
+		'ol' => array('style'),
+		'p' => array('style'),
+		'pre' => array(),
+		'q' => array(),
+		'samp' => array(),
+		's' => array(), // strikethrough
 		'section' => array('style'),
-		'code' => array('style', 'class'),
+		'small' => array(),
+		'span' => array('style'),
+		'strong' => array(),
 		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
-		'thead' => array('style'),
 		'tbody' => array('style'),
-		'tr' => array('style', 'colspan', 'rowspan'),
 		'td' => array('style', 'colspan', 'rowspan'),
 		'th' => array('style', 'colspan', 'rowspan'),
-		'fieldset' => array('style'),
-		'legend' => array('style'),
-		'font' => array('face', 'color', 'style', 'size'),
-		'big' => array(),
-		'small' => array(),
+		'thead' => array('style'),
+		'tr' => array('style', 'colspan', 'rowspan'),
 		'tt' => array(),
-		'kbd' => array(),
-		'samp' => array(),
+		'u' => array(),
+		'ul' => array('style'),
 		'var' => array(),
-		'del' => array(),
-		's' => array(), // strikethrough
-		'ins' => array(),
-		'cite' => array(),
-		'q' => array(),
-		'hr' => array('style'),
-		'pre' => array(),
-		'center' => array(),
+	);
+
+	protected static $aTagsContentRemovableList = array(
+		'applet',
+		'basefont',
+		'canvas',
+		'code',
+		'dialog',
+		'embed',
+		'object',
+		'script',
+		'style',
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -303,6 +315,108 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	
 	protected function CleanNode(DOMNode $oElement)
 	{
+		$this->CleanNodeRemoveForbiddenTags($oElement);
+		$this->CleanNodeHandleImages($oElement);
+		$this->CleanNodeRemoveForbiddenAttributes($oElement);
+	}
+
+	protected function CleanNodeRemoveForbiddenTags(DOMNode $oElement)
+	{
+		if ($oElement->hasChildNodes())
+		{
+			$aValidatedNodes = array();
+			do
+			{
+				$bChildRemoved = false;
+
+				$aNodes = array();
+				foreach($oElement->childNodes as $oNode)
+				{
+					$aNodes[] = $oNode;
+				}
+
+				foreach($aNodes as $oNode)
+				{
+					if (($oNode instanceof DOMElement) && (!array_key_exists(strtolower($oNode->tagName), self::$aTagsWhiteList)))
+					{
+						$bChildRemoved = true;
+						$this->SmartRemoveChild($oElement, $oNode);
+					}
+					else if ($oNode instanceof DOMComment)
+					{
+						$oElement->removeChild($oNode);
+					}
+					else
+					{
+						//if the node is kept, we can recurse into it, bu we want to perform this only once (see the do/while above?)
+						$bAlreadyValidated = false;
+						/** @var \DOMNode $oValidatedNode */
+						foreach ($aValidatedNodes as $oValidatedNode)
+						{
+							if ($oValidatedNode->isSameNode($oNode))
+							{
+								$bAlreadyValidated = true;
+								break;
+							}
+						}
+						if (! $bAlreadyValidated)
+						{
+							$this->CleanNodeRemoveForbiddenTags($oNode);
+							$aValidatedNodes[] = $oNode;
+						}
+					}
+				}
+			} while ($bChildRemoved);
+		}
+	}
+
+	/**
+	 * Remove a node, but move its inner nodes in the parent.
+	 * Note: invalid/forbidden tags may be moved up, so they have to be checked again.
+	 *
+	 * @param \DOMNode $oParent
+	 * @param \DOMElement $oRemovable
+	 */
+	private function SmartRemoveChild(DOMNode $oParent, DOMElement $oRemovable)
+	{
+		if (!$oRemovable->hasChildNodes())
+		{
+			$oParent->removeChild($oRemovable);
+		}
+		else if (in_array(strtolower($oRemovable->tagName), self::$aTagsContentRemovableList))
+		{
+			$oParent->removeChild($oRemovable);
+		}
+		else
+		{
+			/** @var \DOMNode $oNode */
+			foreach ($oRemovable->childNodes as $oNode)
+			{
+				$oNode = $oNode->cloneNode(true);
+				$oParent->insertBefore($oNode, $oRemovable);
+			}
+
+			$oParent->removeChild($oRemovable);
+		}
+	}
+
+	protected function CleanNodeHandleImages(DOMNode $oElement)
+	{
+		if ($oElement->hasChildNodes())
+		{
+			foreach($oElement->childNodes as $oNode)
+			{
+				$this->CleanNodeHandleImages($oNode);
+				if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
+				{
+					InlineImage::ProcessImageTag($oNode);
+				}
+			}
+		}
+	}
+
+	protected function CleanNodeRemoveForbiddenAttributes(DOMNode $oElement)
+	{
 		$aAttrToRemove = array();
 		// Gather the attributes to remove
 		if ($oElement->hasAttributes())
@@ -341,35 +455,12 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 				$oElement->removeAttribute($sName);
 			}
 		}
-		
+
 		if ($oElement->hasChildNodes())
 		{
-			$aChildElementsToRemove = array();
-			// Gather the child noes to remove
 			foreach($oElement->childNodes as $oNode)
 			{
-				if (($oNode instanceof DOMElement) && (!array_key_exists(strtolower($oNode->tagName), self::$aTagsWhiteList)))
-				{
-					$aChildElementsToRemove[] = $oNode;
-				}
-				else if ($oNode instanceof DOMComment)
-				{
-					$aChildElementsToRemove[] = $oNode;
-				}
-				else
-				{
-					// Recurse
-					$this->CleanNode($oNode);
-					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
-					{
-						InlineImage::ProcessImageTag($oNode);
-					}
-				}
-			}
-			// Now remove them
-			foreach($aChildElementsToRemove as $oDomElement)
-			{
-				$oElement->removeChild($oDomElement);
+				$this->CleanNodeRemoveForbiddenAttributes($oNode);
 			}
 		}
 	}
