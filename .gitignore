@@ -1,12 +1,16 @@
 
 # no slash at the end to handle also symlinks
 /toolkit
-/conf
 /env-*
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
 test/vendor/*
+
+# all conf but listing prevention
+/conf/**
+!/conf/.htaccess
+!/conf/web.config
 
 # all datas but listing prevention
 /data/**
