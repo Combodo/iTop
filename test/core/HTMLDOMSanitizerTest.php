@@ -306,8 +306,12 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 				'expected' => 1,
 			),
 			'nested images within forbidden tags' => array(
-				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><object baz="1" biz="2">baz<img /><img /></object>rab</div> oof<img /></iframe><img /></body></html>',
+				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><article baz="1" biz="2">baz<img /><img /></article>rab</div> oof<img /></iframe><img /></body></html>',
 				'expected' => 5,
+			),
+			'nested images within forbidden and removed tags' => array(
+				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><object baz="1" biz="2">baz<img /><img /></object>rab</div> oof<img /></iframe><img /></body></html>',
+				'expected' => 3,
 			),
 		);
 	}
