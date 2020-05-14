@@ -716,7 +716,7 @@ class DeadLockLog extends LogAPI
 	{
 		if (empty($sTargetFile))
 		{
-			$sTargetFile = APPROOT.'log/itop-deadlocks.log';
+			$sTargetFile = APPROOT.'log/deadlocks.log';
 		}
 		parent::Enable($sTargetFile);
 	}
