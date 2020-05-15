@@ -241,8 +241,9 @@ class MFCompiler
 			$this->Log("Root class (with child classes): ".$oClass->getAttribute('id'));
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
 		}
-		
-		$this->LoadSnippets();	
+
+		$this->LoadSnippets();
+		$this->LoadHooks();
 
 		// Compile, module by module
 		//
@@ -1119,6 +1120,67 @@ EOF
 			$aClassParams['indexes'] = var_export($aIndexes, true);
 		}
 
+		$sEvents = '';
+		$sMethods = '';
+		$oHooks = $oClass->GetOptionalElement('hooks');
+		if ($oHooks)
+		{
+			foreach($oHooks->getElementsByTagName('hook') as $oHook)
+			{
+				/** @var \DOMElement $oHook */
+				$sEventName = $oHook->getAttribute('id');
+				$oListeners = $oHook->GetOptionalElement('listeners');
+				if ($oListeners)
+				{
+					foreach ($oListeners->getElementsByTagName('listener') as $oListener)
+					{
+						/** @var \DOMElement $oListener */
+						$sListenerId = $oListener->getAttribute('id');
+						$oCallback = $oListener->GetUniqueElement('callback', false);
+						if (is_object($oCallback))
+						{
+							$sCallback = $oCallback->GetText();
+						}
+						else
+						{
+							$oExecute = $oListener->GetUniqueElement('execute', true);
+							$sExecute = trim($oExecute->GetText());
+							$sCallback = "EventHook_{$sEventName}_{$sListenerId}";
+							$sCallbackFct = preg_replace('@^function\s*\(@', "public function {$sCallback}(", $sExecute);
+							if ($sExecute == $sCallbackFct)
+							{
+								throw new DOMFormatException("Malformed tag <execute> in class: {$sClass} hook: {$sEventName} listener: {$sListenerId}");
+							}
+							$sMethods .= "\n    {$sCallbackFct}\n\n";
+						}
+						if (strpos($sCallback, '::') === false)
+						{
+							$sEventListener = 'array($this, \''.$sCallback.'\')';
+						}
+						else
+						{
+							$sEventListener = "'{$sCallback}'";
+						}
+
+						$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
+						$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
+					}
+				}
+			}
+		}
+
+		if (!empty($sEvents))
+		{
+			$sMethods .= <<<EOF
+	protected function RegisterEvents()
+	{
+		parent::RegisterEvents();
+{$sEvents}
+	}
+
+EOF;
+		}
+
 		if ($oArchive = $oProperties->GetOptionalElement('archive'))
 		{
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
@@ -1862,7 +1924,6 @@ EOF
 		}
 	
 		// Methods
-		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
 		foreach($oMethods->getElementsByTagName('method') as $oMethod)
 		{
@@ -1993,6 +2054,7 @@ $sLifecycle
 $sHighlightScale
 $sZlists;
 EOF;
+
 		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
 		// generated PHP
 		$aPHP[$sClassName] = $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls,
@@ -2930,6 +2992,130 @@ EOF;
 		foreach($this->aSnippets as $sModuleId => $void)
 		{
 			uasort($this->aSnippets[$sModuleId]['before'], array(get_class($this), 'SortOnRank'));
+			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
+		}
+	}
+
+	/**
+	 * @throws \DOMFormatException
+	 */
+	protected function LoadHooks()
+	{
+		$sClassName = 'GlobalEventHooks';
+		$sModuleId = '_core_';
+		if (!array_key_exists($sModuleId, $this->aSnippets))
+		{
+			$this->aSnippets[$sModuleId] = array('before' => array(), 'after' => array());
+		}
+		$oHooks = $this->oFactory->GetNodes('/itop_design/hooks/hook');
+		$aHooks = array();
+		foreach($oHooks as $oHook)
+		{
+			/** @var \DOMElement $oHook */
+			$sEventName = $oHook->getAttribute('id');
+			$oListeners = $oHook->GetOptionalElement('listeners');
+			if ($oListeners)
+			{
+				foreach ($oListeners->getElementsByTagName('listener') as $oListener)
+				{
+					/** @var \DOMElement $oListener */
+					$sListenerId = $oListener->getAttribute('id');
+					$oExecute = $oListener->GetUniqueElement('execute', true);
+					$sExecute = trim($oExecute->GetText());
+					$sCallback = "{$sEventName}_{$sListenerId}";
+					$sCallbackFct = preg_replace('@^function\s*\(@', "public static function {$sCallback}(", $sExecute);
+					if ($sExecute == $sCallbackFct)
+					{
+						throw new DOMFormatException("Malformed tag <execute> in hook: {$sEventName} listener: {$sListenerId}");
+					}
+					$fPriority = (float)($oListener->GetChildText('priority', '0'));
+					
+					$aFilters = array();
+					$oFilters = $oListener->GetOptionalElement('filters');
+					if ($oFilters)
+					{
+						foreach ($oFilters->getElementsByTagName('filter') as $oFilter)
+						{
+							$aFilters[] = $oFilter->GetText();
+						}
+					}
+					if (empty($aFilters))
+					{
+						$sEventSource = 'null';
+					}
+					else
+					{
+						$sEventSource = 'array("'.implode('", "', $aFilters).'")';
+					}
+					
+					$aContexts = array();
+					$oContexts = $oListener->GetOptionalElement('Contexts');
+					if ($oContexts)
+					{
+						foreach ($oContexts->getElementsByTagName('Context') as $oContext)
+						{
+							$aContexts[] = $oContext->GetText();
+						}
+					}
+					if (empty($aContexts))
+					{
+						$sContext = 'null';
+					}
+					else
+					{
+						$sContext = 'array("'.implode('", "', $aContexts).'")';
+					}
+					
+					$aHooks[] = array(
+						'event_name' => $sEventName,
+						'callback' => $sCallback,
+						'content' => $sCallbackFct,
+						'priority' => $fPriority,
+						'source' => $sEventSource,
+						'context' => $sContext,
+					);
+				}
+			}
+		}
+
+		if (empty($aHooks))
+		{
+			return;
+		}
+
+		$sRegister = '';
+		$sMethods = '';
+		foreach ($aHooks as $aHook)
+		{
+			$sCallback = $aHook['callback'];
+			$sEventName = $aHook['event_name'];
+			$sEventSource = $aHook['source'];
+			$sContext = $aHook['context'];
+			$sPriority = $aHook['priority'];
+			$sRegister .= "\nCombodo\iTop\Service\Event::Register(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority);";
+			$sCallbackFct = $aHook['content'];
+			$sMethods .= "\n    {$sCallbackFct}\n\n";
+		}
+
+		$sContent = <<<PHP
+class $sClassName
+{
+$sMethods
+}
+
+$sRegister
+
+PHP;
+
+		$fOrder = 0;
+		$this->aSnippets[$sModuleId]['after'][] = array(
+			'rank' => $fOrder,
+			'content' => $sContent,
+			'snippet_id' => $sClassName,
+		);
+		foreach($this->aSnippets as $sModuleId => $void)
+		{
+			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
 		}
 	}
 

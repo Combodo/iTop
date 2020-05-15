@@ -254,5 +254,237 @@
         </fields>
       </class>
     </classes>
+    <events _delta="define">
+      <event id="ObjectDetails">
+        <description>An object details is about to be displayed to a user</description>
+        <available_filters>Class hierarchy of the displayed object</available_filters>
+        <arguments>
+          <argument id="object">
+            <description>The object displayed</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="BeforeInsert">
+        <description>An object is about to be inserted in the database</description>
+        <replaces>DBObject::OnInsert</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object inserted</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DBObjectKeyReady">
+        <description>A key (id) has been generated for an object inserted into the database (use GetKey() to read the new key)</description>
+        <replaces>DBObject::OnObjectKeyReady</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object inserted</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="AfterInsert">
+        <description>An object has been inserted into the database</description>
+        <replaces>DBObject::AfterInsert</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object inserted</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="BeforeUpdate">
+        <description>An object is about to be updated in the database</description>
+        <replaces>DBObject::OnUpdate</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object updated</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="AfterUpdate">
+        <description>An object has been updated into the database</description>
+        <replaces>DBObject::AfterUpdate</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object updated</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="BeforeDelete">
+        <description>An object is about to be deleted in the database</description>
+        <replaces>DBObject::OnDelete</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object deleted</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="AfterDelete">
+        <description>An object has been deleted into the database</description>
+        <replaces>DBObject::AfterDelete</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object deleted</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="BeforeApplyStimulus">
+        <description>A stimulus is about to be applied to an object</description>
+        <arguments>
+          <argument id="object">
+            <description>The object where the stimulus is to be applied</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="AfterApplyStimulus">
+        <description>A stimulus has been applied to an object</description>
+        <arguments>
+          <argument id="object">
+            <description>The object where the stimulus has been applied</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DBObjectLoaded">
+        <description>An object has been loaded from the database</description>
+        <arguments>
+          <argument id="object">
+            <description>The object loaded</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DBObjectNew">
+        <description>An object has been created in memory</description>
+        <arguments>
+          <argument id="object">
+            <description>The object created</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DBObjectReload">
+        <description>An object has been re-loaded from the database</description>
+        <arguments>
+          <argument id="object">
+            <description>The object re-loaded</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="OnCheckToWrite">
+        <description>Check an object before it is written into the database</description>
+        <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object to check</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="error_messages">
+            <description>Array of strings where all the errors found during the object checking are added</description>
+            <type>array</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DoCheckToDelete">
+        <description>Check an object before it is deleted from the database</description>
+        <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
+        <arguments>
+          <argument id="object">
+            <description>The object to check</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="error_messages">
+            <description>Array of strings where all the errors found during the object checking are added</description>
+            <type>array</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="DownloadDocument">
+        <description>A document has been downloaded from the GUI</description>
+        <arguments>
+          <argument id="object">
+            <description>The object containing the document</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="document">
+            <description>The document downloaded</description>
+            <type>ormDocument</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+    </events>
   </meta>
 </itop_design>

@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Service\EventName;
+
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
 define('HILIGHT_CLASS_CRITICAL', 'red');
@@ -4162,6 +4164,7 @@ EOF
 				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
 			}
 		}
+		$this->FireEvent(EventName::ON_CHECK_TO_WRITE, array('error_messages' => &$this->m_aCheckIssues));
 
 		// User rights
 		//
@@ -4210,6 +4213,7 @@ EOF
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
 		}
+		$this->FireEvent(EventName::ON_CHECK_TO_DELETE, array('error_messages' => &$this->m_aDeleteIssues));
 
 		// User rights
 		//

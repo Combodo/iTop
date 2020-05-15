@@ -25,6 +25,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\Event;
+
 
 /**
  * ormDocument
@@ -188,7 +191,6 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
-	 * @return none
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
@@ -207,6 +209,12 @@ class ormDocument
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
+				$aEventData = array(
+					'debug_info' => $oDocument->GetFileName(),
+					'object' => $oObj,
+					'document' => $oDocument,
+					);
+				Event::FireEvent(EventName::DOWNLOAD_DOCUMENT, $sClass, $aEventData);
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());

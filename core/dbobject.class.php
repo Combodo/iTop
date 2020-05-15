@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventName;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -153,9 +155,14 @@ abstract class DBObject implements iDisplay
 	protected $m_aSynchroData = null;
 	protected $m_sHighlightCode = null;
 	protected $m_aCallbacks = array();
+	/**
+	 * @var string local events suffix
+	 */
+	protected $m_sEventUniqId = '';
+	protected static $m_iEventUniqCounter = 0;
 
 
-    /**
+	/**
      * DBObject constructor.
      *
      * You should preferably use MetaModel::NewObject() instead of this constructor.
@@ -179,6 +186,9 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
+			$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+			$this->RegisterEvents();
+			$this->FireEvent(EventName::DB_OBJECT_LOADED);
 			return;
 		}
 		// Creation of a brand new object
@@ -205,6 +215,14 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->UpdateMetaAttributes();
+
+		$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+		$this->RegisterEvents();
+		$this->FireEvent(EventName::DB_OBJECT_NEW);
+	}
+
+	protected function RegisterEvents()
+	{
 	}
 
 	/**
@@ -351,6 +369,7 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
+		$this->FireEvent(EventName::DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -2687,6 +2706,7 @@ abstract class DBObject implements iDisplay
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
+		$this->FireEvent(EventName::BEFORE_INSERT);
 
 		if ($this->m_iKey < 0)
 		{
@@ -2759,6 +2779,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->OnObjectKeyReady();
+			$this->FireEvent(EventName::DB_OBJECT_KEY_READY);
 
 			$this->DBWriteLinks();
 			$this->WriteExternalAttributes();
@@ -2789,6 +2810,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterInsert();
+		$this->FireEvent(EventName::AFTER_INSERT);
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -3037,6 +3059,8 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
+			$this->FireEvent(EventName::BEFORE_UPDATE);
+
 
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) == 0)
@@ -3239,6 +3263,7 @@ abstract class DBObject implements iDisplay
 			try
 			{
 				$this->AfterUpdate();
+				$this->FireEvent(EventName::AFTER_UPDATE);
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue)
@@ -3357,6 +3382,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
+		$this->FireEvent(EventName::BEFORE_DELETE);
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3458,6 +3484,8 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
+		$this->FireEvent(EventName::AFTER_DELETE);
+
 
 		$this->m_bIsInDB = false;
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
@@ -3643,6 +3671,8 @@ abstract class DBObject implements iDisplay
 
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
+		$this->FireEvent(EventName::BEFORE_APPLY_STIMULUS);
+
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
 		$sPreviousState = $this->Get($sStateAttCode);
@@ -3754,6 +3784,8 @@ abstract class DBObject implements iDisplay
 				/** @var \Trigger $oTrigger */
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
+
+			$this->FireEvent(EventName::AFTER_APPLY_STIMULUS);
 		}
 		else
 		{
@@ -5383,6 +5415,24 @@ abstract class DBObject implements iDisplay
 			$aArgs[$sFieldDesc] = $value;
 		}
 		return $oExpression->Evaluate($aArgs);
+	}
+
+	/**
+	 * @param $sEvent
+	 * @param array $aEventData
+	 *
+	 * @throws \CoreException
+	 */
+	public function FireEvent($sEvent, $aEventData = array())
+	{
+		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
+		$aEventData['object'] = $this;
+		$aEventSources = array($this->m_sEventUniqId);
+		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass)
+		{
+			$aEventSources[] = $sClass;
+		}
+		Event::FireEvent($sEvent, $aEventSources, $aEventData);
 	}
 }
 

@@ -28,6 +28,8 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventName;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -120,6 +122,8 @@ class ObjectController extends BrickController
 		}
 
 		$sOperation = $oRequestManipulator->ReadParam('operation', '');
+
+		$oObject->FireEvent(EventName::OBJECT_DETAILS);
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);

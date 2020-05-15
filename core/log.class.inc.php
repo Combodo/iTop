@@ -604,15 +604,23 @@ abstract class LogAPI
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
+		if (self::CanLog($sLevel, $sChannel))
+		{
+			static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
+		}
+	}
+
+	public static function CanLog($sLevel, $sChannel = null)
+	{
 		if (! static::$m_oFileLog)
 		{
-			return;
+			return false;
 		}
 
 		if (! isset(self::$aLevelsPriority[$sLevel]))
 		{
 			IssueLog::Error("invalid log level '{$sLevel}'");
-			return;
+			return false;
 		}
 
 		if (is_null($sChannel))
@@ -621,25 +629,21 @@ abstract class LogAPI
 		}
 
 		$sMinLogLevel = self::GetMinLogLevel($sChannel);
-
 		if ($sMinLogLevel === false || $sMinLogLevel === 'false')
 		{
-			return;
+			return false;
 		}
-		if (is_string($sMinLogLevel))
+		if (! isset(self::$aLevelsPriority[$sMinLogLevel]))
 		{
-			if (! isset(self::$aLevelsPriority[$sMinLogLevel]))
-			{
-				throw new Exception("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
-			}
-			elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel])
-			{
-				//priority too low regarding the conf, do not log this
-				return;
-			}
+			throw new Exception("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
+		}
+		elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel])
+		{
+			//priority too low regarding the conf, do not log this
+			return false;
 		}
 
-		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
+		return true;
 	}
 
 	/**
