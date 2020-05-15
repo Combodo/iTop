@@ -23,65 +23,65 @@
 // Database inconsistencies
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB Tools~~',
-	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => 'Database Maintenance Tools~~',
-	'DBTools:ErrorsFound' => 'Errors Found~~',
-	'DBTools:Error' => 'Error~~',
-	'DBTools:Count' => 'Count~~',
-	'DBTools:SQLquery' => 'SQL query~~',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL result~~',
-	'DBTools:NoError' => 'The database is OK~~',
-	'DBTools:HideIds' => 'Error List~~',
-	'DBTools:ShowIds' => 'Detailed view~~',
-	'DBTools:ShowReport' => 'Report~~',
-	'DBTools:IntegrityCheck' => 'Integrity check~~',
+	'Menu:DBToolsMenu' => 'Herramientas de bases de datos',
+	'DBTools:Class' => 'Clase',
+	'DBTools:Title' => 'Herramientas de mantenimiento de base de datos',
+	'DBTools:ErrorsFound' => 'Errores encontrados',
+	'DBTools:Error' => 'Error',
+	'DBTools:Count' => 'Cantidad',
+	'DBTools:SQLquery' => 'Consulta SQL',
+	'DBTools:FixitSQLquery' => 'Consulta SQL para solucioner el problema (sugerencia)',
+	'DBTools:SQLresult' => 'Resultado SQL',
+	'DBTools:NoError' => 'La base de datos está correcta',
+	'DBTools:HideIds' => 'Lista de errores',
+	'DBTools:ShowIds' => 'Vista detallada',
+	'DBTools:ShowReport' => 'Reporte',
+	'DBTools:IntegrityCheck' => 'Verificación de integridad',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
 
-	'DBTools:Analyze' => 'Analyze~~',
-	'DBTools:Details' => 'Show Details~~',
-	'DBTools:ShowAll' => 'Show All Errors~~',
+	'DBTools:Analyze' => 'Analizar',
+	'DBTools:Details' => 'Mostrar detalles',
+	'DBTools:ShowAll' => 'Mostrar todos los errores',
 
-	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
+	'DBTools:Inconsistencies' => 'Inconsistencias de base de datos',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Missing external key %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)~~',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all~~',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Registro huérfano en `%1$s`, debería tener su contraparte en la tabla `%2$s`',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Llave externa inválida %1$s (columna: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Llave externa perdida %1$s (columna: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-InvalidValue' => 'Valor inválido para %1$s (columna: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Algunas cuentas de usuario no tienen perfil asignado',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 ));
 
 // Database Info
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'DBTools:DatabaseInfo' => 'Database Information~~',
-	'DBTools:Base' => 'Base~~',
-	'DBTools:Size' => 'Size~~',
+	'DBTools:DatabaseInfo' => 'Información de base de datos',
+	'DBTools:Base' => 'Base',
+	'DBTools:Size' => 'Tamaño',
 ));
 
 // Lost attachments
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'DBTools:LostAttachments' => 'Lost attachments~~',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => 'Adjuntos perdidos',
+	'DBTools:LostAttachments:Disclaimer' => 'Aquí usted puede buscar adjuntos perdidos o desplazados. Esta NO es una herramienta de recuperación de datos, no obtiene datos borrados.',
 
-	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
-	'DBTools:LostAttachments:Button:Restore' => 'Restore~~',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => 'This action cannot be undone, please confirm that you want to restore the selected files.~~',
-	'DBTools:LostAttachments:Button:Busy' => 'Please wait...~~',
+	'DBTools:LostAttachments:Button:Analyze' => 'Analizar',
+	'DBTools:LostAttachments:Button:Restore' => 'Restaurar',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta acción no se puede deshacer, por favor confirme que quiere restaurar los archivos seleccionados.',
+	'DBTools:LostAttachments:Button:Busy' => 'Por favor espere...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => 'Primero, buscaremos adjuntos perdidos/desplazados analizando la base de datos.',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyze results:~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Filename~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Current location~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Move to...~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analizar resultados:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Genial! Todo parece estar en el lugar correcto.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Algunos adjuntos (%1$d) parecen estar desplazados. Mire la siguiente lista y verifique los que quiera mover.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nombre de archivo',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Ubicación actual',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover a...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultados de restauración:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d adjuntos fueron restaurados.',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Almacenado como imagen en línea',
+	'DBTools:LostAttachments:History' => 'Adjunto "%1$s" restaurado con herramientas de base de datos'
 ));
