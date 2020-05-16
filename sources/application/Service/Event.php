@@ -10,12 +10,11 @@ use Closure;
 use CoreException;
 use Exception;
 use IssueLog;
-use ReflectionClass;
-use ReflectionException;
+use ReflectionMethod;
 
 define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
 
-class EventService
+class Event
 {
 	private static $aEvents = array();
 
@@ -23,7 +22,7 @@ class EventService
 	 * Register a callback for specific event
 	 *
 	 * @param string $sEvent
-	 * @param mixed $mClass The class to call (must implement iEventServiceCallable or iEventServiceCallableStatic for static classes)
+	 * @param callable $callback The class to call (must implement iEventServiceCallable or iEventServiceCallableStatic for static classes)
 	 * @param mixed|null $mUserData Optional user data
 	 * @param string $sGroup optional group (for controlled mass un-registration)
 	 * @param int $fPriority optional priority for callback order
@@ -31,32 +30,15 @@ class EventService
 	 * @return string Id of the registration (used for unregister)
 	 * @throws \CoreException
 	 */
-	public static function Register($sEvent, $mClass, $mUserData = null, $sGroup = '', $fPriority = 0)
+	public static function Register($sEvent, callable $callback, $mUserData = null, $sGroup = '', $fPriority = 0)
 	{
-		// Check the callable
-		if (is_string($mClass))
+		try
 		{
-			try
-			{
-				$oReflectionClass = new ReflectionClass($mClass);
-			}
-			catch (ReflectionException $e)
-			{
-				throw new CoreException("Class '$mClass' not found");
-			}
-			if (!$oReflectionClass->implementsInterface('Combodo\iTop\Service\iEventServiceCallableStatic'))
-			{
-				throw new CoreException("Class '$mClass' does not implement iEventServiceCallableStatic interface");
-			}
-			$sClass = $mClass;
+			$sName = self::GetCallableDesc($callback);
 		}
-		else
+		catch (Exception $e)
 		{
-			$sClass = get_class($mClass);
-			if (!$mClass instanceof iEventServiceCallable)
-			{
-				throw new CoreException("Class '$sClass' does not implement iEventServiceCallable interface");
-			}
+			throw new CoreException("EventService registering '{$sEvent}' Invalid callback: ".$e->getMessage());
 		}
 
 		if (isset(self::$aEvents[$sEvent]))
@@ -70,8 +52,8 @@ class EventService
 		$sId = uniqid('event_');
 		$aEventCallbacks[] = array(
 			'id' => $sId,
-			'callback' => array($mClass, 'OnEvent'),
-			'class' => $sClass,
+			'callback' => $callback,
+			'name' => $sName,
 			'user_data' => $mUserData,
 			'group' => $sGroup,
 			'priority' => $fPriority,
@@ -85,7 +67,7 @@ class EventService
 			return ($fPriorityA < $fPriorityB) ? -1 : 1;
 		});
 		self::$aEvents[$sEvent] = $aEventCallbacks;
-		IssueLog::Debug("Registering event '$sEvent' for class '$sClass' with id '$sId'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Debug("Registering event '$sEvent' for '$sName' with id '$sId'", LOG_EVENT_SERVICE_CHANNEL);
 
 		return $sId;
 	}
@@ -100,8 +82,9 @@ class EventService
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
 			if ($aEventCallback['id'] == $sId)
 			{
+				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Debug("Unregistered callback '{$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Debug("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				return false;
 			}
 			return true;
@@ -126,8 +109,9 @@ class EventService
 			if ($aEventCallback['group'] == $sGroup)
 			{
 				$sId = self::$aEvents[$sEvent][$idx]['id'];
+				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Debug("Unregistered callback '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Debug("Unregistered callback '{$sName}' id '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				$iRemovedCount++;
 			}
 			return true;
@@ -192,6 +176,8 @@ class EventService
 	 *
 	 * @param string $sEvent event to trigger
 	 * @param mixed|null $mEventData event related data
+	 *
+	 * @throws \Exception from the callback
 	 */
 	public static function Trigger($sEvent, $mEventData = null)
 	{
@@ -204,39 +190,123 @@ class EventService
 
 		foreach (self::$aEvents[$sEvent] as $aEventCallback)
 		{
-			IssueLog::Debug("Trigger event '$sEvent' calling '{$aEventCallback['class']}::OnEvent()' for id {$aEventCallback['id']}", LOG_EVENT_SERVICE_CHANNEL);
+			$sName = $aEventCallback['name'];
+			$sId = $aEventCallback['id'];
+
+			IssueLog::Debug("Trigger event '$sEvent' calling '{$sName}' id '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
 			try
 			{
-				call_user_func($aEventCallback['callback'], $sEvent, $mEventData, $aEventCallback['user_data']);
+				call_user_func($aEventCallback['callback'], new EventData($sEvent, $mEventData, $aEventCallback['user_data']));
 			}
 			catch (Exception $e)
 			{
-				IssueLog::Error("Event '$sEvent' on '{$aEventCallback['class']}::OnEvent()' for id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+				IssueLog::Error("Event '$sEvent' for '{$sName}' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+				throw $e;
 			}
 		}
 	}
+
+	/**
+	 * @param callable $callable
+	 *
+	 * @return bool|string
+	 * @throws \ReflectionException
+	 * @throws \CoreException
+	 */
+	private static function GetCallableDesc(callable $callable)
+	{
+		if (is_callable($callable))
+		{
+			switch (true)
+			{
+				case is_object($callable):
+					return 'Closure' === get_class($callable) ? 'closure' : 'invocable';
+				case is_string($callable):
+					return $callable;
+				case is_array($callable):
+					$m = null;
+					if (preg_match('~^(:?(?<reference>self|parent)::)?(?<method>[a-z_][a-z0-9_]*)$~i', $callable[1], $m))
+					{
+						if (is_string($callable[0]))
+						{
+							if ('parent' === strtolower($m['reference']))
+							{
+								list($left, $right) = [get_parent_class($callable[0]), $m['method']];
+							}
+							else
+							{
+								list($left, $right) = [$callable[0], $m['method']];
+							}
+							return (new ReflectionMethod($left, $right))->GetName();
+						}
+						else
+						{
+							if ('self' === strtolower($m['reference']))
+							{
+								list($left, $right) = [$callable[0], $m['method']];
+							}
+							else
+							{
+								list($left, $right) = $callable;
+							}
+							return (new ReflectionMethod($left, $right))->GetName();
+						}
+					}
+					break;
+			}
+			return 'unknown';
+		}
+		throw new CoreException('Not a callable');
+	}
 }
 
-interface iEventServiceCallable
+/**
+ * Data given to the Event Service callbacks
+ * Class EventServiceData
+ *
+ * @package Combodo\iTop\Service
+ */
+class EventData
 {
-	/** Called when a registered event is triggered
-	 *
-	 * @param string $sEvent Event triggered
-	 * @param mixed|null $mEventData optional data relative to the event
-	 * @param mixed|null $mUserData optional data relative to the Callback
-	 *
-	 */
-	public function OnEvent($sEvent, $mEventData = null, $mUserData = null);
-}
+	private $sEvent;
+	private $mEventData;
+	private $mUserData;
 
-interface iEventServiceCallableStatic
-{
-	/** Called when a registered event is triggered
+	/**
+	 * EventServiceData constructor.
 	 *
-	 * @param string $sEvent Event triggered
-	 * @param mixed|null $mEventData optional data relative to the event
-	 * @param mixed|null $mUserData optional data relative to the Callback
-	 *
+	 * @param $sEvent
+	 * @param $mEventData
+	 * @param $mUserData
 	 */
-	public static function OnEvent($sEvent, $mEventData = null, $mUserData = null);
+	public function __construct($sEvent, $mEventData, $mUserData)
+	{
+		$this->sEvent = $sEvent;
+		$this->mEventData = $mEventData;
+		$this->mUserData = $mUserData;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetEvent()
+	{
+		return $this->sEvent;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetEventData()
+	{
+		return $this->mEventData;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetUserData()
+	{
+		return $this->mUserData;
+	}
 }

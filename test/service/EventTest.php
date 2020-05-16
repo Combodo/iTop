@@ -1,0 +1,255 @@
+<?php
+
+namespace Combodo\iTop\Test\UnitTest\Service;
+
+use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use TypeError;
+
+/**
+ * Class EventTest
+ *
+ * @package Combodo\iTop\Test\UnitTest\Service
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
+class EventTest extends ItopTestCase
+{
+	const USE_TRANSACTION = false;
+	const CREATE_TEST_ORG = false;
+
+	private static $iEventCalls;
+
+	protected function setUp()
+	{
+		parent::setUp();
+		self::$iEventCalls = 0;
+	}
+
+	/**
+	 * @dataProvider BadCallbackProvider
+	 * @throws \CoreException
+	 */
+	public function testRegisterBadCallback($callback)
+	{
+		$this->expectException(TypeError::class);
+		Event::Register('event', $callback);
+	}
+
+	public function BadCallbackProvider()
+	{
+		return array(
+			array('toto'),
+			array('EventTest::toto'),
+			array(array('EventTest', 'toto')),
+			array(array($this, 'toto')),
+		);
+	}
+
+	public function testNoParameterCallbackFunction()
+	{
+		$sId = Event::Register('event', function () { $this->debug("Closure: event received !!!"); self::IncrementCallCount(); });
+		$this->debug("Registered $sId");
+		Event::Trigger('event');
+		$this->assertEquals(1, self::$iEventCalls);
+	}
+
+	/**
+	 * @dataProvider GoodCallbackProvider
+	 * @param $callback
+	 *
+	 * @throws \CoreException
+	 */
+	public function testMethodCallbackFunction(callable $callback)
+	{
+		$sId = Event::Register('event', $callback);
+		$this->debug("Registered $sId");
+		Event::Trigger('event');
+		$this->assertEquals(1, self::$iEventCalls);
+		Event::Trigger('event');
+		$this->assertEquals(2, self::$iEventCalls);
+	}
+
+	public function GoodCallbackProvider()
+	{
+		$oReceiver = new TestEventReceiver();
+		return array(
+			'method' => array(array($oReceiver, 'OnEvent1')),
+			//'static' => array('TestEventReceiver::OnStaticEvent1'),
+			//'static2' => array(array('TestEventReceiver', 'OnStaticEvent1')),
+			//'closure' => array(function (EventData $oData) { $sEvent = $oData->GetEvent(); $this->debug("Closure: '{$sEvent}' event received !!!"); self::IncrementCallCount(); }),
+		);
+	}
+
+	public function testMultiEvent()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event_a', array($oReceiver, 'OnEvent1'));
+		Event::Register('event_a', array($oReceiver, 'OnEvent2'));
+
+		Event::Register('event_b', array($oReceiver, 'OnEvent1'));
+		Event::Register('event_b', array($oReceiver, 'OnEvent2'));
+
+		Event::Trigger('event_a');
+		$this->assertEquals(2, self::$iEventCalls);
+		Event::Trigger('event_b');
+		$this->assertEquals(4, self::$iEventCalls);
+	}
+
+	public function testMultiSameEvent()
+	{
+		$oReceiver = new TestEventReceiver();
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+
+		Event::Trigger('event1');
+		$this->assertEquals(4, self::$iEventCalls);
+	}
+
+	public function testData()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event1', array($oReceiver, 'OnEventWithData'), 'User Data Static');
+		Event::Register('event1', array($oReceiver, 'OnEventWithData'), $oReceiver);
+		Event::Trigger('event1', 'Event Data 1');
+		$this->assertEquals(2, self::$iEventCalls);
+		Event::Trigger('event1', array('text' => 'Event Data 2'));
+		$this->assertEquals(4, self::$iEventCalls);
+	}
+
+	public function testPriority()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event1', array($oReceiver, 'OnEvent1'), null, '',0);
+		Event::Register('event1', array($oReceiver, 'OnEvent2'), null, '',1);
+
+		Event::Register('event2', array($oReceiver, 'OnEvent1'), null, '',1);
+		Event::Register('event2', array($oReceiver, 'OnEvent2'), null, '',0);
+
+		Event::Trigger('event1');
+		$this->assertEquals(2, self::$iEventCalls);
+		Event::Trigger('event2');
+		$this->assertEquals(4, self::$iEventCalls);
+	}
+
+	public static function IncrementCallCount()
+	{
+		self::$iEventCalls++;
+	}
+
+	/**
+	 * static version of the debug to be accessible from other objects
+	 *
+	 * @param $sMsg
+	 */
+	public static function DebugStatic($sMsg)
+	{
+		if (DEBUG_UNIT_TEST)
+		{
+			if (is_string($sMsg))
+			{
+				echo "$sMsg\n";
+			}
+			else
+			{
+				print_r($sMsg);
+			}
+		}
+	}
+}
+
+class TestEventReceiver
+{
+
+	// Event callbacks
+	public function OnEvent1(EventData $oData)
+	{
+		$sEvent = $oData->GetEvent();
+		$this->Debug(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+	}
+
+	// Event callbacks
+	public function OnEvent2(EventData $oData)
+	{
+		$sEvent = $oData->GetEvent();
+		$this->Debug(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+	}
+
+	public function OnEventWithData(EventData $oData)
+	{
+		$sEvent = $oData->GetEvent();
+		$mEventData = $oData->GetEventData();
+		$mUserData = $oData->GetUserData();
+		$this->Debug(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+		$this->Debug($mEventData);
+		$this->Debug($mUserData);
+	}
+
+	// Event callbacks
+	public static function OnStaticEvent1(EventData $oData)
+	{
+		$sEvent = $oData->GetEvent();
+		self::DebugStatic(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+	}
+
+	// Event callbacks
+	public static function OnStaticEvent2(EventData $oData)
+	{
+		$sEvent = $oData->GetEvent();
+		self::DebugStatic(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+	}
+
+	/**
+	 * static version of the debug to be accessible from other objects
+	 *
+	 * @param $sMsg
+	 */
+	public static function DebugStatic($sMsg)
+	{
+		if (DEBUG_UNIT_TEST)
+		{
+			if (is_string($sMsg))
+			{
+				echo "$sMsg\n";
+			}
+			else
+			{
+				print_r($sMsg);
+			}
+		}
+	}
+	/**
+	 * static version of the debug to be accessible from other objects
+	 *
+	 * @param $sMsg
+	 */
+	public function Debug($sMsg)
+	{
+		if (DEBUG_UNIT_TEST)
+		{
+			if (is_string($sMsg))
+			{
+				echo "$sMsg\n";
+			}
+			else
+			{
+				print_r($sMsg);
+			}
+		}
+	}
+
+}
