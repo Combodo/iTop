@@ -162,6 +162,88 @@ class EventTest extends ItopTestCase
 		$this->assertEquals(5, self::$iEventCalls);
 	}
 
+
+	public function testUnRegisterEvent()
+	{
+		$oReceiver = new TestEventReceiver();
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event2', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+
+		Event::FireEvent('event1');
+		$this->assertEquals(3, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(4, self::$iEventCalls);
+
+		Event::UnRegisterEvent('event1');
+
+		Event::FireEvent('event1');
+		$this->assertEquals(4, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(5, self::$iEventCalls);
+	}
+
+	public function testUnRegisterAll()
+	{
+		$oReceiver = new TestEventReceiver();
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event2', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+
+		Event::FireEvent('event1');
+		$this->assertEquals(3, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(4, self::$iEventCalls);
+
+		Event::UnRegisterAll();
+
+		Event::FireEvent('event1');
+		$this->assertEquals(4, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(4, self::$iEventCalls);
+	}
+
+	public function testUnRegisterCallback()
+	{
+		$oReceiver = new TestEventReceiver();
+		$sIdToRemove = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sIdToRemove");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+		$sId = Event::Register('event2', array($oReceiver, 'OnEvent1'));
+		$this->debug("Registered $sId");
+
+		Event::FireEvent('event1');
+		$this->assertEquals(3, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(4, self::$iEventCalls);
+
+		Event::UnRegisterCallback($sIdToRemove);
+
+		Event::FireEvent('event1');
+		$this->assertEquals(6, self::$iEventCalls);
+
+		Event::FireEvent('event2');
+		$this->assertEquals(7, self::$iEventCalls);
+	}
+
 	public static function IncrementCallCount()
 	{
 		self::$iEventCalls++;
