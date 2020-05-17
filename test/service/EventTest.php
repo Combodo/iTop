@@ -121,22 +121,22 @@ class EventTest extends ItopTestCase
 	public function testData()
 	{
 		$oReceiver = new TestEventReceiver();
-		Event::Register('event1', array($oReceiver, 'OnEventWithData'), 'User Data Static');
-		Event::Register('event1', array($oReceiver, 'OnEventWithData'), $oReceiver);
-		Event::FireEvent('event1', 'Event Data 1');
+		Event::Register('event1', array($oReceiver, 'OnEventWithData'), '', 'User Data Static');
+		Event::Register('event1', array($oReceiver, 'OnEventWithData'), '', $oReceiver);
+		Event::FireEvent('event1', '', 'Event Data 1');
 		$this->assertEquals(2, self::$iEventCalls);
-		Event::FireEvent('event1', array('text' => 'Event Data 2'));
+		Event::FireEvent('event1', '', array('text' => 'Event Data 2'));
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 	public function testPriority()
 	{
 		$oReceiver = new TestEventReceiver();
-		Event::Register('event1', array($oReceiver, 'OnEvent1'), null, '',0);
-		Event::Register('event1', array($oReceiver, 'OnEvent2'), null, '',1);
+		Event::Register('event1', array($oReceiver, 'OnEvent1'), '', null, 0);
+		Event::Register('event1', array($oReceiver, 'OnEvent2'), '', null, 1);
 
-		Event::Register('event2', array($oReceiver, 'OnEvent1'), null, '',1);
-		Event::Register('event2', array($oReceiver, 'OnEvent2'), null, '',0);
+		Event::Register('event2', array($oReceiver, 'OnEvent1'), '', null, 1);
+		Event::Register('event2', array($oReceiver, 'OnEvent2'), '', null, 0);
 
 		Event::FireEvent('event1');
 		$this->assertEquals(2, self::$iEventCalls);

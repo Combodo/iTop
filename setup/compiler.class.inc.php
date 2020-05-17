@@ -1164,8 +1164,7 @@ EOF
 				$oListener = $oEvent->GetUniqueElement('listener', true);
 				$sEventListener = $oListener->GetText();
 				$sEventPriority = (float)($oEvent->GetChildText('priority', '0'));
-				$sEvent = $sEventId.'_{$this->m_sEventUniqId}';
-				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEvent\", array(\$this, '$sEventListener'), null, '', $sEventPriority);";
+				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventId\", array(\$this, '$sEventListener'), \$this->m_sEventUniqId, null, $sEventPriority);";
 			}
 		}
 

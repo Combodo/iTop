@@ -5537,10 +5537,7 @@ abstract class DBObject implements iDisplay
 
 	protected function FireEvent($sEvent, $mEventData = null)
 	{
-		// Trigger a local event
-		Event::FireEvent("{$sEvent}_{$this->m_sEventUniqId}", $mEventData);
-		// Trigger a global event
-		Event::FireEvent($sEvent, $mEventData);
+		Event::FireEvent($sEvent, $this->m_sEventUniqId, $mEventData);
 	}
 }
 
