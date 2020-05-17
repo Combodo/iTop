@@ -144,6 +144,24 @@ class EventTest extends ItopTestCase
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
+
+	public function testEventSource()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event1', array($oReceiver, 'OnEvent1'), 'A', null, 0);
+		Event::Register('event1', array($oReceiver, 'OnEvent2'), 'A', null, 1);
+		Event::Register('event1', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent1', '', null, 2);
+
+		Event::Register('event2', array($oReceiver, 'OnEvent1'), 'A', null, 1);
+		Event::Register('event2', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent1', '', null, 2);
+		Event::Register('event2', array($oReceiver, 'OnEvent2'), 'B', null, 0);
+
+		Event::FireEvent('event1', 'A');
+		$this->assertEquals(3, self::$iEventCalls);
+		Event::FireEvent('event2', 'A');
+		$this->assertEquals(5, self::$iEventCalls);
+	}
+
 	public static function IncrementCallCount()
 	{
 		self::$iEventCalls++;
