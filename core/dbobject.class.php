@@ -184,6 +184,9 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
+			$this->m_sEventUniqId = uniqid('', true);
+			$this->RegisterEvents();
+			$this->FireEvent('ObjectLoad', array('this' => $this));
 			return;
 		}
 		// Creation of a brand new object
@@ -213,6 +216,7 @@ abstract class DBObject implements iDisplay
 
 		$this->m_sEventUniqId = uniqid('', true);
 		$this->RegisterEvents();
+		$this->FireEvent('ObjectNew', array('this' => $this));
 	}
 
 	protected function RegisterEvents()
@@ -363,6 +367,7 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
+		$this->FireEvent('ObjectReload', array('this' => $this));
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -2774,6 +2779,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->OnObjectKeyReady();
+			$this->FireEvent('ObjectKeyReady', array('this' => $this));
 
 			$this->DBWriteLinks();
 			$this->WriteExternalAttributes();
@@ -3093,6 +3099,8 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
+			$this->FireEvent('BeforeUpdate', array('this' => $this));
+
 
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) == 0)
@@ -3295,6 +3303,7 @@ abstract class DBObject implements iDisplay
 			try
 			{
 				$this->AfterUpdate();
+				$this->FireEvent('AfterUpdate', array('this' => $this));
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue)
@@ -3432,6 +3441,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
+		$this->FireEvent('BeforeDelete', array('this' => $this));
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3533,6 +3543,8 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
+		$this->FireEvent('AfterDelete', array('this' => $this));
+
 
 		$this->m_bIsInDB = false;
 		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
@@ -3726,6 +3738,8 @@ abstract class DBObject implements iDisplay
 		}
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
+		$this->FireEvent('BeforeApplyStimulus', array('this' => $this));
+
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
 		$sPreviousState = $this->Get($sStateAttCode);
@@ -3839,6 +3853,8 @@ abstract class DBObject implements iDisplay
 				/** @var \Trigger $oTrigger */
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
+
+			$this->FireEvent('AfterApplyStimulus', array('this' => $this));
 		}
 
 		return $bSuccess;

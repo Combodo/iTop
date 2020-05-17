@@ -67,7 +67,8 @@ class Event
 			return ($fPriorityA < $fPriorityB) ? -1 : 1;
 		});
 		self::$aEvents[$sEvent] = $aEventCallbacks;
-		IssueLog::Trace("Registering event '$sEvent' for '$sName' with id '$sId'", LOG_EVENT_SERVICE_CHANNEL);
+		$iTotalRegistrations = count(self::$aEvents,  COUNT_RECURSIVE) / 10;
+		IssueLog::Debug("Registering event '$sEvent' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
 
 		return $sId;
 	}
@@ -82,10 +83,18 @@ class Event
 	 */
 	public static function FireEvent($sEvent, $mEventData = null)
 	{
-		IssueLog::Trace("Fire event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+		if (is_array($mEventData) && isset($mEventData['this']))
+		{
+			$sSource = ' from: '.get_class($mEventData['this']).':'.$mEventData['this']->GetKey();
+		}
+		else
+		{
+			$sSource = '';
+		}
+		IssueLog::Debug("Fire event '$sEvent'$sSource", LOG_EVENT_SERVICE_CHANNEL);
 		if (!isset(self::$aEvents[$sEvent]))
 		{
-			IssueLog::Debug("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
 			return;
 		}
 
@@ -94,7 +103,7 @@ class Event
 			$sName = $aEventCallback['name'];
 			$sId = $aEventCallback['id'];
 
-			IssueLog::Trace("Fire event '$sEvent' calling '{$sName}' id '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Debug("Fire event '$sEvent' calling '{$sName}' id '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
 			try
 			{
 				call_user_func($aEventCallback['callback'], new EventData($sEvent, $mEventData, $aEventCallback['user_data']));
@@ -119,7 +128,7 @@ class Event
 			{
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Trace("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Debug("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				return false;
 			}
 			return true;
@@ -127,7 +136,7 @@ class Event
 
 		if (!$bRemoved)
 		{
-			IssueLog::Debug("No registration found for callback '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for callback '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
 		}
 	}
 
@@ -146,7 +155,7 @@ class Event
 				$sId = self::$aEvents[$sEvent][$idx]['id'];
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Trace("Unregistered callback '{$sName}' id '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Debug("Unregistered callback '{$sName}' id '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				$iRemovedCount++;
 			}
 			return true;
@@ -154,7 +163,7 @@ class Event
 
 		if ($iRemovedCount == 0)
 		{
-			IssueLog::Debug("No registration found for group '{$sGroup}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for group '{$sGroup}'", LOG_EVENT_SERVICE_CHANNEL);
 		}
 	}
 
@@ -167,12 +176,12 @@ class Event
 	{
 		if (!isset(self::$aEvents[$sEvent]))
 		{
-			IssueLog::Debug("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
 			return;
 		}
 
 		unset(self::$aEvents[$sEvent]);
-		IssueLog::Trace("Unregistered all the callbacks on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Debug("Unregistered all the callbacks on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 	}
 
 	/**
@@ -181,7 +190,7 @@ class Event
 	public static function UnRegisterAll()
 	{
 		self::$aEvents = array();
-		IssueLog::Trace("Unregistered all events", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Debug("Unregistered all events", LOG_EVENT_SERVICE_CHANNEL);
 	}
 
 	/**
@@ -237,7 +246,7 @@ class Event
 							{
 								list($left, $right) = [$callable[0], $m['method']];
 							}
-							return (new ReflectionMethod($left, $right))->GetName();
+							return self::GetName($left, $right);
 						}
 						else
 						{
@@ -249,7 +258,7 @@ class Event
 							{
 								list($left, $right) = $callable;
 							}
-							return (new ReflectionMethod($left, $right))->GetName();
+							return self::GetName($left, $right);
 						}
 					}
 					break;
@@ -257,6 +266,15 @@ class Event
 			return 'unknown';
 		}
 		throw new CoreException('Not a callable');
+	}
+
+	private static function GetName($left, $right)
+	{
+		if (is_object($left))
+		{
+			return get_class($left).'::'.$right;
+		}
+		return (new ReflectionMethod($left, $right))->GetName();
 	}
 }
 
