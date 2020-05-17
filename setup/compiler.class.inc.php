@@ -1154,6 +1154,39 @@ EOF
 			$aClassParams['indexes'] = var_export($aIndexes, true);
 		}
 
+		$sEvents = '';
+		if ($oEvents = $oClass->GetOptionalElement('events'))
+		{
+			foreach($oEvents->getElementsByTagName('event') as $oEvent)
+			{
+				/** @var \DOMElement $oEvent */
+				$sEventId = $oEvent->getAttribute('id');
+				$sEventType = $oEvent->GetChildText('type', 'global');
+				$oListener = $oEvent->GetUniqueElement('listener', true);
+				$sEventListener = $oListener->GetText();
+				$sEventPriority = (float)($oEvent->GetChildText('priority', '0'));
+				$sEvent = ($sEventType == 'local') ? $sEventId.'_{$this->m_sEventUniqId}' : $sEventId;
+				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEvent\", array(\$this, '$sEventListener'), null, '', $sEventPriority);";
+			}
+		}
+
+		if (!empty($sEvents))
+		{
+			$sMethods = <<<PHP
+	protected function RegisterEvents()
+	{
+		parent::RegisterEvents();
+{$sEvents}
+	}
+
+PHP;
+
+		}
+		else
+		{
+			$sMethods = "";
+		}
+
 		if ($oArchive = $oProperties->GetOptionalElement('archive'))
 		{
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
@@ -1897,7 +1930,6 @@ EOF
 		}
 	
 		// Methods
-		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
 		foreach($oMethods->getElementsByTagName('method') as $oMethod)
 		{
@@ -2028,6 +2060,7 @@ $sLifecycle
 $sHighlightScale
 $sZlists;
 EOF;
+
 		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
 		// generated PHP
 		$sPHP = $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls,

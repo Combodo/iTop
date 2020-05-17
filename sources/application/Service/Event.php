@@ -25,12 +25,12 @@ class Event
 	 * @param callable $callback The class to call (must implement iEventServiceCallable or iEventServiceCallableStatic for static classes)
 	 * @param mixed|null $mUserData Optional user data
 	 * @param string $sGroup optional group (for controlled mass un-registration)
-	 * @param int $fPriority optional priority for callback order
+	 * @param float $fPriority optional priority for callback order
 	 *
 	 * @return string Id of the registration (used for unregister)
 	 * @throws \CoreException
 	 */
-	public static function Register($sEvent, callable $callback, $mUserData = null, $sGroup = '', $fPriority = 0)
+	public static function Register($sEvent, callable $callback, $mUserData = null, $sGroup = '', $fPriority = 0.0)
 	{
 		try
 		{
@@ -49,7 +49,7 @@ class Event
 		{
 			$aEventCallbacks = array();
 		}
-		$sId = uniqid('event_');
+		$sId = uniqid('event_', true);
 		$aEventCallbacks[] = array(
 			'id' => $sId,
 			'callback' => $callback,
@@ -67,9 +67,44 @@ class Event
 			return ($fPriorityA < $fPriorityB) ? -1 : 1;
 		});
 		self::$aEvents[$sEvent] = $aEventCallbacks;
-		IssueLog::Debug("Registering event '$sEvent' for '$sName' with id '$sId'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Registering event '$sEvent' for '$sName' with id '$sId'", LOG_EVENT_SERVICE_CHANNEL);
 
 		return $sId;
+	}
+
+	/**
+	 * Fire an event. Call all the callbacks registered for this event.
+	 *
+	 * @param string $sEvent event to trigger
+	 * @param mixed|null $mEventData event related data
+	 *
+	 * @throws \Exception from the callback
+	 */
+	public static function FireEvent($sEvent, $mEventData = null)
+	{
+		IssueLog::Trace("Fire event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+		if (!isset(self::$aEvents[$sEvent]))
+		{
+			IssueLog::Debug("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			return;
+		}
+
+		foreach (self::$aEvents[$sEvent] as $aEventCallback)
+		{
+			$sName = $aEventCallback['name'];
+			$sId = $aEventCallback['id'];
+
+			IssueLog::Trace("Fire event '$sEvent' calling '{$sName}' id '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
+			try
+			{
+				call_user_func($aEventCallback['callback'], new EventData($sEvent, $mEventData, $aEventCallback['user_data']));
+			}
+			catch (Exception $e)
+			{
+				IssueLog::Error("Event '$sEvent' for '{$sName}' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+				throw $e;
+			}
+		}
 	}
 
 	/**
@@ -84,7 +119,7 @@ class Event
 			{
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Debug("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Trace("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				return false;
 			}
 			return true;
@@ -111,7 +146,7 @@ class Event
 				$sId = self::$aEvents[$sEvent][$idx]['id'];
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Debug("Unregistered callback '{$sName}' id '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Trace("Unregistered callback '{$sName}' id '{$sId}' for the group '{$sGroup}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 				$iRemovedCount++;
 			}
 			return true;
@@ -137,7 +172,7 @@ class Event
 		}
 
 		unset(self::$aEvents[$sEvent]);
-		IssueLog::Debug("Unregistered all the callbacks on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Unregistered all the callbacks on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
 	}
 
 	/**
@@ -146,7 +181,7 @@ class Event
 	public static function UnRegisterAll()
 	{
 		self::$aEvents = array();
-		IssueLog::Debug("Unregistered all events", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Unregistered all events", LOG_EVENT_SERVICE_CHANNEL);
 	}
 
 	/**
@@ -169,41 +204,6 @@ class Event
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Trigger an event. Call all the callbacks registered for this event.
-	 *
-	 * @param string $sEvent event to trigger
-	 * @param mixed|null $mEventData event related data
-	 *
-	 * @throws \Exception from the callback
-	 */
-	public static function Trigger($sEvent, $mEventData = null)
-	{
-		IssueLog::Debug("Trigger event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
-		if (!isset(self::$aEvents[$sEvent]))
-		{
-			IssueLog::Debug("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
-			return;
-		}
-
-		foreach (self::$aEvents[$sEvent] as $aEventCallback)
-		{
-			$sName = $aEventCallback['name'];
-			$sId = $aEventCallback['id'];
-
-			IssueLog::Debug("Trigger event '$sEvent' calling '{$sName}' id '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
-			try
-			{
-				call_user_func($aEventCallback['callback'], new EventData($sEvent, $mEventData, $aEventCallback['user_data']));
-			}
-			catch (Exception $e)
-			{
-				IssueLog::Error("Event '$sEvent' for '{$sName}' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
-				throw $e;
-			}
-		}
 	}
 
 	/**

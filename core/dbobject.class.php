@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Service\Event;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -153,9 +154,13 @@ abstract class DBObject implements iDisplay
 	protected $m_aSynchroData = null;
 	protected $m_sHighlightCode = null;
 	protected $m_aCallbacks = array();
+	/**
+	 * @var string local events suffix
+	 */
+	protected $m_sEventUniqId = '';
 
 
-    /**
+	/**
      * DBObject constructor.
      *
      * You should preferably use MetaModel::NewObject() instead of this constructor.
@@ -205,6 +210,13 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->UpdateMetaAttributes();
+
+		$this->m_sEventUniqId = uniqid('', true);
+		$this->RegisterEvents();
+	}
+
+	protected function RegisterEvents()
+	{
 	}
 
 	/**
@@ -2689,6 +2701,7 @@ abstract class DBObject implements iDisplay
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
+		$this->FireEvent('BeforeInsert', array('this' => $this));
 
 		if ($this->m_iKey < 0)
 		{
@@ -2791,6 +2804,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterInsert();
+		$this->FireEvent('AfterInsert', array('this' => $this));
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -5503,6 +5517,14 @@ abstract class DBObject implements iDisplay
 			default:
 				break;
 		}
+	}
+
+	protected function FireEvent($sEvent, $mEventData = null)
+	{
+		// Trigger a local event
+		Event::FireEvent("{$sEvent}_{$this->m_sEventUniqId}", $mEventData);
+		// Trigger a global event
+		Event::FireEvent($sEvent, $mEventData);
 	}
 }
 

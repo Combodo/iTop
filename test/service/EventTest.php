@@ -53,7 +53,7 @@ class EventTest extends ItopTestCase
 	{
 		$sId = Event::Register('event', function () { $this->debug("Closure: event received !!!"); self::IncrementCallCount(); });
 		$this->debug("Registered $sId");
-		Event::Trigger('event');
+		Event::FireEvent('event');
 		$this->assertEquals(1, self::$iEventCalls);
 	}
 
@@ -67,9 +67,9 @@ class EventTest extends ItopTestCase
 	{
 		$sId = Event::Register('event', $callback);
 		$this->debug("Registered $sId");
-		Event::Trigger('event');
+		Event::FireEvent('event');
 		$this->assertEquals(1, self::$iEventCalls);
-		Event::Trigger('event');
+		Event::FireEvent('event');
 		$this->assertEquals(2, self::$iEventCalls);
 	}
 
@@ -93,9 +93,9 @@ class EventTest extends ItopTestCase
 		Event::Register('event_b', array($oReceiver, 'OnEvent1'));
 		Event::Register('event_b', array($oReceiver, 'OnEvent2'));
 
-		Event::Trigger('event_a');
+		Event::FireEvent('event_a');
 		$this->assertEquals(2, self::$iEventCalls);
-		Event::Trigger('event_b');
+		Event::FireEvent('event_b');
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
@@ -111,7 +111,7 @@ class EventTest extends ItopTestCase
 		$sId = Event::Register('event1', array($oReceiver, 'OnEvent1'));
 		$this->debug("Registered $sId");
 
-		Event::Trigger('event1');
+		Event::FireEvent('event1');
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
@@ -120,9 +120,9 @@ class EventTest extends ItopTestCase
 		$oReceiver = new TestEventReceiver();
 		Event::Register('event1', array($oReceiver, 'OnEventWithData'), 'User Data Static');
 		Event::Register('event1', array($oReceiver, 'OnEventWithData'), $oReceiver);
-		Event::Trigger('event1', 'Event Data 1');
+		Event::FireEvent('event1', 'Event Data 1');
 		$this->assertEquals(2, self::$iEventCalls);
-		Event::Trigger('event1', array('text' => 'Event Data 2'));
+		Event::FireEvent('event1', array('text' => 'Event Data 2'));
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
@@ -135,9 +135,9 @@ class EventTest extends ItopTestCase
 		Event::Register('event2', array($oReceiver, 'OnEvent1'), null, '',1);
 		Event::Register('event2', array($oReceiver, 'OnEvent2'), null, '',0);
 
-		Event::Trigger('event1');
+		Event::FireEvent('event1');
 		$this->assertEquals(2, self::$iEventCalls);
-		Event::Trigger('event2');
+		Event::FireEvent('event2');
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
