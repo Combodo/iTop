@@ -78,9 +78,8 @@ class EventTest extends ItopTestCase
 		$oReceiver = new TestEventReceiver();
 		return array(
 			'method' => array(array($oReceiver, 'OnEvent1')),
-			//'static' => array('TestEventReceiver::OnStaticEvent1'),
-			//'static2' => array(array('TestEventReceiver', 'OnStaticEvent1')),
-			//'closure' => array(function (EventData $oData) { $sEvent = $oData->GetEvent(); $this->debug("Closure: '{$sEvent}' event received !!!"); self::IncrementCallCount(); }),
+			'static' => array('Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent1'),
+			'static2' => array(array('Combodo\iTop\Test\UnitTest\Service\TestEventReceiver', 'OnStaticEvent1')),
 		);
 	}
 
@@ -89,14 +88,18 @@ class EventTest extends ItopTestCase
 		$oReceiver = new TestEventReceiver();
 		Event::Register('event_a', array($oReceiver, 'OnEvent1'));
 		Event::Register('event_a', array($oReceiver, 'OnEvent2'));
+		Event::Register('event_a', array('Combodo\iTop\Test\UnitTest\Service\TestEventReceiver', 'OnStaticEvent1'));
+		Event::Register('event_a', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent2');
 
 		Event::Register('event_b', array($oReceiver, 'OnEvent1'));
 		Event::Register('event_b', array($oReceiver, 'OnEvent2'));
+		Event::Register('event_b', array('Combodo\iTop\Test\UnitTest\Service\TestEventReceiver', 'OnStaticEvent1'));
+		Event::Register('event_b', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent2');
 
 		Event::FireEvent('event_a');
-		$this->assertEquals(2, self::$iEventCalls);
-		Event::FireEvent('event_b');
 		$this->assertEquals(4, self::$iEventCalls);
+		Event::FireEvent('event_b');
+		$this->assertEquals(8, self::$iEventCalls);
 	}
 
 	public function testMultiSameEvent()
