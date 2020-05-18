@@ -19,15 +19,15 @@ class Event
 	private static $aEvents = array();
 
 	/**
-	 * Register a callback for specific event
+	 * Register a callback for a specific event
 	 *
-	 * @param string $sEvent
-	 * @param callable $callback The class to call (must implement iEventServiceCallable or iEventServiceCallableStatic for static classes)
+	 * @param string $sEvent corresponding event
+	 * @param callable $callback The callback to call
 	 * @param string $sEventSource event filtering depending on the source of the event
 	 * @param mixed|null $mUserData Optional user data
 	 * @param float $fPriority optional priority for callback order
 	 *
-	 * @return string Id of the registration (used for unregister)
+	 * @return string Id of the registration (used for unregistering)
 	 * @throws \CoreException
 	 */
 	public static function Register($sEvent, callable $callback, $sEventSource = '', $mUserData = null, $fPriority = 0.0)
@@ -92,7 +92,7 @@ class Event
 	 */
 	public static function FireEvent($sEvent, $sEventSource = '', $mEventData = null)
 	{
-		if (is_array($mEventData) && isset($mEventData['this']))
+		if (is_array($mEventData) && isset($mEventData['this']) && is_object($mEventData['this']) && method_exists($mEventData['this'], 'GetKey'))
 		{
 			$sSource = ' from: '.get_class($mEventData['this']).':'.$mEventData['this']->GetKey();
 		}
