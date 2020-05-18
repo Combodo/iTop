@@ -216,7 +216,14 @@ EOF
 				}
 				else if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
 				{
-					$sRet = $oAttDef->GetEditValue($value, $oObj);
+					if ($oAttDef instanceof AttributeText && $oAttDef->GetFormat()=='html')
+					{
+						$sRet = str_replace("&gt;", ">", $value);
+					}
+					else
+					{
+						$sRet = $oAttDef->GetEditValue($value, $oObj);
+					}
 				}
 				else
 				{
