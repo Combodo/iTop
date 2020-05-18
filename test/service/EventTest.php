@@ -83,6 +83,15 @@ class EventTest extends ItopTestCase
 		);
 	}
 
+	public function testBrokenCallback()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event_a', array($oReceiver, 'BrokenCallback'));
+
+		$this->expectException(TypeError::class);
+		Event::FireEvent('event_a');
+	}
+
 	public function testMultiEvent()
 	{
 		$oReceiver = new TestEventReceiver();
@@ -277,6 +286,14 @@ class TestEventReceiver
 	public function OnEvent1(EventData $oData)
 	{
 		$sEvent = $oData->GetEvent();
+		$this->Debug(__METHOD__.": received event '{$sEvent}'");
+		EventTest::IncrementCallCount();
+	}
+
+	// Event callbacks
+	public function BrokenCallback(array $aData)
+	{
+		$sEvent = $aData['event'];
 		$this->Debug(__METHOD__.": received event '{$sEvent}'");
 		EventTest::IncrementCallCount();
 	}
