@@ -92,7 +92,7 @@ class Event
 
 		foreach (self::$aEvents[$sEvent] as $aEventCallback)
 		{
-			if ($aEventCallback['source'] != '' && $sEventSource != $aEventCallback['source'])
+			if (!empty($aEventCallback['source']) && $sEventSource != $aEventCallback['source'])
 			{
 				continue;
 			}
@@ -189,67 +189,5 @@ class Event
 			}
 		}
 		return false;
-	}
-}
-
-/**
- * Data given to the Event Service callbacks
- * Class EventServiceData
- *
- * @package Combodo\iTop\Service
- */
-class EventData
-{
-	private $sEvent;
-	private $sEventSource;
-	private $mEventData;
-	private $mUserData;
-
-	/**
-	 * EventServiceData constructor.
-	 *
-	 * @param $sEvent
-	 * @param $sEventSource
-	 * @param $mEventData
-	 * @param $mUserData
-	 */
-	public function __construct($sEvent, $sEventSource, $mEventData, $mUserData)
-	{
-		$this->sEvent = $sEvent;
-		$this->mEventData = $mEventData;
-		$this->mUserData = $mUserData;
-		$this->sEventSource = $sEventSource;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetEvent()
-	{
-		return $this->sEvent;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetEventSource()
-	{
-		return $this->sEventSource;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function GetEventData()
-	{
-		return $this->mEventData;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function GetUserData()
-	{
-		return $this->mUserData;
 	}
 }
