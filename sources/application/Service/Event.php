@@ -8,6 +8,7 @@ namespace Combodo\iTop\Service;
 
 use Closure;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 
 define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
@@ -15,6 +16,7 @@ define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
 class Event
 {
 	private static $aEvents = array();
+	private static $iEventIdCounter = 0;
 
 	/**
 	 * Register a callback for a specific event
@@ -34,7 +36,7 @@ class Event
 		is_callable($callback, false, $sName);
 
 		$aEventCallbacks = isset(self::$aEvents[$sEvent]) ? self::$aEvents[$sEvent] : array();
-		$sId = uniqid('event_', true);
+		$sId = 'event_'.self::$iEventIdCounter++;
 		$aEventCallbacks[] = array(
 			'id' => $sId,
 			'callback' => $callback,
@@ -77,12 +79,14 @@ class Event
 	 */
 	public static function FireEvent($sEvent, $sEventSource = '', $mEventData = null)
 	{
+		$oKPI = new ExecutionKPI();
 		$sSource = isset($mEventData['debug_info']) ? " {$mEventData['debug_info']}" : '';
 		$sEventName = ($sEventSource != '') ? "$sEvent:$sEventSource" : $sEvent;
 		IssueLog::Trace("Fire event '$sEventName'$sSource", LOG_EVENT_SERVICE_CHANNEL);
 		if (!isset(self::$aEvents[$sEvent]))
 		{
 			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			$oKPI->ComputeStats('FireEvent', $sEvent);
 			return;
 		}
 
@@ -112,6 +116,7 @@ class Event
 				throw $e;
 			}
 		}
+		$oKPI->ComputeStats('FireEvent', $sEvent);
 	}
 
 	/**

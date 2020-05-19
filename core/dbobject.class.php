@@ -158,6 +158,7 @@ abstract class DBObject implements iDisplay
 	 * @var string local events suffix
 	 */
 	protected $m_sEventUniqId = '';
+	protected static $m_iEventUniqCounter = 0;
 
 
 	/**
@@ -184,7 +185,7 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sEventUniqId = uniqid('DataModel_', true);
+			$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
 			$this->RegisterEvents();
 			$this->FireEvent('DMObjectLoaded');
 			return;
@@ -214,7 +215,7 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sEventUniqId = uniqid('DataModel_', true);
+		$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
 		$this->RegisterEvents();
 		$this->FireEvent('DMObjectNew');
 	}
