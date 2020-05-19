@@ -7,11 +7,8 @@
 namespace Combodo\iTop\Service;
 
 use Closure;
-use CoreException;
 use Exception;
 use IssueLog;
-use ReflectionException;
-use ReflectionMethod;
 
 define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
 
