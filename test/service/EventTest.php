@@ -92,6 +92,18 @@ class EventTest extends ItopTestCase
 		Event::FireEvent('event_a');
 	}
 
+	public function testRemovedCallback()
+	{
+		$oReceiver = new TestEventReceiver();
+		Event::Register('event_a', array($oReceiver, 'OnEvent1'));
+
+		$oReceiver = null;
+		gc_collect_cycles();
+
+		Event::FireEvent('event_a');
+		$this->assertEquals(1, self::$iEventCalls);
+	}
+
 	public function testMultiEvent()
 	{
 		$oReceiver = new TestEventReceiver();

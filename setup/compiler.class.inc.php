@@ -1161,10 +1161,12 @@ EOF
 			{
 				/** @var \DOMElement $oEvent */
 				$sEventId = $oEvent->getAttribute('id');
+				$oEventName = $oEvent->GetUniqueElement('name', true);
+				$sEventName = $oEventName->GetText();
 				$oListener = $oEvent->GetUniqueElement('listener', true);
 				$sEventListener = $oListener->GetText();
 				$sEventPriority = (float)($oEvent->GetChildText('priority', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventId\", array(\$this, '$sEventListener'), \$this->m_sEventUniqId, null, $sEventPriority);";
+				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventName\", array(\$this, '$sEventListener'), \$this->m_sEventUniqId, '$sEventId', $sEventPriority);";
 			}
 		}
 

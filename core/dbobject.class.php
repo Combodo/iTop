@@ -186,7 +186,7 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 			$this->m_sEventUniqId = uniqid('DataModel_', true);
 			$this->RegisterEvents();
-			$this->FireEvent('OnObjectLoad', array('this' => $this));
+			$this->FireEvent('DMObjectLoaded');
 			return;
 		}
 		// Creation of a brand new object
@@ -216,7 +216,7 @@ abstract class DBObject implements iDisplay
 
 		$this->m_sEventUniqId = uniqid('DataModel_', true);
 		$this->RegisterEvents();
-		$this->FireEvent('OnObjectNew', array('this' => $this));
+		$this->FireEvent('DMObjectNew');
 	}
 
 	protected function RegisterEvents()
@@ -367,7 +367,7 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$this->FireEvent('ObjectReload', array('this' => $this));
+		$this->FireEvent('ObjectReload');
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -2706,7 +2706,7 @@ abstract class DBObject implements iDisplay
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
-		$this->FireEvent('BeforeInsert', array('this' => $this));
+		$this->FireEvent('BeforeInsert');
 
 		if ($this->m_iKey < 0)
 		{
@@ -2779,7 +2779,7 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->OnObjectKeyReady();
-			$this->FireEvent('ObjectKeyReady', array('this' => $this));
+			$this->FireEvent('ObjectKeyReady');
 
 			$this->DBWriteLinks();
 			$this->WriteExternalAttributes();
@@ -2810,7 +2810,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterInsert();
-		$this->FireEvent('AfterInsert', array('this' => $this));
+		$this->FireEvent('AfterInsert');
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -3099,7 +3099,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
-			$this->FireEvent('BeforeUpdate', array('this' => $this));
+			$this->FireEvent('BeforeUpdate');
 
 
 			$aChanges = $this->ListChanges();
@@ -3303,7 +3303,7 @@ abstract class DBObject implements iDisplay
 			try
 			{
 				$this->AfterUpdate();
-				$this->FireEvent('AfterUpdate', array('this' => $this));
+				$this->FireEvent('AfterUpdate');
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue)
@@ -3441,7 +3441,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
-		$this->FireEvent('BeforeDelete', array('this' => $this));
+		$this->FireEvent('BeforeDelete');
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3543,7 +3543,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
-		$this->FireEvent('AfterDelete', array('this' => $this));
+		$this->FireEvent('AfterDelete');
 
 
 		$this->m_bIsInDB = false;
@@ -3738,7 +3738,7 @@ abstract class DBObject implements iDisplay
 		}
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
-		$this->FireEvent('BeforeApplyStimulus', array('this' => $this));
+		$this->FireEvent('BeforeApplyStimulus');
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
@@ -3854,7 +3854,7 @@ abstract class DBObject implements iDisplay
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 
-			$this->FireEvent('AfterApplyStimulus', array('this' => $this));
+			$this->FireEvent('AfterApplyStimulus');
 		}
 
 		return $bSuccess;
@@ -5535,9 +5535,15 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-	protected function FireEvent($sEvent, $mEventData = null)
+	/**
+	 * @param $sEvent
+	 *
+	 * @throws \Exception
+	 */
+	protected function FireEvent($sEvent)
 	{
-		Event::FireEvent($sEvent, $this->m_sEventUniqId, $mEventData);
+		$aEventData = array('debug_info' => get_class($this).':'.$this->GetKey(), 'object' => $this);
+		Event::FireEvent($sEvent, $this->m_sEventUniqId, $aEventData);
 	}
 }
 
