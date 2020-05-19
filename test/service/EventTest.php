@@ -31,7 +31,10 @@ class EventTest extends ItopTestCase
 
 	/**
 	 * @dataProvider BadCallbackProvider
-	 * @throws \CoreException
+	 *
+	 * @param $callback
+	 *
+	 * @throws \Exception
 	 */
 	public function testRegisterBadCallback($callback)
 	{
@@ -59,9 +62,10 @@ class EventTest extends ItopTestCase
 
 	/**
 	 * @dataProvider GoodCallbackProvider
+	 *
 	 * @param $callback
 	 *
-	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function testMethodCallbackFunction(callable $callback)
 	{
