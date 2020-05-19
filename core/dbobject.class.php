@@ -5542,7 +5542,7 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function FireEvent($sEvent)
 	{
-		$aEventData = array('debug_info' => get_class($this).':'.$this->GetKey(), 'object' => $this);
+		$aEventData = array('debug_info' => 'from: '.get_class($this).':'.$this->GetKey(), 'object' => $this);
 		Event::FireEvent($sEvent, $this->m_sEventUniqId, $aEventData);
 	}
 }

@@ -77,7 +77,7 @@ class Event
 	 */
 	public static function FireEvent($sEvent, $sEventSource = '', $mEventData = null)
 	{
-		$sSource = isset($mEventData['debug_info']) ? " info: {$mEventData['debug_info']}" : '';
+		$sSource = isset($mEventData['debug_info']) ? " {$mEventData['debug_info']}" : '';
 		$sEventName = ($sEventSource != '') ? "$sEvent:$sEventSource" : $sEvent;
 		IssueLog::Trace("Fire event '$sEventName'$sSource", LOG_EVENT_SERVICE_CHANNEL);
 		if (!isset(self::$aEvents[$sEvent]))
@@ -93,7 +93,7 @@ class Event
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			IssueLog::Debug("Fire event '$sEventName' calling '{$sName}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Debug("Fire event '$sEventName'$sSource calling '{$sName}'", LOG_EVENT_SERVICE_CHANNEL);
 			try
 			{
 				if (is_callable($aEventCallback['callback']))
