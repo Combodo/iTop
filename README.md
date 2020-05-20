@@ -52,7 +52,7 @@ iTop also offers mass import tools and web services to integrate with your IT
 ## Last releases
 
 ### Versions 2.7.*
- - 2.7.0-beta2 published on January 29, 2020
+ - 2.7.0-2 published on May 20, 2020
  - [Changes since the previous version][62]
  - [New features][63]
  - [Migration notes][64]
@@ -61,7 +61,7 @@ iTop also offers mass import tools and web services to integrate with your IT
 [62]: https://www.itophub.io/wiki/page?id=2_7_0:release:change_log
 [63]: https://www.itophub.io/wiki/page?id=2_7_0:release:2_7_whats_new
 [64]: https://www.itophub.io/wiki/page?id=2_7_0:install:260_to_270_migration_notes
-[65]: https://sourceforge.net/projects/itop/files/itop/2.7.0-beta2
+[65]: https://sourceforge.net/projects/itop/files/itop/2.7.0-2/iTop-2.7.0-2-5689.zip/download
 
 
 ### Versions 2.6.*
