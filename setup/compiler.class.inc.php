@@ -1155,6 +1155,7 @@ EOF
 		}
 
 		$sEvents = '';
+		$sMethods = '';
 		if ($oEvents = $oClass->GetOptionalElement('events'))
 		{
 			foreach($oEvents->getElementsByTagName('event') as $oEvent)
@@ -1164,27 +1165,30 @@ EOF
 				$oEventName = $oEvent->GetUniqueElement('name', true);
 				$sEventName = $oEventName->GetText();
 				$oListener = $oEvent->GetUniqueElement('listener', true);
-				$sEventListener = $oListener->GetText();
+				$sListener = $oListener->GetText();
+				if (strpos($sListener, '::') === false)
+				{
+					$sEventListener = 'array($this, \''.$sListener.'\')';
+				}
+				else
+				{
+					$sEventListener = "'{$sListener}'";
+				}
 				$sEventPriority = (float)($oEvent->GetChildText('priority', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventName\", array(\$this, '$sEventListener'), \$this->m_sEventUniqId, '$sEventId', $sEventPriority);";
+				$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, '$sEventId', $sEventPriority);";
 			}
 		}
 
 		if (!empty($sEvents))
 		{
-			$sMethods = <<<PHP
+			$sMethods .= <<<EOF
 	protected function RegisterEvents()
 	{
 		parent::RegisterEvents();
 {$sEvents}
 	}
 
-PHP;
-
-		}
-		else
-		{
-			$sMethods = "";
+EOF;
 		}
 
 		if ($oArchive = $oProperties->GetOptionalElement('archive'))
