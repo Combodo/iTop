@@ -1156,13 +1156,13 @@ EOF
 
 		$sEvents = '';
 		$sMethods = '';
-		if ($oEvents = $oClass->GetOptionalElement('events'))
+		if ($oEvents = $oClass->GetOptionalElement('hooks'))
 		{
-			foreach($oEvents->getElementsByTagName('event') as $oEvent)
+			foreach($oEvents->getElementsByTagName('hook') as $oEvent)
 			{
 				/** @var \DOMElement $oEvent */
 				$sEventId = $oEvent->getAttribute('id');
-				$oEventName = $oEvent->GetUniqueElement('name', true);
+				$oEventName = $oEvent->GetUniqueElement('event_name', true);
 				$sEventName = $oEventName->GetText();
 				$oListener = $oEvent->GetUniqueElement('listener', true);
 				$sListener = $oListener->GetText();

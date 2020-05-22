@@ -186,7 +186,7 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+			$this->m_sEventUniqId = get_class($this).'.'.self::$m_iEventUniqCounter++;
 			$this->RegisterEvents();
 			$this->FireEvent(EventName::DB_OBJECT_LOADED);
 			return;
@@ -216,7 +216,7 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+		$this->m_sEventUniqId = get_class($this).'.'.self::$m_iEventUniqCounter++;
 		$this->RegisterEvents();
 		$this->FireEvent(EventName::DB_OBJECT_NEW);
 	}
