@@ -23,7 +23,7 @@ class Event
 	 *
 	 * @param string $sEvent corresponding event
 	 * @param callable $callback The callback to call
-	 * @param string $sEventSource event filtering depending on the source of the event
+	 * @param string|array $sEventSource event filtering depending on the source of the event
 	 * @param mixed|null $mUserData Optional user data
 	 * @param float $fPriority optional priority for callback order
 	 *
@@ -31,7 +31,7 @@ class Event
 	 *
 	 * @throws \Exception
 	 */
-	public static function Register($sEvent, callable $callback, $sEventSource = '', $mUserData = null, $fPriority = 0.0)
+	public static function Register($sEvent, callable $callback, $sEventSource = null, $mUserData = null, $fPriority = 0.0)
 	{
 		is_callable($callback, false, $sName);
 
@@ -62,7 +62,7 @@ class Event
 			{
 				$iTotalRegistrations += count($aEvent);
 			}
-			$sEventName = ($sEventSource != '') ? "$sEvent:$sEventSource" : $sEvent;
+			$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
 			IssueLog::Trace("Registering event '$sEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
 		}
 		return $sId;
@@ -72,16 +72,16 @@ class Event
 	 * Fire an event. Call all the callbacks registered for this event.
 	 *
 	 * @param string $sEvent event to trigger
-	 * @param string $sEventSource source of the event
+	 * @param string|array $sEventSource source of the event
 	 * @param mixed|null $mEventData event related data
 	 *
 	 * @throws \Exception from the callback
 	 */
-	public static function FireEvent($sEvent, $sEventSource = '', $mEventData = null)
+	public static function FireEvent($sEvent, $sEventSource = null, $mEventData = null)
 	{
 		$oKPI = new ExecutionKPI();
 		$sSource = isset($mEventData['debug_info']) ? " {$mEventData['debug_info']}" : '';
-		$sEventName = ($sEventSource != '') ? "$sEvent:$sEventSource" : $sEvent;
+		$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
 		IssueLog::Trace("Fire event '$sEventName'$sSource", LOG_EVENT_SERVICE_CHANNEL);
 		if (!isset(self::$aEvents[$sEvent]))
 		{
@@ -92,7 +92,7 @@ class Event
 
 		foreach (self::$aEvents[$sEvent] as $aEventCallback)
 		{
-			if (!empty($aEventCallback['source']) && $sEventSource != $aEventCallback['source'])
+			if (!self::MatchEventSource($aEventCallback['source'], $sEventSource))
 			{
 				continue;
 			}
@@ -117,6 +117,76 @@ class Event
 			}
 		}
 		$oKPI->ComputeStats('FireEvent', $sEvent);
+	}
+
+	private static function MatchEventSource($srcRegistered, $srcEvent)
+	{
+		if (empty($srcRegistered))
+		{
+			// no filtering
+			return true;
+		}
+		if (empty($srcEvent))
+		{
+			// no match (the registered source is not empty)
+			return false;
+		}
+		if (is_string($srcRegistered))
+		{
+			$aSrcRegistered = array($srcRegistered);
+		}
+		elseif (is_array($srcRegistered))
+		{
+			$aSrcRegistered = $srcRegistered;
+		}
+		else
+		{
+			$aSrcRegistered = array();
+		}
+
+		if (is_string($srcEvent))
+		{
+			$aSrcEvent = array($srcEvent);
+		}
+		elseif (is_array($srcEvent))
+		{
+			$aSrcEvent = $srcEvent;
+		}
+		else
+		{
+			$aSrcEvent = array();
+		}
+
+		foreach ($aSrcRegistered as $sSrcRegistered)
+		{
+			foreach ($aSrcEvent as $sSrcEvent)
+			{
+				if ($sSrcRegistered == $sSrcEvent)
+				{
+					// sources matches
+					return true;
+				}
+			}
+		}
+		// no match
+		return false;
+	}
+
+	private static function GetSourcesAsString($srcRegistered)
+	{
+		if (empty($srcRegistered))
+		{
+			return '';
+		}
+		if (is_string($srcRegistered))
+		{
+			return $srcRegistered;
+		}
+		if (is_array($srcRegistered))
+		{
+			$sStr = implode(',', $srcRegistered);
+		}
+		return '';
 	}
 
 	/**
