@@ -30,7 +30,6 @@ pipeline {
       parallel {
         stage('unattended_install default env') {
           steps {
-            sh './.jenkins/bin/purposely_fail.sh'
             sh './.jenkins/bin/unattended_install/default_env.sh'
           }
         }
