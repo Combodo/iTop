@@ -78,15 +78,16 @@ interface iScheduledProcess extends iProcess
  * * week_days
  * * time
  *
- * Param names and some of their default values are in constant that can be overriden.
+ * Param names and some of their default values are in constant that can be overridden.
  *
  * Other info (module name and time default value) should be provided using a method that needs to be implemented.
  *
- * @since 2.7.0
+ * @since 2.7.0 PR #89
+ * @since 2.7.0-2 N°2580 Fix {@link GetNextOccurrence} returning wrong value
  */
 abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 {
-	// param have default names/values but can be overriden
+	// param have default names/values but can be overridden
 	const MODULE_SETTING_ENABLED = 'enabled';
 	const DEFAULT_MODULE_SETTING_ENABLED = true;
 	const MODULE_SETTING_WEEKDAYS = 'week_days';
@@ -191,7 +192,8 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 		}
 		$oNow = new DateTime();
 		$iNextPos = false;
-		for ($iDay = $oNow->format('N'); $iDay <= 7; $iDay++)
+		$sDay = $oNow->format('N');
+		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
 		{
 			$iNextPos = array_search($iDay, $aDays, true);
 			if ($iNextPos !== false)
@@ -223,6 +225,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$oRet->modify('+'.$iMove.' days');
 		}
 		list($sHours, $sMinutes) = explode(':', $sProcessTime);
+		/** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection non used new parameter in PHP 7.1 */
 		$oRet->setTime((int)$sHours, (int)$sMinutes);
 
 		return $oRet;

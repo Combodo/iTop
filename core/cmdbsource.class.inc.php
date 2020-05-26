@@ -119,7 +119,18 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
-	
+
+	/**
+	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
+	 *   Message: Lock wait timeout exceeded; try restarting transaction
+	 */
+	const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
+	/**
+	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
+	 *   Message: Deadlock found when trying to get lock; try restarting transaction
+	 */
+	const MYSQL_ERRNO_DEADLOCK = 1213;
+
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -661,6 +672,7 @@ class CMDBSource
 		}
 		catch (mysqli_sql_exception $e)
 		{
+			self::LogDeadLock($e);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
@@ -674,11 +686,53 @@ class CMDBSource
 			{
 				throw new MySQLHasGoneAwayException(self::GetError(), $aContext);
 			}
-
-			throw new MySQLException('Failed to issue SQL query', $aContext);
+			$e = new MySQLException('Failed to issue SQL query', $aContext);
+			self::LogDeadLock($e);
+			throw $e;
 		}
 
 		return $oResult;
+	}
+
+	/**
+	 * @param \Exception $e
+	 *
+	 * @since 2.7.1
+	 */
+	private static function LogDeadLock(Exception $e)
+	{
+		// checks MySQL error code
+		$iMySqlErrorNo = self::$m_oMysqli->errno;
+		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
+		{
+			return;
+		}
+
+		// Get error info
+		$sUser = UserRights::GetUser();
+		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
+		if ($oError !== false)
+		{
+			$aData = $oError->fetch_all(MYSQLI_ASSOC);
+			$sInnodbStatus = $aData[0];
+		}
+		else
+		{
+			$sInnodbStatus = 'Get status query cannot execute';
+		}
+
+		// log !
+		$sMessage = "deadlock detected: user= $sUser; errno=$iMySqlErrorNo";
+		$aLogContext = array(
+			'userinfo' => $sUser,
+			'errno' => $iMySqlErrorNo,
+			'ex_msg' => $e->getMessage(),
+			'callstack' => $e->getTraceAsString(),
+			'data' => $sInnodbStatus,
+		);
+		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
+
+		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
 	}
 
 	/**

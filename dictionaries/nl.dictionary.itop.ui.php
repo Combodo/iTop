@@ -845,7 +845,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ModificationTitle_Class_Object' => 'Aanpassen van %1$s: <span class="hilite">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'ITOP_APPLICATION_SHORT - Kloon %1$s - %2$s aanpassing',
 	'UI:CloneTitle_Class_Object' => 'Klonen van %1$s: <span class="hilite">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'ITOP_APPLICATION_SHORT - Nieuwe %1$s aangemaakt',
+	'UI:CreationPageTitle_Class' => 'ITOP_APPLICATION_SHORT - %1$s aanmaken',
 	'UI:CreationTitle_Class' => '%1$s aanmaken',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Selecteer het type %1$s dat moet worden aangemaakt:',
 	'UI:Class_Object_NotUpdated' => 'Geen verandering waargenomen, %1$s (%2$s) is <strong>niet</strong> aangepast.',

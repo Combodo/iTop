@@ -1,7 +1,7 @@
 {# itop-portal-base/portal/templates/bricks/manage/layout.html.twig #}
 {% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
 
-{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }} ({{ iCount }}) {% endblock %}
+{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }} {% if iCount >= 0 %} ({{ iCount }}){% endif %} {% endblock %}
 
 {% block pMainHeaderActions %}
     {% if oBrick.GetAvailablesDisplayModes|length > 1 %}

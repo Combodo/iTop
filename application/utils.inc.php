@@ -2194,7 +2194,7 @@ class utils
 	 *      * not contained in base path
 	 *    Otherwise return the real path (see realpath())
 	 *
-	 * @since 2.7.0 N°2538
+	 * @since 2.6.5 2.7.0 N°2538
 	 */
 	final public static function RealPath($sPath, $sBasePath)
 	{

@@ -17,7 +17,7 @@
  */
 
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.7.0-1";
+$version: "v2.7.0-2";
 $approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
@@ -118,6 +118,9 @@ $primary-text-color: #333333 !default;
 $secondary-text-color: $grey-color !default;
 $error-text-color: $white !default;
 $highlight-text-color: #363636 !default;
+$button-content-background-color: $gray-extra-light !default;
+$button-header-background-color: $gray-extra-light !default;
+$main-menu-background-color: $gray-extra-light !default;
 $hover-background-color: #fde17c !default;
 $border-highlight-color: $brand-primary-dark !default;
 $highlight-item-color: $white !default;

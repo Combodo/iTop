@@ -1014,6 +1014,9 @@ table .group-actions {
 /****************/
 /* Filter brick */
 /****************/
+.tile.tile-filter-brick .tile_decoration .icon {
+  color: #da7014;
+}
 .tile.tile-filter-brick .tile_filterbox .form-group:first-child {
   width: 100%;
 }

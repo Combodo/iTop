@@ -158,6 +158,9 @@ abstract class Expression
 	// recursively builds an array of [classAlias][fieldName] => value
 	abstract public function ListConstantFields();
 
+	// recursively builds an array of parameters to give to current request
+	abstract public function ListParameters();
+
 	public function RequiresField($sClass, $sFieldName)
 	{
 		// #@# todo - optimize : this is called quite often when building a single query !
@@ -350,6 +353,11 @@ class SQLExpression extends Expression
 	}
 
 	public function ListConstantFields()
+	{
+		return array();
+	}
+
+	public function ListParameters()
 	{
 		return array();
 	}
@@ -591,6 +599,13 @@ class BinaryExpression extends Expression
 			$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
 		}
 		return $aResult;
+	}
+
+	public function ListParameters()
+	{
+		$aLeft = $this->GetLeftExpr()->ListParameters();
+		$aRight = $this->GetRightExpr()->ListParameters();
+		return array_merge($aLeft, $aRight);
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -930,6 +945,11 @@ class UnaryExpression extends Expression
 	}
 
 	public function ListConstantFields()
+	{
+		return array();
+	}
+
+	public function ListParameters()
 	{
 		return array();
 	}
@@ -1848,6 +1868,12 @@ class VariableExpression extends UnaryExpression
 		}
 		return $oRet;
 	}
+
+	public function ListParameters()
+	{
+		return array($this);
+	}
+
 }
 
 // Temporary, until we implement functions and expression casting!
@@ -2001,6 +2027,16 @@ class ListExpression extends Expression
 		return $aRes;
 	}
 
+	public function ListParameters()
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListParameters());
+		}
+		return $aRes;
+	}
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		foreach ($this->m_aExpressions as $key => $oExpr)
@@ -2140,6 +2176,11 @@ class NestedQueryExpression extends Expression
 	public function ListConstantFields()
 	{
 		return $this->m_oNestedQuery->ListConstantFields();
+	}
+
+	public function ListParameters()
+	{
+		return array();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -2287,6 +2328,11 @@ class FunctionExpression extends Expression
 			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
+	}
+
+	public function ListParameters()
+	{
+		return array();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -2570,6 +2616,11 @@ class IntervalExpression extends Expression
 		return array();
 	}
 
+	public function ListParameters()
+	{
+		return array();
+	}
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->m_oValue->RenameParam($sOldName, $sNewName);
@@ -2714,6 +2765,11 @@ class CharConcatExpression extends Expression
 			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
+	}
+
+	public function ListParameters()
+	{
+		return array();
 	}
 
 	public function RenameParam($sOldName, $sNewName)

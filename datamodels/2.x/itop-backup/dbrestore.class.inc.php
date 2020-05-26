@@ -69,10 +69,11 @@ class DBRestore extends DBBackup
 		{
 			$sPortOption = '--port='.$this->iDBPort.' ';
 		}
+		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
 
 		$sDataFileEscaped = self::EscapeShellArg($sDataFile);
-		$sCommand = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sDBName <$sDataFileEscaped 2>&1";
-		$sCommandDisplay = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=xxxx --password=xxxx $sDBName <$sDataFileEscaped 2>&1";
+		$sCommand = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sTlsOptions $sDBName <$sDataFileEscaped 2>&1";
+		$sCommandDisplay = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=xxxx --password=xxxx $sTlsOptions $sDBName <$sDataFileEscaped 2>&1";
 
 		// Now run the command for real
 		$this->LogInfo("Executing command: $sCommandDisplay");

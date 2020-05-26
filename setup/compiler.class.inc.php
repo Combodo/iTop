@@ -3113,7 +3113,7 @@ EOF;
 	 */
 	protected function WriteStaticOnlyWebConfig($sTempTargetDir)
 	{
-		$sContent = <<<EOF
+		$sContent = <<<XML
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <system.webServer>
@@ -3146,7 +3146,7 @@ EOF;
   </system.webServer>
 </configuration>
 
-EOF;
+XML;
 
 		$this->WriteFile("$sTempTargetDir/web.config", $sContent);
 	}

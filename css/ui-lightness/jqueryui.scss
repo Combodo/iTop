@@ -1024,7 +1024,7 @@ body {
     }
     .ui-state-default {
         border: 1px solid #cccccc;
-        background: #f1f1f1;
+        background: $button-content-background-color;
         font-weight: bold;
         color: $secondary-text-color;
     }
@@ -1092,7 +1092,7 @@ body {
     }
     .ui-state-default {
         border: 1px solid #cccccc;
-        background: #f1f1f1;
+        background: $button-header-background-color;
         font-weight: bold;
         color: $secondary-text-color;
     }
@@ -1152,7 +1152,7 @@ body {
 }
 .ui-state-default {
     border: 1px solid #cccccc;
-    background: #f1f1f1;
+    background: $main-menu-background-color;
     font-weight: bold;
     color: $secondary-text-color;
     a {

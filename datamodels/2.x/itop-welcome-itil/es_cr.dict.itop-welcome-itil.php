@@ -55,7 +55,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
 	'Menu:UserManagement' => 'Gestión de usuarios',
 	'Menu:Queries' => 'Consultas',
-	'Menu:ConfigurationTools' => 'configuración',
+	'Menu:ConfigurationTools' => 'Configuración',
 ));
 
 //
@@ -63,7 +63,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource' => 'Recurso abstracto',
 	'Class:AbstractResource+' => '~~',
 ));
 
@@ -72,7 +72,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu' => 'Recursos de Menú de Administración',
 	'Class:ResourceAdminMenu+' => '~~',
 ));
 
@@ -81,7 +81,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu' => 'Recurso Libreta de Consultas',
 	'Class:ResourceRunQueriesMenu+' => '~~',
 ));
 
@@ -90,6 +90,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '~~',
 ));

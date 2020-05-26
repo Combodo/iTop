@@ -30,5 +30,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль должен содержать не менее 8 символов и включать прописные, строчные, числовые и специальные символы.',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => 'Поля требуют наличия доп. расширения'
 ));

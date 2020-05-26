@@ -460,7 +460,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'You are not allowed to perform a bulk update of objects of class %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '%2$s is currently in the "%3$s" state, the "%1$s" operation you requested could not be applied.',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',

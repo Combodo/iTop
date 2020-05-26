@@ -667,6 +667,16 @@ class DBUnionSearch extends DBSearch
 		return $oSQLQuery;
 	}
 
+	function GetExpectedArguments()
+	{
+		$aVariableCriteria = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
+		}
+
+		return $aVariableCriteria;
+	}
 	/**
 	 * @return \Expression
 	 */

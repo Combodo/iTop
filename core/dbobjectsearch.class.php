@@ -223,9 +223,9 @@ class DBObjectSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bFound = false;
-		if (array_key_exists($sOldName, $this->m_aClasses))
+		if (!array_key_exists($sOldName, $this->m_aClasses))
 		{
-			$bFound = true;
+			return false;
 		}
 		if (array_key_exists($sNewName, $this->m_aClasses))
 		{
@@ -632,7 +632,10 @@ class DBObjectSearch extends DBSearch
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
 		$this->AddConditionExpression($oNewCond);
-		$this->m_aParams[$sQueryParam] = $sNeedle;
+		//replace in order to search the character "_" ("_" in mysql is like "%" for only one character).
+		$sFullText = str_replace('_', '\_', $sNeedle);
+
+		$this->m_aParams[$sQueryParam] = $sFullText;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
@@ -1036,7 +1039,7 @@ class DBObjectSearch extends DBSearch
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (($this->GetFirstJoinedClass() == $oFilter->GetFirstJoinedClass()))
+		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(),$this->GetFirstJoinedClass()))
 		{
 			return $this->Intersect($oFilter);
 		}
@@ -1068,7 +1071,6 @@ class DBObjectSearch extends DBSearch
 	{
 		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
 		{
-			$oSearch->ResetCondition();
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
 			return $oSearch->GetCriteria();
 		}

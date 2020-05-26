@@ -790,12 +790,13 @@ class LoginWebPage extends NiceWebPage
 		$oPerson = null;
 		try
 		{
-			$sOrigin = 'External User provisioning';
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
 			if (isset($_SESSION['login_mode']))
 			{
-				$sOrigin .= " ({$_SESSION['login_mode']})";
+				$sInfo .= " ({$_SESSION['login_mode']})";
 			}
-			CMDBObject::SetTrackOrigin($sOrigin);
+			CMDBObject::SetTrackInfo($sInfo);
 
 			$oPerson = MetaModel::NewObject('Person');
 			$oPerson->Set('first_name', $sFirstName);
@@ -843,6 +844,14 @@ class LoginWebPage extends NiceWebPage
 		$oUser = null;
 		try
 		{
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sInfo .= " ({$_SESSION['login_mode']})";
+			}
+			CMDBObject::SetTrackInfo($sInfo);
+
 			$oUser = MetaModel::GetObjectByName('UserExternal', $sAuthUser, false);
 			if (is_null($oUser))
 			{
@@ -985,7 +994,7 @@ class LoginWebPage extends NiceWebPage
 				else
 				{
 					require_once(APPROOT.'/setup/setuppage.class.inc.php');
-					$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+					$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");
 					$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 					$oP->output();

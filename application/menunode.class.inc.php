@@ -128,7 +128,7 @@ class ApplicationMenu
 		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
 		{
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
-			$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessRestricted')."</h1>\n");
 			$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 			$oP->output();

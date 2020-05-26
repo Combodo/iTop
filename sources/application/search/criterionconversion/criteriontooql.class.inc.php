@@ -123,7 +123,6 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			return "1";
 		}
-		$sValue = str_replace('_', '\_', $sValue);
 
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
