@@ -8,8 +8,11 @@
 namespace Combodo\iTop\Service;
 
 
-class EventName
+class EventName extends EventNameAbstract
 {
+	//not an event
+	const MODULE_CODE = 'core';
+
 	// OrmDocument
 	const DOWNLOAD_DOCUMENT = 'DownloadDocument';
 
@@ -26,4 +29,5 @@ class EventName
 	const AFTER_DELETE = 'AfterDelete';
 	const BEFORE_APPLY_STIMULUS = 'BeforeApplyStimulus';
 	const AFTER_APPLY_STIMULUS = 'AfterApplyStimulus';
+
 }

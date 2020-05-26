@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Service;
 
 use Combodo\iTop\Service\Event;
 use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\iEventName;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use TypeError;
 
@@ -282,6 +283,77 @@ class EventTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider MergeEventNameListsProvider
+	 */
+	public function testMergeEventNameLists($aEventNameInstancesReturns, $aExpected)
+	{
+		$aEventNameInstances = [];
+		foreach ($aEventNameInstancesReturns as $aEventNameInstancesReturn)
+		{
+			$oEventNameInstance = $this->createMock(iEventName::class);
+			$oEventNameInstance->expects($this->once())
+				->method('GetEventNameList')
+				->willReturn($aEventNameInstancesReturn);
+			$aEventNameInstances[] = $oEventNameInstance;
+		}
+
+		$class = new \ReflectionClass(Event::class);
+		$method = $class->getMethod('MergeEventNameLists');
+		$method->setAccessible(true);
+		$aResult = $method->invokeArgs(null, array($aEventNameInstances));
+
+		$this->assertSame($aExpected, $aResult);
+	}
+
+	public function MergeEventNameListsProvider()
+	{
+		return array(
+			'basic' => array(
+				'aEventNameInstancesReturns' => array(
+					array(
+						'module' => '',
+						'events' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					),
+				),
+				'aExpected' => array(
+					'' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+				),
+			),
+			'Two instances two modules' => array(
+				'aEventNameInstancesReturns' => array(
+					array(
+						'module' => '',
+						'events' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					),
+					array(
+						'module' => 'Foo',
+						'events' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					),
+				),
+				'aExpected' => array(
+					'' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					'Foo' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+				),
+			),
+			'Two instances same modules' => array(
+				'aEventNameInstancesReturns' => array(
+					array(
+						'module' => '',
+						'events' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					),
+					array(
+						'module' => '',
+						'events' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+					),
+				),
+				'aExpected' => array(
+					'' => array('\Foo::FOO' => 'foo', '\Foo::BAR' => 'bar', '\Foo::Baz' => 'baz', '\Long\Name\space::FOO' => 'foo_foo', ),
+				),
+			),
+		);
+	}
+
+	/**
 	 * static version of the debug to be accessible from other objects
 	 *
 	 * @param $sMsg
@@ -394,5 +466,6 @@ class TestEventReceiver
 			}
 		}
 	}
+
 
 }

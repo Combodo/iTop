@@ -260,4 +260,41 @@ class Event
 		}
 		return false;
 	}
+
+	public static function GetEventNameList()
+	{
+
+		$aEventNameInstances = \MetaModel::EnumPlugins('iModuleExtension', iEventName::class);
+		$aEventNameList = self::MergeEventNameLists($aEventNameInstances);
+
+		return $aEventNameList;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Service\iEventName[] $aEventNameInstances
+	 *
+	 * @return array
+	 */
+	private static function MergeEventNameLists(array $aEventNameInstances)
+	{
+		$aEventNameList = array();
+
+		foreach ($aEventNameInstances as $oEventName)
+		{
+			$aList = $oEventName->GetEventNameList();
+			$sModule = $aList['module'];
+			$aEvents = $aList['events'];
+
+			if (empty($aEventNameList[$sModule]))
+			{
+				$aEventNameList[$sModule] = $aEvents;
+			}
+			else
+			{
+				$aEventNameList[$sModule] = array_merge($aEventNameList[$sModule], $aEvents);
+			}
+		}
+
+		return $aEventNameList;
+	}
 }

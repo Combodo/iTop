@@ -383,6 +383,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Service\\Event' => __DIR__ . '/../..' . '/sources/application/Service/Event.php',
         'Combodo\\iTop\\Service\\EventData' => __DIR__ . '/../..' . '/sources/application/Service/EventData.php',
         'Combodo\\iTop\\Service\\EventName' => __DIR__ . '/../..' . '/sources/application/Service/EventName.php',
+        'Combodo\\iTop\\Service\\EventNameAbstract' => __DIR__ . '/../..' . '/sources/application/Service/EventNameAbstract.php',
+        'Combodo\\iTop\\Service\\iEventName' => __DIR__ . '/../..' . '/sources/application/Service/iEventName.php',
         'Combodo\\iTop\\TwigExtension' => __DIR__ . '/../..' . '/application/twigextension.class.inc.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'ConfigException' => __DIR__ . '/../..' . '/core/config.class.inc.php',

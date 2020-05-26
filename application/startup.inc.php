@@ -18,7 +18,7 @@
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/contexttag.class.inc.php');
-
+require_once(APPROOT.'/sources/application/Service/EventName.php');
 
 /**
  * File to include to initialize the datamodel in memory

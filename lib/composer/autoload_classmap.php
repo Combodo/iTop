@@ -153,6 +153,8 @@ return array(
     'Combodo\\iTop\\Service\\Event' => $baseDir . '/sources/application/Service/Event.php',
     'Combodo\\iTop\\Service\\EventData' => $baseDir . '/sources/application/Service/EventData.php',
     'Combodo\\iTop\\Service\\EventName' => $baseDir . '/sources/application/Service/EventName.php',
+    'Combodo\\iTop\\Service\\EventNameAbstract' => $baseDir . '/sources/application/Service/EventNameAbstract.php',
+    'Combodo\\iTop\\Service\\iEventName' => $baseDir . '/sources/application/Service/iEventName.php',
     'Combodo\\iTop\\TwigExtension' => $baseDir . '/application/twigextension.class.inc.php',
     'Config' => $baseDir . '/core/config.class.inc.php',
     'ConfigException' => $baseDir . '/core/config.class.inc.php',
