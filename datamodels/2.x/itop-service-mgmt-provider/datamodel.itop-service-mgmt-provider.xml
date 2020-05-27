@@ -1643,9 +1643,9 @@ public function PrefillSearchForm(&$aContextParam)
 			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
 			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
 			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
-			if($this->Get("id")!=null)
+			if ($this->Get("id") != null)
 			{
-				$sOql=$sOql." AND ccs.sla_id!=:sla_id";
+				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
 				$aQueryParams['sla_id'] = $this->Get("id");
 			}
 			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
