@@ -1606,29 +1606,16 @@ JS
 		}
 
 		$sManualInstallModulesFullPath = APPROOT.$sExtensionsDir.DIRECTORY_SEPARATOR;
-		$aManualInstallModules = array_filter($aModules,
-			static function ($v, $k) use ($sManualInstallModulesFullPath) {
-				if (!isset($v['root_dir'])) // avoid index undefined for the _Root_ entry
-				{
-					return false;
-				}
-				// calling realpath to avoid problems with dir separator (almost everywhere we are adding '/' instead of DIRECTORY_SEPARATOR)
-				$return = utils::RealPath($v['root_dir'], $sManualInstallModulesFullPath);
-				if ($return === false)
-				{
-					return false;
-				}
-
-				return true;
-			},
-			ARRAY_FILTER_USE_BOTH);
-
-		if (empty($aManualInstallModules))
+		//simple test in order to prevent install iTop pro with module in extension folder
+		$fileInfo = scandir($sManualInstallModulesFullPath);
+		foreach ($fileInfo as $folder)
 		{
-			return '';
+			if ($folder != "." && $folder != ".." && is_dir($sManualInstallModulesFullPath.$folder) === true)
+			{
+				return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
+			}
 		}
-
-		return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
+		return '';
 	}
 
 	/**
