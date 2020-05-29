@@ -49,7 +49,7 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 
 
-## Lastest release
+## Latest release
 
  - [Changes since the previous version][62]
  - [New features][63]
