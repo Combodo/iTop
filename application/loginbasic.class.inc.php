@@ -40,7 +40,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (!isset($_SESSION['login_mode']) || $_SESSION['login_mode'] == 'basic')
 		{
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
 			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
