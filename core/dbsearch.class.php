@@ -1179,8 +1179,7 @@ abstract class DBSearch
 				if (is_object($oVisibleObjects))
 				{
 					$oVisibleObjects->AllowAllData();
-					$oSearch = $this->Filter($sClassAlias, $oVisibleObjects);
-					/** @var DBSearch $oSearch */
+					$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
 					$oSearch->SetDataFiltered();
 				}
 			}
