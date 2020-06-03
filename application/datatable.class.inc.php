@@ -20,6 +20,8 @@
 class DataTable
 {
 	protected $iListId;		// Unique ID inside the web page
+	/** @var string */
+	private $sDatatableContainerId;
 	protected $sTableId;	// identifier for saving the settings (combined with the class aliases)
 	protected $oSet;		// The set of objects to display
 	protected $aClassAliases;	// The aliases (alias => class) inside the set
@@ -29,10 +31,10 @@ class DataTable
 	protected $bShowObsoleteData;
 
 	/**
-	 * @param $iListId mixed Unique ID for this div/table in the page
-	 * @param $oSet DBObjectSet The set of data to display
-	 * @param $aClassAliases array The list of classes/aliases to be displayed in this set $sAlias => $sClassName
-	 * @param $sTableId mixed A string (or null) identifying this table in order to persist its settings
+	 * @param string $iListId  Unique ID for this div/table in the page
+	 * @param DBObjectSet $oSet The set of data to display
+	 * @param array$aClassAliases The list of classes/aliases to be displayed in this set $sAlias => $sClassName
+	 * @param string $sTableId A string (or null) identifying this table in order to persist its settings
 	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
@@ -42,6 +44,7 @@ class DataTable
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
 		$this->iListId = utils::GetSafeId($iListId); // Make a "safe" ID for jQuery
+		$this->sDatatableContainerId = 'datatable_'.utils::GetSafeId($iListId);
 		$this->oSet = $oSet;
 		$this->aClassAliases = $aClassAliases;
 		$this->sTableId = $sTableId;
@@ -165,7 +168,7 @@ class DataTable
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
 		
-		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">";
+		$sHtml = "<table id=\"{$this->sDatatableContainerId}\" class=\"datatable\">";
 		$sHtml .= "<tr><td>";
 		$sHtml .= "<table style=\"width:100%;\">";
 		$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
@@ -201,7 +204,7 @@ class DataTable
 			$aOptions['oDefaultSettings'] = $this->GetAsHash($this->oDefaultSettings);
 		}
 		$sJSOptions = json_encode($aOptions);
-		$oPage->add_ready_script("$('#datatable_{$this->iListId}').datatable($sJSOptions);");
+		$oPage->add_ready_script("$('#{$this->sDatatableContainerId}').datatable($sJSOptions);");
 
 		return $sHtml;
 	}
@@ -418,15 +421,15 @@ EOF;
 		$sHtml .= "<input id=\"dtbl_dlg_all_{$this->iListId}\" type=\"radio\" name=\"scope\" $sGenericChecked value=\"defaults\"><label for=\"dtbl_dlg_all_{$this->iListId}\">&nbsp;".Dict::S('UI:ForAllLists').'</label></p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= '<table style="width:100%"><tr><td style="text-align:center;">';
-		$sHtml .= '<button type="button" onclick="$(\'#datatable_'.$this->iListId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
+		$sHtml .= '<button type="button" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
 		$sHtml .= '</td><td style="text-align:center;">';
-		$sHtml .= '<button type="submit" onclick="$(\'#datatable_'.$this->iListId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
+		$sHtml .= '<button type="submit" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
 		$sHtml .= '</td></tr></table>';
 		$sHtml .= "</form>";
 		$sHtml .= "</div>";
 		
 		$sDlgTitle = addslashes(Dict::S('UI:ListConfigurationTitle'));
-		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#datatable_{$this->iListId}').datatable('onDlgCancel'); } });");
+		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#{$this->sDatatableContainerId}').datatable('onDlgCancel'); } });");
 
 		return $sHtml;
 	}
@@ -745,12 +748,25 @@ EOF;
 		}
 		$sOQL = addslashes($this->oSet->GetFilter()->serialize());
 		$oPage->add_ready_script(
-<<<EOF
-var oTable = $('#{$this->iListId} table.listResults');
+<<<JS
+var oTable = $('#{$this->sDatatableContainerId} table.listResults');
 oTable.tableHover();
-oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, table_id: '{$this->iListId}', columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
-EOF
-		);
+oTable
+	.tablesorter({ $sHeaders widgets: ['myZebra', 'truncatedList']})
+	.tablesorterPager({
+		container: $('#pager{$this->iListId}'),
+		totalRows:$iCount,
+		size: $iPageSize,
+		filter: '$sOQL',
+		extra_params: '$sExtraParams',
+		select_mode: '$sSelectModeJS',
+		displayKey: $sDisplayKey,
+		table_id: '{$this->sDatatableContainerId}',
+		columns: $sJSColumns,
+		class_aliases: $sJSClassAliases $sCssCount
+	});
+JS
+	);
 		if ($sFakeSortList != '')
 		{
 			$oPage->add_ready_script("oTable.trigger(\"fakesorton\", [$sFakeSortList]);");
