@@ -270,7 +270,7 @@ CSS;
 	 *
 	 * @param string[] $aThemeParameters
 	 * @param string[] $aImportsPaths
-	 * @param $aIncludedImages
+	 * @param string[] $aIncludedImages
 	 *
 	 * @return string
 	 * @throws \Exception
