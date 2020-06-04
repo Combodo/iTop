@@ -1858,17 +1858,13 @@ class utils
 	}
 	
 	/**
+	 * @deprecated
 	 * @param string $sModuleName
 	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
 	 */
 	public static function GetCompiledModuleVersion($sModuleName)
 	{
-		$aModulesInfo = GetModulesInfo();
-		if (array_key_exists($sModuleName, $aModulesInfo))
-		{
-			return $aModulesInfo[$sModuleName]['version'];
-		}
-		return null;
+		return static::GetCacheBusterTimestamp();
 	}
 	
 	/**
