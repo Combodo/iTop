@@ -309,11 +309,12 @@ CSS;
 
 	/**
 	 * Search for images referenced in stylesheet files
-	 * @param $aThemeParametersVariables
-	 * @param $aStylesheetFile
-	 * @param $sThemeFolderPath : used as relative paths to find css images
+	 * @param array $aThemeParametersVariables
+	 * @param array $aStylesheetFile
+	 * @param string $sThemeFolderPath : used as relative paths to find css images
 	 *
 	 * @return array
+	 * @since 2.8.0
 	 */
 	public static function GetIncludedImages($aThemeParametersVariables, $aStylesheetFile, $sThemeFolderPath)
 	{
