@@ -181,7 +181,7 @@ class ThemeHandler
 
 			$sFile = static::FindStylesheetFile($sImport, $aImportsPaths);
 			$iImportLastModified = @filemtime($sFile);
-			$aStylesheetFile[]=$sFile;
+			$aStylesheetFile[] = $sFile;
 			$iStyleLastModified = $iStyleLastModified < $iImportLastModified ? $iImportLastModified : $iStyleLastModified;
 		}
 		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
@@ -645,4 +645,3 @@ class CompileCSSService
 	}
 
 }
-
