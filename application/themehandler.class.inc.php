@@ -332,7 +332,8 @@ CSS;
 		foreach ($aStylesheetFile as $sStylesheetFile)
 		{
 			$aRes = self::GetAllUrlFromScss($aThemeParametersVariables, $sStylesheetFile);
-			foreach($aMap as $key => /** array */$aVal)
+                        /** @var array $aVal */
+			foreach($aMap as $key => $aVal)
 			{
 				if (array_key_exists($key, $aMap))
 				{
