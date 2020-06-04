@@ -141,11 +141,15 @@ class ThemeHandlerTest extends ItopTestCase
 			}
 
 			/** @var \DOMNodeList $oImports */
+			$aStylesheetFiles = array();
+			$aImportsPaths = array(APPROOT.'datamodels');
 			$oImports = $oTheme->GetNodes('imports/import');
 			foreach($oImports as $oImport)
 			{
 				$sImportId = $oImport->getAttribute('id');
 				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
+				$sFile = ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths);
+				$aStylesheetFiles[] = $sFile;
 			}
 
 			/** @var \DOMNodeList $oStylesheets */
@@ -154,13 +158,17 @@ class ThemeHandlerTest extends ItopTestCase
 			{
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+				$sFile = ThemeHandler::FindStylesheetFile($oStylesheet->GetText(), $aImportsPaths);
+				$aStylesheetFiles[] = $sFile;
 			}
 			$sThemeFolderPath = APPROOT.'env-production/branding/themes/'.$sThemeId.'/test';
 			if (!is_dir($sThemeFolderPath))
 			{
 				mkdir($sThemeFolderPath);
 			}
-			$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, array(APPROOT.'datamodels'), $sThemeFolderPath);
+
+			$aIncludedImages=ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeFolderPath);
+			$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 			echo "  current signature: $compiled_json_sig\n";
 			rmdir($sThemeFolderPath);
 			$this->assertEquals($precompiledSig, $compiled_json_sig, "Precompiled signature does not match currently compiled one on theme '".$sThemeId."' (cf precompiledsheet $sPrecompiledStylesheet / datamodel $xmlDataCusto)");

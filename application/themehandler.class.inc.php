@@ -615,7 +615,7 @@ CSS;
 	 * @throws Exception
 	 * @return string
 	 */
-	private static function FindStylesheetFile($sFile, $aImportsPaths)
+	public static function FindStylesheetFile($sFile, $aImportsPaths)
 	{
 		foreach($aImportsPaths as $sPath)
 		{
