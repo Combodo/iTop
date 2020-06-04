@@ -25,7 +25,7 @@ class FilesIntegrity
 	 * @return array|false list of file info (path, size, md5)
 	 * @throws \Exception
 	 */
-	private static function GetInstalledFiles($sManifest)
+	public static function GetInstalledFiles($sManifest)
 	{
 		$aFiles = array();
 
@@ -54,14 +54,19 @@ class FilesIntegrity
 					if ($oFileNode->hasChildNodes())
 					{
 						$aFileInfo = array();
+						$sFilePath = uniqid(); // just in case no path...
 						foreach ($oFileNode->childNodes as $oFileInfo)
 						{
 							if ($oFileInfo instanceof DOMElement)
 							{
 								$aFileInfo[$oFileInfo->tagName] = $oFileInfo->textContent;
+								if ($oFileInfo->tagName == 'path')
+								{
+									$sFilePath = $oFileInfo->textContent;
+								}
 							}
 						}
-						$aFiles[] = $aFileInfo;
+						$aFiles[$sFilePath] = $aFileInfo;
 					}
 				}
 			}
@@ -98,7 +103,6 @@ class FilesIntegrity
 				$sChecksum = md5($sContent);
 				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
 				{
-
 					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', basename($sFile)));
 				}
 			}
