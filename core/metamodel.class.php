@@ -5747,6 +5747,14 @@ abstract class MetaModel
 		{
 			$sTableItems = implode(', ', $aCreateTableItems[$sTable]);
 			$aCondensedQueries[] = "CREATE TABLE `$sTable` ($sTableItems) $sTableOptions";
+			// Add request right after the CREATE TABLE
+			if (isset($aPostTableAlteration[$sTable]))
+			{
+				foreach ($aPostTableAlteration[$sTable] as $sQuery)
+				{
+					$aCondensedQueries[] = $sQuery;
+				}
+			}
 		}
 		foreach ($aAlterTableMetaData as $sTableAlterQuery)
 		{
