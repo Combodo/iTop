@@ -201,8 +201,7 @@ class ThemeHandler
 		{
 			if (!is_file($sImage))
 			{
-				//TODO log warning
-				echo "Cannot find $sImage\n";
+				IssueLog::Warning("Cannot find $sImage during SCSS $sThemeId precompilation");
 			}
 			else
 			{
