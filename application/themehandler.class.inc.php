@@ -342,7 +342,7 @@ CSS;
 			}
 		}
 
-		$aMap = ThemeHandler::ResolveUncompleteUrlsFromScss($aMap, $aThemeParametersVariables, $aStylesheetFile);
+		$aMap = static::ResolveUncompleteUrlsFromScss($aMap, $aThemeParametersVariables, $aStylesheetFile);
 		$aImages = array();
 		foreach ($aMap ['aCompleteUrls'] as $sUrl)
 		{
