@@ -55,7 +55,7 @@ class TCPDF_STATIC {
 	 * Current TCPDF version.
 	 * @private static
 	 */
-	private static $tcpdf_version = '6.3.4';
+	private static $tcpdf_version = '6.3.5';
 
 	/**
 	 * String alias for total number of pages.
@@ -1859,7 +1859,7 @@ class TCPDF_STATIC {
 	public static function encodeUrlQuery($url) {
 		$urlData = parse_url($url);
 		if (isset($urlData['query']) && $urlData['query']) {
-			$urlQueryData = [];
+			$urlQueryData = array();
 			parse_str(urldecode($urlData['query']), $urlQueryData);
 			$updatedUrl = $urlData['scheme'] . '://' . $urlData['host'] . $urlData['path'] . '?' . http_build_query($urlQueryData);
 		} else {
