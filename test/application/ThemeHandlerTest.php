@@ -37,10 +37,10 @@ class ThemeHandlerTest extends ItopTestCase
 	public function tearDown()
 	{
 		parent::tearDown();
-		/*foreach ($this->aDirsToCleanup as $dir)
+		foreach ($this->aDirsToCleanup as $dir)
 		{
 			$this->rrmdir($dir);
-		}*/
+		}
 	}
 
 	function rrmdir($dir) {
@@ -376,48 +376,22 @@ JSON;
 			{
 				$this->assertTrue(false, "Cannot find expected main css file $sExpectedMainCssFile");
 			}
-			Exec("ls -al $sExpectedMainCssFile");
-			Exec("ls -al $cssPath");
-			$this->assertEquals(file_get_contents($sExpectedMainCssFile), file_get_contents($cssPath), "File dont match ($sExpectedMainCssFile/ $cssPath)");
+			$sExpectedContent = file_get_contents($sExpectedMainCssFile);
+			$sExpectedContent = preg_replace("|/var/[^\"]+iTop|", APPROOT, $sExpectedContent);
+			$this->assertEquals($sExpectedContent, file_get_contents($cssPath), "File dont match ($sExpectedMainCssFile/ $cssPath)");
 		}
 	}
 
-	function Exec($cmd, $workdir = null) {
-		$iBeginTime = time();
-		if (is_null($workdir)) {
-			$workdir = __DIR__;
-		}
-
-		$descriptorspec = array(
-			0 => array("pipe", "r"),  // stdin
-			1 => array("pipe", "w"),  // stdout
-			2 => array("pipe", "w"),  // stderr
-		);
-		$process = proc_open($cmd, $descriptorspec, $pipes, $workdir, null);
-
-		$stdout = stream_get_contents($pipes[1]);
-		fclose($pipes[1]);
-
-		$stderr = stream_get_contents($pipes[2]);
-		fclose($pipes[2]);
-
-		$code = proc_close($process);
-
-		$iElapsed = time() - $iBeginTime;
-		echo("========= ELAPSED:${iElapsed}s  cd $workdir; $cmd");
-		if (0 === $code) {
-			if ($this->explode)
-			{
-				$msg = explode("\n", trim($stdout));
-			}
-			else{
-				$msg = $stdout;
-			}
-		} else {
-			$msg = "Command failed : cd $workdir; $cmd \n\t\t=== with status:$code \n\t\t=== stderr:$stderr \n\t\t=== stdout: $stdout";
-		}
-		echo $msg;
+	public function testToto()
+	{
+		$sExpectedMainCssFile = APPROOT. "test/application/theme-handler/expected/themes/basque-red/main_imagemodified.css";
+		$sExpectedContent = file_get_contents($sExpectedMainCssFile);
+		$sActualContent = preg_replace("|/var[^\"]+iTop|", 'TOTO', $sExpectedContent);
+		echo $sExpectedContent;
+		$this->assertEquals($sExpectedContent, $sActualContent);
 	}
+
+
 
 	/**
 	 * @return array
