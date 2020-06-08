@@ -28,12 +28,7 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->tmpDir=$this->tmpdir();
 		$aDirsToCleanup[] = $this->tmpDir;
 
-		if (!is_dir($this->tmpDir ."/branding"))
-		{
-			@mkdir($this->tmpDir."/branding");
-		}
-		@mkdir($this->tmpDir."/branding/themes/");
-		@mkdir($this->tmpDir."/branding/themes/basque-red");
+		$this->recurseMkdir($this->tmpDir."/branding/themes/basque-red");
 		$this->cssPath = $this->tmpDir . '/branding/themes/basque-red/main.css';
 		$this->jsonThemeParamFile = $this->tmpDir . '/branding/themes/basque-red/theme-parameters.json';
 		$this->recurse_copy(APPROOT."/test/application/theme-handler/expected/css", $this->tmpDir."/branding/css");
@@ -162,9 +157,9 @@ class ThemeHandlerTest extends ItopTestCase
 				$aStylesheetFiles[] = $sFile;
 			}
 			$sThemeFolderPath = APPROOT.'env-production/branding/themes/'.$sThemeId.'/test';
-			if (!is_dir($sThemeFolderPath))
+			if (!$this->recurseMkdir($sThemeFolderPath))
 			{
-				mkdir($sThemeFolderPath);
+				$this->assertTrue(false, "Cannot create directory $sThemeFolderPath");
 			}
 
 			$aIncludedImages=ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeFolderPath);
@@ -173,7 +168,22 @@ class ThemeHandlerTest extends ItopTestCase
 			rmdir($sThemeFolderPath);
 			$this->assertEquals($precompiledSig, $compiled_json_sig, "Precompiled signature does not match currently compiled one on theme '".$sThemeId."' (cf precompiledsheet $sPrecompiledStylesheet / datamodel $xmlDataCusto)");
 		}
+	}
 
+	function recurseMkdir($dir)
+	{
+		if (is_dir($dir))
+		{
+			return true;
+		}
+
+		$sParentDir = dirname($dir);
+		if (!$this->recurseMkdir($sParentDir))
+		{
+			return false;
+		}
+
+		return @mkdir($dir);
 	}
 
 	public function providePrecompiledStyleSheets()
@@ -324,8 +334,7 @@ JSON;
 		copy(APPROOT."test/application/theme-handler/expected/themes/basque-red/main_testcompilethemes.css", $cssPath);
 
 		$sAbsoluteImagePath = APPROOT .'test/application/theme-handler/copied/testimages/';
-		@mkdir(APPROOT .'test/application/theme-handler/copied/');
-		@mkdir($sAbsoluteImagePath);
+		$this->recurseMkdir($sAbsoluteImagePath);
 		$aDirsToCleanup[] = $sAbsoluteImagePath;
 		$this->recurse_copy(APPROOT .'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
 
