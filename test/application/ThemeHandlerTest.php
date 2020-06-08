@@ -362,7 +362,12 @@ JSON;
 
 		if ($CompileCSSFromSASSCount==1)
 		{
-			$this->assertEquals(file_get_contents(APPROOT . $expected_maincss_path), file_get_contents($cssPath));
+			$sExpectedMainCssFile = APPROOT.$expected_maincss_path;
+			if (!is_file($sExpectedMainCssFile))
+			{
+				$this->assertTrue(false, "Cannot find expected main css file $sExpectedMainCssFile");
+			}
+			$this->assertEquals(file_get_contents($sExpectedMainCssFile), file_get_contents($cssPath));
 		}
 	}
 
