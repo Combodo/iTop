@@ -25,7 +25,6 @@ require_once (__DIR__.DIRECTORY_SEPARATOR.'update.classes.inc.php');
 /** @var \FileVersionUpdater[] $aFilesUpdaters */
 $aFilesUpdaters = array(
 	new iTopVersionFileUpdater(),
-	new CssVariablesFileUpdater(),
 	new DatamodelsModulesFiles(),
 );
 
