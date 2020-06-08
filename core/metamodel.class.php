@@ -5754,6 +5754,7 @@ abstract class MetaModel
 				{
 					$aCondensedQueries[] = $sQuery;
 				}
+				unset($aPostTableAlteration[$sTable]);
 			}
 		}
 		foreach ($aAlterTableMetaData as $sTableAlterQuery)
@@ -5771,7 +5772,17 @@ abstract class MetaModel
 				{
 					$aCondensedQueries[] = $sQuery;
 				}
+				unset($aPostTableAlteration[$sTable]);
             }
+		}
+
+		// Add alterations not yet managed
+		foreach ($aPostTableAlteration as $aQueries)
+		{
+			foreach ($aQueries as $sQuery)
+			{
+				$aCondensedQueries[] = $sQuery;
+			}
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
