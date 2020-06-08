@@ -10,6 +10,8 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class ThemeHandlerTest extends ItopTestCase
 {
+	const PATTERN = '|/var[^"]+iTop|';
+	
 	private $compileCSSServiceMock;
 	private $cssPath;
 	private $jsonThemeParamFile;
@@ -376,22 +378,57 @@ JSON;
 			{
 				$this->assertTrue(false, "Cannot find expected main css file $sExpectedMainCssFile");
 			}
-			$sExpectedContent = file_get_contents($sExpectedMainCssFile);
-			$sExpectedContent = preg_replace("|/var/[^\"]+iTop|", APPROOT, $sExpectedContent);
-			$this->assertEquals($sExpectedContent, file_get_contents($cssPath), "File dont match ($sExpectedMainCssFile/ $cssPath)");
+
+			$this->DoInnerJsonValidation($sExpectedMainCssFile, $sExpectedMainCssFile);
 		}
 	}
 
-	public function testToto()
+	public function DoInnerJsonValidation($sExpectedCssFile, $sActualCssFile)
 	{
-		$sExpectedMainCssFile = APPROOT. "test/application/theme-handler/expected/themes/basque-red/main_imagemodified.css";
-		$sExpectedContent = file_get_contents($sExpectedMainCssFile);
-		$sActualContent = preg_replace("|/var[^\"]+iTop|", 'TOTO', $sExpectedContent);
-		echo $sExpectedContent;
-		$this->assertEquals($sExpectedContent, $sActualContent);
+		$sReplacement = rtrim(APPROOT, '/');
+		$sExpectedContent = file_get_contents($sExpectedCssFile);
+
+		//replace absolute path to fix it in any envt
+		$sActualContent = preg_replace(static::PATTERN,  $sReplacement, file_get_contents($sActualCssFile));
+		if ($sExpectedContent != $sActualContent)
+		{
+			//try to have inner json diff failure
+			/** @var array $aExpectedJson */
+			$aExpectedJson = json_decode(ThemeHandler::GetSignature($sExpectedCssFile), true);
+			//replace absolute path to fix it in any envt
+			$sActualJson = preg_replace(static::PATTERN,  $sReplacement, ThemeHandler::GetSignature($sActualCssFile));
+			/** @var array $aActualJson */
+			$aActualJson = json_decode($sActualJson, true);
+			$this->assertEquals($aExpectedJson['variables'], $aActualJson['variables'], "File dont match on variables ($sExpectedCssFile / $sActualCssFile)");
+			$this->ValidateSubArray('stylesheets', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
+			$this->ValidateSubArray('imports', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
+			$this->ValidateSubArray('images', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
+		}
+
+		$this->assertTrue(true);
 	}
 
-
+	/**
+	 * @param $sKey
+	 * @param $sExpectedCssFile
+	 * @param $sActualCssFile
+	 * @param array $aExpectedJson
+	 * @param $aActualJson
+	 */
+	private function ValidateSubArray($sKey, $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson)
+	{
+		foreach ($aExpectedJson[$sKey] as $sSubKey => $sSubVal)
+		{
+			if (array_key_exists($sSubKey, $aActualJson[$sKey]))
+			{
+				$this->assertEquals($sSubVal, $aActualJson[$sKey][$sSubKey], "File dont match on $sKey ($sExpectedCssFile / $sActualCssFile)");
+			}
+			else
+			{
+				$this->assertTrue(false, "File dont match on '$sKey' ($sExpectedCssFile / $sActualCssFile).\nCannot find key '$sSubKey' in actual sub json \n" . json_encode($aActualJson[$sKey], true));
+			}
+		}
+	}
 
 	/**
 	 * @return array
