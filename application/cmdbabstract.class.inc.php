@@ -239,8 +239,11 @@ EOF
 				foreach($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
 				{
 					$sMsgClass = 'message_'.$aMessageData['severity'];
-					$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
-					$aRanks[] = $aMessageData['rank'];
+					if(!in_array("<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>",$aMessages))
+					{
+						$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
+						$aRanks[] = $aMessageData['rank'];
+					}
 				}
 				unset($_SESSION['obj_messages'][$sMessageKey]);
 			}
