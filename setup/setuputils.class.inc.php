@@ -1607,10 +1607,10 @@ JS
 
 		$sManualInstallModulesFullPath = APPROOT.$sExtensionsDir.DIRECTORY_SEPARATOR;
 		//simple test in order to prevent install iTop pro with module in extension folder
-		$fileInfo = scandir($sManualInstallModulesFullPath);
-		foreach ($fileInfo as $folder)
+		$aFileInfo = scandir($sManualInstallModulesFullPath);
+		foreach ($aFileInfo as $sFolder)
 		{
-			if ($folder != "." && $folder != ".." && is_dir($sManualInstallModulesFullPath.$folder) === true)
+			if ($sFolder != "." && $sFolder != ".." && is_dir($sManualInstallModulesFullPath.$sFolder) === true)
 			{
 				return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
 			}
