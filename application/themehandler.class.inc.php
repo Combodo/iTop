@@ -320,7 +320,7 @@ CSS;
 		$aCompleteUrls = array();
 		$aToCompleteUrls = array();
 		$aMissingVariables = array();
-		$aFoundVariables = array();
+		$aFoundVariables = array('version'=>'');
 		$aMap = array(
 			'aCompleteUrls' => $aCompleteUrls,
 			'aToCompleteUrls' => $aToCompleteUrls,
@@ -389,6 +389,11 @@ CSS;
 		$aToCompleteUrls=$aMap['aToCompleteUrls'];
 		$aCompleteUrls=$aMap['aCompleteUrls'];
 		list($aMissingVariables, $aFoundVariables) = static::FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent);
+		if (array_key_exists('version', $aMissingVariables))
+		{
+			//handle removed $version from css-variables.scss
+			$aFoundVariables['version'] = '';
+		}
 		list($aToCompleteUrls, $aCompleteUrls) = static::ResolveUrls($aFoundVariables, $aToCompleteUrls, $aCompleteUrls);
 		$aMap['aMissingVariables']=$aMissingVariables;
 		$aMap['aFoundVariables']=$aFoundVariables;
@@ -408,6 +413,7 @@ CSS;
 	 */
 	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent)
 	{
+		$aNewMissingVars = array();
 		if (!empty($aMissingVariables))
 		{
 			foreach ($aMissingVariables as $var)
@@ -415,20 +421,34 @@ CSS;
 				if (array_key_exists($var, $aThemeParametersVariables))
 				{
 					$aFoundVariables[$var] = $aThemeParametersVariables[$var];
-					unset($aMissingVariables[$var]);
 				}
 				else
 				{
-					if (preg_match_all("/\\\$$var\s*:\s*[\"'](.*)[\"']/", $sContent, $aValues))
+					if (preg_match_all("/\\\$$var\s*:\s*[\"']{0,1}(.*)[\"']{0,1};/", $sContent, $aValues))
 					{
-						$aFoundVariables[$var] = $aValues[1][0];
-						unset($aMissingVariables[$var]);
+						$sValue = $aValues[1][0];
+						if (preg_match_all("/([^!]+)!/", $sValue, $aSubValues))
+						{
+							$sValue = trim($aSubValues[1][0], ' "\'');
+						}
+
+						if (strpos($sValue, '$') === false)
+						{
+							$aFoundVariables[$var] = $sValue;
+						}
+						else{
+							$aNewMissingVars[] = $var;
+						}
+					}
+					else
+					{
+						$aNewMissingVars[] = $var;
 					}
 				}
 			}
 		}
 
-		return array($aMissingVariables, $aFoundVariables);
+		return array($aNewMissingVars, $aFoundVariables);
 	}
 
 	/**
@@ -542,7 +562,7 @@ CSS;
 			$aReplacement[]=$aFoundVariableValue;
 		}
 		$sResolvedUrl=preg_replace($aPattern, $aReplacement, $sUrlTemplate);
-		if (strpos($sResolvedUrl, "+")!=false)
+		if (strpos($sResolvedUrl, "+")!==false)
 		{
 			return false;
 		}

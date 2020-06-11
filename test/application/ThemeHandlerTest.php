@@ -10,7 +10,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class ThemeHandlerTest extends ItopTestCase
 {
-	const PATTERN = '|/var[^"]+iTop|';
+	const PATTERN = '|\\\/var[^"]+testimages|';
 	
 	private $compileCSSServiceMock;
 	private $cssPath;
@@ -213,7 +213,7 @@ class ThemeHandlerTest extends ItopTestCase
 	{
 		$sig = ThemeHandler::GetSignature(APPROOT.'test/application/theme-handler/expected/themes/basque-red/main.css');
 		$expect_sig=<<<JSON
-{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"css-variables":"934888ebb4991d4c76555be6b6d1d5cc","jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"imports":[],"images":[]}
+{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"css-variables":"1d4b4ae2a6fba3db101f8dd1cecab082","jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"imports":[],"images":[]}
 JSON;
 
 		$this->assertEquals($expect_sig,$sig);
@@ -307,34 +307,66 @@ JSON;
 		);
 	}
 
+	/**
+	 * @return array
+	 */
+	public function CompileThemesProvider()
+	{
+		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
+		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
+		$sImportFilePath = '/branding/css/css-variables.scss';
+		$sVarChangedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_varchanged.css";
+		$sStylesheetMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";
+		$sImageMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_imagemodified.css";
+		$sImportModifiedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_importmodified.css";
+		$sStylesheetFilePath = '/branding/css/light-grey.scss';
+		$sImageFilePath = 'test/application/theme-handler/copied/testimages/images/green-header.gif';
+		return array(
+			"setup context: variables list modified without any file touched" => array($sModifiedVariableThemeParameterJson, 1,false,false,false,$sImportFilePath, $sVarChangedMainCssPath),
+			"setup context: variables list modified with files touched" => array($sModifiedVariableThemeParameterJson, 1,false,true,false,$sImportFilePath, $sVarChangedMainCssPath, false),
+			"itop page/theme loading; variables list modified without any file touched" => array($sModifiedVariableThemeParameterJson, 0,false,false,false,$sImportFilePath, $sVarChangedMainCssPath, false),
+			//imports
+			"import file missing" => array($sInitialThemeParamJson, 0, true, false, false, $sImportFilePath),
+			"import file touched" => array($sInitialThemeParamJson, 0, false, true, false, $sImportFilePath),
+			"import file modified" => array($sInitialThemeParamJson, 1, false, false, true, $sImportFilePath, $sImportModifiedMainCssPath),
+			//stylesheets
+			"stylesheets file missing" => array($sInitialThemeParamJson, 0, true, false, false, $sStylesheetFilePath),
+			"stylesheets file touched" => array($sInitialThemeParamJson, 0, false, true, false, $sStylesheetFilePath),
+			"stylesheets file modified" => array($sInitialThemeParamJson, 1, false, false, true, $sStylesheetFilePath, $sStylesheetMainCssPath),
+			//images
+			"image file missing" => array($sInitialThemeParamJson, 0, true, false, false, $sImageFilePath),
+			"image file touched" => array($sInitialThemeParamJson, 0, false, true, false, $sImageFilePath),
+			"image file modified" => array($sInitialThemeParamJson, 1, false, false, true, $sImageFilePath, $sImageMainCssPath),
+		);
+	}
+
 
 	/**
 	 * @param $ThemeParametersJson
-	 * @param $CompileCSSFromSASSCount
-	 * @param int $missingFile
-	 * @param int $filesTouchedRecently
-	 * @param int $fileMd5sumModified
-	 * @param null $fileToTest
-	 *
-	 * @param null $expected_maincss_path
+	 * @param int $iCompileCSSFromSASSCount
+	 * @param boolean $bMissingFile
+	 * @param boolean $bFilesTouchedRecently
+	 * @param boolean $bFileMd5sumModified
+	 * @param null $sFileToTest
+	 * @param null $sExpectedMainCssPath
+	 * @param bool $bSetup
 	 *
 	 * @throws \CoreException
 	 * @dataProvider CompileThemesProvider
 	 */
-	public function testCompileThemes($ThemeParametersJson, $CompileCSSFromSASSCount, $missingFile=0, $filesTouchedRecently=0, $fileMd5sumModified=0, $fileToTest=null, $expected_maincss_path=null, $bSetup=true)
+	public function testCompileThemes($ThemeParametersJson, $iCompileCSSFromSASSCount, $bMissingFile=false, $bFilesTouchedRecently=false, $bFileMd5sumModified=false, $sFileToTest=null, $sExpectedMainCssPath=null, $bSetup=true)
 	{
-		if (is_file($this->tmpDir.'/'.$fileToTest))
+		$sAfterReplacementCssVariableMd5sum='';
+		if (is_file($this->tmpDir.'/'.$sFileToTest))
 		{
-			$fileToTest=$this->tmpDir.'/'.$fileToTest;
+			$sFileToTest=$this->tmpDir.'/'.$sFileToTest;
 		}
 		else
 		{
-			$fileToTest=APPROOT.'/'.$fileToTest;
+			$sFileToTest=APPROOT.'/'.$sFileToTest;
 		}
 
-		$cssPath = $this->tmpDir . '/branding/themes/basque-red/main.css';
-		copy(APPROOT."test/application/theme-handler/expected/themes/basque-red/main_testcompilethemes.css", $cssPath);
-
+		//copy images in test dir
 		$sAbsoluteImagePath = APPROOT .'test/application/theme-handler/copied/testimages/';
 		$this->recurseMkdir($sAbsoluteImagePath);
 		$aDirsToCleanup[] = $sAbsoluteImagePath;
@@ -342,125 +374,102 @@ JSON;
 
 		//change approot-relative in css-variable to use absolute path
 		$sCssVarPath = $this->tmpDir."/branding/css/css-variables.scss";
+		$sBeforeReplacementCssVariableMd5sum = md5_file($sCssVarPath);
+		echo 'BEFORE :' . $sBeforeReplacementCssVariableMd5sum  .' ' . $sCssVarPath . ' ';
 		$sCssVariableContent = file_get_contents($sCssVarPath);
-		$sLine = '$approot-relative: "' . $sAbsoluteImagePath . '" !default;';
-		
+		$sLine = '$approot-relative: "'.$sAbsoluteImagePath.'" !default;';
 		$sCssVariableContent=preg_replace("/\\\$approot-relative: \"(.*)\"/", $sLine, $sCssVariableContent);
 		file_put_contents($sCssVarPath, $sCssVariableContent);
-
-		if ($missingFile==1)
+		if ($bMissingFile)
 		{
-			unlink($fileToTest);
+			$sAfterReplacementCssVariableMd5sum = $sBeforeReplacementCssVariableMd5sum;
+			unlink($sFileToTest);
 		}
 
-		if ($filesTouchedRecently==1)
+		if (is_file($sCssVarPath))
+		{
+			$sAfterReplacementCssVariableMd5sum = md5_file($sCssVarPath);
+		}
+
+		//change cssvar md5sum + image absolute paths
+		$sMainCssContent = file_get_contents(APPROOT."test/application/theme-handler/expected/themes/basque-red/main_testcompilethemes.css");
+		$sMainCssContent = preg_replace('/MD5SUM/', $sAfterReplacementCssVariableMd5sum, $sMainCssContent);
+		$sReplacement = rtrim($sAbsoluteImagePath, '/');
+		$sReplacement=preg_replace('|\/|', '\/', $sReplacement);
+		$sMainCssContent = preg_replace(static::PATTERN,  $sReplacement, $sMainCssContent);
+		$cssPath = $this->tmpDir . '/branding/themes/basque-red/main.css';
+		echo 'PUT md5sum: '.$sAfterReplacementCssVariableMd5sum.' in '.$cssPath.' ';
+		file_put_contents($cssPath, $sMainCssContent);
+
+		//should be after main.css modification to make sure precompilation check will be performed
+		if ($bFilesTouchedRecently)
 		{
 			sleep(1);
-			touch($fileToTest);
+			touch($sFileToTest);
 		}
 
-		if ($fileMd5sumModified==1)
+		//same: it should be after main.css modification
+		if ($bFileMd5sumModified)
 		{
+			$sMd5sum = md5_file($sFileToTest);
+			echo ' BEFORE touch: ' . $sMd5sum  .' ' . $sFileToTest;
 			sleep(1);
-			file_put_contents($fileToTest, "###\n".file_get_contents($fileToTest));
+			file_put_contents($sFileToTest, "###\n".file_get_contents($sFileToTest));
+
+			$sMd5sum = md5_file($sFileToTest);
+			echo ' AFTER touch: ' . $sMd5sum  .' ' . $sFileToTest;
 		}
 
-		$this->compileCSSServiceMock->expects($this->exactly($CompileCSSFromSASSCount))
+		if (is_file($sCssVarPath))
+		{
+			$sAfterReplacementCssVariableMd5sum = md5_file($sCssVarPath);
+		}
+
+		$this->compileCSSServiceMock->expects($this->exactly($iCompileCSSFromSASSCount))
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
-		ThemeHandler::CompileTheme('basque-red', $bSetup, json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+		$aThemeParameters = json_decode($ThemeParametersJson, true);
+		ThemeHandler::CompileTheme('basque-red', $bSetup, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 
-		if ($CompileCSSFromSASSCount==1)
+		if ($iCompileCSSFromSASSCount==1)
 		{
-			$sExpectedMainCssFile = APPROOT.$expected_maincss_path;
+			$sExpectedMainCssFile = APPROOT.$sExpectedMainCssPath;
 			if (!is_file($sExpectedMainCssFile))
 			{
 				$this->assertTrue(false, "Cannot find expected main css file $sExpectedMainCssFile");
 			}
 
-			$this->DoInnerJsonValidation($sExpectedMainCssFile, $sExpectedMainCssFile);
+			$aPatterns = array(static::PATTERN, '/'.$sBeforeReplacementCssVariableMd5sum.'/');
+			$aPatterns[] = "/8100523d2e76a70266f3e7110e2fe5fb/";
+			$aReplacements = array($sReplacement, $sAfterReplacementCssVariableMd5sum);
+			$aReplacements[] = md5(json_encode($aThemeParameters['variables']));
+			var_dump($aReplacements);
+			$this->DoInnerJsonValidation($sExpectedMainCssFile, $cssPath, $aPatterns, $aReplacements);
 		}
 	}
 
-	public function DoInnerJsonValidation($sExpectedCssFile, $sActualCssFile)
+	public function DoInnerJsonValidation($sExpectedCssFile, $sActualCssFile, $aPatterns, $aReplacements)
 	{
-		$sReplacement = rtrim(APPROOT, '/');
-		$sExpectedContent = file_get_contents($sExpectedCssFile);
+		$sActualContent = file_get_contents($sActualCssFile);
 
 		//replace absolute path to fix it in any envt
-		$sActualContent = preg_replace(static::PATTERN,  $sReplacement, file_get_contents($sActualCssFile));
+		$sExpectedContent = preg_replace($aPatterns,  $aReplacements, file_get_contents($sExpectedCssFile));
+
+		//echo($sExpectedContent);
 		if ($sExpectedContent != $sActualContent)
 		{
 			//try to have inner json diff failure
 			/** @var array $aExpectedJson */
-			$aExpectedJson = json_decode(ThemeHandler::GetSignature($sExpectedCssFile), true);
 			//replace absolute path to fix it in any envt
-			$sActualJson = preg_replace(static::PATTERN,  $sReplacement, ThemeHandler::GetSignature($sActualCssFile));
+			$sExpectedJson = preg_replace($aPatterns,  $aReplacements, ThemeHandler::GetSignature($sExpectedCssFile));
+			$aExpectedJson = json_decode($sExpectedJson, true);
 			/** @var array $aActualJson */
-			$aActualJson = json_decode($sActualJson, true);
-			$this->assertEquals($aExpectedJson['variables'], $aActualJson['variables'], "File dont match on variables ($sExpectedCssFile / $sActualCssFile)");
-			$this->ValidateSubArray('stylesheets', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
-			$this->ValidateSubArray('imports', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
-			$this->ValidateSubArray('images', $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson);
+			$aActualJson = json_decode(ThemeHandler::GetSignature($sActualCssFile), true);
+			$this->assertEquals($aExpectedJson, $aActualJson, "CSS file dont match ($sExpectedCssFile / $sActualCssFile)");
 		}
 
 		$this->assertTrue(true);
-	}
-
-	/**
-	 * @param $sKey
-	 * @param $sExpectedCssFile
-	 * @param $sActualCssFile
-	 * @param array $aExpectedJson
-	 * @param $aActualJson
-	 */
-	private function ValidateSubArray($sKey, $sExpectedCssFile, $sActualCssFile, $aExpectedJson, $aActualJson)
-	{
-		foreach ($aExpectedJson[$sKey] as $sSubKey => $sSubVal)
-		{
-			if (array_key_exists($sSubKey, $aActualJson[$sKey]))
-			{
-				$this->assertEquals($sSubVal, $aActualJson[$sKey][$sSubKey], "File dont match on $sKey ($sExpectedCssFile / $sActualCssFile)");
-			}
-			else
-			{
-				$this->assertTrue(false, "File dont match on '$sKey' ($sExpectedCssFile / $sActualCssFile).\nCannot find key '$sSubKey' in actual sub json \n" . json_encode($aActualJson[$sKey], true));
-			}
-		}
-	}
-
-	/**
-	 * @return array
-	 */
-	public function CompileThemesProvider()
-	{
-		$modifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
-		$initialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
-		$import_file_path = '/branding/css/css-variables.scss';
-		$varchanged_maincss="test/application/theme-handler/expected/themes/basque-red/main_varchanged.css";
-		$stylesheet_maincss="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";
-		$image_maincss="test/application/theme-handler/expected/themes/basque-red/main_imagemodified.css";
-		$importmodified_maincss="test/application/theme-handler/expected/themes/basque-red/main_importmodified.css";
-		$stylesheet_file_path = '/branding/css/light-grey.scss';
-		$image_file_path = 'test/application/theme-handler/copied/testimages/images/green-header.gif';
-		return array(
-			"setup context: variables list modified without any file touched" => array($modifiedVariableThemeParameterJson, 1,0,0,0,$import_file_path, $varchanged_maincss),
-			"setup context: variables list modified with files touched" => array($modifiedVariableThemeParameterJson, 1,0,1,0,$import_file_path, $varchanged_maincss, false),
-			"itop page/theme loading; variables list modified without any file touched" => array($modifiedVariableThemeParameterJson, 0,0,0,0,$import_file_path, $varchanged_maincss, false),
-			//imports
-			"import file missing" => array($initialThemeParamJson, 0, 1, 0, 0, $import_file_path),
-			"import file touched" => array($initialThemeParamJson, 0, 0, 1, 0, $import_file_path),
-			"import file modified" => array($initialThemeParamJson, 1, 0, 0, 1, $import_file_path, $importmodified_maincss),
-			//stylesheets
-			"stylesheets file missing" => array($initialThemeParamJson, 0, 1, 0, 0, $stylesheet_file_path),
-			"stylesheets file touched" => array($initialThemeParamJson, 0, 0, 1, 0, $stylesheet_file_path),
-			"stylesheets file modified" => array($initialThemeParamJson, 1, 0, 0, 1, $stylesheet_file_path, $stylesheet_maincss),
-			//images
-			"image file missing" => array($initialThemeParamJson, 0, 1, 0, 0, $image_file_path),
-			"image file touched" => array($initialThemeParamJson, 0, 0, 1, 0, $image_file_path),
-			"image file modified" => array($initialThemeParamJson, 1, 0, 0, 1, $image_file_path, $image_maincss),
-		);
 	}
 
 	/**
@@ -471,20 +480,24 @@ JSON;
 	public function testGetAllUrlFromScss($sScssFile)
 	{
 		$aIncludedUrls = ThemeHandler::GetAllUrlFromScss(array('attr' => "123"),APPROOT.$sScssFile);
-		$this->assertEquals(array('version1'), array_values($aIncludedUrls['aMissingVariables']));
-		$this->assertEquals(array("approot-relative" => "../../../../../", "version" => "aaa", "attr"=>"123"),
+		$this->assertEquals(array('approot-relative', 'version', 'version1'), array_values($aIncludedUrls['aMissingVariables']));
+		$this->assertEquals(array("attr"=>"123"),
 			$aIncludedUrls['aFoundVariables']);
-		$expected_array = array(
+		$aExpectedCompletedUrls = array(
 			'css/ui-lightness/images/tutu.jpg',
 			"css/ui-lightness/images/tata.jpeg",
-			'abc/../../../../../css/ui-lightness/images/toutou.png?v=aaa',
-			"../../../../../css/ui-lightness/images/toto.png?v=aaa",
-			"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=aaa",
 			"css/ui-lightness/images/tete.jpeg?g=123"
 		);
+		$aExpectedToCompleteUrls = array(
+			'\'abc/\'+ $approot-relative + "css/ui-lightness/images/toutou.png?v=" + $version',
+			"\$approot-relative + \"css/ui-lightness/images/toto.png?v=\" + \$version",
+			'$approot-relative + \'css/ui-lightness/images/titi.gif?v=\' + $version1',
+		'"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=" + $version',
+	);
+
 		$aIncludedUrls['aCompleteUrls'];
-		$this->assertEquals($expected_array, array_values($aIncludedUrls['aCompleteUrls']));
-		$this->assertEquals(array('$approot-relative + \'css/ui-lightness/images/titi.gif?v=\' + $version1'), array_values($aIncludedUrls['aToCompleteUrls']));
+		$this->assertEquals($aExpectedCompletedUrls, array_values($aIncludedUrls['aCompleteUrls']));
+		$this->assertEquals($aExpectedToCompleteUrls, array_values($aIncludedUrls['aToCompleteUrls']));
 	}
 
 	/**
@@ -493,6 +506,38 @@ JSON;
 	public function GetAllUrlFromScssProvider()
 	{
 		return array('test-getimages.scss' => array('test/application/theme-handler/getimages/test-getimages.scss'));
+	}
+
+	public function testFindMissingVariables()
+	{
+		$sContent = <<< 'SCSS'
+$approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
+$approot-relative2: "../../" !default; // relative to env-***/branding/themes/***/main.css
+$gray-base:              #000 !default;
+$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+$brand-primary: 	$combodo-orange !default;
+$brand-primary-lightest:	lighten($brand-primary, 15%) !default;
+$content-color: #eeeeee !default; 
+$default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
+$icons-filter: hue-rotate(0deg) !default;
+$toto : titi;
+SCSS;
+		$aMissingVariables = array('gabu', 'toto', 'approot-relative', 'approot-relative2', 'gray-base', 'gray-darker', 'brand-primary', 'brand-primary-lightest', 'content-color', 'default-font-family', 'icons-filter');
+		list($aMissingVariables, $aFoundVariables) = ThemeHandler::FindMissingVariables(array('gabu' => 'zomeu'), $aMissingVariables, array("a" => "b"), $sContent);
+		$aExpectedFoundVariables = array(
+			'gabu' => 'zomeu',
+			'toto' => 'titi',
+		    'approot-relative' => '../../../../../',
+		    'approot-relative2' => '../../',
+		    'gray-base' => '#000',
+		    'a' => 'b',
+		    'content-color' => '#eeeeee',
+		    'default-font-family' => 'Trebuchet MS,Tahoma,Verdana,Arial,sans-serif',
+		    'icons-filter' => 'hue-rotate(0deg)',
+			'toto' => 'titi',
+		);
+		$this->assertEquals($aExpectedFoundVariables, $aFoundVariables);
+		$this->assertEquals(array('gray-darker', 'brand-primary', 'brand-primary-lightest'), $aMissingVariables);
 	}
 
 	/**
