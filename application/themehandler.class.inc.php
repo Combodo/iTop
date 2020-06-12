@@ -388,12 +388,7 @@ CSS;
 		$aFoundVariables=$aMap['aFoundVariables'];
 		$aToCompleteUrls=$aMap['aToCompleteUrls'];
 		$aCompleteUrls=$aMap['aCompleteUrls'];
-		list($aMissingVariables, $aFoundVariables) = static::FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent);
-		if (array_key_exists('version', $aMissingVariables))
-		{
-			//handle removed $version from css-variables.scss
-			$aFoundVariables['version'] = '';
-		}
+		list($aMissingVariables, $aFoundVariables) = static::FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, true);
 		list($aToCompleteUrls, $aCompleteUrls) = static::ResolveUrls($aFoundVariables, $aToCompleteUrls, $aCompleteUrls);
 		$aMap['aMissingVariables']=$aMissingVariables;
 		$aMap['aFoundVariables']=$aFoundVariables;
@@ -404,14 +399,16 @@ CSS;
 
 	/**
 	 * Find missing variable values from SCSS content based on their name.
+	 *
 	 * @param $aThemeParametersVariables
 	 * @param $aMissingVariables
 	 * @param $aFoundVariables
-	 * @param $sContent: scss content
+	 * @param $sContent : scss content
+	 * @param bool $bForceEmptyValueWhenNotFound
 	 *
 	 * @return array
 	 */
-	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent)
+	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, $bForceEmptyValueWhenNotFound=false)
 	{
 		$aNewMissingVars = array();
 		if (!empty($aMissingVariables))
@@ -442,7 +439,14 @@ CSS;
 					}
 					else
 					{
-						$aNewMissingVars[] = $var;
+						if ($bForceEmptyValueWhenNotFound)
+						{
+							$aFoundVariables[$var] = '';
+						}
+						else
+						{
+							$aNewMissingVars[] = $var;
+						}
 					}
 				}
 			}
