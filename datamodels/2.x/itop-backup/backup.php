@@ -134,6 +134,8 @@ set_time_limit(0);
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Database Backup");
+
+	SetupUtils::CheckPhpAndExtensionsForCli($oP);
 }
 else
 {
