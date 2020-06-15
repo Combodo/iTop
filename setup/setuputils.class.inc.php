@@ -42,7 +42,7 @@ class CheckResult
 
 	/**
 	 * @return string
-	 * @since 2.7.1 2.8.0 N°2214
+	 * @since 2.8.0 N°2214
 	 */
 	public function __toString()
 	{
@@ -55,7 +55,7 @@ class CheckResult
 	 *
 	 * @return \CheckResult[] only elements that are error (iSeverity===ERROR)
 	 *
-	 * @since 2.7.1 2.8.0 N°2214
+	 * @since 2.8.0 N°2214
 	 */
 	public static function KeepOnlyErrors($aResults)
 	{
@@ -74,7 +74,7 @@ class CheckResult
 	 * @return string[]
 	 * @uses \CheckResult::__toString
 	 *
-	 * @since 2.7.1 2.8.0 N°2214
+	 * @since 2.8.0 N°2214
 	 */
 	public static function FromObjetsToStrings($aResults)
 	{
@@ -417,7 +417,7 @@ class SetupUtils
 	 * @param \CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
-	 * @since 2.7.1 2.8.0 N°2214
+	 * @since 2.8.0 N°2214
 	 */
 	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
 	{
