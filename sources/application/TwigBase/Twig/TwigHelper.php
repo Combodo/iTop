@@ -22,6 +22,10 @@ class TwigHelper
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
+		$sLocalPath = utils::LocalPath($sViewPath);
+		$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
+		$sCachePath = utils::GetCachePath().$sLocalPath;
+		$oTwig->setCache($sCachePath);
 
 		return $oTwig;
 	}

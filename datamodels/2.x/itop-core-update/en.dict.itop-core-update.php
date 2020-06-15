@@ -73,7 +73,8 @@ Dict::Add('EN US', 'English', 'English', array(
     'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking files failed (File not exist %1$s)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking files failed',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Application can be updated',
-    'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start',

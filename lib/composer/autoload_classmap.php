@@ -197,6 +197,7 @@ return array(
     'DataTableSettings' => $baseDir . '/application/datatable.class.inc.php',
     'Datamatrix' => $vendorDir . '/combodo/tcpdf/include/barcodes/datamatrix.php',
     'DateTimeFormat' => $baseDir . '/core/datetimeformat.class.inc.php',
+    'DeadLockLog' => $baseDir . '/core/log.class.inc.php',
     'DefaultLogFileNameBuilder' => $baseDir . '/core/log.class.inc.php',
     'DefaultMetricComputer' => $baseDir . '/core/computing.inc.php',
     'DefaultWorkingTimeComputer' => $baseDir . '/core/computing.inc.php',

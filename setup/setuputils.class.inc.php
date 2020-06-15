@@ -76,7 +76,7 @@ class SetupUtils
 	 * @internal SetupPage $oP The page used only for its 'log' method
 	 * @return CheckResult[]
 	 */
-	static function CheckPhpAndExtensions()
+	public static function CheckPhpAndExtensions()
 	{
 		$aResult = array();
 
@@ -419,7 +419,7 @@ class SetupUtils
 	 * @param $aSelectedModules
 	 * @return array
 	 */
-	static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
+	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
 	{
 		$aResult = array();
 		SetupPage::log('Info - CheckSelectedModules');
@@ -450,7 +450,7 @@ class SetupUtils
 	 * @return array An array of CheckResults objects
 	 * @internal param Page $oP The page used only for its 'log' method
 	 */
-	static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
+	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
 	{
 		$aResult = array();
 		SetupPage::log('Info - CheckBackupPrerequisites');
@@ -540,7 +540,7 @@ class SetupUtils
 	 * @return CheckResult The result of the check
 	 * @internal param string $GraphvizPath The path where graphviz' dot program is installed
 	 */
-	static function CheckGraphviz($sGraphvizPath)
+	public static function CheckGraphviz($sGraphvizPath)
 	{
 		$oResult = null;
 		SetupPage::log('Info - CheckGraphviz');
@@ -589,7 +589,7 @@ class SetupUtils
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 * @return string Path to the system's temp directory
 	 */
-	static function GetTmpDir()
+	public static function GetTmpDir()
 	{
 		return realpath(sys_get_temp_dir());
 	}
@@ -598,7 +598,7 @@ class SetupUtils
 	 * Helper function to retrieve the directory where files are to be uploaded
 	 * @return string Path to the temp directory used for uploading files
 	 */
-	static function GetUploadTmpDir()
+	public static function GetUploadTmpDir()
 	{
 		$sPath = ini_get('upload_tmp_dir');
 		if (empty($sPath))
@@ -821,7 +821,7 @@ class SetupUtils
 		}
 	}
 
-	static function GetPreviousInstance($sDir)
+	public static function GetPreviousInstance($sDir)
 	{
 		$sSourceDir = '';
 		$sSourceEnvironment = '';
@@ -875,7 +875,7 @@ class SetupUtils
 	 * @return bool|float false if failure
 	 * @uses \disk_free_space()
 	 */
-	static function CheckDiskSpace($sDir)
+	public static function CheckDiskSpace($sDir)
 	{
 		while(($f = @disk_free_space($sDir)) == false)
 		{
@@ -887,7 +887,7 @@ class SetupUtils
 		return $f;
 	}
 
-	static function HumanReadableSize($fBytes)
+	public static function HumanReadableSize($fBytes)
 	{
 		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
 		$index = 0;
@@ -912,7 +912,7 @@ class SetupUtils
 	 * @param string $sTlsCA
 	 * @param string $sNewDBName
 	 */
-	static function DisplayDBParameters(
+	public static function DisplayDBParameters(
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
@@ -1155,7 +1155,7 @@ EOF
 	 * @return bool|array false if the connection failed or array('checks' => Array of CheckResult, 'databases' =>
 	 *     Array of database names (as strings) or null if not allowed)
 	 */
-	static function CheckDbServer(
+	public static function CheckDbServer(
 		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCA = null
 	)
 	{
@@ -1606,29 +1606,16 @@ JS
 		}
 
 		$sManualInstallModulesFullPath = APPROOT.$sExtensionsDir.DIRECTORY_SEPARATOR;
-		$aManualInstallModules = array_filter($aModules,
-			static function ($v, $k) use ($sManualInstallModulesFullPath) {
-				if (!isset($v['root_dir'])) // avoid index undefined for the _Root_ entry
-				{
-					return false;
-				}
-				// calling realpath to avoid problems with dir separator (almost everywhere we are adding '/' instead of DIRECTORY_SEPARATOR)
-				$return = utils::RealPath($v['root_dir'], $sManualInstallModulesFullPath);
-				if ($return === false)
-				{
-					return false;
-				}
-
-				return true;
-			},
-			ARRAY_FILTER_USE_BOTH);
-
-		if (empty($aManualInstallModules))
+		//simple test in order to prevent install iTop pro with module in extension folder
+		$aFileInfo = scandir($sManualInstallModulesFullPath);
+		foreach ($aFileInfo as $sFolder)
 		{
-			return '';
+			if ($sFolder != "." && $sFolder != ".." && is_dir($sManualInstallModulesFullPath.$sFolder) === true)
+			{
+				return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
+			}
 		}
-
-		return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
+		return '';
 	}
 
 	/**
@@ -2067,7 +2054,7 @@ JS
  */
 class SetupInfo
 {
-	static $aSelectedModules = array();
+	public static $aSelectedModules = array();
 
 	/**
 	 * Called by the setup process to initializes the list of selected modules. Do not call this method
@@ -2075,7 +2062,7 @@ class SetupInfo
 	 * @param hash $aModules
 	 * @return void
 	 */
-	static function SetSelectedModules($aModules)
+	public static function SetSelectedModules($aModules)
 	{
 		self::$aSelectedModules = $aModules;
 	}
@@ -2086,7 +2073,7 @@ class SetupInfo
 	 * @param string $sModuleId The identifier of the module (without the version number. Example: itop-config-mgmt)
 	 * @return boolean True if the module is already selected, false otherwise
 	 */
-	static function ModuleIsSelected($sModuleId)
+	public static function ModuleIsSelected($sModuleId)
 	{
 		return (array_key_exists($sModuleId, self::$aSelectedModules));
 	}

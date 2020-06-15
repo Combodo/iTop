@@ -154,8 +154,10 @@ $(function()
 				var sDashletUniqueId = $(this).attr("id");
 				var sDashletIdParts = sDashletUniqueId.split('_');
 				var sDashletOrigId = sDashletIdParts[sDashletIdParts.length - 1];
-				return isNaN(sDashletOrigId) ? 0 : parseInt(sDashletOrigId);
+				return isNaN(parseInt(sDashletOrigId)) ? 0 : parseInt(sDashletOrigId);
 			}).get();
+			// avoid empty array for IE
+			aDashletsIds.push(0);
 			// Note: Use of .apply() to be compatible with IE10
 			var iHighestDashletOrigId = Math.max.apply(null, aDashletsIds);
 

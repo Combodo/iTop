@@ -313,6 +313,11 @@ class DBObjectSearch extends DBSearch
 		return true;
 	}
 
+	/**
+	 * Move conditions from $oFilter to $this
+	 * @param \DBSearch $oFilter
+	 * @param $aTranslation
+	 */
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		// Prevent collisions in the parameter names by renaming them if needed
@@ -335,6 +340,7 @@ class DBObjectSearch extends DBSearch
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
+		$oFilter->ResetCondition();
 	}
 
 	public function RenameParam($sOldName, $sNewName)

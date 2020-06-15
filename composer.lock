@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b29eb2767d269b9ec2cf4d148dc083bc",
+    "content-hash": "ad359769d05acd25a9fc31d69acbe43a",
     "packages": [
         {
             "name": "combodo/tcpdf",
-            "version": "6.3.4",
+            "version": "6.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-                "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d"
+                "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
-                "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
+                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/abbfedb8ca59843dec11c97ca3f308742265c3fc",
+                "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
             ],
             "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
             "homepage": "https://github.com/combodo-itop-libs/TCPDF",
-            "time": "2020-02-12T14:16:56+00:00"
+            "time": "2020-06-05T13:06:44+00:00"
         },
         {
             "name": "nikic/php-parser",

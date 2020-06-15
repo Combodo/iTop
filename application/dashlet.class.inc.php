@@ -1121,7 +1121,7 @@ abstract class DashletGroupBy extends Dashlet
 			$this->sFunction = null;
 		}
 
-		if (empty($this->aProperties['order_direction']))
+		if ((!is_null($this->sClass)) && empty($this->aProperties['order_direction']))
 		{
 			$aAttributeTypes = $this->oModelReflection->ListAttributes($this->sClass);
 			if (isset($aAttributeTypes[$this->sGroupByAttCode]))

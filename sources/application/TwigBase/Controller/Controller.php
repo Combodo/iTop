@@ -23,6 +23,7 @@ use ajax_page;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
+use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;

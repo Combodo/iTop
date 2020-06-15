@@ -686,6 +686,12 @@ abstract class LogAPI
 class SetupLog extends LogAPI
 {
 	const CHANNEL_DEFAULT = 'SetupLog';
+	/**
+	 * @inheritDoc
+	 *
+	 * As this object is used during setup, without any conf file available, customizing the level can be done by changing this constant !
+	 */
+	const LEVEL_DEFAULT = self::LEVEL_INFO;
 
 	protected static $m_oFileLog = null;
 }

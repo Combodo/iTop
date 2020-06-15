@@ -67,6 +67,15 @@ class LoginExternal extends AbstractLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	protected function OnError(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'external')
+		{
+			LoginWebPage::HTTP401Error();
+		}
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
+	}
+
 	/**
 	 * @return bool
 	 */
