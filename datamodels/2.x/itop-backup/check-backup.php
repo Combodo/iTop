@@ -250,8 +250,6 @@ catch(Exception $e)
 
 if (utils::IsModeCLI())
 {
-	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('Check backup utility'));
-
 	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
 	try
 	{

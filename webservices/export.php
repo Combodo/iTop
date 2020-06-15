@@ -29,11 +29,6 @@ require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
-const EXIT_CODE_ERROR = -1;
-const EXIT_CODE_FATAL = -2;
-
-
 try
 {
 	// Do this before loging, in order to allow setting user credentials from within the file
@@ -42,15 +37,12 @@ try
 catch(Exception $e)
 {
 	echo "Error: ".$e->GetMessage()."<br/>\n";
-	exit(EXIT_CODE_FATAL);
+	exit -2;
 }
 
 if (utils::IsModeCLI()) 
 {
-	$oP = new CLIPage("iTop - Export");
-	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
-
-	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
+	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data'); 
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data'); 
 
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) 
@@ -59,9 +51,10 @@ if (utils::IsModeCLI())
 	} 
 	else 
 	{ 
-		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
+		$oP = new CLIPage("iTop - Export"); 
+		$oP->p("Access restricted or wrong credentials ('$sAuthUser')"); 
 		$oP->output(); 
-		exit(EXIT_CODE_ERROR);
+		exit -1; 
 	}
 } 
 else 
@@ -81,7 +74,7 @@ if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
 	$oP = new CLIPage("iTop - Export");
 	$oP->p("The user account is not authorized to access the archives");
 	$oP->output();
-	exit(EXIT_CODE_ERROR);
+	exit -1;
 }
 
 $bLocalize = (utils::ReadParam('no_localize', 0) != 1);

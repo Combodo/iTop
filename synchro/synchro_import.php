@@ -255,7 +255,6 @@ class CLILikeWebPage extends WebPage
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
-	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {

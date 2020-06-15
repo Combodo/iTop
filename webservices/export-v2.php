@@ -32,12 +32,6 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 
-
-const EXIT_CODE_ERROR = -1;
-const EXIT_CODE_FATAL = -2;
-
-
-
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
@@ -45,14 +39,14 @@ function ReportErrorAndExit($sErrorMessage)
 		$oP = new CLIPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit(EXIT_CODE_ERROR);
+		exit(-1);
 	}
 	else
 	{
 		$oP = new WebPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit(EXIT_CODE_ERROR);
+		exit(-1);
 	}
 }
 
@@ -64,7 +58,7 @@ function ReportErrorAndUsage($sErrorMessage)
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit(EXIT_CODE_ERROR);
+		exit(-1);
 	}
 	else
 	{
@@ -72,7 +66,7 @@ function ReportErrorAndUsage($sErrorMessage)
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit(EXIT_CODE_ERROR);
+		exit(-1);
 	}
 }
 
@@ -571,8 +565,6 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 /////////////////////////////////////////////////////////////////////////////
 if (utils::IsModeCLI())
 {
-	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('iTop - Export'));
-
 	try
 	{
 		// Do this before loging, in order to allow setting user credentials from within the file
@@ -581,7 +573,7 @@ if (utils::IsModeCLI())
 	catch(Exception $e)
 	{
 		echo "Error: ".$e->GetMessage()."<br/>\n";
-		exit(EXIT_CODE_FATAL);
+		exit(-2);
 	}
 	
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');

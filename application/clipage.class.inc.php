@@ -29,13 +29,9 @@ require_once(APPROOT."/application/webpage.class.inc.php");
 
 class CLIPage implements Page
 {
-	/** @var string */
-	public $s_title;
-
-	function __construct($s_title)
+    function __construct($s_title)
     {
-	    $this->s_title = $s_title;
-    }
+    }	
 
     public function output()
     {
@@ -52,22 +48,22 @@ class CLIPage implements Page
 	public function add($sText)
 	{
 		echo $sText;
-	}
+	}	
 
 	public function p($sText)
 	{
 		echo $sText."\n";
-	}
+	}	
 
 	public function pre($sText)
 	{
 		echo $sText."\n";
-	}
+	}	
 
 	public function add_comment($sText)
 	{
 		echo "#".$sText."\n";
-	}
+	}	
 
 	public function table($aConfig, $aData, $aParams = array())
 	{
@@ -97,3 +93,5 @@ class CLIPage implements Page
 		}
 	}
 }
+
+?>

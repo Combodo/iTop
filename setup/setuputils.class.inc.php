@@ -39,49 +39,6 @@ class CheckResult
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
 	}
-
-	/**
-	 * @return string
-	 * @since 2.7.1 2.8.0 N°2214
-	 */
-	public function __toString()
-	{
-		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
-		return "{$this->sLabel}$sPrintDesc";
-	}
-
-	/**
-	 * @param \CheckResult[] $aResults
-	 *
-	 * @return \CheckResult[] only elements that are error (iSeverity===ERROR)
-	 *
-	 * @since 2.7.1 2.8.0 N°2214
-	 */
-	public static function KeepOnlyErrors($aResults)
-	{
-		return array_filter($aResults,
-			static function ($v)
-				{
-					if ($v->iSeverity === CheckResult::ERROR) {
-					return $v;
-					}
-				},
-			ARRAY_FILTER_USE_BOTH);
-	}
-
-	/**
-	 * @param \CheckResult[] $aResults
-	 * @return string[]
-	 * @uses \CheckResult::__toString
-	 *
-	 * @since 2.7.1 2.8.0 N°2214
-	 */
-	public static function FromObjetsToStrings($aResults)
-	{
-		return array_map(function($value) {
-			return $value->__toString();
-		}, $aResults);
-	}
 }
 
 /**
@@ -411,37 +368,6 @@ class SetupUtils
 		}
 
 		return $aResult;
-	}
-
-	/**
-	 * @param \CLIPage $oCliPage
-	 * @param int $iExitCode
-	 *
-	 * @since 2.7.1 2.8.0 N°2214
-	 */
-	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
-	{
-		$aPhpCheckResults = self::CheckPhpAndExtensions();
-		$aPhpCheckErrors = CheckResult::KeepOnlyErrors($aPhpCheckResults);
-		if (empty($aPhpCheckErrors))
-		{
-			return;
-		}
-
-		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
-		$oCliPage->p($sMessageTitle);
-		$aPhpCheckErrorsForPrint = CheckResult::FromObjetsToStrings($aPhpCheckErrors);
-		foreach ($aPhpCheckErrorsForPrint as $sError)
-		{
-			$oCliPage->p(' * '.$sError);
-		}
-		$oCliPage->output();
-
-		// some CLI scripts are launched automatically
-		// we need a log so that we don't miss errors after migration !
-		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, 'CLI', $aPhpCheckErrorsForPrint);
-
-		exit($iExitCode);
 	}
 
 	/**
