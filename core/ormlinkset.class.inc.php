@@ -145,7 +145,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
     /**
      * @param DBObject $oObject
      * @param string $sClassAlias
-     * @deprecated Since iTop 2.4, use ormLinkset->AddItem() instead.
+     *
+     * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
