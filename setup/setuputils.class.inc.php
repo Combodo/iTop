@@ -71,14 +71,15 @@ class CheckResult
 
 	/**
 	 * @param \CheckResult[] $aResults
+	 *
 	 * @return string[]
 	 * @uses \CheckResult::__toString
 	 *
 	 * @since 2.8.0 N°2214
 	 */
-	public static function FromObjetsToStrings($aResults)
+	public static function FromObjectsToStrings($aResults)
 	{
-		return array_map(function($value) {
+		return array_map(function ($value) {
 			return $value->__toString();
 		}, $aResults);
 	}
@@ -430,7 +431,7 @@ class SetupUtils
 
 		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
 		$oCliPage->p($sMessageTitle);
-		$aPhpCheckErrorsForPrint = CheckResult::FromObjetsToStrings($aPhpCheckErrors);
+		$aPhpCheckErrorsForPrint = CheckResult::FromObjectsToStrings($aPhpCheckErrors);
 		foreach ($aPhpCheckErrorsForPrint as $sError)
 		{
 			$oCliPage->p(' * '.$sError);
