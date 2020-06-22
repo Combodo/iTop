@@ -224,7 +224,7 @@ class LoginTwigRenderer
 		}
 
 		$oCoreLoader = new Twig_Loader_Filesystem(array(), APPROOT.'templates');
-		$aCoreTemplatesPaths = array('login', 'login/password');
+		$aCoreTemplatesPaths = array('pages/login', 'pages/login/password');
 		// Having this path declared after the plugins let the plugins replace the core templates
 		$oCoreLoader->setPaths($aCoreTemplatesPaths);
 		// Having the core templates accessible within a different namespace offer the possibility to extend them while replacing them
