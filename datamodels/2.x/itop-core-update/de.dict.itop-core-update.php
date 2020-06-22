@@ -73,7 +73,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Dateisystemprüfung fehlgeschlagen (Datei nicht vorhanden %1$s)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Dateisystemprüfung fehlgeschlagen',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Anwendungsupgrade kann durchgeführt werden',
-    'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Bereit zum Upgrade',

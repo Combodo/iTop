@@ -51,6 +51,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valor inválido para %1$s (columna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Algunas cuentas de usuario no tienen perfil asignado',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
+	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value than `%3$s`.`%1$s`~~',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
 ));
 
 // Database Info

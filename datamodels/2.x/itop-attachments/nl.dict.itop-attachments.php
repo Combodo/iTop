@@ -40,6 +40,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Er is geen voorbeeld beschikbaar voor dit type bijlage.',
 	'Attachments:Error:FileTooLarge' => 'Het bestand is te groot om geüpload te worden: %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
+Either you have pushed an empty file,
+or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
 ));

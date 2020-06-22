@@ -420,6 +420,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Hledání',
 	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
@@ -1440,6 +1443,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:ResetImage' => 'Obnovit původní obrázek',
 	'UI:Button:RemoveImage' => 'Odebrat obrázek',
 	'UI:UploadNotSupportedInThisMode' => 'Úprava obrázků není v tomto režimu podporována.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',

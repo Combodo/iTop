@@ -397,6 +397,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Insert' => 'Вставить',
 	'UI:Button:More' => 'Больше',
 	'UI:Button:Less' => 'Меньше',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Поиск',
 	'UI:ClickToCreateNew' => 'Создать: %1$s',
@@ -1418,6 +1421,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:ResetImage' => 'Восстановить предыдущее изображение',
 	'UI:Button:RemoveImage' => 'Удалить изображение',
 	'UI:UploadNotSupportedInThisMode' => 'Изменение изображений и файлов не поддерживается в этом режиме.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Развернуть / Свернуть',

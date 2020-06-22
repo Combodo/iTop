@@ -418,6 +418,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Insert' => 'Insertar',
 	'UI:Button:More' => 'Más',
 	'UI:Button:Less' => 'Menos',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Buscar',
 	'UI:ClickToCreateNew' => 'Crear %1$s',
@@ -1442,6 +1445,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Button:ResetImage' => 'Recuperar imágen previa',
 	'UI:Button:RemoveImage' => 'Remover imágen',
 	'UI:UploadNotSupportedInThisMode' => 'La modificación de imágenes o archivos no está soportado en este modo.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar/ Expandir',

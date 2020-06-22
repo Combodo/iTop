@@ -372,6 +372,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLA/Attribute:slts_list+' => 'Alle servicelevel-doelstellingen voor deze SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Klantencontracten',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle klantencontracten die gebruik maken van deze SLA',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : already one SLA exist~~',
 ));
 
 //

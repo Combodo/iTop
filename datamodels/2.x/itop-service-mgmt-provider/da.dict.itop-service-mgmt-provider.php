@@ -358,6 +358,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLA/Attribute:slts_list+' => '',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kundekontrakt',
 	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : already one SLA exist~~',
 ));
 
 //

@@ -359,6 +359,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:SLA/Attribute:slts_list+' => 'Objetivos de Nivel de Servicio',
 	'Class:SLA/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : already one SLA exist~~',
 ));
 
 //

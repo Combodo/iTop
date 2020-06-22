@@ -418,6 +418,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Insert' => 'Inserir',
 	'UI:Button:More' => 'Mais',
 	'UI:Button:Less' => 'Menos',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Pesquisar',
 	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
@@ -1440,6 +1443,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:ResetImage' => 'Recupere a imagem anterior',
 	'UI:Button:RemoveImage' => 'Remover a imagem',
 	'UI:UploadNotSupportedInThisMode' => 'A modificação de imagens ou arquivos não é suportada neste modo.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
