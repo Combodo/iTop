@@ -652,7 +652,6 @@ HTML
 		$oPage->add('</div></div>');
 
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview({ control: '#treecontrolid',	persist: 'false'});\n");
-		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview();\n");
 		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
 	}
 

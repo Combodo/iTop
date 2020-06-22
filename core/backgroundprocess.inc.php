@@ -263,13 +263,14 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 /**
  * Exception for {@link iProcess} implementations.<br>
  * An error happened during the processing but we can go on with the next implementations.
+ * @since 2.5.0 N°1195
  */
 class ProcessException extends CoreException
 {
 }
 
 /**
- * @since 2.7.0
+ * @since 2.7.0 PR #89
  */
 class ProcessInvalidConfigException extends ProcessException
 {
@@ -279,6 +280,7 @@ class ProcessInvalidConfigException extends ProcessException
  * Class ProcessFatalException
  * Exception for iProcess implementations.<br>
  * A big error occurred, we have to stop the iProcess processing.
+ * @since 2.5.0 N°1195
  */
 class ProcessFatalException extends CoreException
 {

@@ -528,6 +528,8 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Helper method for IN / NOT IN conditions : values won't be parsed in the expression tree, that will save some time !
+	 *
 	 * @param string $sFilterCode attribute code to use
 	 * @param array $aValues
 	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN

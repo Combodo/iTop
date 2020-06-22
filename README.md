@@ -52,7 +52,7 @@ iTop also offers mass import tools and web services to integrate with your IT
 ## Last releases
 
 ### Versions 2.7.*
- - 2.7.0-1 published on April 8, 2020
+ - 2.7.1 published on April 8, 2020
  - [Changes since the previous version][62]
  - [New features][63]
  - [Migration notes][64]
@@ -125,10 +125,8 @@ We would like to give a special thank you to the people from the community who c
  - Lucas, Jonathan
  - Malik, Remie
  - Rosenke, Stephan
- - Schirrmann, Pascal
  - Seki, Shoji
  - Shilov, Vladimir
- - Tahri, Ahmed R. (Ousret)
  - Tulio, Marco
  - Turrubiates, Miguel
 
