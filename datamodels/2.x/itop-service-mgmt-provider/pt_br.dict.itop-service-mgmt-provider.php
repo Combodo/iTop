@@ -368,7 +368,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SLA/Attribute:slts_list+' => 'Todos os SLTs para essa SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contratos clientes',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Todos os contratos de clientes utilizando essa SLA',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : already one SLA exist~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
 //
