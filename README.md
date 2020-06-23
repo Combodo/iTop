@@ -21,6 +21,19 @@ iTop also offers mass import tools and web services to integrate with your IT
 - [Data synchronization][18] (for data federation)
 
 
+## Latest release
+
+ - [Changes since the previous version][62]
+ - [New features][63]
+ - [Installation notes][64]
+ - [Download][65]
+
+[62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
+[63]: https://www.itophub.io/wiki/page?id=latest:release:start
+[64]: https://www.itophub.io/wiki/page?id=latest:install:start
+[65]: https://sourceforge.net/projects/itop/files/latest/download
+
+
 ## Resources
 
  - [iTop Forums][1]: community support
@@ -28,7 +41,6 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Releases download][3]
  - [Documentation][4] covering both iTop and its official extensions
  - [iTop Hub][5] : discover and install extensions !
-
 
 
 [1]: https://sourceforge.net/p/itop/discussion/
@@ -46,20 +58,6 @@ iTop also offers mass import tools and web services to integrate with your IT
 [16]: https://www.itophub.io/wiki/page?id=latest%3Auser%3Abulk_modify#uploading_data
 [17]: https://www.itophub.io/wiki/page?id=latest%3Aadmin%3Aaudit
 [18]: https://www.itophub.io/wiki/page?id=latest%3Aadvancedtopics%3Adata_synchro_overview
-
-
-
-## Latest release
-
- - [Changes since the previous version][62]
- - [New features][63]
- - [Installation notes][64]
- - [Download][65]
-
-[62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
-[63]: https://www.itophub.io/wiki/page?id=latest:release:start
-[64]: https://www.itophub.io/wiki/page?id=latest:install:start
-[65]: https://sourceforge.net/projects/itop/files/latest/download
 
 
 ## About Us
