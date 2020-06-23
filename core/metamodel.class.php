@@ -3496,7 +3496,7 @@ abstract class MetaModel
 		}
 		if (array_key_exists($sAttCode, self::$m_aAttribDefs[$sTargetClass]))
 		{
-			throw new Exception("Declaration of $sTargetClass: attempting to redeclare the inherited attribute '$sAttCode', originaly declared in ".self::$m_aAttribOrigins[$sTargetClass][$sAttCode]);
+			throw new Exception("Declaration of $sTargetClass: attempting to redeclare the inherited attribute '$sAttCode', originally declared in ".self::$m_aAttribOrigins[$sTargetClass][$sAttCode]);
 		}
 
 		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
@@ -4934,7 +4934,7 @@ abstract class MetaModel
 				//
 				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
@@ -5308,7 +5308,7 @@ abstract class MetaModel
 				$sClassRes .= self::MakeDictEntry("Class:$sClass+", self::GetClassDescription_Obsolete($sClass), '', $bNotInDico);
 				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
@@ -5472,7 +5472,7 @@ abstract class MetaModel
 			{
 				if (!$oAttDef->CopyOnAllTables())
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
