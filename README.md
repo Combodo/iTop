@@ -26,16 +26,18 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [Documentation][4] covering both iTop and its official extensions
- - [iTop Hub][5] : discover and install extensions !
+ - [Software requirements][4]
+ - [Documentation][5] covering both iTop and its official extensions
+ - [iTop Hub][6] : discover and install extensions !
 
 
 
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
 [3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki
-[5]: https://store.itophub.io/en_US/
+[4]: https://www.itophub.io/wiki/page?id=2_7_0%3Ainstall%3Aupgrading_itop
+[5]: https://www.itophub.io/wiki
+[6]: https://store.itophub.io/en_US/
 
 [10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
 [11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
