@@ -424,7 +424,7 @@ class DBObjectSet implements iDBObjectSetIterator
      *
      * @api
      *
-     * @param bool $bWithId
+     * @param bool $bWithId if true array key will be set to object id
      *
      * @return DBObject[]
      *

@@ -7946,18 +7946,6 @@ class AttributeImage extends AttributeBlob
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * @see AttributeBlob::MakeRealValue()
-	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
-	{
-		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
-
-		// The validation of the MIME Type is done by CheckFormat below
-		return $oDoc;
-	}
-
-	/**
 	 * Check that the supplied ormDocument actually contains an image
 	 * {@inheritDoc}
 	 *

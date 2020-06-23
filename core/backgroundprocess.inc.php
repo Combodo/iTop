@@ -1,29 +1,23 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * interface iProcess
- * Something that can be executed 
+ * Copyright (C) 2010-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
+
+
 interface iProcess
 {
 	/**
@@ -95,6 +89,11 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	const MODULE_SETTING_TIME = 'time';
 
 	/**
+	 * @var Config can be used to mock config for tests
+	 */
+	protected $oConfig;
+
+	/**
 	 * Module must be declared in each implementation
 	 *
 	 * @return string
@@ -106,6 +105,20 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	 *         example '23:30'
 	 */
 	abstract protected function GetDefaultModuleSettingTime();
+
+	/**
+	 * @return \Config
+	 */
+	public function getOConfig()
+	{
+		if (!isset($this->oConfig))
+		{
+			$this->oConfig = MetaModel::GetConfig();
+		}
+
+		return $this->oConfig;
+	}
+
 
 	/**
 	 * Interpret current setting for the week days
@@ -125,7 +138,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			'sunday' => 7,
 		);
 		$aDays = array();
-		$sWeekDays = MetaModel::GetConfig()->GetModuleSetting(
+		$sWeekDays = $this->getOConfig()->GetModuleSetting(
 			$this->GetModuleName(),
 			static::MODULE_SETTING_WEEKDAYS,
 			static::DEFAULT_MODULE_SETTING_WEEKDAYS
@@ -158,21 +171,26 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	}
 
 	/**
-	 * Gives the exact time at which the process must be run next time
+	 * @param string $sCurrentTime Date string to extract time dependency
+	 *      this parameter is not present in the interface but as it is optional it's ok
 	 *
-	 * @return DateTime
-	 * @throws Exception
+	 * @return DateTime the exact time at which the process must be run next time
+	 * @throws \ProcessInvalidConfigException
 	 */
-	public function GetNextOccurrence()
+	public function GetNextOccurrence($sCurrentTime = 'now')
 	{
-		$bEnabled = MetaModel::GetConfig()->GetModuleSetting(
+		$bEnabled = $this->getOConfig()->GetModuleSetting(
 			$this->GetModuleName(),
 			static::MODULE_SETTING_ENABLED,
 			static::DEFAULT_MODULE_SETTING_ENABLED
 		);
+
+		$sItopTimeZone = $this->getOConfig()->Get('timezone');
+		$timezone = new DateTimeZone($sItopTimeZone);
+
 		if (!$bEnabled)
 		{
-			return new DateTime('3000-01-01');
+			return new DateTime('3000-01-01', $timezone);
 		}
 
 		// 1st - Interpret the list of days as ordered numbers (monday = 1)
@@ -181,7 +199,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 
 		// 2nd - Find the next active week day
 		//
-		$sProcessTime = MetaModel::GetConfig()->GetModuleSetting(
+		$sProcessTime = $this->getOConfig()->GetModuleSetting(
 			$this->GetModuleName(),
 			static::MODULE_SETTING_TIME,
 			static::GetDefaultModuleSettingTime()
@@ -190,7 +208,8 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 		{
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
 		}
-		$oNow = new DateTime();
+
+		$oNow = new DateTime($sCurrentTime, $timezone);
 		$iNextPos = false;
 		$sDay = $oNow->format('N');
 		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
@@ -244,13 +263,14 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 /**
  * Exception for {@link iProcess} implementations.<br>
  * An error happened during the processing but we can go on with the next implementations.
+ * @since 2.5.0 N°1195
  */
 class ProcessException extends CoreException
 {
 }
 
 /**
- * @since 2.7.0
+ * @since 2.7.0 PR #89
  */
 class ProcessInvalidConfigException extends ProcessException
 {
@@ -260,6 +280,7 @@ class ProcessInvalidConfigException extends ProcessException
  * Class ProcessFatalException
  * Exception for iProcess implementations.<br>
  * A big error occurred, we have to stop the iProcess processing.
+ * @since 2.5.0 N°1195
  */
 class ProcessFatalException extends CoreException
 {

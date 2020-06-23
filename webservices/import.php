@@ -212,6 +212,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {

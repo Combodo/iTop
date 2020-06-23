@@ -313,6 +313,11 @@ class DBObjectSearch extends DBSearch
 		return true;
 	}
 
+	/**
+	 * Move conditions from $oFilter to $this
+	 * @param \DBSearch $oFilter
+	 * @param $aTranslation
+	 */
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		// Prevent collisions in the parameter names by renaming them if needed
@@ -335,6 +340,7 @@ class DBObjectSearch extends DBSearch
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
+		$oFilter->ResetCondition();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -522,6 +528,8 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Helper method for IN / NOT IN conditions : values won't be parsed in the expression tree, that will save some time !
+	 *
 	 * @param string $sFilterCode attribute code to use
 	 * @param array $aValues
 	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN

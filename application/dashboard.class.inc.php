@@ -1574,9 +1574,16 @@ JS
 	private function GetDashletObjectListAppUserPreferencesPrefix(DashletObjectList $oDashlet, $aExtraParams, $sDashletId)
 	{
 		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
-		$oFilter = $oDashlet->GetDBSearch($aExtraParams);
-		$aClassAliases = $oFilter->GetSelectedClasses();
-
+		$aClassAliases = array();
+		try{
+			$oFilter = $oDashlet->GetDBSearch($aExtraParams);
+			$aClassAliases = $oFilter->GetSelectedClasses();
+		}
+		catch (Exception $e)
+		{
+			//on error, return default value
+			return null;
+		}
 		return DataTableSettings::GetAppUserPreferenceKey($aClassAliases, $sDataTableId);
 	}
 }

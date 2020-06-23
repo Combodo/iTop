@@ -1248,9 +1248,9 @@ class CMDBSource
 	 */
 	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
 	{
-		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?$/', $sCompleteFieldType, $aMatches);
+		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?/', $sCompleteFieldType, $aMatches);
 
-		$sDataType = $aMatches[1];
+		$sDataType = isset($aMatches[1]) ? $aMatches[1] : '';
 		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
 		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
 

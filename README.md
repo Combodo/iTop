@@ -60,6 +60,7 @@ iTop also offers mass import tools and web services to integrate with your IT
 [18]: https://www.itophub.io/wiki/page?id=latest%3Aadvancedtopics%3Adata_synchro_overview
 
 
+
 ## About Us
 
 iTop development is sponsored, led and supported by [Combodo][0].
@@ -95,10 +96,8 @@ We would like to give a special thank you to the people from the community who c
  - Lucas, Jonathan
  - Malik, Remie
  - Rosenke, Stephan
- - Schirrmann, Pascal
  - Seki, Shoji
  - Shilov, Vladimir
- - Tahri, Ahmed R. (Ousret)
  - Tulio, Marco
  - Turrubiates, Miguel
 

@@ -104,6 +104,48 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	}
 
 	/**
+	 * @dataProvider LocalPathProvider
+	 *
+	 * @param $sAbsolutePath
+	 * @param $expected
+	 */
+	public function testLocalPath($sAbsolutePath, $expected)
+	{
+		$this->assertSame($expected, utils::LocalPath($sAbsolutePath));
+
+	}
+
+	public function LocalPathProvider()
+	{
+		return array(
+			'index.php' => array(
+				'sAbsolutePath' => APPROOT.'index.php',
+				'expected' => 'index.php',
+			),
+			'non existing' => array(
+				'sAbsolutePath' => APPROOT.'nonexisting/nonexisting',
+				'expected' => false,
+			),
+			'outside' => array(
+				'sAbsolutePath' => '/tmp',
+				'expected' => false,
+			),
+			'application/cmdbabstract.class.inc.php' => array(
+				'sAbsolutePath' => APPROOT.'application/cmdbabstract.class.inc.php',
+				'expected' => 'application/cmdbabstract.class.inc.php',
+			),
+			'dir' => array(
+				'sAbsolutePath' => APPROOT.'application/.',
+				'expected' => 'application',
+			),
+			'root' => array(
+				'sAbsolutePath' => APPROOT.'.',
+				'expected' => '',
+			),
+		);
+	}
+
+	/**
 	 * @dataProvider appRootUrlProvider
 	 * @covers utils::GetAppRootUrl
 	 */

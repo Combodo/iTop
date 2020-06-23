@@ -10,7 +10,7 @@
     "ext-json": "*",
     "ext-mysqli": "*",
     "ext-soap": "*",
-    "combodo/tcpdf": "6.3.4",
+    "combodo/tcpdf": "6.3.5",
     "nikic/php-parser": "^3.1",
     "pear/archive_tar": "1.4.9",
     "pelago/emogrifier": "2.1.0",

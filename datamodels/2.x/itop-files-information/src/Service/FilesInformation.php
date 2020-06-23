@@ -21,33 +21,71 @@ class FilesInformation
 	 *
 	 * @param string $sMessage
 	 *
-	 * @return bool true if core update is possible
+	 * @return string 'Yes', 'No', 'Warning'
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileNotExistException
+	 * @throws \Exception
 	 */
     public static function CanUpdateCore(&$sMessage)
     {
         self::Init();
         // Check than iTop can write everywhere
-        if (!self::CanWriteRecursive('', $sMessage))
+	    $aFilesInfo = FilesIntegrity::GetInstalledFiles(APPROOT.'manifest.xml');
+	    if ($aFilesInfo === false)
+	    {
+	    	$sMessage = Dict::Format('FilesInformation:Error:MissingFile', 'manifest.xml');
+	    	return 'No';
+	    }
+	    // generate files and folders list
+	    $aInstalledFiles = array();
+	    foreach (array_keys($aFilesInfo) as $sFile)
+	    {
+		    $sLocalDirPath = utils::LocalPath(APPROOT.dirname($sFile));
+		    if ($sLocalDirPath !== false)
+		    {
+		    	if (!isset($aInstalledFiles[$sLocalDirPath]))
+			    {
+				    $aInstalledFiles[$sLocalDirPath] = true;
+			    }
+		        $aInstalledFiles[$sFile] = true;
+		    }
+	    }
+        if (!self::CanWriteRecursive('', $sMessage, $aInstalledFiles))
         {
-            return false;
+            return 'No';
         }
 
-        return true;
+	    try
+	    {
+		    FilesIntegrity::CheckInstallationIntegrity();
+	    }
+        catch (FileIntegrityException $e)
+	    {
+	    	$sMessage = $e->getMessage();
+	    	return 'Warning';
+	    }
+
+	    return 'Yes';
     }
 
 	/**
 	 * @param string $sRootPath
 	 * @param string $sMessage
+	 * @param array $aInstalledFiles
 	 *
 	 * @return bool
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileNotExistException
 	 */
-    private static function CanWriteRecursive($sRootPath = '', &$sMessage = null)
+    private static function CanWriteRecursive($sRootPath = '', &$sMessage = null, $aInstalledFiles = array())
     {
         $aDirStats = FilesInformationUtils::Scan($sRootPath, false);
         foreach ($aDirStats as $sFileName => $aFileStats)
         {
+        	// For name normalization
+        	$sLocalPath = utils::LocalPath(APPROOT.$sRootPath.DIRECTORY_SEPARATOR.$sFileName);
+        	if (($sLocalPath === false) || !isset($aInstalledFiles[$sLocalPath]))
+	        {
+	        	continue;
+	        }
             if (!self::CanWriteToFile($aFileStats))
             {
 	            $sMessage = Dict::Format('FilesInformation:Error:CantWriteToFile', $sRootPath.DIRECTORY_SEPARATOR.$sFileName);
@@ -55,7 +93,7 @@ class FilesInformation
             }
             if (($sFileName != '.') && ($aFileStats['type'] == 'dir'))
             {
-                if (!self::CanWriteRecursive($sRootPath.DIRECTORY_SEPARATOR.$sFileName, $sMessage))
+                if (!self::CanWriteRecursive($sRootPath.DIRECTORY_SEPARATOR.$sFileName, $sMessage, $aInstalledFiles))
                 {
                     return false;
                 }

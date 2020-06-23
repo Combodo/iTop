@@ -38,7 +38,7 @@
 			animated ?
 				this.animate({ height: "toggle" }, animated, callback) :
 				this.each(function(){
-					jQuery(this)[ jQuery(this).is(":hidden") ? "show" : "hide" ]();
+					$(this)[ $(this).is(":hidden") ? "show" : "hide" ]();
 					if(callback)
 						callback.apply(this, arguments);
 				});
@@ -50,6 +50,32 @@
 				this.hide();
 				if (callback)
 					this.each(callback);				
+			}
+		},
+		heightToggleShow: function(animated, callback) {
+			if (animated) {
+				this.animate({ height: "show" }, animated, callback);
+			}
+			else
+			{
+				this.each(function() {
+					$(this).show();
+					if (callback)
+						callback.apply(this, arguments);
+				});
+			}
+		},
+		heightToggleHide: function(animated, callback) {
+			if (animated) {
+				this.animate({ height: "hide" }, animated, callback);
+			}
+			else
+			{
+				this.each(function() {
+					$(this).hide();
+					if (callback)
+						callback.apply(this, arguments);
+				});
 			}
 		},
 		prepareBranches: function(settings) {
@@ -132,20 +158,42 @@
 		
 			// handle toggle event
 			function toggler() {
-				$(this)
+				//with if it's better
+				if($(this).parent().find(".treeview").first().is(":hidden") )
+				{
+					$(this)
 					.parent()
 					// swap classes for hitarea
 					.find(">.hitarea")
-						.swapClass( CLASSES.collapsableHitarea, CLASSES.expandableHitarea )
-						.swapClass( CLASSES.lastCollapsableHitarea, CLASSES.lastExpandableHitarea )
+						.replaceClass( CLASSES.expandableHitarea, CLASSES.collapsableHitarea)
+						.replaceClass(  CLASSES.lastExpandableHitarea, CLASSES.lastCollapsableHitarea)
 					.end()
 					// swap classes for parent li
-					.swapClass( CLASSES.collapsable, CLASSES.expandable )
-					.swapClass( CLASSES.lastCollapsable, CLASSES.lastExpandable )
+					.replaceClass( CLASSES.expandable, CLASSES.collapsable )
+					.replaceClass( CLASSES.lastExpandable, CLASSES.lastCollapsable )
 					// find child lists
 					.find( ">ul" )
-					// toggle them
-					.heightToggle( settings.animated, settings.toggle );
+						// toggle them
+						.heightToggleShow( settings.animated, settings.toggle );
+				}
+				else
+				{
+					$(this)
+					.parent()
+						// swap classes for hitarea
+						.find(">.hitarea")
+							.replaceClass( CLASSES.collapsableHitarea, CLASSES.expandableHitarea )
+							.replaceClass( CLASSES.lastCollapsableHitarea, CLASSES.lastExpandableHitarea )
+						.end()
+						// swap classes for parent li
+						.replaceClass( CLASSES.collapsable, CLASSES.expandable )
+						.replaceClass( CLASSES.lastCollapsable, CLASSES.lastExpandable )
+						// find child lists
+						.find( ">ul" )
+							// toggle them
+							.heightToggleHide( settings.animated, settings.toggle );
+				}
+
 				if ( settings.unique ) {
 					$(this).parent()
 						.siblings()
@@ -157,10 +205,9 @@
 						.replaceClass( CLASSES.collapsable, CLASSES.expandable )
 						.replaceClass( CLASSES.lastCollapsable, CLASSES.lastExpandable )
 						.find( ">ul" )
-						.heightHide( settings.animated, settings.toggle );
+							.heightHide( settings.animated, settings.toggle );
 				}
 			}
-			
 			function serialize() {
 				function binary(arg) {
 					return arg ? 1 : 0;

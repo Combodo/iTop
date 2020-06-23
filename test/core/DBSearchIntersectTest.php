@@ -3,7 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DBSearch;
 
 /**
@@ -15,9 +15,8 @@ use DBSearch;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class DBSearchIntersectTest extends ItopDataTestCase
+class DBSearchIntersectTest extends ItopTestCase
 {
-	const USE_TRANSACTION = false;
 
 	protected function setUp()
 	{
@@ -57,7 +56,6 @@ class DBSearchIntersectTest extends ItopDataTestCase
 			'right' => "SELECT FunctionalCI WHERE org_id = 3",
 			'alias' => "ApplicationSolution",
 			'result' => "SELECT `ApplicationSolution` FROM ApplicationSolution AS `ApplicationSolution` WHERE (`ApplicationSolution`.`org_id` = 3) UNION SELECT `BusinessProcess` FROM BusinessProcess AS `BusinessProcess` WHERE (`BusinessProcess`.`org_id` = 3)");
-
 
 // Bug to fix
 //		$aTests['Test union #2902'] = array(
@@ -455,5 +453,54 @@ class DBSearchIntersectTest extends ItopDataTestCase
 		);
 
 		return $aQueries;
+	}
+
+	/**
+	 * Bug #2970
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \OQLException
+	 */
+	public function testFilterOnJoin()
+	{
+		$sReq1 = "SELECT `L-1` FROM Organization AS `L-1` WHERE (`L-1`.`id` = :current_contact->org_id)";
+		$sReq2 = "SELECT `L-1-1` FROM CustomerContract AS `L-1-1` JOIN Organization AS `O` ON `L-1-1`.org_id = `O`.id WHERE (((`L-1-1`.`status` = 'active') OR (`L-1-1`.`status` = 'standby')) AND (`O`.`id` = :current_contact->org_id))";
+
+		$oFilter1 = DBSearch::FromOQL($sReq1);
+		$oFilter2 = DBSearch::FromOQL($sReq2);
+		$aRealiasingMap = array();
+		$oFilter1 = $oFilter1->Join($oFilter2,
+			DBSearch::JOIN_REFERENCED_BY,
+			'org_id',
+			TREE_OPERATOR_EQUALS, $aRealiasingMap);
+
+		$sRes1 = $oFilter1->ToOQL();
+		$this->debug($sRes1);
+
+		foreach($oFilter1->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
+		{
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $index => $oForeignFilter)
+					{
+						$this->debug($oForeignFilter->ToOQL());
+					}
+				}
+			}
+		}
+
+		$this->assertFalse(strpos($sRes1, '`O`.'));
+
+		$sReq3 = "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE (`CustomerContract`.`org_id` IN ('2'))";
+		$oFilter3 = DBSearch::FromOQL($sReq3);
+
+		$oFilter1 = $oFilter1->Filter('L-1-1', $oFilter3);
+
+		$sRes1 = $oFilter1->ToOQL();
+		$this->debug($sRes1);
+
+		$this->assertFalse(strpos($sRes1, '`O`.'));
 	}
 }

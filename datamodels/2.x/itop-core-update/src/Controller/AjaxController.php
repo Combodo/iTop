@@ -28,7 +28,8 @@ class AjaxController extends Controller
 
 		try
 		{
-			$bCanUpdateCore = FilesInformation::CanUpdateCore($sMessage);
+			$sCanUpdateCore = FilesInformation::CanUpdateCore($sMessage);
+			$bCanUpdateCore = ($sCanUpdateCore == 'Yes');
 			$aParams['bStatus'] = $bCanUpdateCore;
 			if ($bCanUpdateCore)
 			{
@@ -36,7 +37,7 @@ class AjaxController extends Controller
 			}
 			else
 			{
-				$aParams['sMessage'] = Dict::Format('iTopUpdate:UI:CanCoreUpdate:No', $sMessage);
+				$aParams['sMessage'] = Dict::Format("iTopUpdate:UI:CanCoreUpdate:{$sCanUpdateCore}", $sMessage);
 			}
 		} catch (FileNotExistException $e)
 		{

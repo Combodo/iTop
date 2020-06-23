@@ -427,6 +427,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'DataTableSettings' => __DIR__ . '/../..' . '/application/datatable.class.inc.php',
         'Datamatrix' => __DIR__ . '/..' . '/combodo/tcpdf/include/barcodes/datamatrix.php',
         'DateTimeFormat' => __DIR__ . '/../..' . '/core/datetimeformat.class.inc.php',
+        'DeadLockLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'DefaultLogFileNameBuilder' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'DefaultMetricComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
         'DefaultWorkingTimeComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
