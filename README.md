@@ -57,7 +57,7 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Download][65]
 
 [62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
-[63]: https://www.itophub.io/wiki/page?id=latest:release:2_7_whats_new
+[63]: https://www.itophub.io/wiki/page?id=latest:release:start
 [64]: https://www.itophub.io/wiki/page?id=latest:install:start
 [65]: https://sourceforge.net/projects/itop/files/latest/download
 
