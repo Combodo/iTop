@@ -2624,7 +2624,7 @@ class IntervalExpression extends Expression
 
 	public function ListParameters()
 	{
-		return array();
+		return $this->m_oValue->ListParameters();
 	}
 
 	public function RenameParam($sOldName, $sNewName)

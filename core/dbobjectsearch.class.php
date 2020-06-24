@@ -2097,4 +2097,9 @@ class DBObjectSearch extends DBSearch
 		}
 		return $oExpression;
 	}
+
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
+	}
 }

@@ -728,4 +728,14 @@ class DBUnionSearch extends DBSearch
 			$oSearch->AddConditionExpression($oInCondition);
 		}
 	}
+
+	public function ListParameters()
+	{
+		$aParameters = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aParameters = array_merge($aParameters, $oSearch->ListParameters());
+		}
+		return $aParameters;
+	}
 }
