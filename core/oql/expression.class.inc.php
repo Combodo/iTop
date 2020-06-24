@@ -2180,7 +2180,7 @@ class NestedQueryExpression extends Expression
 
 	public function ListParameters()
 	{
-		return array();
+		return $this->m_oNestedQuery->ListParameters();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -2332,7 +2332,13 @@ class FunctionExpression extends Expression
 
 	public function ListParameters()
 	{
-		return array();
+
+		$aRes = array();
+		foreach ($this->m_aArgs as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListParameters());
+		}
+		return $aRes;
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -2769,7 +2775,12 @@ class CharConcatExpression extends Expression
 
 	public function ListParameters()
 	{
-		return array();
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListParameters());
+		}
+		return $aRes;
 	}
 
 	public function RenameParam($sOldName, $sNewName)
