@@ -1,0 +1,53 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables (can be overloaded) */
+$ibo-body-text-color: $ibo-color-grey-900 !default;
+$ibo-body-background-color: $ibo-color-white-200 !default;
+
+/* CSS variables (can be changed directly from the browser) */
+:root{
+	--ibo-body-text-color: $ibo-body-text-color;
+	--ibo-body-background-color: $ibo-body-background-color;
+}
+
+/* Layout */
+html{
+	height: 100%;
+}
+body{
+	display: flex;
+	height: 100%;
+	color: var(--ibo-body-text-color);
+	background-color: var(--ibo-body-background-color);
+	@include ibo-font-ral-nor-100;
+}
+#ibo-page-container{
+	position: relative;
+	height: 100%;
+	overflow: auto;
+	flex-grow: 1;
+}
+#ibo-top-bar{
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+#ibo-page-content{
+}

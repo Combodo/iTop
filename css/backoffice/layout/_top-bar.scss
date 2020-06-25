@@ -1,0 +1,37 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables (can be overloaded) */
+$ibo-top-bar-padding-left: 16px !default; /* Should be align with the page content padding-left */
+$ibo-top-bar-padding-right: 16px !default;
+$ibo-top-bar-padding-y: 16px !default;
+$ibo-top-bar-background-color: $ibo-color-white-100 !default;
+
+/* CSS variables (can be changed directly from the browser) */
+:root{
+	--ibo-top-bar-padding-left: $ibo-top-bar-padding-left;
+	--ibo-top-bar-padding-right: $ibo-top-bar-padding-right;
+	--ibo-top-bar-padding-y: $ibo-top-bar-padding-y;
+	--ibo-top-bar-background-color: $ibo-top-bar-background-color;
+}
+.ibo-top-bar{
+	display: flex;
+	align-items: center;
+	padding: var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-right) var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-left);
+	background-color: var(--ibo-top-bar-background-color);
+}

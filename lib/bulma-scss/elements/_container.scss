@@ -1,0 +1,43 @@
+$container-offset: 2 * $gap !default;
+
+.container {
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  width: auto;
+
+  &.is-fluid {
+    max-width: none;
+    padding-left: $gap;
+    padding-right: $gap;
+    width: 100%;
+  }
+
+  @include desktop {
+    max-width: $desktop - $container-offset;
+  }
+
+
+  @include until-widescreen {
+    &.is-widescreen {
+      max-width: $widescreen - $container-offset;
+    }
+  }
+
+
+  @include until-fullhd {
+    &.is-fullhd {
+      max-width: $fullhd - $container-offset;
+    }
+  }
+
+
+  @include widescreen {
+    max-width: $widescreen - $container-offset;
+  }
+
+
+  @include fullhd {
+    max-width: $fullhd - $container-offset;
+  }
+}
