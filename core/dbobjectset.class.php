@@ -1313,34 +1313,6 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * Will be deprecated soon - use MetaModel::GetRelatedObjectsDown/Up instead to take redundancy into account
-     *
-     * @throws \Exception
-     */
-	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99)
-	{
-		$aRelatedObjs = array();
-
-		$aVisited = array(); // optimization for consecutive calls of MetaModel::GetRelatedObjects
-		$this->Seek(0);
-		while ($oObject = $this->Fetch())
-		{
-			$aMore = $oObject->GetRelatedObjects($sRelCode, $iMaxDepth, $aVisited);
-			foreach ($aMore as $sClass => $aRelated)
-			{
-				foreach ($aRelated as $iObj => $oObj)
-				{
-					if (!isset($aRelatedObjs[$sClass][$iObj]))
-					{
-						$aRelatedObjs[$sClass][$iObj] = $oObj;
-					}
-				}
-			}
-		}
-		return $aRelatedObjs;
-	}
-
-    /**
      * Compute the "RelatedObjects" (forward or "down" direction) for the set
      * for the specified relation
      *
