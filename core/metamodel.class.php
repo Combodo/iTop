@@ -7240,97 +7240,9 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinkingClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 *
-	 */
-	public static function EnumLinksClasses()
-	{
-		// Returns a flat array of classes having at least two external keys
-		$aResult = array();
-		foreach(self::$m_aAttribDefs as $sSomeClass => $aClassAttributes)
-		{
-			$iExtKeyCount = 0;
-			foreach($aClassAttributes as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$iExtKeyCount++;
-				}
-			}
-			if ($iExtKeyCount >= 2)
-			{
-				$aResult[] = $sSomeClass;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinksClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 *
-	 *@param string $sClass
-	 *
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 * @throws \CoreException
-	 *
-	 */
-	public static function EnumLinkingClasses($sClass = "")
-	{
-		// N-N links, array of sLinkClass => (array of sAttCode=>sClass)
-		$aResult = array();
-		foreach(self::EnumLinksClasses() as $sSomeClass)
-		{
-			$aTargets = array();
-			$bFoundClass = false;
-			foreach(self::ListAttributeDefs($sSomeClass) as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$sRemoteClass = $oAttDef->GetTargetClass();
-					if (empty($sClass))
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-					elseif ($sClass == $sRemoteClass)
-					{
-						$bFoundClass = true;
-					}
-					else
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-				}
-			}
-			if (empty($sClass) || $bFoundClass)
-			{
-				$aResult[$sSomeClass] = $aTargets;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
 	 * Using GetLinkClasses is the recommended way to determine if a class is
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
-	 *
-	 * This function has two siblings that will be soon deprecated:
-	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
 	 *
 	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
