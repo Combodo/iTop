@@ -348,6 +348,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLA/Attribute:slts_list+' => 'Service Level Threshholds:',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kunde kontrakter',
 	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
 //

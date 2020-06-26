@@ -407,6 +407,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Søg',
 	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s ',
@@ -1429,6 +1432,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',

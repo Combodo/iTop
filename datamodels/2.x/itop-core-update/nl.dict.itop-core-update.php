@@ -75,7 +75,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Controle van het bestandssysteem mislukt (Bestand bestaat niet: %1$s)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Controle van het bestandssysteem is mislukt',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Updaten van toepassing is mogelijk',
-    'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Klaar om verder te gaan',

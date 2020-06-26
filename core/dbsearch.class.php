@@ -1230,6 +1230,8 @@ abstract class DBSearch
 	 */
 	public abstract function GetCriteria();
 
+	public abstract function ListParameters();
+
     /**
      * Shortcut to add efficient IN condition
      *

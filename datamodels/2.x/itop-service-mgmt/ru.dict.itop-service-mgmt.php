@@ -336,6 +336,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SLA/Attribute:slts_list+' => 'Целевые показатели уровня услуги (Service Level Target)',
 	'Class:SLA/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Договоры с заказчиками, в которых используется SLA',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
 //

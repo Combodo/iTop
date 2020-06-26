@@ -73,7 +73,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
     'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking filesystem failed (File not exist %1$s)~~',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking filesystem failed~~',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Application can be updated~~',
-    'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s~~',
+	'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start~~',

@@ -370,6 +370,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SLA/Attribute:slts_list+' => 'Všechny cíle úrovně služeb pro tuto dohodu o úrovni služeb',
 	'Class:SLA/Attribute:customercontracts_list' => 'Smlouvy se zákazníky',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Všechny smlouvy se zákazníky využívající tuto dohodu o úrovni služeb',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
 //

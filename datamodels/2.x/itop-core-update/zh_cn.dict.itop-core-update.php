@@ -73,7 +73,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => '文件系统检查失败 ( %1$s 文件不存在)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => '文件系统检查失败',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => '应用无法升级',
-    'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级: %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',

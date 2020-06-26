@@ -424,6 +424,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:Insert' => 'Invoegen',
 	'UI:Button:More' => 'Meer',
 	'UI:Button:Less' => 'Minder',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Zoek',
 	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
@@ -1449,6 +1452,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Button:ResetImage' => 'Vorige afbeelding herstellen',
 	'UI:Button:RemoveImage' => 'Afbeelding verwijderen',
 	'UI:UploadNotSupportedInThisMode' => 'Het aanpassen van afbeeldingen of bestanden wordt niet ondersteund in deze mode.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Inklappen / uitklappen',

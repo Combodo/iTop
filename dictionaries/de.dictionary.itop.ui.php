@@ -406,6 +406,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Insert' => 'Einfügen',
 	'UI:Button:More' => 'Mehr',
 	'UI:Button:Less' => 'Weniger',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
@@ -1427,6 +1430,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Button:ResetImage' => 'Vorheriges Bild wiederherstellen',
 	'UI:Button:RemoveImage' => 'Bild löschen',
 	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Ein-/Ausklappen',

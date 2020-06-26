@@ -48,6 +48,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Ungültiger Wert für %1$s (Spalte: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Manche Benutzerkonten haben keinerlei zugewiesenes Profi',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch-Count-Fehler in `%1$s`, %2$d Einträge geholt (fetched) / %3$d gezählt',
+	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
 ));
 
 // Database Info

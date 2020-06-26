@@ -53,6 +53,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Ongeldige waarde voor %1$s (kolom: "%2$s.%3$s")',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Sommige gebruikersaccounts hebben geen profiel',
 	'DBAnalyzer-Fetch-Count-Error' => 'Opvraag-fout in "%1$s", %2$d records opgevraagd / %3$d geteld',
+	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
+	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
 ));
 
 // Database Info

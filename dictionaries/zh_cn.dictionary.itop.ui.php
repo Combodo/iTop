@@ -418,6 +418,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Insert' => '插入',
 	'UI:Button:More' => '更多',
 	'UI:Button:Less' => '更少',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => '搜索',
 	'UI:ClickToCreateNew' => '新建 %1$s',
@@ -1440,6 +1443,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
+
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
 
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
