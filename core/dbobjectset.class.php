@@ -1468,7 +1468,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	public function ListConstantFields()
 	{
 		// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
-		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
+		$aScalarArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->ListParameters());
 		$aConst = $this->m_oFilter->ListConstantFields();
 				
 		foreach($aConst as $sClassAlias => $aVals)
@@ -1487,7 +1487,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	
 	public function ApplyParameters()
 	{
-		$aAllArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs);
+		$aAllArgs = MetaModel::PrepareQueryArguments($this->m_oFilter->GetInternalParams(), $this->m_aArgs, $this->m_oFilter->GetExpectedArguments());
 		$this->m_oFilter->ApplyParameters($aAllArgs);
 	}
 }
