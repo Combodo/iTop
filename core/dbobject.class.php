@@ -2948,46 +2948,6 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsert()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int|null
-     * @throws CoreException
-     */
-	public function DBInsertTracked(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBInsert();
-	}
-
-    /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsertNoReload()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int
-     * @throws ArchivedObjectException
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws CoreWarning
-     * @throws MySQLException
-     * @throws OQLException
-     */
-	public function DBInsertTrackedNoReload(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBInsertNoReload();
-	}
-
-    /**
      * Creates a copy of the current object into the database
      *
      * @internal
@@ -3338,25 +3298,6 @@ abstract class DBObject implements iDisplay
 		$this->m_aPreviousValuesForUpdatedAttributes = $aPreviousValuesForUpdatedAttributes;
 	}
 
-    /**
-     *
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBUpdate()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     */
-	public function DBUpdateTracked(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBUpdate();
-	}
-
 	/**
 	 * Make the current changes persistent - clever wrapper for Insert or Update
      *
@@ -3611,32 +3552,7 @@ abstract class DBObject implements iDisplay
 		return $oDeletionPlan;
 	}
 
-    /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBDelete()} instead.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     * @param boolean $bSkipStrongSecurity
-     * @param \DeletionPlan $oDeletionPlan
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws DeleteException
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
-     * @throws OQLException
-     */
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		$this->DBDelete($oDeletionPlan);
-	}
-
-    /**
+     /**
      * @internal
      *
      * @return array

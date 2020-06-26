@@ -513,83 +513,6 @@ abstract class CMDBObject extends DBObject
 		}
 	}
 
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int|null
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$ret = $this->DBInsertTracked_Internal();
-		return $ret;
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsertNoReload} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$ret = $this->DBInsertTracked_Internal(true);
-		return $ret;
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} or {@link DBInsertNoReload} instead
-	 *
-	 * @param bool $bDoNotReload
-	 *
-	 * @return integer Identifier of the created object
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	protected function DBInsertTracked_Internal($bDoNotReload = false)
-	{
-		if ($bDoNotReload)
-		{
-			$ret = $this->DBInsertNoReload();
-		}
-		else
-		{
-			$ret = $this->DBInsert();
-		}
-		return $ret;
-	}
-
 	public function DBClone($newKey = null)
 	{
 		return $this->DBCloneTracked_Internal();
@@ -622,24 +545,6 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBUpdate} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int|void
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \SecurityException
-	 */
-	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$this->DBUpdate();
-	}
 
 	/**
 	 * @param null $oDeletionPlan
@@ -657,31 +562,6 @@ abstract class CMDBObject extends DBObject
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBDelete} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 * @param null $oDeletionPlan
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DeleteException
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
-		$this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
 	/**
