@@ -156,7 +156,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			phpCAS::setDebug(APPROOT.'log/cas.log');
 		}
-		
+
 		// Initialize phpCAS
 		$sCASVersion = Config::Get('cas_version');
 		$sCASHost = Config::Get('cas_host');
@@ -500,15 +500,8 @@ class CASUserProvisioning
 		}
 
 		// Now synchronize the profiles
-		$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
-		foreach($aProfiles as $iProfileId)
-		{
-			$oLink = new URP_UserProfile();
-			$oLink->Set('profileid', $iProfileId);
-			$oLink->Set('reason', 'CAS/LDAP Synchro');
-			$oProfilesSet->AddObject($oLink);
-		}
-		$oUser->Set('profile_list', $oProfilesSet);
+		LoginWebPage::SynchroniseProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
+
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
 		if ($oUser->IsModified())
 		{
