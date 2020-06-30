@@ -92,7 +92,6 @@ class LoginWebPage extends NiceWebPage
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
