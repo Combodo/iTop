@@ -48,6 +48,7 @@ class DBObjectTest extends ItopDataTestCase
 
 	/**
 	 * Test default page name
+	 * @covers DBObject::GetUIPage
 	 */
 	public function testGetUIPage()
 	{
@@ -81,6 +82,9 @@ class DBObjectTest extends ItopDataTestCase
 			array('PHP_INT_MIN', false));
 	}
 
+	/**
+	 * @covers DBObject::GetOriginal
+	 */
 	public function testGetOriginal()
 	{
 		$oObject = $this->CreateUserRequest(190664);
@@ -88,4 +92,61 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertNull($oObject->GetOriginal('sla_tto_passed'));
 	}
 
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testAttributeRefresh_FriendlyName()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+
+		static::assertEquals('John Foo', $oObject->Get('friendlyname'));
+		$oObject->Set('name', 'Who');
+		static::assertEquals('John Who', $oObject->Get('friendlyname'));
+	}
+
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testAttributeRefresh_FriendlyNameFromDB()
+	{
+		$oObject = \MetaModel::GetObject('Person', 15);
+
+		static::assertEquals('Agatha Christie', $oObject->Get('friendlyname'));
+		$oObject->Set('name', 'The Blues');
+		static::assertEquals('Agatha The Blues', $oObject->Get('friendlyname'));
+	}
+
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testAttributeRefresh_ObsolescenceFlag()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+
+		static::assertEquals(false, (bool)$oObject->Get('obsolescence_flag'));
+		$oObject->Set('status', 'inactive');
+		static::assertEquals(true, (bool)$oObject->Get('obsolescence_flag'));
+	}
+
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testAttributeRefresh_ExternalKeysAndFields()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+
+		static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
+		static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		$oObject->Set('org_id', 2);
+		static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+		static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+	}
 }

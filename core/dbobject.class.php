@@ -798,9 +798,10 @@ abstract class DBObject implements iDisplay
 			elseif ($sAttCode == 'friendlyname')
 			{
 				// The friendly name is not computed and the object is dirty
-				// Todo: implement the computation of the friendly name based on sprintf()
-				// 
-				$this->m_aCurrValues[$sAttCode] = '';
+				//
+				/** @var AttributeFriendlyName $oAttDef */
+				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());
+				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 			else
 			{
@@ -5372,6 +5373,34 @@ abstract class DBObject implements iDisplay
 			default:
 				break;
 		}
+	}
+
+	public function EvaluateExpression(Expression $oExpression)
+	{
+		$aFields = $oExpression->ListRequiredFields();
+		$aArgs = array();
+		foreach ($aFields as $sFieldDesc)
+		{
+			$aFieldParts = explode('.', $sFieldDesc);
+			if (count($aFieldParts) == 2)
+			{
+				$sClass = $aFieldParts[0];
+				$sAttCode = $aFieldParts[1];
+			}
+			else
+			{
+				$sClass = get_class($this);
+				$sAttCode = $aFieldParts[0];
+			}
+			if (get_class($this) != $sClass) continue;
+			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) continue;
+
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			$value = reset($aSQLValues);
+			$aArgs[$sFieldDesc] = $value;
+		}
+		return $oExpression->Evaluate($aArgs);
 	}
 }
 
