@@ -24,14 +24,14 @@ abstract class HTMLSanitizer
 	{
 		// Do nothing..
 	}
-	
+
 	/**
 	 * Sanitizes the given HTML document
 	 * @param string $sHTML
 	 * @return string
 	 */
 	abstract public function DoSanitize($sHTML);
-	
+
 	/**
 	 * Sanitize an HTML string with the configured sanitizer, falling back to HTMLDOMSanitizer in case of Exception or invalid configuration
 	 * @param string $sHTML
@@ -50,7 +50,7 @@ abstract class HTMLSanitizer
 			IssueLog::Warning('The configured "html_sanitizer" class "'.$sSanitizerClass.'" is not a subclass of HTMLSanitizer. Will use HTMLDOMSanitizer as the default sanitizer.');
 			$sSanitizerClass = 'HTMLDOMSanitizer';
 		}
-		
+
 		try
 		{
 			$oSanitizer = new $sSanitizerClass();
@@ -70,7 +70,7 @@ abstract class HTMLSanitizer
 			{
 				IssueLog::Error('Failed to sanitize an HTML string with "HTMLDOMSanitizer". The following exception occured: '.$e->getMessage());
 				IssueLog::Error('The HTML will NOT be sanitized.');
-				$sCleanHTML = $sHTML;	
+				$sCleanHTML = $sHTML;
 			}
 		}
 		return $sCleanHTML;
@@ -97,7 +97,7 @@ class HTMLNullSanitizer extends HTMLSanitizer
 	{
 		return $sHTML;
 	}
-	
+
 }
 
 /**
@@ -109,7 +109,7 @@ class HTMLNullSanitizer extends HTMLSanitizer
 class HTMLPurifierSanitizer extends HTMLSanitizer
 {
 	protected static $oPurifier = null;
-	
+
 	public function __construct()
 	{
 		if (self::$oPurifier == null)
@@ -120,7 +120,7 @@ class HTMLPurifierSanitizer extends HTMLSanitizer
 				throw new Exception("Missing library '$sLibPath', cannot use HTMLPurifierSanitizer.");
 			}
 			require_once($sLibPath);
-			
+
 			$oPurifierConfig = HTMLPurifier_Config::createDefault();
 			$oPurifierConfig->set('Core.Encoding', 'UTF-8'); // defaults to 'UTF-8'
 			$oPurifierConfig->set('HTML.Doctype', 'XHTML 1.0 Strict'); // defaults to 'XHTML 1.0 Transitional'
@@ -142,11 +142,11 @@ class HTMLPurifierSanitizer extends HTMLSanitizer
 			self::$oPurifier = new HTMLPurifier($oPurifierConfig);
 		}
 	}
-	
+
 	public function DoSanitize($sHTML)
 	{
 		$sCleanHtml = self::$oPurifier->purify($sHTML);
-		return $sCleanHtml;		
+		return $sCleanHtml;
 	}
 }
 */
@@ -160,65 +160,53 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aTagsWhiteList = array(
-		'a' => array('href', 'name', 'style', 'target', 'title'),
-		'b' => array(),
-		'big' => array(),
-		'blockquote' => array('style'),
+		'html' => array(),
 		'body' => array(),
+		'a' => array('href', 'name', 'style', 'target', 'title'),
+		'p' => array('style'),
+		'blockquote' => array('style'),
 		'br' => array(),
-		'center' => array(),
-		'cite' => array(),
-		'code' => array('style', 'class'),
-		'del' => array(),
+		'span' => array('style'),
 		'div' => array('style'),
+		'b' => array(),
+		'i' => array(),
+		'u' => array(),
 		'em' => array(),
-		'fieldset' => array('style'),
-		'font' => array('face', 'color', 'style', 'size'),
+		'strong' => array(),
+		'img' => array('src', 'style', 'alt', 'title'),
+		'ul' => array('style'),
+		'ol' => array('style'),
+		'li' => array('style'),
 		'h1' => array('style'),
 		'h2' => array('style'),
 		'h3' => array('style'),
 		'h4' => array('style'),
-		'hr' => array('style'),
-		'html' => array(),
-		'i' => array(),
-		'img' => array('src', 'style', 'alt', 'title'),
-		'ins' => array(),
-		'kbd' => array(),
-		'legend' => array('style'),
-		'li' => array('style'),
 		'nav' => array('style'),
-		'ol' => array('style'),
-		'p' => array('style'),
-		'pre' => array(),
-		'q' => array(),
-		'samp' => array(),
-		's' => array(), // strikethrough
 		'section' => array('style'),
-		'small' => array(),
-		'span' => array('style'),
-		'strong' => array(),
+		'code' => array('style', 'class'),
 		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
+		'thead' => array('style'),
 		'tbody' => array('style'),
+		'tr' => array('style', 'colspan', 'rowspan'),
 		'td' => array('style', 'colspan', 'rowspan'),
 		'th' => array('style', 'colspan', 'rowspan'),
-		'thead' => array('style'),
-		'tr' => array('style', 'colspan', 'rowspan'),
+		'fieldset' => array('style'),
+		'legend' => array('style'),
+		'font' => array('face', 'color', 'style', 'size'),
+		'big' => array(),
+		'small' => array(),
 		'tt' => array(),
-		'u' => array(),
-		'ul' => array('style'),
+		'kbd' => array(),
+		'samp' => array(),
 		'var' => array(),
-	);
-
-	protected static $aTagsContentRemovableList = array(
-		'applet',
-		'basefont',
-		'canvas',
-		'code',
-		'dialog',
-		'embed',
-		'object',
-		'script',
-		'style',
+		'del' => array(),
+		's' => array(), // strikethrough
+		'ins' => array(),
+		'cite' => array(),
+		'q' => array(),
+		'hr' => array('style'),
+		'pre' => array(),
+		'center' => array(),
 	);
 
 	protected static $aAttrsWhiteList = array(
@@ -290,13 +278,13 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
-		
+
 		$this->CleanNode($this->oDoc);
-		
+
 		$oXPath = new DOMXPath($this->oDoc);
 		$sXPath = "//body";
 		$oNodesList = $oXPath->query($sXPath);
-		
+
 		if ($oNodesList->length == 0)
 		{
 			// No body, save the whole document
@@ -309,113 +297,11 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 			// remove the body tag itself
 			$sCleanHtml = str_replace( array('<body>', '</body>'), '', $sCleanHtml);
 		}
-		
+
 		return $sCleanHtml;
 	}
-	
+
 	protected function CleanNode(DOMNode $oElement)
-	{
-		$this->CleanNodeRemoveForbiddenTags($oElement);
-		$this->CleanNodeHandleImages($oElement);
-		$this->CleanNodeRemoveForbiddenAttributes($oElement);
-	}
-
-	protected function CleanNodeRemoveForbiddenTags(DOMNode $oElement)
-	{
-		if ($oElement->hasChildNodes())
-		{
-			$aValidatedNodes = array();
-			do
-			{
-				$bChildRemoved = false;
-
-				$aNodes = array();
-				foreach($oElement->childNodes as $oNode)
-				{
-					$aNodes[] = $oNode;
-				}
-
-				foreach($aNodes as $oNode)
-				{
-					if (($oNode instanceof DOMElement) && (!array_key_exists(strtolower($oNode->tagName), self::$aTagsWhiteList)))
-					{
-						$bChildRemoved = true;
-						$this->SmartRemoveChild($oElement, $oNode);
-					}
-					else if ($oNode instanceof DOMComment)
-					{
-						$oElement->removeChild($oNode);
-					}
-					else
-					{
-						//if the node is kept, we can recurse into it, bu we want to perform this only once (see the do/while above?)
-						$bAlreadyValidated = false;
-						/** @var \DOMNode $oValidatedNode */
-						foreach ($aValidatedNodes as $oValidatedNode)
-						{
-							if ($oValidatedNode->isSameNode($oNode))
-							{
-								$bAlreadyValidated = true;
-								break;
-							}
-						}
-						if (! $bAlreadyValidated)
-						{
-							$this->CleanNodeRemoveForbiddenTags($oNode);
-							$aValidatedNodes[] = $oNode;
-						}
-					}
-				}
-			} while ($bChildRemoved);
-		}
-	}
-
-	/**
-	 * Remove a node, but move its inner nodes in the parent.
-	 * Note: invalid/forbidden tags may be moved up, so they have to be checked again.
-	 *
-	 * @param \DOMNode $oParent
-	 * @param \DOMElement $oRemovable
-	 */
-	private function SmartRemoveChild(DOMNode $oParent, DOMElement $oRemovable)
-	{
-		if (!$oRemovable->hasChildNodes())
-		{
-			$oParent->removeChild($oRemovable);
-		}
-		else if (in_array(strtolower($oRemovable->tagName), self::$aTagsContentRemovableList))
-		{
-			$oParent->removeChild($oRemovable);
-		}
-		else
-		{
-			/** @var \DOMNode $oNode */
-			foreach ($oRemovable->childNodes as $oNode)
-			{
-				$oNode = $oNode->cloneNode(true);
-				$oParent->insertBefore($oNode, $oRemovable);
-			}
-
-			$oParent->removeChild($oRemovable);
-		}
-	}
-
-	protected function CleanNodeHandleImages(DOMNode $oElement)
-	{
-		if ($oElement->hasChildNodes())
-		{
-			foreach($oElement->childNodes as $oNode)
-			{
-				$this->CleanNodeHandleImages($oNode);
-				if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
-				{
-					InlineImage::ProcessImageTag($oNode);
-				}
-			}
-		}
-	}
-
-	protected function CleanNodeRemoveForbiddenAttributes(DOMNode $oElement)
 	{
 		$aAttrToRemove = array();
 		// Gather the attributes to remove
@@ -458,9 +344,32 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 		if ($oElement->hasChildNodes())
 		{
+			$aChildElementsToRemove = array();
+			// Gather the child noes to remove
 			foreach($oElement->childNodes as $oNode)
 			{
-				$this->CleanNodeRemoveForbiddenAttributes($oNode);
+				if (($oNode instanceof DOMElement) && (!array_key_exists(strtolower($oNode->tagName), self::$aTagsWhiteList)))
+				{
+					$aChildElementsToRemove[] = $oNode;
+				}
+				else if ($oNode instanceof DOMComment)
+				{
+					$aChildElementsToRemove[] = $oNode;
+				}
+				else
+				{
+					// Recurse
+					$this->CleanNode($oNode);
+					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
+					{
+						InlineImage::ProcessImageTag($oNode);
+					}
+				}
+			}
+			// Now remove them
+			foreach($aChildElementsToRemove as $oDomElement)
+			{
+				$oElement->removeChild($oDomElement);
 			}
 		}
 	}
@@ -481,7 +390,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		}
 		return implode(';', $aAllowedStyles);
 	}
-	
+
 	protected function IsValidAttributeContent($sAttributeName, $sValue)
 	{
 		if (array_key_exists($sAttributeName, self::$aAttrsWhiteList))
