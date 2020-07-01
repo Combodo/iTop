@@ -2047,7 +2047,6 @@ abstract class MetaModel
 	 */
 	protected static function ComputeRelationQueries($sRelCode)
 	{
-		$bHasLegacy = false;
 		$aQueries = array();
 		foreach(self::GetClasses() as $sClass)
 		{
@@ -2133,157 +2132,7 @@ abstract class MetaModel
 					}
 				}
 			}
-
-			// Read legacy definitions
-			// The up/down queries have to be reconcilied, which can only be done later when all the classes have been browsed
-			//
-			// The keys used to store a query (up or down) into the array are built differently between the modern and legacy made data:
-			// Modern way: aQueries[sClass]['up'|'down'][sArrowId], where sArrowId is made of the source class + neighbour id (XML def)
-			// Legacy way: aQueries[sClass]['up'|'down'][sRemoteClass]
-			// The modern way does allow for several arrows between two classes
-			// The legacy way aims at simplifying the transformation (reconciliation between up and down)
-			if ($sRelCode == 'impacts')
-			{
-				$sRevertCode = 'depends on';
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['down'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['down'][$sRemoteClass]['sQueryDown'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['down'][$sRemoteClass] = $aQueries[$sParent]['down'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['down'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sClass,
-							'sFromClass' => $sClass,
-							'sToClass' => $sRemoteClass,
-							'sDirection' => 'down',
-							'sQueryDown' => $aLegacyEntry['sQuery'],
-							'sQueryUp' => null,
-							'sNeighbour' => $sRemoteClass // Normalize the neighbour id
-						);
-					}
-				}
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRevertCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['up'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['up'][$sRemoteClass]['sQueryUp'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['up'][$sRemoteClass] = $aQueries[$sParent]['up'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['up'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sRemoteClass,
-							'sFromClass' => $sRemoteClass,
-							'sToClass' => $sClass,
-							'sDirection' => 'both',
-							'sQueryDown' => null,
-							'sQueryUp' => $aLegacyEntry['sQuery'],
-							'sNeighbour' => $sClass// Normalize the neighbour id
-						);
-					}
-				}
-			}
-			//else
-			//{
-				// Cannot take the legacy system into account... simply ignore it
-			//}
 		} // foreach class
-
-		// Perform the up/down reconciliation for the legacy definitions
-		if ($bHasLegacy)
-		{
-			foreach(self::GetClasses() as $sClass)
-			{
-				// Foreach "up" legacy query, update its "down" counterpart
-				if (isset($aQueries[$sClass]['up']))
-				{
-					foreach($aQueries[$sClass]['up'] as $sNeighbourId => $aNeighbourData)
-					{
-						if (!array_key_exists('_legacy_', $aNeighbourData))
-						{
-							continue;
-						}
-						if (!$aNeighbourData['_legacy_'])
-						{
-							continue;
-						} // Skip modern definitions
-
-						$sLocalClass = $aNeighbourData['sToClass'];
-						foreach(self::EnumChildClasses($aNeighbourData['sFromClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-						{
-							if (isset($aQueries[$sRemoteClass]['down'][$sLocalClass]))
-							{
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sDirection'] = 'both';
-							}
-							// Be silent in order to transparently support legacy data models where the counterpart query does not always exist
-							//else
-							//{
-							//	throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
-							//}
-						}
-					}
-				}
-				// Foreach "down" legacy query, update its "up" counterpart (if any)
-				foreach($aQueries[$sClass]['down'] as $sNeighbourId => $aNeighbourData)
-				{
-					if (!$aNeighbourData['_legacy_'])
-					{
-						continue;
-					} // Skip modern definitions
-
-					$sLocalClass = $aNeighbourData['sFromClass'];
-					foreach(self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-					{
-						if (isset($aQueries[$sRemoteClass]['up'][$sLocalClass]))
-						{
-							$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
-						}
-					}
-				}
-			}
-		}
 
 		return $aQueries;
 	}
@@ -3318,18 +3167,6 @@ abstract class MetaModel
 		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
 	}
 
-	/**
-	 * To be overloaded by biz model declarations
-	 *
-	 * @param string $sRelCode
-	 *
-	 * @return array
-	 */
-	public static function GetRelationQueries($sRelCode)
-	{
-		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
-		return array();
-	}
 
 	/**
 	 * @param array $aParams

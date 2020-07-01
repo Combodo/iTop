@@ -4336,22 +4336,7 @@ abstract class DBObject implements iDisplay
 	}
 
 
-    /**
-     * implement relations
-     *
-     * Return an empty set for the parent of all
-     *
-     * this way of implementing the relations suffers limitations (not handling the redundancy)
-     * and you should consider defining those things in XML
-     *
-     * @internal
-     * @deprecated
-     */
-	public static function GetRelationQueries($sRelCode)
-	{
-		return array();
-	}
-	
+
     /**
      * Reserved: do not overload
      *
