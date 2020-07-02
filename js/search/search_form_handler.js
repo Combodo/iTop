@@ -408,7 +408,7 @@ $(function()
 			var oFilterElem = $('<div></div>')
 				.addClass('sf_filter')
 				.addClass('sfm_filter')
-				.append('<span class="sff_input_wrapper"><input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fas fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fas fa-filter"></span><span class="sff_picto sff_reset fas fa-times"></span></span>')
 				.appendTo(oContentElem);
 
 			// - Lists container
