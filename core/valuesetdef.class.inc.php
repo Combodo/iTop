@@ -141,7 +141,10 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_oExtraCondition = $oFilter;
 		$this->m_bIsLoaded = false;
 	}
-
+	public function SetOrderBy(array $aOrderBy)
+	{
+		$this->m_aOrderBy = $aOrderBy;
+	}
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		if ($this->m_bAllowAllData)
@@ -243,7 +246,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
 		$aFields = $oExpression->ListRequiredFields();
 		$sClass = $oFilter->GetClass();
-		foreach($aFields as $sField)
+		/*foreach($aFields as $sField)
 		{
 			$aFieldItems = explode('.', $sField);
 			if ($aFieldItems[0] != $sClass)
@@ -251,7 +254,7 @@ class ValueSetObjects extends ValueSetDefinition
 				$sOperation = 'contains';
 				break;
 			}
-		}
+		}*/
 
 		switch ($sOperation)
 		{
