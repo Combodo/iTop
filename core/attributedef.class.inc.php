@@ -742,7 +742,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return mixed a value out of suffix/value pairs, for SELECT result interpretation
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		return null;
 	}
@@ -2402,9 +2402,9 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $aColumns;
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
-		$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
+		$value = $this->MakeRealValue($aCols[$sPrefix.''], $oHostObject);
 
 		return $value;
 	}
@@ -3913,7 +3913,7 @@ class AttributeEncryptedString extends AttributeString
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
 		$sValue = $oSimpleCrypt->Decrypt(self::$sKey, $aCols[$sPrefix]);
@@ -4283,7 +4283,7 @@ class AttributeText extends AttributeString
 	 *
 	 * @return string
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$value = $aCols[$sPrefix.''];
 		if ($this->GetOptional('format', null) != null)
@@ -4577,7 +4577,7 @@ class AttributeCaseLog extends AttributeLongText
 	 * @return \ormCaseLog
 	 * @throws \MissingColumnException
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		if (!array_key_exists($sPrefix, $aCols))
 		{
@@ -7378,18 +7378,18 @@ class AttributeExternalField extends AttributeDefinition
 	//public function GetSQLExpressions($sPrefix = '') {return array();}
 
 	// Here, we get the data...
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 
-		return $oExtAttDef->FromSQLToValue($aCols, $sPrefix);
+		return $oExtAttDef->FromSQLToValue($aCols, $sPrefix, $oHostObject, $sHostAttCode);
 	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 
-		return $oExtAttDef->GetAsHTML($value, null, $bLocalize);
+		return $oExtAttDef->GetAsHTML($value, $oHostObject, $bLocalize);
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
@@ -7645,6 +7645,10 @@ class AttributeBlob extends AttributeDefinition
 
 		if (is_object($proposedValue))
 		{
+			if (!$proposedValue instanceof ormDocument)
+			{
+				throw new Exception(__METHOD__.": unexpected class ".get_class($proposedValue));
+			}
 			$proposedValue = clone $proposedValue;
 		}
 		else
@@ -7661,6 +7665,7 @@ class AttributeBlob extends AttributeDefinition
 			}
 		}
 
+		$proposedValue->SetHostObject($oHostObj, $this->GetCode());
 		return $proposedValue;
 	}
 
@@ -7679,7 +7684,7 @@ class AttributeBlob extends AttributeDefinition
 		return $aColumns;
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		if (!array_key_exists($sPrefix, $aCols))
 		{
@@ -7703,7 +7708,7 @@ class AttributeBlob extends AttributeDefinition
 		$sFileName = isset($aCols[$sPrefix.'_filename']) ? $aCols[$sPrefix.'_filename'] : '';
 
 		$value = new ormDocument($data, $sMimeType, $sFileName);
-
+		$value->SetHostObject($oHostObject, $sHostAttCode);
 		return $value;
 	}
 
@@ -8219,7 +8224,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return date("Y-m-d H:i:s", $iSeconds);
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$aExpectedCols = array($sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped');
 		foreach($this->ListThresholds() as $iThreshold => $aFoo)
@@ -9056,7 +9061,7 @@ class AttributeSubItem extends AttributeDefinition
 	// 
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 	}
 
@@ -9274,7 +9279,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return $aColumns;
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		if (!array_key_exists($sPrefix, $aCols))
 		{
@@ -9471,7 +9476,7 @@ class AttributeTable extends AttributeDBField
 		return $proposedValue;
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		try
 		{
@@ -9486,11 +9491,11 @@ class AttributeTable extends AttributeDBField
 			}
 			if ($value === false)
 			{
-				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
+				$value = $this->MakeRealValue($aCols[$sPrefix.''], $oHostObject);
 			}
 		} catch (Exception $e)
 		{
-			$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
+			$value = $this->MakeRealValue($aCols[$sPrefix.''], $oHostObject);
 		}
 
 		return $value;
@@ -9885,11 +9890,11 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$sValue = $aCols["$sPrefix"];
 
-		return $this->MakeRealValue($sValue, null, true);
+		return $this->MakeRealValue($sValue, $oHostObject, true);
 	}
 
 	/**
@@ -11034,7 +11039,7 @@ class AttributeTagSet extends AttributeSet
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$sValue = $aCols["$sPrefix"];
 
@@ -11616,7 +11621,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return $sLabel;
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
+	public function FromSQLToValue($aCols, $sPrefix = '', $oHostObject = null, $sHostAttCode = null)
 	{
 		$sValue = $aCols[$sPrefix];
 

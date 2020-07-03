@@ -461,7 +461,7 @@ abstract class DBObject implements iDisplay
 
 				if (array_key_exists($sAttRef, $aRow))
 				{
-					$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
+					$value = $oAttDef->FromSQLToValue($aRow, $sAttRef, $this, $sAttCode);
 					$bIsDefined = true;
 				}
 			}

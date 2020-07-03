@@ -38,6 +38,8 @@ class ormDocument
 	protected $m_data;
 	protected $m_sMimeType;
 	protected $m_sFileName;
+	protected $m_oHostObject;
+	protected $m_sHostObjectAttcode;
 	
 	/**
 	 * Constructor
@@ -47,6 +49,15 @@ class ormDocument
 		$this->m_data = $data;
 		$this->m_sMimeType = $sMimeType;
 		$this->m_sFileName = $sFileName;
+
+		$this->m_oHostObject = null;
+		$this->m_sHostObjectAttcode = null;
+	}
+
+	public function SetHostObject(DBObject $oHostObject, $sAttCode)
+	{
+		$this->m_oHostObject = $oHostObject;
+		$this->m_sHostObjectAttcode = $sAttCode;
 	}
 
 	public function __toString()
@@ -138,6 +149,12 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
+		if ($this->m_oHostObject)
+		{
+			$sClass = get_class($this->m_oHostObject);
+			$Id = $this->m_oHostObject->GetKey();
+			$sAttCode = $this->m_sHostObjectAttcode;
+		}
 		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 
@@ -147,6 +164,12 @@ class ormDocument
 	 */
 	public function GetDisplayURL($sClass, $Id, $sAttCode)
 	{
+		if ($this->m_oHostObject)
+		{
+			$sClass = get_class($this->m_oHostObject);
+			$Id = $this->m_oHostObject->GetKey();
+			$sAttCode = $this->m_sHostObjectAttcode;
+		}
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode";
 	}
@@ -157,6 +180,12 @@ class ormDocument
 	 */
 	public function GetDownloadURL($sClass, $Id, $sAttCode)
 	{
+		if ($this->m_oHostObject)
+		{
+			$sClass = get_class($this->m_oHostObject);
+			$Id = $this->m_oHostObject->GetKey();
+			$sAttCode = $this->m_sHostObjectAttcode;
+		}
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = md5($this->GetData());
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
