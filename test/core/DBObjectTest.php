@@ -107,7 +107,7 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @covers DBObject::NewObject
+	 * @covers MetaModel::GetObject
 	 * @covers DBObject::Get
 	 * @covers DBObject::Set
 	 */
@@ -141,12 +141,30 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_ExternalKeysAndFields()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		static::assertQueryCount(0, function() use (&$oObject){
+			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		});
+		static::assertQueryCount(2, function() use (&$oObject){
+			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
+			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		});
 
-		static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
-		static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
-		$oObject->Set('org_id', 2);
-		static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
-		static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		// External key given as an id
+		static::assertQueryCount(1, function() use (&$oObject){
+			$oObject->Set('org_id', 2);
+			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+		});
+
+		// External key given as an object
+		static::assertQueryCount(1, function() use (&$oBordeaux){
+			$oBordeaux = \MetaModel::GetObject('Location', 1);
+		});
+
+		static::assertQueryCount(0, function() use (&$oBordeaux, &$oObject){
+			$oObject->Set('location_id', $oBordeaux);
+			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+			static::assertEquals('IT Department', $oObject->Get('org_name'));
+			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+		});
 	}
 }

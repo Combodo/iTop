@@ -70,6 +70,21 @@ class ItopTestCase extends TestCase
 		return ((float)$uSec + (float)$sec);
 	}
 
+	/**
+	 *  Assert that a series of operations will trigger a given number of MySL queries
+	 *
+	 * @param $iExpectedCount  Number of MySQL queries that should be executed
+	 * @param callable $oFunction Operations to perform
+	 */
+	protected static function assertQueryCount($iExpectedCount, callable $oFunction)
+	{
+		$iInitialCount = (int) \CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$oFunction();
+		$iFinalCount = (int) \CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$iCount = $iFinalCount - 1 - $iInitialCount;
+		if ($iCount != $iExpectedCount) static::Fail("Expected $iExpectedCount queries. $iCount have been executed.");
+	}
+
 	public function WriteToCsvHeader($sFilename, $aHeader)
 	{
 		$sResultFile = APPROOT.'log/'.$sFilename;
