@@ -605,7 +605,7 @@ class CMDBSource
 	 */
 	private static function RemoveSurroundingQuotes($sValue)
 	{
-		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
+		if ($sValue != "'" && utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
 		{
 			$sValue = substr($sValue, 1, -1);
 		}
@@ -1187,8 +1187,12 @@ class CMDBSource
 
 		if (strcmp($sItopFieldTypeOptions, $sDbFieldTypeOptions) !== 0)
 		{
+			// in MySQL 8, will ignore int and tinyint length
+			$aIgnoreOptions = array("int", "tinyint");
 			// case sensitive comp as we need to check case for enum possible values for example
-			return false;
+			if(!in_array($sDbFieldDataType, $aIgnoreOptions)) {
+				return false;
+			}
 		}
 
 		// remove the default value NULL added by MariadDB
