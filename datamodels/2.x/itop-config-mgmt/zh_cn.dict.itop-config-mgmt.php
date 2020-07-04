@@ -1247,11 +1247,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Typology' => '拓扑',
+	'Class:Typology' => '类型',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => '名称',
 	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => '拓扑子类别',
+	'Class:Typology/Attribute:finalclass' => '类型',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1874,14 +1874,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Group+' => '配置组',
 	'Menu:ConfigManagement:Shortcuts' => '快捷方式',
 	'Menu:ConfigManagement:AllContacts' => '所有联系人: %1$d',
-	'Menu:Typology' => '配置管理',
-	'Menu:Typology+' => '配置管理',
+	'Menu:Typology' => '类型配置',
+	'Menu:Typology+' => '类型配置',
 	'Menu:OSVersion' => 'OS 版本',
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => '软件清单',
 	'Menu:Software+' => '软件清单',
 	'UI_WelcomeMenu_AllConfigItems' => '摘要',
-	'Menu:ConfigManagement:Typology' => '配置管理',
+	'Menu:ConfigManagement:Typology' => '类型配置',
 
 ));
 
