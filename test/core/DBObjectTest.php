@@ -113,11 +113,15 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_FriendlyNameFromDB()
 	{
-		$oObject = \MetaModel::GetObject('Person', 15);
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Gary', 'first_name' => 'Romain', 'org_id' => 3, 'location_id' => 2));
+		$oObject->DBInsert();
+		$iObjKey = $oObject->GetKey();
 
-		static::assertEquals('Agatha Christie', $oObject->Get('friendlyname'));
-		$oObject->Set('name', 'The Blues');
-		static::assertEquals('Agatha The Blues', $oObject->Get('friendlyname'));
+		$oObject = \MetaModel::GetObject('Person', $iObjKey);
+
+		static::assertEquals('Romain Gary', $oObject->Get('friendlyname'));
+		$oObject->Set('name', 'Duris');
+		static::assertEquals('Romain Duris', $oObject->Get('friendlyname'));
 	}
 
 	/**
