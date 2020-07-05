@@ -167,4 +167,27 @@ class DBObjectTest extends ItopDataTestCase
 			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
 		});
 	}
+
+	/**
+	 * @group Integration
+	 */
+	public function testModelExpressions()
+	{
+		foreach (\MetaModel::GetClasses() as $sClass)
+		{
+			if (\MetaModel::IsAbstract($sClass)) continue;
+
+			$oObject = \MetaModel::NewObject($sClass);
+			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if ($oAttDef->IsBasedOnOQLExpression())
+				{
+					$this->debug("$sClass::$sAttCode");
+					static::assertQueryCount(0, function() use (&$oObject, &$oAttDef){
+						$oObject->EvaluateExpression($oAttDef->GetOQLExpression());
+					});
+				}
+			}
+		}
+	}
 }

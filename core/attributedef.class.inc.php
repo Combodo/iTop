@@ -6659,7 +6659,13 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		$oExpression = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression())->GetCriteria();
 		foreach ($oExpression->GetParameters('this') as $sAttCode)
 		{
-			$aAttributes[] = $sAttCode;
+			// Skip the id as it cannot change anyway
+			if ($sAttCode =='id') continue;
+
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
 		}
 		return $aAttributes;
 	}
@@ -11577,7 +11583,10 @@ class AttributeFriendlyName extends AttributeDefinition
 		$oExpression = $this->GetOQLExpression();
 		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
 		{
-			$aAttributes[] = $sAttCode;
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
 		}
 		return $aAttributes;
 	}
@@ -12816,7 +12825,10 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		$oExpression = $this->GetOQLExpression();
 		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
 		{
-			$aAttributes[] = $sAttCode;
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
 		}
 		return $aAttributes;
 	}

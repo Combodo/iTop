@@ -82,7 +82,15 @@ class ItopTestCase extends TestCase
 		$oFunction();
 		$iFinalCount = (int) \CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
 		$iCount = $iFinalCount - 1 - $iInitialCount;
-		if ($iCount != $iExpectedCount) static::Fail("Expected $iExpectedCount queries. $iCount have been executed.");
+		if ($iCount != $iExpectedCount)
+		{
+			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+		}
+		else
+		{
+			// Otherwise PHP Unit will consider that no assertion has been made
+			static::assertTrue(true);
+		}
 	}
 
 	public function WriteToCsvHeader($sFilename, $aHeader)

@@ -154,4 +154,29 @@ class MetaModelTest extends ItopDataTestCase
 		return $aRet;
 	}
 
+	/**
+	 * To be removed as soon as the dependencies on external fields are obsoleted
+	 * @Group Integration
+	 */
+	public function testManualVersusAutomaticDependenciesOnExtKeys()
+	{
+		foreach (\MetaModel::GetClasses() as $sClass)
+		{
+			if (\MetaModel::IsAbstract($sClass)) continue;
+
+			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if (\MetaModel::GetAttributeOrigin($sClass, $sAttCode) != $sClass) continue;
+				if (!$oAttDef instanceof \AttributeExternalKey) continue;
+
+				$aManual = $oAttDef->Get('depends_on');
+				$aAuto = \MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
+				// The order doesn't matter
+				sort($aAuto);
+				sort($aManual);
+				static::assertEquals($aManual, $aAuto, "Class: $sClass, Attribute: $sAttCode");
+			}
+		}
+	}
+
 }
