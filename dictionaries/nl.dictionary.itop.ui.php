@@ -864,7 +864,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:FatalErrorMessage' => 'Fatale fout, ITOP_APPLICATION_SHORT kan niet doorgaan.',
 	'UI:Error_Details' => 'Fout: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'ITOP_APPLICATION_SHORT gebruikersbeheer - klasse-projecties',
 	'UI:PageTitle:ProfileProjections' => 'ITOP_APPLICATION_SHORT gebruikersbeheer - profiel-projecties',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse van objecten',
@@ -873,8 +872,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:AnyObject' => '* elk *',
 	'UI:UserManagement:User' => 'Gebruiker',
 	'UI:UserManagement:User+' => 'Gebruiker bezig met de projectie',
-	'UI:UserManagement:Profile' => 'Profiel',
-	'UI:UserManagement:Profile+' => 'Profiel waarin de projectie is opgegeven',
 	'UI:UserManagement:Action:Read' => 'Lezen',
 	'UI:UserManagement:Action:Read+' => 'Lezen/weergeven van objecten',
 	'UI:UserManagement:Action:Modify' => 'Aanpassen',
@@ -914,7 +911,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ChangeManagementMenu:Title' => 'Overzicht changes',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes aan de hand van soort',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes aan de hand van soort status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes aan de hand van werkgroep',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nog niet toegewezen Changes',
 
 	'UI:ConfigurationManagementMenu' => 'Configuratie Management',

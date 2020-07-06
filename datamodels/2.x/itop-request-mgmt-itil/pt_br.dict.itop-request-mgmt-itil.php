@@ -161,8 +161,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Última data pendente',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'Pendências acumuladas',
-	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

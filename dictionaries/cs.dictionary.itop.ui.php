@@ -860,7 +860,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:FatalErrorMessage' => 'Závažná chyba, iTop nemůže pokračovat.',
 	'UI:Error_Details' => 'Chyba: %1$s',
 
-	'UI:PageTitle:ClassProjections' => 'iTop správa uživatelů - projekce tříd',
 	'UI:PageTitle:ProfileProjections' => 'iTop správa uživatelů - projekce profilů',
 	'UI:UserManagement:Class' => 'Třída',
 	'UI:UserManagement:Class+' => 'Třída objektů',
@@ -869,8 +868,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:UserManagement:AnyObject' => '* jakýkoli *',
 	'UI:UserManagement:User' => 'Uživatel',
 	'UI:UserManagement:User+' => 'User zapojený do projekce',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil, ve kterém je projekce specifikována',
 	'UI:UserManagement:Action:Read' => 'Čtení',
 	'UI:UserManagement:Action:Read+' => 'Čtení/zobrazování objektů',
 	'UI:UserManagement:Action:Modify' => 'Upravování',
@@ -910,7 +907,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ChangeManagementMenu:Title' => 'Přehled změn',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Změny podle typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Změny podle stavu',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Změny podle pracovních skupin',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nepřidělené změny',
 
 	'UI:ConfigurationManagementMenu' => 'Správa konfigurací',

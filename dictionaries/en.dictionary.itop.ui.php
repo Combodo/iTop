@@ -863,7 +863,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:FatalErrorMessage' => 'Fatal error, '.ITOP_APPLICATION_SHORT.' cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => ITOP_APPLICATION_SHORT.' user management - class projections',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
 	'UI:UserManagement:Class+' => 'Class of objects',
@@ -872,8 +871,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:AnyObject' => '* any *',
 	'UI:UserManagement:User' => 'User',
 	'UI:UserManagement:User+' => 'User involved in the projection',
-	'UI:UserManagement:Profile' => 'Profile',
-	'UI:UserManagement:Profile+' => 'Profile in which the projection is specified',
 	'UI:UserManagement:Action:Read' => 'Read',
 	'UI:UserManagement:Action:Read+' => 'Read/display objects',
 	'UI:UserManagement:Action:Modify' => 'Modify',
@@ -913,7 +910,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ChangeManagementMenu:Title' => 'Changes Overview',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes by type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes by status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes by workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes not yet assigned',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',

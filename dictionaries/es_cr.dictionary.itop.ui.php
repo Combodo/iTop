@@ -858,7 +858,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:FatalErrorMessage' => 'Error fatal, iTop no puede continuar.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'Administración de usuarios iTop - proyecciones de clases',
 	'UI:PageTitle:ProfileProjections' => 'Administración de usuarios iTop - proyecciones de Perfil',
 	'UI:UserManagement:Class' => 'Clase',
 	'UI:UserManagement:Class+' => 'Clase de objetos',
@@ -867,8 +866,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:UserManagement:AnyObject' => '* cualquiera *',
 	'UI:UserManagement:User' => 'Usuario',
 	'UI:UserManagement:User+' => 'Usuario implicado en la proyección',
-	'UI:UserManagement:Profile' => 'Perfil',
-	'UI:UserManagement:Profile+' => 'Perfil en el cual se especifico la proyección',
 	'UI:UserManagement:Action:Read' => 'Leer',
 	'UI:UserManagement:Action:Read+' => 'Leer/Mostrar objetos',
 	'UI:UserManagement:Action:Modify' => 'Modificar',
@@ -908,7 +905,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ChangeManagementMenu:Title' => 'Resumen de Cambios',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Cambios por Tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Cambios por Estatus',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambios por Grupo de Trabajo',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambios No Asignados Aún',
 
 	'UI:ConfigurationManagementMenu' => 'Administración de la Configuración',

@@ -846,7 +846,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop Benutzerverwaltung - Klassenabbildung',
 	'UI:PageTitle:ProfileProjections' => 'iTop Benutzerverwaltung - Profilabbildung',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse von Objekten',
@@ -855,8 +854,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:AnyObject' => '* beliebig *',
 	'UI:UserManagement:User' => 'Benutzer',
 	'UI:UserManagement:User+' => 'Benutzer, der in Abbildung beteiligt ist.',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil, in welchem die Abbildung spezifiziert wird.',
 	'UI:UserManagement:Action:Read' => 'Lesen',
 	'UI:UserManagement:Action:Read+' => 'Lesen/Anzeigen von Objekten',
 	'UI:UserManagement:Action:Modify' => 'Verändern',
@@ -896,7 +893,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ChangeManagementMenu:Title' => 'Übersicht an Changes',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes ~nach Typ',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes nach Status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',

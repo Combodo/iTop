@@ -845,7 +845,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:FatalErrorMessage' => 'Fatálna chyba, iTop nemôže pokračovať.',
 	'UI:Error_Details' => 'Chyba: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop užívateľský manažment - projekcie tried',
 	'UI:PageTitle:ProfileProjections' => 'iTop užívateľský manažment - projekcie profilov',
 	'UI:UserManagement:Class' => 'Trieda',
 	'UI:UserManagement:Class+' => '',
@@ -854,8 +853,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:UserManagement:AnyObject' => '* Akýkoľvek *',
 	'UI:UserManagement:User' => 'Užívateľ',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Čítať',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Upravovať',
@@ -895,7 +892,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:ChangeManagementMenu:Title' => 'Prehľad zmien',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Zmeny podľa typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Zmeny podľa stavu',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Zmeny podľa pracovnej skupiny',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Zmeny ešte nepriradené',
 
 	'UI:ConfigurationManagementMenu' => 'Konfiguračný manažment',

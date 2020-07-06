@@ -847,7 +847,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:FatalErrorMessage' => 'Fatal fejl, iTop kan ikke fortsætte.',
 	'UI:Error_Details' => 'Fejl: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop bruger styring - klasse projection',
 	'UI:PageTitle:ProfileProjections' => 'iTop bruger styring - profil projection',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => '',
@@ -856,8 +855,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:UserManagement:AnyObject' => '* enhver *',
 	'UI:UserManagement:User' => 'Bruger',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Læs',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Ændring',
@@ -897,7 +894,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ChangeManagementMenu:Title' => 'Changes Overblik',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes efter type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes efter status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes efter workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes endnu ikke tildelt',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',

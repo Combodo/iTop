@@ -845,7 +845,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:FatalErrorMessage' => 'Fatális hiba, iTop nem tudja a működését folytatni',
 	'UI:Error_Details' => 'Hiba: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop felhasználó menedzsmet - osztály nézet',
 	'UI:PageTitle:ProfileProjections' => 'iTop felhasználó menedzsmet - profil nézet',
 	'UI:UserManagement:Class' => 'Osztály',
 	'UI:UserManagement:Class+' => '',
@@ -854,8 +853,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:AnyObject' => '* any *',
 	'UI:UserManagement:User' => 'Felhasználó',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Olvas',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Módosít',
@@ -895,7 +892,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ChangeManagementMenu:Title' => 'Változás áttekintése',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Változások típusok szerint',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Változások státusz szerint',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Változások csoportok szerint',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Még nem kiosztott változások',
 
 	'UI:ConfigurationManagementMenu' => 'Konfiguráció menedzsment',

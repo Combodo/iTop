@@ -858,7 +858,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:FatalErrorMessage' => 'Fatal error, iTop non può continuare.',
 	'UI:Error_Details' => 'Errore: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop gestione degli utenti - proiezioni classe',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestione degli utenti - proiezioni profilo',
 	'UI:UserManagement:Class' => 'Classe',
 	'UI:UserManagement:Class+' => '',
@@ -867,8 +866,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:UserManagement:AnyObject' => '* qualsiasi *',
 	'UI:UserManagement:User' => 'Utente',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profilo',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Leggi',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Modifica',
@@ -908,7 +905,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:ChangeManagementMenu:Title' => 'Panoramica dei cambi',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Cambi per tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Cambi per stato',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambi per gruppi di lavoro',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambi non ancora assegnati',
 
 	'UI:ConfigurationManagementMenu' => 'Gestione Configurazione',

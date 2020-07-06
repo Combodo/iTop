@@ -169,8 +169,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Datum posledního pozastavení',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'Kumulovaná doba pozastavení',
-	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

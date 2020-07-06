@@ -837,7 +837,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:FatalErrorMessage' => 'Критическая ошибка, iTop не может продолжать работу.',
 	'UI:Error_Details' => 'Ошибка: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop управление пользователями - проектирование классов',
 	'UI:PageTitle:ProfileProjections' => 'iTop управление пользователями - проектирование профилей',
 	'UI:UserManagement:Class' => 'Классs',
 	'UI:UserManagement:Class+' => 'Класс объектов',
@@ -846,8 +845,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:AnyObject' => '* любой *',
 	'UI:UserManagement:User' => 'Пользователь',
 	'UI:UserManagement:User+' => 'Пользователь учавствует',
-	'UI:UserManagement:Profile' => 'Профиль',
-	'UI:UserManagement:Profile+' => 'Профиль, указанный в проектировании',
 	'UI:UserManagement:Action:Read' => 'Чтение',
 	'UI:UserManagement:Action:Read+' => 'Чтение/отображение объектов',
 	'UI:UserManagement:Action:Modify' => 'Изменить',
@@ -887,7 +884,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ChangeManagementMenu:Title' => 'Обзор изменений',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Изменения по типу',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Изменения по статутсу',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Изменения по рабочей группе',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Не назначенные изменения',
 
 	'UI:ConfigurationManagementMenu' => 'Управление конфигурациями',

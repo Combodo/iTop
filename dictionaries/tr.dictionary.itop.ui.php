@@ -859,7 +859,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:FatalErrorMessage' => 'Kritik Hata, iTop devam edemiyor.',
 	'UI:Error_Details' => 'Hata: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop Kullanıcı Yönetimi - sınıf koruması',
 	'UI:PageTitle:ProfileProjections' => 'iTop Kullanıcı Yönetimi - profil koruması',
 	'UI:UserManagement:Class' => 'Sınıf',
 	'UI:UserManagement:Class+' => 'Nesnin sınıfı',
@@ -868,8 +867,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:AnyObject' => '* herhangi *',
 	'UI:UserManagement:User' => 'Kullanıcı',
 	'UI:UserManagement:User+' => 'User involved in the projection',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profile in which the projection is specified',
 	'UI:UserManagement:Action:Read' => 'Oku',
 	'UI:UserManagement:Action:Read+' => 'Nesneyi görüntüle',
 	'UI:UserManagement:Action:Modify' => 'Güncelle',
@@ -909,7 +906,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ChangeManagementMenu:Title' => 'Değişiklik Özeti',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Değişiklik tipine göre',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Değişiklik durumuna göre',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'İş grubuna değişiklikler',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Atanmamış Değişiklikler',
 
 	'UI:ConfigurationManagementMenu' => 'Konfigürasyon Yönetimi',

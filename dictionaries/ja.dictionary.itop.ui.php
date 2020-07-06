@@ -845,7 +845,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
 
-	'UI:PageTitle:ClassProjections' => 'iTop ユーザ管理 - クラスプロジェクション',
 	'UI:PageTitle:ProfileProjections' => 'iTop ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
@@ -854,8 +853,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:AnyObject' => '* 任意 *',
 	'UI:UserManagement:User' => 'ユーザ',
 	'UI:UserManagement:User+' => 'このプロジェクションに関与しているユーザー',
-	'UI:UserManagement:Profile' => 'プロフィール',
-	'UI:UserManagement:Profile+' => 'プロジェクションが指定されているプロフィール',
 	'UI:UserManagement:Action:Read' => '読み込み',
 	'UI:UserManagement:Action:Read+' => 'オブジェクトの読み込み/表示',
 	'UI:UserManagement:Action:Modify' => '修正',
@@ -895,7 +892,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ChangeManagementMenu:Title' => '変更管理概要',
 	'UI-ChangeManagementMenu-ChangesByType' => 'タイプ別変更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '状態別変更',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'ワークグループ別変更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'まだ割り当てられていない変更',
 
 	'UI:ConfigurationManagementMenu' => '構成管理',

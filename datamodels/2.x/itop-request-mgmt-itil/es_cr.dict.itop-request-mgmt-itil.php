@@ -162,8 +162,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:resolution_date+' => 'Fecha de Solución',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Última Fecha de Espera',
 	'Class:UserRequest/Attribute:last_pending_date+' => 'Última Fecha de Espera',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'Espera Acumulada',
-	'Class:UserRequest/Attribute:cumulatedpending+' => 'Espera Acumulada',
 	'Class:UserRequest/Attribute:tto' => 'TDA - Tiempo de Asignación',
 	'Class:UserRequest/Attribute:tto+' => 'Tiempo de Asignación',
 	'Class:UserRequest/Attribute:ttr' => 'TDS - Tiempo de Solución',

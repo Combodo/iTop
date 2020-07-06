@@ -858,7 +858,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:FatalErrorMessage' => '致命错误, iTop 无法继续.',
 	'UI:Error_Details' => '错误: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop 用户管理 - 类映射',
 	'UI:PageTitle:ProfileProjections' => 'iTop 用户管理 - 角色映射',
 	'UI:UserManagement:Class' => '类',
 	'UI:UserManagement:Class+' => '对象的类',
@@ -867,8 +866,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:AnyObject' => '* 任何 *',
 	'UI:UserManagement:User' => '用户',
 	'UI:UserManagement:User+' => '与该映射相关的用户',
-	'UI:UserManagement:Profile' => '角色',
-	'UI:UserManagement:Profile+' => '映射被指定的角色',
 	'UI:UserManagement:Action:Read' => '读',
 	'UI:UserManagement:Action:Read+' => '读/显示 对象',
 	'UI:UserManagement:Action:Modify' => '修改',
@@ -908,7 +905,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ChangeManagementMenu:Title' => '变更概况',
 	'UI-ChangeManagementMenu-ChangesByType' => '按类别划分的变更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '按状态划分的变更',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => '按执行团队划分的变更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => '尚未分配的变更',
 
 	'UI:ConfigurationManagementMenu' => '配置管理',

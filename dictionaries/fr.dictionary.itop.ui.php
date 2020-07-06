@@ -845,7 +845,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop gestion des utilisateurs - projections des classes',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestion des utilisateurs - projections des profils',
 	'UI:UserManagement:Class' => 'Type',
 	'UI:UserManagement:Class+' => 'Type des objets',
@@ -854,8 +853,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:AnyObject' => '* indifférent *',
 	'UI:UserManagement:User' => 'Utilisateur',
 	'UI:UserManagement:User+' => 'L\'utilisateur',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil dans lequel la projection est définie',
 	'UI:UserManagement:Action:Read' => 'Lecture',
 	'UI:UserManagement:Action:Read+' => 'Lecture et affichage d\'un objet',
 	'UI:UserManagement:Action:Modify' => 'Modification',
@@ -895,7 +892,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ChangeManagementMenu:Title' => 'Résumé des changements',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changements par type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changements par état',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changements par workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changements en attente d\'assignation',
 
 	'UI:ConfigurationManagementMenu' => 'Gestion de Configuration',

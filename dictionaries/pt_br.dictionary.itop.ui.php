@@ -858,7 +858,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:FatalErrorMessage' => 'Erro fatal, o sistema não pode continuar.',
 	'UI:Error_Details' => 'Erro: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:PageTitle:ProfileProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:UserManagement:Class' => 'Classe',
 	'UI:UserManagement:Class+' => 'Classe de objetos',
@@ -867,8 +866,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:UserManagement:AnyObject' => '* qualquer *',
 	'UI:UserManagement:User' => 'Usuário',
 	'UI:UserManagement:User+' => 'Usuário(s) envolvido(s) na projeção',
-	'UI:UserManagement:Profile' => 'Perfis',
-	'UI:UserManagement:Profile+' => 'Perfil em que a projeção é especificado',
 	'UI:UserManagement:Action:Read' => 'Leitura',
 	'UI:UserManagement:Action:Read+' => 'Leitura/mostrar objetos',
 	'UI:UserManagement:Action:Modify' => 'Modificação',
@@ -908,7 +905,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ChangeManagementMenu:Title' => 'Visão geral',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Mudanças por tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Mudanças por status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Mudanças por grupo de trabalho',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Mudanças ainda não atribuídas',
 
 	'UI:ConfigurationManagementMenu' => 'Gerenciamento Configurações',
