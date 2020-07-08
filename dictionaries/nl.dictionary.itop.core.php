@@ -1052,3 +1052,39 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Uiteindelijke klasse',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:AbstractResource' => 'Abstracte Tool',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceAdminMenu' => 'Tool "Admin Menu"',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceRunQueriesMenu' => 'Tool "Voer query\'s uit" Menu',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
+	'Class:ResourceSystemMenu+' => '',
+));

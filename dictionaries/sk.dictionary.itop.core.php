@@ -2922,3 +2922,39 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Portal:LanguageChangedTo_Lang' => 'Jazyk zmenený na',
  'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));

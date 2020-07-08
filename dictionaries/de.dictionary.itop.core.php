@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>, <martin.raenker@itomig.de>
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
@@ -1044,4 +1044,40 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final Class',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:AbstractResource' => 'Abstrakte Ressource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceAdminMenu' => 'Ressource "Admin Menü"',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceRunQueriesMenu' => 'Ressource "Abfrage Ausführen Menü"',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
+	'Class:ResourceSystemMenu+' => '',
 ));

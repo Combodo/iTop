@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  * 
  * @author Hipska (2018)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -1593,4 +1593,43 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:ResetCache' => 'Maak cache leeg',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
+));
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Menu:DataSources' => 'Synchronisatie-databronnen',
+	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
+	'Menu:WelcomeMenu' => 'Welkom',
+	'Menu:WelcomeMenu+' => 'Welkom in iTop',
+	'Menu:WelcomeMenuPage' => 'Welkom',
+	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
+	'Menu:AdminTools' => 'Admintools',
+	'Menu:AdminTools+' => 'Beheertools',
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
+	'Menu:DataModelMenu' => 'Datamodel',
+	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',
+	'Menu:NotificationsMenu' => 'Meldingen',
+	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',
+	'Menu:AuditCategories' => 'Auditcategorieën',
+	'Menu:AuditCategories+' => 'Auditcategorieën',
+	'Menu:Notifications:Title' => 'Auditcategorieën',
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',
+	'Menu:RunQueriesMenu+' => 'Voer een query uit',
+	'Menu:QueryMenu' => 'Favoriete query\'s',
+	'Menu:QueryMenu+' => 'Favoriete query\'s',
+	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',
+	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',
+	'Menu:UserManagementMenu' => 'Gebruikersbeheer',
+	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',
+	'Menu:ProfilesMenu' => 'Profielen',
+	'Menu:ProfilesMenu+' => 'Profielen',
+	'Menu:ProfilesMenu:Title' => 'Profielen',
+	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
+	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
+	'Menu:UserManagement' => 'Gebruikersbeheer',
+	'Menu:Queries' => 'Query\'s',
+	'Menu:ConfigurationTools' => 'Configuratie',
 ));

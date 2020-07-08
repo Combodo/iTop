@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+  <classes>
+    <class id="AbstractResource" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment>/* Resource access control abstraction. Can be herited by abstract resource access control classes. Generaly controlled using UR_ACTION_MODIFY access right. */</comment>
+        <abstract>true</abstract>
+      </properties>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="ResourceAdminMenu" _delta="define">
+      <parent>AbstractResource</parent>
+      <properties>
+        <comment>/* AdminTools menu access control. */</comment>
+        <abstract>true</abstract>
+        <category>grant_by_profile</category>
+      </properties>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="ResourceRunQueriesMenu" _delta="define">
+      <parent>AbstractResource</parent>
+      <properties>
+        <comment>/* RunQueriesMenu menu access control. */</comment>
+        <abstract>true</abstract>
+        <category>grant_by_profile</category>
+      </properties>
+      <presentation/>
+      <methods/>
+    </class>
+    <class id="ResourceSystemMenu" _delta="define">
+      <parent>AbstractResource</parent>
+      <properties>
+        <comment>/* System menu access control. */</comment>
+        <abstract>true</abstract>
+        <category>grant_by_profile</category>
+      </properties>
+      <presentation/>
+      <methods/>
+    </class>
+  </classes>
   <portals>
     <portal id="backoffice" _delta="define">
       <url>pages/UI.php</url>
@@ -12,6 +53,117 @@
     </portal>
   </portals>
   <menus>
+    <menu id="WelcomeMenu" xsi:type="MenuGroup" _delta="define">
+      <rank>10</rank>
+    </menu>
+    <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>WelcomeMenu</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="MyShortcuts" xsi:type="ShortcutContainerMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>WelcomeMenu</parent>
+    </menu>
+    <menu id="UserManagement" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>AdminTools</parent>
+      <template_file/>
+    </menu>
+    <menu id="UserAccountsMenu" xsi:type="OQLMenuNode" _delta="define">
+      <rank>11</rank>
+      <parent>UserManagement</parent>
+      <oql><![CDATA[SELECT User]]></oql>
+      <do_search>1</do_search>
+      <search_form_open>1</search_form_open>
+      <enable_class>User</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="ProfilesMenu" xsi:type="OQLMenuNode" _delta="define">
+      <rank>12</rank>
+      <parent>UserManagement</parent>
+      <oql><![CDATA[SELECT URP_Profiles]]></oql>
+      <do_search>1</do_search>
+      <enable_class>URP_Profiles</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="AuditCategories" xsi:type="OQLMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>AdminTools</parent>
+      <oql><![CDATA[SELECT AuditCategory]]></oql>
+      <do_search>1</do_search>
+      <enable_class>AuditCategory</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="Queries" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>30</rank>
+      <parent>AdminTools</parent>
+      <template_file/>
+    </menu>
+    <menu id="RunQueriesMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>31</rank>
+      <parent>Queries</parent>
+      <url>$pages/run_query.php</url>
+      <enable_class>ResourceRunQueriesMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="QueryMenu" xsi:type="OQLMenuNode" _delta="define">
+      <rank>32</rank>
+      <parent>Queries</parent>
+      <oql><![CDATA[SELECT Query]]></oql>
+      <do_search>1</do_search>
+      <enable_class>Query</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="ExportMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>33</rank>
+      <parent>Queries</parent>
+      <url>$webservices/export-v2.php?interactive=1</url>
+      <enable_class>ResourceAdminMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="DataModelMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>40</rank>
+      <parent>AdminTools</parent>
+      <url>$pages/schema.php</url>
+      <enable_class>ResourceRunQueriesMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="UniversalSearchMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>35</rank>
+      <parent>Queries</parent>
+      <url>$pages/UniversalSearch.php</url>
+      <enable_class>ResourceAdminMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
+      <rank>90</rank>
+    </menu>
+    <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>ConfigurationTools</parent>
+      <oql><![CDATA[SELECT SynchroDataSource]]></oql>
+      <do_search>1</do_search>
+      <enable_class>SynchroDataSource</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+    <menu id="NotificationsMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>40</rank>
+      <parent>ConfigurationTools</parent>
+      <url>$pages/notifications.php</url>
+      <enable_class>Trigger</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
     </menu>
@@ -21,4 +173,219 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
+  <meta>
+    <classes>
+      <class id="cmdbAbstractObject" _delta="define">
+        <methods>
+          <method id="Set">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>deny</operation>
+                  <types>
+                    <type id="AttributeStopWatch"/>
+                    <type id="AttributeSubItem"/>
+                    <type id="AttributeExternalField"/>
+                    <type id="AttributeLinkedSetIndirect"/>
+                    <type id="AttributeLinkedSet"/>
+                    <type id="AttributeImage"/>
+                    <type id="AttributeBlob"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetIfNull">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>deny</operation>
+                  <types>
+                    <type id="AttributeStopWatch"/>
+                    <type id="AttributeSubItem"/>
+                    <type id="AttributeExternalField"/>
+                    <type id="AttributeLinkedSetIndirect"/>
+                    <type id="AttributeLinkedSet"/>
+                    <type id="AttributeImage"/>
+                    <type id="AttributeBlob"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentDate">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentUser">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeExternalKey"/>
+                    <type id="AttributeInteger"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentPerson">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeExternalKey"/>
+                    <type id="AttributeInteger"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetElapsedTime">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDuration"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="3">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="Reset">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>deny</operation>
+                  <types>
+                    <type id="AttributeStopWatch"/>
+                    <type id="AttributeSubItem"/>
+                    <type id="AttributeExternalField"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="ResetStopWatch">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeStopWatch"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="Copy">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>deny</operation>
+                  <types>
+                    <type id="AttributeStopWatch"/>
+                    <type id="AttributeSubItem"/>
+                    <type id="AttributeExternalField"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="ApplyStimulus">
+            <arguments>
+              <argument id="1">
+                <type>string</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="PrefillCreationForm">
+            <arguments>
+              <argument id="1">
+                <type>reference</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="PrefillTransitionForm">
+            <arguments>
+              <argument id="1">
+                <type>reference</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="PrefillSearchForm">
+            <arguments>
+              <argument id="1">
+                <type>reference</type>
+                <mandatory>true</mandatory>
+              </argument>
+            </arguments>
+          </method>
+        </methods>
+      </class>
+    </classes>
+  </meta>
 </itop_design>

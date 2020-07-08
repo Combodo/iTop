@@ -1054,3 +1054,39 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));
