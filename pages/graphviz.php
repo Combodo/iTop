@@ -143,6 +143,7 @@ if (file_exists($sDotExecutable))
 	else
 	{
 		header('Content-type: image/svg+xml');
+		header('Content-Disposition: inline; filename="'.$sClass.'.svg"');
 		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
@@ -150,6 +151,7 @@ if (file_exists($sDotExecutable))
 else
 {
 	header('Content-type: image/png');
+	header('Content-Disposition: inline; filename="'.$sClass.'.png"');
 	readfile($sImageFilePath);
 }
 
