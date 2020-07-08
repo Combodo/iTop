@@ -589,11 +589,16 @@ abstract class DBObject implements iDisplay
 					$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
 					$this->m_aLoadedAtt[$sCode] = true;
 				}
+				elseif (in_array($sAttCode, $oDef->GetPrerequisiteAttributes(get_class($this))))
+				{
+					$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+					unset($this->m_aLoadedAtt[$sCode]);
+				}
 			}
 		}
-		else if ($this->m_aCurrValues[$sAttCode] != $value)
+		else if ($this->m_aCurrValues[$sAttCode] !== $value)
 		{
-			// Invalidate dependant fields so that they get reloaded in case they are needed (See Get())
+			// Invalidate dependent fields so that they get reloaded in case they are needed (See Get())
 			//
 			foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode)
 			{
@@ -789,7 +794,7 @@ abstract class DBObject implements iDisplay
 			}
 			elseif ($oAttDef->IsBasedOnOQLExpression())
 			{
-				// Recompute -wich is likely to call Get()
+				// Recompute -which is likely to call Get()
 				//
 				/** @var AttributeFriendlyName $oAttDef */
 				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());

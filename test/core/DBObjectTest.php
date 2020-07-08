@@ -172,6 +172,14 @@ class DBObjectTest extends ItopDataTestCase
 		});
 	}
 
+	public function testSetExtKeyUnsetDependentAttribute()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		$oOrg = \MetaModel::GetObject('Organization', 2);
+		$oObject->Set('org_id', $oOrg);
+		static::assertEquals(0, $oObject->Get('location_id'));
+	}
+
 	/**
 	 * @group Integration
 	 */
