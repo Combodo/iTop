@@ -112,7 +112,7 @@ $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
-	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".png";
+	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".svg";
 	if (!is_dir(APPROOT."data"))
 	{
 		@mkdir(APPROOT."data");
@@ -128,7 +128,7 @@ if (file_exists($sDotExecutable))
 	@fwrite($rFile, $sDotDescription);
 	@fclose($rFile);
 	$aOutput = array();
-	$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
+	$CommandLine = "\"$sDotExecutable\" -v -Tsvg < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
 	
 	exec($CommandLine, $aOutput, $iRetCode);
 	if ($iRetCode != 0)
@@ -142,7 +142,7 @@ if (file_exists($sDotExecutable))
 	}
 	else
 	{
-		header('Content-type: image/png');
+		header('Content-type: image/svg+xml');
 		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
