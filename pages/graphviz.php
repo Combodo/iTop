@@ -143,14 +143,14 @@ if (file_exists($sDotExecutable))
 	else
 	{
 		header('Content-type: image/png');
-		echo file_get_contents($sImageFilePath);
+		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
 }
 else
 {
 	header('Content-type: image/png');
-	echo file_get_contents($sImageFilePath);
+	readfile($sImageFilePath);
 }
 
 ?>
