@@ -134,17 +134,20 @@ class ModuleDiscovery
 		{
 			$sModuleName = $aMatches[1];
 			$sDir = dirname($sFilePath);
-			if ($hDir = opendir($sDir))
+			foreach (array($sDir, $sDir.'/dictionary') as $sRootDir)
 			{
-				while (($sFile = readdir($hDir)) !== false)
+				if ($hDir = @opendir($sRootDir))
 				{
-					$aMatches = array();
-					if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
+					while (($sFile = readdir($hDir)) !== false)
 					{
-						self::$m_aModules[$sId]['dictionary'][] = self::$m_sModulePath.'/'.$sFile;
+						$aMatches = array();
+						if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
+						{
+							self::$m_aModules[$sId]['dictionary'][] = $sRootDir.'/'.$sFile;
+						}
 					}
+					closedir($hDir);
 				}
-				closedir($hDir);
 			}
 		}
 	}

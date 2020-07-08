@@ -256,18 +256,21 @@ class MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			if ($hDir = @opendir($sRootDir))
 			{
-				$aMatches = array();
-				if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				while (($sFile = readdir($hDir)) !== false)
 				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+					$aMatches = array();
+					if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
+						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+					{
+						$aDictionaries[] = $sRootDir.'/'.$sFile;
+					}
 				}
+				closedir($hDir);
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
@@ -466,18 +469,21 @@ class MFDictModule extends MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			if ($hDir = @opendir($sRootDir))
 			{
-				$aMatches = array();
-				if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				while (($sFile = readdir($hDir)) !== false)
 				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+					$aMatches = array();
+					if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
+						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+					{
+						$aDictionaries[] = $sRootDir.'/'.$sFile;
+					}
 				}
+				closedir($hDir);
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
