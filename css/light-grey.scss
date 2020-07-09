@@ -3907,10 +3907,14 @@ input:checked + .slider:before {
 /*for autocomplete*/
 .ui-autocomplete {
 	padding: 0px;
-	border: 1px solid black;
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
+	/*for scrollbar*/
+	max-height: 180px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
 
 	ul {
 		width: 100%;
@@ -3950,5 +3954,13 @@ input:checked + .slider:before {
 			border-color: #0A246A;
 			color: white;
 		}
+	}
+}
+.field_autocomplete
+{
+	background: #fff url($approot-relative + "images/ac-background.gif?v=" + $version) no-repeat right;
+	border:  1px solid black;
+	&:focus{
+		border: 2px solid black;
 	}
 }

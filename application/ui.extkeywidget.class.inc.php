@@ -239,13 +239,13 @@ EOF
 					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
 				}
 				$oPage->add_ready_script(
-<<<EOF
+<<<JS
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
-EOF
+JS
 				);
 			} // Switch
 		}
@@ -269,10 +269,10 @@ EOF
 			{
 				$sDisplayValue = $this->GetObjectName($value);
 			}
-			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
+			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span>";
 
 			// another hidden input to store & pass the object's Id
@@ -282,47 +282,9 @@ EOF
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<JS
-		$('#label_$this->iId').autocomplete({
-			source: function( request, response ) {
-		        $.post( {
-		          url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-		          dataType: "json",
-		          data: {
-		          	q:request.term,
-	                operation:'ac_extkey', 
-					sTargetClass:'{$this->sTargetClass}',
-					sFilter:'$sFilter',
-					bSearchMode:$JSSearchMode, 
-					sOutputFormat:'json',
-					json: function() { return $sWizHelperJSON; } 
-		          },
-		          success: function( data ) {
-		          	response( data );
-		          }
-		        } );
-		    },
-			autoFocus: true,    
-			minLength:{$iMinChars}, 			 
-		    select: function( event, ui ) {
-		        $('#$this->iId').val( ui.item.value );
-		        $('#label_$this->iId').val( ui.item.label );		        
-				$('#$this->iId').trigger('validate');
-				$('#$this->iId').trigger('extkeychange');
-				$('#$this->iId').trigger('change');
-		        return false;
-		    }			 
-		})
-		.autocomplete( "instance" )._renderItem = function( ul, item ) {
-		  var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
-		  var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-		  if (item.obsolete == 'yes'){ 
-		  	val = val + ' <b>old</b>';
-		  }
-	      return $( "<li>" )
-	        .append( val )
-	        .appendTo( ul );
-	    };
-		
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
+		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
+		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
 		if ($('#ac_dlg_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
@@ -334,12 +296,12 @@ JS
 		{
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<EOF
+<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
 			{
 				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
 			}		
-EOF
+JS
 );
 		}
 		if ($bCreate && $bExtensions)
@@ -348,12 +310,12 @@ EOF
 
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<EOF
+<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ajax_{$this->iId}"></div>');
 		}
-EOF
+JS
 );
 		}
         $sHTMLValue .= "</div>";
@@ -476,27 +438,17 @@ EOF
 		$iMax = 150;
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
-		$aOrder = array('friendlyname'=>true);
-		$oValuesSet->SetOrderBy($aOrder);
-		$oValuesSet->SetSort(true);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
 		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-		$aValues = array();
-		foreach($aValuesContains as $sKey => $sFriendlyName)
+		asort($aValuesContains);
+		$aValues = $aValuesContains;
+		if (sizeof($aValues) < $iMax)
 		{
-			if (!isset($aValues[$sKey]))
-			{
-				$aValues[$sKey] = $sFriendlyName;
-			}
-		}
-		if (sizeof($aValuesContains) < $iMax)
-		{
-			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,
-				'contains');
-			//asort($aValuesContains);
-			$iSize=sizeof($aValuesContains);
-			foreach($aValuesContains as $sKey => $sFriendlyName)
+			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'contains');
+			asort($aValuesContains);
+			$iSize = sizeof($aValuesContains);
+			foreach ($aValuesContains as $sKey => $sFriendlyName)
 			{
 				if (!isset($aValues[$sKey]))
 				{
@@ -507,6 +459,11 @@ EOF
 					}
 				}
 			}
+		}
+		elseif (!in_array($sContains, $aValues))
+		{
+			$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
+			$aValues = array_merge($aValuesEquals, $aValues);
 		}
 
 		switch($sOutputFormat)
