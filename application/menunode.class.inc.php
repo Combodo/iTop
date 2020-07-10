@@ -51,7 +51,10 @@ require_once(APPROOT."/application/user.dashboard.class.inc.php");
  * new OQLMenuNode('PersonsMenu', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
  *
  */
- 
+
+/**
+ * Class ApplicationMenu
+ */
 class ApplicationMenu
 {
 	/**
@@ -71,7 +74,10 @@ class ApplicationMenu
 	 */
 	static $sFavoriteSiloQuery = 'SELECT Organization';
 
-	static public function LoadAdditionalMenus()
+	/**
+	 * @return void
+	 */
+	public static function LoadAdditionalMenus()
 	{
 		if (!self::$bAdditionalMenusLoaded)
 		{
@@ -97,10 +103,10 @@ class ApplicationMenu
 
 	/**
 	 * Set the query used to limit the list of displayed organizations in the drop-down menu
-	 * @param $sOQL string The OQL query returning a list of Organization objects
+	 * @param string $sOQL The OQL query returning a list of Organization objects
 	 * @return void
 	 */
-	static public function SetFavoriteSiloQuery($sOQL)
+	public static function SetFavoriteSiloQuery($sOQL)
 	{
 		self::$sFavoriteSiloQuery = $sOQL;
 	}
@@ -109,7 +115,7 @@ class ApplicationMenu
 	 * Get the query used to limit the list of displayed organizations in the drop-down menu
 	 * @return string The OQL query returning a list of Organization objects
 	 */
-	static public function GetFavoriteSiloQuery()
+	public static function GetFavoriteSiloQuery()
 	{
 		return self::$sFavoriteSiloQuery;
 	}
@@ -117,11 +123,11 @@ class ApplicationMenu
 	/**
 	 * Check whether a menu Id is enabled or not
 	 *
-	 * @param $sMenuId
+	 * @param string $sMenuId
 	 *
 	 * @throws \Exception
 	 */
-	static public function CheckMenuIdEnabled($sMenuId)
+	public static function CheckMenuIdEnabled($sMenuId)
 	{
 		self::LoadAdditionalMenus();
 		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
@@ -140,11 +146,11 @@ class ApplicationMenu
 	 * Main function to add a menu entry into the application, can be called during the definition
 	 * of the data model objects
 	 * @param MenuNode $oMenuNode
-	 * @param $iParentIndex
-	 * @param $fRank
+	 * @param int $iParentIndex
+	 * @param float $fRank
 	 * @return int
 	 */
-	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
+	public static function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
 	{
 		$index = self::GetMenuIndexById($oMenuNode->GetMenuId());
 		if ($index == -1)
@@ -185,8 +191,10 @@ class ApplicationMenu
 
 	/**
 	 * Reflection API - Get menu entries
+	 *
+	 * @return array
 	 */
-	static public function ReflectionMenuNodes()
+	public static function ReflectionMenuNodes()
 	{
 		self::LoadAdditionalMenus();
 		return self::$aMenusIndex;
@@ -195,10 +203,10 @@ class ApplicationMenu
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
 	 * @param \WebPage $oPage
-	 * @param $aExtraParams
+	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
 	 */
-	static public function DisplayMenu($oPage, $aExtraParams)
+	public static function DisplayMenu($oPage, $aExtraParams)
 	{
 		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
@@ -237,7 +245,7 @@ EOF
 	 * @param array $aMenu menu entry
 	 * @return bool true if at least one menu is enabled
 	 */
-	static private function CanDisplayMenu($aMenu)
+	private static function CanDisplayMenu($aMenu)
 	{
 		$oMenuNode = self::GetMenuNode($aMenu['index']);
 		if ($oMenuNode->IsEnabled())
@@ -269,11 +277,11 @@ EOF
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
 	 *
-	 * @return true if the currently selected menu is one of the submenus
+	 * @return bool True if the currently selected menu is one of the submenus
 	 * @throws DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	static protected function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
+	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
 		// Sort the menu based on the rank
 		$bActive = false;
@@ -330,11 +338,11 @@ EOF
 
 	/**
 	 * Helper function to sort the menus based on their rank
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 * @return int
 	 */
-	static public function CompareOnRank($a, $b)
+	public static function CompareOnRank($a, $b)
 	{
 		$result = 1;
 		if ($a['rank'] == $b['rank'])
@@ -353,7 +361,7 @@ EOF
 	 * @param int $index
 	 * @return MenuNode|null
 	 */
-	static public function GetMenuNode($index)
+	public static function GetMenuNode($index)
 	{
 		return isset(self::$aMenusIndex[$index]) ? self::$aMenusIndex[$index]['node'] : null;
 	}
@@ -363,7 +371,7 @@ EOF
 	 * @param int $index
 	 * @return array
 	 */
-	static public function GetChildren($index)
+	public static function GetChildren($index)
 	{
 		return self::$aMenusIndex[$index]['children'];
 	}
@@ -373,7 +381,7 @@ EOF
 	 * @param string $sTitle Title of the menu (as passed when creating the menu)
 	 * @return integer ID of the menu, or -1 if not found
 	 */
-	static public function GetMenuIndexById($sTitle)
+	public static function GetMenuIndexById($sTitle)
 	{
 		$index = -1;
 		/** @var MenuNode[] $aMenu */
@@ -392,7 +400,7 @@ EOF
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
 	 * @return string The Id of the currently active menu
 	 */
-	static public function GetActiveNodeId()
+	public static function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
 		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
@@ -406,7 +414,7 @@ EOF
 	/**
 	 * @return null|string
 	 */
-	static public function GetDefaultMenuId()
+	public static function GetDefaultMenuId()
 	{
 		static $sDefaultMenuId = null;
 		if (is_null($sDefaultMenuId))
@@ -426,7 +434,7 @@ EOF
 	 * @param $sMenuId
 	 * @return string
 	 */
-	static public function GetRootMenuId($sMenuId)
+	public static function GetRootMenuId($sMenuId)
 	{
 		$iMenuIndex = self::GetMenuIndexById($sMenuId);
 		if ($iMenuIndex == -1)
@@ -600,7 +608,10 @@ abstract class MenuNode
 	{
 		return $this->index;
 	}
-	
+
+	/**
+	 * @return void
+	 */
 	public function PopulateChildMenus()
 	{
 		foreach (ApplicationMenu::GetChildren($this->GetIndex()) as $aMenu)
