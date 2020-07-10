@@ -25,7 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'DB 工具',
 	'DBTools:Class' => 'Class~~',
-	'DBTools:Title' => '数据库维护工具',
+	'DBTools:Title' => '数据库维护工具~~',
 	'DBTools:ErrorsFound' => '发现错误',
 	'DBTools:Error' => '错误',
 	'DBTools:Count' => '个数',

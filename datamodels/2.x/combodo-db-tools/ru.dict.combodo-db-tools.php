@@ -12,7 +12,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Инструменты БД',
 	'DBTools:Class' => 'Класс',
-	'DBTools:Title' => 'Инструменты обслуживания базы данных',
+	'DBTools:Title' => 'Инструменты обслуживания базы данных~~',
 	'DBTools:ErrorsFound' => 'Найденные ошибки',
 	'DBTools:Error' => 'Ошибка',
 	'DBTools:Count' => 'Количество',

@@ -22,7 +22,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'DB Tools',
 	'DBTools:Class' => 'Klasse',
-	'DBTools:Title' => 'Datenbank-Pflege-Tools',
+	'DBTools:Title' => 'Datenbank-Pflege-Tools~~',
 	'DBTools:ErrorsFound' => 'Fehler gefunden',
 	'DBTools:Error' => 'Fehler',
 	'DBTools:Count' => 'Anzahl',

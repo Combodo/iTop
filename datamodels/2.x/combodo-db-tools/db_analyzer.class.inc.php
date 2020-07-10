@@ -57,6 +57,7 @@ class DatabaseAnalyzer
 					if (!empty($sFixItRequest))
 					{
 						$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = array($sFixItRequest);
+						$aErrorsAndFixes[$sClass][$sErrorDesc]['cleanup'] = array($sFixItRequest);
 					}
 				}
 				else
@@ -376,8 +377,18 @@ SQL;
 		{
 			$aFixIt = array();
 			$aFixIt[] = "-- Remove inconsistant entries:";
-			$sIds = implode(', ', array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']));
-			$aFixIt[] = "DELETE `$sTable` FROM `$sTable` WHERE `$sTable`.`$sExtKeyField` IN ($sIds)";
+			$iOffset = 0;
+			$iStep = 100;
+			do
+			{
+				$aIds = array_slice(array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']), $iOffset, $iStep);
+				$sIds = implode(', ', $aIds);
+				$sDelete = "DELETE `$sTable` FROM `$sTable` WHERE `$sTable`.`$sExtKeyField` IN ($sIds)";
+				$aFixIt[] = $sDelete;
+				$aErrorsAndFixes[$sClass][$sErrorDesc]['cleanup'][] = $sDelete;
+				$iOffset += $iStep;
+			}
+			while (count($aIds) == $iStep);
 			$aFixIt[] = "";
 			$aFixIt[] = "-- Or fix inconsistant values: Replace XXX with the appropriate value";
 			foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey)
@@ -483,13 +494,15 @@ SQL;
 	 */
 	private function CheckUsers(&$aErrorsAndFixes)
 	{
-		$sUserTable = MetaModel::DBGetTable('User');
+		$sClass = 'User';
+		$sUserTable = MetaModel::DBGetTable($sClass);
 		$sLinkTable = MetaModel::DBGetTable('URP_UserProfile');
 		$sSelect = "SELECT DISTINCT u.id AS id, u.`login` AS value";
 		$sFilter = "FROM `$sUserTable` AS u LEFT JOIN `$sLinkTable` AS l ON l.userid = u.id WHERE l.id IS NULL";
 		$sSelWrongRecs = "$sSelect $sFilter";
 		$sFixit = "-- Remove the corresponding user(s)";
-		$this->ExecQuery($sSelWrongRecs, $sFixit, Dict::S('DBAnalyzer-Integrity-UsersWithoutProfile'), 'User', $aErrorsAndFixes);
+		$sErrorDesc = Dict::S('DBAnalyzer-Integrity-UsersWithoutProfile');
+		$this->ExecQuery($sSelWrongRecs, $sFixit, $sErrorDesc, $sClass, $aErrorsAndFixes);
 	}
 
 
