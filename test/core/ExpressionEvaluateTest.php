@@ -4,7 +4,16 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 
-class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCase
+use CMDBSource;
+use Combodo\iTop\Test\UnitTest\iTopDataTestCase;
+use DateInterval;
+use DateTime;
+use Expression;
+use FunctionExpression;
+use MetaModel;
+use ScalarExpression;
+
+class ExpressionEvaluateTest extends iTopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
@@ -20,7 +29,7 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 	 */
 	public function testGetParameters($sExpression, $sParentFilter, $aExpectedParameters)
 	{
-		$oExpression = \Expression::FromOQL($sExpression);
+		$oExpression = Expression::FromOQL($sExpression);
 		$aParameters = $oExpression->GetParameters($sParentFilter);
 		sort($aExpectedParameters);
 		sort($aParameters);
@@ -29,7 +38,7 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 
 	public function GetParametersProvider()
 	{
-		$aTests = array(
+		return array(
 			array('1 AND 0 OR :hello + :world', null, array('hello', 'world')),
 			array('1 AND 0 OR :hello + :world', 'this', array()),
 			array(':this->left + :this->right', null, array('this->left', 'this->right')),
@@ -37,146 +46,45 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 			array(':this->left + :this->right', 'that', array()),
 			array(':this_left + :this_right', 'this', array()),
 		);
-		return $aTests;
 	}
 
 	/**
 	 * 100x quicker to execute than testExpressionEvaluate
+	 *
 	 * @covers       Expression::Evaluate()
 	 * @covers       Expression::FromOQL()
 	 * @relies-on-dataProvider VariousExpressions
+	 * @throws \OQLException
 	 */
 	public function _testExpressionEvaluateAllAtOnce()
 	{
-		$aTestCases = $this->VariousExpressions();
+		$aTestCases = $this->VariousExpressionsProvider();
 		foreach ($aTestCases as $sCaseId => $aTestArgs)
 		{
 			$this->debug("Case $sCaseId:");
-			$this->testExpressionEvaluate($aTestArgs[0], $aTestArgs[1]);
+			$this->testVariousExpressions($aTestArgs[0], $aTestArgs[1]);
 		}
 	}
 
 	/**
 	 * @covers       Expression::Evaluate()
 	 * @covers       Expression::FromOQL()
-	 * @dataProvider VariousExpressions
+	 * @dataProvider VariousExpressionsProvider
 	 *
 	 * @param string $sExpression
 	 * @param string $expectedValue
+	 *
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	public function testExpressionEvaluate($sExpression, $expectedValue)
+	public function testVariousExpressions($sExpression, $expectedValue)
 	{
-		$oExpression = \Expression::FromOQL($sExpression);
+		$oExpression = Expression::FromOQL($sExpression);
 		$value = $oExpression->Evaluate(array());
 		static::assertEquals($expectedValue, $value);
 	}
 
-	/**
-	 * @covers       Expression::Evaluate()
-	 * @dataProvider NotYetParsableExpressions
-	 *
-	 * @param string $sExpression
-	 * @param string $expectedValue
-	 */
-	public function testNotYetParsableExpressionsEvaluate($sExpression, $expectedValue)
-	{
-		$oExpression = eval("return $sExpression;");
-		$res = $oExpression->Evaluate(array());
-		static::assertEquals($expectedValue, $res);
-	}
-
-	/**
-	 * Check that the test data would give the same result when evaluated by MySQL
-	 * It uses the data provider ExpressionProvider, and checks every test case in one single query
-	 */
-	public function testMySQLEvaluateAllAtOnce()
-	{
-		// Expressions given as an OQL
-		$aTests = array_values($this->VariousExpressions());
-
-		// Expressions given as a PHP statement
-		foreach (array_values($this->NotYetParsableExpressions()) as $i => $aTest)
-		{
-			$oExpression = eval("return {$aTest[0]};");
-			$sExpression = $oExpression->RenderExpression(true);
-			$aTests[] = array($sExpression, $aTest[1]);
-		}
-
-		$aExpressions = array();
-		foreach ($aTests as $i => $aTest)
-		{
-			$aExpressions[] = "{$aTest[0]} as test_$i";
-		}
-
-		$sSelects = implode(', ', $aExpressions);
-		$sQuery = "SELECT $sSelects";
-
-		$this->debug($sQuery);
-		$aResults = \CMDBSource::QueryToArray($sQuery);
-
-		foreach ($aTests as $i => $aTest)
-		{
-			$value = $aResults[0]["test_$i"];
-			$expectedValue = $aTest[1];
-			$this->debug("Test #$i: {$aTests[$i][0]} => ".var_export($value, true));
-			static::assertEquals($expectedValue, $value);
-		}
-	}
-
-	/**
-	 * @covers DBObject::EvaluateExpression
-	 * @dataProvider ObjectDataToExpressionValues
-	 * @param $sClass
-	 * @param $aValues
-	 * @param $sExpression
-	 * @param $expected
-	 *
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
-	public function testExpressionsWithObjectData($sClass, $aValues, $sExpression, $expected)
-	{
-		$oObject = \MetaModel::NewObject($sClass, $aValues);
-		$oExpression = \Expression::FromOQL($sExpression);
-
-		$res = $oObject->EvaluateExpression($oExpression);
-
-		static::assertEquals($expected, $res);
-	}
-
-	public function ObjectDataToExpressionValues()
-	{
-		return array(
-			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'org_id', 2),
-			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'CONCAT(SUBSTR(name, 4), " cause")', 'noble cause'),
-		);
-	}
-
-	/**
-	 * Check Expression::IfTrue
-	 *
-	 * @covers Expression::FromOQL
-	 * @covers Expression::IsTrue
-	 * @dataProvider TrueExpressions
-	 * @param $sExpression
-	 * @param $bExpectTrue
-	 */
-	public function testIsTrue($sExpression, $bExpectTrue)
-	{
-		$oExpression = \Expression::FromOQL($sExpression);
-
-		$res = $oExpression->IsTrue();
-		if ($bExpectTrue)
-		{
-			static::assertTrue($res, 'arg: '.$sExpression);
-		}
-		else
-		{
-			static::assertFalse($res, 'arg: '.$sExpression);
-		}
-	}
-
-	public function VariousExpressions()
+	public function VariousExpressionsProvider()
 	{
 		if (false)
 		{
@@ -285,7 +193,22 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 		return $aRet;
 	}
 
-	public function NotYetParsableExpressions()
+	/**
+	 * @covers       Expression::Evaluate()
+	 * @dataProvider NotYetParsableExpressionsProvider
+	 *
+	 * @param string $sExpression
+	 * @param string $expectedValue
+	 */
+	public function testNotYetParsableExpressions($sExpression, $expectedValue)
+	{
+		$sNewExpression = "return $sExpression;";
+		$oExpression = eval($sNewExpression);
+		$res = $oExpression->Evaluate(array());
+		static::assertEquals($expectedValue, $res);
+	}
+
+	public function NotYetParsableExpressionsProvider()
 	{
 		$aExpressions = array(
 			array("new \\FunctionExpression('CONCAT_WS', array(new \\ScalarExpression(' '), new \\ScalarExpression('Hello'), new \ScalarExpression('world!')))", 'Hello world!'),
@@ -307,7 +230,129 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 		return $aRet;
 	}
 
-	public function TrueExpressions()
+	/**
+	 * Check that the test data would give the same result when evaluated by MySQL
+	 * It uses the data provider ExpressionProvider, and checks every test case in one single query
+	 *
+	 * @throws \MySQLException
+	 */
+	public function testMySQLEvaluateAllAtOnce()
+	{
+		// Expressions given as an OQL
+		$aTests = array_values($this->VariousExpressionsProvider());
+
+		// Expressions given as a PHP statement
+		foreach (array_values($this->NotYetParsableExpressionsProvider()) as $i => $aTest)
+		{
+			$sNewExpression = "return {$aTest[0]};";
+			$oExpression = eval($sNewExpression);
+			$sExpression = $oExpression->RenderExpression(true);
+			$aTests[] = array($sExpression, $aTest[1]);
+		}
+
+		$aExpressions = array();
+		foreach ($aTests as $i => $aTest)
+		{
+			$aExpressions[] = "{$aTest[0]} as test_$i";
+		}
+
+		$sSelects = implode(', ', $aExpressions);
+		$sQuery = "SELECT $sSelects";
+
+		$this->debug($sQuery);
+		$aResults = CMDBSource::QueryToArray($sQuery);
+
+		foreach ($aTests as $i => $aTest)
+		{
+			$value = $aResults[0]["test_$i"];
+			$expectedValue = $aTest[1];
+			$this->debug("Test #$i: {$aTests[$i][0]} => ".var_export($value, true));
+			static::assertEquals($expectedValue, $value);
+		}
+	}
+
+	/**
+	 * @covers DBObject::EvaluateExpression
+	 * @dataProvider ExpressionsWithObjectFieldsProvider
+	 *
+	 * @param $sClass
+	 * @param $aValues
+	 * @param $sExpression
+	 * @param $expected
+	 *
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function testExpressionsWithObjectFields($sClass, $aValues, $sExpression, $expected)
+	{
+		$oObject = MetaModel::NewObject($sClass, $aValues);
+		$oExpression = Expression::FromOQL($sExpression);
+
+		$res = $oObject->EvaluateExpression($oExpression);
+
+		static::assertEquals($expected, $res);
+	}
+
+	public function ExpressionsWithObjectFieldsProvider()
+	{
+		return array(
+			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'org_id', 2),
+			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'CONCAT(SUBSTR(name, 4), " cause")', 'noble cause'),
+		);
+	}
+
+	/**
+	 * @dataProvider ExpressionWithParametersProvider
+	 *
+	 * @param $sExpression
+	 * @param $aParameters
+	 * @param $expected
+	 *
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function testExpressionWithParameters($sExpression, $aParameters, $expected)
+	{
+		$oExpression = Expression::FromOQL($sExpression);
+		$res = $oExpression->Evaluate($aParameters);
+		static::assertEquals($expected, $res);
+	}
+
+	public function ExpressionWithParametersProvider()
+	{
+		return array(
+			array('CONCAT(SUBSTR(name, 4), " cause")', array('name' => 'noble'), 'le cause'),
+		);
+	}
+
+	/**
+	 * Check Expression::IfTrue
+	 *
+	 * @covers       Expression::FromOQL
+	 * @covers       Expression::IsTrue
+	 * @dataProvider TrueExpressionsProvider
+	 *
+	 * @param $sExpression
+	 * @param $bExpectTrue
+	 *
+	 * @throws \OQLException
+	 */
+	public function testTrueExpressions($sExpression, $bExpectTrue)
+	{
+		$oExpression = Expression::FromOQL($sExpression);
+
+		$res = $oExpression->IsTrue();
+		if ($bExpectTrue)
+		{
+			static::assertTrue($res, 'arg: '.$sExpression);
+		}
+		else
+		{
+			static::assertFalse($res, 'arg: '.$sExpression);
+		}
+	}
+
+	public function TrueExpressionsProvider()
 	{
 		$aExpressions = array(
 			array('1', true),
@@ -326,19 +371,24 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 
 	/**
 	 * @covers       FunctionExpression::Evaluate()
-	 * @dataProvider TimeFormats
+	 * @dataProvider TimeFormatsProvider
 	 *
 	 * @param $sFormat
 	 * @param $bProcessed
 	 * @param $sValueOrException
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 * @throws \Exception
 	 */
 	public function testTimeFormat($sFormat, $bProcessed, $sValueOrException)
 	{
 		$sDate = '2009-06-04 21:23:24';
-		$oExpression = new \FunctionExpression('DATE_FORMAT', array(new \ScalarExpression($sDate), new \ScalarExpression("%$sFormat")));
+		$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
 		if ($bProcessed)
 		{
-			$sqlValue = \CMDBSource::QueryToScalar("SELECT DATE_FORMAT('$sDate', '%$sFormat')");
+			$sqlValue = CMDBSource::QueryToScalar("SELECT DATE_FORMAT('$sDate', '%$sFormat')");
 			static::assertEquals($sqlValue, $sValueOrException, 'Check test against MySQL');
 
 			$res = $oExpression->Evaluate(array());
@@ -347,11 +397,11 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 		else
 		{
 			static::expectException($sValueOrException);
-			$res = $oExpression->Evaluate(array());
+			$oExpression->Evaluate(array());
 		}
 	}
 
-	public function TimeFormats()
+	public function TimeFormatsProvider()
 	{
 		$aTests = array(
 			array('a', true, 'Thu'),
@@ -396,14 +446,19 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 
 	/**
 	 * Systematically check all supported format specs, for a given date
-	 * @covers       FunctionExpression::Evaluate()
-	 * @dataProvider DateTimeSamples
 	 *
-	 * @param $sDateTime
+	 * @covers       FunctionExpression::Evaluate()
+	 * @dataProvider EveryTimeFormatProvider
+	 *
+	 * @param $sDate
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	public function testEveryTimeFormat($sDate)
 	{
-		$aFormats = $this->TimeFormats();
+		$aFormats = $this->TimeFormatsProvider();
 		$aSelects = array();
 		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
 		{
@@ -415,7 +470,7 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 			}
 		}
 		$sSelects = "SELECT ".implode(', ', $aSelects);
-		$aRes = \CMDBSource::QueryToArray($sSelects);
+		$aRes = CMDBSource::QueryToArray($sSelects);
 		$aRow = $aRes[0];
 		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
 		{
@@ -423,13 +478,13 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 			$bProcessed = $aFormatSpec[1];
 			if ($bProcessed)
 			{
-				$oExpression = new \FunctionExpression('DATE_FORMAT', array(new \ScalarExpression($sDate), new \ScalarExpression("%$sFormat")));
+				$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
 				$res = $oExpression->Evaluate(array());
 				static::assertEquals($aRow[$sFormat], $res, "Format %$sFormat not matching MySQL for '$sDate'");
 			}
 		}
 	}
-	public function DateTimeSamples()
+	public function EveryTimeFormatProvider()
 	{
 		return array(
 			array('1971-07-19 8:40:00'),
@@ -437,26 +492,38 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 			array('2000-01-01 00:00:00'),
 			array('2009-06-04 21:23:24'),
 			array('2020-02-29 23:59:59'),
+			array('2030-10-21 23:59:59'),
+			array('2050-12-21 23:59:59'),
 		);
 	}
 
 	/**
 	 * Systematically check all supported format specs, for a range of dates
+	 *
 	 * @covers       FunctionExpression::Evaluate()
-	 * @dataProvider DateTimeRanges
+	 * @dataProvider EveryTimeFormatOnDateRangeProvider
+	 *
+	 * @param $sStartDate
+	 * @param $sInterval
+	 * @param $iRepeat
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	public function testEveryTimeFormatOnDateRange($sStartDate, $sInterval, $iRepeat)
 	{
-		$oDate = new \DateTime($sStartDate);
+		$oDate = new DateTime($sStartDate);
 		for ($i = 0 ; $i < $iRepeat ; $i++)
 		{
 			$sDate = date_format($oDate, 'Y-m-d, H:i:s');
 			$this->debug("Checking '$sDate'");
 			$this->testEveryTimeFormat($sDate);
-			$oDate->add(new \DateInterval($sInterval));
+			$oDate->add(new DateInterval($sInterval));
 		}
 	}
-	public function DateTimeRanges()
+
+	public function EveryTimeFormatOnDateRangeProvider()
 	{
 		return array(
 			'10 years, day by day' => array('2000-01-01', 'P1D', 365 * 10),

@@ -796,7 +796,7 @@ abstract class DBObject implements iDisplay
 			{
 				// Recompute -which is likely to call Get()
 				//
-				/** @var AttributeFriendlyName $oAttDef */
+				/** @var AttributeFriendlyName|\AttributeObsolescenceFlag $oAttDef */
 				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
