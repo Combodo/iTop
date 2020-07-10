@@ -255,7 +255,6 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 				// Date functions
 				array("DATE('2020-03-12 13:18:30')", '2020-03-12'),
 				array("DATE_FORMAT('2009-10-04 22:23:00', '%Y %m %d %H %i %s')", '2009 10 04 22 23 00'),
-				//array("DATE_FORMAT('2009-10-04 22:23:00', '%W %M %Y')", 'Sunday October 2009'),
 				array("DATE(NOW()) = CURRENT_DATE()", 1), // Could fail if executed around midnight!
 				array("TO_DAYS('2020-01-02')", 737791),
 				array("FROM_DAYS(737791)", '2020-01-02'),
@@ -323,5 +322,147 @@ class ExpressionEvaluateTest extends \Combodo\iTop\Test\UnitTest\iTopDataTestCas
 			$aRet[$aExp[0]] = $aExp;
 		}
 		return $aRet;
+	}
+
+	/**
+	 * @covers       FunctionExpression::Evaluate()
+	 * @dataProvider TimeFormats
+	 *
+	 * @param $sFormat
+	 * @param $bProcessed
+	 * @param $sValueOrException
+	 */
+	public function testTimeFormat($sFormat, $bProcessed, $sValueOrException)
+	{
+		$sDate = '2009-06-04 21:23:24';
+		$oExpression = new \FunctionExpression('DATE_FORMAT', array(new \ScalarExpression($sDate), new \ScalarExpression("%$sFormat")));
+		if ($bProcessed)
+		{
+			$sqlValue = \CMDBSource::QueryToScalar("SELECT DATE_FORMAT('$sDate', '%$sFormat')");
+			static::assertEquals($sqlValue, $sValueOrException, 'Check test against MySQL');
+
+			$res = $oExpression->Evaluate(array());
+			static::assertEquals($sValueOrException, $res, 'Check evaluation');
+		}
+		else
+		{
+			static::expectException($sValueOrException);
+			$res = $oExpression->Evaluate(array());
+		}
+	}
+
+	public function TimeFormats()
+	{
+		$aTests = array(
+			array('a', true, 'Thu'),
+			array('b', true, 'Jun'),
+			array('c', true, '6'),
+			array('D', true, '4th'),
+			array('d', true, '04'),
+			array('e', true, '4'),
+			array('f', false, 'NotYetEvaluatedExpression'), // microseconds: no way!
+			array('H', true, '21'),
+			array('h', true, '09'),
+			array('I', true, '09'),
+			array('i', true, '23'),
+			array('j', true, '155'), // day of the year
+			array('k', true, '21'),
+			array('l', true, '9'),
+			array('M', true, 'June'),
+			array('m', true, '06'),
+			array('p', true, 'PM'),
+			array('r', true, '09:23:24 PM'),
+			array('S', true, '24'),
+			array('s', true, '24'),
+			array('T', true, '21:23:24'),
+			array('U', false, 'NotYetEvaluatedExpression'), // Week sunday based (mode 0)
+			array('u', false, 'NotYetEvaluatedExpression'), // Week monday based (mode 1)
+			array('V', false, 'NotYetEvaluatedExpression'), // Week sunday based (mode 2)
+			array('v', true, '23'), // Week monday based (mode 3 - ISO-8601)
+			array('W', true, 'Thursday'),
+			array('w', true, '4'),
+			array('X', false, 'NotYetEvaluatedExpression'),
+			array('x', true, '2009'), // to be used with %v (ISO - 8601)
+			array('Y', true, '2009'),
+			array('y', true, '09'),
+		);
+		$aRes = array();
+		foreach ($aTests as $aTest)
+		{
+			$aRes["Format %{$aTest[0]}"] = $aTest;
+		}
+		return $aRes;
+	}
+
+	/**
+	 * Systematically check all supported format specs, for a given date
+	 * @covers       FunctionExpression::Evaluate()
+	 * @dataProvider DateTimeSamples
+	 *
+	 * @param $sDateTime
+	 */
+	public function testEveryTimeFormat($sDate)
+	{
+		$aFormats = $this->TimeFormats();
+		$aSelects = array();
+		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
+		{
+			$sFormat = $aFormatSpec[0];
+			$bProcessed = $aFormatSpec[1];
+			if ($bProcessed)
+			{
+				$aSelects["%$sFormat"] = "DATE_FORMAT('$sDate', '%$sFormat') AS `$sFormat`";
+			}
+		}
+		$sSelects = "SELECT ".implode(', ', $aSelects);
+		$aRes = \CMDBSource::QueryToArray($sSelects);
+		$aRow = $aRes[0];
+		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
+		{
+			$sFormat = $aFormatSpec[0];
+			$bProcessed = $aFormatSpec[1];
+			if ($bProcessed)
+			{
+				$oExpression = new \FunctionExpression('DATE_FORMAT', array(new \ScalarExpression($sDate), new \ScalarExpression("%$sFormat")));
+				$res = $oExpression->Evaluate(array());
+				static::assertEquals($aRow[$sFormat], $res, "Format %$sFormat not matching MySQL for '$sDate'");
+			}
+		}
+	}
+	public function DateTimeSamples()
+	{
+		return array(
+			array('1971-07-19 8:40:00'),
+			array('1999-12-31 23:59:59'),
+			array('2000-01-01 00:00:00'),
+			array('2009-06-04 21:23:24'),
+			array('2020-02-29 23:59:59'),
+		);
+	}
+
+	/**
+	 * Systematically check all supported format specs, for a range of dates
+	 * @covers       FunctionExpression::Evaluate()
+	 * @dataProvider DateTimeRanges
+	 */
+	public function testEveryTimeFormatOnDateRange($sStartDate, $sInterval, $iRepeat)
+	{
+		$oDate = new \DateTime($sStartDate);
+		for ($i = 0 ; $i < $iRepeat ; $i++)
+		{
+			$sDate = date_format($oDate, 'Y-m-d, H:i:s');
+			$this->debug("Checking '$sDate'");
+			$this->testEveryTimeFormat($sDate);
+			$oDate->add(new \DateInterval($sInterval));
+		}
+	}
+	public function DateTimeRanges()
+	{
+		return array(
+			'10 years, day by day' => array('2000-01-01', 'P1D', 365 * 10),
+			'1 day, hour by hour' => array('2000-01-01 00:01:02', 'PT1H', 24),
+			'1 hour, minute by minute' => array('2000-01-01 00:01:02', 'PT1M', 60),
+			'1 minute, second by second' => array('2000-01-01 00:01:02', 'PT1S', 60),
+		);
 	}
 }

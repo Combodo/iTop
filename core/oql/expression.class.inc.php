@@ -21,6 +21,9 @@ class MissingQueryArgument extends CoreException
 {
 }
 
+class NotYetEvaluatedExpression extends CoreException
+{
+}
 
 /**
  * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
@@ -2687,9 +2690,17 @@ class FunctionExpression extends Expression
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
 				$sFormat = $this->m_aArgs[1]->Evaluate($aArgs);
 				$sFormat = str_replace(
-					array('%Y', '%d', '%m', '%H', '%i', '%s'),
-					array('Y', 'd', 'm', 'H', 'i', 's'),
+					array('%y', '%x', '%w', '%W', '%v', '%T', '%S', '%r', '%p', '%M', '%l', '%k', '%I', '%h', '%b', '%a', '%D', '%c', '%e', '%Y', '%d', '%m', '%H', '%i', '%s'),
+					array('y', 'o', 'w', 'l', 'W', 'H:i:s', 's', 'h:i:s A', 'A', 'F', 'g', 'H', 'h', 'h','M', 'D', 'jS', 'n', 'j', 'Y', 'd', 'm', 'H', 'i', 's'),
 					$sFormat);
+				if (preg_match('/%j/', $sFormat))
+				{
+					$sFormat = str_replace('%j', date_format($oDate, 'z') + 1, $sFormat);
+				}
+				if (preg_match('/%[fUuVX]/', $sFormat))
+				{
+					throw new NotYetEvaluatedExpression("Expression ".$this->RenderExpression().' cannot be evaluated (known limitation)');
+				}
 				$sRet = date_format($oDate, $sFormat);
 				return $sRet;
 
