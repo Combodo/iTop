@@ -36,7 +36,7 @@ $oAppContext = new ApplicationContext();
 $oP = new iTopWebPage("iTop - Navigator");
 
 // Main program
-$sClass = utils::ReadParam('class', '');
+$sClass = utils::ReadParam('class', '', false, 'class');
 $id = utils::ReadParam('id', 0);
 $sRelation = utils::ReadParam('relation', 'neighbours');
 

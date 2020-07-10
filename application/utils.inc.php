@@ -283,6 +283,8 @@ class utils
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
+	 *
+	 * @throws \CoreException
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -296,7 +298,7 @@ class utils
 				$retValue = $value;
 				if (!MetaModel::IsValidClass($value))
 				{
-					$retValue = false;
+					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
 
