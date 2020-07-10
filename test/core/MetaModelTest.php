@@ -83,4 +83,100 @@ class MetaModelTest extends ItopDataTestCase
             ),
 		);
 	}
+
+	/**
+	 * @covers       MetaModel::GetDependentAttributes()
+	 * @dataProvider GetDependentAttributesProvider
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param array $aExpectedAttCodes
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetDependentAttributes($sClass, $sAttCode, array $aExpectedAttCodes)
+	{
+		$aRes = MetaModel::GetDependentAttributes($sClass, $sAttCode);
+		// The order doesn't matter
+		sort($aRes);
+		sort($aExpectedAttCodes);
+		static::assertEquals($aExpectedAttCodes, $aRes);
+	}
+
+	public function GetDependentAttributesProvider()
+	{
+		$aRawCases = array(
+			array('Person', 'org_id', array('location_id', 'org_name', 'org_id_friendlyname', 'org_id_obsolescence_flag')),
+			array('Person', 'name', array('friendlyname')),
+			array('Person', 'status', array('obsolescence_flag')),
+		);
+		$aRet = array();
+		foreach ($aRawCases as $i => $aData)
+		{
+			$aRet[$aData[0].'::'.$aData[1]] = $aData;
+		}
+		return $aRet;
+	}
+
+	/**
+	 * @covers       MetaModel::GetPrerequisiteAttributes()
+	 * @dataProvider GetPrerequisiteAttributesProvider
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param array $aExpectedAttCodes
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetPrerequisiteAttributes($sClass, $sAttCode, array $aExpectedAttCodes)
+	{
+		$aRes = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
+		// The order doesn't matter
+		sort($aRes);
+		sort($aExpectedAttCodes);
+		static::assertEquals($aRes, $aExpectedAttCodes);
+	}
+
+	public function GetPrerequisiteAttributesProvider()
+	{
+		$aRawCases = array(
+			array('Person', 'friendlyname', array('name', 'first_name')),
+			array('Person', 'obsolescence_flag', array('status')),
+			array('Person', 'org_id_friendlyname', array('org_id')),
+			array('Person', 'org_id', array()),
+			array('Person', 'org_name', array('org_id')),
+		);
+		$aRet = array();
+		foreach ($aRawCases as $i => $aData)
+		{
+			$aRet[$aData[0].'::'.$aData[1]] = $aData;
+		}
+		return $aRet;
+	}
+
+	/**
+	 * To be removed as soon as the dependencies on external fields are obsoleted
+	 * @Group Integration
+	 */
+	public function testManualVersusAutomaticDependenciesOnExtKeys()
+	{
+		foreach (\MetaModel::GetClasses() as $sClass)
+		{
+			if (\MetaModel::IsAbstract($sClass)) continue;
+
+			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+			{
+				if (\MetaModel::GetAttributeOrigin($sClass, $sAttCode) != $sClass) continue;
+				if (!$oAttDef instanceof \AttributeExternalKey) continue;
+
+				$aManual = $oAttDef->Get('depends_on');
+				$aAuto = \MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
+				// The order doesn't matter
+				sort($aAuto);
+				sort($aManual);
+				static::assertEquals($aManual, $aAuto, "Class: $sClass, Attribute: $sAttCode");
+			}
+		}
+	}
+
 }

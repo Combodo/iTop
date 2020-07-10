@@ -944,11 +944,6 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
-		// Temporary implementation: later, we might be able to compute
-		// the dependencies, based on the attributes definition
-		// (allowed values and default values)
-
-		// Even non-writable attributes (like ExternalFields) can now have Prerequisites
 		return $oAtt->GetPrerequisiteAttributes();
 	}
 

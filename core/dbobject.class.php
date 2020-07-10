@@ -569,43 +569,41 @@ abstract class DBObject implements iDisplay
 			$this->Reload();
 		}
 
-		if ($oAttDef->IsExternalKey())
+		if ($oAttDef->IsExternalKey() && is_object($value))
 		{
-			if (is_object($value))
+			// Setting an external key with a whole object (instead of just an ID)
+			// let's initialize also the external fields that depend on it
+			// (useful when building objects in memory and not from a query)
+			/** @var \AttributeExternalKey $oAttDef */
+			if ((get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
 			{
-				// Setting an external key with a whole object (instead of just an ID)
-				// let's initialize also the external fields that depend on it
-				// (useful when building objects in memory and not from a query)
-				/** @var \AttributeExternalKey $oAttDef */
-				if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
-				{
-					throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
-				}
+				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
+			}
 
-				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+			{
+				/** @var \AttributeExternalField $oDef */
+				if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 				{
-					/** @var \AttributeExternalField $oDef */
-					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
-					{
-						/** @var \DBObject $value */
-						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
-						$this->m_aLoadedAtt[$sCode] = true;
-					}
+					/** @var \DBObject $value */
+					$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
+					$this->m_aLoadedAtt[$sCode] = true;
+				}
+				elseif (in_array($sAttCode, $oDef->GetPrerequisiteAttributes(get_class($this))))
+				{
+					$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+					unset($this->m_aLoadedAtt[$sCode]);
 				}
 			}
-			else if ($this->m_aCurrValues[$sAttCode] != $value)
+		}
+		else if ($this->m_aCurrValues[$sAttCode] !== $value)
+		{
+			// Invalidate dependent fields so that they get reloaded in case they are needed (See Get())
+			//
+			foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode)
 			{
-				// Setting an external key, but no any other information is available...
-				// Invalidate the corresponding fields so that they get reloaded in case they are needed (See Get())
-				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
-				{
-					/** @var \AttributeExternalKey $oDef */
-					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
-					{
-						$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
-						unset($this->m_aLoadedAtt[$sCode]);
-					}
-				}
+				$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+				unset($this->m_aLoadedAtt[$sCode]);
 			}
 		}
 		if ($oAttDef->IsLinkSet() && ($value != null))
@@ -787,20 +785,20 @@ abstract class DBObject implements iDisplay
 			{
 				// Standard case... we have the information directly
 			}
-			elseif ($this->m_bIsInDB && !$this->m_bDirty)
+			elseif ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 			{
 				// Lazy load (polymorphism): complete by reloading the entire object
-				// #@# non-scalar attributes.... handle that differently?
 				$oKPI = new ExecutionKPI();
 				$this->Reload();
 				$oKPI->ComputeStats('Reload', get_class($this).'/'.$sAttCode);
 			}
-			elseif ($sAttCode == 'friendlyname')
+			elseif ($oAttDef->IsBasedOnOQLExpression())
 			{
-				// The friendly name is not computed and the object is dirty
-				// Todo: implement the computation of the friendly name based on sprintf()
-				// 
-				$this->m_aCurrValues[$sAttCode] = '';
+				// Recompute -which is likely to call Get()
+				//
+				/** @var AttributeFriendlyName|\AttributeObsolescenceFlag $oAttDef */
+				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());
+				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 			else
 			{
@@ -5357,6 +5355,34 @@ abstract class DBObject implements iDisplay
 			default:
 				break;
 		}
+	}
+
+	public function EvaluateExpression(Expression $oExpression)
+	{
+		$aFields = $oExpression->ListRequiredFields();
+		$aArgs = array();
+		foreach ($aFields as $sFieldDesc)
+		{
+			$aFieldParts = explode('.', $sFieldDesc);
+			if (count($aFieldParts) == 2)
+			{
+				$sClass = $aFieldParts[0];
+				$sAttCode = $aFieldParts[1];
+			}
+			else
+			{
+				$sClass = get_class($this);
+				$sAttCode = $aFieldParts[0];
+			}
+			if (get_class($this) != $sClass) continue;
+			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) continue;
+
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			$value = reset($aSQLValues);
+			$aArgs[$sFieldDesc] = $value;
+		}
+		return $oExpression->Evaluate($aArgs);
 	}
 }
 
