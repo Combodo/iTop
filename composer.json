@@ -2,7 +2,7 @@
   "type": "project",
   "license": "AGPLv3",
   "require": {
-    "php": ">=5.6.0",
+    "php": ">=7.2.0",
     "ext-ctype": "*",
     "ext-dom": "*",
     "ext-gd": "*",
@@ -37,7 +37,7 @@
   },
   "config": {
     "platform": {
-      "php": "5.6.0"
+      "php": "7.2.0"
     },
     "vendor-dir": "lib",
     "preferred-install": {
