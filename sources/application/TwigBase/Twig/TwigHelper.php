@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use IssueLog;
+use MetaModel;
 use Twig\Environment;
 use Twig_Environment;
 use Twig_Error;
@@ -22,10 +23,13 @@ class TwigHelper
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
-		$sLocalPath = utils::LocalPath($sViewPath);
-		$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
-		$sCachePath = utils::GetCachePath().$sLocalPath;
-		$oTwig->setCache($sCachePath);
+		if (MetaModel::GetConfig()->Get('apc_cache.enabled'))
+		{
+			$sLocalPath = utils::LocalPath($sViewPath);
+			$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
+			$sCachePath = utils::GetCachePath().$sLocalPath;
+			$oTwig->setCache($sCachePath);
+		}
 
 		return $oTwig;
 	}
