@@ -196,6 +196,7 @@ CONF;
 
 		$oConfig = new Config($sConfigPath, false);
 		try{
+			clearstatcache();
 			$oConfig->WriteToFile();
 			if ($conf_exists)
 			{
