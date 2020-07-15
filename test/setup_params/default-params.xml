@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installation>
 <!-- On manual installs, this file is generated in setup/install-*.xml -->
-    <mode>upgrade</mode>
+    <mode>install</mode>
     <preinstall>
         <copies type="array"/>
     </preinstall>
