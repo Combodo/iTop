@@ -184,6 +184,7 @@ CONF;
 	 */
 	public function testConfigWriteToFile_FromScratchInstallation()
 	{
+		clearstatcache();
 		$sConfigPath = utils::GetConfigFilePath();
 		$tmpSavePath = tempnam( '/tmp/', 'config-itop');
 
