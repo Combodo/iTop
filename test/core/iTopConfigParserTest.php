@@ -207,7 +207,7 @@ CONF;
 				rename($tmpSavePath, $sConfigPath);
 			}
 
-			$this->assertTrue(false, "failed writetofile with no initial file");
+			$this->assertTrue(false, "failed writetofile with no initial file: " . $e->getMessage());
 		}
 
 	}
