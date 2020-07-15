@@ -3,7 +3,8 @@ def infra
 node(){
   checkout scm
 
-  infra = load '/var/lib/jenkins/workspace/itop-test-infra_master/src/Infra.groovy'
+//  infra = load '/var/lib/jenkins/workspace/itop-test-infra_master/src/Infra.groovy'
+  infra = load '/home/combodo/workspaceBEHAT/itop-test-infra/src/Infra.groovy'
 
 }
 
