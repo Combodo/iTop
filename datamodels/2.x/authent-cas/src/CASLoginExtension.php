@@ -19,7 +19,6 @@ use LoginTwigContext;
 use LoginWebPage;
 use MetaModel;
 use phpCAS;
-use URP_UserProfile;
 use User;
 use UserExternal;
 use utils;
@@ -58,18 +57,15 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			}
 			else
 			{
-				if ($_SESSION['login_mode'] == 'cas')
+				if (!isset($_SESSION['login_will_redirect']))
 				{
-					if (!isset($_SESSION['login_will_redirect']))
-					{
-						$_SESSION['login_will_redirect'] = true;
-					}
-					else
-					{
-						unset($_SESSION['login_will_redirect']);
-						$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
-						return LoginWebPage::LOGIN_FSM_ERROR;
-					}
+					$_SESSION['login_will_redirect'] = true;
+				}
+				else
+				{
+					unset($_SESSION['login_will_redirect']);
+					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
+					return LoginWebPage::LOGIN_FSM_ERROR;
 				}
 				$_SESSION['login_mode'] = 'cas';
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
