@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installation>
 <!-- On manual installs, this file is generated in setup/install-*.xml -->
-    <mode>upgrade</mode>
+    <mode>install</mode>
     <preinstall>
         <copies type="array"/>
     </preinstall>
@@ -20,7 +20,7 @@
         <db_tls_ca></db_tls_ca>
         <prefix></prefix>
     </database>
-    <url>http://127.0.0.1/itop/svn/trunk/</url>
+    <url>http://localhost/iTop/</url>
     <graphviz_path>/usr/bin/dot</graphviz_path>
     <admin_account>
         <user>admin</user>
