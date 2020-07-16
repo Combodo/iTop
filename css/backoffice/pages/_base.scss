@@ -22,8 +22,8 @@ $ibo-body-background-color: $ibo-color-white-200 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
-	--ibo-body-text-color: $ibo-body-text-color;
-	--ibo-body-background-color: $ibo-body-background-color;
+	--ibo-body-text-color: #{$ibo-body-text-color};
+	--ibo-body-background-color: #{$ibo-body-background-color};
 }
 
 /* Layout */
@@ -35,7 +35,10 @@ body{
 	height: 100%;
 	color: var(--ibo-body-text-color);
 	background-color: var(--ibo-body-background-color);
-	@include ibo-font-ral-nor-100;
+	@extend %ibo-font-ral-nor-100;
+}
+#ibo-navigation-menu{
+	z-index: 1;
 }
 #ibo-page-container{
 	position: relative;

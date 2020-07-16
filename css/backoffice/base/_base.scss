@@ -16,6 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+$ibo-hyperlink-color: $ibo-color-primary-500 !default;
+$ibo-hyperlink-color--on-hover: $ibo-color-primary-600 !default;
+$ibo-hyperlink-color--on-active: $ibo-color-primary-700 !default;
+
+:root{
+	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
+	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
+	--ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
+}
+
 *,
 *::before,
 *::after{
@@ -24,4 +34,21 @@
 
 html{
 	font-size: 12px;
+}
+
+a{
+	color: var(--ibo-hyperlink-color);
+	text-decoration: none;
+
+	&:hover,
+	&:active,
+	&:visited{
+		text-decoration: none;
+	}
+	&:hover{
+		color: var(--ibo-hyperlink-color--on-hover);
+	}
+	&:active{
+		color: var(--ibo-hyperlink-color--on-active);
+	}
 }

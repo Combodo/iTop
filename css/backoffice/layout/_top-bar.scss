@@ -24,10 +24,10 @@ $ibo-top-bar-background-color: $ibo-color-white-100 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
-	--ibo-top-bar-padding-left: $ibo-top-bar-padding-left;
-	--ibo-top-bar-padding-right: $ibo-top-bar-padding-right;
-	--ibo-top-bar-padding-y: $ibo-top-bar-padding-y;
-	--ibo-top-bar-background-color: $ibo-top-bar-background-color;
+	--ibo-top-bar-padding-left: #{$ibo-top-bar-padding-left};
+	--ibo-top-bar-padding-right: #{$ibo-top-bar-padding-right};
+	--ibo-top-bar-padding-y: #{$ibo-top-bar-padding-y};
+	--ibo-top-bar-background-color: #{$ibo-top-bar-background-color};
 }
 .ibo-top-bar{
 	display: flex;

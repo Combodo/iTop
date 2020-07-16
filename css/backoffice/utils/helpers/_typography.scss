@@ -29,232 +29,232 @@
 	900		Black (Heavy)
 	950		Extra Black (Ultra Black)
  */
-@mixin ibo-font-ral-nor-50 {
+%ibo-font-ral-nor-50 {
 	font-size: $ibo-font-size-50;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-100 {
+%ibo-font-ral-nor-100 {
 	font-size: $ibo-font-size-100;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-150 {
+%ibo-font-ral-nor-150 {
 	font-size: $ibo-font-size-150;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-200 {
+%ibo-font-ral-nor-200 {
 	font-size: $ibo-font-size-200;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-250 {
+%ibo-font-ral-nor-250 {
 	font-size: $ibo-font-size-250;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-300 {
+%ibo-font-ral-nor-300 {
 	font-size: $ibo-font-size-300;
 	font-family:" Raleway";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-350 {
+%ibo-font-ral-nor-350 {
 	font-size: $ibo-font-size-350;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-400 {
+%ibo-font-ral-nor-400 {
 	font-size: $ibo-font-size-400;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-450 {
+%ibo-font-ral-nor-450 {
 	font-size: $ibo-font-size-450;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-500 {
+%ibo-font-ral-nor-500 {
 	font-size: $ibo-font-size-500;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-nor-550 {
+%ibo-font-ral-nor-550 {
 	font-size: $ibo-font-size-550;
 	font-family: "Monorale";
 	font-weight: 400;
 }
-@mixin ibo-font-ral-med-50 {
+%ibo-font-ral-med-50 {
 	font-size: $ibo-font-size-50;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-100 {
+%ibo-font-ral-med-100 {
 	font-size: $ibo-font-size-100;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-150 {
+%ibo-font-ral-med-150 {
 	font-size: $ibo-font-size-150;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-200 {
+%ibo-font-ral-med-200 {
 	font-size: $ibo-font-size-200;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-250 {
+%ibo-font-ral-med-250 {
 	font-size: $ibo-font-size-250;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-300 {
+%ibo-font-ral-med-300 {
 	font-size: $ibo-font-size-300;
 	font-family:" Raleway";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-350 {
+%ibo-font-ral-med-350 {
 	font-size: $ibo-font-size-350;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-400 {
+%ibo-font-ral-med-400 {
 	font-size: $ibo-font-size-400;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-450 {
+%ibo-font-ral-med-450 {
 	font-size: $ibo-font-size-450;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-500 {
+%ibo-font-ral-med-500 {
 	font-size: $ibo-font-size-500;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-med-550 {
+%ibo-font-ral-med-550 {
 	font-size: $ibo-font-size-550;
 	font-family: "Monorale";
 	font-weight: 500;
 }
-@mixin ibo-font-ral-bol-50 {
+%ibo-font-ral-bol-50 {
 	font-size: $ibo-font-size-50;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-100 {
+%ibo-font-ral-bol-100 {
 	font-size: $ibo-font-size-100;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-150 {
+%ibo-font-ral-bol-150 {
 	font-size: $ibo-font-size-150;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-200 {
+%ibo-font-ral-bol-200 {
 	font-size: $ibo-font-size-200;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-250 {
+%ibo-font-ral-bol-250 {
 	font-size: $ibo-font-size-250;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-300 {
+%ibo-font-ral-bol-300 {
 	font-size: $ibo-font-size-300;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-350 {
+%ibo-font-ral-bol-350 {
 	font-size: $ibo-font-size-350;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-400 {
+%ibo-font-ral-bol-400 {
 	font-size: $ibo-font-size-400;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-450 {
+%ibo-font-ral-bol-450 {
 	font-size: $ibo-font-size-450;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-500 {
+%ibo-font-ral-bol-500 {
 	font-size: $ibo-font-size-500;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-bol-550 {
+%ibo-font-ral-bol-550 {
 	font-size: $ibo-font-size-550;
 	font-family: "Monorale";
 	font-weight: 700;
 }
-@mixin ibo-font-ral-ita-50 {
+%ibo-font-ral-ita-50 {
 	font-size: $ibo-font-size-50;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-100 {
+%ibo-font-ral-ita-100 {
 	font-size: $ibo-font-size-100;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-150 {
+%ibo-font-ral-ita-150 {
 	font-size: $ibo-font-size-150;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-200 {
+%ibo-font-ral-ita-200 {
 	font-size: $ibo-font-size-200;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-250 {
+%ibo-font-ral-ita-250 {
 	font-size: $ibo-font-size-250;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-300 {
+%ibo-font-ral-ita-300 {
 	font-size: $ibo-font-size-300;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-350 {
+%ibo-font-ral-ita-350 {
 	font-size: $ibo-font-size-350;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-400 {
+%ibo-font-ral-ita-400 {
 	font-size: $ibo-font-size-400;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-450 {
+%ibo-font-ral-ita-450 {
 	font-size: $ibo-font-size-450;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-500 {
+%ibo-font-ral-ita-500 {
 	font-size: $ibo-font-size-500;
 	font-family: "Monorale";
 	font-weight: 400;
 	font-style: italic;
 }
-@mixin ibo-font-ral-ita-550 {
+%ibo-font-ral-ita-550 {
 	font-size: $ibo-font-size-550;
 	font-family: "Monorale";
 	font-weight: 400;
