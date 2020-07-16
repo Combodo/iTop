@@ -46,6 +46,9 @@ test/vendor/*
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/*
 
+# Sass converter
+/**/.sass-cache/
+
 # doc. generation
 /.doc/vendor
 
