@@ -5589,7 +5589,7 @@ abstract class MetaModel
 							{
 								$sIndexName = $sField;
 								$sColumns = '`'.$sField.'`';
-								if (!is_null($aLength[0]))
+								if (isset($aLength[0]))
 								{
 									$sColumns .= ' ('.$aLength[0].')';
 								}
