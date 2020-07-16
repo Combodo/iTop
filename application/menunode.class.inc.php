@@ -201,10 +201,95 @@ class ApplicationMenu
 	}
 
 	/**
+	 * Return an array of menu groups
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @since 2.8.0
+	 */
+	public static function GetMenuGroups($aExtraParams = array())
+	{
+		self::LoadAdditionalMenus();
+
+		// Sort the root menu based on the rank
+		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+
+		$aMenuGroups = [];
+		foreach(static::$aRootMenus as $aMenuGroup)
+		{
+			if(!static::CanDisplayMenu($aMenuGroup))
+			{
+				continue;
+			}
+
+			$sMenuGroupIdx = $aMenuGroup['index'];
+			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
+
+			$aMenuGroups[] = [
+				'sId' => $oMenuNode->GetMenuID(),
+				'sIconCssClasses' => 'fas fa-fw fa-home', // TODO: Get the classes from the datamodel
+				'sTitle' => $oMenuNode->GetTitle(),
+				'aSubMenuNodes' => static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams),
+			];
+		}
+
+		return $aMenuGroups;
+	}
+
+	/**
+	 * Return an array of sub-menu nodes for $sMenuGroupIdx
+	 *
+	 * @param string $sMenuGroupIdx
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @since 2.8.0
+	 */
+	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = array())
+	{
+		$aSubMenuItems = self::GetChildren($sMenuGroupIdx);
+
+		// Sort the children based on the rank
+		usort($aSubMenuItems, array('ApplicationMenu', 'CompareOnRank'));
+
+		$aSubMenuNodes = [];
+		foreach($aSubMenuItems as $aSubMenuItem)
+		{
+			if(!static::CanDisplayMenu($aSubMenuItem))
+			{
+				continue;
+			}
+
+			$sSubMenuItemIdx = $aSubMenuItem['index'];
+			$oSubMenuNode = static::GetMenuNode($sSubMenuItemIdx);
+
+			if(!$oSubMenuNode->IsEnabled())
+			{
+				continue;
+			}
+
+			$aSubMenuNodes[] = [
+				'sId' => $oSubMenuNode->GetMenuId(),
+				'sTitle' => $oSubMenuNode->GetTitle(),
+				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
+				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+			];
+		}
+
+		return $aSubMenuNodes;
+	}
+
+	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
 	 * @param \WebPage $oPage
 	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
+	 *
+	 * @deprecated Will be removed in 2.8.0
 	 */
 	public static function DisplayMenu($oPage, $aExtraParams)
 	{
@@ -280,6 +365,7 @@ EOF
 	 * @return bool True if the currently selected menu is one of the submenus
 	 * @throws DictExceptionMissingString
 	 * @throws \Exception
+	 * @deprecated Will be removed in 2.8.0
 	 */
 	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{

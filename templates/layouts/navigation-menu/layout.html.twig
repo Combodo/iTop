@@ -1,0 +1,45 @@
+<nav {% if sId is defined %}id="{{ sId }}"{% endif%} class="ibo-navigation-menu">
+	<div class="ibo-navigation-menu--body">
+		<div class="ibo-navigation-menu--top-part">
+			<a class="ibo-navigation-menu--square-company-logo" title="{{ sAppRevisionNumber }}" href="{{ sAppIconLink }}">
+				<img src="{{ sAppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
+			</a>
+			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" title="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" href="#">
+				<span class="ibo-navigation-menu--toggler-icon">
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+				</span>
+			</a>
+		</div>
+		<div class="ibo-navigation-menu--middle-part">
+			{% for aMenuGroup in aMenuGroups %}
+				{% include 'layouts/navigation-menu/menu-group.html.twig' with aMenuGroup %}
+			{% endfor %}
+		</div>
+		<div class="ibo-navigation-menu--bottom-part">
+
+		</div>
+	</div>
+	<div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
+		<div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
+			{# TODO: Retrieve input style from a component? #}
+			<input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" />
+			<a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"></a>
+			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
+		</div>
+		<div class="ibo-navigation-menu--menu-groups">
+			{% for aMenuGroup in aMenuGroups %}
+				{% include 'layouts/navigation-menu/menu-nodes.html.twig' with aMenuGroup %}
+			{% endfor %}
+		</div>
+	</div>
+</nav>
+
+{# TODO: Move this to a dedicated script file #}
+<script type="text/javascript" src="js/layouts/navigation-menu.js"></script>
+<script type="text/javascript">
+setTimeout(function(){
+	$('#{{ sId }}').navigation_menu();
+}, 500);
+</script>

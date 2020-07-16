@@ -1019,7 +1019,7 @@ class JSButtonItem extends JSPopupMenuItem
 interface iPageUIExtension
 {
 	/**
-	 * Add content to the North pane
+	 * Add content to the header of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -1028,7 +1028,7 @@ interface iPageUIExtension
 	public function GetNorthPaneHtml(iTopWebPage $oPage);
 
 	/**
-	 * Add content to the South pane
+	 * Add content to the footer of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *

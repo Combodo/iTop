@@ -21,11 +21,32 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
 class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
+	/** @var string ENUM_APP_ICON_SHAPE_SQUARE */
+	const ENUM_APP_ICON_SHAPE_SQUARE = 'square';
+	/** @var string ENUM_APP_ICON_SHAPE_FULL */
+	const ENUM_APP_ICON_SHAPE_FULL = 'full';
+	/** @var string DEFAULT_APP_ICON_SHAPE */
+	const DEFAULT_APP_ICON_SHAPE = self::ENUM_APP_ICON_SHAPE_FULL;
+
+	/** @var array Default and branding filenames for the app. icon in the backoffice */
+	protected static $aAppIconFilenames = [
+		self::ENUM_APP_ICON_SHAPE_SQUARE => [
+			'default' => 'itop-logo-square.png',
+			'branding' => 'backoffice-square-logo.png',
+		],
+		self::ENUM_APP_ICON_SHAPE_FULL => [
+			'default' => 'itop-logo.png',
+			'branding' => 'main-logo.png',
+		],
+	];
+
 	private $m_sMenu;
 	//	private $m_currentOrganization;
 	private $m_aMessages;
@@ -71,41 +92,44 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
-		$this->add_header("Cache-control: no-cache");
-		$this->add_linked_stylesheet("../css/jquery.treeview.css");
-		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
-		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
-		$this->add_linked_stylesheet("../css/magnific-popup.css");
-		$this->add_linked_stylesheet("../css/c3.min.css");
-		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
-		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
+		// TODO: Should we keep this? Makes no sense
+		//$this->add_header("Cache-control: no-cache");
+		// TODO: Add only what's necessary
+		$this->add_linked_stylesheet("css/jquery.treeview.css");
+		$this->add_linked_stylesheet("css/jquery-ui-timepicker-addon.css");
+		$this->add_linked_stylesheet("css/jquery.multiselect.css");
+		$this->add_linked_stylesheet("css/magnific-popup.css");
+		$this->add_linked_stylesheet("css/c3.min.css");
+		$this->add_linked_stylesheet("css/font-awesome/css/all.min.css");
+		$this->add_linked_stylesheet("js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
 
-		$this->add_linked_script('../js/jquery.layout.min.js');
-		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
-		$this->add_linked_script("../js/jquery.treeview.js");
-		$this->add_linked_script("../js/date.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
-		$this->add_linked_script("../js/jquery.blockUI.js");
-		$this->add_linked_script("../js/utils.js");
-		$this->add_linked_script("../js/swfobject.js");
-		$this->add_linked_script("../js/ckeditor/ckeditor.js");
-		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
-		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
-		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script('../js/property_field.js');
-		$this->add_linked_script('../js/icon_select.js');
-		$this->add_linked_script('../js/raphael-min.js');
-		$this->add_linked_script('../js/d3.js');
-		$this->add_linked_script('../js/c3.js');
-		$this->add_linked_script('../js/jquery.multiselect.js');
-		$this->add_linked_script('../js/ajaxfileupload.js');
-		$this->add_linked_script('../js/jquery.mousewheel.js');
-		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
-		$this->add_linked_script('../js/breadcrumb.js');
-		$this->add_linked_script('../js/moment-with-locales.min.js');
-		$this->add_linked_script('../js/showdown.min.js');
-		$this->add_linked_script('../js/newsroom_menu.js');
+		// TODO: Add only what's necessary
+		$this->add_linked_script('js/jquery.layout.min.js');
+		$this->add_linked_script('js/jquery.ba-bbq.min.js');
+		$this->add_linked_script("js/jquery.treeview.js");
+		$this->add_linked_script("js/date.js");
+		$this->add_linked_script("js/jquery-ui-timepicker-addon.js");
+		$this->add_linked_script("js/jquery-ui-timepicker-addon-i18n.min.js");
+		$this->add_linked_script("js/jquery.blockUI.js");
+		$this->add_linked_script("js/utils.js");
+		$this->add_linked_script("js/swfobject.js");
+		$this->add_linked_script("js/ckeditor/ckeditor.js");
+		$this->add_linked_script("js/ckeditor/adapters/jquery.js");
+		$this->add_linked_script("js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
+		$this->add_linked_script("js/jquery.qtip-1.0.min.js");
+		$this->add_linked_script('js/property_field.js');
+		$this->add_linked_script('js/icon_select.js');
+		$this->add_linked_script('js/raphael-min.js');
+		$this->add_linked_script('js/d3.js');
+		$this->add_linked_script('js/c3.js');
+		$this->add_linked_script('js/jquery.multiselect.js');
+		$this->add_linked_script('js/ajaxfileupload.js');
+		$this->add_linked_script('js/jquery.mousewheel.js');
+		$this->add_linked_script('js/jquery.magnific-popup.min.js');
+		$this->add_linked_script('js/breadcrumb.js');
+		$this->add_linked_script('js/moment-with-locales.min.js');
+		$this->add_linked_script('js/showdown.min.js');
+		$this->add_linked_script('js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -180,6 +204,7 @@ EOF
 	 */
 	protected function PrepareLayout()
 	{
+		// TODO: Move this to the menu renderer
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
 			// No pin button
@@ -368,66 +393,6 @@ JS
 			<<< JS
 	try
 	{
-		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
-
-		// Layout
-		paneSize = GetUserPreference('menu_size', 300);
-		if ($('body').length > 0)
-		{
-            myLayout = $('body').layout({
-                west :	{
-                            $sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "click", hideTogglerOnSlide: true, enableCursorHotkey: false,
-                            onclose_end: function(name, elt, state, options, layout)
-                            {
-                                    if (state.isSliding == false)
-                                    {
-                                        $('.menu-pane-exclusive').show();
-                                        SetUserPreference('menu_pane', 'closed', true);
-                                    }
-                            },
-                            onresize_end: function(name, elt, state, options, layout)
-                            {
-                                    if (state.isSliding == false)
-                                    {
-                                        SetUserPreference('menu_size', state.size, true);
-                                    }
-                            },
-                                        
-                            onopen_end: function(name, elt, state, options, layout)
-                            {
-                                if (state.isSliding == false)
-                                {
-                                    $('.menu-pane-exclusive').hide();
-                                    SetUserPreference('menu_pane', 'open', true);
-                                }
-                            }
-                        },
-                center: {
-                            onresize_end: function(name, elt, state, options, layout)
-                            {
-                                    $('.v-resizable').each( function() {
-                                        var fixedWidth = $(this).parent().innerWidth() - 6;
-                                        $(this).width(fixedWidth);
-                                        // Make sure it cannot be resized horizontally
-                                        $(this).resizable('options', { minWidth: fixedWidth, maxWidth:	fixedWidth });
-                                        // Now adjust all the child 'items'
-                                        var innerWidth = $(this).innerWidth() - 10;
-                                        $(this).find('.item').width(innerWidth);
-                                    });
-                                    $('.panel-resized').trigger('resized');
-                            }
-                    
-                        }
-            });
-        }
-		window.clearTimeout(iPaneVisWatchDog);
-		//myLayout.open( "west" );
-		$('.ui-layout-resizer-west .ui-layout-toggler').css({background: 'transparent'});
-		$sConfigureWestPane
-		if ($('#left-pane').length > 0)
-		{
-		    $('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
-		}
 		// Tabs, using JQuery BBQ to store the history
 		// The "tab widgets" to handle.
 		var tabs = $('div[id^=tabbedContent]');
@@ -478,6 +443,7 @@ JS
 JS
 		);
 
+		// TODO: What is this for?
 		$this->add_ready_script(
 			<<< JS
 	
@@ -642,13 +608,17 @@ JS
 	});
 JS
 		);
+
+		// TODO: To preserve
 		$this->add_ready_script(InlineImage::FixImagesWidth());
+
 		/*
 		 * Not used since the sorting of the tables is always performed server-side
 		AttributeDateTime::InitTableSorter($this, 'custom_date_time');
 		AttributeDate::InitTableSorter($this, 'custom_date');
 		*/
 
+		// TODO: What is this for?
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 			<<<JS
@@ -725,6 +695,20 @@ JS
 		);
 	}
 
+	protected function LoadTheme()
+	{
+		// TODO: Reuse theming mecanism
+//		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
+//		$this->add_linked_stylesheet($sCssThemeUrl);
+
+		$sCssRelPath = utils::GetCSSFromSASS(
+			'css/backoffice/main.scss',
+			array(
+				APPROOT.'css/backoffice/',
+			)
+		);
+		$this->add_saas($sCssRelPath);
+	}
 
 	/**
 	 * @param string $sId Identifies the item, to search after it in the current breadcrumb
@@ -833,15 +817,75 @@ JS
 	}
 
 	/**
-	 * @throws \DictExceptionMissingString
+	 * Return the complete revision number of the application
+	 *
+	 * @return string
+	 * @since 2.8.0
 	 */
-	public function DisplayMenu()
+	public function GetApplicationRevisionNumber()
 	{
-		// Display the menu
-		$oAppContext = new ApplicationContext();
-		$iAccordionIndex = 0;
+		if (ITOP_REVISION == 'svn')
+		{
+			// This is NOT a version built using the build system, just display the main version
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		}
 
-		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash());
+		return $sRevisionNumber;
+	}
+
+	/**
+	 * Return the absolute URL to the application logo of $sShape
+	 *
+	 * @see static::ENUM_APP_ICON_SHAPE_SQUARE, static::ENUM_APP_ICON_SHAPE_FULL, ...
+	 *
+	 * @param string $sShape Shape of the icon to return
+	 *
+	 * @return string
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public function GetApplicationIconUrl($sShape = self::DEFAULT_APP_ICON_SHAPE)
+	{
+		$sIconDefaultFilename = static::$aAppIconFilenames[$sShape]['default'];
+		$sIconBrandingFilename = static::$aAppIconFilenames[$sShape]['branding'];
+
+		$sIconAbsUrl = utils::GetAbsoluteUrlAppRoot().'images/'.$sIconDefaultFilename;
+		// Check if icon is overloaded by the branding
+		if (file_exists(MODULESROOT.'branding/'.$sIconBrandingFilename))
+		{
+			$sIconAbsUrl = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sIconBrandingFilename;
+		}
+
+		$sIconAbsUrl .= '?t='.utils::GetCacheBusterTimestamp();
+
+		return $sIconAbsUrl;
+	}
+
+	/**
+	 * Return the navigation menu data (id, menu groups, ...)
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @throws \DictExceptionMissingString
+	 * @since 2.8.0
+	 */
+	public function GetNavigationMenuData()
+	{
+		$oAppContext = new ApplicationContext();
+
+		return [
+			'sId' => 'ibo-navigation-menu',
+			'sAppRevisionNumber' => $this->GetApplicationRevisionNumber(),
+			'sAppSquareIconUrl' => $this->GetApplicationIconUrl(static::ENUM_APP_ICON_SHAPE_SQUARE),
+			'sAppFullIconUrl' => $this->GetApplicationIconUrl(static::ENUM_APP_ICON_SHAPE_FULL),
+			'sAppIconLink' => MetaModel::GetConfig()->Get('app_icon_url'),
+			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
+		];
 	}
 
 	/**
@@ -905,6 +949,72 @@ EOF
 		return $sNewsroomInitialImage;
 	}
 
+	/**
+	 * Render the banner HTML which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetBannerHtml()
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	protected function RenderBannerHtml()
+	{
+		$sBannerHtml = '';
+
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
+		}
+
+		return $sBannerHtml;
+	}
+
+	/**
+	 * Render the header HTML which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetNorthPaneHtml()
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	protected function RenderHeaderHtml()
+	{
+		$sHeaderHtml = '';
+
+		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
+		{
+			// TODO: Don't forget this dude!
+			$sHeaderHtml .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
+		}
+
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
+		}
+
+		return $sHeaderHtml;
+	}
+
+	/**
+	 * Render the footer HTML which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetSouthPaneHtml()
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	protected function RenderFooterHtml()
+	{
+		$sFooterHtml = '';
+
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
+		{
+			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
+		}
+	}
 
 	/**
 	 * @inheritDoc
@@ -912,36 +1022,78 @@ EOF
 	 */
 	public function output()
 	{
-		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+		// Data to be passed to the view
+		$aData = [];
 
-		//$this->set_base($this->m_sRootUrl.'pages/');
+		// Prepare page metadata
+		$sAbsoluteUrlAppRoot = addslashes($this->m_sRootUrl);
+		// TODO: Make it a property so it can be changed programmatically
+		// TODO: How to set both dark/light mode favicons
+		$sFaviconUrl = $sAbsoluteUrlAppRoot.'images/favicon.ico';
+		// TODO: Get this for the current user language
+		$sMetadataLanguage = 'en';
+
+		// Base structure of data to pass to the TWIG template
+		$aData['aPage'] = [
+			'sAbsoluteUrlAppRoot' => $sAbsoluteUrlAppRoot,
+			'sTitle' => $this->s_title,
+			'sFaviconUrl' => $sFaviconUrl,
+			'aMetadata' => [
+				'sCharset' => static::PAGES_CHARSET,
+				'sLang' => $sMetadataLanguage,
+			],
+			'aCssFiles' => $this->a_linked_stylesheets,
+			'aCssInline' => $this->a_styles,
+			'aJsFiles' => $this->a_linked_scripts,
+			'aJsInlineOnInit' => $this->m_aInitScript,
+			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
+			'aJsInlineLive' => $this->a_scripts,
+		];
+
+		// Layouts
+		$aData['aLayouts'] = [
+			'sBanner' => $this->RenderBannerHtml(),
+			'sHeader' => $this->RenderHeaderHtml(),
+			'sFooter' => $this->RenderFooterHtml(),
+		];
+
+		// - Navigation menu
+		$aData['aLayouts']['aNavigationMenu'] = $this->GetNavigationMenuData();
+
+		$oTwigEnv = TwigHelper::GetTwigEnvironment(APPROOT.'templates/');
+		$sTemplateRelPath = 'pages/backoffice/layout';
+
+		// Send headers
+		if ($this->GetOutputFormat() === 'html')
+		{
+			foreach ($this->a_headers as $sHeader)
+			{
+				header($sHeader);
+			}
+		}
+
+
+
+		// Render final TWIG into global HTML
+		$oKpi = new ExecutionKPI();
+		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $sTemplateRelPath);
+		$oKpi->ComputeAndReport('TWIG rendering');
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+		DBSearch::RecordQueryTrace();
+		ExecutionKPI::ReportStats();
+
+		return;
+
+		/////////////////////////////////////////////////////////
+		////////////////// ☢ DANGER ZONE ☢ /////////////////////
+		/////////////////////////////////////////////////////////
+
 		$sForm = $this->GetSiloSelectionForm();
-		$this->DisplayMenu(); // Compute the menu
-
-		// Call the extensions to add content to the page, so that they can also add styles or scripts
-		$sBannerExtraHtml = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sBannerExtraHtml .= $oExtensionInstance->GetBannerHtml($this);
-		}
-
-		$sNorthPane = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
-		}
-
-		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
-		{
-			$sNorthPane .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
-		}
-
-		//$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
-		$sSouthPane = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
-		}
 
 		// Render the tabs in the page (if any)
 		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
@@ -969,6 +1121,7 @@ EOF
 EOF
 		);
 
+		// TODO: Extract this in a dedicated component
 		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
 		if ($iBreadCrumbMaxCount > 1)
 		{
@@ -1004,82 +1157,31 @@ EOF
 			);
 		}
 
+		// TODO: Extract in a dedicated component and call it in the nav menu
 		$sNewsRoomInitialImage = $this->InitNewsroom();
 
 		$this->outputCollapsibleSectionInit();
 
-		if ($this->GetOutputFormat() == 'html')
-		{
-			foreach ($this->a_headers as $s_header)
-			{
-				header($s_header);
-			}
-		}
+		// TODO: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
 		$s_captured_output = $this->ob_get_clean_safe();
-		$sHtml = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-		$sHtml .= "<html>\n";
-		$sHtml .= "<head>\n";
-		// Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
-		$sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
-		$sPageCharset = self::PAGES_CHARSET;
-		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=$sPageCharset\" />\n";
-		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, $sPageCharset)."</title>\n";
-		$sHtml .= $this->get_base_tag();
-		// Stylesheets MUST be loaded before any scripts otherwise
-		// jQuery scripts may face some spurious problems (like failing on a 'reload')
-		foreach ($this->a_linked_stylesheets as $a_stylesheet)
-		{
-			if (strpos($a_stylesheet['link'], '?') === false)
-			{
-				$s_stylesheet = $a_stylesheet['link']."?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
-				$s_stylesheet = $a_stylesheet['link']."&t=".utils::GetCacheBusterTimestamp();
-			}
-			if ($a_stylesheet['condition'] != "")
-			{
-				$sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
-			}
-			$sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
-			if ($a_stylesheet['condition'] != "")
-			{
-				$sHtml .= "<![endif]-->\n";
-			}
-		}
+
+		// TODO: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
+		// TODO: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
 		// special stylesheet for printing, hides the navigation gadgets
 		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 
 		if ($this->GetOutputFormat() == 'html')
 		{
 			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
-			foreach ($this->a_linked_scripts as $s_script)
-			{
-				// Make sure that the URL to the script contains the application's version number
-				// so that the new script do NOT get reloaded from the cache when the application is upgraded
-				if (strpos($s_script, '?') === false)
-				{
-					$s_script .= "?t=".utils::GetCacheBusterTimestamp();
-				}
-				else
-				{
-					$s_script .= "&t=".utils::GetCacheBusterTimestamp();
-				}
-				$sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-			}
+
 			if (!$this->IsPrintableVersion())
 			{
 				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
 			}
-			$sInitScripts = "";
-			if (count($this->m_aInitScript) > 0)
-			{
-				foreach ($this->m_aInitScript as $m_sInitScript)
-				{
-					$sInitScripts .= "$m_sInitScript\n";
-				}
-			}
-			$this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+
+
+			// TODO: Should we still do this init vs ready separation?
+//			$this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
 			if ($this->IsPrintableVersion())
 			{
 				$this->add_ready_script(
@@ -1109,32 +1211,13 @@ $('legend').css('cursor', 'pointer').click(function(){
 EOF
 				);
 			}
-			if (count($this->m_aReadyScripts) > 0)
-			{
-				$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
-			}
-			if (count($this->a_scripts) > 0)
-			{
-				$sHtml .= "<script type=\"text/javascript\">\n";
-				foreach ($this->a_scripts as $s_script)
-				{
-					$sHtml .= "$s_script\n";
-				}
-				$sHtml .= "</script>\n";
-			}
+
 		}
 
-		if (count($this->a_styles) > 0)
-		{
-			$sHtml .= "<style>\n";
-			foreach ($this->a_styles as $s_style)
-			{
-				$sHtml .= "$s_style\n";
-			}
-			$sHtml .= "</style>\n";
-		}
+
+		// TODO: Does this still work?
 		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
+
 
 		$sHtml .= "</head>\n";
 		$sBodyClass = "";
@@ -1178,18 +1261,6 @@ EOF;
 			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
-		// Render the revision number
-		if (ITOP_REVISION == 'svn')
-		{
-			// This is NOT a version built using the buil system, just display the main version
-			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
-		}
-		else
-		{
-			// This is a build made from SVN, let display the full information
-			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
-		}
-
 		// Render the text of the global search form
 		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
 		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
@@ -1206,6 +1277,7 @@ EOF;
 			$oAppContext = new ApplicationContext();
 
 			$sUserName = UserRights::GetUser();
+			// TODO: BEGIN USER MENU
 			$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
 			if (UserRights::IsAdministrator())
 			{
@@ -1272,8 +1344,9 @@ EOF;
 			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
 
 			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
+			// TODO: END USER MENU
 
-
+			// TODO: Move this in the Header method
 			$sRestrictions = '';
 			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 			{
@@ -1305,6 +1378,7 @@ EOF;
 				$this->AddApplicationMessage($sRestrictions, $sIcon);
 			}
 
+			// TODO: Move this in the header method
 			$sApplicationMessages = '';
 			foreach ($this->m_aMessages as $aMessage)
 			{
@@ -1326,7 +1400,7 @@ EOF;
 				$sSouthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sSouthPane.'</div>';
 			}
 
-			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
+			// TODO: What do we do with this?
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
@@ -1438,9 +1512,9 @@ EOF;
 
 		if ($this->GetOutputFormat() == 'html')
 		{
-			$oKPI = new ExecutionKPI();
-			echo $sHtml;
-			$oKPI->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+//			$oKpi = new ExecutionKPI();
+//			echo $sHtml;
+//			$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 		}
 		else
 		{
@@ -1474,8 +1548,8 @@ EOF;
 				}
 			}
 		}
-		DBSearch::RecordQueryTrace();
-		ExecutionKPI::ReportStats();
+//		DBSearch::RecordQueryTrace();
+//		ExecutionKPI::ReportStats();
 	}
 
 	/**
