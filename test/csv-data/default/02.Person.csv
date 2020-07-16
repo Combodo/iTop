@@ -1,0 +1,9 @@
+first_name;name;org_id->name;status;email;phone;notify;function;manager_id->email
+Config;Manager;IT Department;active;config.quality@combodo.com;;yes;ConfigManager qui voit tout;
+Config;Special;IT Special;active;config-special.quality@combodo.com;+33 01 23 45 67 89;yes;ConfigManager limité à son org et son client;
+Power;Portal;Demo;active;power.quality@combodo.com;;yes;power utilisateur portail, sans allowed org;config.quality@combodo.com
+Power;Special;Client Special;active;power-special.quality@combodo.com;+33 01 23 45 67 89;yes;power utilisateur portail, limité à son org;config-special.quality@combodo.com
+Agent;Standard;IT Department;active;agent-special.quality@combodo.com;;yes;agent de support standard qui voit tout;config.quality@combodo.com
+Agent;Special;IT Special;active;agent.quality@combodo.com;+33 01 23 45 67 89;yes;agent de support limité à son org et son client;config-special.quality@combodo.com
+Portal;Generic;Demo;active;portal.quality@combodo.com;;yes;utilisateur portail, sans allowed org;power.quality@combodo.com
+Portal;Special;Client Special;active;portal-special.quality@combodo.com;+33 01 23 45 67 89;yes;utilisateur portail, limité à son org;power-special.quality@combodo.com

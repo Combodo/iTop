@@ -1,0 +1,11 @@
+coverage_window_id->name;weekday;start_time;end_time
+Business Hours;friday;09:00;12:00
+Business Hours;friday;14:00;18:00
+Business Hours;monday;09:00;12:00
+Business Hours;monday;14:00;18:00
+Business Hours;thursday;09:00;12:00
+Business Hours;thursday;14:00;18:00
+Business Hours;tuesday;09:00;12:00
+Business Hours;tuesday;14:00;18:00
+Business Hours;wednesday;09:00;12:00
+Business Hours;wednesday;14:00;18:00

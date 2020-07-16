@@ -1,0 +1,20 @@
+{
+  "Organization": "name",
+  "Person": "name,first_name,org_id->name",
+  "UserLocal": "login",
+  "Team": "name",
+  "DeliveryModel": "name",
+  "lnkDeliveryModelToContact": "deliverymodel_id,contact_id",
+  "Service": "name,org_id->name",
+  "CustomerContract": "name,org_id->name",
+  "CoverageWindow": "name",
+  "CoverageWindowInterval": "coverage_window_id->name,weekday",
+  "lnkCustomerContractToService": "customercontract_id->organization_name;customercontract_id->name;customercontract_id->provider_name;service_id->organization_name;service_id->name",
+  "ApprovalRule": "name",
+  "ServiceSubcategory": "name,service_id->name,service_id->organization_name",
+  "TriggerOnLogUpdate": "description",
+  "ActionEmail": "name",
+  "lnkTriggerAction": "trigger_id,action_id",
+  "RequestTemplate": "label",
+  "TemplateField": "code,template_id->name"
+}

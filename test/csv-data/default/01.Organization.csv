@@ -1,0 +1,6 @@
+name;code;status;parent_id->name
+IT Special;IT;active;IT Department
+Client Special;;active;
+Demo;;active;
+IT Department;IT;active;
+My Company/Department;SOMECODE;active;

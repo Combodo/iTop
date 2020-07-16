@@ -1,0 +1,2 @@
+name;description;level1_rule;level1_timeout;level1_default_approval;level2_rule;level2_default_approval;level2_timeout;coveragewindow_id->name
+Manager approval;;SELECT Person AS m JOIN Person AS e ON e.manager_id=m.id WHERE e.id=:this->caller_id;70;yes;;no;70;Business Hours

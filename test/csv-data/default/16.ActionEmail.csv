@@ -1,0 +1,5 @@
+name;to;status;subject;from;description;test_recipient;importance;body
+Notification to caller on User Request public log update;SELECT Person WHERE id=:this->caller_id;enabled;The ticket $this->ref$ has been updated;test@combodo.com;This action informs a caller that the public log of a ticket has been updated;test@test.com;normal;"$this-&gt;head_html(public_log)$<br>
+$this-&gt;hyperlink(portal)$"
+Notification to agent on User Request private log update;SELECT Person WHERE id=:this->agent_id;enabled;Votre ticket $this->ref$ a été mis à jour;test@combodo.com;This action informs the agent that the private log of a ticket has been updated;test@test.com;normal;"<ul><li>$this-&gt;head_html(public_log)$</li><li>
+$this-&gt;hyperlink(portal)$</li></ul>"
