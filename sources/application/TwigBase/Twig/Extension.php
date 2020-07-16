@@ -127,6 +127,20 @@ class Extension
 
 			return $oConfig->Get($sParamName);
 		}));
+
+		// Function to get iTop's app root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/)
+		// Usage in twig: {{ get_absolute_url_app_root() }}
+		/** @since 2.8.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_app_root', function () {
+			return utils::GetAbsoluteUrlAppRoot();
+		}));
+
+		// Function to get iTop's modules root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/env-zzz/)
+		// Usage in twig: {{ get_absolute_url_modules_root() }}
+		/** @since 2.8.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_modules_root', function () {
+			return utils::GetAbsoluteUrlModulesRoot();
+		}));
 	}
 
 }

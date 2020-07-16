@@ -17,6 +17,8 @@ use WebPage;
 
 class TwigHelper
 {
+	const DEFAULT_FILE_TYPE = 'html';
+
 	public static function GetTwigEnvironment($sViewPath)
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
@@ -47,7 +49,7 @@ class TwigHelper
 	 * @throws \Exception
 	 * @api
 	 */
-	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
+	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oPage->add(self::RenderTemplate($oTwig, $aParams, $sTemplateName, $sDefaultType));
@@ -57,13 +59,13 @@ class TwigHelper
 
 	/**
 	 * @param \Twig\Environment $oTwig
-	 * @param $aParams
-	 * @param $sName
-	 * @param $sTemplateFileExtension
+	 * @param array $aParams
+	 * @param string $sName
+	 * @param string $sTemplateFileExtension
 	 *
 	 * @return string
 	 */
-	private static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension)
+	public static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension = self::DEFAULT_FILE_TYPE)
 	{
 		try
 		{
