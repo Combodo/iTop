@@ -1,4 +1,0 @@
-name;service_id->name;status;request_type;description;service_id->organization_name;approvalrule_id->name
-Coq au vin;Service pour les Gaulois;production;service_request;Un truc avec Request Template;IT special;Manager approval
-Demande de congé;Service pour les Gaulois;production;service_request;Un truc qu'il faut faire approuver;IT special;
-Préavis de grève;Service pour les Gaulois;production;incident;Un genre d'incident fréquent en France;IT special;

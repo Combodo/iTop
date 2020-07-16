@@ -1,4 +1,0 @@
-customercontract_id->organization_name;customercontract_id->name;customercontract_id->provider_name;service_id->organization_name;service_id->name;sla_id->name;coveragewindow_id->name;sla_id->organization_name
-Client Special;Contract Special;IT Special;IT Special;Service pour les Gaulois;;;
-Client Special;Contract Standard;IT Department;IT Department;Computers and peripherals;Standard SLA;Business Hours;Demo
-Demo;Contract Standard;IT Department;IT Department;Software;Standard SLA;;Demo

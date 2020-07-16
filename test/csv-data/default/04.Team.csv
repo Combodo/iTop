@@ -1,2 +1,0 @@
-name;status;org_id->name;email;notify;persons_list
-Firemen;active;IT Special;;yes;person_id->email:agent-special.quality@combodo.com|person_id->email:config-special.quality@combodo.com

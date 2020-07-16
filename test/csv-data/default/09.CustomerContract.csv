@@ -1,4 +1,0 @@
-name;status;org_id->name;start_date;provider_id->name;cost_currency
-Contract Special;production;Client Special;2016-12-25;IT Special;euros
-Contract Standard;implementation;Client Special;2016-01-31;IT Department;dollars
-Contract Standard;production;Demo;;IT Department;

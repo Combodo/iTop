@@ -1,9 +1,0 @@
-login;password;contactid->org_name;contactid->first_name;contactid->name;status;language;profile_list;allowed_org_list
-agent;agent;IT Department;Agent;Standard;enabled;EN US;profileid->name:Support Agent;
-config;config;IT Department;Config;Manager;enabled;FR FR;profileid->name:Configuration Manager;
-portal;portal;Demo;Portal;Generic;enabled;EN US;profileid->name:Portal user;
-power;power;Demo;Power;Portal;enabled;EN US;profileid->name:Portal user|profileid->name:Portal power user;
-agent2;agent2;IT Special;Agent;Special;enabled;FR FR;profileid->name:Support Agent;allowed_org_id->name:IT Special|allowed_org_id->name:Client Special
-config2;config2;IT Special;Config;Special;enabled;EN US;profileid->name:Configuration Manager;allowed_org_id->name:IT Special|allowed_org_id->name:Client Special
-portal2;portal2;Client Special;Portal;Special;enabled;FR FR;profileid->name:Portal user;allowed_org_id->name:Client Special
-power2;power2;Client Special;Power;Special;enabled;FR FR;profileid->name:Portal user|profileid->name:Portal power user;allowed_org_id->name:Client Special
