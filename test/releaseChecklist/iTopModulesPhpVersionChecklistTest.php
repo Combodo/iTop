@@ -37,7 +37,7 @@ use iTopDesignFormat;
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
-class iTopModulesXmlVersionChecklistTest extends ItopTestCase
+class iTopModulesPhpVersionChecklistTest extends ItopTestCase
 {
 
 
