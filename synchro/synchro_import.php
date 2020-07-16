@@ -534,7 +534,7 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null)
+					if (!strlen($value))
 					{
 						$aValues[] = 'NULL';
 					}
@@ -604,7 +604,11 @@ try
 					}
 
 					$sCol = $aInputColumns[$iCol];
-					if ($aIsDateToTransform[$iCol] !== false)
+					if(!strlen($value))
+					{
+						$aValuePairs[] = "`$sCol` = NULL";
+					}
+					elseif ($aIsDateToTransform[$iCol] !== false)
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
