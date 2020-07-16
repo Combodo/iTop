@@ -2089,6 +2089,24 @@ class utils
 	}
 
 	/**
+	 * @return string eg : '2_7_0'
+	 */
+	public static function GetItopVersionWikiSyntax()
+	{
+		$sVersionShort = self::GetItopVersionShort();
+		return str_replace('.', '_', $sVersionShort);
+	}
+
+	/**
+	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
+	 */
+	public static function GetItopVersionShort()
+	{
+		$aExplodedVersion = explode('-', ITOP_VERSION);
+		return $aExplodedVersion[0];
+	}
+
+	/**
 	 * Check if the given class if configured as a high cardinality class.
 	 *
 	 * @param $sClass
