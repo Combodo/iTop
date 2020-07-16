@@ -464,25 +464,29 @@ class MFDictModule extends MFModule
 	}
 
 	/**
+	 * Scan for dictionary files recursively in $sDir
+	 *
 	 * @inheritDoc
 	 */
-	public function GetDictionaryFiles()
+	public function GetDictionaryFiles($sDir = null)
 	{
 		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
+		$sDictionaryFilePattern = '*dictionary.itop.*.php';
+
+		if($sDir === null)
 		{
-			if ($hDir = @opendir($sRootDir))
+			$sDir = $this->sRootDir;
+		}
+
+		if ($hDir = opendir($sDir))
+		{
+			// Matching files
+			$aDictionaries = glob($sDir.'/'.$sDictionaryFilePattern);
+
+			// Directories to scan
+			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
 			{
-				while (($sFile = readdir($hDir)) !== false)
-				{
-					$aMatches = array();
-					if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
-						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-					{
-						$aDictionaries[] = $sRootDir.'/'.$sFile;
-					}
-				}
-				closedir($hDir);
+				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
 		}
 
