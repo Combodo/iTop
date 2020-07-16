@@ -2120,6 +2120,18 @@ class utils
 	}
 
 	/**
+	 * Check if debug is enabled in the current environment.
+	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
+	 *
+	 * @return bool
+	 * @since 2.8.0
+	 */
+	public static function IsDebugEnabled()
+	{
+		return utils::ReadParam('debug') === 'true';
+	}
+
+	/**
 	 * @see https://php.net/manual/en/function.finfo-file.php
 	 *
 	 * @param string $sFilePath file full path
