@@ -134,7 +134,7 @@ class ModuleDiscovery
 		{
 			$sModuleName = $aMatches[1];
 			$sDir = dirname($sFilePath);
-			foreach (array($sDir, $sDir.'/dictionary') as $sRootDir)
+			foreach (array($sDir, $sDir.'/dictionaries') as $sRootDir)
 			{
 				if ($hDir = @opendir($sRootDir))
 				{

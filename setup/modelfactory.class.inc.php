@@ -256,7 +256,7 @@ class MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
 		{
 			if ($hDir = @opendir($sRootDir))
 			{
@@ -469,7 +469,7 @@ class MFDictModule extends MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
 		{
 			if ($hDir = @opendir($sRootDir))
 			{
