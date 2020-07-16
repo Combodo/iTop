@@ -84,15 +84,18 @@ class Extension
 			})
 		);
 
-		// Filter to add itopversion to an url
+		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
+		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
+		//
+		// Note: This could be rename "add_cache_buster" instead.
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
 			if (strpos($sUrl, '?') === false)
 			{
-				$sUrl = $sUrl."?itopversion=".ITOP_VERSION;
+				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
 			}
 			else
 			{
-				$sUrl = $sUrl."&itopversion=".ITOP_VERSION;
+				$sUrl = $sUrl."&t=".utils::GetCacheBusterTimestamp();
 			}
 
 			return $sUrl;
