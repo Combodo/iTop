@@ -8304,12 +8304,21 @@ body {
   height: 100%;
   overflow: auto;
   flex-grow: 1; }
+  #ibo-page-container #ibo-top-bar,
+  #ibo-page-container #ibo-page-content {
+    /* Align both elements content for a slicker touch */
+    padding-left: 48px;
+    padding-right: 48px; }
 
 #ibo-top-bar {
   position: sticky;
   top: 0;
   left: 0;
   right: 0; }
+
+#ibo-page-content {
+  padding-top: 24px;
+  padding-bottom: 24px; }
 
 /*!
  * Copyright (C) 2013-2020 Combodo SARL

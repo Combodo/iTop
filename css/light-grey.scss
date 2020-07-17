@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-//@import 'css-variables.scss';
+@import 'css-variables.scss';
 
 /* CSS Document */
-body {
-    font-family: Tahoma, Verdana, Arial, Helvetica;
-    font-size: 10pt;
-	background-color: $body-background-color;
-    color: $text-color;
-	margin: 0;			/* Remove body margin/padding */
-	padding: 0;
-	overflow: hidden;	/* Remove scroll bars on browser window */
-}
-
-body.printable-version {
-	margin:1.5em;
-	overflow:auto;
-}
+// IMPORTANT: Some parts are commented while developing Full Moon so we can still use the pages in the "legacy" theme.
+//body {
+//    font-family: Tahoma, Verdana, Arial, Helvetica;
+//    font-size: 10pt;
+//	background-color: $body-background-color;
+//    color: $text-color;
+//	margin: 0;			/* Remove body margin/padding */
+//	padding: 0;
+//	overflow: hidden;	/* Remove scroll bars on browser window */
+//}
+//
+//body.printable-version {
+//	margin:1.5em;
+//	overflow:auto;
+//}
 
 /* to prevent flicker, hide the pane's content until it's ready */
 .ui-layout-center, .ui-layout-north, .ui-layout-south {
@@ -60,28 +61,28 @@ body.printable-version {
     margin-top: 1em;
 }
 
-h1 {
-    font-family: Tahoma, Verdana, Arial, Helvetica;
-    color: $text-color;
-    font-weight: bold;
-    font-size: 12pt;
-}
-h2 {
-    font-family: Tahoma, Verdana, Arial, Helvetica;
-    color: $text-color;
-    font-weight: normal;
-    font-size: 12pt;
-}
-h3 {
-    font-family: Tahoma, Verdana, Arial, Helvetica;
-    color: $text-color;
-    font-weight: normal;
-    font-size: 10pt;
-}
-
-label {
-	cursor: pointer;
-}
+//h1 {
+//    font-family: Tahoma, Verdana, Arial, Helvetica;
+//    color: $text-color;
+//    font-weight: bold;
+//    font-size: 12pt;
+//}
+//h2 {
+//    font-family: Tahoma, Verdana, Arial, Helvetica;
+//    color: $text-color;
+//    font-weight: normal;
+//    font-size: 12pt;
+//}
+//h3 {
+//    font-family: Tahoma, Verdana, Arial, Helvetica;
+//    color: $text-color;
+//    font-weight: normal;
+//    font-size: 10pt;
+//}
+//
+//label {
+//	cursor: pointer;
+//}
 
 .hilite, .hilite a, .hilite a:visited {
     color: $highlight-color;

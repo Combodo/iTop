@@ -20,6 +20,10 @@
 $ibo-body-text-color: $ibo-color-grey-900 !default;
 $ibo-body-background-color: $ibo-color-white-200 !default;
 
+$ibo-page-container--elements-padding-x: 48px !default;
+$ibo-page-content--padding-top: 24px !default;
+$ibo-page-content--padding-bottom: 24px !default;
+
 /* CSS variables (can be changed directly from the browser) */
 :root{
 	--ibo-body-text-color: #{$ibo-body-text-color};
@@ -45,6 +49,13 @@ body{
 	height: 100%;
 	overflow: auto;
 	flex-grow: 1;
+
+	#ibo-top-bar,
+	#ibo-page-content{
+		/* Align both elements content for a slicker touch */
+		padding-left: $ibo-page-container--elements-padding-x;
+		padding-right: $ibo-page-container--elements-padding-x;
+	}
 }
 #ibo-top-bar{
 	position: sticky;
@@ -53,4 +64,6 @@ body{
 	right: 0;
 }
 #ibo-page-content{
+	padding-top: $ibo-page-content--padding-top;
+	padding-bottom: $ibo-page-content--padding-bottom;
 }

@@ -704,9 +704,10 @@ JS
 
 	protected function LoadTheme()
 	{
-		// TODO: Reuse theming mecanism
-//		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
-//		$this->add_linked_stylesheet($sCssThemeUrl);
+		// TODO: Remove light-grey when development of Full Moon is done.
+		// TODO: Reuse theming mechanism for Full Moon
+		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
+		$this->add_linked_stylesheet($sCssThemeUrl);
 
 		$sCssRelPath = utils::GetCSSFromSASS(
 			'css/backoffice/main.scss',
@@ -1136,6 +1137,8 @@ EOF
 			'aJsInlineOnInit' => $this->m_aInitScript,
 			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 			'aJsInlineLive' => $this->a_scripts,
+			// TODO: TEMP, used while developping, remove it.
+			'aSanitizedContent' => self::FilterXSS($this->s_content),
 		];
 
 		// Base tag
@@ -1216,42 +1219,6 @@ EOF
 		$('.multiselect').multiselect($sJSMultiselectOptions);
 EOF
 		);
-
-		// TODO: Extract this in a dedicated component
-		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
-		if ($iBreadCrumbMaxCount > 1)
-		{
-			$oConfig = MetaModel::GetConfig();
-			$siTopInstanceId = json_encode($oConfig->GetItopInstanceid());
-			if ($this->bBreadCrumbEnabled)
-			{
-				if (is_null($this->sBreadCrumbEntryId))
-				{
-					$this->sBreadCrumbEntryId = $this->s_title;
-					$this->sBreadCrumbEntryLabel = $this->s_title;
-					$this->sBreadCrumbEntryDescription = $this->s_title;
-					$this->sBreadCrumbEntryUrl = '';
-					$this->sBreadCrumbEntryIcon = utils::GetAbsoluteUrlAppRoot().'images/wrench.png';
-				}
-				$sNewEntry = json_encode(array(
-					'id' => $this->sBreadCrumbEntryId,
-					'url' => $this->sBreadCrumbEntryUrl,
-					'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, self::PAGES_CHARSET),
-					'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, self::PAGES_CHARSET),
-					'icon' => $this->sBreadCrumbEntryIcon,
-				));
-			}
-			else
-			{
-				$sNewEntry = 'null';
-			}
-
-			$this->add_ready_script(
-				<<<EOF
-		$('#itop-breadcrumb').breadcrumb({itop_instance_id: $siTopInstanceId, new_entry: $sNewEntry, max_count: $iBreadCrumbMaxCount});
-EOF
-			);
-		}
 
 		// TODO: Extract in a dedicated component and call it in the nav menu
 		$sNewsRoomInitialImage = $this->InitNewsroom();
@@ -1510,31 +1477,31 @@ EOF;
 			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
 			$sHtml .= '<!-- Beginning of the left pane -->';
 			$sHtml .= ' <div class="ui-layout-north">';
-			$sHtml .= ' <div id="header-logo">';
-			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'
-				.htmlentities($sIconUrl, ENT_QUOTES, self::PAGES_CHARSET)
-				.'"><img src="'.$sDisplayIcon.'" title="'
-				.htmlentities($sVersionString, ENT_QUOTES, self::PAGES_CHARSET)
-				.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
-			$sHtml .= ' </div>';
+//			$sHtml .= ' <div id="header-logo">';
+//			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'
+//				.htmlentities($sIconUrl, ENT_QUOTES, self::PAGES_CHARSET)
+//				.'"><img src="'.$sDisplayIcon.'" title="'
+//				.htmlentities($sVersionString, ENT_QUOTES, self::PAGES_CHARSET)
+//				.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+//			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';
-			if (!MetaModel::GetConfig()->Get('demo_mode'))
-			{
-				$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-			}
+//			if (!MetaModel::GetConfig()->Get('demo_mode'))
+//			{
+//				$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+//			}
 			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' </div>';
-			$sHtml .= ' <div id="menu" class="ui-layout-center">';
-			$sHtml .= '		<div id="inner_menu">';
-			$sHtml .= '			<div id="accordion">';
-			$sHtml .= self::FilterXSS($this->m_sMenu);
-			$sHtml .= '			<!-- Beginning of the accordion menu -->';
-			$sHtml .= '			<!-- End of the accordion menu-->';
-			$sHtml .= '			</div>';
-			$sHtml .= '		</div> <!-- /inner menu -->';
-			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a></div></div>';
+//			$sHtml .= ' <div id="menu" class="ui-layout-center">';
+//			$sHtml .= '		<div id="inner_menu">';
+//			$sHtml .= '			<div id="accordion">';
+//			$sHtml .= self::FilterXSS($this->m_sMenu);
+//			$sHtml .= '			<!-- Beginning of the accordion menu -->';
+//			$sHtml .= '			<!-- End of the accordion menu-->';
+//			$sHtml .= '			</div>';
+//			$sHtml .= '		</div> <!-- /inner menu -->';
+//			$sHtml .= ' </div> <!-- /menu -->';
+			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a></div></div>';
 			$sHtml .= '<!-- End of the left pane -->';
 			$sHtml .= '</div>';
 

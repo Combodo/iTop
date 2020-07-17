@@ -42,30 +42,7 @@
 	<div id="ibo-page-container">
 		{{ include('layouts/top-bar/layout.html.twig', { aTopBar: aLayouts.aTopBar }, false) }}
 		<main id="ibo-page-content">
-			<div>item</div>
-			<div>
-itemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitemitem
-			</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
-			<div>item</div>
+			{{ aPage.aSanitizedContent|raw }}
 		</main>
 	</div>
 
