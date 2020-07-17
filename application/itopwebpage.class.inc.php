@@ -103,40 +103,40 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// TODO: Should we keep this? Makes no sense
 		//$this->add_header("Cache-control: no-cache");
 		// TODO: Add only what's necessary
-		$this->add_linked_stylesheet("css/jquery.treeview.css");
-		$this->add_linked_stylesheet("css/jquery-ui-timepicker-addon.css");
-		$this->add_linked_stylesheet("css/jquery.multiselect.css");
-		$this->add_linked_stylesheet("css/magnific-popup.css");
-		$this->add_linked_stylesheet("css/c3.min.css");
-		$this->add_linked_stylesheet("css/font-awesome/css/all.min.css");
-		$this->add_linked_stylesheet("js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
+		$this->add_linked_stylesheet("../css/jquery.treeview.css");
+		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
+		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
+		$this->add_linked_stylesheet("../css/magnific-popup.css");
+		$this->add_linked_stylesheet("../css/c3.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
+		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
 
 		// TODO: Add only what's necessary
-		$this->add_linked_script('js/jquery.layout.min.js');
-		$this->add_linked_script('js/jquery.ba-bbq.min.js');
-		$this->add_linked_script("js/jquery.treeview.js");
-		$this->add_linked_script("js/date.js");
-		$this->add_linked_script("js/jquery-ui-timepicker-addon.js");
-		$this->add_linked_script("js/jquery-ui-timepicker-addon-i18n.min.js");
-		$this->add_linked_script("js/jquery.blockUI.js");
-		$this->add_linked_script("js/utils.js");
-		$this->add_linked_script("js/swfobject.js");
-		$this->add_linked_script("js/ckeditor/ckeditor.js");
-		$this->add_linked_script("js/ckeditor/adapters/jquery.js");
-		$this->add_linked_script("js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
-		$this->add_linked_script("js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script('js/property_field.js');
-		$this->add_linked_script('js/icon_select.js');
-		$this->add_linked_script('js/raphael-min.js');
-		$this->add_linked_script('js/d3.js');
-		$this->add_linked_script('js/c3.js');
-		$this->add_linked_script('js/jquery.multiselect.js');
-		$this->add_linked_script('js/ajaxfileupload.js');
-		$this->add_linked_script('js/jquery.mousewheel.js');
-		$this->add_linked_script('js/jquery.magnific-popup.min.js');
-		$this->add_linked_script('js/moment-with-locales.min.js');
-		$this->add_linked_script('js/showdown.min.js');
-		$this->add_linked_script('js/newsroom_menu.js');
+		$this->add_linked_script('../js/jquery.layout.min.js');
+		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
+		$this->add_linked_script("../js/jquery.treeview.js");
+		$this->add_linked_script("../js/date.js");
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
+		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
+		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script("../js/utils.js");
+		$this->add_linked_script("../js/swfobject.js");
+		$this->add_linked_script("../js/ckeditor/ckeditor.js");
+		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
+		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
+		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
+		$this->add_linked_script('../js/property_field.js');
+		$this->add_linked_script('../js/icon_select.js');
+		$this->add_linked_script('../js/raphael-min.js');
+		$this->add_linked_script('../js/d3.js');
+		$this->add_linked_script('../js/c3.js');
+		$this->add_linked_script('../js/jquery.multiselect.js');
+		$this->add_linked_script('../js/ajaxfileupload.js');
+		$this->add_linked_script('../js/jquery.mousewheel.js');
+		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
+		$this->add_linked_script('../js/moment-with-locales.min.js');
+		$this->add_linked_script('../js/showdown.min.js');
+		$this->add_linked_script('../js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -1138,6 +1138,13 @@ EOF
 			'aJsInlineLive' => $this->a_scripts,
 		];
 
+		// Base tag
+		// Note: We might consider to put the app_root_url parameter here, but that would need a BIG rework on iTop AND the extensions to replace all the "../images|js|css/xxx.yyy"...
+		if(!empty($this->a_base['href']))
+		{
+			$aData['aPage']['aMetadata']['sBaseUrl'] = $this->a_base['href'];
+		}
+
 		// Layouts
 		$aData['aLayouts'] = [
 			'sBanner' => $this->RenderBannerHtml(),
@@ -1162,8 +1169,6 @@ EOF
 				header($sHeader);
 			}
 		}
-
-
 
 		// Render final TWIG into global HTML
 		$oKpi = new ExecutionKPI();

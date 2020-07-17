@@ -5,7 +5,9 @@
 	{# This block can be used to add your own meta tags by extending the default template #}
 	{% block iboPageExtraMetas %}
 	{% endblock %}
-	<base href="{{ aPage.sAbsoluteUrlAppRoot }}">
+	{% if aPage.aMetadata.sBaseUrl is defined %}
+		<base href="{{ aPage.aMetadata.sBaseUrl }}">
+	{% endif %}
 	<title>{{ aPage.sTitle }}</title>
 	<link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version }}" />
 
