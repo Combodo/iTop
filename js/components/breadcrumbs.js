@@ -1,10 +1,27 @@
-//iTop Form field
+/*
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 ;
 $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
-	// 'breadcrumb' the widget name
-	$.widget( 'itop.breadcrumb',
+	// 'breadcrumbs' the widget name
+	$.widget( 'itop.breadcrumbs',
 	{
 		// default options
 		options:
@@ -19,17 +36,17 @@ $(function()
 		{
 			var me = this;
 			
-			this.element
-			.addClass('breadcrumb');
+			this.element.addClass('ibo-breadcrumbs');
 
-			if(typeof(Storage) !== "undefined")
+			// Check that storage API is available
+			if(typeof(Storage) !== 'undefined')
 			{
-				$(window).bind( 'hashchange', function(e)
+				$(window).bind('hashchange', function(e)
 				{
 					me.RefreshLatestEntry();
 				});
 
-				aBreadCrumb = this._Read();
+				aBreadCrumb = this._readDataFromStorage();
 
                 if (this.options.new_entry !== null) {
                     var sUrl = this.options.new_entry.url;
@@ -46,72 +63,57 @@ $(function()
                         label: this.options.new_entry.label,
 						description: this.options.new_entry.description,
                         icon: this.options.new_entry.icon,
+	                    icon_type: this.options.new_entry.icon_type,
                         url: sUrl
                     });
                     // Keep only the last <max_count> items
                     aBreadCrumb = aBreadCrumb.slice(-(this.options.max_count));
                 }
-				this._Write(aBreadCrumb);
-				var sBreadCrumbHtml = '';
+				this._writeDataToStorage(aBreadCrumb);
+
 				for (iEntry in aBreadCrumb)
 				{
-                    //if (iEntry >= iDisplayableItems) break; // skip the current page
+					var sBreadcrumbsItemHtml = '';
 					var oEntry = aBreadCrumb[iEntry];
 					if (oEntry['label'].length > 0)
 					{
                         var sIconSpec = '';
-                        if (oEntry['icon'].length > 0)
+                        if (oEntry['icon_type'] === 'css_classes')
                         {
-                            sIconSpec = '<span class="icon"><img src="'+oEntry['icon']+'"/></span>';
+	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><span class="'+oEntry['icon']+'"/></span></span>';
                         }
+                        else if (oEntry['icon'].length > 0)
+                        {
+                            sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'"/></span>';
+                        }
+
 						var sTitle = oEntry['description'];
 						if (sTitle.length == 0) {
 							sTitle = oEntry['label'];
 						}
+
 						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
 						{
 							// Last entry is the current page
-							sBreadCrumbHtml += '<div class="breadcrumb-item breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></div>';
+							sBreadcrumbsItemHtml += '<span class="ibo-breadcrumbs--item--is-current" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+oEntry['label']+'</span></span>';
 						}
 						else
 						{
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
-							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></div>';
+							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a>';
 						}
 					}
+					this.element.append(sBreadcrumbsItemHtml);
 				}
-				$('#itop-breadcrumb').html(sBreadCrumbHtml);
 			}
-			else
-			{
-				// Sorry! No Web Storage support..
-				//$('#itop-breadcrumb').html('<span style="display:none;">Session storage not available for the current browser</span>');
-			}
-		},
-		// called when created, and later when changing options
-		_refresh: function()
-		{
-
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('breadcrumb');
+			this.element.removeClass('ibo-breadcrumbs');
 		},
-		// _setOptions is called with a hash of all options that are changing
-		// always refresh when changing options
-		_setOptions: function()
-		{
-			this._superApply(arguments);
-		},
-		// _setOption is called for each individual option that is changing
-		_setOption: function( key, value )
-		{
-			this._super( key, value );
-		},
-		_Read: function()
+		_readDataFromStorage: function()
 		{
 			var sBreadCrumbStorageKey = this.options.itop_instance_id + 'breadcrumb-v1';
 			var aBreadCrumb = [];
@@ -122,7 +124,7 @@ $(function()
 			}
 			return aBreadCrumb;
 		},
-		_Write: function(aBreadCrumb)
+		_writeDataToStorage: function(aBreadCrumb)
 		{
 			var sBreadCrumbStorageKey = this.options.itop_instance_id + 'breadcrumb-v1';
 			sBreadCrumbData = JSON.stringify(aBreadCrumb);
@@ -131,11 +133,11 @@ $(function()
 		// Refresh the latest entry (navigating to a tab)
 		RefreshLatestEntry: function(sRefreshHrefTo)
 		{
-			aBreadCrumb = this._Read();
+			var aBreadCrumb = this._readDataFromStorage();
 			var iDisplayableItems = aBreadCrumb.length;
 
 			if (this.options.new_entry !== null) {
-				if (sRefreshHrefTo == undefined)
+				if (sRefreshHrefTo === undefined)
 				{
 					sRefreshHrefTo = window.location.href;
 				}
@@ -144,8 +146,7 @@ $(function()
 				aBreadCrumb[aBreadCrumb.length - 1].url = sRefreshHrefTo;
 				$('#itop-breadcrumb .breadcrumb-current:last-of-type a').attr('href', sRefreshHrefTo);
 			}
-			this._Write(aBreadCrumb);
+			this._writeDataToStorage(aBreadCrumb);
 		},
-
 	});
 });

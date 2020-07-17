@@ -35,7 +35,7 @@ $oP->add('<div class="page_header" style="padding:0.5em;">');
 $oP->add('<h1>'.dict::S('UI:NotificationsMenu:Title').'</h1>');
 $oP->add('</div>');
 
-$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', '../images/bell.png');
+$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 $oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true, 'notifications-home');
 $oP->add('<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">');

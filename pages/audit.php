@@ -243,7 +243,7 @@ try
 						
 		case 'errors':
 		$sTitle = 'Audit Errors';
-		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);
 	
@@ -268,7 +268,7 @@ try
 		
 		case 'audit':
 		default:
-		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		$oP->add('<div class="page_header"><h1>'.Dict::S('UI:Audit:InteractiveAudit').'</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
 		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);

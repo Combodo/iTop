@@ -190,11 +190,13 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
 {
 	$sClass = get_class($oObj); // get the leaf class
 	$sIcon = MetaModel::GetClassIcon($sClass, false);
+	$sIconType = iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 	if ($sIcon == '')
 	{
-		$sIcon = utils::GetAbsoluteUrlAppRoot().'images/breadcrumb_object.png';
+		$sIcon = 'fas fa-cube';
+		$sIconType = iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES;
 	}
-	$oPage->SetBreadCrumbEntry("ui-details-$sClass-".$oObj->GetKey(), $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon);
+	$oPage->SetBreadCrumbEntry("ui-details-$sClass-".$oObj->GetKey(), $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon, $sIconType);
 }
 
 /**
@@ -239,7 +241,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 			//$iCount = $oBlock->GetDisplayedCount();
 			$sPageId = "ui-search-".$oFilter->GetClass();
 			$sLabel = MetaModel::GetName($oFilter->GetClass());
-			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
+			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
 	}
 }
@@ -631,7 +633,7 @@ try
 					$sPageId = "ui-global-search";
 					$sLabel = Dict::S('UI:SearchResultsTitle');
 					$sDescription = Dict::S('UI:SearchResultsTitle+');
-					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
+					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');

@@ -35,6 +35,13 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @var string DEFAULT_APP_ICON_SHAPE */
 	const DEFAULT_APP_ICON_SHAPE = self::ENUM_APP_ICON_SHAPE_FULL;
 
+	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE */
+	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE = 'image';
+	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES */
+	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES = 'css_classes';
+	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
+	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
+
 	/** @var array Default and branding filenames for the app. icon in the backoffice */
 	protected static $aAppIconFilenames = [
 		self::ENUM_APP_ICON_SHAPE_SQUARE => [
@@ -58,6 +65,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryDescription;
 	protected $sBreadCrumbEntryUrl;
 	protected $sBreadCrumbEntryIcon;
+	protected $sBreadCrumbEntryIconType;
 	protected $oCtx;
 
 	/**
@@ -126,7 +134,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('js/ajaxfileupload.js');
 		$this->add_linked_script('js/jquery.mousewheel.js');
 		$this->add_linked_script('js/jquery.magnific-popup.min.js');
-		$this->add_linked_script('js/breadcrumb.js');
 		$this->add_linked_script('js/moment-with-locales.min.js');
 		$this->add_linked_script('js/showdown.min.js');
 		$this->add_linked_script('js/newsroom_menu.js');
@@ -715,9 +722,12 @@ JS
 	 * @param string $sLabel Label of the breadcrumb item
 	 * @param string $sDescription More information, displayed as a tooltip
 	 * @param string $sUrl Specify a URL if the current URL as perceived on the browser side is not relevant
-	 * @param string $sIcon Icon (relative or absolute) path that will be displayed next to the label
+	 * @param string $sIcon Image URL (relative or absolute) or CSS classes (eg. "fas fa-wrench") of the icon that will be displayed next to the label
+	 * @param string $sIconType Type of the icon, must be set according to the $sIcon value. See class constants ENUM_BREADCRUMB_ENTRY_ICON_TYPE_XXX
+	 *
+	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
 	 */
-	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '', $sIconType = self::DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE)
 	{
 		$this->bBreadCrumbEnabled = true;
 		$this->sBreadCrumbEntryId = $sId;
@@ -725,6 +735,7 @@ JS
 		$this->sBreadCrumbEntryDescription = $sDescription;
 		$this->sBreadCrumbEntryUrl = $sUrl;
 		$this->sBreadCrumbEntryIcon = $sIcon;
+		$this->sBreadCrumbEntryIconType = $sIconType;
 	}
 
 	/**
@@ -822,7 +833,7 @@ JS
 	 * @return string
 	 * @since 2.8.0
 	 */
-	public function GetApplicationRevisionNumber()
+	protected function GetApplicationRevisionNumber()
 	{
 		if (ITOP_REVISION == 'svn')
 		{
@@ -849,7 +860,7 @@ JS
 	 * @throws \Exception
 	 * @since 2.8.0
 	 */
-	public function GetApplicationIconUrl($sShape = self::DEFAULT_APP_ICON_SHAPE)
+	protected function GetApplicationIconUrl($sShape = self::DEFAULT_APP_ICON_SHAPE)
 	{
 		$sIconDefaultFilename = static::$aAppIconFilenames[$sShape]['default'];
 		$sIconBrandingFilename = static::$aAppIconFilenames[$sShape]['branding'];
@@ -874,7 +885,7 @@ JS
 	 * @throws \DictExceptionMissingString
 	 * @since 2.8.0
 	 */
-	public function GetNavigationMenuData()
+	protected function GetNavigationMenuData()
 	{
 		$oAppContext = new ApplicationContext();
 
@@ -886,6 +897,83 @@ JS
 			'sAppIconLink' => MetaModel::GetConfig()->Get('app_icon_url'),
 			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
 		];
+	}
+
+	/**
+	 * Return the top bar data (global search, breadcrumbs, ...)
+	 *
+	 * @return array
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 2.8.0
+	 */
+	protected function GetTopBarData()
+	{
+		$aData = [
+			'sId' => 'ibo-top-bar',
+			'aComponents' => [
+				'aBreadCrumbs' => $this->GetBreadCrumbsData(),
+			],
+		];
+
+		return $aData;
+	}
+
+	/**
+	 * Return the breadcrumbs data (iTop instance ID, new entry, ...)
+	 *
+	 * @return array
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 2.8.0
+	 */
+	protected function GetBreadCrumbsData()
+	{
+		$aData = [
+			'sId' => 'ibo-breadcrumbs',
+		];
+
+		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
+		if ($iBreadCrumbMaxCount > 1)
+		{
+			$oConfig = MetaModel::GetConfig();
+			$siTopInstanceId = $oConfig->GetItopInstanceid();
+
+			if ($this->bBreadCrumbEnabled)
+			{
+				// Default entry values
+				if (is_null($this->sBreadCrumbEntryId))
+				{
+					$this->sBreadCrumbEntryId = $this->s_title;
+					$this->sBreadCrumbEntryLabel = $this->s_title;
+					$this->sBreadCrumbEntryDescription = $this->s_title;
+					$this->sBreadCrumbEntryUrl = '';
+					$this->sBreadCrumbEntryIcon = 'fas fa-wrench';
+					$this->sBreadCrumbEntryIconType = static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES;
+				}
+
+				$aNewEntry = array(
+					'id' => $this->sBreadCrumbEntryId,
+					'url' => $this->sBreadCrumbEntryUrl,
+					'label' => utils::HtmlEntities($this->sBreadCrumbEntryLabel),
+					'description' => utils::HtmlEntities($this->sBreadCrumbEntryDescription),
+					'icon' => $this->sBreadCrumbEntryIcon,
+					'icon_type' => $this->sBreadCrumbEntryIconType,
+				);
+			}
+			else
+			{
+				$aNewEntry = null;
+			}
+
+			$aData['aWidgetOptions'] = [
+				'itop_instance_id' => $siTopInstanceId,
+				'max_count' => $iBreadCrumbMaxCount,
+				'new_entry' => $aNewEntry,
+			];
+		}
+
+		return $aData;
 	}
 
 	/**
@@ -1059,6 +1147,9 @@ EOF
 
 		// - Navigation menu
 		$aData['aLayouts']['aNavigationMenu'] = $this->GetNavigationMenuData();
+
+		// - Top bar
+		$aData['aLayouts']['aTopBar'] = $this->GetTopBarData();
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(APPROOT.'templates/');
 		$sTemplateRelPath = 'pages/backoffice/layout';

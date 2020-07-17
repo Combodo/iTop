@@ -375,7 +375,7 @@ EOF
 	else
 	{
 		$oP = new iTopWebPage('iTop Export');
-		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', 'fas fa-file-export', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 	}
 	
 	if ($sExpression === null)

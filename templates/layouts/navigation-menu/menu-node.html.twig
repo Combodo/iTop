@@ -5,10 +5,10 @@
 	{% else %}
 		<span class="ibo-navigation-menu--menu-node-title">{{ aMenuNode.sTitle }}</span>
 	{% endif %}
-	{% if aMenuNode.aChildNodes is defined and aMenuNode.aChildNodes|length > 0 %}
+	{% if aMenuNode.aSubMenuNodes is defined and aMenuNode.aSubMenuNodes|length > 0 %}
 		<ul>
-			{% for aSubMenuNode in aMenuGroup.aSubMenuNodes %}
-				{% include 'layouts/navigation-menu/menu-node.html.twig' with aSubMenuNode %}
+			{% for aSubMenuNode in aMenuNode.aSubMenuNodes %}
+				{{ include('layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aSubMenuNode }, false) }}
 			{% endfor %}
 		</ul>
 	{% endif %}

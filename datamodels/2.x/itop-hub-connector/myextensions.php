@@ -30,7 +30,7 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
 $oAppContext = new ApplicationContext();
 
 $oPage = new iTopWebPage(Dict::S('iTopHub:InstalledExtensions'));
-$oPage->SetBreadCrumbEntry('ui-hub-myextensions', Dict::S('Menu:iTopHub:MyExtensions'), Dict::S('Menu:iTopHub:MyExtensions+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+$oPage->SetBreadCrumbEntry('ui-hub-myextensions', Dict::S('Menu:iTopHub:MyExtensions'), Dict::S('Menu:iTopHub:MyExtensions+'), '', 'fas fa-puzzle-piece', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 function DisplayExtensionInfo(Webpage $oPage, iTopExtension $oExtension)
 {

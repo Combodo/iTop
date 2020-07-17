@@ -1,8 +1,8 @@
-<nav {% if sId is defined %}id="{{ sId }}"{% endif%} class="ibo-navigation-menu">
+<nav id="{{ aNavigationMenu.sId }}" class="ibo-navigation-menu">
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
-			<a class="ibo-navigation-menu--square-company-logo" title="{{ sAppRevisionNumber }}" href="{{ sAppIconLink }}">
-				<img src="{{ sAppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
+			<a class="ibo-navigation-menu--square-company-logo" title="{{ aNavigationMenu.sAppRevisionNumber }}" href="{{ aNavigationMenu.sAppIconLink }}">
+				<img src="{{ aNavigationMenu.sAppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
 			</a>
 			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" title="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" href="#">
 				<span class="ibo-navigation-menu--toggler-icon">
@@ -13,8 +13,8 @@
 			</a>
 		</div>
 		<div class="ibo-navigation-menu--middle-part">
-			{% for aMenuGroup in aMenuGroups %}
-				{% include 'layouts/navigation-menu/menu-group.html.twig' with aMenuGroup %}
+			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
+				{{ include('layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }, false) }}
 			{% endfor %}
 		</div>
 		<div class="ibo-navigation-menu--bottom-part">
@@ -29,8 +29,8 @@
 			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
 		</div>
 		<div class="ibo-navigation-menu--menu-groups">
-			{% for aMenuGroup in aMenuGroups %}
-				{% include 'layouts/navigation-menu/menu-nodes.html.twig' with aMenuGroup %}
+			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
+				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }, false) }}
 			{% endfor %}
 		</div>
 	</div>
@@ -40,6 +40,6 @@
 <script type="text/javascript" src="js/layouts/navigation-menu.js"></script>
 <script type="text/javascript">
 setTimeout(function(){
-	$('#{{ sId }}').navigation_menu();
+	$('#{{ aNavigationMenu.sId }}').navigation_menu();
 }, 500);
 </script>

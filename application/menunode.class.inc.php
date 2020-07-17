@@ -1031,7 +1031,7 @@ class OQLMenuNode extends MenuNode
 			//$iCount = $oBlock->GetDisplayedCount();
 			$sPageId = "ui-search-".$oSearch->GetClass();
 			$sLabel = MetaModel::GetName($oSearch->GetClass());
-			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', '../images/breadcrumb-search.png');
+			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', 'fas fa-list', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
 	}
 }
@@ -1078,7 +1078,7 @@ class SearchMenuNode extends MenuNode
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
+		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oSearch = new DBObjectSearch($this->sClass);
 		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
@@ -1315,13 +1315,13 @@ class DashboardMenuNode extends MenuNode
 				}
 				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId())
 				{
-					$sIcon = '../images/breadcrumb_home.png';
+					$sIcon = 'fas fa-home';
 				}
 				else
 				{
-					$sIcon = '../images/breadcrumb-dashboard.png';
+					$sIcon = 'fas fa-chart-pie';
 				}
-				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon);
+				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon, iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			}
 		}
 		else

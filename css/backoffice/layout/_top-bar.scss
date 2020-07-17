@@ -17,13 +17,15 @@
  */
 
 /* SCSS variables (can be overloaded) */
+$ibo-top-bar-height: 54px !default;
 $ibo-top-bar-padding-left: 16px !default; /* Should be align with the page content padding-left */
 $ibo-top-bar-padding-right: 16px !default;
-$ibo-top-bar-padding-y: 16px !default;
+$ibo-top-bar-padding-y: 0px !default;
 $ibo-top-bar-background-color: $ibo-color-white-100 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
+	--ibo-top-bar-height: #{$ibo-top-bar-height};
 	--ibo-top-bar-padding-left: #{$ibo-top-bar-padding-left};
 	--ibo-top-bar-padding-right: #{$ibo-top-bar-padding-right};
 	--ibo-top-bar-padding-y: #{$ibo-top-bar-padding-y};
@@ -32,6 +34,11 @@ $ibo-top-bar-background-color: $ibo-color-white-100 !default;
 .ibo-top-bar{
 	display: flex;
 	align-items: center;
+	height: var(--ibo-top-bar-height);
 	padding: var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-right) var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-left);
 	background-color: var(--ibo-top-bar-background-color);
+
+	.ibo-breadcrumbs{
+		flex-grow: 1; /* Occupy as much width as possible */
+	}
 }

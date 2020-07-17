@@ -202,7 +202,7 @@ $(function()
 				}
 
 
-				$('#itop-breadcrumb')
+				$('#ibo-breadcrumbs')
 					.breadcrumb('destroy')
 					.breadcrumb({
 					itop_instance_id: oData['breadcrumb_instance_id'],
@@ -212,6 +212,7 @@ $(function()
 						"label": oData['breadcrumb_label'],
 						"url": sNewUrl,
 						'icon': oData['breadcrumb_icon'],
+						'icon_type': oData['breadcrumb_icon_type'],
 						'description': ''
 					}
 				});

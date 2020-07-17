@@ -1,0 +1,74 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+$ibo-breadcrumbs--item--text-color: $ibo-color-grey-800 !default;
+
+$ibo-breadcrumbs--item-icon--margin-x: 8px !default;
+$ibo-breadcrumbs--item-icon--max-width: 16px !default;
+$ibo-breadcrumbs--item-icon--text-color: $ibo-color-grey-600 !default;
+
+$ibo-breadcrumbs--item-separator--margin-x: 12px !default;
+$ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
+
+.ibo-breadcrumbs{
+	display: flex;
+	align-items: center;
+
+	* {
+		display: flex;
+		align-items: center;
+	}
+}
+.ibo-breadcrumbs--item{
+	color: $ibo-breadcrumbs--item--text-color;
+	@extend %ibo-font-ral-nor-100;
+
+	&:not(:last-child){
+		&::after{
+			content: '\f054';
+			margin: 0 $ibo-breadcrumbs--item-separator--margin-x;
+			color: $ibo-breadcrumbs--item-separator--text-color;
+			@extend %fa-solid-base;
+		}
+
+		&:hover{
+			.ibo-breadcrumbs--item-icon{
+				> *{
+					opacity: 1;
+					filter: none;
+				}
+			}
+		}
+	}
+}
+.ibo-breadcrumbs--item-icon{
+	margin-right: $ibo-breadcrumbs--item-icon--margin-x;
+	@extend %ibo-font-ral-nor-150;
+	transition: all 0.1s linear;
+
+	> span{
+		color: $ibo-breadcrumbs--item-icon--text-color;
+		opacity: 0.6;
+	}
+	> img{
+		height: auto;
+		max-width: $ibo-breadcrumbs--item-icon--max-width;
+		opacity: 0.3;
+		filter: grayscale(100%);
+	}
+}

@@ -1134,7 +1134,7 @@ $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
 
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '',
-	utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	'fas fa-book', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 $oPage->add_script(
 	<<<EOF
 	var autocompleteClassLabelAndCode = [];

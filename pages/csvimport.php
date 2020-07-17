@@ -33,7 +33,7 @@ try
 	$iStep = utils::ReadParam('step', 1);
 	
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
-	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', 'fas fa-file-import', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action

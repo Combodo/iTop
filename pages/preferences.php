@@ -507,7 +507,7 @@ try
 			case 'display':
 			default:
 				$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '',
-					utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+					'fas fa-user-cog', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 				DisplayPreferences($oPage);
 		}
 	}

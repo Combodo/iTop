@@ -696,7 +696,8 @@ class DisplayBlock
 							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
 							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
 							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png',
+							'breadcrumb_icon' => 'fas fa-search',
+							'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
 						));
 
 						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
