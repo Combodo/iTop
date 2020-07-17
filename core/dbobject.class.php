@@ -891,6 +891,11 @@ abstract class DBObject implements iDisplay
 		return isset($aOrigValues[$sAttCode]) ? $aOrigValues[$sAttCode] : null;
 	}
 
+	public function GetValues()
+	{
+		return $this->m_aCurrValues;
+	}
+
     /**
      * Returns the default value of the $sAttCode.
      *
