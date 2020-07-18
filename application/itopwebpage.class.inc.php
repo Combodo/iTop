@@ -702,6 +702,10 @@ JS
 		);
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	protected function LoadTheme()
 	{
 		// TODO: Remove light-grey when development of Full Moon is done.
@@ -1786,7 +1790,6 @@ EOF;
 			);
 		}
 	}
-
 
 	/**
 	 * Adds in the page a container with the header_message CSS class

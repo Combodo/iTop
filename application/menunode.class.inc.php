@@ -247,6 +247,7 @@ class ApplicationMenu
 	 *
 	 * @return array
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 * @since 2.8.0
 	 */
 	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = array())
@@ -658,7 +659,6 @@ abstract class MenuNode
 
 	/**
 	 * @return string
-	 * @throws DictExceptionMissingString
 	 */
 	public function GetTitle()
 	{
@@ -667,7 +667,6 @@ abstract class MenuNode
 
 	/**
 	 * @return string
-	 * @throws DictExceptionMissingString
 	 */
 	public function GetLabel()
 	{

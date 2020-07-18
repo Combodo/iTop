@@ -1,6 +1,19 @@
 <?php
+
+/**
+ * Class ItopHubMenusHandler
+ *
+ * @author Denis Flaven <denis.flaven@combodo.com>
+ * @since 2.4.1
+ */
 class ItopHubMenusHandler extends ModuleHandlerAPI
 {
+	/**
+	 * iTop Hub menus are defined in PHP instead of XML to avoid people overloading them through a delta.
+	 * Do NOT refactor them to the XML.
+	 *
+	 * @throws \Exception
+	 */
 	public static function OnMenuCreation()
 	{
 		// Add the admin menus

@@ -848,6 +848,11 @@ class WebPage implements Page
 		}
 	}
 
+	/**
+	 * Return the HTML base tag
+	 *
+	 * @return string
+	 */
 	protected function get_base_tag()
 	{
 		$sTag = '';
