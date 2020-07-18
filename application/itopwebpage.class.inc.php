@@ -90,6 +90,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
+		$this->add_linked_stylesheet("../node_modules/tippy.js/dist/tippy.css");
+		$this->add_linked_stylesheet("../node_modules/tippy.js/animations/shift-away-subtle.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
 		$this->add_linked_stylesheet("../css/font-combodo/font-combodo.css");
 		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
@@ -107,7 +109,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
+		/* @deprecated qTip will be removed in 2.9.0, use Tippy.js instead */
 		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
+		$this->add_linked_script("../node_modules/@popperjs/core/dist/umd/popper.js");
+		$this->add_linked_script("../node_modules/tippy.js/dist/tippy-bundle.umd.js");
 		$this->add_linked_script('../js/property_field.js');
 		$this->add_linked_script('../js/icon_select.js');
 		$this->add_linked_script('../js/raphael-min.js');
@@ -119,6 +124,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
 		$this->add_linked_script('../js/moment-with-locales.min.js');
 		$this->add_linked_script('../js/showdown.min.js');
+		$this->add_linked_script('../js/pages/backoffice.js');
 		$this->add_linked_script('../js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
@@ -133,60 +139,34 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		if (!$this->IsPrintableVersion())
 		{
 			$this->PrepareLayout();
-			$this->add_script(
-				<<<EOF
-function ShowAboutBox()
-{
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
-		$('body').append(data);
-	});
-	return false;
-}
-function ArchiveMode(bEnable)
-{
-	var sPrevUrl = StripArchiveArgument(window.location.search);
-	if (bEnable)
-	{
-		window.location.search = sPrevUrl + '&with-archive=1';
-	}
-	else
-	{
-		window.location.search = sPrevUrl + '&with-archive=0';
-	}
-}
-function StripArchiveArgument(sUrl)
-{
-	var res = sUrl.replace(/&with-archive=[01]/g, '');
-	return res;
-}
-EOF
-			);
 		}
 	}
 
 	/**
+	 * Return true is the navigation menu should be expanded
+	 *
 	 * @return bool
 	 */
 	protected function IsMenuPaneVisible()
 	{
-		$bLeftPaneOpen = true;
+		$bIsExpanded = false;
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
-			// Leave the pane opened
+			// Leave the menu collapsed
 		}
 		else
 		{
 			if (utils::ReadParam('force_menu_pane', null) === 0)
 			{
-				$bLeftPaneOpen = false;
+				$bIsExpanded = false;
 			}
-			elseif (appUserPreferences::GetPref('menu_pane', 'open') == 'closed')
+			elseif (appUserPreferences::GetPref('menu_pane', 'closed') === 'opened')
 			{
-				$bLeftPaneOpen = false;
+				$bIsExpanded = true;
 			}
 		}
 
-		return $bLeftPaneOpen;
+		return $bIsExpanded;
 	}
 
 	/**
@@ -195,22 +175,22 @@ EOF
 	protected function PrepareLayout()
 	{
 		// TODO: Move this to the menu renderer
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			// No pin button
-			$sConfigureWestPane = '';
-		}
-		else
-		{
-			$sConfigureWestPane =
-				<<<EOF
-                if (typeof myLayout !== "undefined")
-                {
-                    myLayout.addPinBtn( "#tPinMenu", "west" );
-                }
-EOF;
-		}
-		$sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
+//		if (MetaModel::GetConfig()->Get('demo_mode'))
+//		{
+//			// No pin button
+//			$sConfigureWestPane = '';
+//		}
+//		else
+//		{
+//			$sConfigureWestPane =
+//				<<<EOF
+//                if (typeof myLayout !== "undefined")
+//                {
+//                    myLayout.addPinBtn( "#tPinMenu", "west" );
+//                }
+//EOF;
+//		}
+//		$sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
 
 		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
@@ -816,6 +796,33 @@ JS
 	}
 
 	/**
+	 * Return the language for the page metadata based on the current user
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	protected function GetLanguageForMetadata()
+	{
+		$sUserLang = UserRights::GetUserLanguage();
+
+		return strtolower(substr($sUserLang, 0 ,2));
+	}
+
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		// TODO: Make it a property so it can be changed programmatically
+		// TODO: How to set both dark/light mode favicons
+		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
+	}
+
+	/**
 	 * Return the complete revision number of the application
 	 *
 	 * @return string
@@ -856,6 +863,7 @@ JS
 			'sAppFullIconUrl' => Branding::GetFullMainLogoAbsoluteUrl(),
 			'sAppIconLink' => MetaModel::GetConfig()->Get('app_icon_url'),
 			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
+			'bIsExpanded' => $this->IsMenuPaneVisible(),
 		];
 	}
 
@@ -1075,11 +1083,12 @@ EOF
 
 		// Prepare page metadata
 		$sAbsoluteUrlAppRoot = addslashes($this->m_sRootUrl);
-		// TODO: Make it a property so it can be changed programmatically
-		// TODO: How to set both dark/light mode favicons
-		$sFaviconUrl = $sAbsoluteUrlAppRoot.'images/favicon.ico';
-		// TODO: Get this for the current user language
-		$sMetadataLanguage = 'en';
+		$sFaviconUrl = $this->GetFaviconAbsoluteUrl();
+		$sMetadataLanguage = $this->GetLanguageForMetadata();
+
+		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
+		// - Generate necessary dict. files
+		$this->output_dict_entries();
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
@@ -1468,7 +1477,7 @@ EOF;
 			$sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
 			$sHtml .= self::FilterXSS($sApplicationBanner);
 
-			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
+//			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
 
 			$sHtml .= ' <table id="top-bar-table">';
 			$sHtml .= ' <tr>';

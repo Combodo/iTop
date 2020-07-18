@@ -1,10 +1,10 @@
-<nav id="{{ aNavigationMenu.sId }}" class="ibo-navigation-menu">
+<nav id="{{ aNavigationMenu.sId }}" class="ibo-navigation-menu {% if aNavigationMenu.bIsExpanded == true %}ibo-navigation-menu--is-expanded{% endif %}">
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
 			<a class="ibo-navigation-menu--square-company-logo" title="{{ aNavigationMenu.sAppRevisionNumber }}" href="{{ aNavigationMenu.sAppIconLink }}">
 				<img src="{{ aNavigationMenu.sAppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
 			</a>
-			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" title="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" href="#">
+			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="20" href="#">
 				<span class="ibo-navigation-menu--toggler-icon">
 					<span class="ibo-navigation-menu--toggler-bar"></span>
 					<span class="ibo-navigation-menu--toggler-bar"></span>
@@ -24,7 +24,7 @@
 	<div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
 		<div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
 			{# TODO: Retrieve input style from a component? #}
-			<input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" />
+			<input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip'|dict_s }}" data-tooltip-trigger="mouseenter" />
 			<a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"></a>
 			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
 		</div>

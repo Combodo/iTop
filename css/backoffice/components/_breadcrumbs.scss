@@ -22,6 +22,8 @@ $ibo-breadcrumbs--item-icon--margin-x: 8px !default;
 $ibo-breadcrumbs--item-icon--max-width: 16px !default;
 $ibo-breadcrumbs--item-icon--text-color: $ibo-color-grey-600 !default;
 
+$ibo-breadcrumbs--item-label--max-width: 100px !default;
+
 $ibo-breadcrumbs--item-separator--margin-x: 12px !default;
 $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 
@@ -71,4 +73,9 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 		opacity: 0.3;
 		filter: grayscale(100%);
 	}
+}
+.ibo-breadcrumbs--item-label{
+	display: inline; /* Otherwise the "truncate" doesn't work with th default display: flex */
+	max-width: $ibo-breadcrumbs--item-label--max-width;
+	@extend %ibo-text-truncated-with-ellipsis;
 }

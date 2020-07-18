@@ -42,10 +42,11 @@ body{
 	@extend %ibo-font-ral-nor-100;
 }
 #ibo-navigation-menu{
-	z-index: 1;
+	z-index: 20;
 }
 #ibo-page-container{
 	position: relative;
+	z-index: 10;
 	height: 100%;
 	overflow: auto;
 	flex-grow: 1;

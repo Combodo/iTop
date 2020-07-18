@@ -37,8 +37,10 @@ $ibo-top-bar-background-color: $ibo-color-white-100 !default;
 	height: var(--ibo-top-bar-height);
 	padding: var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-right) var(--ibo-top-bar-padding-y) var(--ibo-top-bar-padding-left);
 	background-color: var(--ibo-top-bar-background-color);
+	@extend %ibo-elevation-100;
 
 	.ibo-breadcrumbs{
 		flex-grow: 1; /* Occupy as much width as possible */
+		overflow-x: hidden; /* Avoid glitches when too many items */
 	}
 }

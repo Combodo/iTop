@@ -293,6 +293,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+.ibo-top-bar {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.12); }
+
 /*!
  * Copyright (C) 2013-2020 Combodo SARL
  *
@@ -8148,12 +8151,13 @@ a {
   padding: 32px 20px;
   overflow-y: auto;
   background-color: #f8f9fa;
+  border-right: 1px solid #d5dde5;
   transition: right 0.2s ease-in-out; }
 
 /* - Menu filter */
 .ibo-navigation-menu--menu-filter {
   position: relative;
-  margin-bottom: 55px; }
+  margin-bottom: 50px; }
 
 .ibo-navigation-menu--menu-filter-input {
   /* TODO: Refactor this into the standard field input */
@@ -8297,10 +8301,11 @@ body {
   background-color: var(--ibo-body-background-color); }
 
 #ibo-navigation-menu {
-  z-index: 1; }
+  z-index: 20; }
 
 #ibo-page-container {
   position: relative;
+  z-index: 10;
   height: 100%;
   overflow: auto;
   flex-grow: 1; }

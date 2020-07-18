@@ -100,7 +100,7 @@ $(function()
 						else
 						{
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
-							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a>';
+							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+oEntry['label']+'</span></a>';
 						}
 					}
 					this.element.append(sBreadcrumbsItemHtml);

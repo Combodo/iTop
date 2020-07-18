@@ -72,12 +72,14 @@ $ibo-navigation-menu--menu-group-icon--text-color--is-active: $ibo-color-primary
 $ibo-navigation-menu--menu-group-title--margin-left: $ibo-navigation-menu--middle-part--padding-x !default;
 $ibo-navigation-menu--menu-group-title--text-color--is-active: $ibo-color-blue-grey-800 !default;
 
-$ibo-navigation-menu--drawer--background-color: $ibo-color-grey-100 !default;
 $ibo-navigation-menu--drawer--width: 312px !default;
 $ibo-navigation-menu--drawer--padding-x: 20px !default;
 $ibo-navigation-menu--drawer--padding-y: 32px !default;
+$ibo-navigation-menu--drawer--background-color: $ibo-color-grey-100 !default;
+$ibo-navigation-menu--drawer--border-right: 1px solid $ibo-color-grey-300 !default;
 
-$ibo-navigation-menu--menu-filter--margin-bottom: 55px !default;
+$ibo-navigation-menu--menu-filter--width: $ibo-navigation-menu--drawer--width - $ibo-navigation-menu--drawer--padding-x * 2 !default;
+$ibo-navigation-menu--menu-filter--margin-bottom: 50px !default;
 $ibo-navigation-menu--menu-filter-input--padding-right: 64px !default;
 $ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
 
@@ -91,14 +93,18 @@ $ibo-navigation-menu--menu-filter-input--background-color: $ibo-color-white-100 
 $ibo-navigation-menu--menu-filter-input--border: 1px solid $ibo-color-grey-300 !default;
 $ibo-navigation-menu--menu-filter-input--border-radius: $ibo-border-radius-300 !default;
 
+$ibo-navigation-menu--menu-groups--margin-top: $ibo-navigation-menu--drawer--padding-y + $ibo-navigation-menu--menu-filter--margin-bottom !default;
+
+$ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered: 48px !default;
+
 $ibo-navigation-menu--menu-nodes-title--margin-top: 0 !default;
 $ibo-navigation-menu--menu-nodes-title--margin-bottom: 32px !default;
+$ibo-navigation-menu--menu-nodes-title--margin-bottom--on-filtered: 8px !default;
 
 $ibo-navigation-menu--menu-node--padding-x: 10px !default;
 $ibo-navigation-menu--menu-node--padding-y: 6px !default;
 $ibo-navigation-menu--menu-node--margin-x: -1 * $ibo-navigation-menu--menu-node--padding-x !default;
 $ibo-navigation-menu--menu-node--margin-y: 0 !default;
-$ibo-navigation-menu--menu-node--margin-top: 8px !default;
 $ibo-navigation-menu--menu-node--text-color: $ibo-color-grey-700 !default;
 $ibo-navigation-menu--menu-node--hyperlink-color: inherit !default;
 $ibo-navigation-menu--menu-node--background-color: $ibo-color-grey-200 !default;
@@ -153,6 +159,15 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 	&.ibo-navigation-menu--is-active{
 		.ibo-navigation-menu--drawer{
 			right: calc(-1 * #{$ibo-navigation-menu--drawer--width});
+		}
+	}
+	&.ibo-navigation-menu--is-filtered{
+		.ibo-navigation-menu--menu-nodes{
+			margin-bottom: $ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered;
+
+			.ibo-navigation-menu--menu-nodes-title{
+				margin-bottom: $ibo-navigation-menu--menu-nodes-title--margin-bottom--on-filtered;
+			}
 		}
 	}
 }
@@ -340,12 +355,13 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 	overflow-y: auto;
 
 	background-color: $ibo-navigation-menu--drawer--background-color;
+	border-right: $ibo-navigation-menu--drawer--border-right;
 	transition: right 0.2s ease-in-out;
 }
 /* - Menu filter */
 .ibo-navigation-menu--menu-filter{
-	position: relative;
-	margin-bottom: $ibo-navigation-menu--menu-filter--margin-bottom;
+	position: fixed;
+	width: $ibo-navigation-menu--menu-filter--width;
 }
 .ibo-navigation-menu--menu-filter-input{
 	/* TODO: Refactor this into the standard field input */
@@ -380,6 +396,10 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 	padding: 2px 4px;
 	@extend %ibo-font-ral-nor-50;
 }
+/* - Menu groups */
+.ibo-navigation-menu--menu-groups{
+	margin-top: $ibo-navigation-menu--menu-groups--margin-top;
+}
 /* - Menu nodes */
 .ibo-navigation-menu--menu-nodes{
 	display: none;
@@ -405,7 +425,6 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 			}
 		}
 		ul{
-			margin-top: $ibo-navigation-menu--menu-node--margin-top;
 			padding-left: $ibo-navigation-menu--drawer--padding-x;
 		}
 	}

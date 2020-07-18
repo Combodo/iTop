@@ -1,9 +1,9 @@
-<li class="ibo-navigation-menu--menu-node" data-menu-node-id="{{ aMenuNode.sId }}">
+<li class="ibo-navigation-menu--menu-node" data-role="ibo-navigation-menu--menu-node" data-menu-node-id="{{ aMenuNode.sId }}">
 	{% if aMenuNode.sUrl is not empty %}
 		{% set sTarget = (aMenuNode.bOpenInNewWindow == true) ? 'target="_blank"' : '' %}
-		<a class="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}</a>
+		<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}</a>
 	{% else %}
-		<span class="ibo-navigation-menu--menu-node-title">{{ aMenuNode.sTitle }}</span>
+		<span class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title">{{ aMenuNode.sTitle }}</span>
 	{% endif %}
 	{% if aMenuNode.aSubMenuNodes is defined and aMenuNode.aSubMenuNodes|length > 0 %}
 		<ul>
