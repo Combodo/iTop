@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+define('ITOP_DESIGN_LATEST_VERSION', '1.8'); // iTop >= 2.8.0
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -87,6 +87,12 @@ class iTopDesignFormat
 		'1.7' => array(
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
+			'next' => '1.8',
+			'go_to_next' => 'From17To18',
+		),
+		'1.8' => array(
+			'previous' => '1.7',
+			'go_to_previous' => 'From18To17',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -754,6 +760,28 @@ class iTopDesignFormat
 
 		// -- 2746 - remove attributes Enum Set
 		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * Upgrade the format from version 1.7 to 1.8
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To18($oFactory)
+	{
+		// Nothing
+	}
+
+	/**
+	 * Downgrade the format from version 1.8 to 1.7
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From18To17($oFactory)
+	{
+		// -- 3182 - Remove style node from MenuGroup
+		$sPath = "/itop_design/menus/menu[@xsi:type='MenuGroup']/style";
 		$this->RemoveNodeFromXPath($sPath);
 	}
 

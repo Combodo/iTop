@@ -225,11 +225,12 @@ class ApplicationMenu
 			}
 
 			$sMenuGroupIdx = $aMenuGroup['index'];
+			/** @var \MenuGroup $oMenuNode */
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			$aMenuGroups[] = [
 				'sId' => $oMenuNode->GetMenuID(),
-				'sIconCssClasses' => 'fas fa-fw fa-home', // TODO: Get the classes from the datamodel
+				'sIconCssClasses' => $oMenuNode->GetDecorationClasses(),
 				'sTitle' => $oMenuNode->GetTitle(),
 				'aSubMenuNodes' => static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams),
 			];
@@ -822,18 +823,42 @@ abstract class MenuNode
  */
 class MenuGroup extends MenuNode
 {
+	/** @var string DEFAULT_DECORATION_CLASSES */
+	const DEFAULT_DECORATION_CLASSES = 'fas fa-ellipsis-v';
+
+	/** @var string The CSS classes used to display the menu group's icon */
+	protected $sDecorationClasses = self::DEFAULT_DECORATION_CLASSES;
+
 	/**
 	 * Create a top-level menu group and inserts it into the application's main menu
+	 *
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param float $fRank Number used to order the list, the groups are sorted based on this value
+	 * @param string|null $sDecorationClasses CSS classes used to display the menu group's icon
 	 * @param string $sEnableClass Name of class of object
 	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @param string $sEnableStimulus
 	 */
-	public function __construct($sMenuId, $fRank, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	public function __construct($sMenuId, $fRank, $sDecorationClasses = null, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
+
+		if(!empty($sDecorationClasses))
+		{
+			$this->sDecorationClasses = $sDecorationClasses;
+		}
+	}
+
+	/**
+	 * Return the CSS classes used for decorating the menu group (typically the icon in the navigation menu)
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	public function GetDecorationClasses()
+	{
+		return $this->sDecorationClasses;
 	}
 
 	/**

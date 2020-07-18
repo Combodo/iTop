@@ -2179,6 +2179,13 @@ EOF
 			break;
 
 		case 'MenuGroup':
+			$oStyleNode = $oMenu->GetOptionalElement('style');
+			// Note: We use '' as the default value to ease the MenuGroup::__construct() call as we would have to make a different processing to not put the quotes around the parameter in case of null.
+			$sDecorationClasses = ($oStyleNode === null) ? '' : $oStyleNode->GetChildText('decoration_classes', '');
+
+			$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sDecorationClasses' {$sOptionalEnableParams});";
+			break;
+
 		default:
 			$sNewMenu = "new $sMenuClass('$sMenuId', $fRank {$sOptionalEnableParams});";
 		}
