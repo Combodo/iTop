@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
 	<classes>
 		<class id="UserRequest" _delta="define">
 			<parent>Ticket</parent>
@@ -1808,6 +1808,9 @@
 		<menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
 			<rank>30</rank>
 			<enable_stimulus/>
+	    <style>
+		    <decoration_classes>fas fa-comment-alt</decoration_classes>
+	    </style>
 		</menu>
 		<menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
 			<rank>0</rank>

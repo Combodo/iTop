@@ -109,6 +109,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
+		$this->add_linked_stylesheet("../css/font-combodo/font-combodo.css");
 		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
 
 		// TODO: Add only what's necessary

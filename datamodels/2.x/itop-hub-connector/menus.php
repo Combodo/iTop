@@ -22,7 +22,7 @@ class ItopHubMenusHandler extends ModuleHandlerAPI
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php?exec_module=itop-hub-connector&exec_page=launch.php';
 			$sMyExtensionsUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php?exec_module=itop-hub-connector&exec_page=myextensions.php';
 			
-			$oHubMenu = new MenuGroup('iTopHub', 999 /* fRank */);
+			$oHubMenu = new MenuGroup('iTopHub', 999 /* fRank */, 'fc fc-itophub-icon fc-1-5x');
 			$fRank = 1;
 			new WebPageMenuNode('iTopHub:Register', $sRootUrl.'&target=view_dashboard', $oHubMenu->GetIndex(), $fRank++);
 			new WebPageMenuNode('iTopHub:MyExtensions', $sMyExtensionsUrl, $oHubMenu->GetIndex(), $fRank++);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
 	<classes>
 		<class id="Incident" _delta="define">
 			<parent>Ticket</parent>
@@ -1665,6 +1665,9 @@
 		<menu id="IncidentManagement" xsi:type="MenuGroup" _delta="define">
 			<rank>35</rank>
 			<enable_stimulus/>
+	    <style>
+		    <decoration_classes>fas fa-exclamation</decoration_classes>
+	    </style>
 		</menu>
 		<menu id="Incident:Overview" xsi:type="DashboardMenuNode" _delta="define">
 			<rank>0</rank>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
   <classes>
     <class id="KnownError" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -606,6 +606,9 @@
   <menus>
     <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>42</rank>
+	    <style>
+		    <decoration_classes>fas fa-question</decoration_classes>
+	    </style>
     </menu>
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
