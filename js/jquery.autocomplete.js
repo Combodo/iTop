@@ -13,6 +13,7 @@
  * patched by sabello to : 	replace .size() to length
  * 							set the row response split to "\t"
  *
+ * @since 2.8.0 N°2284 replaced by JQuery UI Autocomplete Widget, but kept for legacy code in modules
  */
 
 ;(function($) {
