@@ -1864,7 +1864,12 @@ class utils
 	 */
 	public static function GetCompiledModuleVersion($sModuleName)
 	{
-		return static::GetCacheBusterTimestamp();
+		$aModulesInfo = GetModulesInfo();
+		if (array_key_exists($sModuleName, $aModulesInfo))
+		{
+			return $aModulesInfo[$sModuleName]['version'];
+		}
+		return null;
 	}
 	
 	/**

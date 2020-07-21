@@ -124,15 +124,24 @@ class ThemeHandler
 	 * 2) The produced CSS file exists and its signature is equal to the expected signature (imports, stylesheets, variables)
 	 *
 	 * @param string $sThemeId
-	 * @param bool $bSetup : indicated whether compilation is performed in setup context (true) or when loading a page/theme (false)
+	 * @param mix $sSetupCompilationTimestamp : when setup context this is compilation timestamp. otherwise false.
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
 	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
 	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
 	 */
-	public static function CompileTheme($sThemeId, $bSetup=false, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	public static function CompileTheme($sThemeId, $sSetupCompilationTimestamp=false, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
 	{
+		if ($sSetupCompilationTimestamp===false)
+		{
+			$sSetupCompilationTimestamp = microtime(true);
+			$bSetup = false;
+		}
+		else
+		{
+			$bSetup = true;
+		}
 		// Default working path
 		if($sWorkingPath === null)
 		{
@@ -154,11 +163,7 @@ class ThemeHandler
 		// Save parameters if passed... (typically during DM compilation)
 		if(is_array($aThemeParameters))
 		{
-			if (!is_dir($sThemeFolderPath))
-			{
-				mkdir($sWorkingPath.'/branding/');
-				mkdir($sWorkingPath.'/branding/themes/');
-			}
+			$aThemeParameters = self::PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $sSetupCompilationTimestamp);
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
 		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
@@ -256,8 +261,11 @@ CSS;
 				{
 					static::$oCompileCSSService = new CompileCSSService();
 				}
+				//store it again to change $version with latest compiled time
+				$aThemeParameters = self::PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $sSetupCompilationTimestamp);
 				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
 					$aThemeParameters['variables']);
+				file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
 			}
 		}
@@ -357,6 +365,10 @@ CSS;
 				if (!is_file($sImg))
 				{
 					$sImg=$sThemeFolderPath.DIRECTORY_SEPARATOR.$sImg;
+					if (!is_file($sImg))
+					{
+						$sImg=preg_replace('#'.DIRECTORY_SEPARATOR.'..#', '', $sImg, 1);
+					}
 				}
 				$aImages[$sImg]=$sImg;
 			}
@@ -651,9 +663,41 @@ CSS;
 		return ''; // Not found, fail silently, maybe the SCSS compiler knowns better...
 	}
 
-	public static function mockCompileCSSService($oCompileCSSServiceMock)
+	public static function MockCompileCSSService($oCompileCSSServiceMock)
 	{
 		static::$oCompileCSSService = $oCompileCSSServiceMock;
+	}
+
+	/**
+	 * main work is to store compilation timestamp as $version variable
+	 * that way each time there is compilation, images and others will be loaded again on client browser side (apart from cache)
+	 * @param $aThemeParameters
+	 * @param $sWorkingPath
+	 * @param $sThemeFolderPath
+	 *
+	 * @return mixed
+	 */
+	public static function PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $bSetupCompilationTimestamp)
+	{
+		if (array_key_exists('variables', $aThemeParameters))
+		{
+			if (is_array($aThemeParameters['variables']))
+			{
+				$aThemeParameters['variables']['$version'] = $bSetupCompilationTimestamp;
+			}
+		}
+		else
+		{
+			$aThemeParameters['variables']['$version'] = $bSetupCompilationTimestamp;
+		}
+
+		if (!is_dir($sThemeFolderPath))
+		{
+			mkdir($sWorkingPath.'/branding/');
+			mkdir($sWorkingPath.'/branding/themes/');
+		}
+
+		return $aThemeParameters;
 	}
 }
 

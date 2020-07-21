@@ -25,7 +25,7 @@ class ThemeHandlerTest extends ItopTestCase
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 
 		$this->compileCSSServiceMock = $this->createMock('CompileCSSService');
-		ThemeHandler::mockCompileCSSService($this->compileCSSServiceMock);
+		ThemeHandler::MockCompileCSSService($this->compileCSSServiceMock);
 
 		$this->tmpDir=$this->tmpdir();
 		$aDirsToCleanup[] = $this->tmpDir;
@@ -253,14 +253,15 @@ JSON;
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
+		$sSetupCompilationTimestamp = microtime(true);
 		if($readFromParamAttributeFromJson)
 		{
 			copy($expectJsonFilePath, $this->jsonThemeParamFile);
-			ThemeHandler::CompileTheme('basque-red', true, null, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+			ThemeHandler::CompileTheme('basque-red', $sSetupCompilationTimestamp, null, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 		}
 		else
 		{
-			ThemeHandler::CompileTheme('basque-red', true, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+			ThemeHandler::CompileTheme('basque-red', $sSetupCompilationTimestamp, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 		}
 		$this->assertTrue(is_file($this->cssPath));
 		$this->assertEquals($expectedThemeParamJson, file_get_contents($this->jsonThemeParamFile));
@@ -291,8 +292,8 @@ JSON;
 		$this->compileCSSServiceMock->expects($this->exactly($CompileCount))
 			->method("CompileCSSFromSASS")
 			->willReturn("====CSSCOMPILEDCONTENT====");
-
-		ThemeHandler::CompileTheme('basque-red', true, json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+		$sSetupCompilationTimestamp = microtime(true);
+		ThemeHandler::CompileTheme('basque-red', $sSetupCompilationTimestamp, json_decode($ThemeParametersJson, true), array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 	}
 
 	public function CompileThemesProviderEmptyArray()
@@ -356,6 +357,8 @@ JSON;
 	 */
 	public function testCompileThemes($ThemeParametersJson, $iCompileCSSFromSASSCount, $bMissingFile=false, $bFilesTouchedRecently=false, $bFileMd5sumModified=false, $sFileToTest=null, $sExpectedMainCssPath=null, $bSetup=true)
 	{
+		$sSetupCompilationTimestamp = ($bSetup) ? microtime(true) : false;
+
 		$sAfterReplacementCssVariableMd5sum='';
 		if (is_file($this->tmpDir.'/'.$sFileToTest))
 		{
@@ -430,7 +433,7 @@ JSON;
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
 		$aThemeParameters = json_decode($ThemeParametersJson, true);
-		ThemeHandler::CompileTheme('basque-red', $bSetup, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
+		ThemeHandler::CompileTheme('basque-red', $sSetupCompilationTimestamp, $aThemeParameters, array($this->tmpDir.'/branding/themes/'), $this->tmpDir);
 
 		if ($iCompileCSSFromSASSCount==1)
 		{
@@ -576,5 +579,10 @@ SCSS;
 
 		$aExpectedImages = json_decode(file_get_contents(APPROOT.'test/application/theme-handler/getimages/expected-getimages.json'), true);
 		$this->assertEquals($aExpectedImages, $aIncludedImages);
+		foreach ($aIncludedImages as $sImagePath)
+		{
+			$sFilename = str_replace('RELATIVEPATH', dirname($this->cssPath), $sImagePath);
+			$this->assertTrue(is_file($sFilename), "Image $sFilename does not exist");
+		}
 	}
 }
