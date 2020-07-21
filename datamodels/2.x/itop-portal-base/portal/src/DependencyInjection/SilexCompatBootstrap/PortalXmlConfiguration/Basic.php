@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Helper\UIExtensionsHelper;
 use DOMFormatException;
@@ -72,7 +73,7 @@ class Basic extends AbstractConfiguration
 			'properties' => array(
 				'id' => $_ENV['PORTAL_ID'],
 				'name' => 'Page:DefaultTitle',
-				'logo' => (file_exists(MODULESROOT.'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot().'branding/portal-logo.png' : '../images/logo-itop-dark-bg.svg',
+				'logo' => Branding::GetPortalLogoAbsoluteUrl(),
 				'themes' => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',

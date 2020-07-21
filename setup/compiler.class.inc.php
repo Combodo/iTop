@@ -2745,8 +2745,9 @@ EOF;
 			// Transform file refs into files in the images folder
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo-full');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo_square', 'main-logo-square');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
 
 			// Cleanup the images directory (eventually made by CompileFiles)

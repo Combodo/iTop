@@ -1,0 +1,133 @@
+<?php
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+namespace Combodo\iTop\Application;
+
+use utils;
+
+/**
+ * Class Branding
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application
+ * @since 2.8.0
+ */
+class Branding
+{
+	/** @var string Full main logo, used everywhere when there is no need for a special one */
+	const ENUM_LOGO_TYPE_MAIN_LOGO_FULL = 'main_logo_full';
+	/** @var string Square main logo, used in the collapsed menu of the backoffice */
+	const ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE = 'main_logo_square';
+	/** @var string Logo used in the end-users portal */
+	const ENUM_LOGO_TYPE_PORTAL_LOGO = 'portal_logo';
+	/** @var string Logo used in the login pages */
+	const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
+	/** @var string Default logo */
+	const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
+
+	/** @var \string[][] Relative paths to the default/custom logos from the current environment folder */
+	public static $aLogoPaths = [
+		self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL => [
+			'default' => 'images/itop-logo.png',
+			'custom' => 'branding/main-logo-full.png',
+		],
+		self::ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE => [
+			'default' => 'images/itop-logo-square.png',
+			'custom' => 'branding/main-logo-square.png',
+		],
+		self::ENUM_LOGO_TYPE_PORTAL_LOGO => [
+			'default' => 'images/logo-itop-dark-bg.svg',
+			'custom' => 'branding/portal-logo.png',
+		],
+		self::ENUM_LOGO_TYPE_LOGIN_LOGO => [
+			'default' => 'images/itop-logo.png',
+			'custom' => 'branding/login-logo.png',
+		],
+	];
+
+	/**
+	 * Return the absolute URL for the full main logo
+	 *
+	 * @param string $sType Type of the logo to return
+	 * @see static::ENUM_LOGO_TYPE_XXX
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
+	{
+		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
+		$sCustomLogoPath = static::$aLogoPaths[$sType]['custom'];
+
+		if (file_exists(MODULESROOT.$sCustomLogoPath))
+		{
+			$sUrl = utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath;
+		}
+		else
+		{
+			$sUrl = utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath;
+		}
+
+		return $sUrl.'?t='.utils::GetCacheBusterTimestamp();
+	}
+
+	/**
+	 * Return the absolute URL for the full main logo
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetFullMainLogoAbsoluteUrl()
+	{
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_LOGO_FULL);
+	}
+
+	/**
+	 * Return the absolute URL for the square main logo
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetSquareMainLogoAbsoluteUrl()
+	{
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE);
+	}
+
+	/**
+	 * Return the absolute URL for the portal logo
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetPortalLogoAbsoluteUrl()
+	{
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_PORTAL_LOGO);
+	}
+
+	/**
+	 * Return the absolute URL for the login logo
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetLoginLogoAbsoluteUrl()
+	{
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_LOGIN_LOGO);
+	}
+}

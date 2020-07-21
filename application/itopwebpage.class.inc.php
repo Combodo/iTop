@@ -21,6 +21,7 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 
 /**
@@ -28,31 +29,12 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
  */
 class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
-	/** @var string ENUM_APP_ICON_SHAPE_SQUARE */
-	const ENUM_APP_ICON_SHAPE_SQUARE = 'square';
-	/** @var string ENUM_APP_ICON_SHAPE_FULL */
-	const ENUM_APP_ICON_SHAPE_FULL = 'full';
-	/** @var string DEFAULT_APP_ICON_SHAPE */
-	const DEFAULT_APP_ICON_SHAPE = self::ENUM_APP_ICON_SHAPE_FULL;
-
 	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE */
 	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE = 'image';
 	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES */
 	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES = 'css_classes';
 	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
-
-	/** @var array Default and branding filenames for the app. icon in the backoffice */
-	protected static $aAppIconFilenames = [
-		self::ENUM_APP_ICON_SHAPE_SQUARE => [
-			'default' => 'itop-logo-square.png',
-			'branding' => 'backoffice-square-logo.png',
-		],
-		self::ENUM_APP_ICON_SHAPE_FULL => [
-			'default' => 'itop-logo.png',
-			'branding' => 'main-logo.png',
-		],
-	];
 
 	private $m_sMenu;
 	//	private $m_currentOrganization;
@@ -856,34 +838,6 @@ JS
 	}
 
 	/**
-	 * Return the absolute URL to the application logo of $sShape
-	 *
-	 * @see static::ENUM_APP_ICON_SHAPE_SQUARE, static::ENUM_APP_ICON_SHAPE_FULL, ...
-	 *
-	 * @param string $sShape Shape of the icon to return
-	 *
-	 * @return string
-	 * @throws \Exception
-	 * @since 2.8.0
-	 */
-	protected function GetApplicationIconUrl($sShape = self::DEFAULT_APP_ICON_SHAPE)
-	{
-		$sIconDefaultFilename = static::$aAppIconFilenames[$sShape]['default'];
-		$sIconBrandingFilename = static::$aAppIconFilenames[$sShape]['branding'];
-
-		$sIconAbsUrl = utils::GetAbsoluteUrlAppRoot().'images/'.$sIconDefaultFilename;
-		// Check if icon is overloaded by the branding
-		if (file_exists(MODULESROOT.'branding/'.$sIconBrandingFilename))
-		{
-			$sIconAbsUrl = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sIconBrandingFilename;
-		}
-
-		$sIconAbsUrl .= '?t='.utils::GetCacheBusterTimestamp();
-
-		return $sIconAbsUrl;
-	}
-
-	/**
 	 * Return the navigation menu data (id, menu groups, ...)
 	 *
 	 * @return array
@@ -898,8 +852,8 @@ JS
 		return [
 			'sId' => 'ibo-navigation-menu',
 			'sAppRevisionNumber' => $this->GetApplicationRevisionNumber(),
-			'sAppSquareIconUrl' => $this->GetApplicationIconUrl(static::ENUM_APP_ICON_SHAPE_SQUARE),
-			'sAppFullIconUrl' => $this->GetApplicationIconUrl(static::ENUM_APP_ICON_SHAPE_FULL),
+			'sAppSquareIconUrl' => Branding::GetSquareMainLogoAbsoluteUrl(),
+			'sAppFullIconUrl' => Branding::GetFullMainLogoAbsoluteUrl(),
 			'sAppIconLink' => MetaModel::GetConfig()->Get('app_icon_url'),
 			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
 		];
@@ -1472,11 +1426,11 @@ EOF;
 			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
-			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
-			if (file_exists(MODULESROOT.'branding/main-logo.png'))
-			{
-				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png?t='.utils::GetCacheBusterTimestamp();
-			}
+//			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+//			if (file_exists(MODULESROOT.'branding/main-logo.png'))
+//			{
+//				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png?t='.utils::GetCacheBusterTimestamp();
+//			}
 
 			$sHtml .= $sNorthPane;
 			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
