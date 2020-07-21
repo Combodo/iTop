@@ -814,6 +814,17 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 				$oNotObsoleteRemote->AddConditionExpression($oNotObsolete);
 				$oLinkSearch->AddCondition_PointingTo($oNotObsoleteRemote, $sExtKeyToRemote);
 			}
+			if (!utils::IsArchiveMode() && MetaModel::IsArchivable($sTargetClass))
+			{
+				$oNotArchived = new BinaryExpression(
+					new FieldExpression('archive_flag', $sTargetClass),
+					'=',
+					new ScalarExpression(0)
+				);
+				$oNotArchivedRemote = new DBObjectSearch($sTargetClass);
+				$oNotArchivedRemote->AddConditionExpression($oNotArchived);
+				$oLinkSearch->AddCondition_PointingTo($oNotArchivedRemote, $sExtKeyToRemote);
+			}
 		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);
