@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
+
 @include_once('../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
@@ -53,7 +55,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	$bRunAnalysis = intval(utils::ReadParam('run_analysis', '0'));
 	if ($bRunAnalysis)
 	{
-		$oDBAnalyzer = new DatabaseAnalyzer();
+		$oDBAnalyzer = new DatabaseAnalyzer(0);
 		$aResults = $oDBAnalyzer->CheckIntegrity($aClassSelection);
 		if (empty($aResults))
 		{
@@ -199,74 +201,23 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
  */
 function DisplayInconsistenciesReport($aResults)
 {
-	$sDBToolsFolder = str_replace("\\", '/', APPROOT.'log/');
-	$sReportFile = 'dbtools-report-'.date('Y-m-d-H-i-s');
+	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults);
 
-	$fReport = fopen($sDBToolsFolder.$sReportFile.'.txt', 'w');
-	fwrite($fReport, 'Database Maintenance tools: '.date('Y-m-d H:i:s')."\r\n");
-	foreach($aResults as $sClass => $aErrorList)
-	{
-		fwrite($fReport, '');
-		foreach($aErrorList as $sErrorLabel => $aError)
-		{
-			fwrite($fReport, "\r\n----------\r\n");
-			fwrite($fReport, 'Class: '.MetaModel::GetName($sClass).' ('.$sClass.")\r\n");
-			$iCount = $aError['count'];
-			fwrite($fReport, 'Count: '.$iCount."\r\n");
-			fwrite($fReport, 'Error: '.$sErrorLabel."\r\n");
-			$sQuery = $aError['query'];
-			fwrite($fReport, 'Query: '.$sQuery."\r\n");
-
-			if (isset($aError['fixit']))
-			{
-				fwrite($fReport, "\r\nFix it (indication):\r\n\r\n");
-				$aFixitQueries = $aError['fixit'];
-				foreach($aFixitQueries as $sFixitQuery)
-				{
-					fwrite($fReport, "$sFixitQuery\r\n");
-				}
-				fwrite($fReport, "\r\n");
-			}
-
-			$sQueryResult = '';
-			$aIdList = array();
-			foreach($aError['res'] as $aRes)
-			{
-				foreach($aRes as $sKey => $sValue)
-				{
-					$sQueryResult .= "'$sKey'='$sValue' ";
-					if ($sKey == 'id')
-					{
-						$aIdList[] = $sValue;
-					}
-				}
-				$sQueryResult .= "\r\n";
-
-			}
-			fwrite($fReport, "Result: \r\n".$sQueryResult);
-			$sIdList = '('.implode(',', $aIdList).')';
-			fwrite($fReport, 'Ids: '.$sIdList."\r\n");
-		}
-	}
-	fclose($fReport);
-
+	$sZipReport = "{$sReportFile}.zip";
 	$oArchive = new ZipArchive();
-	$oArchive->open($sDBToolsFolder.$sReportFile.'.zip', ZipArchive::CREATE);
-	$oArchive->addFile($sDBToolsFolder.$sReportFile.'.txt', $sReportFile.'.txt');
+	$oArchive->open($sZipReport, ZipArchive::CREATE);
+	$oArchive->addFile($sReportFile.'.log', basename($sReportFile.'.log'));
 	$oArchive->close();
-	unlink($sDBToolsFolder.$sReportFile.'.txt');
-	$sReportFile = $sDBToolsFolder.$sReportFile.'.zip';
-
 
 	header('Content-Description: File Transfer');
 	header('Content-Type: multipart/x-zip');
-	header('Content-Disposition: inline; filename="'.basename($sReportFile).'"');
+	header('Content-Disposition: inline; filename="'.basename($sZipReport).'"');
 	header('Expires: 0');
 	header('Cache-Control: must-revalidate');
 	header('Pragma: public');
-	header('Content-Length: '.filesize($sReportFile));
-	readfile($sReportFile);
-	unlink($sReportFile);
+	header('Content-Length: '.filesize($sZipReport));
+	readfile($sZipReport);
+	unlink($sZipReport);
 	exit(0);
 }
 
