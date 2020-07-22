@@ -16,10 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-%ibo-centered-content{
+%ibo-fully-centered-content{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+/* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
+%ibo-vertically-centered-content{
+	display: flex;
+	align-items: stretch;
 }
 %ibo-text-truncated-with-ellipsis{
 	white-space: nowrap;
@@ -31,7 +36,7 @@
 	border-radius: var(--ibo-border-radius-full);
 	border: 2px solid var(--ibo-color-grey-300);
 	overflow: hidden;
-	@extend %ibo-centered-content;
+	@extend %ibo-fully-centered-content;
 
 	> *{
 		position: absolute;

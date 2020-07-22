@@ -32,11 +32,11 @@ $ibo-page-content--padding-bottom: 24px !default;
 
 /* Layout */
 html{
-	height: 100%;
+	height: 100vh;
 }
 body{
 	display: flex;
-	height: 100%;
+	height: 100vh;
 	color: var(--ibo-body-text-color);
 	background-color: var(--ibo-body-background-color);
 	@extend %ibo-font-ral-nor-100;
@@ -57,14 +57,16 @@ body{
 		padding-left: $ibo-page-container--elements-padding-x;
 		padding-right: $ibo-page-container--elements-padding-x;
 	}
-}
-#ibo-top-bar{
-	position: sticky;
-	top: 0;
-	left: 0;
-	right: 0;
-}
-#ibo-page-content{
-	padding-top: $ibo-page-content--padding-top;
-	padding-bottom: $ibo-page-content--padding-bottom;
+	#ibo-top-bar{
+		z-index: 20;
+		position: sticky;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+	#ibo-page-content{
+		z-index: 10;
+		padding-top: $ibo-page-content--padding-top;
+		padding-bottom: $ibo-page-content--padding-bottom;
+	}
 }

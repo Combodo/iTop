@@ -28,8 +28,7 @@ $ibo-breadcrumbs--item-separator--margin-x: 12px !default;
 $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 
 .ibo-breadcrumbs{
-	display: flex;
-	align-items: center;
+	@extend %ibo-vertically-centered-content;
 
 	* {
 		display: flex;
