@@ -381,14 +381,13 @@ class DBUnionSearch extends DBSearch
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
-	 * @throws CoreException
-	 * @throws CoreWarning
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_PointingTo($oConditionFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 
@@ -402,7 +401,8 @@ class DBUnionSearch extends DBSearch
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_ReferencedBy($oConditionFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 

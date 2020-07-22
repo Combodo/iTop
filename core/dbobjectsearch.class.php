@@ -340,6 +340,7 @@ class DBObjectSearch extends DBSearch
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
+		$oFilter->ResetCondition();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -858,17 +859,15 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
+	 * @param DBObjectSearch $oFilter (can be modified)
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
-	public function AddCondition_PointingTo(DBObjectSearch $oOrigFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
+	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		/** @var \DBObjectSearch $oFilter */
-		$oFilter = $oOrigFilter->DeepClone();
 		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
 		{
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}'");
@@ -952,18 +951,15 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
+	 * @param DBObjectSearch $oFilter (can be modified)
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
 	 * @return void
 	 * @throws \CoreException
 	 */
-	public function AddCondition_ReferencedBy(DBObjectSearch $oOrigFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
+	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		/** @var \DBObjectSearch $oFilter */
-		$oFilter = $oOrigFilter->DeepClone();
-
 		$sForeignClass = $oFilter->GetClass();
 		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
 		{
