@@ -1,0 +1,38 @@
+<div id="{{ aGlobalSearch.sId }}" class="ibo-global-search" data-role="ibo-global-search">
+	<form action="{{ aGlobalSearch.sEndpoint }}" method="post" class="ibo-global-search--head" data-role="ibo-global-search--head">
+		<a href="#" class="ibo-global-search--icon fas fa-search" data-role="ibo-global-search--icon" data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25"></a>
+		<input type="text" name="query" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" />
+	</form>
+	<div class="ibo-global-search--drawer" data-role="ibo-global-search--drawer">
+		<div class="ibo-global-search--compartment">
+			<div class="ibo-global-search--compartment-title" data-role="ibo-global-search--compartment-title">
+				<span>{{ 'UI:Component:GlobalSearch:Recents:Title'|dict_s }}</span>
+			</div>
+			<div class="ibo-global-search--compartment-content" data-role="ibo-global-search--compartment-content">
+				{% if aGlobalSearch.aLastQueries|length > 0 %}
+					{% for aQuery in aGlobalSearch.aLastQueries %}
+						<a href="#" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
+							{% if aQuery.icon_url is defined %}
+								<img src="{{ aPage.sAbsoluteUrlAppRoot ~ aQuery.icon_url}}" class="ibo-global-search--compartment-element-image" />
+							{% endif %}
+							{{ aQuery.label_html|raw }}
+						</a>
+					{% endfor %}
+				{% else %}
+					<div class="ibo-global-search--compartment--placeholder">
+						<img class="ibo-global-search--compartment--placeholder-image" src="{{ aPage.sAbsoluteUrlAppRoot }}images/illustrations/undraw-collection/web_search.svg" />
+						<div class="ibo-global-search--compartment--placeholder-hint">{{ 'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder'|dict_s }}</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{# TODO: Move this to a dedicated script file #}
+<script type="text/javascript" src="../js/components/global-search.js"></script>
+<script type="text/javascript">
+setTimeout(function(){
+	$('#{{ aGlobalSearch.sId }}').global_search();
+}, 500);
+</script>

@@ -138,6 +138,7 @@ return array(
     'CheckStopWatchThresholds' => $baseDir . '/core/ormstopwatch.class.inc.php',
     'CheckableExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'Combodo\\iTop\\Application\\Branding' => $baseDir . '/sources/application/Branding.php',
+    'Combodo\\iTop\\Application\\GlobalSearch\\GlobalSearchHelper' => $baseDir . '/sources/application/GlobalSearch/GlobalSearchHelper.php',
     'Combodo\\iTop\\Application\\Search\\AjaxSearchException' => $baseDir . '/sources/application/search/ajaxsearchexception.class.inc.php',
     'Combodo\\iTop\\Application\\Search\\CriterionConversionAbstract' => $baseDir . '/sources/application/search/criterionconversionabstract.class.inc.php',
     'Combodo\\iTop\\Application\\Search\\CriterionConversion\\CriterionToOQL' => $baseDir . '/sources/application/search/criterionconversion/criteriontooql.class.inc.php',

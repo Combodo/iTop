@@ -14,7 +14,7 @@
 		</div>
 		<div class="ibo-navigation-menu--middle-part">
 			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
-				{{ include('layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }, false) }}
+				{{ include('layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>
 		<div class="ibo-navigation-menu--bottom-part">
@@ -30,7 +30,7 @@
 		</div>
 		<div class="ibo-navigation-menu--menu-groups">
 			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
-				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }, false) }}
+				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>
 	</div>

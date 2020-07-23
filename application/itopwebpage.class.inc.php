@@ -22,6 +22,7 @@ require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 
 /**
@@ -880,8 +881,27 @@ JS
 		$aData = [
 			'sId' => 'ibo-top-bar',
 			'aComponents' => [
+				'aGlobalSearch' => $this->GetGlobalSearchData(),
 				'aBreadCrumbs' => $this->GetBreadCrumbsData(),
 			],
+		];
+
+		return $aData;
+	}
+
+	/**
+	 * Return the global search data (last queries)
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	protected function GetGlobalSearchData()
+	{
+		$aData = [
+			'sId' => 'ibo-global-search',
+			'sEndpoint' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=full_text',
+			'aLastQueries' => GlobalSearchHelper::GetLastQueries(),
 		];
 
 		return $aData;

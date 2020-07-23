@@ -8,7 +8,7 @@
 	{% if aMenuNode.aSubMenuNodes is defined and aMenuNode.aSubMenuNodes|length > 0 %}
 		<ul>
 			{% for aSubMenuNode in aMenuNode.aSubMenuNodes %}
-				{{ include('layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aSubMenuNode }, false) }}
+				{{ include('layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aSubMenuNode }) }}
 			{% endfor %}
 		</ul>
 	{% endif %}

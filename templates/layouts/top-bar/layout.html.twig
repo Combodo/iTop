@@ -1,3 +1,6 @@
 <nav id="{{ aTopBar.sId }}" class="ibo-top-bar">
-	{{ include('components/breadcrumbs/layout.html.twig', { aBreadCrumbs: aTopBar.aComponents.aBreadCrumbs }, false) }}
+	<div class="ibo-top-bar--quick-actions">
+		{{ include('components/global-search/layout.html.twig', { aGlobalSearch: aTopBar.aComponents.aGlobalSearch }) }}
+	</div>
+	{{ include('components/breadcrumbs/layout.html.twig', { aBreadCrumbs: aTopBar.aComponents.aBreadCrumbs }) }}
 </nav>

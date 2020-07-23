@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
+
 /**
  * Displays a popup welcome message, once per session at maximum
  * until the user unchecks the "Display welcome at startup"
@@ -546,15 +548,16 @@ try
 
 		case 'full_text': // Global "google-like" search
 			$oP->DisableBreadCrumb();
-			$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+			$sQuery = trim(utils::ReadPostedParam('query', '', 'raw_data'));
 			$iTune = utils::ReadParam('tune', 0);
-			if (empty($sFullText))
+			if (empty($sQuery))
 			{
 				$oP->p(Dict::S('UI:Search:NoSearch'));
 			}
 			else
 			{
 				$iErrors = 0;
+				$sFullText = $sQuery;
 
 				// Check if a class name/label is supplied to limit the search
 				$sClassName = '';
@@ -580,6 +583,21 @@ try
 					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
 					$aFullTextNeedles = explode(' ', $sFullText);
 				}
+
+				// Save search to history
+				// - Prepare icon
+				$sQueryIconUrl = null;
+				if(!empty($sClassName))
+				{
+					$sQueryIconUrl = MetaModel::GetClassIcon($sClassName, false);
+				}
+				// - Prepare label
+				$sQueryLabel = null;
+				if($sQuery !== $sFullText)
+				{
+					$sQueryLabel = $sFullText;
+				}
+				GlobalSearchHelper::AddQueryToHistory($sQuery, $sQueryIconUrl, $sQueryLabel);
 
 				// Check the needle length
 				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');

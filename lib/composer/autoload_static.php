@@ -368,6 +368,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'CheckStopWatchThresholds' => __DIR__ . '/../..' . '/core/ormstopwatch.class.inc.php',
         'CheckableExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'Combodo\\iTop\\Application\\Branding' => __DIR__ . '/../..' . '/sources/application/Branding.php',
+        'Combodo\\iTop\\Application\\GlobalSearch\\GlobalSearchHelper' => __DIR__ . '/../..' . '/sources/application/GlobalSearch/GlobalSearchHelper.php',
         'Combodo\\iTop\\Application\\Search\\AjaxSearchException' => __DIR__ . '/../..' . '/sources/application/search/ajaxsearchexception.class.inc.php',
         'Combodo\\iTop\\Application\\Search\\CriterionConversionAbstract' => __DIR__ . '/../..' . '/sources/application/search/criterionconversionabstract.class.inc.php',
         'Combodo\\iTop\\Application\\Search\\CriterionConversion\\CriterionToOQL' => __DIR__ . '/../..' . '/sources/application/search/criterionconversion/criteriontooql.class.inc.php',

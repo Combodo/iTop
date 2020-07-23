@@ -2,7 +2,7 @@
 	<h2 class="ibo-navigation-menu--menu-nodes-title">{{ aMenuGroup.sTitle }}</h2>
 	<ul>
 		{% for aMenuNode in aMenuGroup.aSubMenuNodes %}
-			{{ include('layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aMenuNode }, false) }}
+			{{ include('layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aMenuNode }) }}
 		{% endfor %}
 	</ul>
 </div>

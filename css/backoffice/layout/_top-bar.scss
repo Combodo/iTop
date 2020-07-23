@@ -49,3 +49,11 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 		overflow-x: hidden; /* Avoid glitches when too many items */
 	}
 }
+.ibo-top-bar--quick-actions{
+	@extend %ibo-vertically-centered-content;
+	margin-right: var(--ibo-top-bar--quick-actions--margin-right);
+
+	.ibo-global-search{
+
+	}
+}
