@@ -39,11 +39,13 @@ class appUserPreferences extends DBObject
 	/**
 	 * Get the value of the given property/preference
 	 * If not set, the default value will be returned
+	 *
 	 * @param string $sCode Code/Name of the property to set
-	 * @param string $sDefaultValue The default value
-	 * @return string The value of the property for the current user
+	 * @param mixed $defaultValue The default value
+	 *
+	 * @return mixed The value of the property for the current user
 	 */
-	public static function GetPref($sCode, $sDefaultValue)
+	public static function GetPref($sCode, $defaultValue)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -56,29 +58,30 @@ class appUserPreferences extends DBObject
 		}
 		else
 		{
-			return $sDefaultValue;
+			return $defaultValue;
 		}
 	}
 	
 	/**
 	 * Set the value for a given preference, and stores it into the database
+	 *
 	 * @param string $sCode Code/Name of the property/preference to set
-	 * @param string $sValue Value to set
+	 * @param mixed $value Value to set
 	 */
-	public static function SetPref($sCode, $sValue)
+	public static function SetPref($sCode, $value)
 	{
 		if (self::$oUserPrefs == null)
 		{
 			self::Load();
 		}
 		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $sValue))
+		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $value))
 		{
 			// Do not write it again
 		}
 		else
 		{
-			$aPrefs[$sCode] = $sValue;
+			$aPrefs[$sCode] = $value;
 			self::$oUserPrefs->Set('preferences', $aPrefs);
 			self::Save();
 		}
