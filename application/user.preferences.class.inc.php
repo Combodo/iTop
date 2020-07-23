@@ -35,7 +35,7 @@ require_once(APPROOT.'/core/userrights.class.inc.php');
 class appUserPreferences extends DBObject
 {
 	private static $oUserPrefs = null; // Local cache
-	
+
 	/**
 	 * Get the value of the given property/preference
 	 * If not set, the default value will be returned
@@ -44,6 +44,9 @@ class appUserPreferences extends DBObject
 	 * @param mixed $defaultValue The default value
 	 *
 	 * @return mixed The value of the property for the current user
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public static function GetPref($sCode, $defaultValue)
 	{
@@ -61,12 +64,17 @@ class appUserPreferences extends DBObject
 			return $defaultValue;
 		}
 	}
-	
+
 	/**
 	 * Set the value for a given preference, and stores it into the database
 	 *
 	 * @param string $sCode Code/Name of the property/preference to set
 	 * @param mixed $value Value to set
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public static function SetPref($sCode, $value)
 	{
@@ -89,8 +97,14 @@ class appUserPreferences extends DBObject
 
 	/**
 	 * Clears the value for a given preference (or list of preferences that matches a pattern), and updates the database
+	 *
 	 * @param string $sCodeOrPattern Code/Pattern of the properties/preferences to reset
 	 * @param boolean $bPattern Whether or not the supplied code is a PCRE pattern
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public static function UnsetPref($sCodeOrPattern, $bPattern = false)
 	{
@@ -122,10 +136,14 @@ class appUserPreferences extends DBObject
 			self::Save();
 		}
 	}
-	
+
 	/**
 	 * Call this function to get all the preferences for the user, packed as a JSON object
+	 *
 	 * @return string JSON representation of the preferences
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public static function GetAsJSON()
 	{
@@ -139,19 +157,29 @@ class appUserPreferences extends DBObject
 
 	/**
 	 * Call this function if the user has changed (like when doing a logoff...)
+	 *
+	 * @return void
 	 */
 	public static function ResetPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
+
 	/**
 	 * Call this function to ERASE all the preferences from the current user
+	 *
+	 * @return void
 	 */
 	public static function ClearPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
-	
+
+	/**
+	 * Save preferences in the DB
+	 *
+	 * @return void;
+	 */
 	protected static function Save()
 	{
 		if (self::$oUserPrefs != null)
@@ -164,10 +192,15 @@ class appUserPreferences extends DBObject
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads the preferences for the current user, creating the record in the database
 	 * if needed
+	 *
+	 * @return void;
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	protected static function Load()
 	{
@@ -196,6 +229,9 @@ class appUserPreferences extends DBObject
 		self::$oUserPrefs = $oObj;
 	}
 
+	/**
+	 * @throws \CoreException
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -216,9 +252,22 @@ class appUserPreferences extends DBObject
 	}
 
 	/**
-	* Overloading this function here to secure a fix done right before the release
-	* The real fix should be to implement this verb in DBObject	
-	*/
+	 * Overloading this function here to secure a fix done right before the release
+	 * The real fix should be to implement this verb in DBObject
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param bool|null $bSkipStrongSecurity
+	 * @param \DeletionPlan|null $oDeletionPlan
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
 		utils::PushArchiveMode(false);
