@@ -20,22 +20,22 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttributeExternalKey;
 use AttributeLinkedSetIndirect;
+use BinaryExpression;
+use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
 use Combodo\iTop\Portal\Helper\BrowseBrickHelper;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
+use FieldExpression;
+use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use MetaModel;
-use DBSearch;
-use DBObjectSet;
-use BinaryExpression;
-use FieldExpression;
 use VariableExpression;
-use AttributeExternalKey;
-use Combodo\iTop\Portal\Brick\AbstractBrick;
-use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 /**
  * Class BrowseBrickController
@@ -156,8 +156,11 @@ class BrowseBrickController extends BrickController
 					{
 						if (array_key_exists($sLevelAlias, $aRealiasingMap))
 						{
-							$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($aRealiasingMap[$sLevelAlias],
-								$sLevelAlias);
+							/** @since 2.7.2 */
+							foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToChange)
+							{
+								$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($sAliasToChange, $sLevelAlias);
+							}
 						}
 					}
 				}

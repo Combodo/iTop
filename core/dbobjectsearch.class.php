@@ -792,10 +792,11 @@ class DBObjectSearch extends DBSearch
 	 * Helper to
 	 * - convert a translation table (format optimized for the translation in an expression tree) into simple hash
 	 * - compile over an eventually existing map
+	 * - accept multiple translations for the same alias for unions
 	 *
 	 * @param array $aRealiasingMap Map to update
 	 * @param array $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
-	 * @return void of <old-alias> => <new-alias>
+	 * @return void of [old-alias][] => new-alias (@since 2.7.2)
 	 */
 	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
 	{
@@ -803,17 +804,33 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach ($aAliasTranslation as $sPrevAlias => $aRules)
 			{
-				if (isset($aRules['*']))
+				if (!isset($aRules['*']))
 				{
-					$sNewAlias = $aRules['*'];
-					$sOriginalAlias = array_search($sPrevAlias, $aRealiasingMap);
-					if ($sOriginalAlias !== false)
+					continue;
+				}
+
+				$sNewAlias = $aRules['*'];
+				$bOriginalFound = false;
+				$iIndex = 0;
+				foreach ($aRealiasingMap as $sOriginalAlias => $aAliases)
+				{
+					$iIndex = array_search($sPrevAlias, $aAliases);
+					if ($iIndex !== false)
 					{
-						$aRealiasingMap[$sOriginalAlias] = $sNewAlias;
+						$bOriginalFound = true;
+						break;
 					}
-					else
+
+				}
+				if ($bOriginalFound)
+				{
+					$aRealiasingMap[$sOriginalAlias][$iIndex] = $sNewAlias;
+				}
+				else
+				{
+					if (!isset($aRealiasingMap[$sPrevAlias]) || !in_array($sNewAlias, $aRealiasingMap[$sPrevAlias]))
 					{
-						$aRealiasingMap[$sPrevAlias] = $sNewAlias;
+						$aRealiasingMap[$sPrevAlias][] = $sNewAlias;
 					}
 				}
 			}
