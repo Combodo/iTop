@@ -45,25 +45,85 @@ define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions 
  */
 abstract class UserRightsAddOnAPI
 {
+	/**
+	 * @param string $sAdminUser
+	 * @param string $sAdminPwd
+	 * @param string $sLanguage
+	 *
+	 * @return mixed
+	 */
 	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US'); // could be used during initial installation
 
+	/**
+	 * @return void
+	 */
 	abstract public function Init(); // loads data (possible optimizations)
 
-	// Used to build select queries showing only objects visible for the given user
+	/**
+	 * Used to build select queries showing only objects visible for the given user
+	 *
+	 * @param string $sLogin
+	 * @param string $sClass
+	 * @param array $aSettings
+	 *
+	 * @return mixed
+	 */
 	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = array()); // returns a filter object
 
-	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsAdministrator($oUser);
-	abstract public function IsPortalUser($oUser);
-	abstract public function FlushPrivileges();
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param int $iActionCode
+	 * @param null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null);
 
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param string $sStimulusCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null);
+
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param int $iActionCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null);
+
+	/**
+	 * @param \User $oUser
+	 *
+	 * @return bool
+	 */
+	abstract public function IsAdministrator($oUser);
+
+	/**
+	 * @param \User $oUser
+	 *
+	 * @return bool
+	 */
+	abstract public function IsPortalUser($oUser);
+
+	/**
+	 * @return void
+	 */
+	abstract public function FlushPrivileges();
 
 	/**
 	 * Default behavior for addons that do not support profiles
 	 *
-	 * @param $oUser User
+	 * @param \User $oUser
 	 * @return array
 	 */
 	public function ListProfiles($oUser)
@@ -72,7 +132,18 @@ abstract class UserRightsAddOnAPI
 	}
 
 	/**
-	 *	...
+	 * ...
+	 *
+	 * @param string$sClass
+	 * @param array $aAllowedOrgs
+	 * @param array $aSettings
+	 * @param string|null $sAttCode
+	 *
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 */
 	public function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
 	{
@@ -156,6 +227,9 @@ abstract class UserRightsAddOnAPI
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 abstract class User extends cmdbAbstractObject
 {
+	/**
+	 * @throws \CoreException
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -570,25 +644,32 @@ interface iSelfRegister
  */
 class UserRights
 {
+	public static $m_aCacheUsers;
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
 	protected static $m_oUser;
 	protected static $m_oRealUser;
 	protected static $m_sSelfRegisterAddOn = null;
+	protected static $m_aAdmins = array();
+	protected static $m_aPortalUsers = array();
 	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
 	private static $m_sLastLoginStatus = null;
 
+	/**
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
 	public static function SelectModule($sModuleName)
 	{
 		if (!class_exists($sModuleName))
 		{
 			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
-			return;
 		}
 		if (!is_subclass_of($sModuleName, 'UserRightsAddOnAPI'))
 		{
 			throw new CoreException("Could not select this module, the class '$sModuleName' is not derived from UserRightsAddOnAPI");
-			return;
 		}
 		self::$m_oAddOn = new $sModuleName;
 		self::$m_oAddOn->Init();
@@ -596,6 +677,12 @@ class UserRights
 		self::$m_oRealUser = null;
 	}
 
+	/**
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
 	public static function SelectSelfRegister($sModuleName)
 	{
 		if (!class_exists($sModuleName))
@@ -605,19 +692,33 @@ class UserRights
 		self::$m_sSelfRegisterAddOn = $sModuleName;
 	}
 
+	/**
+	 * @return \UserRightsAddOnAPI
+	 */
 	public static function GetModuleInstance()
 	{
 		return self::$m_oAddOn;
 	}
 
-	// Installation: create the very first user
+	/**
+	 * Installation: create the very first user
+	 *
+	 * @param string $sAdminUser
+	 * @param string $sAdminPwd
+	 * @param string $sLanguage
+	 *
+	 * @return bool
+	 */
 	public static function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		$bRes = self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage);
 		self::FlushPrivileges(true /* reset admin cache */);
 		return $bRes;
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public static function IsLoggedIn()
 	{
 		if (self::$m_oUser == null)
@@ -630,6 +731,14 @@ class UserRights
 		}	
 	}
 
+	/**
+	 * @param string $sName
+	 * @param string $sAuthentication
+	 *
+	 * @return bool
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
 	public static function Login($sName, $sAuthentication = 'any')
 	{
 		$oUser = self::FindUser($sName, $sAuthentication);
@@ -649,6 +758,15 @@ class UserRights
 		return true;
 	}
 
+	/**
+	 * @param string $sName
+	 * @param string $sPassword
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 *
+	 * @return bool
+	 * @throws \OQLException
+	 */
 	public static function CheckCredentials($sName, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
 	{
 		$oUser = self::FindUser($sName, $sAuthentication);
@@ -680,7 +798,15 @@ class UserRights
 
 		return true;
 	}
-	
+
+	/**
+	 * @param string $sName
+	 * @param string $sPassword
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 *
+	 * @return mixed
+	 */
 	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
 	{
 		if (self::$m_sSelfRegisterAddOn != null)
@@ -689,6 +815,11 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param \User $oUser
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 */
 	public static function UpdateUser($oUser, $sLoginMode, $sAuthentication)
 	{
 		if (self::$m_sSelfRegisterAddOn != null)
@@ -696,7 +827,10 @@ class UserRights
 			call_user_func(array(self::$m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
 		}
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public static function TrustWebServerContext()
 	{
 		if (!is_null(self::$m_oUser))
@@ -711,9 +845,11 @@ class UserRights
 
 	/**
 	 * Tells whether or not the archive mode is allowed to the current user
-	 * @return boolean
+	 *
+	 * @return bool
+	 * @throws \CoreException
 	 */
-	static function CanBrowseArchive()
+	public static function CanBrowseArchive()
 	{
 		if (is_null(self::$m_oUser))
 		{
@@ -732,6 +868,9 @@ class UserRights
 		return $bRet;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function CanChangePassword()
 	{
 		if (MetaModel::DBIsReadOnly())
@@ -749,6 +888,14 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param string $sOldPassword
+	 * @param string $sNewPassword
+	 * @param string $sName
+	 *
+	 * @return bool
+	 * @throws \OQLException
+	 */
 	public static function ChangePassword($sOldPassword, $sNewPassword, $sName = '')
 	{
 		if (empty($sName))
@@ -773,7 +920,10 @@ class UserRights
 
 	/**
 	 * @param string $sName Login identifier of the user to impersonate
+	 *
 	 * @return bool True if an impersonation occurred
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
 	 */
 	public static function Impersonate($sName)
 	{
@@ -806,6 +956,9 @@ class UserRights
 		return $bRet;
 	}
 
+	/**
+	 * @throws \DictExceptionUnknownLanguage
+	 */
 	public static function Deimpersonate()
 	{
 		if (!is_null(self::$m_oRealUser))
@@ -817,6 +970,9 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetUser()
 	{
 		if (is_null(self::$m_oUser))
@@ -829,7 +985,9 @@ class UserRights
 		}
 	}
 
-	/** User */
+	/**
+	 * @return \User|null
+	 */
 	public static function GetUserObject()
 	{
 		if (is_null(self::$m_oUser))
@@ -841,7 +999,10 @@ class UserRights
 			return self::$m_oUser;
 		}
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public static function GetUserLanguage()
 	{
 		if (is_null(self::$m_oUser))
@@ -855,6 +1016,11 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param string $sName
+	 *
+	 * @return string|null
+	 */
 	public static function GetUserId($sName = '')
 	{
 		if (empty($sName))
@@ -878,6 +1044,12 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param string $sName
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public static function GetContactId($sName = '')
 	{
 		if (empty($sName))
@@ -899,6 +1071,9 @@ class UserRights
 		return $oUser->Get('contactid');
 	}
 
+	/**
+	 * @return \Contact|null
+	 */
 	public static function GetContactObject()
 	{
 		if (is_null(self::$m_oUser))
@@ -911,7 +1086,13 @@ class UserRights
 		}
 	}
 
-	// Render the user name in best effort mode
+	/**
+	 * Render the user name in best effort mode
+	 *
+	 * @param string $sName
+	 *
+	 * @return string
+	 */
 	public static function GetUserFriendlyName($sName = '')
 	{
 		if (empty($sName))
@@ -929,6 +1110,9 @@ class UserRights
 		return $oUser->GetFriendlyName();
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function IsImpersonated()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -938,6 +1122,9 @@ class UserRights
 		return true;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUser()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -947,11 +1134,17 @@ class UserRights
 		return self::$m_oRealUser->Get('login');
 	}
 
+	/**
+	 * @return \User|null
+	 */
 	public static function GetRealUserObject()
 	{
 		return self::$m_oRealUser;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUserId()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -961,6 +1154,9 @@ class UserRights
 		return self::$m_oRealUser->GetKey();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUserFriendlyName()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -970,6 +1166,9 @@ class UserRights
 		return self::$m_oRealUser->GetFriendlyName();
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected static function CheckLogin()
 	{
 		if (!self::IsLoggedIn())
@@ -983,7 +1182,7 @@ class UserRights
 	/**
 	 * Add additional filter for organization silos to all the requests.
 	 *
-	 * @param $sClass
+	 * @param string $sClass
 	 * @param array $aSettings
 	 *
 	 * @return bool|\Expression
@@ -1015,11 +1214,13 @@ class UserRights
 	/**
 	 * @param string $sClass
 	 * @param int $iActionCode
-	 * @param DBObjectSet $oInstanceSet
-	 * @param User $oUser
+	 * @param \DBObjectSet $oInstanceSet
+	 * @param \User $oUser
+	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
+	 * @throws \CoreException
 	 */
-	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
+	public static function IsActionAllowed($sClass, $iActionCode, $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return UR_ALLOWED_YES;
@@ -1071,6 +1272,15 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sStimulusCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
@@ -1102,9 +1312,11 @@ class UserRights
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param int $iActionCode
-	 * @param DBObjectSet $oInstanceSet
-	 * @param User $oUser
+	 * @param \DBObjectSet $oInstanceSet
+	 * @param \User $oUser
+	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO)
+	 * @throws \CoreException
 	 */
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
 	{
@@ -1139,7 +1351,11 @@ class UserRights
 
 	}
 
-	protected static $m_aAdmins = array();
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 */
 	public static function IsAdministrator($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -1156,7 +1372,11 @@ class UserRights
 		return self::$m_aAdmins[$iUser];
 	}
 
-	protected static $m_aPortalUsers = array();
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 */
 	public static function IsPortalUser($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -1173,6 +1393,9 @@ class UserRights
 		return self::$m_aPortalUsers[$iUser];
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function GetAllowedPortals()
     {
         $aAllowedPortals = array();
@@ -1198,6 +1421,11 @@ class UserRights
         return $aAllowedPortals;
     }
 
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return array|mixed
+	 */
     public static function ListProfiles($oUser = null)
 	{
 		if (is_null($oUser))
@@ -1261,8 +1489,6 @@ class UserRights
 		}
 	}
 
-	static $m_aCacheUsers;
-
 	/**
 	 * Find a user based on its login and its type of authentication
 	 *
@@ -1320,6 +1546,18 @@ class UserRights
 		return $oUser;
 	}
 
+	/**
+	 * @param string$sClass
+	 * @param array $aAllowedOrgs
+	 * @param array $aSettings
+	 * @param string|null $sAttCode
+	 *
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
 	{
 		return self::$m_oAddOn->MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);

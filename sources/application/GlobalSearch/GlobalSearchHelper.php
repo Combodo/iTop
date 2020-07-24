@@ -40,16 +40,19 @@ class GlobalSearchHelper
 	 *
 	 * @param string $sQuery Raw search query
 	 * @param string|null $sIconRelUrl Relative URL of the icon
-	 * @param string|null $sLabelAsHtml Alternate label for the query (eg. more human readable or with highlights), MUST be html entities otherwise there can be XSS flaws
+	 * @param string|null $sLabelAsHtml Alternate label for the query (eg. more human readable or with highlights), MUST be html entities
+	 *     otherwise there can be XSS flaws
 	 *
 	 * @return void
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \Exception
+	 * @noinspection PhpUnused Called by /pages/UI.php and extensions overloading the global search
 	 */
 	public static function AddQueryToHistory($sQuery, $sIconRelUrl = null, $sLabelAsHtml = null)
 	{
-		$aNewQuery = [
+		$aNewEntry = [
 			'query' => $sQuery,
 		];
 
@@ -57,41 +60,41 @@ class GlobalSearchHelper
 		if(!empty($sIconRelUrl))
 		{
 			//Ensure URL is relative to limit space in the preferences and avoid broken links in case app_root_url changes
-			$aNewQuery['icon_url'] = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sIconRelUrl);
+			$aNewEntry['icon_url'] = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sIconRelUrl);
 		}
 
 		// Set label only when necessary to avoid unnecessary space filling of the preferences in the DB
 		if(!empty($sLabelAsHtml))
 		{
-			$aNewQuery['label_html'] = $sLabelAsHtml;
+			$aNewEntry['label_html'] = $sLabelAsHtml;
 		}
 
-		/** @var array $aQueriesHistory */
-		$aQueriesHistory = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
+		/** @var array $aHistoryEntries */
+		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Remove same query from history to avoid duplicates
-		for($iIdx = 0; $iIdx < count($aQueriesHistory); $iIdx++)
+		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
-			if($aQueriesHistory[$iIdx]['query'] === $sQuery)
+			if($aHistoryEntries[$iIdx]['query'] === $sQuery)
 			{
-				unset($aQueriesHistory[$iIdx]);
+				unset($aHistoryEntries[$iIdx]);
 			}
 		}
 
-		// Add new query
-		array_unshift($aQueriesHistory, $aNewQuery);
+		// Add new entry
+		array_unshift($aHistoryEntries, $aNewEntry);
 
 		// Truncate history
-		if(count($aQueriesHistory) > static::MAX_HISTORY_SIZE)
+		if(count($aHistoryEntries) > static::MAX_HISTORY_SIZE)
 		{
-			$aQueriesHistory = array_slice($aQueriesHistory, 0, static::MAX_HISTORY_SIZE);
+			$aHistoryEntries = array_slice($aHistoryEntries, 0, static::MAX_HISTORY_SIZE);
 		}
 
-		appUserPreferences::SetPref(static::USER_PREF_CODE, $aQueriesHistory);
+		appUserPreferences::SetPref(static::USER_PREF_CODE, $aHistoryEntries);
 	}
 
 	/**
-	 * Return an array of pasted queries, including the query itself and its HTML label
+	 * Return an array of past queries, including the query itself and its HTML label
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -100,18 +103,18 @@ class GlobalSearchHelper
 	 */
 	public static function GetLastQueries()
 	{
-		/** @var array $aLastQueries */
-		$aLastQueries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
+		/** @var array $aHistoryEntries */
+		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Add HTML label if missing
-		for($iIdx = 0; $iIdx < count($aLastQueries); $iIdx++)
+		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
-			if(!isset($aLastQueries[$iIdx]['label_html']))
+			if(!isset($aHistoryEntries[$iIdx]['label_html']))
 			{
-				$aLastQueries[$iIdx]['label_html'] = utils::HtmlEntities($aLastQueries[$iIdx]['query']);
+				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities($aHistoryEntries[$iIdx]['query']);
 			}
 		}
 
-		return $aLastQueries;
+		return $aHistoryEntries;
 	}
 }
