@@ -1422,6 +1422,45 @@ class UserRights
     }
 
 	/**
+	 * @see UR_ACTION_READ, UR_ACTION_MODIFY, ...
+	 *
+	 * @param int $iActionCode
+	 * @param array $aCategories
+	 * @param bool $bWithLabels
+	 * @param \User|null $oUser
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @throws \CoreException
+	 */
+    public static function GetAllowedClasses($iActionCode, $aCategories = array('bizmodel'), $bWithLabels = false, $oUser = null)
+    {
+    	$aAllowedClasses = [];
+    	foreach(MetaModel::GetClasses(implode(',', $aCategories)) as $sClass)
+	    {
+	    	if(static::IsActionAllowed($sClass, $iActionCode, null, $oUser) === UR_ALLOWED_YES)
+		    {
+		    	if($bWithLabels)
+			    {
+			    	$aAllowedClasses[$sClass] = MetaModel::GetName($sClass);
+			    }
+		    	else
+			    {
+		    	    $aAllowedClasses[] = $sClass;
+			    }
+		    }
+	    }
+
+    	// Sort by label
+    	if($bWithLabels)
+	    {
+	    	asort($aAllowedClasses);
+	    }
+
+    	return $aAllowedClasses;
+    }
+
+	/**
 	 * @param \User|null $oUser
 	 *
 	 * @return array|mixed
