@@ -1,8 +1,10 @@
 <?php
+$iBeginTime = time();
 
 $aCommands = [
 	'php composer/rmDeniedTestDir.php',
-	'bash /tmp/gabuzomeu.sh',
+	'php build/commands/setupCssCompiler.php',
+//	'bash /tmp/gabuzomeu.sh',
 ];
 
 $aFailedCommands=[];
@@ -14,12 +16,17 @@ foreach ($aCommands as $sCommand)
 	}
 }
 
+$iElapsed = time() - $iBeginTime;
+
 if (count($aFailedCommands))
 {
-	fwrite(STDERR, "afterBuild execution failed:\n" . implode("\n\t", $aFailedCommands) . "\n");
+	fwrite(STDERR, "\nafterBuild execution failed! (in ${iElapsed}s)\n");
+	fwrite(STDERR, "List of failling commands:\n - " . implode("\n - ", $aFailedCommands) . "\n");
 	exit(1);
 }
 
+
+echo "\nDone (${iElapsed}s)\n";
 exit(0);
 
 /**
@@ -32,6 +39,9 @@ exit(0);
  */
 function ExecCommand($cmd) {
 	$iBeginTime = time();
+
+
+	echo sprintf("command: %s", str_pad("$cmd ", 50));
 
 	$descriptorspec = array(
 		0 => array("pipe", "r"),  // stdin
@@ -47,22 +57,32 @@ function ExecCommand($cmd) {
 	fclose($pipes[2]);
 
 	$iCode = proc_close($process);
-	$bRes = (0 !== $iCode);
+	$bSuccess = (0 === $iCode);
 
 	$iElapsed = time() - $iBeginTime;
-	if ($bRes) {
-		fwrite(STDERR, "========= Command failed $cmd \n\t\t=== with status:$iCode \n\t\t=== stderr:$stderr \n\t\t=== stdout: $stdout\n");
+	if (!$bSuccess) {
+		fwrite(STDERR, sprintf(
+			"\nCOMMAND FAILED! (%s) \n - status:%s \n - stderr:%s \n - stdout: %s\n - elapsed:%ss\n\n",
+			$cmd,
+			$iCode,
+			rtrim($stderr),
+			rtrim($stdout),
+			$iElapsed
+		));
 	}
-	echo "========= ELAPSED:${iElapsed}s \t cmd:$cmd \n";
+	else
+	{
+		echo "| elapsed:${iElapsed}s \n";
+	}
 
 	if (!empty($stderr))
 	 {
-		 echo "\t\t=== stderr:$stderr\n";
+		 fwrite(STDERR, "$stderr\n");
 	 }
 	 if (!empty($stdout))
 	 {
-		 echo "\t\t=== stdout:$stdout\n";
+		 echo "stdout :$stdout\n\n";
 	 }
 
-	return $bRes;
+	return $bSuccess;
 }
