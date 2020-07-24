@@ -244,10 +244,11 @@ class ApplicationHelper
 	 * Generate the form data for the $sClass.
 	 * Form will look like the "Properties" tab of a $sClass object in the console.
 	 *
-	 * @param string $sClass
-	 * @param bool   $bAddLinksets
+	 * @param string    $sClass
+	 * @param bool      $bAddLinksets
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	protected static function GenerateDefaultFormForClass($sClass, $bAddLinksets = false)
 	{
@@ -275,6 +276,13 @@ class ApplicationHelper
 		// - Retrieve zlist details
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, array(), 'UI:PropertiesTab', 'col1', '');
+		if(!isset($aDetailsStruct['UI:PropertiesTab']))
+		{
+			// For the iTop administrator
+			IssueLog::Error('Could not generate default form for "'.$sClass.'" class. Is the "details" zlist empty?');
+			// For the end-user
+			throw new Exception('Could not generate form, check the error log for more information.');
+		}
 		$aPropertiesStruct = $aDetailsStruct['UI:PropertiesTab'];
 
 		// Count cols (not linksets)
