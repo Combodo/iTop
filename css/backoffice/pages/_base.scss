@@ -45,7 +45,7 @@ body{
 	z-index: 20;
 }
 #ibo-page-container{
-	position: relative;
+	position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
 	z-index: 10;
 	height: 100%;
 	overflow: auto;
@@ -65,6 +65,7 @@ body{
 		right: 0;
 	}
 	#ibo-page-content{
+		position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
 		z-index: 10;
 		padding-top: $ibo-page-content--padding-top;
 		padding-bottom: $ibo-page-content--padding-bottom;
