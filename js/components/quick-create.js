@@ -21,7 +21,7 @@ $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
 	// 'breadcrumbs' the widget name
-	$.widget( 'itop.global_search',
+	$.widget( 'itop.quick_create',
 	{
 		// default options
 		options:
@@ -30,27 +30,41 @@ $(function()
 		},
 		css_classes:
 		{
-			opened: 'ibo-global-search--is-opened',
+			opened: 'ibo-quick-create--is-opened',
 		},
 		js_selectors:
 		{
-			icon: '[data-role="ibo-global-search--icon"]',
-			form: '[data-role="ibo-global-search--head"]',
-			input: '[data-role="ibo-global-search--input"]',
-			compartment_element: '[data-role="ibo-global-search--compartment-element"]',
+			icon: '[data-role="ibo-quick-create--icon"]',
+			form: '[data-role="ibo-quick-create--head"]',
+			input: '[data-role="ibo-quick-create--input"]',
+			compartment_element: '[data-role="ibo-quick-create--compartment-element"]',
 		},
    
 		// the constructor
 		_create: function()
 		{
-			this.element.addClass('ibo-global-search');
+			this.element.addClass('ibo-quick-create');
+			this._initializeMarkup();
 			this._bindEvents();
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element.removeClass('ibo-global-search');
+			this.element.removeClass('ibo-quick-create');
+		},
+		_initializeMarkup: function()
+		{
+			const me = this;
+
+			// Instantiate selectize.js on input
+			this.element.find(this.js_selectors.input).selectize({
+				openOnFocus: false,
+				maxItems: 1
+			});
+
+			// Remove some inline styling from the widget
+			this.element.find('.selectize-input > input').css('width', '');
 		},
 		_bindEvents: function()
 		{
@@ -63,8 +77,8 @@ $(function()
 			this.element.find(this.js_selectors.form).on('submit', function(oEvent){
 				me._onFormSubmit(oEvent);
 			});
-			this.element.find(this.js_selectors.compartment_element).on('click', function(oEvent){
-				me._onCompartmentElementClick(oEvent, $(this));
+			this.element.find(this.js_selectors.input).on('change', function(oEvent){
+				me._onInputOptionSelected(oEvent, $(this));
 			});
 			// Mostly for outside clicks that should close elements
 			oBodyElem.on('click', function(oEvent){
@@ -101,19 +115,14 @@ $(function()
 				oEvent.preventDefault();
 			}
 		},
-		_onCompartmentElementClick: function(oEvent, oElementElem)
+		_onInputOptionSelected: function(oEvent, oInputElem)
 		{
-			// Avoid anchor glitch
-			oEvent.preventDefault();
-
-			const sElementQuery = oElementElem.attr('data-query-raw');
-			this.element.find(this.js_selectors.input)
-				.val(sElementQuery)
-				.closest(this.js_selectors.form).trigger('submit');
+			// Submit form directly on change
+			this.element.find(this.js_selectors.form).trigger('submit');
 		},
 		_onBodyClick: function(oEvent)
 		{
-			if($(oEvent.target.closest('.ibo-global-search')).length === 0)
+			if($(oEvent.target.closest('.ibo-quick-create')).length === 0)
 			{
 				this._closeDrawer();
 			}
@@ -122,7 +131,7 @@ $(function()
 		{
 			// Note: We thought about extracting the oEvent.key in a variable to lower case it, but this would be done
 			// on every single key up in the application, which might not be what we want... (time consuming)
-			if((oEvent.altKey === true) && (oEvent.key === 'h' || oEvent.key === 'H'))
+			if((oEvent.altKey === true) && (oEvent.key === 'n' || oEvent.key === 'N'))
 			{
 				if(this._isDrawerOpened())
 				{
@@ -151,7 +160,7 @@ $(function()
 		},
 		_setFocusOnInput: function()
 		{
-			this.element.find(this.js_selectors.input).trigger('focus');
+			this.element.find('.selectize-input > input').trigger('focus');
 		}
 	});
 });

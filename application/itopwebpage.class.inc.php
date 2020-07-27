@@ -22,6 +22,7 @@ require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 
@@ -175,24 +176,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	protected function PrepareLayout()
 	{
-		// TODO: Move this to the menu renderer
-//		if (MetaModel::GetConfig()->Get('demo_mode'))
-//		{
-//			// No pin button
-//			$sConfigureWestPane = '';
-//		}
-//		else
-//		{
-//			$sConfigureWestPane =
-//				<<<EOF
-//                if (typeof myLayout !== "undefined")
-//                {
-//                    myLayout.addPinBtn( "#tPinMenu", "west" );
-//                }
-//EOF;
-//		}
-//		$sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
-
 		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
@@ -305,6 +288,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 JS
 		);
 
+		// TODO: This is for tag sets, refactor the attribute markup so it contains the necessary
+		// TODO: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
 		// Attribute set tooltip on items
 		$this->add_ready_script(
 			<<<JS
@@ -336,6 +321,8 @@ JS
 	});
 JS
 		);
+
+		// TODO: Change CSS class and extract this in backoffice.js
 		// Make image attributes zoomable
 		$this->add_ready_script(
 			<<<JS
@@ -345,7 +332,8 @@ JS
 		.magnificPopup({type: 'image', closeOnContentClick: true });
 JS
 		);
-		
+
+		// TODO: Change CSS class and extract this in backoffice.js
 		// Highlight code content created with CKEditor
 		$this->add_ready_script(
 			<<<JS
@@ -852,12 +840,13 @@ JS
 	 * @throws \Exception
 	 * @throws \DictExceptionMissingString
 	 * @since 2.8.0
+	 * @internal
 	 */
 	protected function GetNavigationMenuData()
 	{
 		$oAppContext = new ApplicationContext();
 
-		return [
+		$aData = [
 			'sId' => 'ibo-navigation-menu',
 			'sAppRevisionNumber' => $this->GetApplicationRevisionNumber(),
 			'sAppSquareIconUrl' => Branding::GetSquareMainLogoAbsoluteUrl(),
@@ -866,6 +855,16 @@ JS
 			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
 			'bIsExpanded' => $this->IsMenuPaneVisible(),
 		];
+
+		// TODO: Move this in the PHP component when designed
+		$this->add_linked_script('../js/layouts/navigation-menu.js');
+		// ... and this in a dedicated JS TWIG
+		$this->add_ready_script(<<<JS
+$('#{$aData['sId']}').navigation_menu();
+JS
+		);
+
+		return $aData;
 	}
 
 	/**
@@ -874,17 +873,50 @@ JS
 	 * @return array
 	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 * @since 2.8.0
+	 * @internal
 	 */
 	protected function GetTopBarData()
 	{
 		$aData = [
 			'sId' => 'ibo-top-bar',
 			'aComponents' => [
+				'aQuickCreate' => $this->GetQuickCreateData(),
 				'aGlobalSearch' => $this->GetGlobalSearchData(),
 				'aBreadCrumbs' => $this->GetBreadCrumbsData(),
 			],
 		];
+
+		return $aData;
+	}
+
+	/**
+	 * Return the quick create data (last classes)
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since 2.8.0
+	 * @internal
+	 */
+	protected function GetQuickCreateData()
+	{
+		$aData = [
+			'sId' => 'ibo-quick-create',
+			'sEndpoint' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php',
+			'aAvailableClasses' => UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true),
+			'aLastClasses' => QuickCreateHelper::GetLastClasses(),
+		];
+
+		// TODO: Move this in the PHP component when designed
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/quick-create.js');
+		// ... and this in a dedicated JS TWIG
+		$this->add_ready_script(<<<JS
+$('#{$aData['sId']}').quick_create();
+JS
+		);
 
 		return $aData;
 	}
@@ -895,6 +927,7 @@ JS
 	 * @return array
 	 * @throws \Exception
 	 * @since 2.8.0
+	 * @internal
 	 */
 	protected function GetGlobalSearchData()
 	{
@@ -903,6 +936,14 @@ JS
 			'sEndpoint' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=full_text',
 			'aLastQueries' => GlobalSearchHelper::GetLastQueries(),
 		];
+
+		// TODO: Move this in the PHP component when designed
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/global-search.js');
+		// ... and this in a dedicated JS TWIG
+		$this->add_ready_script(<<<JS
+$('#{$aData['sId']}').global_search();
+JS
+		);
 
 		return $aData;
 	}
@@ -914,11 +955,13 @@ JS
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @since 2.8.0
+	 * @internal
 	 */
 	protected function GetBreadCrumbsData()
 	{
 		$aData = [
 			'sId' => 'ibo-breadcrumbs',
+			'aWidgetOptions' => [],
 		];
 
 		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
@@ -960,6 +1003,16 @@ JS
 				'new_entry' => $aNewEntry,
 			];
 		}
+
+		// TODO: Move this in the PHP component when designed
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/breadcrumbs.js');
+		// ... and this in a dedicated JS TWIG
+		$sWidgetOptionsAsJson = json_encode($aData['aWidgetOptions']);
+		$this->add_ready_script(<<<JS
+// Note: When refactor in the JS TWIG, use {{ aBreadCrumbs.aWidgetOptions|json_encode|raw }}
+$('#{$aData['sId']}').breadcrumbs($sWidgetOptionsAsJson);
+JS
+		);
 
 		return $aData;
 	}
@@ -1029,6 +1082,7 @@ EOF
 	 * Render the banner HTML which can come from both iTop itself and from extensions
 	 *
 	 * @see \iPageUIExtension::GetBannerHtml()
+	 * @internal
 	 *
 	 * @return string
 	 * @since 2.8.0
@@ -1050,6 +1104,7 @@ EOF
 	 * Render the header HTML which can come from both iTop itself and from extensions
 	 *
 	 * @see \iPageUIExtension::GetNorthPaneHtml()
+	 * @internal
 	 *
 	 * @return string
 	 * @since 2.8.0
@@ -1077,6 +1132,7 @@ EOF
 	 * Render the footer HTML which can come from both iTop itself and from extensions
 	 *
 	 * @see \iPageUIExtension::GetSouthPaneHtml()
+	 * @internal
 	 *
 	 * @return string
 	 * @since 2.8.0
@@ -1110,6 +1166,10 @@ EOF
 		// - Generate necessary dict. files
 		$this->output_dict_entries();
 
+		// TODO: Check if we can keep this as is
+		// Render the tabs in the page (if any)
+		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
+
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => $sAbsoluteUrlAppRoot,
@@ -1119,14 +1179,6 @@ EOF
 				'sCharset' => static::PAGES_CHARSET,
 				'sLang' => $sMetadataLanguage,
 			],
-			'aCssFiles' => $this->a_linked_stylesheets,
-			'aCssInline' => $this->a_styles,
-			'aJsFiles' => $this->a_linked_scripts,
-			'aJsInlineOnInit' => $this->m_aInitScript,
-			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
-			'aJsInlineLive' => $this->a_scripts,
-			// TODO: TEMP, used while developping, remove it.
-			'aSanitizedContent' => self::FilterXSS($this->s_content),
 		];
 
 		// Base tag
@@ -1148,6 +1200,21 @@ EOF
 
 		// - Top bar
 		$aData['aLayouts']['aTopBar'] = $this->GetTopBarData();
+
+		// Variable content of the page
+		$aData['aPage'] = array_merge(
+			$aData['aPage'],
+			[
+				'aCssFiles' => $this->a_linked_stylesheets,
+				'aCssInline' => $this->a_styles,
+				'aJsFiles' => $this->a_linked_scripts,
+				'aJsInlineOnInit' => $this->m_aInitScript,
+				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
+				'aJsInlineLive' => $this->a_scripts,
+				// TODO: TEMP, used while developping, remove it.
+				'aSanitizedContent' => self::FilterXSS($this->s_content),
+			]
+		);
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(APPROOT.'templates/');
 		$sTemplateRelPath = 'pages/backoffice/layout';

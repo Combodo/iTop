@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Global create
+// Quick create
 Dict::Add('EN US', 'English', 'English', array(
+	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Recents',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet',
 ));

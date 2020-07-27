@@ -1,11 +1,1 @@
 <div id="{{ aBreadCrumbs.sId }}" class="ibo-breadcrumbs"></div>
-
-{# TODO: Move this to a dedicated script file #}
-{% if aBreadCrumbs.aWidgetOptions is defined %}
-	<script type="text/javascript" src="../js/components/breadcrumbs.js"></script>
-	<script type="text/javascript">
-	setTimeout(function(){
-		$('#{{ aBreadCrumbs.sId }}').breadcrumbs({{ aBreadCrumbs.aWidgetOptions|json_encode|raw }});
-	}, 500);
-	</script>
-{% endif %}

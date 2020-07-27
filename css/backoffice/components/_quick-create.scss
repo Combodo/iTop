@@ -1,0 +1,222 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-quick-create--head--background-color: $ibo-color-white-100 !default;
+
+$ibo-quick-create--icon-padding-x: 16px !default;
+$ibo-quick-create--icon-padding-y: 0 !default;
+
+$ibo-quick-create--input--padding: 0 default;
+$ibo-quick-create--input--padding-x--is-opened: 8px !default;
+$ibo-quick-create--input--padding-y--is-opened: 8px !default;
+$ibo-quick-create--input--width: 0 !default;
+$ibo-quick-create--input--width--is-opened: 245px !default;
+$ibo-quick-create--input--text-color: $ibo-color-grey-800 !default;
+$ibo-quick-create--input--placeholder-color: $ibo-color-grey-600 !default;
+
+$ibo-quick-create--input-options--background-color: $ibo-quick-create--head--background-color !default;
+$ibo-quick-create--input-options--border: none !default;
+$ibo-quick-create--input-options--border-radius: 0 !default;
+
+$ibo-quick-create--drawer--max-height: 200px !default;
+$ibo-quick-create--drawer--padding-x: $ibo-quick-create--icon-padding-x !default;
+$ibo-quick-create--drawer--padding-y: 16px !default;
+$ibo-quick-create--drawer--top: -1 * ($ibo-quick-create--drawer--max-height) !default;
+$ibo-quick-create--drawer--top--is-opened: 100% !default;
+$ibo-quick-create--drawer--background-color: $ibo-color-white-100 !default;
+
+$ibo-quick-create--compartment-title--margin-bottom: 8px !default;
+$ibo-quick-create--compartment-title--padding-left: 32px !default;
+$ibo-quick-create--compartment-title--text-color: $ibo-color-grey-600 !default;
+$ibo-quick-create--compartment-title--line-spacing: 8px !default;
+
+$ibo-quick-create--compartment-content--text-color: $ibo-color-grey-900 !default;
+
+$ibo-quick-create--compartment-element--margin-bottom: 8px !default;
+
+$ibo-quick-create--compartment-element-image--margin-right: 8px !default;
+$ibo-quick-create--compartment-element-image--width: 20px !default;
+
+$ibo-quick-create--compartment--placeholder-image--margin-top: 24px !default;
+$ibo-quick-create--compartment--placeholder-image--margin-bottom: 16px !default;
+$ibo-quick-create--compartment--placeholder-image--width: 66% !default;
+
+$ibo-quick-create--compartment--placeholder-hint--padding-x: 8px !default;
+$ibo-quick-create--compartment--placeholder-hint--padding-y: 0 !default;
+$ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-700 !default;
+
+/* Animations*/
+@keyframes ibo-quick-create--drawer--opening{
+	from {
+		top: $ibo-quick-create--drawer--top;
+		box-shadow: none;
+	}
+	to {
+		top: $ibo-quick-create--drawer--top--is-opened;
+		box-shadow: $ibo-elevation-300;
+	}
+}
+
+/* SCSS rules */
+.ibo-quick-create{
+	position: relative;
+	@extend %ibo-vertically-centered-content;
+
+	&.ibo-quick-create--is-opened{
+		.ibo-quick-create--input{
+			width: $ibo-quick-create--input--width--is-opened;
+		}
+		.ibo-quick-create--drawer{
+			animation-name: ibo-quick-create--drawer--opening;
+			animation-delay: 0.1s;
+			animation-duration: 0.2s;
+			animation-direction: normal;
+			animation-fill-mode: forwards;
+		}
+	}
+}
+.ibo-quick-create--head{
+	@extend %ibo-vertically-centered-content;
+	background-color: $ibo-quick-create--head--background-color;
+}
+.ibo-quick-create--icon{
+	align-self: center;
+	padding: $ibo-quick-create--icon-padding-y $ibo-quick-create--icon-padding-x;
+	@extend %ibo-font-ral-nor-400;
+}
+.ibo-quick-create--input{
+	width: $ibo-quick-create--input--width;
+	transition: all 0.2s ease-in-out;
+
+	/* Remove selectize.js theme and apply our own */
+	&.selectize-control.single{
+		position: sticky;
+		display: flex;
+
+		.selectize-input{
+			display: flex;
+			background-color: transparent;
+			background-image: none;
+			border: none;
+			box-shadow: none;
+
+			&.input-active{
+				@extend .selectize-input;
+			}
+
+			> input{
+				color: $ibo-quick-create--input--text-color;
+				@extend %ibo-font-ral-nor-300;
+
+				outline: none;
+				border: none;
+
+				&::placeholder{
+					color: $ibo-quick-create--input--placeholder-color;
+				}
+				/* This rule is duplicated otherwise Chrome won't be able to parse it. */
+				&:-ms-input-placeholder,
+				&::-ms-input-placeholder{
+					color: $ibo-quick-create--input--placeholder-color;
+				}
+			}
+		}
+		.selectize-dropdown{
+			background-color: $ibo-quick-create--input-options--background-color;
+			border: $ibo-quick-create--input-options--border;
+			border-radius: $ibo-quick-create--input-options--border-radius;
+			@extend %ibo-elevation-300;
+		}
+	}
+}
+/* TODO: Make drawer appear below the top bar so its shadow is cast on the drawer */
+.ibo-quick-create--drawer{
+	z-index: -1;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: $ibo-quick-create--drawer--top;
+	padding: $ibo-quick-create--drawer--padding-y $ibo-quick-create--drawer--padding-x;
+	background-color: $ibo-quick-create--drawer--background-color;
+	box-shadow: none;
+	@extend %ibo-font-ral-nor-100;
+}
+.ibo-quick-create--compartment-title{
+	margin-bottom: $ibo-quick-create--compartment-title--margin-bottom;
+	padding-left: $ibo-quick-create--compartment-title--padding-left;
+	overflow-x: hidden;
+	color: $ibo-quick-create--compartment-title--text-color;
+
+	> span{
+		position: relative;
+
+		&::before,
+		&::after{
+			content: "";
+			display: inline-block;
+			position: absolute;
+			top: 50%;
+			height: 1px;
+			width: 600px;
+			border-top: 1px solid $ibo-quick-create--compartment-title--text-color;
+		}
+		&::before{
+			right: 100%;
+			margin-right: $ibo-quick-create--compartment-title--line-spacing;
+		}
+		&::after{
+			left: 100%;
+			margin-left: $ibo-quick-create--compartment-title--line-spacing;
+		}
+	}
+}
+.ibo-quick-create--compartment-content{
+	color: $ibo-quick-create--compartment-content--text-color;
+}
+.ibo-quick-create--compartment-element{
+	display: flex;
+	align-items: center;
+	color: inherit;
+
+	@extend %ibo-text-truncated-with-ellipsis;
+
+	&:not(:last-child){
+		margin-bottom: $ibo-quick-create--compartment-element--margin-bottom;
+	}
+}
+.ibo-quick-create--compartment-element-image{
+	margin-right: $ibo-quick-create--compartment-element-image--margin-right;
+	width: $ibo-quick-create--compartment-element-image--width;
+}
+.ibo-quick-create--compartment--placeholder{
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+.ibo-quick-create--compartment--placeholder-image{
+	width: $ibo-quick-create--compartment--placeholder-image--width;
+	margin-top: $ibo-quick-create--compartment--placeholder-image--margin-top;
+	margin-bottom: $ibo-quick-create--compartment--placeholder-image--margin-bottom;
+}
+.ibo-quick-create--compartment--placeholder-hint{
+	text-align: justify;
+	padding: $ibo-quick-create--compartment--placeholder-hint--padding-y $ibo-quick-create--compartment--placeholder-hint--padding-x;
+	color: $ibo-quick-create--compartment--placeholder-hint--text-color;
+	@extend %ibo-font-ral-ita-100;
+}

@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\QuickCreate\QuickCreateHelper;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -1266,6 +1267,7 @@ HTML
 
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+				QuickCreateHelper::AddClassToHistory($sClass);
 
 				// Compute the name, by reloading the object, even if it disappeared from the silo
 				$oObj = MetaModel::GetObject($sClass, $oObj->GetKey(), true /* Must be found */, true /* Allow All Data*/);

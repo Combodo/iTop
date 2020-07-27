@@ -60,8 +60,8 @@ $(function()
 			},
 			_bindEvents: function()
 			{
-				var me = this;
-				var oBodyElem = $('body');
+				const me = this;
+				const oBodyElem = $('body');
 
 				// Click on collapse/expand toggler
 				this.element.find(this.js_selectors.menu_toggler).on('click', function(oEvent){
@@ -241,7 +241,9 @@ $(function()
 			// Menus filter methods
 			_focusFilter: function()
 			{
-				this.element.find(this.js_selectors.menu_filter_input).trigger('focus');
+				this.element.find(this.js_selectors.menu_filter_input)
+					.trigger('click')
+					.trigger('focus');
 			},
 			/**
 			 * Remove the current filter value and reset the menu nodes display

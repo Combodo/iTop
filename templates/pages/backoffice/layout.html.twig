@@ -30,12 +30,6 @@
 			</style>
 		{% endfor %}
 	{% endblock %}
-
-	{% block iboPageJsFiles %}
-		{% for sJsFile in aPage.aJsFiles %}
-			<script type="text/javascript" src="{{ sJsFile|add_itop_version }}"></script>
-		{% endfor %}
-	{% endblock %}
 </head>
 <body data-gui-type="backoffice">
 	{{ include('layouts/navigation-menu/layout.html.twig', { aNavigationMenu: aLayouts.aNavigationMenu }) }}
@@ -45,6 +39,12 @@
 			{{ aPage.aSanitizedContent|raw }}
 		</main>
 	</div>
+
+	{% block iboPageJsFiles %}
+		{% for sJsFile in aPage.aJsFiles %}
+			<script type="text/javascript" src="{{ sJsFile|add_itop_version }}"></script>
+		{% endfor %}
+	{% endblock %}
 
 	{% block iboPageJsInlineScripts %}
 		<script type="text/javascript">
@@ -57,9 +57,11 @@
 				{% endblock %}
 
 				{% block iboPageJsInlineOnDomReady %}
-					{% for sJsInline in aPage.aJsInlineOnDomReady %}
-						{{ sJsInline|raw }}
-					{% endfor %}
+					setTimeout(function(){
+						{% for sJsInline in aPage.aJsInlineOnDomReady %}
+							{{ sJsInline|raw }}
+						{% endfor %}
+					}, 50);
 				{% endblock %}
 			});
 		</script>
