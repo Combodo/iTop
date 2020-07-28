@@ -1,4 +1,15 @@
 
+################################### Temporary ignore rules during 2.8 UI/UX dev - START
+/css/backoffice/main.css
+
+# Sass converter
+/**/.sass-cache/
+################################### Temporary ignore rules during 2.8 UI/UX dev - END
+
+
+
+
+
 # no slash at the end to handle also symlinks
 /toolkit
 /env-*
@@ -40,9 +51,6 @@ test/vendor/*
 !/.idea/codeStyles/*
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/*
-
-# Sass converter
-/**/.sass-cache/
 
 # doc. generation
 /.doc/vendor
