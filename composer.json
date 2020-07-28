@@ -52,6 +52,7 @@
       "application",
       "sources/application",
       "sources/Composer",
+      "sources/Form",
       "sources/Renderer"
     ],
     "exclude-from-classmap": [

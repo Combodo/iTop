@@ -30,13 +30,9 @@ require_once('ormlinkset.class.inc.php');
 require_once('ormset.class.inc.php');
 require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
-require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
 require_once('datetimeformat.class.inc.php');
-// This should be changed to a use when we go full-namespace
-require_once(APPROOT.'sources/form/validator/validator.class.inc.php');
-require_once(APPROOT.'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row

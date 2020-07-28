@@ -36,7 +36,6 @@ require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
 require_once(APPROOT.'application/datatable.class.inc.php');
-require_once(APPROOT.'sources/renderer/console/consoleformrenderer.class.inc.php');
 require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
