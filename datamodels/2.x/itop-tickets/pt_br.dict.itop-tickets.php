@@ -112,32 +112,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link CI / Solicitação',
-	'Class:lnkFunctionalCIToTicket+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Solicitação',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do bilhete',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CIs',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Adicionado manualmente',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computado',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Não impactado',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -238,15 +212,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo baseado em um SLT do tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo baseado em um SLT do tipo TTR',
-
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'iTop - Portal do Usuário',
-	'Brick:Portal:UserProfile:Title' => 'Meu Perfil',
-	'Brick:Portal:NewRequest:Title' => 'Nova Solicitação',
-	'Brick:Portal:NewRequest:Title+' => '<p>Precisa de ajuda?</p><p>Escolha no Catálogo de Serviços e envie sua solicitação para nossas equipes de suporte.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Em andamento',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Acompanhar suas solicitações em andamento, adicionar comentários, anexar documentos e confirmar a solução.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Abrir',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolvido',
-	'Brick:Portal:ClosedRequests:Title' => 'Fechar solicitações',
 ));

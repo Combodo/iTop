@@ -38,8 +38,7 @@ SetupWebPage::AddModule(
 	'webservice' => array(
 	//'webservices.itop-portal.php',
 	),
-	'dictionary' => array(
-	),
+
 	'data.struct' => array(
 	//'data.struct.itop-portal.xml',
 	),

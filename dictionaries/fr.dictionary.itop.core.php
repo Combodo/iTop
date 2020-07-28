@@ -1090,3 +1090,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResourceSystemMenu' => 'Menu System',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
+

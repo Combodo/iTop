@@ -134,29 +134,31 @@ class _Ticket extends cmdbAbstractObject
 	public function UpdateImpactedItems()
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
-
 		/** @var ormLinkSet $oContactsSet */
 		$oContactsSet = $this->Get('contacts_list');
-		/** @var ormLinkSet $oCIsSet */
-		$oCIsSet = $this->Get('functionalcis_list');
-
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
-    	foreach ($oCIsSet as $oLink)
+		if (MetaModel::IsValidClass('FunctionalCI'))
 		{
-			$iKey = $oLink->Get('functionalci_id');
-			$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
-			if ($oLink->Get('impact_code') == 'manual')
+			/** @var ormLinkSet $oCIsSet */
+			$oCIsSet = $this->Get('functionalcis_list');
+			foreach ($oCIsSet as $oLink)
 			{
-				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
-				$aSources[$iKey] = $oObj;
+				$iKey = $oLink->Get('functionalci_id');
+				$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
+				if ($oLink->Get('impact_code') == 'manual')
+				{
+					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+					$aSources[$iKey] = $oObj;
+				}
+				else if ($oLink->Get('impact_code') == 'not_impacted')
+				{
+					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+					$aExcluded[] = $oObj;
+				}
 			}
-			else if ($oLink->Get('impact_code') == 'not_impacted')
-			{
-				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
-				$aExcluded[] = $oObj;
-			}
+
 		}
 
 		$aContactsToRoleCode = array();
@@ -258,7 +260,10 @@ class _Ticket extends cmdbAbstractObject
 				break;
 			}
 		}
-		$this->Set('functionalcis_list', $oCIsSet);
+		if (MetaModel::IsValidClass('FunctionalCI'))
+		{
+			$this->Set('functionalcis_list', $oCIsSet);
+		}
 		$this->Set('contacts_list', $oContactsSet);
 	}
 

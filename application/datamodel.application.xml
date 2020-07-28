@@ -388,4 +388,34 @@
       </class>
     </classes>
   </meta>
+	<branding >
+		<themes>
+			<theme id="light-grey" _delta="define">
+				<variables>
+				</variables>
+				<imports>
+					<import id="css-variables">../css/css-variables.scss</import>
+				</imports>
+				<stylesheets>
+					<stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+					<stylesheet id="main">../css/light-grey.scss</stylesheet>
+				</stylesheets>
+			</theme>
+			<theme id="test-red" _delta="define">
+				<variables>
+					<variable id="backoffice-environment-banner-background-color">#C53030</variable>
+					<variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
+					<variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+				</variables>
+				<imports>
+					<import id="css-variables">../css/css-variables.scss</import>
+				</imports>
+				<stylesheets>
+					<stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+					<stylesheet id="main">../css/light-grey.scss</stylesheet>
+					<stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
+				</stylesheets>
+			</theme>
+		</themes>
+	</branding>
 </itop_design>

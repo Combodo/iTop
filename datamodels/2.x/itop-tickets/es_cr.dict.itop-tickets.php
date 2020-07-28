@@ -113,32 +113,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkFunctionalCIToTicket' => 'Relación EC Funcional y Ticket',
-	'Class:lnkFunctionalCIToTicket+' => 'Relación EC Funcional y Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => 'Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref.',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => 'Ref.',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'EC',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => 'Elemanto de Configuración',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Elemanto de Configuración',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => 'Elemanto de Configuración',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Agregado Manualmente',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculado',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'No impactado',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -239,15 +213,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Tiempo a Resolución',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTR',
-
-	'portal:itop-portal' => 'Portal de Usuario', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'ITop - Portal de Usuario',
-	'Brick:Portal:UserProfile:Title' => 'Mi perfil',
-	'Brick:Portal:NewRequest:Title' => 'Nuevo Requerimiento',
-	'Brick:Portal:NewRequest:Title+' => '¿Necesita ayuda? Elija del catálogo de servicios y envíe su requerimiento a nuestros equipos de soporte.',
-	'Brick:Portal:OngoingRequests:Title' => 'Requerimientos en Proceso',
-	'Brick:Portal:OngoingRequests:Title+' => 'Revise sus requerimientos en proceso. Compruebe el progreso, agregue comentarios, adjunte documentos, entienda la solución. </ P>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En proceso',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Solucionado',
-	'Brick:Portal:ClosedRequests:Title' => 'Requerimientos Cerrados',
 ));
