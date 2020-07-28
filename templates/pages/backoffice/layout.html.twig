@@ -10,6 +10,7 @@
 	{% endif %}
 	<title>{{ aPage.sTitle }}</title>
 	<link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version }}" />
+	<link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php" />
 
 	{# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
 	- Visual glitches
