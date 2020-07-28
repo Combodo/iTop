@@ -1078,7 +1078,98 @@ class UserRights
 	}
 
 	/**
-	 * @return \Contact|null
+	 * Return the absolute URL of the contact picture
+	 *
+	 * @param string $sName
+	 *
+	 * @return mixed|string
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public static function GetContactPicture($sName = '')
+	{
+		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'img/user-profile-default-256px.png';
+
+		if (empty($sName))
+		{
+			$oUser = self::$m_oUser;
+		}
+		else
+		{
+			$oUser = FindUser($sName);
+		}
+
+		// Check that user exists (in case we try to get it for another contact)
+		if (!is_null($oUser) && !MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
+		{
+			$oContact = $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
+			$sContactClass = get_class($oContact);
+
+			// Check that user has a contact
+			if(!is_null($oContact) && !MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE))
+			{
+				/** @var \ormDocument $oPicture */
+				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+				if($oPicture->IsEmpty())
+				{
+					/** @var \AttributeImage $oAttDef */
+					$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+					$sPictureUrl = $oAttDef->Get('default_image');
+				}
+				else
+				{
+					$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+				}
+			}
+		}
+
+		return $sPictureUrl;
+	}
+
+	/**
+	 * Return the organization name of the current user's contact.
+	 * If the user has no contact linked, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public static function GetContactOrganizationFriendlyname()
+	{
+		$sOrgFriendlyname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE))
+		{
+			$sOrgFriendlyname = $oContact->Get(static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE);
+		}
+
+		return $sOrgFriendlyname;
+	}
+
+	/**
+	 * Return the first name of the current user's contact.
+	 * If the user has no contact, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public static function GetContactFirstname()
+	{
+		$sFirstname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE))
+		{
+			$sFirstname = $oContact->Get(static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE);
+		}
+
+		return $sFirstname;
+	}
+
+	/**
+	 * @return \DBObject|null
 	 */
 	public static function GetContactObject()
 	{
