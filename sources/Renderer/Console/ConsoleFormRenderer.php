@@ -21,10 +21,6 @@ namespace Combodo\iTop\Renderer\Console;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Renderer\FormRenderer;
 
-require_once('fieldrenderer/consolesimplefieldrenderer.class.inc.php');
-require_once('fieldrenderer/consoleselectobjectfieldrenderer.class.inc.php');
-require_once('fieldrenderer/consolesubformfieldrenderer.class.inc.php');
-
 class ConsoleFormRenderer extends FormRenderer
 {
 	const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\';
