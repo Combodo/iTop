@@ -859,10 +859,14 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
-	 * @param $sExtKeyAttCode
+	 * Add a link to another filter, using an extkey already present in current filter
+	 *
+	 * @param DBObjectSearch $oFilter filter to join to
+	 * @param string $sExtKeyAttCode extkey present in current filter, that allows to points to $oFilter
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed.
+	 *          Doesn't change existing alias, use {@link \DBObjectSearch::RenameAlias()} for that.
+	 *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
