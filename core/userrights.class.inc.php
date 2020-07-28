@@ -644,6 +644,12 @@ interface iSelfRegister
  */
 class UserRights
 {
+	const DEFAULT_USER_CONTACT_ID_ATTCODE = 'contactid';
+	const DEFAULT_CONTACT_ORG_ID_ATTCODE = 'org_id';
+	const DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE = self::DEFAULT_CONTACT_ORG_ID_ATTCODE.'_friendlyname';
+	const DEFAULT_CONTACT_FIRSTNAME_ATTCODE = 'first_name';
+	const DEFAULT_CONTACT_PICTURE_ATTCODE = 'picture';
+
 	public static $m_aCacheUsers;
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
@@ -1064,11 +1070,11 @@ class UserRights
 		{
 			return '';
 		}
-		if (!MetaModel::IsValidAttCode(get_class($oUser), 'contactid'))
+		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
 		{
 			return '';
 		}
-		return $oUser->Get('contactid');
+		return $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
 	}
 
 	/**
