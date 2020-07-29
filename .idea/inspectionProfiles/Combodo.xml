@@ -146,6 +146,7 @@
         </list>
       </option>
     </inspection_tool>
+    <inspection_tool class="SlowArrayOperationsInLoopInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlAddNotNullColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SqlAmbiguousColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SqlAutoIncrementDuplicateInspection" enabled="false" level="WARNING" enabled_by_default="false" />
