@@ -910,6 +910,28 @@ class utils
 	}
 
 	/**
+	 * Return the complete revision number of the application
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	public static function GetAppRevisionNumber()
+	{
+		if (ITOP_REVISION == 'svn')
+		{
+			// This is NOT a version built using the build system, just display the main version
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		}
+
+		return $sRevisionNumber;
+	}
+
+	/**
 	 * Helper to handle the variety of HTTP servers
 	 * See N°286 (fixed in [896]), and N°634 (this fix)
 	 * 	 

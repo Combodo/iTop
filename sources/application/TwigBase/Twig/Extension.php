@@ -8,6 +8,8 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;
+use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
 use MetaModel;
@@ -144,6 +146,13 @@ class Extension
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_modules_root', function () {
 			return utils::GetAbsoluteUrlModulesRoot();
 		}));
+
+		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
+		// Usage in twig: {{ render_block(oBlock) }}
+		/** @since 2.8.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock){
+			return BlockRenderer::RenderBlockTemplates($oBlock);
+		}, ['is_safe' => ['html']]));
 	}
 
 }

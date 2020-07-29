@@ -1,0 +1,13 @@
+<div {% if oPopoverMenu.Id is defined %}id="{{ oPopoverMenu.Id }}"{% endif %} class="ibo-popover-menu" data-role="ibo-popover-menu">
+	<div class="ibo-popover-menu--menu">
+		{% for aSection in oPopoverMenu.Sections %}
+			{% if aSection.aItems|length > 0 %}
+				<div class="ibo-popover-menu--section">
+					{% for oPopoverMenuItem in aSection.aItems %}
+						{{ render_block(oPopoverMenuItem) }}
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>

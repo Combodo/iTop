@@ -21,10 +21,10 @@ require_once(APPROOT."/application/nicewebpage.class.inc.php");
 require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
-use Combodo\iTop\Application\Branding;
-use Combodo\iTop\Application\QuickCreate\QuickCreateHelper;
-use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenuFactory;
+use Combodo\iTop\Application\UI\Layout\TopBar\TopBarFactory;
+use Combodo\iTop\Application\UI\UIBlock;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -87,47 +87,48 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// TODO: Should we keep this? Makes no sense
 		//$this->add_header("Cache-control: no-cache");
 		// TODO: Add only what's necessary
-		$this->add_linked_stylesheet("../css/jquery.treeview.css");
-		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
-		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
-		$this->add_linked_stylesheet("../css/magnific-popup.css");
-		$this->add_linked_stylesheet("../css/c3.min.css");
-		$this->add_linked_stylesheet("../node_modules/tippy.js/dist/tippy.css");
-		$this->add_linked_stylesheet("../node_modules/tippy.js/animations/shift-away-subtle.css");
-		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
-		$this->add_linked_stylesheet("../css/font-combodo/font-combodo.css");
-		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.multiselect.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 
 		// TODO: Add only what's necessary
-		$this->add_linked_script('../js/jquery.layout.min.js');
-		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
-		$this->add_linked_script("../js/jquery.treeview.js");
-		$this->add_linked_script("../js/date.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
-		$this->add_linked_script("../js/jquery.blockUI.js");
-		$this->add_linked_script("../js/utils.js");
-		$this->add_linked_script("../js/swfobject.js");
-		$this->add_linked_script("../js/ckeditor/ckeditor.js");
-		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
-		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/date.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/swfobject.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
 		/* @deprecated qTip will be removed in 2.9.0, use Tippy.js instead */
-		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script("../node_modules/@popperjs/core/dist/umd/popper.js");
-		$this->add_linked_script("../node_modules/tippy.js/dist/tippy-bundle.umd.js");
-		$this->add_linked_script('../js/property_field.js');
-		$this->add_linked_script('../js/icon_select.js');
-		$this->add_linked_script('../js/raphael-min.js');
-		$this->add_linked_script('../js/d3.js');
-		$this->add_linked_script('../js/c3.js');
-		$this->add_linked_script('../js/jquery.multiselect.js');
-		$this->add_linked_script('../js/ajaxfileupload.js');
-		$this->add_linked_script('../js/jquery.mousewheel.js');
-		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
-		$this->add_linked_script('../js/moment-with-locales.min.js');
-		$this->add_linked_script('../js/showdown.min.js');
-		$this->add_linked_script('../js/pages/backoffice.js');
-		$this->add_linked_script('../js/newsroom_menu.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.qtip-1.0.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -142,33 +143,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		{
 			$this->PrepareLayout();
 		}
-	}
-
-	/**
-	 * Return true is the navigation menu should be expanded
-	 *
-	 * @return bool
-	 */
-	protected function IsMenuPaneVisible()
-	{
-		$bIsExpanded = false;
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			// Leave the menu collapsed
-		}
-		else
-		{
-			if (utils::ReadParam('force_menu_pane', null) === 0)
-			{
-				$bIsExpanded = false;
-			}
-			elseif (appUserPreferences::GetPref('menu_pane', 'closed') === 'opened')
-			{
-				$bIsExpanded = true;
-			}
-		}
-
-		return $bIsExpanded;
 	}
 
 	/**
@@ -675,14 +649,16 @@ JS
 	}
 
 	/**
+	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
+	 *
 	 * @param string $sId Identifies the item, to search after it in the current breadcrumb
 	 * @param string $sLabel Label of the breadcrumb item
 	 * @param string $sDescription More information, displayed as a tooltip
 	 * @param string $sUrl Specify a URL if the current URL as perceived on the browser side is not relevant
-	 * @param string $sIcon Image URL (relative or absolute) or CSS classes (eg. "fas fa-wrench") of the icon that will be displayed next to the label
-	 * @param string $sIconType Type of the icon, must be set according to the $sIcon value. See class constants ENUM_BREADCRUMB_ENTRY_ICON_TYPE_XXX
-	 *
-	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
+	 * @param string $sIcon Image URL (relative or absolute) or CSS classes (eg. "fas fa-wrench") of the icon that will be displayed next
+	 *     to the label
+	 * @param string $sIconType Type of the icon, must be set according to the $sIcon value. See class constants
+	 *     ENUM_BREADCRUMB_ENTRY_ICON_TYPE_XXX
 	 */
 	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '', $sIconType = self::DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE)
 	{
@@ -812,209 +788,70 @@ JS
 	}
 
 	/**
-	 * Return the complete revision number of the application
+	 * Return the navigation menu layout (id, menu groups, ...)
 	 *
-	 * @return string
-	 * @since 2.8.0
-	 */
-	protected function GetApplicationRevisionNumber()
-	{
-		if (ITOP_REVISION == 'svn')
-		{
-			// This is NOT a version built using the build system, just display the main version
-			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
-		}
-		else
-		{
-			// This is a build made from SVN, let display the full information
-			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
-		}
-
-		return $sRevisionNumber;
-	}
-
-	/**
-	 * Return the navigation menu data (id, menu groups, ...)
-	 *
-	 * @return array
-	 * @throws \Exception
+	 * @internal
+	 * @return \Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenu
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
 	 * @since 2.8.0
-	 * @internal
 	 */
-	protected function GetNavigationMenuData()
+	protected function GetNavigationMenuLayout()
 	{
-		$oAppContext = new ApplicationContext();
-
-		$aData = [
-			'sId' => 'ibo-navigation-menu',
-			'sAppRevisionNumber' => $this->GetApplicationRevisionNumber(),
-			'sAppSquareIconUrl' => Branding::GetSquareMainLogoAbsoluteUrl(),
-			'sAppFullIconUrl' => Branding::GetFullMainLogoAbsoluteUrl(),
-			'sAppIconLink' => MetaModel::GetConfig()->Get('app_icon_url'),
-			'aMenuGroups' => ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash()),
-			'bIsExpanded' => $this->IsMenuPaneVisible(),
-		];
-
-		// TODO: Move this in the PHP component when designed
-		$this->add_linked_script('../js/layouts/navigation-menu.js');
-		// ... and this in a dedicated JS TWIG
-		$this->add_ready_script(<<<JS
-$('#{$aData['sId']}').navigation_menu();
-JS
-		);
-
-		return $aData;
+		return NavigationMenuFactory::MakeStandard();
 	}
 
 	/**
-	 * Return the top bar data (global search, breadcrumbs, ...)
+	 * Return the top bar layout (global search, breadcrumbs, ...)
 	 *
-	 * @return array
-	 * @throws \ConfigException
+	 * @internal
+	 * @return \Combodo\iTop\Application\UI\Layout\TopBar\TopBar
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
 	 * @since 2.8.0
-	 * @internal
 	 */
-	protected function GetTopBarData()
+	protected function GetTopBarLayout()
 	{
-		$aData = [
-			'sId' => 'ibo-top-bar',
-			'aComponents' => [
-				'aQuickCreate' => $this->GetQuickCreateData(),
-				'aGlobalSearch' => $this->GetGlobalSearchData(),
-				'aBreadCrumbs' => $this->GetBreadCrumbsData(),
-			],
-		];
-
-		return $aData;
+		return TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry());
 	}
 
 	/**
-	 * Return the quick create data (last classes)
+	 * Return the new breadcrumbs entry or null if we don't create a new entry for the current page
 	 *
-	 * @return array
-	 * @throws \Exception
-	 * @since 2.8.0
 	 * @internal
-	 */
-	protected function GetQuickCreateData()
-	{
-		$aData = [
-			'sId' => 'ibo-quick-create',
-			'sEndpoint' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php',
-			'aAvailableClasses' => UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true),
-			'aLastClasses' => QuickCreateHelper::GetLastClasses(),
-		];
-
-		// TODO: Move this in the PHP component when designed
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/quick-create.js');
-		// ... and this in a dedicated JS TWIG
-		$this->add_ready_script(<<<JS
-$('#{$aData['sId']}').quick_create();
-JS
-		);
-
-		return $aData;
-	}
-
-	/**
-	 * Return the global search data (last queries)
-	 *
-	 * @return array
-	 * @throws \Exception
+	 * @return array|null
 	 * @since 2.8.0
-	 * @internal
 	 */
-	protected function GetGlobalSearchData()
+	protected function GetBreadCrumbsNewEntry()
 	{
-		$aData = [
-			'sId' => 'ibo-global-search',
-			'sEndpoint' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=full_text',
-			'aLastQueries' => GlobalSearchHelper::GetLastQueries(),
-		];
+		$aNewEntry = null;
 
-		// TODO: Move this in the PHP component when designed
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/global-search.js');
-		// ... and this in a dedicated JS TWIG
-		$this->add_ready_script(<<<JS
-$('#{$aData['sId']}').global_search();
-JS
-		);
-
-		return $aData;
-	}
-
-	/**
-	 * Return the breadcrumbs data (iTop instance ID, new entry, ...)
-	 *
-	 * @return array
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @since 2.8.0
-	 * @internal
-	 */
-	protected function GetBreadCrumbsData()
-	{
-		$aData = [
-			'sId' => 'ibo-breadcrumbs',
-			'aWidgetOptions' => [],
-		];
-
-		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
-		if ($iBreadCrumbMaxCount > 1)
+		if ($this->bBreadCrumbEnabled)
 		{
-			$oConfig = MetaModel::GetConfig();
-			$siTopInstanceId = $oConfig->GetItopInstanceid();
-
-			if ($this->bBreadCrumbEnabled)
+			// Default entry values
+			if (is_null($this->sBreadCrumbEntryId))
 			{
-				// Default entry values
-				if (is_null($this->sBreadCrumbEntryId))
-				{
-					$this->sBreadCrumbEntryId = $this->s_title;
-					$this->sBreadCrumbEntryLabel = $this->s_title;
-					$this->sBreadCrumbEntryDescription = $this->s_title;
-					$this->sBreadCrumbEntryUrl = '';
-					$this->sBreadCrumbEntryIcon = 'fas fa-wrench';
-					$this->sBreadCrumbEntryIconType = static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES;
-				}
-
-				$aNewEntry = array(
-					'id' => $this->sBreadCrumbEntryId,
-					'url' => $this->sBreadCrumbEntryUrl,
-					'label' => utils::HtmlEntities($this->sBreadCrumbEntryLabel),
-					'description' => utils::HtmlEntities($this->sBreadCrumbEntryDescription),
-					'icon' => $this->sBreadCrumbEntryIcon,
-					'icon_type' => $this->sBreadCrumbEntryIconType,
-				);
-			}
-			else
-			{
-				$aNewEntry = null;
+				$this->sBreadCrumbEntryId = $this->s_title;
+				$this->sBreadCrumbEntryLabel = $this->s_title;
+				$this->sBreadCrumbEntryDescription = $this->s_title;
+				$this->sBreadCrumbEntryUrl = '';
+				$this->sBreadCrumbEntryIcon = 'fas fa-wrench';
+				$this->sBreadCrumbEntryIconType = static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES;
 			}
 
-			$aData['aWidgetOptions'] = [
-				'itop_instance_id' => $siTopInstanceId,
-				'max_count' => $iBreadCrumbMaxCount,
-				'new_entry' => $aNewEntry,
+			$aNewEntry = [
+				'id' => $this->sBreadCrumbEntryId,
+				'url' => $this->sBreadCrumbEntryUrl,
+				'label' => utils::HtmlEntities($this->sBreadCrumbEntryLabel),
+				'description' => utils::HtmlEntities($this->sBreadCrumbEntryDescription),
+				'icon' => $this->sBreadCrumbEntryIcon,
+				'icon_type' => $this->sBreadCrumbEntryIconType,
 			];
 		}
 
-		// TODO: Move this in the PHP component when designed
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/components/breadcrumbs.js');
-		// ... and this in a dedicated JS TWIG
-		$sWidgetOptionsAsJson = json_encode($aData['aWidgetOptions']);
-		$this->add_ready_script(<<<JS
-// Note: When refactor in the JS TWIG, use {{ aBreadCrumbs.aWidgetOptions|json_encode|raw }}
-$('#{$aData['sId']}').breadcrumbs($sWidgetOptionsAsJson);
-JS
-		);
-
-		return $aData;
+		return $aNewEntry;
 	}
 
 	/**
@@ -1194,12 +1031,34 @@ EOF
 			'sHeader' => $this->RenderHeaderHtml(),
 			'sFooter' => $this->RenderFooterHtml(),
 		];
+		// - Prepare navigation menu
+		$aData['aLayouts']['oNavigationMenu'] = $this->GetNavigationMenuLayout();
+		// - Prepare top bar
+		$aData['aLayouts']['oTopBar'] = $this->GetTopBarLayout();
+		// - Retrieve layouts linked files
+		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
+		/** @var \Combodo\iTop\Application\UI\UIBlock|string $oLayout */
+		foreach ($aData['aLayouts'] as $oLayout)
+		{
+			if (!$oLayout instanceof UIBlock)
+			{
+				continue;
+			}
 
-		// - Navigation menu
-		$aData['aLayouts']['aNavigationMenu'] = $this->GetNavigationMenuData();
+			// CSS files
+			foreach ($oLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl)
+			{
+				$this->add_linked_stylesheet($sFileAbsUrl);
+			}
+			// JS files
+			foreach ($oLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl)
+			{
+				$this->add_linked_script($sFileAbsUrl);
+			}
+		}
 
-		// - Top bar
-		$aData['aLayouts']['aTopBar'] = $this->GetTopBarData();
+		// Components
+		// Note: For now all components are either included in the layouts above or put in page through the add_ui_block() API, so there is no need to do anything more.
 
 		// Variable content of the page
 		$aData['aPage'] = array_merge(
@@ -1292,10 +1151,10 @@ EOF
 		{
 			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
 
-			if (!$this->IsPrintableVersion())
-			{
-				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
-			}
+//			if (!$this->IsPrintableVersion())
+//			{
+//				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
+//			}
 
 
 			// TODO: Should we still do this init vs ready separation?
@@ -1333,8 +1192,7 @@ EOF
 		}
 
 
-		// TODO: Does this still work?
-		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
+//		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
 
 
 		$sHtml .= "</head>\n";
@@ -1379,10 +1237,10 @@ EOF;
 			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
-		// Render the text of the global search form
-		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
-		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
-		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
+//		// Render the text of the global search form
+//		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
+//		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
+//		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
 
 		if ($this->IsPrintableVersion())
 		{
@@ -1409,57 +1267,57 @@ EOF;
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
-			$aAllowedPortals = UserRights::GetAllowedPortals();
-			if (count($aAllowedPortals) > 1)
-			{
-				// Adding portals
-				foreach ($aAllowedPortals as $aAllowedPortal)
-				{
-					if ($aAllowedPortal['id'] !== 'backoffice')
-					{
-						$oPortalMenuItem = new URLPopupMenuItem('portal:'.$aAllowedPortal['id'], Dict::S($aAllowedPortal['label']),
-							$aAllowedPortal['url'], '_blank');
-						$aActions[$oPortalMenuItem->GetUID()] = $oPortalMenuItem->GetMenuItem();
-					}
-				}
-				// Adding a separator
-				$oPortalSeparatorMenuItem = new SeparatorPopupMenuItem();
-				$aActions[$oPortalSeparatorMenuItem->GetUID()] = $oPortalSeparatorMenuItem->GetMenuItem();
-			}
+//			$aAllowedPortals = UserRights::GetAllowedPortals();
+//			if (count($aAllowedPortals) > 1)
+//			{
+//				// Adding portals
+//				foreach ($aAllowedPortals as $aAllowedPortal)
+//				{
+//					if ($aAllowedPortal['id'] !== 'backoffice')
+//					{
+//						$oPortalMenuItem = new URLPopupMenuItem('portal:'.$aAllowedPortal['id'], Dict::S($aAllowedPortal['label']),
+//							$aAllowedPortal['url'], '_blank');
+//						$aActions[$oPortalMenuItem->GetUID()] = $oPortalMenuItem->GetMenuItem();
+//					}
+//				}
+//				// Adding a separator
+//				$oPortalSeparatorMenuItem = new SeparatorPopupMenuItem();
+//				$aActions[$oPortalSeparatorMenuItem->GetUID()] = $oPortalSeparatorMenuItem->GetMenuItem();
+//			}
 
-			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'),
-				utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
-			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
+//			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'),
+//				utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
+//			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
 
 			if (utils::IsArchiveMode())
 			{
-				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
-				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
+//				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
+//				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
 
 				$sIcon = '<span class="fas fa-lock fa-1x"></span>';
 				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
 			}
-			elseif (UserRights::CanBrowseArchive())
-			{
-				$oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
-				$aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
-			}
-			if (utils::CanLogOff())
-			{
-				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'),
-					utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
-				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
-			}
-			if (UserRights::CanChangePassword())
-			{
-				$oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'),
-					utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=change_pwd');
-				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
-			}
+//			elseif (UserRights::CanBrowseArchive())
+//			{
+//				$oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
+//				$aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
+//			}
+//			if (utils::CanLogOff())
+//			{
+//				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'),
+//					utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
+//				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
+//			}
+//			if (UserRights::CanChangePassword())
+//			{
+//				$oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'),
+//					utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=change_pwd');
+//				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
+//			}
 			utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
 
-			$oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
-			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
+//			$oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
+//			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
 
 			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
 			// TODO: END USER MENU
@@ -1519,7 +1377,7 @@ EOF;
 			}
 
 			// TODO: What do we do with this?
-			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
+//			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
 			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
 //			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
@@ -1583,7 +1441,7 @@ EOF;
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
 			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
 			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><i class="top-right-icon fa-flip-horizontal fas fa-search"></i><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank" title="'.Dict::S('UI:Help').'"><i class="top-right-icon fas fa-question-circle"></i></a></td>';
+//			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank" title="'.Dict::S('UI:Help').'"><i class="top-right-icon fas fa-question-circle"></i></a></td>';
 			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
 			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
 			$sHtml .= '     </tr></table></form></div>';

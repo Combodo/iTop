@@ -166,6 +166,20 @@ class RenderingOutput
 	}
 
 	/**
+	 * Set the JS files (absolute URLs) and replace any existing ones.
+	 *
+	 * @param array $aFiles Array of absolute URLs
+	 *
+	 * @return $this
+	 * @since 2.8.0
+	 */
+	public function SetJsFiles($aFiles)
+	{
+		$this->aJsFiles = $aFiles;
+		return $this;
+	}
+
+	/**
 	 *
 	 * @param string $sFile
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
@@ -201,6 +215,20 @@ class RenderingOutput
 	public function AddCss($sCss)
 	{
 		$this->sCssInline .= $sCss . "\n";
+		return $this;
+	}
+
+	/**
+	 * Set the CSS files (absolute URLs) and replace any existing ones.
+	 *
+	 * @param array $aFiles Array of absolute URLs
+	 *
+	 * @return $this
+	 * @since 2.8.0
+	 */
+	public function SetCssFiles($aFiles)
+	{
+		$this->aCssFiles = $aFiles;
 		return $this;
 	}
 

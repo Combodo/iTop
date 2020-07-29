@@ -102,6 +102,7 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 }
 .ibo-quick-create--input{
 	width: $ibo-quick-create--input--width;
+	border: none;
 	transition: all 0.2s ease-in-out;
 
 	/* Remove selectize.js theme and apply our own */

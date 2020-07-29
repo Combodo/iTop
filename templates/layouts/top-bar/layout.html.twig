@@ -1,7 +1,13 @@
-<nav id="{{ aTopBar.sId }}" class="ibo-top-bar">
+<nav id="{{ oTopBar.Id }}" class="ibo-top-bar">
 	<div class="ibo-top-bar--quick-actions">
-		{{ include('components/quick-create/layout.html.twig', { aQuickCreate: aTopBar.aComponents.aQuickCreate }) }}
-		{{ include('components/global-search/layout.html.twig', { aGlobalSearch: aTopBar.aComponents.aGlobalSearch }) }}
+		{% if oTopBar.HasQuickCreate %}
+			{{ render_block(oTopBar.QuickCreate) }}
+		{% endif %}
+		{% if oTopBar.HasGlobalSearch %}
+			{{ render_block(oTopBar.GlobalSearch) }}
+		{% endif %}
 	</div>
-	{{ include('components/breadcrumbs/layout.html.twig', { aBreadCrumbs: aTopBar.aComponents.aBreadCrumbs }) }}
+	{% if oTopBar.HasBreadcrumbs %}
+		{{ render_block(oTopBar.Breadcrumbs) }}
+	{% endif %}
 </nav>

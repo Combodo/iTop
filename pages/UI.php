@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\GlobalSearch\GlobalSearchHelper;
-use Combodo\iTop\Application\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateHelper;
 
 /**
  * Displays a popup welcome message, once per session at maximum

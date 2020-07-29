@@ -17,65 +17,51 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\GlobalSearch;
+namespace Combodo\iTop\Application\UI\Component\QuickCreate;
 
 
 use appUserPreferences;
+use DBObject;
+use MetaModel;
 use utils;
 
 /**
- * Class GlobalSearchHelper
+ * Class QuickCreateHelper
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\GlobalSearch
+ * @package Combodo\iTop\Application\UI\Component\QuickCreate
+ * @internal
  * @since 2.8.0
  */
-class GlobalSearchHelper
+class QuickCreateHelper
 {
 	const MAX_HISTORY_SIZE = 10;
-	const USER_PREF_CODE = 'global_search_history';
+	const USER_PREF_CODE = 'quick_create_history';
 
 	/**
-	 * Add $sQuery to the history. History is limited to the static::MAX_HISTORY_SIZE last queries.
+	 * Add $sQuery to the history. History is limited to the static::MAX_HISTORY_SIZE last classes.
 	 *
-	 * @param string $sQuery Raw search query
-	 * @param string|null $sIconRelUrl Relative URL of the icon
-	 * @param string|null $sLabelAsHtml Alternate label for the query (eg. more human readable or with highlights), MUST be html entities
-	 *     otherwise there can be XSS flaws
+	 * @param string $Class Class of the created object
 	 *
 	 * @return void
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @throws \Exception
-	 * @noinspection PhpUnused Called by /pages/UI.php and extensions overloading the global search
 	 */
-	public static function AddQueryToHistory($sQuery, $sIconRelUrl = null, $sLabelAsHtml = null)
+	public static function AddClassToHistory($Class)
 	{
 		$aNewEntry = [
-			'query' => $sQuery,
+			'class' => $Class,
 		];
-
-		// Set icon only when necessary
-		if(!empty($sIconRelUrl))
-		{
-			//Ensure URL is relative to limit space in the preferences and avoid broken links in case app_root_url changes
-			$aNewEntry['icon_url'] = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sIconRelUrl);
-		}
-
-		// Set label only when necessary to avoid unnecessary space filling of the preferences in the DB
-		if(!empty($sLabelAsHtml))
-		{
-			$aNewEntry['label_html'] = $sLabelAsHtml;
-		}
 
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
-		// Remove same query from history to avoid duplicates
+		// Remove same entry from history to avoid duplicates
 		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
-			if($aHistoryEntries[$iIdx]['query'] === $sQuery)
+			if($aHistoryEntries[$iIdx]['class'] === $Class)
 			{
 				unset($aHistoryEntries[$iIdx]);
 			}
@@ -94,24 +80,42 @@ class GlobalSearchHelper
 	}
 
 	/**
-	 * Return an array of past queries, including the query itself and its HTML label
+	 * Return an array of past created object classes
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public static function GetLastQueries()
+	public static function GetLastClasses()
 	{
-		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
-		// Add HTML label if missing
 		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
+			$sClass = $aHistoryEntries[$iIdx]['class'];
+
+			// Add class icon
+			if(!isset($aHistoryEntries[$iIdx]['icon_url']))
+			{
+				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+				// Mind that some classes don't have an icon
+				if(!empty($sClassIconUrl))
+				{
+					$aHistoryEntries[$iIdx]['icon_url'] = $sClassIconUrl;
+				}
+			}
+
+			// Add class label
 			if(!isset($aHistoryEntries[$iIdx]['label_html']))
 			{
-				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities($aHistoryEntries[$iIdx]['query']);
+				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities(MetaModel::GetName($sClass));
+			}
+
+			// Add url
+			if(!isset($aHistoryEntries[$iIdx]['target_url']))
+			{
+				$aHistoryEntries[$iIdx]['target_url'] = DBObject::ComputeStandardUIPage($sClass).'?operation=new&class='.$sClass;
 			}
 		}
 

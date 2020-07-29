@@ -1,8 +1,8 @@
-<nav id="{{ aNavigationMenu.sId }}" class="ibo-navigation-menu {% if aNavigationMenu.bIsExpanded == true %}ibo-navigation-menu--is-expanded{% endif %}">
+<nav id="{{ oNavigationMenu.Id }}" class="ibo-navigation-menu {% if NavigationMenu.IsExpanded == true %}ibo-navigation-menu--is-expanded{% endif %}">
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
-			<a class="ibo-navigation-menu--square-company-logo" title="{{ aNavigationMenu.sAppRevisionNumber }}" href="{{ aNavigationMenu.sAppIconLink }}">
-				<img src="{{ aNavigationMenu.sAppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
+			<a class="ibo-navigation-menu--square-company-logo" title="{{ oNavigationMenu.AppRevisionNumber }}" href="{{ oNavigationMenu.AppIconLink }}">
+				<img src="{{ oNavigationMenu.AppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
 			</a>
 			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="20" href="#">
 				<span class="ibo-navigation-menu--toggler-icon">
@@ -13,12 +13,23 @@
 			</a>
 		</div>
 		<div class="ibo-navigation-menu--middle-part">
-			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
+			{% for aMenuGroup in oNavigationMenu.MenuGroups %}
 				{{ include('layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>
 		<div class="ibo-navigation-menu--bottom-part">
-
+			<div class="ibo-navigation-menu--notifications">
+				<div class="ibo-navigation-menu--notifications-toggler"></div>
+				<div class="ibo-navigation-menu--notifications-menu"></div>
+			</div>
+			<div class="ibo-navigation-menu--user-info">
+				<div class="ibo-navigation-menu--user-picture"></div>
+				<div class="ibo-navigation-menu--user-welcome-message"></div>
+				<div class="ibo-navigation-menu--user-organization"></div>
+				<div class="ibo-navigation-menu--user-menu">
+					{{ render_block(oNavigationMenu.UserMenu) }}
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
@@ -29,7 +40,7 @@
 			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
 		</div>
 		<div class="ibo-navigation-menu--menu-groups">
-			{% for aMenuGroup in aNavigationMenu.aMenuGroups %}
+			{% for aMenuGroup in oNavigationMenu.MenuGroups %}
 				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>

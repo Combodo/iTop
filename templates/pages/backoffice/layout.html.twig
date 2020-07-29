@@ -33,9 +33,9 @@
 	{% endblock %}
 </head>
 <body data-gui-type="backoffice">
-	{{ include('layouts/navigation-menu/layout.html.twig', { aNavigationMenu: aLayouts.aNavigationMenu }) }}
+	{{ render_block(aLayouts.oNavigationMenu) }}
 	<div id="ibo-page-container">
-		{{ include('layouts/top-bar/layout.html.twig', { aTopBar: aLayouts.aTopBar }) }}
+		{{ render_block(aLayouts.oTopBar) }}
 		<main id="ibo-page-content">
 			{{ aPage.aSanitizedContent|raw }}
 		</main>
