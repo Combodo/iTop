@@ -15,14 +15,45 @@ use utils;
 use WebPage;
 
 
+/**
+ * Class TwigHelper
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\TwigBase\Twig
+ * @since 2.7.0
+ */
 class TwigHelper
 {
+	/**
+	 * @var string ENUM_FILE_TYPE_HTML
+	 * @since 2.8.0
+	 */
 	const ENUM_FILE_TYPE_HTML = 'html';
+	/**
+	 * @var string ENUM_FILE_TYPE_JS
+	 * @since 2.8.0
+	 */
 	const ENUM_FILE_TYPE_JS = 'js';
+	/**
+	 * @var string ENUM_FILE_TYPE_CSS
+	 * @since 2.8.0
+	 */
 	const ENUM_FILE_TYPE_CSS = 'css';
 
+	/**
+	 * @var string DEFAULT_FILE_TYPE
+	 * @since 2.8.0
+	 */
 	const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
 
+	/**
+	 * Return a TWIG environment instance looking for templates under $sViewPath.
+	 * This is not a singleton as we might want to use several instances with different base path.
+	 *
+	 * @param string $sViewPath
+	 *
+	 * @return \Twig_Environment
+	 */
 	public static function GetTwigEnvironment($sViewPath)
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
@@ -68,6 +99,9 @@ class TwigHelper
 	 * @param string $sTemplateFileExtension
 	 *
 	 * @return string
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	public static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension = self::DEFAULT_FILE_TYPE)
 	{
