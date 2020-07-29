@@ -17,7 +17,11 @@ use WebPage;
 
 class TwigHelper
 {
-	const DEFAULT_FILE_TYPE = 'html';
+	const ENUM_FILE_TYPE_HTML = 'html';
+	const ENUM_FILE_TYPE_JS = 'js';
+	const ENUM_FILE_TYPE_CSS = 'css';
+
+	const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
 
 	public static function GetTwigEnvironment($sViewPath)
 	{
