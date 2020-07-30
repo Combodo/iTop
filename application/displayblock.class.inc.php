@@ -24,15 +24,6 @@ require_once(APPROOT.'/application/utils.inc.php');
  *
  * Each block is actually rendered as a <div></div> tag that can be rendered synchronously
  * or as a piece of Javascript/JQuery/Ajax that will get its content from another page (ajax.render.php).
- * The list of cmdbObjects to be displayed into the block is defined by a filter
- * Right now the type of display is either: list, count, bare_details, details, csv, modify or search
- * - list produces a table listing the objects
- * - count produces a paragraphs with a sentence saying 'cont' objects found
- * - bare_details displays just the details of the attributes of the object  (best if only one)
- * - details display the full details of each object found using its template (best if only one)
- * - csv displays a textarea with the CSV export of the list of objects 
- * - modify displays the form to modify an object (best if only one)
- * - search displays a search form with the criteria of the filter set
  */
 class DisplayBlock
 {
@@ -45,7 +36,23 @@ class DisplayBlock
 	protected $m_aParams;
 	protected $m_oSet;
 	protected $m_bShowObsoleteData = null;
-	
+
+	/**
+	 * @param \DBSearch $oFilter list of cmdbObjects to be displayed into the block
+	 * @param string $sStyle one of :
+	 *        <ul>
+	 *           <li>list : produces a table listing the objects</li>
+	 *           <li>count : produces a paragraphs with a sentence saying 'cont' objects found</li>
+	 *           <li>bare_details : displays just the details of the attributes of the object  (best if only one)</li>
+	 *           <li>details : display the full details of each object found using its template (best if only one)</li>
+	 *           <li>csv : displays a textarea with the CSV export of the list of objects</li>
+	 *           <li>modify : displays the form to modify an object (best if only one)</li>
+	 *           <li>search : displays a search form with the criteria of the filter set</li>
+	 *        </ul>
+	 * @param bool $bAsynchronous
+	 * @param array $aParams
+	 * @param \DBObjectSet $oSet
+	 */
 	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();

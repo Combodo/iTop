@@ -1848,7 +1848,7 @@ abstract class MetaModel
 	 * @param string $sClass
 	 * @param string $sListCode
 	 *
-	 * @return array
+	 * @return array list of attribute codes
 	 */
 	public static function GetZListItems($sClass, $sListCode)
 	{
@@ -1866,6 +1866,82 @@ abstract class MetaModel
 		} // nothing for the mother of all classes
 		// Dig recursively
 		return self::GetZListItems($sParentClass, $sListCode);
+	}
+
+	/**
+	 * @param string $sRemoteClass
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
+	 *
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
+	{
+		$aAttCodesToPrint = [];
+
+		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode)
+		{
+			//TODO: check the state of the attribute: hidden or visible ?
+			if ($sFieldCode == 'finalclass')
+			{
+				continue;
+			}
+
+			$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sFieldCode);
+			$aAttCodesToPrint[] = $oRemoteAttDef;
+		}
+
+		return $aAttCodesToPrint;
+	}
+
+	/**
+	 * @param string $sClass left class
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
+	 *
+	 * @throws \CoreException
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode)
+		{
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode)
+			{
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass'))
+			{
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable()))
+			{
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY))
+			{
+				$aAttCodesToPrint[] = $oLnkAttDef;
+			}
+		}
+
+		return $aAttCodesToPrint;
 	}
 
 	/**

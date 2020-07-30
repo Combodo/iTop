@@ -662,7 +662,30 @@ EOF
 				{
 					// n:n links
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$sLinkingAttCode = $oLinkingAttDef->GetCode();
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+
+					// N°2334 fields to display for n:n relations
+					$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
+					$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
+					$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
+						return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+					},
+						$aLnkAttDefsToDisplay
+					);
+					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay))
+					{
+						// we need to display a link to the remote class instance !
+						$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
+					}
+					$aRemoteAttCodesToDisplay = array_map(function ($oRemoteAttDef) {
+						return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
+					},
+						$aRemoteAttDefsToDisplay
+					);
+					$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+					$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
+
 					$aParams = array(
 						'link_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
@@ -670,8 +693,12 @@ EOF
 						'view_link' => false,
 						'menu' => false,
 						//'menu_actions_target' => '_blank',
-						'display_limit' => true, // By default limit the list to speed up the initial load & display
+						// By default limit the list to speed up the initial load & display
+						'display_limit' => true,
 						'table_id' => $sClass.'_'.$sAttCode,
+						// N°2334 specify fields to display for n:n relations
+						'zlist' => false,
+						'extra_fields' => $sAttCodesToDisplay,
 					);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
@@ -1285,7 +1312,14 @@ HTML
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams key used :
+	 *      <ul>
+	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
+	 *          <li>menu : if true prints DisplayBlock menu, default true
+	 *          <li>display_aliases : list of query aliases that will be printed, defaults to [] (displays all)
+	 *          <li>zlist : name of the zlist to use, false to disable zlist lookup, default to 'list'
+	 *          <li>extra_fields : list of <alias>.<attcode> to add to the result, separator ',', defaults to empty string
+	 *      </ul>
 	 *
 	 * @return string
 	 * @throws \CoreException
@@ -1364,7 +1398,7 @@ HTML
 			}
 
 			// Filter the list to removed linked set since we are not able to display them here
-			foreach($aList[$sAlias] as $index => $sAttCode)
+			foreach ($aList[$sAlias] as $index => $sAttCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 				if ($oAttDef instanceof AttributeLinkedSet)
@@ -1372,6 +1406,11 @@ HTML
 					// Removed from the display list
 					unset($aList[$sAlias][$index]);
 				}
+			}
+
+			if (empty($aList[$sAlias]))
+			{
+				unset($aList[$sAlias], $aAuthorizedClasses[$sAlias]);
 			}
 		}
 
@@ -3110,7 +3149,7 @@ EOF
 			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
 		}
 
-		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug n°1240.
+		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
 		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 	}
