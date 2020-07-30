@@ -1071,7 +1071,8 @@ EOF
 				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 				'aJsInlineLive' => $this->a_scripts,
 				// TODO: TEMP, used while developping, remove it.
-				'aSanitizedContent' => self::FilterXSS($this->s_content),
+				'sSanitizedContent' => self::FilterXSS($this->s_content),
+				'sDeferredContent' => self::FilterXSS($this->s_deferred_content),
 			]
 		);
 

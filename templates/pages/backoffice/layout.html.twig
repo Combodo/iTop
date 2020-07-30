@@ -37,7 +37,13 @@
 	<div id="ibo-page-container">
 		{{ render_block(aLayouts.oTopBar) }}
 		<main id="ibo-page-content">
-			{{ aPage.aSanitizedContent|raw }}
+			{{ aPage.sSanitizedContent|raw }}
+
+			{# TODO: Remove this when modal development is done #}
+			<div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
+			<div style="display:none" title="ex2" id="ex2">Please wait...</div>
+			<div style="display:none" title="dialog" id="ModalDlg"></div>
+			<div style="display:none" id="ajax_content"></div>
 		</main>
 	</div>
 
