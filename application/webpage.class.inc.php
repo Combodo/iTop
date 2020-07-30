@@ -449,6 +449,7 @@ class WebPage implements Page
 
 	/**
 	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
+	 * Handles duplicates since 2.8.0 : calling twig with the same stylesheet will add the stylesheet only once
 	 *
 	 * @param string $s_linked_stylesheet
 	 * @param string $s_condition
@@ -456,7 +457,7 @@ class WebPage implements Page
 	 */
 	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
 	{
-		$this->a_linked_stylesheets[] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
+		$this->a_linked_stylesheets[$s_linked_stylesheet] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
 	}
 
 	/**

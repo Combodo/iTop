@@ -22,9 +22,11 @@ require_once(APPROOT."/application/applicationcontext.class.inc.php");
 require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenuFactory;
 use Combodo\iTop\Application\UI\Layout\TopBar\TopBarFactory;
 use Combodo\iTop\Application\UI\UIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -983,6 +985,8 @@ EOF
 		{
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
+
+		return $sFooterHtml;
 	}
 
 	/**
@@ -1425,19 +1429,19 @@ EOF;
 
 //			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
 
-			$sHtml .= ' <table id="top-bar-table">';
-			$sHtml .= ' <tr>';
-			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
-			$sHtml .= ' <i class="fas fa-bars"></i>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><i class="fas fa-home"></i></a>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
-			$sHtml .= ' <div id="itop-breadcrumb"></div>';
-			$sHtml .= ' </td>';
+//			$sHtml .= ' <table id="top-bar-table">';
+//			$sHtml .= ' <tr>';
+//			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
+//			$sHtml .= ' <i class="fas fa-bars"></i>';
+//			$sHtml .= ' </td>';
+//			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
+//			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><i class="fas fa-home"></i></a>';
+//			$sHtml .= ' </td>';
+//			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
+//			$sHtml .= ' </td>';
+//			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
+//			$sHtml .= ' <div id="itop-breadcrumb"></div>';
+//			$sHtml .= ' </td>';
 			$sHtml .= ' <td id="top-bar-table-search">';
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
 			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
@@ -1446,9 +1450,9 @@ EOF;
 			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
 			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
 			$sHtml .= '     </tr></table></form></div>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' </tr>';
-			$sHtml .= ' </table>';
+//			$sHtml .= ' </td>';
+//			$sHtml .= ' </tr>';
+//			$sHtml .= ' </table>';
 
 //			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
 //			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
@@ -1716,6 +1720,41 @@ EOF;
 <div class="header_message $sCssClasses">$sContent</div>
 EOF
 		);
+	}
+
+	/**
+	 * Add a UIBlock in the page by dispatching its parts in the right places (CSS, JS, HTML)
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 *
+	 * @return void
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public function AddUiBlock(iUIBlock $oBlock)
+	{
+		$oBlockRenderer = new BlockRenderer($oBlock);
+
+		// Add HTML
+		$this->add($oBlockRenderer->RenderHtml());
+
+		// Add inline CSS and JS
+		$this->add_style($oBlockRenderer->RenderCssInline());
+		$this->add_ready_script($oBlockRenderer->RenderJsInline());
+
+		// Add external files
+		foreach($oBlockRenderer->GetCssFiles() as $sFile)
+		{
+			$this->add_linked_stylesheet($sFile);
+		}
+		foreach($oBlockRenderer->GetJsFiles() as $sFile)
+		{
+			$this->add_linked_script($sFile);
+		}
 	}
 
 	/**

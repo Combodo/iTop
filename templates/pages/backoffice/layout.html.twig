@@ -35,7 +35,11 @@
 <body data-gui-type="backoffice">
 	{{ render_block(aLayouts.oNavigationMenu) }}
 	<div id="ibo-page-container">
-		{{ render_block(aLayouts.oTopBar) }}
+		<div id="ibo-top-container">
+			{{ include('pages/backoffice/extension-blocks/banner.html.twig') }}
+			{{ render_block(aLayouts.oTopBar) }}
+		</div>
+		{{ include('pages/backoffice/extension-blocks/header.html.twig') }}
 		<main id="ibo-page-content">
 			{{ aPage.sSanitizedContent|raw }}
 
@@ -45,6 +49,7 @@
 			<div style="display:none" title="dialog" id="ModalDlg"></div>
 			<div style="display:none" id="ajax_content"></div>
 		</main>
+		{{ include('pages/backoffice/extension-blocks/footer.html.twig') }}
 	</div>
 
 	{% block iboPageJsFiles %}

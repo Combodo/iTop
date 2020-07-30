@@ -143,11 +143,12 @@ $(function()
 				const oInputElem = this.element.find(this.js_selectors.menu_filter_input);
 				const sValue = oInputElem.val();
 
-				if((sValue === '') || (oEvent.key === 'Escape'))
+				if((sValue === '') && (oEvent.key === 'Escape'))
 				{
-					// Prevent other behaviors
-					oEvent.stopPropagation();
-
+					this._closeDrawer();
+				}
+				else if((sValue === '') || (oEvent.key === 'Escape'))
+				{
 					this._clearFiltering();
 				}
 				else

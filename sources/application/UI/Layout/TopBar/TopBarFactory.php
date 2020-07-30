@@ -47,7 +47,7 @@ class TopBarFactory
 	 */
 	public static function MakeStandard($aBreadcrumbsEntry = null)
 	{
-		$oTopBar =  new TopBar();
+		$oTopBar =  new TopBar(TopBar::BLOCK_CODE);
 
 		if(utils::GetConfig()->Get('quick_create.enabled') === true)
 		{
