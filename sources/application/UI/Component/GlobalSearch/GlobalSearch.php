@@ -82,7 +82,7 @@ class GlobalSearch extends UIBlock
 	/**
 	 * Return the absolute URL of the search form
 	 *
-	 * @return $this
+	 * @return string
 	 * @throws \Exception
 	 */
 	public function GetEndpoint()

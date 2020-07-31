@@ -36,7 +36,7 @@ Interface Page
 	 *
 	 * @param string $sText
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function add($sText);
 
@@ -45,7 +45,7 @@ Interface Page
 	 *
 	 * @param string $sText
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function p($sText);
 
@@ -54,7 +54,7 @@ Interface Page
 	 *
 	 * @param string $sText
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function pre($sText);
 
@@ -63,7 +63,7 @@ Interface Page
 	 *
 	 * @param string $sText
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function add_comment($sText);
 
@@ -161,6 +161,7 @@ class WebPage implements Page
 	 * Change the title of the page after its creation
 	 *
 	 * @param string $s_title
+	 * @return void
 	 */
 	public function set_title($s_title)
 	{
@@ -172,6 +173,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_href
 	 * @param string $s_target
+	 * @return void
 	 */
 	public function set_base($s_href = '', $s_target = '')
 	{
@@ -195,6 +197,7 @@ class WebPage implements Page
 	 * @param array $aParams Params used by the twig template
 	 * @param string $sDefaultType default type of the template ('html', 'xml', ...)
 	 *
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function add_twig_template($sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
@@ -437,6 +440,7 @@ class WebPage implements Page
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
 	 * @param string $s_linked_script
+	 * @return void
 	 */
 	public function add_linked_script($s_linked_script)
 	{
@@ -448,6 +452,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_linked_stylesheet
 	 * @param string $s_condition
+	 * @return void
 	 */
 	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
 	{

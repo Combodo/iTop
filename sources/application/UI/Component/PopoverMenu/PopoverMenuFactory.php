@@ -99,6 +99,7 @@ class PopoverMenuFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem[]
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	protected static function PrepareUserRelatedItemsForUserMenu()
 	{

@@ -1,30 +1,27 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_inlineimage&id=');
 
 /**
  * Persistent classes (internal): store images referenced inside HTML formatted text fields
- *
- * @copyright   Copyright (C) 2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class InlineImage extends DBObject
 {
 	/** @var string attribute to be added to IMG tags to contain ID */
@@ -32,6 +29,11 @@ class InlineImage extends DBObject
 	/** @var string attribute to be added to IMG tags to contain secret */
 	const DOM_ATTR_SECRET = 'data-img-secret';
 
+	/**
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -69,8 +71,9 @@ class InlineImage extends DBObject
 
 	/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 *
 	 * @param string $sContextParam Name of the context parameter, e.g. 'org_id'
-	 * @return string Filter code, e.g. 'customer_id'
+	 * @return string|null Filter code, e.g. 'customer_id'
 	 */
 	public static function MapContextParam($sContextParam)
 	{
@@ -86,8 +89,15 @@ class InlineImage extends DBObject
 
 	/**
 	 * Set/Update all of the '_item' fields
+	 *
 	 * @param DBObject $oItem Container item
+	 * @param bool $bUpdateOnChange
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function SetItem(DBObject $oItem, $bUpdateOnChange = false)
 	{
@@ -121,7 +131,12 @@ class InlineImage extends DBObject
 
 	/**
 	 * Give a default value for item_org_id (if relevant...)
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function SetDefaultOrgId()
 	{
@@ -157,12 +172,19 @@ class InlineImage extends DBObject
 			}
 		}
 	}
-	
+
 	/**
 	 * When posting a form, finalize the creation of the inline images
 	 * related to the specified object
-	 * 
+	 *
 	 * @param DBObject $oObject
+	 *
+	 * @return void
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public static function FinalizeInlineImages(DBObject $oObject)
 	{
@@ -203,10 +225,21 @@ class InlineImage extends DBObject
             ));
         }
 	}
-	
+
 	/**
 	 * Cleanup the pending images if the form is not submitted
+	 *
 	 * @param string $sTempId
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public static function OnFormCancel($sTempId)
 	{
@@ -227,13 +260,16 @@ class InlineImage extends DBObject
             'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
         ));
 	}
-	
+
 	/**
 	 * Parses the supplied HTML fragment to rebuild the attribute src="" for images
 	 * that refer to an InlineImage (detected via the attribute data-img-id="") so that
 	 * the URL is consistent with the current URL of the application.
+	 *
 	 * @param string $sHtml The HTML fragment to process
+	 *
 	 * @return string The modified HTML
+	 * @throws \Exception
 	 */
 	public static function FixUrls($sHtml)
 	{
@@ -268,6 +304,9 @@ class InlineImage extends DBObject
 	 * so that we can later reconstruct the full "src" URL when needed
 	 *
 	 * @param \DOMElement $oElement
+	 *
+	 * @return void
+	 * @throws \Exception
 	 */
 	public static function ProcessImageTag(DOMElement $oElement)
 	{
@@ -301,6 +340,8 @@ class InlineImage extends DBObject
 
 	/**
 	 * Get the javascript fragment  - to be added to "on document ready" - to adjust (on the fly) the width on Inline Images
+	 *
+	 * @return string
 	 */
 	public static function FixImagesWidth()
 	{
@@ -309,15 +350,15 @@ class InlineImage extends DBObject
 		if ($iMaxWidth != 0)
 		{
 			$sJS =
-<<<EOF
+<<<JS
 $('img[data-img-id]').each(function() {
-	if ($(this).width() > $iMaxWidth)
+	if ($(this).width() > {$iMaxWidth})
 	{
 		$(this).css({'max-width': '{$iMaxWidth}px', width: '', height: '', 'max-height': ''});
 	}
 	$(this).addClass('inline-image').attr('href', $(this).attr('src'));
 }).magnificPopup({type: 'image', closeOnContentClick: true });
-EOF
+JS
 			;
 		}
 		
@@ -563,6 +604,9 @@ JS
 		;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
     protected function AfterInsert()
     {
         IssueLog::Trace(__METHOD__, 'InlineImage', array(
@@ -581,6 +625,9 @@ JS
 	    parent::AfterInsert();
     }
 
+	/**
+	 * @inheritDoc
+	 */
     protected function AfterUpdate()
     {
         IssueLog::Trace(__METHOD__, 'InlineImage', array(
@@ -599,7 +646,10 @@ JS
 	    parent::AfterUpdate();
     }
 
-    protected function AfterDelete()
+	/**
+	 * @inheritDoc
+	 */
+	protected function AfterDelete()
     {
         IssueLog::Trace(__METHOD__, 'InlineImage', array(
             'id' => $this->GetKey(),
@@ -625,20 +675,16 @@ JS
  */
 class InlineImageGC implements iBackgroundProcess
 {
-    public function GetPeriodicity()
+	/**
+	 * @inheritDoc
+	 */
+	public function GetPeriodicity()
     {
         return 1;
     }
 
 	/**
-	 * @param int $iTimeLimit
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DeleteException
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritDoc
 	 */
 	public function Process($iTimeLimit)
 	{
@@ -692,5 +738,5 @@ class InlineImageGC implements iBackgroundProcess
 		}
 
 		return $iProcessed;
-}
+	}
 }
