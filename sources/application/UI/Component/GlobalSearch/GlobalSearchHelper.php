@@ -101,18 +101,25 @@ class GlobalSearchHelper
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	public static function GetLastQueries()
 	{
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
-		// Add HTML label if missing
 		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
+			// Add HTML label if missing
 			if(!isset($aHistoryEntries[$iIdx]['label_html']))
 			{
 				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities($aHistoryEntries[$iIdx]['query']);
+			}
+
+			// Set absolute URL
+			if(isset($aHistoryEntries[$iIdx]['icon_url']))
+			{
+				$aHistoryEntries[$iIdx]['icon_url'] = utils::GetAbsoluteUrlAppRoot().$aHistoryEntries[$iIdx]['icon_url'];
 			}
 		}
 
