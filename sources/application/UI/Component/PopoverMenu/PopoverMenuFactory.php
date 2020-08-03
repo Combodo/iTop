@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu;
 
 
 
-use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem\PopupMenuItemFactory;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Dict;
 use JSPopupMenuItem;
 use MetaModel;
@@ -87,7 +87,7 @@ class PopoverMenuFactory
 					$aAllowedPortal['url'],
 					'_blank'
 				);
-				$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem($oPopupMenuItem);
+				$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oPopupMenuItem);
 			}
 		}
 
@@ -106,7 +106,7 @@ class PopoverMenuFactory
 		$aItems = [];
 
 		// Preferences
-		$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+		$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 			new URLPopupMenuItem(
 				'UI:Preferences',
 				Dict::S('UI:Preferences'),
@@ -117,7 +117,7 @@ class PopoverMenuFactory
 		// Archive mode
 		if(true === utils::IsArchiveMode())
 		{
-			$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new JSPopupMenuItem(
 					'UI:ArchiveModeOff',
 					Dict::S('UI:ArchiveModeOff'),
@@ -127,7 +127,7 @@ class PopoverMenuFactory
 		}
 		elseif(UserRights::CanBrowseArchive())
 		{
-			$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new JSPopupMenuItem(
 					'UI:ArchiveModeOn',
 					Dict::S('UI:ArchiveModeOn'),
@@ -139,7 +139,7 @@ class PopoverMenuFactory
 		// Logoff
 		if(utils::CanLogOff())
 		{
-			$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new URLPopupMenuItem(
 					'UI:LogOffMenu',
 					Dict::S('UI:LogOffMenu'),
@@ -151,7 +151,7 @@ class PopoverMenuFactory
 		// Change password
 		if (UserRights::CanChangePassword())
 		{
-			$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new URLPopupMenuItem(
 					'UI:ChangePwdMenu',
 					Dict::S('UI:ChangePwdMenu'),
@@ -175,7 +175,7 @@ class PopoverMenuFactory
 		$aItems = [];
 
 		// Online documentation
-		$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+		$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 			new URLPopupMenuItem(
 				'UI:Help',
 				Dict::S('UI:Help'),
@@ -185,7 +185,7 @@ class PopoverMenuFactory
 		);
 
 		// About box
-		$aItems[] = PopupMenuItemFactory::MakeFromApplicationPopupMenuItem(
+		$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 			new JSPopupMenuItem(
 				'UI:AboutBox',
 				Dict::S('UI:AboutBox'),

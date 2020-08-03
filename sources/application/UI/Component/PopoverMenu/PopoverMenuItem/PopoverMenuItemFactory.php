@@ -33,7 +33,7 @@ use URLPopupMenuItem;
  * @internal
  * @since 2.8.0
  */
-class PopupMenuItemFactory
+class PopoverMenuItemFactory
 {
 	/**
 	 * Make a standard NavigationMenu layout for backoffice pages

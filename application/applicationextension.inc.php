@@ -869,7 +869,7 @@ abstract class ApplicationPopupMenuItem
 class URLPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sURL;
+	protected $sUrl;
 	/** @ignore */
 	protected $sTarget;
 
@@ -878,20 +878,32 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param string $sURL If the menu is an hyperlink, provide the absolute hyperlink here
+	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
 	 * @param string $sTarget In case the menu is an hyperlink and a specific target is needed (_blank for example), pass it here
 	 */
-	public function __construct($sUID, $sLabel, $sURL, $sTarget = '_top')
+	public function __construct($sUID, $sLabel, $sUrl, $sTarget = '_top')
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sURL = $sURL;
+		$this->sUrl = $sUrl;
 		$this->sTarget = $sTarget;
 	}
 
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget, 'css_classes' => $this->aCssClasses);
+		return array('label' => $this->GetLabel(), 'url' => $this->GetUrl(), 'target' => $this-> GetTarget(), 'css_classes' => $this->aCssClasses);
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
+	}
+
+	/** @ignore */
+	public function GetTarget()
+	{
+		return $this->sTarget;
 	}
 }
 
@@ -905,7 +917,9 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 class JSPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sJSCode;
+	protected $sJsCode;
+	/** @ignore */
+	protected $sUrl;
 	/** @ignore */
 	protected $aIncludeJSFiles;
 
@@ -923,7 +937,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = array())
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sJSCode = $sJSCode;
+		$this->sJsCode = $sJSCode;
+		$this->sUrl = '#';
 		$this->aIncludeJSFiles = $aIncludeJSFiles;
 	}
 
@@ -933,9 +948,9 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 		// Note: the semicolumn is a must here!
 		return array(
 			'label' => $this->GetLabel(),
-			'onclick' => $this->sJSCode.'; return false;',
-			'url' => '#',
-			'css_classes' => $this->aCssClasses,
+			'onclick' => $this->GetJsCode().'; return false;',
+			'url' => $this->GetUrl(),
+			'css_classes' => $this->GetCssClasses(),
 		);
 	}
 
@@ -943,6 +958,18 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetLinkedScripts()
 	{
 		return $this->aIncludeJSFiles;
+	}
+	
+	/** @ignore */
+	public function GetJsCode()
+	{
+		return $this->sJsCode;
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
 	}
 }
 

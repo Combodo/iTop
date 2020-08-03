@@ -20,14 +20,38 @@
 namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
 
 
+use JSPopupMenuItem;
+
 /**
  * Class JsPopoverMenuItem
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
+ * @property \JSPopupMenuItem $oPopupMenuItem 
  * @since 2.8.0
  */
 class JsPopoverMenuItem extends PopoverMenuItem
 {
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_js';
+
+	public function GetJsCode()
+	{
+		return $this->oPopupMenuItem->GetJSCode();
+	}
+
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->oPopupMenuItem->GetUrl();
+	}
+	
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function GetJsFilesUrlRecursively($bAbsoluteUrl = false)
+	{
+		$aJsFiles = array_merge(parent::GetJsFilesUrlRecursively($bAbsoluteUrl), $this->oPopupMenuItem->GetLinkedScripts());
+		return $aJsFiles;
+	}
 }

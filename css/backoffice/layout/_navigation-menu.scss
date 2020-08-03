@@ -439,3 +439,7 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 	@extend %ibo-font-ral-nor-350;
 	@extend %ibo-text-truncated-with-ellipsis;
 }
+.ibo-navigation-menu--user-menu-container{
+	position: absolute;
+	bottom: 10px;
+}

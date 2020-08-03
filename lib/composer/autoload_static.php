@@ -386,7 +386,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\JsPopoverMenuItem' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/JsPopoverMenuItem.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopoverMenuItem' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopoverMenuItem.php',
-        'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopupMenuItemFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopupMenuItemFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopoverMenuItemFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopoverMenuItemFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\UrlPopoverMenuItem' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/UrlPopoverMenuItem.php',
         'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreate' => __DIR__ . '/../..' . '/sources/application/UI/Component/QuickCreate/QuickCreate.php',
         'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreateFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/QuickCreate/QuickCreateFactory.php',

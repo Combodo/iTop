@@ -156,7 +156,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuFactory' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuFactory.php',
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\JsPopoverMenuItem' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/JsPopoverMenuItem.php',
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopoverMenuItem' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopoverMenuItem.php',
-    'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopupMenuItemFactory' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopupMenuItemFactory.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\PopoverMenuItemFactory' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/PopoverMenuItemFactory.php',
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\UrlPopoverMenuItem' => $baseDir . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/UrlPopoverMenuItem.php',
     'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreate' => $baseDir . '/sources/application/UI/Component/QuickCreate/QuickCreate.php',
     'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreateFactory' => $baseDir . '/sources/application/UI/Component/QuickCreate/QuickCreateFactory.php',

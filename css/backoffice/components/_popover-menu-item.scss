@@ -1,5 +1,4 @@
-<?php
-/**
+/*!
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -17,30 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
+/* SCSS variables */
+$ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
+$ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
 
-
-/**
- * Class UrlPopoverMenuItem
- *
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
- * @property \URLPopupMenuItem $oPopupMenuItem
- * @since 2.8.0
- */
-class UrlPopoverMenuItem extends PopoverMenuItem
-{
-	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_url';
-
-	/** @ignore */
-	public function GetUrl()
-	{
-		return $this->oPopupMenuItem->GetUrl();
-	}
-	
-	/** @ignore */
-	public function GetTarget()
-	{
-		return $this->oPopupMenuItem->GetTarget();
-	}
+.ibo-popover-menu--item{
+  padding: 12px 24px 12px 16px;
+  color: $ibo-popover-menu--item--text-color;
+  @extend %ibo-font-ral-nor-200;
+  a {
+    color: $ibo-popover-menu--item--text-color;
+  }
+  &:hover{
+    background-color: var(--ibo-color-grey-200);
+    color: inherit;
+  }
 }

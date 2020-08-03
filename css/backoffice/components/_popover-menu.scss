@@ -1,0 +1,47 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-popover-menu--background-color: $ibo-color-white-100 !default;
+$ibo-popover-menu--border-radius: 3px !default;
+$ibo-popover-menu--padding: 0 !default;
+
+.ibo-popover-menu{
+  display: none;
+  flex-direction: column;
+  padding: $ibo-popover-menu--padding;
+  background-color: $ibo-popover-menu--background-color;
+  @extend %ibo-elevation-300;
+  border-radius: $ibo-popover-menu--border-radius;
+  flex-wrap: wrap;
+  position: absolute;
+  
+  &.ibo-is-opened{
+    display: flex;
+  }
+}
+
+
+.ibo-popover-menu--section{
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  margin: 0px 0px;
+  width: 100%;
+  @extend %ibo-text-truncated-with-ellipsis;
+}
