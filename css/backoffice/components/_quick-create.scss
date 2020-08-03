@@ -78,7 +78,7 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	position: relative;
 	@extend %ibo-vertically-centered-content;
 
-	&.ibo-quick-create--is-opened{
+	&.ibo-is-opened{
 		.ibo-quick-create--input{
 			width: $ibo-quick-create--input--width--is-opened;
 		}

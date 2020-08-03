@@ -688,6 +688,7 @@ JS
 
 	/**
 	 * @param string $sHtml
+	 * @deprecated Will be removed in 2.8.0
 	 */
 	public function AddToMenu($sHtml)
 	{

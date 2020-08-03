@@ -30,7 +30,7 @@ $(function()
 		},
 		css_classes:
 		{
-			opened: 'ibo-global-search--is-opened',
+			opened: 'ibo-is-opened',
 		},
 		js_selectors:
 		{

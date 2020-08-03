@@ -29,11 +29,11 @@ $(function()
 			},
 			css_classes:
 			{
-				menu_expanded: 'ibo-navigation-menu--is-expanded',
-				menu_active: 'ibo-navigation-menu--is-active',
-				menu_filtered: 'ibo-navigation-menu--is-filtered',
-				menu_group_active: 'ibo-navigation-menu--menu-group--is-active',
-				menu_nodes_active: 'ibo-navigation-menu--menu-nodes--is-active'
+				menu_expanded: 'ibo-is-expanded',
+				menu_active: 'ibo-is-active',
+				menu_filtered: 'ibo-is-filtered',
+				menu_group_active: 'ibo-is-active',
+				menu_nodes_active: 'ibo-is-active'
 			},
 			js_selectors:
 			{

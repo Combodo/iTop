@@ -74,7 +74,7 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	position: relative;
 	@extend %ibo-vertically-centered-content;
 
-	&.ibo-global-search--is-opened{
+	&.ibo-is-opened{
 		.ibo-global-search--input{
 			padding: $ibo-global-search--input--padding-y--is-opened $ibo-global-search--input--padding-x--is-opened;
 			width: $ibo-global-search--input--width--is-opened;
