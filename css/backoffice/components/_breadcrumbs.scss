@@ -29,7 +29,6 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 
 .ibo-breadcrumbs{
 	@extend %ibo-vertically-centered-content;
-	justify-content: flex-end; /* To hide first elements when there is not enough space to show all */
 
 	* {
 		display: flex;
