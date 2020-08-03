@@ -24,4 +24,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey' => 'Alt + M',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:Alt' => 'User picture'
 ));

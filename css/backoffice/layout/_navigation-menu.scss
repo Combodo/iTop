@@ -110,7 +110,20 @@ $ibo-navigation-menu--menu-node--hyperlink-color: inherit !default;
 $ibo-navigation-menu--menu-node--background-color: $ibo-color-grey-200 !default;
 $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 
+$ibo-navigation-menu--bottom-part--padding-y: 24px 0px !default;
 
+$ibo-navigation-menu--notifications-toggler--font-size: 28px !default;
+
+$ibo-navigation-menu--user--text-color: $ibo-color-white-100 !default;
+$ibo-navigation-menu--user-picture--image-collapsed--size: 36px !default;
+$ibo-navigation-menu--user-picture--image-collapsed--border-radius: 18px !default;
+$ibo-navigation-menu--user-notifications--toggler--padding-left: 8px !default;
+
+$ibo-navigation-menu--user-info-expanded--height: 100%;
+$ibo-navigation-menu--user-picture--image-expanded--margin: -60px auto 0 auto !default;
+$ibo-navigation-menu--user-picture--image-expanded--border: solid 3px $ibo-color-blue-grey-900 !default;
+$ibo-navigation-menu--user-picture--image-expanded--border-radius: 36px !default;
+$ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 /* CSS variables (can be changed directly from the browser) */
 :root {
 	/* TODO: Introduce variables once SCSS variables are set */
@@ -151,6 +164,25 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 				&:not(.ibo-is-active){
 					&:active{
 						border-radius: $ibo-navigation-menu--action--border-radius--on-active-expanded;
+					}
+				}
+			}
+			.ibo-navigation-menu--bottom-part{
+				.ibo-navigation-menu--notifications{
+					display: none;
+				}
+				.ibo-navigation-menu--user-info{
+					height: $ibo-navigation-menu--user-info-expanded--height;
+					.ibo-navigation-menu--user-welcome-message, .ibo-navigation-menu--user-notifications, .ibo-navigation-menu--user-organization{
+						display: block;
+					}
+					.ibo-navigation-menu--user-picture{
+						.ibo-navigation-menu--user-picture--image{
+							margin:$ibo-navigation-menu--user-picture--image-expanded--margin;
+							border: $ibo-navigation-menu--user-picture--image-expanded--border;
+							border-radius: $ibo-navigation-menu--user-picture--image-expanded--border-radius;
+							width: $ibo-navigation-menu--user-picture--image-expanded--size;
+						}
 					}
 				}
 			}
@@ -221,6 +253,12 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 .ibo-navigation-menu--bottom-part{
 	height: 150px;
 	background-color: $ibo-navigation-menu--bottom-part--background-color;
+	padding: $ibo-navigation-menu--bottom-part--padding-y;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .ibo-navigation-menu--toggler,
@@ -439,7 +477,49 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 	@extend %ibo-font-ral-nor-350;
 	@extend %ibo-text-truncated-with-ellipsis;
 }
-.ibo-navigation-menu--user-menu-container{
-	position: absolute;
-	bottom: 10px;
+
+.ibo-navigation-menu--notifications{
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	.ibo-navigation-menu--notifications-toggler{
+		font-size: $ibo-navigation-menu--notifications-toggler--font-size;
+		color: $ibo-color-grey-300;
+	}
+}
+
+.ibo-navigation-menu--user-info{
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: space-between;
+	
+	.ibo-navigation-menu--user-picture{
+		display: flex;
+		.ibo-navigation-menu--user-picture--image{
+			width: $ibo-navigation-menu--user-picture--image-collapsed--size;
+			border-radius: $ibo-navigation-menu--user-picture--image-collapsed--border-radius;
+		}
+	}
+	.ibo-navigation-menu--user-welcome-message, .ibo-navigation-menu--user-organization, .ibo-navigation-menu--user-notifications{
+		display: none;
+		text-align: center;
+		color: $ibo-navigation-menu--user--text-color;
+	}
+	.ibo-navigation-menu--user-welcome-message{
+		@extend %ibo-font-ral-med-250;
+	}
+	.ibo-navigation-menu--user-notifications{
+		@extend %ibo-font-ral-med-150;
+		.ibo-navigation-menu--user-notifications--toggler{
+			padding-left: $ibo-navigation-menu--user-notifications--toggler--padding-left;
+		}
+	}
+	.ibo-navigation-menu--user-organization{
+		@extend %ibo-font-ral-med-100;
+	}
+	.ibo-navigation-menu--user-menu-container{
+		position: absolute;
+		bottom: 10px;
+	}
 }

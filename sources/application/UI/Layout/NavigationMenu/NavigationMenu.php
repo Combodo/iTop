@@ -169,6 +169,14 @@ class NavigationMenu extends UIBlock
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function GetIsNewsroomEnabled()
+	{
+		return MetaModel::GetConfig()->Get('newsroom_enabled');
+	}
+
+	/**
 	 * Compute if the menu is expanded or collapsed
 	 *
 	 * @return $this
@@ -212,11 +220,12 @@ class NavigationMenu extends UIBlock
 		];
 
 		// Logon message
-		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage+Admin' : 'UI:LoggedAsMessage';
-		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetUser());
+		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage' : 'UI:LoggedAsMessage';
+		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFirstname());
 
 		$this->aUserData = $aData;
 
 		return $this;
 	}
+	
 }

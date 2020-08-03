@@ -1088,7 +1088,8 @@ class UserRights
 	 */
 	public static function GetContactPicture($sName = '')
 	{
-		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'img/user-profile-default-256px.png';
+		// TODO: replace with console one
+		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'datamodels/2.x/itop-portal-base/portal/public/img/user-profile-default-256px.png';
 
 		if (empty($sName))
 		{

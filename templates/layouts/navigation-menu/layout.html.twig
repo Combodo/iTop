@@ -18,14 +18,42 @@
 			{% endfor %}
 		</div>
 		<div class="ibo-navigation-menu--bottom-part">
-			<div class="ibo-navigation-menu--notifications">
-				<div class="ibo-navigation-menu--notifications-toggler"></div>
-				<div class="ibo-navigation-menu--notifications-menu"></div>
-			</div>
+			{% if oNavigationMenu.IsNewsroomEnabled == true %}
+				<div class="ibo-navigation-menu--notifications">
+					<div class="ibo-navigation-menu--notifications-toggler">
+						<i class="fas fa-bell"></i>
+					</div>
+					<div class="ibo-navigation-menu--notifications-menu"></div>
+				</div>
+			{% endif %}
 			<div class="ibo-navigation-menu--user-info">
-				<div class="ibo-navigation-menu--user-picture"></div>
-				<div class="ibo-navigation-menu--user-welcome-message"></div>
-				<div class="ibo-navigation-menu--user-organization"></div>
+				<div class="ibo-navigation-menu--user-picture">
+					<img class="ibo-navigation-menu--user-picture--image" src="{{ oNavigationMenu.UserData.sPictureUrl }}" alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:Alt'|dict_s }}" />
+				</div>
+				<div class="ibo-navigation-menu--user-welcome-message">
+					<div class="ibo-navigation-menu--user-welcome-message--text">
+						{{ oNavigationMenu.UserData.sLogonMessage }}
+						<span class="ibo-navigation-menu--user-welcome-message--toggler">
+							<i class="fas fa-caret-down"></i>
+						</span>
+					</div>
+				</div>
+				{% if oNavigationMenu.IsNewsroomEnabled == true %}
+					<div class="ibo-navigation-menu--user-notifications">
+						<div class="ibo-navigation-menu--user-notifications--text">
+							{{ '0 notification'|dict_s }}
+							<span class="ibo-navigation-menu--user-notifications--toggler">
+								<i class="fas fa-bell"></i>
+							</span>
+						</div>
+						<div class="ibo-navigation-menu--user-notifications-menu"></div>
+					</div>
+				{% endif %}
+				<div class="ibo-navigation-menu--user-organization">
+					<div class="ibo-navigation-menu--user-organization--text">
+						{{ oNavigationMenu.UserData.sOrganization }}
+					</div>
+				</div>
 				<div class="ibo-navigation-menu--user-menu-container">
 					{{ render_block(oNavigationMenu.UserMenu) }}
 				</div>
