@@ -1169,6 +1169,27 @@ class UserRights
 	}
 
 	/**
+	 * Return the friendlyname of the current user's contact.
+	 * If the user has no contact, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	public static function GetContactFriendlyname()
+	{
+		$sFriendlyname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), 'friendlyname'))
+		{
+			$sFriendlyname = $oContact->Get('friendlyname');
+		}
+
+		return $sFriendlyname;
+	}
+
+	/**
 	 * @return \DBObject|null
 	 */
 	public static function GetContactObject()

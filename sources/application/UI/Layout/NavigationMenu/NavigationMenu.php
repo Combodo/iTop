@@ -213,6 +213,7 @@ class NavigationMenu extends UIBlock
 	 */
 	protected function ComputeUserData()
 	{
+		//Todo : what do we show if no contact is linked to the user ?
 		$aData = [
 			'sOrganization' => UserRights::GetContactOrganizationFriendlyname(),
 			'sFirstname' => UserRights::GetContactFirstname(),
@@ -222,7 +223,8 @@ class NavigationMenu extends UIBlock
 
 		// Logon message
 		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage+Admin' : 'UI:LoggedAsMessage';
-		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactObject()->Get('friendlyname'));
+		
+		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFriendlyname());
 
 		$this->aUserData = $aData;
 
