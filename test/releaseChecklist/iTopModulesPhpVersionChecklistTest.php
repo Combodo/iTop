@@ -62,7 +62,7 @@ class iTopModulesPhpVersionChecklistTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertSame($sExpectedVersion, $matches[1]);
+		$this->assertSame($sExpectedVersion, $matches[1], "$sPhpFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedVersion)");
 	}
 
 	public function DatamodelItopXmlVersionProvider()

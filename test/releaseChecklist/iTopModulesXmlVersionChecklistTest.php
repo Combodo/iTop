@@ -57,7 +57,7 @@ class iTopModulesXmlVersionChecklistTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertSame($sExpectedXmlVersion, $matches[1]);
+		$this->assertSame($sExpectedXmlVersion, $matches[1], "$sXmlFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedXmlVersion)");
 	}
 
 	public function DatamodelItopXmlVersionProvider()
