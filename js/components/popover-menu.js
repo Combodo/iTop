@@ -20,24 +20,24 @@
 $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
-	// 'breadcrumbs' the widget name
-	$.widget( 'itop.popover-menu',
+	// 'popover-menu' the widget name
+	$.widget( 'itop.popover_menu',
 		{
 			// default options
 			options:
-				{
-
-				},
+			{
+				toggler: '',
+			},
 			css_classes:
-				{
-					opened: 'ibo-is-opened',
-				},
+			{
+				opened: 'ibo-is-opened',
+			},
 			js_selectors:
-				{
-					menu: '[data-role="ibo-popover-menu"]',
-					section: '[data-role="ibo-popover-menu--section"]',
-					item: '[data-role="ibo-popover-menu--item"]',
-				},
+			{
+				menu: '[data-role="ibo-popover-menu"]',
+				section: '[data-role="ibo-popover-menu--section"]',
+				item: '[data-role="ibo-popover-menu--item"]',
+			},
 
 			// the constructor
 			_create: function()
@@ -48,7 +48,6 @@ $(function()
 			// revert other modifications here
 			_destroy: function()
 			{
-				this.element.removeClass('ibo-quick-create');
 			},
 			_bindEvents: function()
 			{
@@ -58,12 +57,21 @@ $(function()
 				this.element.find(this.js_selectors.item).on('click', function(oEvent){
 					me._closePopup();
 				});
+				
+				// Mostly for outside clicks that should close elements
+				oBodyElem.on('click', function(oEvent){
+					me._onBodyClick(oEvent);
+				});
 			},
 
 			// Methods
-			_isDrawerPopup: function()
+			_onBodyClick: function(oEvent)
 			{
-				return this.element.hasClass(this.css_classes.opened);
+				if($(oEvent.target.closest('[data-role="ibo-popover-menu"]')).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0)
+				{
+					console.log('a');
+					this._closePopup();
+				}
 			},
 			_openPopup: function()
 			{
@@ -72,6 +80,10 @@ $(function()
 			_closePopup: function()
 			{
 				this.element.removeClass(this.css_classes.opened);
+			},
+			openPopup: function()
+			{
+				this._openPopup();
 			},
 		});
 });

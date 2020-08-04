@@ -28,21 +28,26 @@
 			{% endif %}
 			<div class="ibo-navigation-menu--user-info">
 				<div class="ibo-navigation-menu--user-picture">
-					<img class="ibo-navigation-menu--user-picture--image" 
-						 src="{{ oNavigationMenu.UserData.sPictureUrl }}" 
-						 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oNavigationMenu.UserData.sFirstname) }}" 
-						 data-tooltip-content="{{ oNavigationMenu.UserData.sLogonMessage }}"
-						 data-tooltip-placement="right"
-						 data-tooltip-distance-offset="20"
-					/>
+					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+						<img class="ibo-navigation-menu--user-picture--image" 
+							 src="{{ oNavigationMenu.UserData.sPictureUrl }}" 
+							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oNavigationMenu.UserData.sFirstname) }}" 
+							 
+							 data-tooltip-content="{{ oNavigationMenu.UserData.sLogonMessage }}"
+							 data-tooltip-placement="right"
+							 data-tooltip-distance-offset="20"
+						/>
+					</a>
 				</div>
 				<div class="ibo-navigation-menu--user-welcome-message">
-					<div class="ibo-navigation-menu--user-welcome-message--text">
-						{{ oNavigationMenu.UserData.sWelcomeMessage }}
-						<span class="ibo-navigation-menu--user-welcome-message--toggler">
-							<i class="fas fa-caret-down"></i>
-						</span>
-					</div>
+					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+						<div class="ibo-navigation-menu--user-welcome-message--text">
+							{{ oNavigationMenu.UserData.sWelcomeMessage }}
+							<span class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler">
+								<i class="fas fa-caret-down"></i>
+							</span>
+						</div>
+					</a>
 				</div>
 				{% if oNavigationMenu.IsNewsroomEnabled == true %}
 					<div class="ibo-navigation-menu--user-notifications">
@@ -60,7 +65,7 @@
 						{{ oNavigationMenu.UserData.sOrganization }}
 					</div>
 				</div>
-				<div class="ibo-navigation-menu--user-menu-container">
+				<div class="ibo-navigation-menu--user-menu-container" data-role="ibo-navigation-menu--user-menu-container">
 					{{ render_block(oNavigationMenu.UserMenu) }}
 				</div>
 			</div>

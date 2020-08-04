@@ -18,7 +18,7 @@
 
 /* SCSS variables */
 $ibo-popover-menu--background-color: $ibo-color-white-100 !default;
-$ibo-popover-menu--border-radius: 3px !default;
+$ibo-popover-menu--border-radius: $ibo-border-radius-300 !default;
 $ibo-popover-menu--padding: 0 !default;
 
 .ibo-popover-menu{

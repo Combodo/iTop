@@ -42,6 +42,9 @@ $(function()
 				menu_drawer: '[data-role="ibo-navigation-menu--drawer"]',
 				menu_filter_input: '[data-role="ibo-navigation-menu--menu-filter-input"]',
 				menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
+				user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
+				user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
+				user_menu: '[data-role="ibo-popover-menu"]'
 			},
 			filter_throttle_timeout: null,
 
@@ -49,7 +52,7 @@ $(function()
 			_create: function()
 			{
 				this.element.addClass('ibo-navigation-menu');
-
+				$(this.js_selectors.user_menu).popover_menu({'toggler': this.js_selectors.user_menu_toggler});
 				this._bindEvents();
 			},
 			// events bound via _bind are removed automatically
@@ -89,6 +92,11 @@ $(function()
 				this.element.find(this.js_selectors.menu_filter_clear).on('click', function(oEvent){
 					me._onFilterClearClick(oEvent);
 				})
+				
+				// User info
+				this.element.find(this.js_selectors.user_menu_toggler).on('click', function(oEvent){
+					me._onUserMenuTogglerClick(oEvent);
+				});
 			},
 
 			// Events callbacks
@@ -169,6 +177,19 @@ $(function()
 				this._clearFiltering();
 				// Position focus in the input for better UX
 				this._focusFilter();
+			},
+			_onUserMenuTogglerClick: function(oEvent)
+			{
+				// Avoid anchor glitch
+				oEvent.preventDefault();
+				var oEventTarget = $(oEvent.target);
+				var aEventTargetPos = oEventTarget.position();
+				
+				$(this.js_selectors.user_menu_container).css({
+					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(this.js_selectors.user_menu).height()) + 'px',
+					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
+				});
+				$(this.js_selectors.user_menu).popover_menu('openPopup');
 			},
 
 			// Methods
