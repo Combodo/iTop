@@ -1036,45 +1036,28 @@ EOF
 		$iKey = $this->GetKey();
 		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
-		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate($sClass));
-		if (!empty($sTemplate))
-		{
-			$oTemplate = new DisplayTemplate($sTemplate);
-			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
-			//       but the preferred method is to use '$id$'
-			$oTemplate->Render($oPage, array(
-				'class_name' => MetaModel::GetName($sClass),
-				'class' => $sClass,
-				'pkey' => $iKey,
-				'id' => $iKey,
-				'name' => $this->GetName(),
-			));
-		}
-		else
-		{
-			// Object's details
-			// template not found display the object using the *old style*
-			$oPage->add(<<<HTML
+		// Object's details
+		// template not found display the object using the *old style*
+		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
 <div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
 HTML
-			);
-			$this->DisplayBareHeader($oPage, $bEditMode);
-			/** @var \iTopWebPage $oPage */
-			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
-			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-			$oPage->SetCurrentTab('UI:PropertiesTab');
-			$this->DisplayBareProperties($oPage, $bEditMode);
-			$this->DisplayBareRelations($oPage, $bEditMode);
-			//$oPage->SetCurrentTab('UI:HistoryTab');
-			//$this->DisplayBareHistory($oPage, $bEditMode);
-			$oPage->AddAjaxTab('UI:HistoryTab',
-				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
-			$oPage->add(<<<HTML
+		);
+		$this->DisplayBareHeader($oPage, $bEditMode);
+		/** @var \iTopWebPage $oPage */
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab('UI:PropertiesTab');
+		$this->DisplayBareProperties($oPage, $bEditMode);
+		$this->DisplayBareRelations($oPage, $bEditMode);
+		//$oPage->SetCurrentTab('UI:HistoryTab');
+		//$this->DisplayBareHistory($oPage, $bEditMode);
+		$oPage->AddAjaxTab('UI:HistoryTab',
+			utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
+		$oPage->add(<<<HTML
 </div><!-- End of object-details -->
 HTML
-			);
-		}
+		);
 	}
 
 	/**
