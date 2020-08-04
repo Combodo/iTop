@@ -32,6 +32,7 @@ use JSPopupMenuItem;
  */
 class JsPopoverMenuItem extends PopoverMenuItem
 {
+	// Overloaded constants
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_js';
 
 	public function GetJsCode()

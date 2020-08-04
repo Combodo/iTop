@@ -33,8 +33,8 @@ use Combodo\iTop\Application\UI\UIBlock;
  */
 class PopoverMenuItem extends UIBlock
 {
+	// Overloaded constants
 	const BLOCK_CODE = 'ibo-popover-menu--item';
-
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/layout';
 
 	/** @var \ApplicationPopupMenuItem $oPopupMenuItem We decorate the class with the original \ApplicationPopupMenuItem as it is used among the application (backoffice, portal, extensions) and cannot be refactored without BC breaks */

@@ -291,7 +291,7 @@ class ApplicationMenu
 	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
 	 *
-	 * @deprecated Will be removed in 2.8.0
+	 * @deprecated Will be removed in 2.8.0, use static::GetMenuGroups() instead
 	 */
 	public static function DisplayMenu($oPage, $aExtraParams)
 	{
@@ -367,7 +367,7 @@ EOF
 	 * @return bool True if the currently selected menu is one of the submenus
 	 * @throws DictExceptionMissingString
 	 * @throws \Exception
-	 * @deprecated Will be removed in 2.8.0
+	 * @deprecated Will be removed in 2.8.0, use static::GetSubMenuNodes() instead
 	 */
 	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{

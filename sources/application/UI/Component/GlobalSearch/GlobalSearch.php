@@ -33,8 +33,8 @@ use utils;
  */
 class GlobalSearch extends UIBlock
 {
+	// Overloaded constants
 	const BLOCK_CODE = 'ibo-global-search';
-
 	const HTML_TEMPLATE_REL_PATH = 'components/global-search/layout';
 	const JS_TEMPLATE_REL_PATH = 'components/global-search/layout';
 	const JS_FILES_REL_PATH = [

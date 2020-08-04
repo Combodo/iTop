@@ -42,8 +42,8 @@ use utils;
  */
 class NavigationMenu extends UIBlock
 {
+	// Overloaded constants
 	const BLOCK_CODE = 'ibo-navigation-menu';
-
 	const HTML_TEMPLATE_REL_PATH = 'layouts/navigation-menu/layout';
 	const JS_TEMPLATE_REL_PATH = 'layouts/navigation-menu/layout';
 	const JS_FILES_REL_PATH = [

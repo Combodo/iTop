@@ -52,6 +52,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryUrl;
 	protected $sBreadCrumbEntryIcon;
 	protected $sBreadCrumbEntryIconType;
+	/** @var \ContextTag $oCtx */
 	protected $oCtx;
 
 	/**
@@ -1063,7 +1064,7 @@ EOF
 		}
 
 		// Components
-		// Note: For now all components are either included in the layouts above or put in page through the add_ui_block() API, so there is no need to do anything more.
+		// Note: For now all components are either included in the layouts above or put in page through the AddUiBlock() API, so there is no need to do anything more.
 
 		// Variable content of the page
 		$aData['aPage'] = array_merge(

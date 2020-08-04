@@ -34,8 +34,8 @@ use Exception;
  */
 class PopoverMenu extends UIBlock
 {
+	// Overloaded constants
 	const BLOCK_CODE = 'ibo-popover-menu';
-
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/layout';
 	//const JS_TEMPLATE_REl_PATH = 'components/popover-menu/layout';
 	const JS_FILES_REL_PATH = [

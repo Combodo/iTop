@@ -40,16 +40,14 @@
 			{{ render_block(aLayouts.oTopBar) }}
 		</div>
 		{{ include('pages/backoffice/extension-blocks/header.html.twig') }}
-		<main id="ibo-page-content">
-			{{ aPage.sSanitizedContent|raw }}
-
-			{# TODO: Remove this when modal development is done #}
-			<div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
-			<div style="display:none" title="ex2" id="ex2">Please wait...</div>
-			<div style="display:none" title="dialog" id="ModalDlg"></div>
-			<div style="display:none" id="ajax_content"></div>
-		</main>
+		{{ render_block(aLayouts.oPageContent) }}
 		{{ include('pages/backoffice/extension-blocks/footer.html.twig') }}
+
+		{# TODO: Remove this when modal development is done #}
+		<div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
+		<div style="display:none" title="ex2" id="ex2">Please wait...</div>
+		<div style="display:none" title="dialog" id="ModalDlg"></div>
+		<div style="display:none" id="ajax_content"></div>
 	</div>
 
 	{% block iboPageJsFiles %}
@@ -80,7 +78,7 @@
 
 		{% block iboPageJsInlineLive %}
 			{% for sJsInline in aPage.aJsInlineLive %}
-				{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed comment) #}
+				{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
 				<script type="text/javascript">
 					{{ sJsInline|raw }}
 				</script>
