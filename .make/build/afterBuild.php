@@ -1,6 +1,8 @@
 <?php
 $iBeginTime = time();
 
+chdir(__DIR__);
+
 $aCommands = [
 	'php composer/rmDeniedTestDir.php',
 	'php build/commands/setupCssCompiler.php',
