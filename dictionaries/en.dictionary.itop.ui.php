@@ -387,7 +387,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Incidents assigned to me',
 	'UI:AllOrganizations' => ' All Organizations ',
 	'UI:YourSearch' => 'Your Search',
-	'UI:LoggedAsMessage' => 'Hi %1$s!',
+	'UI:LoggedAsMessage' => 'Logged in as %1$s',
 	'UI:LoggedAsMessage+Admin' => 'Logged in as %1$s (Administrator)',
 	'UI:Button:Logoff' => 'Log off',
 	'UI:Button:GlobalSearch' => 'Search',

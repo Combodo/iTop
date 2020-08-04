@@ -217,11 +217,12 @@ class NavigationMenu extends UIBlock
 			'sOrganization' => UserRights::GetContactOrganizationFriendlyname(),
 			'sFirstname' => UserRights::GetContactFirstname(),
 			'sPictureUrl' => UserRights::GetContactPicture(),
+			'sWelcomeMessage' => Dict::Format('UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text', UserRights::GetContactFirstname())
 		];
 
 		// Logon message
-		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage' : 'UI:LoggedAsMessage';
-		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFirstname());
+		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage+Admin' : 'UI:LoggedAsMessage';
+		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactObject()->Get('friendlyname'));
 
 		$this->aUserData = $aData;
 
