@@ -24,6 +24,7 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
 use ApplicationPopupMenuItem;
 use JSPopupMenuItem;
 use URLPopupMenuItem;
+use SeparatorPopupMenuItem;
 
 /**
  * Class PopupMenuItemFactory
@@ -52,6 +53,9 @@ class PopoverMenuItemFactory
 				break;
 			case $oItem instanceof JSPopupMenuItem:
 				$sTargetClass = 'JsPopoverMenuItem';
+				break;			
+			case $oItem instanceof SeparatorPopupMenuItem:
+				$sTargetClass = 'SeparatorPopoverMenuItem';
 				break;
 			default:
 				$sTargetClass = 'PopoverMenuItem';

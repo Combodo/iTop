@@ -20,6 +20,10 @@
 $ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
 $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
 
+$ibo-popover-menu--separator--padding: 0;
+$ibo-popover-menu--separator--margin: 0;
+$ibo-popover-menu--separator--background-color: $ibo-color-grey-200;
+
 .ibo-popover-menu--item{
   padding: 12px 24px 12px 16px;
   color: $ibo-popover-menu--item--text-color;
@@ -30,5 +34,10 @@ $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !d
   &:hover{
     background-color: var(--ibo-color-grey-200);
     color: inherit;
+  }
+  &.ibo-popover-menu--separator{
+    padding: $ibo-popover-menu--separator--padding;
+    margin: $ibo-popover-menu--separator--margin;
+    background-color: $ibo-popover-menu--separator--background-color
   }
 }
