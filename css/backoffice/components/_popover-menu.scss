@@ -21,6 +21,8 @@ $ibo-popover-menu--background-color: $ibo-color-white-100 !default;
 $ibo-popover-menu--border-radius: $ibo-border-radius-300 !default;
 $ibo-popover-menu--padding: 0 !default;
 
+$ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !default;
+
 .ibo-popover-menu{
   display: none;
   padding: $ibo-popover-menu--padding;
@@ -44,4 +46,10 @@ $ibo-popover-menu--padding: 0 !default;
   margin: 0px 0px;
   width: 100%;
   @extend %ibo-text-truncated-with-ellipsis;
+  &:first-child{
+    border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;
+  }
+  &:last-child {
+    border-radius: 0 0 $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius;
+  }
 }

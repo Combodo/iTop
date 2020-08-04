@@ -19,7 +19,6 @@
 /* SCSS variables */
 $ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
 $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
-$ibo-popover-menu--item--border-radius: $ibo-popover-menu--border-radius !default;
 
 .ibo-popover-menu--item{
   padding: 12px 24px 12px 16px;
@@ -31,11 +30,5 @@ $ibo-popover-menu--item--border-radius: $ibo-popover-menu--border-radius !defaul
   &:hover{
     background-color: var(--ibo-color-grey-200);
     color: inherit;
-  }
-  &:first-child{
-    border-radius: $ibo-popover-menu--item--border-radius $ibo-popover-menu--item--border-radius 0 0;
-  }
-  &:last-child {
-    border-radius: 0 0 $ibo-popover-menu--item--border-radius $ibo-popover-menu--item--border-radius;
   }
 }
