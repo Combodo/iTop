@@ -31,7 +31,6 @@ class Event extends DBObject implements iDisplay
 			"db_table" => "priv_event",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
@@ -127,7 +126,6 @@ class EventNotification extends Event
 			"db_table" => "priv_event_notification",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"order_by_default" => array('date' => false),
 			'indexes' => array(
 				array('object_id'),
@@ -163,7 +161,6 @@ class EventNotificationEmail extends EventNotification
 			"db_table" => "priv_event_email",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
@@ -201,7 +198,6 @@ class EventIssue extends Event
 			"db_table" => "priv_event_issue",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
@@ -301,7 +297,6 @@ class EventWebService extends Event
 			"db_table" => "priv_event_webservice",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);
@@ -337,7 +332,6 @@ class EventRestService extends Event
 			"db_table" => "priv_event_restservice",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"order_by_default" => array('date' => false)
 		);
 		MetaModel::Init_Params($aParams);

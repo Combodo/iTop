@@ -39,7 +39,6 @@ class ModuleInstallation extends cmdbAbstractObject
 			"db_table" => "priv_module_install",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -81,7 +80,6 @@ class ExtensionInstallation extends cmdbAbstractObject
 				"db_table" => "priv_extension_install",
 				"db_key_field" => "id",
 				"db_finalclass_field" => "",
-				"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

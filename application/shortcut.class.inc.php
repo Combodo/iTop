@@ -39,7 +39,6 @@ abstract class Shortcut extends DBObject implements iDisplay
 			"db_table" => "priv_shortcut",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -161,7 +160,6 @@ class ShortcutOQL extends Shortcut
 			"db_table" => "priv_shortcut_oql",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

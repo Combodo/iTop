@@ -38,7 +38,6 @@ class BackgroundTask extends DBObject
 			"db_table" => "priv_backgroundtask",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 

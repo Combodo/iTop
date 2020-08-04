@@ -242,7 +242,6 @@ abstract class User extends cmdbAbstractObject
 			"db_table" => "priv_user",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

@@ -40,7 +40,6 @@ abstract class Query extends cmdbAbstractObject
 			"db_table" => "priv_query",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -72,7 +71,6 @@ class QueryOQL extends Query
 			"db_table" => "priv_query_oql",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

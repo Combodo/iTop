@@ -27,7 +27,6 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -376,7 +375,6 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -482,7 +480,6 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -590,7 +587,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/workorder.png</icon>
 				<reconciliation>
 					<attributes>

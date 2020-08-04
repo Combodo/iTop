@@ -15,7 +15,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -141,7 +140,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -260,7 +258,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/hypervisor.png</icon>
         <reconciliation>
           <attributes>
@@ -408,7 +405,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/cluster.png</icon>
         <reconciliation>
           <attributes>
@@ -534,7 +530,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/virtualmachine.png</icon>
         <reconciliation>
           <attributes>
@@ -767,7 +762,6 @@
             <attribute id="virtualmachine_name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/interface.png</icon>
         <reconciliation>
           <attributes>

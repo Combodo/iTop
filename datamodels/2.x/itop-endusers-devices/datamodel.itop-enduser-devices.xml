@@ -15,7 +15,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
@@ -168,7 +167,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/phone.png</icon>
         <reconciliation>
           <attributes>
@@ -320,7 +318,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/mobile-phone.png</icon>
         <reconciliation>
           <attributes>
@@ -495,7 +492,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/ipphone.png</icon>
         <reconciliation>
           <attributes>
@@ -647,7 +643,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/tablet.png</icon>
         <reconciliation>
           <attributes>
@@ -796,7 +791,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/laptop.png</icon>
         <reconciliation>
           <attributes>
@@ -1047,7 +1041,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/printer.png</icon>
         <reconciliation>
           <attributes>
@@ -1232,7 +1225,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/peripherals.png</icon>
         <reconciliation>
           <attributes>
