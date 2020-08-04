@@ -171,7 +171,7 @@ class NavigationMenu extends UIBlock
 	/**
 	 * @return boolean
 	 */
-	public function GetIsNewsroomEnabled()
+	public function IsNewsroomEnabled()
 	{
 		return MetaModel::GetConfig()->Get('newsroom_enabled');
 	}
