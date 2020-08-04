@@ -1081,12 +1081,6 @@ EOF
 		}
 		$aClassParams['db_finalclass_field'] = $this->GetPropString($oProperties, 'db_final_class_field', $sDefaultFinalClass);
 	
-		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))
-		{
-			$sDisplayTemplate = $sModuleRelativeDir.'/'.$sDisplayTemplate;
-			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
-		}
-	
 		$this->CompileFiles($oProperties, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
 		{

@@ -770,7 +770,9 @@ class iTopDesignFormat
 	 */
 	protected function From17To18($oFactory)
 	{
-		// Nothing
+		// -- 3233 - Remove "display template" feature from MetaModel
+		$sPath = "/itop_design//class/properties/display_template";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	/**

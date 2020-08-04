@@ -869,18 +869,6 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 */
-	final static public function GetDisplayTemplate($sClass)
-	{
-		self::_check_subclass($sClass);
-		return array_key_exists("display_template", self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["display_template"] : '';
-	}
-
-	/**
-	 * @param string $sClass
 	 * @param bool $bOnlyDeclared
 	 *
 	 * @return array

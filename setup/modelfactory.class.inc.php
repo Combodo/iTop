@@ -1197,7 +1197,6 @@ $sHeader
 	</properties>
 	<naming format=""><attributes/></naming>
 	<reconciliation><attributes/></reconciliation>
-	<display_template/>
 	<icon>$sIcon</icon>
 	</properties>
 	<fields/>
