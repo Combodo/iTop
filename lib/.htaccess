@@ -1,12 +1,23 @@
+# Allow only static resources files
+# - HTML not allowed as there could be some test pages calling server scripts or executing JS scripts
+# - PHP not allowed as they should not be publicly accessible
+
 # Apache 2.4
 <ifModule mod_authz_core.c>
 Require all denied
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot1)$">
+	    Require all granted
+	</FilesMatch>
 </ifModule>
 
 # Apache 2.2
 <ifModule !mod_authz_core.c>
 deny from all
 Satisfy All
+	<FilesMatch ".+\.(css|scss|js|map|png|bmp|gif|jpe?g|svg|tiff|woff2?|ttf|eot)$">
+	    Order Allow,Deny
+	    Allow from all
+	</FilesMatch>
 </ifModule>
 
 # Apache 2.2 and 2.4
