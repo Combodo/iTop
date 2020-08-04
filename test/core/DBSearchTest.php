@@ -675,17 +675,21 @@ class DBSearchTest extends ItopDataTestCase
 		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
 		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)");
 		self::assertNotNull($oSearch);
-		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids'=> $TwoOrgIdsOnly));
+		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids' => $TwoOrgIdsOnly));
 		static::assertEquals(4, $oSet->Count());
 
-		$_SERVER['REQUEST_URI']='FAKE_REQUEST_URI' ;
-		$_SERVER['REQUEST_METHOD']='FAKE_REQUEST_METHOD';
+		$_SERVER['REQUEST_URI'] = 'FAKE_REQUEST_URI';
+		$_SERVER['REQUEST_METHOD'] = 'FAKE_REQUEST_METHOD';
 		$oP = new \iTopWebPage("test");
 		$oBlock = new \DisplayBlock($oSet->GetFilter(), 'list', false);
-		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array ('menu'=>true, 'display_limit'=>false));
+		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array('menu' => true, 'display_limit' => false));
 
 		$iHtmlUserRequestLineCount = substr_count($sHtml, '<tr><td  data-object-class="UserRequest"');
-		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :" . $sHtml);
-		$oP->output();
+		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :".$sHtml);
+
+		// As using $oP we added some content in the PHP buffer, we need to empty it !
+		// Otherwise PHPUnit will throw the error : "Test code or tested code did not (only) close its own output buffers"
+		// Previously we were using a output() call but this is time consuming and could cause "risky test" error !
+		ob_get_clean();
 	}
 }
