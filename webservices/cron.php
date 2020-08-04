@@ -244,8 +244,14 @@ function CronExec($oP, $aProcesses, $bVerbose)
 
 		foreach ($aProcesses as $oProcess)
 		{
-
 			$sTaskClass = get_class($oProcess);
+
+			// N°3219 for each process will use a specific CMDBChange object with a specific track info
+			// Any BackgroundProcess can overrides this as needed
+			CMDBObject::SetCurrentChange(null);
+			CMDBObject::SetTrackInfo("Background task ($sTaskClass)");
+			CMDBObject::SetTrackOrigin(null);
+
 			if (!array_key_exists($sTaskClass, $aTasks))
 			{
 				// New entry, let's create a new BackgroundTask record, and plan the first execution
