@@ -84,7 +84,7 @@ class NavigationMenu extends UIBlock
 		parent::__construct($sId);
 
 		$this->sAppRevisionNumber = utils::GetAppRevisionNumber();
-		$this->sAppSquareIconUrl = Branding::GetSquareMainLogoAbsoluteUrl();
+		$this->sAppSquareIconUrl = Branding::GetCompactMainLogoAbsoluteUrl();
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
 		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());

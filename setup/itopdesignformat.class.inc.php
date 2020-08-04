@@ -783,6 +783,10 @@ class iTopDesignFormat
 		// -- 3182 - Remove style node from MenuGroup
 		$sPath = "/itop_design/menus/menu[@xsi:type='MenuGroup']/style";
 		$this->RemoveNodeFromXPath($sPath);
+
+		// -- 3185 - Remove main_logo_compact node from branding
+		$sPath = "/itop_design/branding/main_logo_compact";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	/**

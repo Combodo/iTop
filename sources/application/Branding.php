@@ -32,8 +32,8 @@ class Branding
 {
 	/** @var string Full main logo, used everywhere when there is no need for a special one */
 	const ENUM_LOGO_TYPE_MAIN_LOGO_FULL = 'main_logo_full';
-	/** @var string Square main logo, used in the collapsed menu of the backoffice */
-	const ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE = 'main_logo_square';
+	/** @var string Compact main logo, used in the collapsed menu of the backoffice */
+	const ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT = 'main_logo_compact';
 	/** @var string Logo used in the end-users portal */
 	const ENUM_LOGO_TYPE_PORTAL_LOGO = 'portal_logo';
 	/** @var string Logo used in the login pages */
@@ -47,9 +47,9 @@ class Branding
 			'default' => 'images/itop-logo.png',
 			'custom' => 'branding/main-logo-full.png',
 		],
-		self::ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE => [
+		self::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT => [
 			'default' => 'images/itop-logo-square.png',
-			'custom' => 'branding/main-logo-square.png',
+			'custom' => 'branding/main-logo-compact.png',
 		],
 		self::ENUM_LOGO_TYPE_PORTAL_LOGO => [
 			'default' => 'images/logo-itop-dark-bg.svg',
@@ -99,14 +99,14 @@ class Branding
 	}
 
 	/**
-	 * Return the absolute URL for the square main logo
+	 * Return the absolute URL for the compact main logo
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function GetSquareMainLogoAbsoluteUrl()
+	public static function GetCompactMainLogoAbsoluteUrl()
 	{
-		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_LOGO_SQUARE);
+		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT);
 	}
 
 	/**
