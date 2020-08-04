@@ -96,9 +96,9 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'basepath containing / and \\' => [
-				APPROOT.'sources/form/form.class.inc.php',
-				APPROOT.'sources/form\\form.class.inc.php',
-				$sItopRootRealPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
+				APPROOT.'sources/Form/Form.php',
+				APPROOT.'sources/Form\\Form.php',
+				$sItopRootRealPath.'sources'.$sSep.'Form'.$sSep.'Form.php',
 			],
 		];
 	}
