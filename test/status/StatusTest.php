@@ -20,7 +20,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusWrongUrl() {
-        $sPath = APPROOT . 'status_wrong.php';
+        $sPath = 'status_wrong.php';
 
         exec("php $sPath", $aOutput, $iRet);
 
@@ -31,7 +31,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGood() {
-	    $sPath = APPROOT . 'status.php';
+	    $sPath = 'status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
 
@@ -42,7 +42,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGoodWithJson() {
-	    $sPath = APPROOT . 'status.php';
+	    $sPath = 'status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
 

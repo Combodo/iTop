@@ -1,8 +1,7 @@
 <?php
 
 //Include status functions
-require_once(__DIR__ . '/sources/application/status/status.inc.php');
-
+require_once(__DIR__.'/../../sources/application/status/status.inc.php');
 //Do check Status
 try 
 {
