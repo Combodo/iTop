@@ -164,7 +164,7 @@ class ThemeHandlerTest extends ItopTestCase
 				$this->assertTrue(false, "Cannot create directory $sThemeFolderPath");
 			}
 
-			$aIncludedImages=ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeFolderPath);
+			$aIncludedImages=ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeFolderPath, $aImportsPaths);
 			$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 			echo "  current signature: $compiled_json_sig\n";
 			rmdir($sThemeFolderPath);
@@ -572,9 +572,25 @@ SCSS;
 		$expectJsonFilePath = APPROOT.'test/application/theme-handler/expected/themes/basque-red/theme-parameters.json';
 		$expectedThemeParamJson = file_get_contents($expectJsonFilePath);
 		$aThemeParametersVariables = json_decode($expectedThemeParamJson, true);
-		$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParametersVariables['variables'], $aStylesheetFile, "RELATIVEPATH");
+		$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParametersVariables['variables'], $aStylesheetFile, "RELATIVEPATH", [APPROOT.'css']);
 
 		$aExpectedImages = json_decode(file_get_contents(APPROOT.'test/application/theme-handler/getimages/expected-getimages.json'), true);
 		$this->assertEquals($aExpectedImages, $aIncludedImages);
+	}
+
+	public function testGetAllImages()
+	{
+		$aFolders = [
+			APPROOT.'test/application/theme-handler/getimages/imagefolder1',
+			APPROOT.'test/application/theme-handler/getimages/imagefolder2'
+		];
+		$aAllImagesMap = ThemeHandler::GetAllImagesMap($aFolders);
+		$aExpectedImagesMap = [
+			"titi.jpeg" => [ APPROOT."test/application/theme-handler/getimages/imagefolder1/subdir/titi.jpeg"],
+			"toto.jpg" => [ APPROOT."test/application/theme-handler/getimages/imagefolder1/toto.jpg"],
+			"tete.gif" => [ APPROOT."test/application/theme-handler/getimages/imagefolder2/subdir/tete.gif"],
+			"tutu.png" => [ APPROOT."test/application/theme-handler/getimages/imagefolder2/subdir/tutu.png", APPROOT."test/application/theme-handler/getimages/imagefolder2/tutu.png"],
+		];
+		$this->assertEquals($aExpectedImagesMap, $aAllImagesMap);
 	}
 }
