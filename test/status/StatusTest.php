@@ -23,8 +23,8 @@ class StatusTest extends ItopTestCase {
         $sPath = 'status_wrong.php';
 
         exec("php $sPath", $aOutput, $iRet);
+        $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
 
-        $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet");
     }
 
     /**
@@ -34,8 +34,7 @@ class StatusTest extends ItopTestCase {
 	    $sPath = 'status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
-
-	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet");
+	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
     }
 
     /**
@@ -45,22 +44,23 @@ class StatusTest extends ItopTestCase {
 	    $sPath = 'status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
+	    $sAdditionnalInfo = "aOutput:\n" . var_export($aOutput, true);
 
         //Check response
-        $this->assertNotEmpty($aOutput[0], 'Empty response');
-        $this->assertJson($aOutput[0], 'Not a JSON');
+        $this->assertNotEmpty($aOutput[0], 'Empty response. ' . $sAdditionnalInfo);
+        $this->assertJson($aOutput[0], 'Not a JSON. ' . $sAdditionnalInfo);
 
         $aResponseDecoded = json_decode($aOutput[0], true);
 
         //Check status
-        $this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a status\' field');
-        $this->assertEquals('RUNNING', $aResponseDecoded['status'], 'Status is not \'RUNNING\'');
+        $this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a status\' field. ' . $sAdditionnalInfo);
+        $this->assertEquals('RUNNING', $aResponseDecoded['status'], 'Status is not \'RUNNING\'. ' . $sAdditionnalInfo);
         //Check code
-        $this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a code\' field');
-        $this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0');
+        $this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a code\' field. ' . $sAdditionnalInfo);
+        $this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0. ' . $sAdditionnalInfo);
         //Check message
-        $this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field');
-        $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty');
+        $this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field. ' . $sAdditionnalInfo);
+        $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. \' . $sAdditionnalInfo);
     }
 
 }
