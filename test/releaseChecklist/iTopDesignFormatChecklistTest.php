@@ -3,13 +3,12 @@
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
 use iTopDesignFormat;
 
 
 /**
  * Class iTopDesignFormatChecklistTest
- *
+ * Ticket 3053 - Check XML conversion methods
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
