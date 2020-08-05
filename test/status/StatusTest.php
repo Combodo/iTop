@@ -60,7 +60,7 @@ class StatusTest extends ItopTestCase {
         $this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0. ' . $sAdditionnalInfo);
         //Check message
         $this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field. ' . $sAdditionnalInfo);
-        $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. \' . $sAdditionnalInfo);
+        $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. ' . $sAdditionnalInfo);
     }
 
 }
