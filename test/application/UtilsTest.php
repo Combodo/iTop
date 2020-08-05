@@ -77,14 +77,19 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 
 		$sSep = DIRECTORY_SEPARATOR;
 		$sItopRootRealPath = realpath(APPROOT).$sSep;
+		$sLicenseFileName = 'license.txt';
+		if (!is_file(APPROOT.$sLicenseFileName))
+		{
+			$sLicenseFileName = 'LICENSE';
+		}
 
 		return [
-			'licence.txt' => [APPROOT.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
+			$sLicenseFileName => [APPROOT.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
 			'unexisting file' => [APPROOT.'license_DOES_NOT_EXIST.txt', APPROOT, false],
-			'/license.txt' => [APPROOT.$sSep.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
-			'%2flicense.txt' => [APPROOT.'%2flicense.txt', APPROOT, false],
-			'../license.txt' => [APPROOT.'..'.$sSep.'license.txt', APPROOT, false],
-			'%2e%2e%2flicense.txt' => [APPROOT.'%2e%2e%2flicense.txt', APPROOT, false],
+			'/'.$sLicenseFileName => [APPROOT.$sSep.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
+			'%2f'.$sLicenseFileName => [APPROOT.'%2f'. $sLicenseFileName, APPROOT, false],
+			'../'.$sLicenseFileName => [APPROOT.'..'.$sSep.$sLicenseFileName, APPROOT, false],
+			'%2e%2e%2f'.$sLicenseFileName => [APPROOT.'%2e%2e%2f'.$sLicenseFileName, APPROOT, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
 				APPROOT.'application/utils.inc.php',
 				APPROOT,
