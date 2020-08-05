@@ -20,10 +20,10 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusWrongUrl() {
-        $sPath = 'status_wrong.php';
+        $sPath = __DIR__ . '/status_wrong.php';
 
         exec("php $sPath", $aOutput, $iRet);
-        $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
+        $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
 
     }
 
@@ -31,7 +31,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGood() {
-	    $sPath = 'status.php';
+	    $sPath = __DIR__ . '/status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
 	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
@@ -41,7 +41,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGoodWithJson() {
-	    $sPath = 'status.php';
+	    $sPath = __DIR__ . '/status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
 	    $sAdditionnalInfo = "aOutput:\n" . var_export($aOutput, true);
