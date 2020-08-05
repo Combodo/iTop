@@ -21,8 +21,8 @@ $ibo-body-text-color: $ibo-color-grey-900 !default;
 $ibo-body-background-color: $ibo-color-white-200 !default;
 
 $ibo-page-container--elements-padding-x: 48px !default;
-$ibo-page-content--padding-top: 24px !default;
-$ibo-page-content--padding-bottom: 24px !default;
+$ibo-main-content--padding-top: 24px !default;
+$ibo-main-content--padding-bottom: 24px !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
@@ -47,12 +47,18 @@ body{
 #ibo-page-container{
 	position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
 	z-index: 10;
+
+	/* Self */
 	height: 100%;
 	overflow: auto;
 	flex-grow: 1;
 
+	/* For children */
+	display: flex;
+	flex-direction: column;
+
 	#ibo-top-bar,
-	#ibo-page-content{
+	#ibo-main-content{
 		/* Align both elements content for a slicker touch */
 		padding-left: $ibo-page-container--elements-padding-x;
 		padding-right: $ibo-page-container--elements-padding-x;
@@ -64,10 +70,14 @@ body{
 		left: 0;
 		right: 0;
 	}
-	#ibo-page-content{
+	#ibo-center-container{
 		position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
 		z-index: 10;
-		padding-top: $ibo-page-content--padding-top;
-		padding-bottom: $ibo-page-content--padding-bottom;
+
+		flex-grow: 1; /* To occupy all height available */
+	}
+	#ibo-main-content{
+		padding-top: $ibo-main-content--padding-top;
+		padding-bottom: $ibo-main-content--padding-bottom;
 	}
 }

@@ -83,7 +83,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		utils::InitArchiveMode();
 
-		$this->m_sMenu = "";
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
@@ -685,15 +684,6 @@ JS
 		$this->sBreadCrumbEntryDescription = null;
 		$this->sBreadCrumbEntryUrl = null;
 		$this->sBreadCrumbEntryIcon = null;
-	}
-
-	/**
-	 * @param string $sHtml
-	 * @deprecated Will be removed in 2.8.0
-	 */
-	public function AddToMenu($sHtml)
-	{
-		$this->m_sMenu .= $sHtml;
 	}
 
 	/**
