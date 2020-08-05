@@ -68,7 +68,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	 */
 	public function testRealPath($sPath, $sBasePath, $expected)
 	{
-		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath));
+		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath), "utils::RealPath($sPath, $sBasePath) does not match $expected");
 	}
 
 	public function realPathDataProvider()
