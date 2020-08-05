@@ -1,6 +1,6 @@
 // TODO: We need to find a clean way to launch this script only once the JS scripts are loaded
 document.addEventListener("DOMContentLoaded", function(){
 	setTimeout(function(){
-		$('#{{ oBreadcrumbs.Id }}').breadcrumbs({{ oBreadcrumbs.JsWidgetOptions|json_encode|raw }});
+		$('#{{ oUIBlock.Id }}').breadcrumbs({{ oUIBlock.JsWidgetOptions|json_encode|raw }});
 	}, 500);
 });

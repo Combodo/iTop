@@ -1,13 +1,13 @@
-<nav id="{{ oTopBar.Id }}" class="ibo-top-bar">
+<nav id="{{ oUIBlock.Id }}" class="ibo-top-bar">
 	<div class="ibo-top-bar--quick-actions">
-		{% if oTopBar.HasQuickCreate %}
-			{{ render_block(oTopBar.QuickCreate) }}
+		{% if oUIBlock.HasQuickCreate %}
+			{{ render_block(oUIBlock.QuickCreate) }}
 		{% endif %}
-		{% if oTopBar.HasGlobalSearch %}
-			{{ render_block(oTopBar.GlobalSearch) }}
+		{% if oUIBlock.HasGlobalSearch %}
+			{{ render_block(oUIBlock.GlobalSearch) }}
 		{% endif %}
 	</div>
-	{% if oTopBar.HasBreadcrumbs %}
-		{{ render_block(oTopBar.Breadcrumbs) }}
+	{% if oUIBlock.HasBreadcrumbs %}
+		{{ render_block(oUIBlock.Breadcrumbs) }}
 	{% endif %}
 </nav>

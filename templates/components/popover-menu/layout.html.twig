@@ -1,9 +1,9 @@
-<div {% if oPopoverMenu.Id is defined %}id="{{ oPopoverMenu.Id }}"{% endif %} class="ibo-popover-menu" data-role="ibo-popover-menu">
-	{% for aSection in oPopoverMenu.Sections %}
+<div {% if oUIBlock.Id is defined %}id="{{ oUIBlock.Id }}"{% endif %} class="ibo-popover-menu" data-role="ibo-popover-menu">
+	{% for aSection in oUIBlock.Sections %}
 		{% if aSection.aItems|length > 0 %}
 			<div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">
-				{% for oPopoverMenuItem in aSection.aItems %}
-					{{ render_block(oPopoverMenuItem) }}
+				{% for oUIBlockItem in aSection.aItems %}
+					{{ render_block(oUIBlockItem) }}
 				{% endfor %}
 			</div>
 		{% endif %}

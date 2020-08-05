@@ -254,6 +254,6 @@ HTML;
 	 */
 	protected function GetBlockParameterNameForTemplate()
 	{
-		return 'o'.(new ReflectionClass($this->oBlock))->getShortName();
+		return 'oUIBlock';
 	}
 }

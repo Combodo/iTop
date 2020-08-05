@@ -1,10 +1,10 @@
-<div id="{{ oQuickCreate.Id }}" class="ibo-quick-create" data-role="ibo-quick-create">
-	<form action="{{ oQuickCreate.Endpoint }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
+<div id="{{ oUIBlock.Id }}" class="ibo-quick-create" data-role="ibo-quick-create">
+	<form action="{{ oUIBlock.Endpoint }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
 		<input type="hidden" name="operation" value="new" />
 		<a href="#" class="ibo-quick-create--icon fas fa-plus" data-role="ibo-quick-create--icon" data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25"></a>
 		<select name="class" class="ibo-quick-create--input" data-role="ibo-quick-create--input" placeholder="{{ 'UI:Component:QuickCreate:Input:Placeholder'|dict_s }}">
 			<option value="">{{ 'UI:Component:QuickCreate:Input:Placeholder'|dict_s }}</option>
-			{% for sClassCode, sClassLabel in oQuickCreate.AvailableClasses %}
+			{% for sClassCode, sClassLabel in oUIBlock.AvailableClasses %}
 				<option value="{{ sClassCode }}">{{ sClassLabel }}</option>
 			{% endfor %}
 		</select>
@@ -15,8 +15,8 @@
 				<span>{{ 'UI:Component:QuickCreate:Recents:Title'|dict_s }}</span>
 			</div>
 			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
-				{% if oQuickCreate.LastClasses|length > 0 %}
-					{% for aClass in oQuickCreate.LastClasses %}
+				{% if oUIBlock.LastClasses|length > 0 %}
+					{% for aClass in oUIBlock.LastClasses %}
 						<a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
 							{% if aClass.icon_url is defined %}
 								<img src="{{ aClass.icon_url}}" class="ibo-quick-create--compartment-element-image" />

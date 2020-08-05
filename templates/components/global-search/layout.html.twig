@@ -1,5 +1,5 @@
-<div id="{{ oGlobalSearch.Id }}" class="ibo-global-search" data-role="ibo-global-search">
-	<form action="{{ oGlobalSearch.Endpoint }}" method="post" class="ibo-global-search--head" data-role="ibo-global-search--head">
+<div id="{{ oUIBlock.Id }}" class="ibo-global-search" data-role="ibo-global-search">
+	<form action="{{ oUIBlock.Endpoint }}" method="post" class="ibo-global-search--head" data-role="ibo-global-search--head">
 		<a href="#" class="ibo-global-search--icon fas fa-search" data-role="ibo-global-search--icon" data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25"></a>
 		<input type="text" name="query" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" />
 	</form>
@@ -9,8 +9,8 @@
 				<span>{{ 'UI:Component:GlobalSearch:Recents:Title'|dict_s }}</span>
 			</div>
 			<div class="ibo-global-search--compartment-content" data-role="ibo-global-search--compartment-content">
-				{% if oGlobalSearch.LastQueries|length > 0 %}
-					{% for aQuery in oGlobalSearch.LastQueries %}
+				{% if oUIBlock.LastQueries|length > 0 %}
+					{% for aQuery in oUIBlock.LastQueries %}
 						<a href="#" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
 								<img src="{{ aPage.sAbsoluteUrlAppRoot ~ aQuery.icon_url}}" class="ibo-global-search--compartment-element-image" />

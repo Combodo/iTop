@@ -1,8 +1,8 @@
-<nav id="{{ oNavigationMenu.Id }}" class="ibo-navigation-menu {% if NavigationMenu.IsExpanded == true %}ibo-is-expanded{% endif %}">
+<nav id="{{ oUIBlock.Id }}" class="ibo-navigation-menu {% if NavigationMenu.IsExpanded == true %}ibo-is-expanded{% endif %}">
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
-			<a class="ibo-navigation-menu--square-company-logo" title="{{ oNavigationMenu.AppRevisionNumber }}" href="{{ oNavigationMenu.AppIconLink }}">
-				<img src="{{ oNavigationMenu.AppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
+			<a class="ibo-navigation-menu--square-company-logo" title="{{ oUIBlock.AppRevisionNumber }}" href="{{ oUIBlock.AppIconLink }}">
+				<img src="{{ oUIBlock.AppSquareIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}" />
 			</a>
 			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="20" href="#">
 				<span class="ibo-navigation-menu--toggler-icon">
@@ -13,12 +13,12 @@
 			</a>
 		</div>
 		<div class="ibo-navigation-menu--middle-part">
-			{% for aMenuGroup in oNavigationMenu.MenuGroups %}
+			{% for aMenuGroup in oUIBlock.MenuGroups %}
 				{{ include('layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>
 		<div class="ibo-navigation-menu--bottom-part">
-			{% if oNavigationMenu.IsNewsroomEnabled == true %}
+			{% if oUIBlock.IsNewsroomEnabled == true %}
 				<div class="ibo-navigation-menu--notifications">
 					<a class="ibo-navigation-menu--notifications-toggler" data-role="ibo-navigation-menu--notifications-toggler">
 						<i class="fas fa-bell"></i>
@@ -32,10 +32,10 @@
 				<div class="ibo-navigation-menu--user-picture">
 					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
 						<img class="ibo-navigation-menu--user-picture--image" 
-							 src="{{ oNavigationMenu.UserData.sPictureUrl }}" 
-							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oNavigationMenu.UserData.sFirstname) }}" 
+							 src="{{ oUIBlock.UserData.sPictureUrl }}"
+							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oUIBlock.UserData.sFirstname) }}"
 							 
-							 data-tooltip-content="{{ oNavigationMenu.UserData.sLogonMessage }}"
+							 data-tooltip-content="{{ oUIBlock.UserData.sLogonMessage }}"
 							 data-tooltip-placement="right"
 							 data-tooltip-distance-offset="20"
 						/>
@@ -45,7 +45,7 @@
 					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
 						<div class="ibo-navigation-menu--user-welcome-message--text">
 							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
-								{{ oNavigationMenu.UserData.sWelcomeMessage }}
+								{{ oUIBlock.UserData.sWelcomeMessage }}
 								<span class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler">
 									<i class="fas fa-caret-down"></i>
 								</span>
@@ -53,7 +53,7 @@
 						</div>
 					</a>
 				</div>
-				{% if oNavigationMenu.IsNewsroomEnabled == true %}
+				{% if oUIBlock.IsNewsroomEnabled == true %}
 					<div class="ibo-navigation-menu--user-notifications">
 						<a class="ibo-navigation-menu--user-notifications--text" data-role="ibo-navigation-menu--notifications-toggler" href="#">
 							{{ '0 notification'|dict_s }}
@@ -66,11 +66,11 @@
 				{% endif %}
 				<div class="ibo-navigation-menu--user-organization">
 					<div class="ibo-navigation-menu--user-organization--text">
-						{{ oNavigationMenu.UserData.sOrganization }}
+						{{ oUIBlock.UserData.sOrganization }}
 					</div>
 				</div>
 				<div class="ibo-navigation-menu--user-menu-container" data-role="ibo-navigation-menu--user-menu-container">
-					{{ render_block(oNavigationMenu.UserMenu) }}
+					{{ render_block(oUIBlock.UserMenu, {aPage: aPage}) }}
 				</div>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
 		</div>
 		<div class="ibo-navigation-menu--menu-groups">
-			{% for aMenuGroup in oNavigationMenu.MenuGroups %}
+			{% for aMenuGroup in oUIBlock.MenuGroups %}
 				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }) }}
 			{% endfor %}
 		</div>
