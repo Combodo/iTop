@@ -18,7 +18,7 @@ use iTopDesignFormat;
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
-class TestForITopDesignFormatClass extends ItopTestCase
+class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 {
 	protected function setUp()
 	{
