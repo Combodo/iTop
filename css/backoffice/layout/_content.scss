@@ -16,6 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "navigation-menu";
-@import "top-bar";
-@import "content";
+.ibo-center-container{
+
+}
+.ibo-center-container--with-side-content{
+	display: flex;
+	align-items: stretch;
+
+	#ibo-main-content{
+		flex-grow: 1; /* To occupy maximum width, side content will handle its width */
+	}
+}

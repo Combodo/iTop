@@ -1,0 +1,15 @@
+<div id="ibo-center-container" class="ibo-center-container {% block iboPageCenterContainerExtraClasses %}{% endblock %}">
+	{% block iboPageCenterContainer %}
+		<main id="ibo-main-content">
+			{% block iboPageMainContent %}
+				Before GetMainBlocks
+				{% for oSubBlock in oUIBlock.GetMainBlocks() %}
+					{{ render_block(oSubBlock, {aPage: aPage}) }}
+				{% endfor %}
+			{% endblock %}
+			{% block iboPageExtraHtml %}
+				{{ oUIBlock.GetExtraHtmlContent()|raw }}
+			{% endblock %}
+		</main>
+	{% endblock %}
+</div>

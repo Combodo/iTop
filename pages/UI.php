@@ -19,6 +19,7 @@
 
 use Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -448,7 +449,19 @@ try
 				if (!is_null($oObj))
 				{
 					SetObjectBreadCrumbEntry($oObj, $oP);
-					DisplayDetails($oP, $sClass, $oObj, $id);
+//					DisplayDetails($oP, $sClass, $oObj, $id);
+
+					// The object could be listed, check if it is actually allowed to view it
+					$oSet = CMDBObjectSet::FromObject($oObj);
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
+					{
+						throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
+					}
+
+					$sClassLabel = MetaModel::GetName($sClass);
+					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj));
+					$oObj->DisplayDetails($oP);
 				}				
 			}
 		break;
