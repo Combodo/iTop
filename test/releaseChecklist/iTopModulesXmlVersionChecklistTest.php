@@ -70,7 +70,7 @@ class iTopModulesXmlVersionChecklistTest extends ItopTestCase
 		$sPath = APPROOT.'datamodels/2.x/*/datamodel.*.xml';
 		$aXmlFiles = glob($sPath);
 
-		$sItopVersionShort = \utils::GetItopVersionShort();
+		$sItopVersionShort = \utils::GetItopPatchVersion();
 		$aItopVersion = explode('.', $sItopVersionShort);
 		$sExpectedXmlVersion = ($aItopVersion[0] - 1).'.'.($aItopVersion[1]); // eg: 2.7.0-dev become 1.7
 

@@ -45,9 +45,9 @@ class iTopModulesPhpVersionChecklistTest extends ItopTestCase
 	 * Verify if the datamodel.*.xml files refer to the current itop version
 	 * This is part of the checklist tests.
 	 *
-	 * @dataProvider DatamodelItopXmlVersionProvider
+	 * @dataProvider iTopModulesPhpVersionProvider
 	 */
-	public function testDatamodelItopXmlVersion($sExpectedVersion, $sPhpFile)
+	public function testiTopModulesPhpVersion($sExpectedVersion, $sPhpFile)
 	{
 
 		$sModulePath = realpath($sPhpFile);
@@ -65,17 +65,30 @@ class iTopModulesPhpVersionChecklistTest extends ItopTestCase
 		$this->assertSame($sExpectedVersion, $matches[1], "$sPhpFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedVersion)");
 	}
 
-	public function DatamodelItopXmlVersionProvider()
+	public function iTopModulesPhpVersionProvider()
 	{
 		parent::setUp();
 
 		require_once APPROOT.'core/config.class.inc.php';
 		require_once APPROOT.'application/utils.inc.php';
 
-		$sPath = APPROOT.'datamodels/2.x/*/module.*.php';
+		if (is_dir(APPROOT.'datamodels/2.x'))
+		{
+			$DatamodelsPath = APPROOT.'datamodels/2.x';
+		}
+		elseif (is_dir(APPROOT.'datamodels/1.x'))
+		{
+			$DatamodelsPath = APPROOT.'datamodels/1.x';
+		}
+		else
+		{
+			throw new \Exception('Cannot local the datamodels directory');
+		}
+
+		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sExpectedVersion = \utils::GetItopVersionShort();
+		$sExpectedVersion = \utils::GetItopPatchVersion();
 
 		$aTestCases = array();
 		foreach ($aPhpFiles as $sPhpFile)

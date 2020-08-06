@@ -2089,18 +2089,35 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0'
+	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
 	 */
 	public static function GetItopVersionWikiSyntax()
 	{
-		$sVersionShort = self::GetItopVersionShort();
-		return str_replace('.', '_', $sVersionShort);
+		$sMinorVersion = self::GetItopMinorVersion();
+		return str_replace('.', '_', $sMinorVersion).'_0';
+	}
+
+	/**
+	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
+	 * @throws \Exception
+	 */
+	public static function GetItopMinorVersion()
+	{
+		$sPatchVersion = self::GetItopPatchVersion();
+		$aExplodedVersion = explode('.', $sPatchVersion);
+
+		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
+		{
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+
+		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
 	}
 
 	/**
 	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
 	 */
-	public static function GetItopVersionShort()
+	public static function GetItopPatchVersion()
 	{
 		$aExplodedVersion = explode('-', ITOP_VERSION);
 		return $aExplodedVersion[0];
