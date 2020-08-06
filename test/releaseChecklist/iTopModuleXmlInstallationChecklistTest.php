@@ -49,6 +49,10 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 	public function testAllModuleAreIncludedInInstallationXml()
 	{
 		$sInstallationXmlPath = APPROOT.'datamodels/2.x/installation.xml';
+		if (!is_file($sInstallationXmlPath))
+		{
+			$sInstallationXmlPath = APPROOT.'datamodels/1.x/installation.xml';
+		}
 		$this->assertTrue(is_file($sInstallationXmlPath), "$sInstallationXmlPath does not exist");
 
 		$sInstallationXmlContent = file_get_contents($sInstallationXmlPath);
@@ -67,7 +71,7 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 
 		$aModulesFromDatamodels = $this->GetModulesFromDatamodels(APPROOT.'/datamodels');
 		$this->assertArraySubset($aModulesFromDatamodels, $aDeclaredModules, false, "$sInstallationXmlPath does not refer to all provided modules. Refered modules:\n " . var_export($aDeclaredModules, true));
-		$this->assertArraySubset($aDeclaredModules, $aModulesFromDatamodels, false, "Not all modules are contained in $sInstallationXmlPath. Refered modules:\n " . var_export($aModulesFromDatamodels, true));²²
+		$this->assertArraySubset($aDeclaredModules, $aModulesFromDatamodels, false, "Not all modules are contained in $sInstallationXmlPath. Refered modules:\n " . var_export($aModulesFromDatamodels, true));
 	}
 
 	public function GetModulesFromDatamodels($sFolder)
@@ -84,10 +88,16 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 				else if (preg_match("/module\..*\.php/", basename($sPath)))
 				{
 					$sModulePhpContent = file_get_contents($sPath);
-					if (strpos($sModulePhpContent, "SetupWebPage::AddModule(")!==false
-						&& strpos($sModulePhpContent, "'mandatory' => true,")===false
-						&& strpos($sModulePhpContent, "'visible' => false,")===false)
+					if (strpos($sModulePhpContent, "SetupWebPage::AddModule")!==false
+						&& strpos($sModulePhpContent, "'mandatory' => true")===false)
 					{
+						//filter modules autoselected due to below condition
+						if (strpos($sModulePhpContent, "'mandatory' => false")!==false
+							&& strpos($sModulePhpContent, "'visible' => false")!==false)
+						{
+							continue;
+						}
+
 						$sModule = basename(dirname($sPath));
 						$aModules[$sModule] = $sModule;
 					}
