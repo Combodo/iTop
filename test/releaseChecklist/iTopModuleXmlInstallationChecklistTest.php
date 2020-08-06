@@ -65,7 +65,9 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			}
 		}
 
-		$this->assertArraySubset($this->GetModulesFromDatamodels(APPROOT.'/datamodels'), $aDeclaredModules, false, "$sInstallationXmlPath does not refer to all provided modules. Refered modules:\n " . var_export($aDeclaredModules, true));
+		$aModulesFromDatamodels = $this->GetModulesFromDatamodels(APPROOT.'/datamodels');
+		$this->assertArraySubset($aModulesFromDatamodels, $aDeclaredModules, false, "$sInstallationXmlPath does not refer to all provided modules. Refered modules:\n " . var_export($aDeclaredModules, true));
+		$this->assertArraySubset($aDeclaredModules, $aModulesFromDatamodels, false, "Not all modules are contained in $sInstallationXmlPath. Refered modules:\n " . var_export($aModulesFromDatamodels, true));²²
 	}
 
 	public function GetModulesFromDatamodels($sFolder)
@@ -79,10 +81,16 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 				{
 					$aModules = array_merge($aModules, $this->GetModulesFromDatamodels($sPath));
 				}
-				else if (preg_match("/datamodel\..*\.xml/", basename($sPath)))
+				else if (preg_match("/module\..*\.php/", basename($sPath)))
 				{
-					$sModule = basename(dirname($sPath));
-					$aModules[$sModule] = $sModule;
+					$sModulePhpContent = file_get_contents($sPath);
+					if (strpos($sModulePhpContent, "SetupWebPage::AddModule(")!==false
+						&& strpos($sModulePhpContent, "'mandatory' => true,")===false
+						&& strpos($sModulePhpContent, "'visible' => false,")===false)
+					{
+						$sModule = basename(dirname($sPath));
+						$aModules[$sModule] = $sModule;
+					}
 				}
 			}
 		}
