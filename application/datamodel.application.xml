@@ -152,7 +152,7 @@
     <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
 	    <style>
-		    <decoration_classes>fas fa-tools</decoration_classes>
+		    <decoration_classes>fas fa-cog</decoration_classes>
 	    </style>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
@@ -173,7 +173,7 @@
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
 	    <style>
-		    <decoration_classes>fas fa-cog</decoration_classes>
+		    <decoration_classes>fas fa-tools</decoration_classes>
 	    </style>
     </menu>
     <menu id="SystemTools" xsi:type="MenuGroup" _delta="define">
