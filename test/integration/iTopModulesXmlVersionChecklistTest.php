@@ -38,7 +38,7 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 	 * Verify if the datamodel.*.xml files refer to the current itop version
 	 * This is an integration test
 	 *
-	 * @group iTopDesignFormat
+	 * @group skipPostBuild
 	 *
 	 * @dataProvider DatamodelItopXmlVersionProvider
 	 */
