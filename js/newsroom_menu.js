@@ -233,7 +233,6 @@ $(function()
 			{
 				aUnreadMessagesByProvider[k] = 0;
 			}
-			console.log(aAllMessages);
 			for(var k in aAllMessages)
 			{
 				var oMessage = aAllMessages[k];
@@ -282,7 +281,7 @@ $(function()
 			}
 			else
 			{
-				$(this.element).html(sDismissAllSection + sMessageSection + sShowAllMessagesSection);
+				$(this.element).html(sMessageSection + sShowAllMessagesSection);
 				var me = this;
 			}
 			
@@ -295,7 +294,6 @@ $(function()
 					var oEventTarget = $(oEvent.target);
 					var aEventTargetPos = oEventTarget.position();
 					oElem.css({
-						'max-height' : (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) - 100) + 'px',
 						'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
 					});
 					oElem.popover_menu("openPopup");
