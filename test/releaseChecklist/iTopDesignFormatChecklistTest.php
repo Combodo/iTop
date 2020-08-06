@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\Test\UnitTest\Setup;
+namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopDesignFormat;
