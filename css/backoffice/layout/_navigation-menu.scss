@@ -119,7 +119,7 @@ $ibo-navigation-menu--notifications-toggler--font-size: 28px !default;
 $ibo-navigation-menu--user--text-color: $ibo-color-white-100 !default;
 $ibo-navigation-menu--user-welcome-message--toggler--padding-left : 6px !default;
 $ibo-navigation-menu--user-picture--image--border-radius: $ibo-border-radius-full !default;
-$ibo-navigation-menu--user-notifications--toggler--padding-left: 8px !default;
+$ibo-navigation-menu--user-notifications--toggler--padding-left: 5px !default;
 
 $ibo-navigation-menu--user-picture--image-collapsed--size: 36px !default;
 
@@ -525,6 +525,9 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 	}
 	.ibo-navigation-menu--user-notifications{
 		@extend %ibo-font-ral-med-150;
+		.ibo-navigation-menu--user-notifications--text{
+			color: $ibo-navigation-menu--user--text-color;
+		}
 		.ibo-navigation-menu--user-notifications--toggler{
 			padding-left: $ibo-navigation-menu--user-notifications--toggler--padding-left;
 		}
