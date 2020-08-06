@@ -150,8 +150,8 @@ class Extension
 		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
 		// Usage in twig: {{ render_block(oBlock) }}
 		/** @since 2.8.0 */
-		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock){
-			return BlockRenderer::RenderBlockTemplates($oBlock);
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock, $aContextParams = []){
+			return BlockRenderer::RenderBlockTemplates($oBlock, $aContextParams);
 		}, ['is_safe' => ['html']]));
 	}
 

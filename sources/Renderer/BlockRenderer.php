@@ -41,6 +41,7 @@ class BlockRenderer
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param array $aContextParams
 	 *
 	 * @return string
 	 * @throws \ReflectionException
@@ -48,14 +49,16 @@ class BlockRenderer
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function RenderBlockTemplates(iUIBlock $oBlock)
+	public static function RenderBlockTemplates(iUIBlock $oBlock, $aContextParams = [])
 	{
-		$oSelf = new static($oBlock);
+		$oSelf = new static($oBlock, $aContextParams);
 		return $oSelf->RenderTemplates();
 	}
 
 	/** @var \Combodo\iTop\Application\UI\iUIBlock $oBlock */
 	protected $oBlock;
+	/** @var array $aContextParams Optional context parameters to pass to the template during rendering */
+	protected $aContextParams;
 	/** @var \Combodo\iTop\Renderer\RenderingOutput $oRenderingOutput */
 	protected $oRenderingOutput;
 
@@ -63,8 +66,9 @@ class BlockRenderer
 	 * BlockRenderer constructor.
 	 *
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param array $aContextParams
 	 */
-	public function __construct(iUIBlock $oBlock)
+	public function __construct(iUIBlock $oBlock, $aContextParams = [])
 	{
 		if(null === static::$oTwigEnv)
 		{
@@ -72,6 +76,7 @@ class BlockRenderer
 		}
 
 		$this->oBlock = $oBlock;
+		$this->aContextParams = $aContextParams;
 		$this->ResetRenderingOutput();
 	}
 
@@ -125,7 +130,7 @@ class BlockRenderer
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
-				[$this->GetBlockParameterNameForTemplate() => $this->oBlock],
+				$this->GetTemplateParameters(),
 				$this->oBlock::GetHtmlTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_HTML
 			);
@@ -150,7 +155,7 @@ class BlockRenderer
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
-				[$this->GetBlockParameterNameForTemplate() => $this->oBlock],
+				$this->GetTemplateParameters(),
 				$this->oBlock::GetJsTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_JS
 			);
@@ -175,7 +180,7 @@ class BlockRenderer
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
-				[$this->GetBlockParameterNameForTemplate() => $this->oBlock],
+				$this->GetTemplateParameters(),
 				$this->oBlock::GetCssTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_CSS
 			);
@@ -247,13 +252,14 @@ HTML;
 	}
 
 	/**
-	 * Return the name of the parameter used in the template to access the block object (class short name  = without namespace)
+	 * Return an associative array of parameters for the template.
+	 * Contains oUIBlock for the current block and optionally some others.
 	 *
-	 * @return string
-	 * @throws \ReflectionException
+	 * @return array
 	 */
-	protected function GetBlockParameterNameForTemplate()
+	protected function GetTemplateParameters()
 	{
-		return 'oUIBlock';
+		return array_merge(['oUIBlock' => $this->oBlock], $this->aContextParams);
+
 	}
 }

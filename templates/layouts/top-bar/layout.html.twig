@@ -1,13 +1,13 @@
 <nav id="{{ oUIBlock.Id }}" class="ibo-top-bar">
 	<div class="ibo-top-bar--quick-actions">
 		{% if oUIBlock.HasQuickCreate %}
-			{{ render_block(oUIBlock.QuickCreate) }}
+			{{ render_block(oUIBlock.QuickCreate, {aPage: aPage}) }}
 		{% endif %}
 		{% if oUIBlock.HasGlobalSearch %}
-			{{ render_block(oUIBlock.GlobalSearch) }}
+			{{ render_block(oUIBlock.GlobalSearch, {aPage: aPage}) }}
 		{% endif %}
 	</div>
 	{% if oUIBlock.HasBreadcrumbs %}
-		{{ render_block(oUIBlock.Breadcrumbs) }}
+		{{ render_block(oUIBlock.Breadcrumbs, {aPage: aPage}) }}
 	{% endif %}
 </nav>

@@ -33,14 +33,14 @@
 	{% endblock %}
 </head>
 <body data-gui-type="backoffice">
-	{{ render_block(aLayouts.oNavigationMenu) }}
+	{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
 	<div id="ibo-page-container">
 		<div id="ibo-top-container">
 			{{ include('pages/backoffice/extension-blocks/banner.html.twig') }}
-			{{ render_block(aLayouts.oTopBar) }}
+			{{ render_block(aLayouts.oTopBar, {aPage: aPage}) }}
 		</div>
 		{{ include('pages/backoffice/extension-blocks/header.html.twig') }}
-		{{ render_block(aLayouts.oPageContent) }}
+		{{ render_block(aLayouts.oPageContent, {aPage: aPage}) }}
 		{{ include('pages/backoffice/extension-blocks/footer.html.twig') }}
 
 		{# TODO: Remove this when modal development is done #}
