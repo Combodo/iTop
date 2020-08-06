@@ -1,13 +1,13 @@
-<nav id="{{ oUIBlock.Id }}" class="ibo-top-bar">
+<nav id="{{ oUIBlock.GetId() }}" class="ibo-top-bar">
 	<div class="ibo-top-bar--quick-actions">
-		{% if oUIBlock.HasQuickCreate %}
-			{{ render_block(oUIBlock.QuickCreate, {aPage: aPage}) }}
+		{% if oUIBlock.HasQuickCreate() %}
+			{{ render_block(oUIBlock.GetQuickCreate(), {aPage: aPage}) }}
 		{% endif %}
-		{% if oUIBlock.HasGlobalSearch %}
-			{{ render_block(oUIBlock.GlobalSearch, {aPage: aPage}) }}
+		{% if oUIBlock.HasGlobalSearch() %}
+			{{ render_block(oUIBlock.GetGlobalSearch(), {aPage: aPage}) }}
 		{% endif %}
 	</div>
-	{% if oUIBlock.HasBreadcrumbs %}
-		{{ render_block(oUIBlock.Breadcrumbs, {aPage: aPage}) }}
+	{% if oUIBlock.HasBreadcrumbs() %}
+		{{ render_block(oUIBlock.GetBreadcrumbs(), {aPage: aPage}) }}
 	{% endif %}
 </nav>
