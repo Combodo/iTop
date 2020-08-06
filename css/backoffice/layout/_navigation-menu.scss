@@ -174,7 +174,7 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 			.ibo-navigation-menu--bottom-part{
 				padding: $ibo-navigation-menu--bottom-part--padding-y $ibo-navigation-menu--bottom-part--padding-x;
 
-				.ibo-navigation-menu--notifications{
+				.ibo-navigation-menu--notifications .ibo-navigation-menu--notifications-toggler{
 					display: none;
 				}
 				.ibo-navigation-menu--user-info{

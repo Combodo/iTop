@@ -43,6 +43,7 @@ $(function()
 			_create: function()
 			{
 				this._bindEvents();
+				this._closePopup();
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
@@ -67,9 +68,8 @@ $(function()
 			// Methods
 			_onBodyClick: function(oEvent)
 			{
-				if($(oEvent.target.closest('[data-role="ibo-popover-menu"]')).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0)
+				if($(oEvent.target.closest(this.js_selectors.menu)).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0)
 				{
-					console.log('a');
 					this._closePopup();
 				}
 			},
@@ -84,6 +84,10 @@ $(function()
 			openPopup: function()
 			{
 				this._openPopup();
+			},
+			closePopup: function()
+			{
+				this._closePopup();
 			},
 		});
 });

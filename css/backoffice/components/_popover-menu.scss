@@ -45,7 +45,8 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   align-self: flex-start;
   margin: 0px 0px;
   width: 100%;
-  @extend %ibo-text-truncated-with-ellipsis;
+  white-space: nowrap;
+  
   &:first-child{
     border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;
   }

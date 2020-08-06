@@ -24,7 +24,18 @@ $(function()
 		{
 			var me = this;
 			this.aMessageByProvider = [];
+			$(me.element).popover_menu({'toggler': '[data-role="ibo-navigation-menu--notifications-toggler"]'});
+			$('[data-role="ibo-navigation-menu--notifications-toggler"]').on('click', function(oEvent) {
+				var oEventTarget = $(oEvent.target);
+				var aEventTargetPos = oEventTarget.position();
 
+				$(me.element).css({
+					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(me.element).height()) + 'px',
+					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px',
+					'max-height' : (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) - 100) + 'px'
+				});
+				$(me.element).popover_menu("openPopup");
+			});
 			this.element
 			.addClass('itop-newsroom_menu');
 			
@@ -152,115 +163,158 @@ $(function()
 			
 			this._buildMenu(aAllMessages);
 		},
+		_buildDismissAllSection: function()
+		{
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check ibo-navigation-menu--notifications-dismiss-all--icon"></i>'+this.options.labels.mark_all_as_read+'</a> <hr class="ibo-popover-menu--item ibo-popover-menu--separator"> </div>';
+		},
+		_buildMessageSection: function()
+		{
+			return '<div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">';
+		},
+		_buildShowAllMessagesSection: function()
+		{
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
+		},
+		_buildMessageItems: function(sId, sText, sImage, sStartDate, sProvider, sUrl)
+		{
+			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
+			sImage = '<img class="ibo-navigation-menu--notifications--item--image" src="'+sImage+'"><i class="ibo-navigation-menu--notifications--item--image '+this.options.placeholder_image_icon+'"></i>';
+
+			var div = document.createElement("div");
+			div.textContent = sText;
+			var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
+			//Todo: make only one converter per loop
+			var converter = new showdown.Converter({noHeaderId: true});
+			
+			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + converter.makeHtml(sDescription) +'</div>';
+			
+			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">'+ sImage + '<span>' + this.options.providers[sProvider].label+'</span> <span> ' + moment(sStartDate).fromNow()+'</span></span>';
+			
+			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-item" data-role="ibo-navigation-menu--notifications-item" data-msg-id="'+sId+'" data-provider-id="'+sProvider+'" href="'+sUrl+'" target="_blank" id="newsroom_menu_item_'+sId+'">' +
+				sNewMessageIndicator + sRichDescription + sBottomText +'</a>';
+		},
+		_buildNoMessageItem: function()
+		{
+			return '<div class="ibo-popover-menu--item ibo-popover-menu--item--no-message">' + this.options.labels.no_message + '<img class="ibo-popover-menu--item--no-message--image" src="../images/illustrations/undraw_empty.svg" alt="TODO"/></div>';
+		},
+		_buildSingleShowAllMessagesItem: function()
+		{
+			return '<a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-show-all" href="'+me.options.providers[0].view_all_url+'">' + this.options.labels.view_all + '</a>';
+		},
+		_buildMultipleShowAllMessagesItem: function(aUnreadMessagesByProvider)
+		{
+			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
+
+			var sUnreadMessages = ''
+			for(k in this.options.providers)
+			{
+				var sExtraMessages = '';
+				if (aUnreadMessagesByProvider[k] > 0)
+				{
+					sExtraMessages = ' <span class="ibo-navigation-menu--notifications-show-all-multiple--counter">('+aUnreadMessagesByProvider[k]+')</span>'
+				}
+				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="'+k+'" href="'+this.options.providers[k].view_all_url+'" target="_blank">'+ sNewMessageIndicator +this.options.providers[k].label+sExtraMessages+'</a>';
+			}
+			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-show-all-multiple" data-role="ibo-navigation-menu--notifications-show-all-multiple" href="#">'+this.options.labels.view_all+'<i class="fas fas-caret-down"></i></a>' +
+				'<div class="ibo-popover-menu" data-role="ibo-popover-menu"><div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">'+sUnreadMessages+'</div></div>';
+		},
 		_buildMenu: function(aAllMessages)
 		{
 			var me = this;
 			var iTotalCount = aAllMessages.length;
 			var iCount = 0;
-			var sHtml = '<span id="newsroom_menu" class="itop_popup toolkit_menu"><ul><li><i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow '+this.options.image_icon+'"></i><ul>';
-			sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_dismiss_all"><i class="fas fa-fw fa-check"></i>'+this.options.labels.mark_all_as_read+'</li>';
+			var sDismissAllSection = this._buildDismissAllSection();
+			var sMessageSection = this._buildMessageSection();
+			var sShowAllMessagesSection = this._buildShowAllMessagesSection();
+
 			moment.locale(GetUserLanguage());
 			var aUnreadMessagesByProvider = [];
 			for(var k in this.options.providers)
 			{
 				aUnreadMessagesByProvider[k] = 0;
 			}
+			console.log(aAllMessages);
 			for(var k in aAllMessages)
 			{
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
-				if (iCount < this.options.display_limit)
+				if (iCount < this.options.display_limit + 4)
 				{
-					var sImage = '';
-					if ((oMessage.image !== undefined) && (oMessage.image !== null))
-					{
-						sImage = '<img src="'+oMessage.image+'">';
-					}
-					else
-					{
-						sImage = '<i class="'+this.options.placeholder_image_icon+'"></i>';
-					}				
-					var div = document.createElement("div");
-					div.textContent = oMessage.text;
-					var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
-					var converter = new showdown.Converter({noHeaderId: true});
-				    var sRichDescription = converter.makeHtml(sDescription);
-				    sRichDescription += '<span class="newsroom_menu_item_date">'+this.options.providers[oMessage.provider].label+' - '+moment(oMessage.start_date).fromNow()+'</span>';
-					sHtml += '<li class="newsroom_menu_item" data-msg-id="'+oMessage.id+'" data-provider-id="'+oMessage.provider+'" data-url="'+oMessage.url+'" id="newsroom_menu_item_'+oMessage.id+'"><div>'+sImage+'<p>'+sRichDescription+'</p><div style="clear:both"></div></div></li>';
+					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url)
+					//$(sMessageSection).append(sMessageItem);
+					sMessageSection += sMessageItem;
 				}
 				iCount++;
 			}
+
 			if (iCount == 0)
 			{
-				sHtml += '<li class="newsroom_menu_item" id="newsroom_no_new_message"><div><p>'+this.options.labels.no_message+'</p><div style="clear:both"></div></div></li>';				
+				var sNoMessageItem = this._buildNoMessageItem();
+				sMessageSection += sNoMessageItem;
 			}
+			sMessageSection += '    <hr class="ibo-popover-menu--item ibo-popover-menu--separator"> </div>';
+			
 			if (this.options.providers.length == 1)
 			{
-				sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_show_all">'+this.options.labels.view_all+'</li>';				
+				var SingleShowAllMessagesItem = this._buildSingleShowAllMessagesItem();	
+				//$(sShowAllMessagesSection).append(SingleShowAllMessagesItem);
+				sShowAllMessagesSection += SingleShowAllMessagesItem;
+				sShowAllMessagesSection += '</div>'
 			}
 			else
 			{
-				sHtml += '<li class="no-padding"><span id="newsroom_show_all_submenu" class="itop_popup toolkit_menu"><ul><li>'+this.options.labels.view_all+'&nbsp;▾<ul>';
-				for(k in this.options.providers)
-				{
-					var sExtraMessages = '';
-					if (aUnreadMessagesByProvider[k] > 0)
-					{
-						sExtraMessages = ' <span class="newsroom_extra_messages_counter">'+aUnreadMessagesByProvider[k]+'</span>'
-					}
-					sHtml += '<li class="newsroom_sub_menu_item" data-provider-id="'+k+'">'+this.options.providers[k].label+sExtraMessages+'</li>';
-				}
-				sHtml += '</ul></li></ul></li></ul></span>';
+				var MultipleShowAllMessagesItem = this._buildMultipleShowAllMessagesItem(aUnreadMessagesByProvider);
+				sShowAllMessagesSection += MultipleShowAllMessagesItem + '</div>'
 			}
 			if (iCount > 0)
 			{
-				sHtml += '</ul></li></ul></span><div id="newsroom_menu_counter_container"><span id="newsroom_menu_counter">'+iTotalCount+'</span></div></span>';
-				$(this.element).html(sHtml);
+				$(this.element).html(sDismissAllSection + sMessageSection + sShowAllMessagesSection);
+				$('.ibo-navigation-menu--notifications--item--content img').each(function(){
+					tippy(this, {'content': this.outerHTML, 'placement': 'left', 'trigger': 'mouseenter focus', 'animation':'shift-away-subtle', 'allowHTML': true });
+				});
 				var me = this;
-				$('#newsroom_menu > ul').popupmenu();
-				$('#newsroom_menu_counter').on('click', function() {setTimeout(function(){ $('#newsroom_menu_icon').trigger('click') }, 10);});
-				$('.newsroom_menu_item[data-msg-id]').on('click', function(ev) { me._handleClick(this); });
-				$('#newsroom_menu_dismiss_all').on('click', function(ev) { me._markAllAsRead(); });
-				if (this.options.providers.length == 1)
-				{
-					$('#newsroom_menu_show_all').on('click', function(ev) { window.open(me.options.providers[0].view_all_url, '_blank'); });
-				}
-				else
-				{
-					$('#newsroom_show_all_submenu > ul').popupmenu();
-					$('.newsroom_sub_menu_item').on('click', function() { var idx = parseInt($(this).attr('data-provider-id'), 10); window.open(me.options.providers[idx].view_all_url, '_blank');});
-				}
+				//$('#newsroom_menu_counter').on('click', function() {setTimeout(function(){ $('#newsroom_menu_icon').trigger('click') }, 10);});
+				//$('.newsroom_menu_item[data-msg-id]').on('click', function(ev) { me._handleClick(this); });
+				$('[data-role="ibo-navigation-menu--notifications-item"]').on('click', function(oEvent){
+					me._handleClick(this);
+				});
+				$('[data-role="ibo-navigation-menu--notifications-dismiss-all"]').on('click', function(ev) { me._markAllAsRead(); });
 			}
 			else
 			{
-				sHtml += '</ul></li></ul></span><div id="newsroom_menu_counter_container"><span id="newsroom_menu_counter" style="visibility:hidden"></span></div></span>';
-				$(this.element).html(sHtml);
-				$('#newsroom_menu_dismiss_all').remove();
+				$(this.element).html(sDismissAllSection + sMessageSection + sShowAllMessagesSection);
 				var me = this;
-				$('#newsroom_menu > ul').popupmenu();
-				$('#top-left-newsroom-cell > img').attr('title', this.options.labels.no_message);
-				if (this.options.providers.length == 1)
-				{
-					$('#newsroom_menu_show_all').on('click', function(ev) { window.open(me.options.providers[0].view_all_url, '_blank'); });
-				}
-				else
-				{
-					$('#newsroom_show_all_submenu > ul').popupmenu();
-					$('.newsroom_sub_menu_item').on('click', function() { var idx = parseInt($(this).attr('data-provider-id'), 10); window.open(me.options.providers[idx].view_all_url, '_blank');});
-				}
+			}
+			
+			if (this.options.providers.length != 1)
+			{
+				var oElem = $('[data-role="ibo-navigation-menu--notifications-show-all-multiple"]~[data-role="ibo-popover-menu"]');
+				oElem.popover_menu({'toggler': '[data-role="ibo-navigation-menu--notifications-show-all-multiple"]'});
+
+				$('[data-role="ibo-navigation-menu--notifications-show-all-multiple"]').on('click', function(oEvent){
+					var oEventTarget = $(oEvent.target);
+					var aEventTargetPos = oEventTarget.position();
+					oElem.css({
+						'max-height' : (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) - 100) + 'px',
+						'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
+					});
+					oElem.popover_menu("openPopup");
+				});
+
 			}
 			
 		},
 		_handleClick: function(elem)
 		{
+			var me = this;
 			var idxProvider = $(elem).attr('data-provider-id');
 			var msgId = $(elem).attr('data-msg-id');
-			var sUrl = $(elem).attr('data-url');
 			
 			this._markOneMessageAsRead(idxProvider, msgId);
-			window.open(sUrl, '_blank');
-			$('#newsroom_menu').remove();
-			$('#newsroom_menu_counter_container').remove();
+			// window.open(sUrl, '_blank');
+			// $('#newsroom_menu').remove();
+			// $('#newsroom_menu_counter_container').remove();
+			$(me.element).popover_menu("closePopup");
 			this._getAllMessages();
 		},
 		_resetUnseenCount: function()

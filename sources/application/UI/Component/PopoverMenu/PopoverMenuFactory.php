@@ -21,8 +21,10 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu;
 
 
 
+use appUserPreferences;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Dict;
+use iNewsroomProvider;
 use JSPopupMenuItem;
 use MetaModel;
 use URLPopupMenuItem;
@@ -68,7 +70,7 @@ class PopoverMenuFactory
 
 		return $oMenu;
 	}
-
+	
 	/**
 	 * Return the allowed portals items for the current user
 	 *

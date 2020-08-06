@@ -24,6 +24,7 @@ use ApplicationContext;
 use ApplicationMenu;
 use appUserPreferences;
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\UIBlock;
 use Dict;
@@ -63,6 +64,8 @@ class NavigationMenu extends UIBlock
 	protected $aUserData;
 	/** @var \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu $oUserMenu */
 	private $oUserMenu;
+	/** @var \Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu $oNewsroomMenu */
+	private $oNewsroomMenu;
 	/** @var bool $bIsExpanded */
 	protected $bIsExpanded;
 
@@ -72,14 +75,14 @@ class NavigationMenu extends UIBlock
 	 * @param string|null $sId
 	 * @param \ApplicationContext $oAppContext
 	 * @param \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu $oUserMenu
+	 * @param \Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu|null $oNewsroomMenu
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
-	 * @throws \Exception
 	 */
-	public function __construct($sId, ApplicationContext $oAppContext, PopoverMenu $oUserMenu)
+	public function __construct($sId, ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null)
 	{
 		parent::__construct($sId);
 
@@ -89,6 +92,7 @@ class NavigationMenu extends UIBlock
 		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
+		$this->oNewsroomMenu = $oNewsroomMenu;
 
 		$this->ComputeExpandedState();
 		$this->ComputeUserData();
@@ -148,6 +152,13 @@ class NavigationMenu extends UIBlock
 	public function GetUserMenu()
 	{
 		return $this->oUserMenu;
+	}
+	/**
+	 * @return \Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu
+	 */
+	public function GetNewsroomMenu()
+	{
+		return $this->oNewsroomMenu;
 	}
 
 	/**

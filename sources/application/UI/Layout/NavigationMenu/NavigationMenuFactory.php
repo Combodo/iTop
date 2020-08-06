@@ -21,7 +21,9 @@ namespace Combodo\iTop\Application\UI\Layout\NavigationMenu;
 
 
 use ApplicationContext;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenuFactory;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuFactory;
+use MetaModel;
 
 /**
  * Class NavigationMenuFactory
@@ -44,10 +46,18 @@ class NavigationMenuFactory
 	 */
 	public static function MakeStandard()
 	{
+		
+		$oNewsroomMenu = null;
+		if (MetaModel::GetConfig()->Get('newsroom_enabled'))
+		{
+			$oNewsroomMenu = NewsroomMenuFactory::MakeNewsroomMenuForNavigationMenu();
+		}
+		
 		return new NavigationMenu(
 			NavigationMenu::BLOCK_CODE,
 			new ApplicationContext(),
-			PopoverMenuFactory::MakeUserMenuForNavigationMenu()
+			PopoverMenuFactory::MakeUserMenuForNavigationMenu(),
+			$oNewsroomMenu
 		);
 	}
 }

@@ -1,0 +1,88 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+// Todo :(
+
+#ibo-navigation-menu--notifications-menu {
+  flex-flow: column;
+  .ibo-navigation-menu--notifications--messages-section{
+    overflow-x: auto;
+  }
+}
+.ibo-navigation-menu--notifications--item--image{
+  width: 20px;
+  max-height: 20px;
+  margin: 0 6px;
+  border-radius: 100%;
+}
+img.ibo-navigation-menu--notifications--item--image[src=""]{
+  display: none;
+}
+img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-navigation-menu--notifications--item--image
+{
+  display: none;
+}
+.ibo-navigation-menu--notifications--item--bottom-text{
+  float: right;
+  font-size: 12px;
+  align-self: center;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ibo-navigation-menu--notifications--item--content{
+  font-size: 14px;
+  padding: 0 14px;
+  img{
+    max-height: 100px;
+    padding: 5px;
+  }
+}
+.ibo-navigation-menu--notifications-item{
+  display: flex;
+  flex-direction: row;
+}
+.ibo-navigation-menu--notifications--item--new-message-indicator{
+  width: 10px;
+  height: 10px;
+  background-color: $ibo-color-blue-500;
+  border-radius: 100%;
+  margin-top: 4px;
+}
+.ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu{
+  bottom: 0;
+  .ibo-navigation-menu--notifications--item--new-message-indicator{
+    display: inline-block;
+    margin-right: 15px;
+  }
+  .ibo-navigation-menu--notifications-show-all-multiple--counter{
+    @extend %ibo-font-ral-bol-200;
+  }
+}
+.ibo-navigation-menu--notifications-dismiss-all--icon{
+  margin: 0 10px 0 0;
+}
+.ibo-popover-menu--item--no-message{
+  text-align: center;
+}
+.ibo-popover-menu--item--no-message--image{
+  display: block;
+  padding: 20px;
+}

@@ -44,7 +44,7 @@ $(function()
 				menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
 				user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
 				user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
-				user_menu: '[data-role="ibo-popover-menu"]'
+				user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
 			},
 			filter_throttle_timeout: null,
 

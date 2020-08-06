@@ -20,10 +20,12 @@
 		<div class="ibo-navigation-menu--bottom-part">
 			{% if oNavigationMenu.IsNewsroomEnabled == true %}
 				<div class="ibo-navigation-menu--notifications">
-					<div class="ibo-navigation-menu--notifications-toggler">
+					<a class="ibo-navigation-menu--notifications-toggler" data-role="ibo-navigation-menu--notifications-toggler">
 						<i class="fas fa-bell"></i>
+					</a>
+					<div class="ibo-navigation-menu--notifications-menu">
+						{{ render_block(oNavigationMenu.NewsroomMenu) }}
 					</div>
-					<div class="ibo-navigation-menu--notifications-menu"></div>
 				</div>
 			{% endif %}
 			<div class="ibo-navigation-menu--user-info">
@@ -42,21 +44,23 @@
 				<div class="ibo-navigation-menu--user-welcome-message">
 					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
 						<div class="ibo-navigation-menu--user-welcome-message--text">
-							{{ oNavigationMenu.UserData.sWelcomeMessage }}
-							<span class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler">
-								<i class="fas fa-caret-down"></i>
-							</span>
+							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+								{{ oNavigationMenu.UserData.sWelcomeMessage }}
+								<span class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler">
+									<i class="fas fa-caret-down"></i>
+								</span>
+							</a>
 						</div>
 					</a>
 				</div>
 				{% if oNavigationMenu.IsNewsroomEnabled == true %}
 					<div class="ibo-navigation-menu--user-notifications">
-						<div class="ibo-navigation-menu--user-notifications--text">
+						<a class="ibo-navigation-menu--user-notifications--text" data-role="ibo-navigation-menu--notifications-toggler" href="#">
 							{{ '0 notification'|dict_s }}
 							<span class="ibo-navigation-menu--user-notifications--toggler">
 								<i class="fas fa-bell"></i>
 							</span>
-						</div>
+						</a>
 						<div class="ibo-navigation-menu--user-notifications-menu"></div>
 					</div>
 				{% endif %}

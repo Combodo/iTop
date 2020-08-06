@@ -1,0 +1,6 @@
+// TODO: We need to find a clean way to launch this script only once the JS scripts are loaded
+document.addEventListener("DOMContentLoaded", function(){
+	setTimeout(function(){
+		$('#{{ oNewsroomMenu.Id }}').newsroom_menu({{ oNewsroomMenu.Params|raw }});
+	}, 500);
+});

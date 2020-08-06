@@ -382,6 +382,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearch' => __DIR__ . '/../..' . '/sources/application/UI/Component/GlobalSearch/GlobalSearch.php',
         'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/GlobalSearch/GlobalSearchFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchHelper' => __DIR__ . '/../..' . '/sources/application/UI/Component/GlobalSearch/GlobalSearchHelper.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenu' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenu.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenuFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenu' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenu.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenuItem\\JsPopoverMenuItem' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenuItem/JsPopoverMenuItem.php',
