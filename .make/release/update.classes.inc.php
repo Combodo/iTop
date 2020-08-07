@@ -89,6 +89,26 @@ class iTopVersionFileUpdater extends AbstractSingleFileVersionUpdater
 	}
 }
 
+class CssVariablesFileUpdater extends AbstractSingleFileVersionUpdater
+{
+	public function __construct()
+	{
+		parent::__construct('css/css-variables.scss');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function UpdateFileContent($sVersionLabel, $sFileContent, $sFileFullPath)
+	{
+		return preg_replace(
+			'/(\$version: "v)[^"]*(";)/',
+			'${1}'.$sVersionLabel.'${2}',
+			$sFileContent
+		);
+	}
+}
+
 abstract class AbstractGlobFileVersionUpdater extends FileVersionUpdater
 {
 	protected $sGlobPattern;
