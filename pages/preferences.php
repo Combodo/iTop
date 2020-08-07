@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
@@ -28,6 +30,8 @@ require_once(APPROOT.'/application/startup.inc.php');
  */
 function DisplayPreferences($oP)
 {
+	$oP->SetContentLayout(PageContentFactory::MakeStandardEmpty());
+//	$oP->AddUiBlock(new \Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs());
 	$oAppContext = new ApplicationContext();
 	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
 	
@@ -362,6 +366,50 @@ EOF
 		$oP->add('</form>');
 		$oP->add('</fieldset>');
 	}
+	
+	//Todo: factorize as UiBlock
+	if (true)
+	{
+		$sUserPicturesFolder = '../images/user-pictures/';
+		$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
+		
+		$oP->add(
+			<<<HTML
+<fieldset><legend>UI:Preferences:ChooseAPlaceholder'</legend>
+<p>UI:Preferences:ChooseAPlaceholder+</p>
+<div class="ibo-preferences--user-preferences--picture-placeholder">
+HTML
+		);
+		foreach (scandir($sUserPicturesFolder) as $sUserPicture)
+		{
+			if ($sUserPicture === '.' || $sUserPicture === '..')
+			{
+				continue;
+			}
+			$sAdditionalClass = '';
+			if ($sUserDefaultPicture === $sUserPicture)
+			{
+				$sAdditionalClass = ' ibo-is-active';
+			}
+			$oP->add('<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>');
+		}
+		$oP->add_ready_script(
+			<<<JS
+$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
+	SetUserPreference('user_picture_placeholder', $(this).attr('data-image-name'), true);
+	$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
+	$(this).addClass('ibo-is-active');
+});
+JS
+
+		);
+		$oP->add(
+			<<<HTML
+</div>
+</fieldset>
+HTML
+		);
+	}
 
 	/** @var iPreferencesExtension $oLoginExtensionInstance */
 	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
@@ -511,6 +559,7 @@ try
 				DisplayPreferences($oPage);
 		}
 	}
+	
 	$oPage->output();
 }
 catch(CoreException $e)

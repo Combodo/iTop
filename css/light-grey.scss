@@ -4366,3 +4366,26 @@
 		}
 	}
 }
+
+
+.ibo-preferences--user-preferences--picture-placeholder{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.ibo-preferences--user-preferences--picture-placeholder--image{
+	height: 54px;
+	width: 54px;
+	border-radius: 100%;
+	margin: 12px;
+}
+.ibo-preferences--user-preferences--picture-placeholder--image > img{
+	border-radius: 100%;
+	background-color: lightgray;
+}
+.ibo-preferences--user-preferences--picture-placeholder--image.ibo-is-active{
+	border: solid 3px hsla(213, 49.4%, 34.1%, 1);
+}
+.ibo-preferences--user-preferences--picture-placeholder--image:hover{
+	border: solid 3px hsla(209, 61.6%, 50%, 1);
+}
