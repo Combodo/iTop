@@ -8384,6 +8384,7 @@
           <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
           <stylesheet id="main">../css/light-grey.scss</stylesheet>
         </stylesheets>
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/light-grey/main.css</precompiled_stylesheet>
       </theme>
       <theme id="test-red" _delta="define">
         <variables>
@@ -8399,6 +8400,7 @@
           <stylesheet id="main">../css/light-grey.scss</stylesheet>
           <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
         </stylesheets>
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
   </branding>
