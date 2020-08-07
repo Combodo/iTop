@@ -2671,7 +2671,6 @@ EOF;
 				'variables' => array(),
 				'imports' => array(),
 				'stylesheets' => array(),
-				'precompiled_stylesheet' => '',
 			);
 
 			/** @var \DOMNodeList $oVariables */
@@ -2697,7 +2696,7 @@ EOF;
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
-			$aThemeParameters['precompiled_stylesheet'] = $oTheme->GetChildText('precompiled_stylesheet', '');
+
 			$aThemes[$sThemeId] = $aThemeParameters;
 		}
 
@@ -2709,7 +2708,6 @@ EOF;
 		}
 
 		// Compile themes
-		$fStart = microtime(true);
 		foreach($aThemes as $sThemeId => $aThemeParameters)
 		{
 			$sThemeDir = $sThemesDir.$sThemeId;
@@ -2717,21 +2715,10 @@ EOF;
 			{
 				SetupUtils::builddir($sThemeDir);
 			}
-			// Check if a precompiled version of the theme is supplied
-			$sPrecompiledFile = $sTempTargetDir.$aThemeParameters['precompiled_stylesheet'];
-			if (file_exists($sPrecompiledFile))
-			{
-				copy($sPrecompiledFile, $sThemeDir.'/main.css');
-				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
-				touch($sThemeDir.'/main.css', 1577836800 /* 2020-01-01 00:00:00 */);
-			}
-			else if ($sPrecompiledFile != '')
-			{
-				$this->Log("Precompiled file not found: '$sPrecompiledFile'");
-			}
-			ThemeHandler::CompileTheme($sThemeId, true, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
+
+
+			ThemeHandler::CompileTheme($sThemeId, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 		}
-		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
 	}
 
 	/**
