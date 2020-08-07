@@ -21,7 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Intégrité base de données',
 	'DBTools:Class' => 'Classe',
-	'DBTools:Title' => 'Outils maintenance base de données',
+	'DBTools:Title' => 'Contrôle de l\'intégrité de la base de données',
 	'DBTools:ErrorsFound' => 'Erreurs trouvées',
 	'DBTools:Error' => 'Erreur',
 	'DBTools:Count' => 'Nombre',

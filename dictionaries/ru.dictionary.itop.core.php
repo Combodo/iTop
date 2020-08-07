@@ -191,12 +191,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => 'Тег',
 	
-	'Core:Context=REST/JSON' => 'REST~~',
-	'Core:Context=Synchro' => 'Synchro~~',
-	'Core:Context=Setup' => 'Setup~~',
-	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'cron~~',
-	'Core:Context=GUI:Portal' => 'Portal~~',
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'cron',
+	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
 
@@ -529,8 +529,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => 'Контекст',
+	'Class:Trigger/Attribute:context+' => 'Контекст, в котором будет срабатывать триггер',
 ));
 
 //
@@ -1032,4 +1032,40 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:AbstractResource' => 'Ресурс',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceAdminMenu' => 'Меню Инструменты администратора',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceRunQueriesMenu' => 'Меню Выполнение запросов',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceSystemMenu' => 'Меню Система',
+	'Class:ResourceSystemMenu+' => '',
 ));

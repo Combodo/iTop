@@ -46,7 +46,7 @@ class UILinksWidget
 	 * UILinksWidget constructor.
 	 *
 	 * @param string $sClass
-	 * @param string $sAttCode
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
 	 * @param int $iInputId
 	 * @param string $sNameSuffix
 	 * @param bool $bDuplicatesAllowed
@@ -73,41 +73,35 @@ class UILinksWidget
 		/** @var AttributeExternalKey $oLinkingAttDef */
 		$oLinkingAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $this->m_sExtKeyToRemote);
 		$this->m_sRemoteClass = $oLinkingAttDef->GetTargetClass();
-		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
-		$sDefaultState = MetaModel::GetDefaultState($this->m_sClass);		
 
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
+		$this->m_aTableConfig['form::checkbox'] = array(
+			'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">",
+			'description' => Dict::S('UI:SelectAllToggle+'),
+		);
 
-		foreach(MetaModel::FlattenZList(MetaModel::GetZListItems($this->m_sLinkedClass, 'list')) as $sAttCode)
+		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
+		foreach ($aLnkAttDefsToDisplay as $oLnkAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sAttCode);
-			if ($sStateAttCode == $sAttCode)
-			{
-				// State attribute is always hidden from the UI
-			}
-			else if ($oAttDef->IsWritable() && ($sAttCode != $sExtKeyToMe) && ($sAttCode != $this->m_sExtKeyToRemote) && ($sAttCode != 'finalclass'))
-			{
-				$iFlags = MetaModel::GetAttributeFlags($this->m_sLinkedClass, $sDefaultState, $sAttCode);				
-				if ( !($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY) )
-				{
-					$this->m_aEditableFields[] = $sAttCode;
-					$this->m_aTableConfig[$sAttCode] = array( 'label' => $oAttDef->GetLabel(), 'description' => $oAttDef->GetDescription());				
-				}
-			}
+			$sLnkAttCode = $oLnkAttDef->GetCode();
+			$this->m_aEditableFields[] = $sLnkAttCode;
+			$this->m_aTableConfig[$sLnkAttCode] = array('label' => $oLnkAttDef->GetLabel(), 'description' => $oLnkAttDef->GetDescription());
 		}
-		
-		$this->m_aTableConfig['static::key'] = array( 'label' => MetaModel::GetName($this->m_sRemoteClass), 'description' => MetaModel::GetClassDescription($this->m_sRemoteClass));
-		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
+
+		$this->m_aTableConfig['static::key'] = array(
+			'label' => MetaModel::GetName($this->m_sRemoteClass),
+			'description' => MetaModel::GetClassDescription($this->m_sRemoteClass),
+		);
+
+		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
+		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef)
 		{
-			// TO DO: check the state of the attribute: hidden or visible ?
-			if ($sFieldCode != 'finalclass')
-			{
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sRemoteClass, $sFieldCode);
-				$this->m_aTableConfig['static::'.$sFieldCode] = array( 'label' => $oAttDef->GetLabel(), 'description' => $oAttDef->GetDescription());
-			}
+			$sRemoteAttCode = $oRemoteAttDef->GetCode();
+			$this->m_aTableConfig['static::'.$sRemoteAttCode] = array(
+				'label' => $oRemoteAttDef->GetLabel(),
+				'description' => $oRemoteAttDef->GetDescription(),
+			);
 		}
 	}
 

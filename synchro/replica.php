@@ -67,6 +67,7 @@ try
 		$oBlock->Display($oP, 1);
 		break;
 
+		case 'delete':
 		case 'select_for_deletion':
 		// Redirect to the page that implements bulk delete
 		$sDelete = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$_SERVER['QUERY_STRING'];

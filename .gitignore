@@ -16,6 +16,11 @@
 vendor/*
 test/vendor/*
 
+# all conf but listing prevention
+/conf/**
+!/conf/.htaccess
+!/conf/web.config
+
 # all datas but listing prevention
 /data/**
 !/data/.htaccess

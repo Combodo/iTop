@@ -1,17 +1,17 @@
 [
     {
         "name": "combodo/tcpdf",
-        "version": "6.3.4",
-        "version_normalized": "6.3.4.0",
+        "version": "6.3.5",
+        "version_normalized": "6.3.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-            "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d"
+            "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
-            "reference": "fe1c625d33e8f7d872d6fb69fb0255fd0e5cee2d",
+            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/abbfedb8ca59843dec11c97ca3f308742265c3fc",
+            "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "replace": {
             "tecnickcom/tcpdf": "self.version"
         },
-        "time": "2020-02-12T14:16:56+00:00",
+        "time": "2020-06-05T13:06:44+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -45,21 +45,22 @@
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "LGPL-3.0-only"
+            "LGPL-3.0"
         ],
         "authors": [
-            {
-                "name": "Nicola Asuni",
-                "email": "info@tecnick.com",
-                "role": "lead"
-            },
             {
                 "name": "Combodo",
                 "email": "contact@combodo.com"
             }
         ],
         "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
-        "homepage": "https://github.com/combodo-itop-libs/TCPDF"
+        "homepage": "https://github.com/combodo-itop-libs/TCPDF",
+        "funding": [
+            {
+                "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                "type": "custom"
+            }
+        ]
     },
     {
         "name": "nikic/php-parser",

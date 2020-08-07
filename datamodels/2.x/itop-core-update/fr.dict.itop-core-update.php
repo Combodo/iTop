@@ -74,6 +74,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Échec de la vérification des fichiers',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'L\'application peut être mise à jour',
     'iTopUpdate:UI:CanCoreUpdate:No' => 'L\'application ne peut pas être mise à jour : %1$s',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Attention : la mise à jour de l\'application peut échouer : %1$s',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Prêt pour l\\installation',

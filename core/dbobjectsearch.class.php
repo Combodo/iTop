@@ -223,9 +223,9 @@ class DBObjectSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bFound = false;
-		if (array_key_exists($sOldName, $this->m_aClasses))
+		if (!array_key_exists($sOldName, $this->m_aClasses))
 		{
-			$bFound = true;
+			return false;
 		}
 		if (array_key_exists($sNewName, $this->m_aClasses))
 		{
@@ -313,6 +313,11 @@ class DBObjectSearch extends DBSearch
 		return true;
 	}
 
+	/**
+	 * Move conditions from $oFilter to $this
+	 * @param \DBSearch $oFilter
+	 * @param $aTranslation
+	 */
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		// Prevent collisions in the parameter names by renaming them if needed
@@ -335,6 +340,7 @@ class DBObjectSearch extends DBSearch
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
+		$oFilter->ResetCondition();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -522,6 +528,8 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Helper method for IN / NOT IN conditions : values won't be parsed in the expression tree, that will save some time !
+	 *
 	 * @param string $sFilterCode attribute code to use
 	 * @param array $aValues
 	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN
@@ -632,7 +640,10 @@ class DBObjectSearch extends DBSearch
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
 		$this->AddConditionExpression($oNewCond);
-		$this->m_aParams[$sQueryParam] = $sNeedle;
+		//replace in order to search the character "_" ("_" in mysql is like "%" for only one character).
+		$sFullText = str_replace('_', '\_', $sNeedle);
+
+		$this->m_aParams[$sQueryParam] = $sFullText;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
@@ -848,10 +859,14 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
-	 * @param $sExtKeyAttCode
+	 * Add a link to another filter, using an extkey already present in current filter
+	 *
+	 * @param DBObjectSearch $oFilter filter to join to
+	 * @param string $sExtKeyAttCode extkey present in current filter, that allows to points to $oFilter
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed.
+	 *          Doesn't change existing alias, use {@link \DBObjectSearch::RenameAlias()} for that.
+	 *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
@@ -1036,7 +1051,7 @@ class DBObjectSearch extends DBSearch
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (($this->GetFirstJoinedClass() == $oFilter->GetFirstJoinedClass()))
+		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(),$this->GetFirstJoinedClass()))
 		{
 			return $this->Intersect($oFilter);
 		}
@@ -1068,7 +1083,6 @@ class DBObjectSearch extends DBSearch
 	{
 		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
 		{
-			$oSearch->ResetCondition();
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
 			return $oSearch->GetCriteria();
 		}
@@ -1314,7 +1328,7 @@ class DBObjectSearch extends DBSearch
 
 			// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams($bExclude magic params)
 			$aNakedMagicArguments = array();
-			foreach (MetaModel::PrepareQueryArguments(array()) as $sArgName => $value)
+			foreach (MetaModel::PrepareQueryArguments(array(),array(), $this->GetExpectedArguments()) as $sArgName => $value)
 			{
 				$iPos = strpos($sArgName, '->object()');
 				if ($iPos === false)
@@ -1377,7 +1391,7 @@ class DBObjectSearch extends DBSearch
 			{
 				$aParams = array_merge($aContextParams, $this->m_aParams);
 			}
-			$aParams = MetaModel::PrepareQueryArguments($aParams);
+			$aParams = MetaModel::PrepareQueryArguments($aParams,array(), $this->GetExpectedArguments());
 		}
 		else
 		{
@@ -1570,7 +1584,7 @@ class DBObjectSearch extends DBSearch
 		$aRet = array('selects' => array(), 'joins' => array(), 'where' => array());
 
 		$aParams = array_merge($this->m_aParams);
-		$aParams = MetaModel::PrepareQueryArguments($aParams);
+		$aParams = MetaModel::PrepareQueryArguments($aParams, array(), $this->GetExpectedArguments());
 
 		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
 		{
@@ -1777,7 +1791,7 @@ class DBObjectSearch extends DBSearch
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectDeleteQuery();
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		$sRet = $oSQLQuery->RenderDelete($aScalarArgs);
 		return $sRet;
 	}
@@ -1793,7 +1807,7 @@ class DBObjectSearch extends DBSearch
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		$sRet = $oSQLQuery->RenderUpdate($aScalarArgs);
 		return $sRet;
 	}
@@ -1812,7 +1826,7 @@ class DBObjectSearch extends DBSearch
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		$sRet = $oSQLQuery->RenderInsert($aScalarArgs);
 		return $sRet;
 	}
@@ -2086,5 +2100,10 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 		return $oExpression;
+	}
+
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
 	}
 }

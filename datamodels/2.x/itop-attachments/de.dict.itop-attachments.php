@@ -37,6 +37,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:NoAttachment' => 'Kein Attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar.',
 	'Attachments:Error:FileTooLarge' => 'Die Datei ist zu groß für den Upload: %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
+Either you have pushed an empty file,
+or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Als Icons anzeigen',
 	'Attachments:Render:Table' => 'Als Liste anzeigen',
 ));

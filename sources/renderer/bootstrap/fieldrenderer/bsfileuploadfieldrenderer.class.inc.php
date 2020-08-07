@@ -143,7 +143,7 @@ var oTable_{$this->oField->GetGlobalId()};
 var buildTable_{$this->oField->GetGlobalId()} = function()
 {
 	oTable_{$this->oField->GetGlobalId()} = $("table#$sAttachmentTableId").DataTable( {
-		"dom": "t",
+		"dom": "tp",
 	    "order": [[3, "asc"]],
 	    "columnDefs": [
 	        $sDeleteColumnDef

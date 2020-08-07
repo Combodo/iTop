@@ -357,6 +357,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SLA/Attribute:slts_list+' => '',
 	'Class:SLA/Attribute:customercontracts_list' => '顧客契約',
 	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
 ));
 
 //

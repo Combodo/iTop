@@ -282,6 +282,7 @@ try
 		{
 			try
 			{
+				$iCount = 0;
 				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 				$oDefinitionFilter->UpdateContextFromUser();
 				FilterByContext($oDefinitionFilter, $oAppContext);
@@ -348,7 +349,7 @@ try
 				$aRow['nb_errors'] = "n/a"; 
 				$aRow['percent_ok'] = '';
 				$aRow['class'] = 'red';				
-				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), $e->getMessage());
+				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
 				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
 				$aResults[] = $aRow;					
 
@@ -375,7 +376,7 @@ try
 catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
 	$oP->output();
@@ -404,7 +405,7 @@ catch(CoreException $e)
 catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
 	$oP->output();

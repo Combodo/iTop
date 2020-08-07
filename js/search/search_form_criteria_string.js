@@ -38,8 +38,26 @@ $(function()
 				},
 			},
 		},
-
-   
+		_getOperatorValues: function(oOpElem)
+		{
+			var aValues = [];
+			oOpElem.find('.sfc_op_content input').each(function(){
+				var sValue = $(this).val();
+				aValues.push({value: sValue.replace('_','\\_'), label: sValue});
+			});
+			return aValues;
+		},
+		_setOperatorValues: function(oOpElem, aValues)
+		{
+			if(aValues.length === 0)
+			{
+				return false;
+			}
+			oOpElem.find('.sfc_op_content input').each(function(){
+				$(this).val(aValues[0].value.replace('\\_','_')).trigger('non_interactive_change');
+			});
+			return true;
+		},
 		// the constructor
 		_create: function()
 		{

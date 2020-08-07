@@ -34,6 +34,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Attachments:NoAttachment' => '添付はありません。',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
+Either you have pushed an empty file,
+or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 ));

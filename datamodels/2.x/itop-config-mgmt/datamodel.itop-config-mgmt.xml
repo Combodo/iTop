@@ -610,9 +610,6 @@
         </field>
         <field id="manager_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT Person]]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
           <sql>manager_id</sql>
           <target_class>Person</target_class>
           <is_null_allowed>true</is_null_allowed>
@@ -1684,16 +1681,6 @@
         </list>
       </presentation>
       <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
         <method id="DisplayBareRelations">
           <static>false</static>
           <access>public</access>
@@ -2170,18 +2157,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="DatacenterDevice" _delta="define">
       <parent>ConnectableCI</parent>
@@ -2732,18 +2708,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -3060,18 +3025,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="ApplicationSolution" _delta="define">
       <parent>FunctionalCI</parent>
@@ -3210,18 +3164,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -3341,18 +3284,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="SoftwareInstance" _delta="define">
       <parent>FunctionalCI</parent>
@@ -3533,18 +3465,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="Middleware" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -3669,18 +3590,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -3814,18 +3724,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -3959,18 +3858,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -4329,18 +4217,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="DatabaseSchema" _delta="define">
       <parent>FunctionalCI</parent>
@@ -4462,18 +4339,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="WebApplication" _delta="define">
       <parent>FunctionalCI</parent>
@@ -4604,18 +4470,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="Software" _delta="define">
       <parent>cmdbAbstractObject</parent>

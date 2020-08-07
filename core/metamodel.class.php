@@ -944,11 +944,6 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
-		// Temporary implementation: later, we might be able to compute
-		// the dependencies, based on the attributes definition
-		// (allowed values and default values)
-
-		// Even non-writable attributes (like ExternalFields) can now have Prerequisites
 		return $oAtt->GetPrerequisiteAttributes();
 	}
 
@@ -1853,7 +1848,7 @@ abstract class MetaModel
 	 * @param string $sClass
 	 * @param string $sListCode
 	 *
-	 * @return array
+	 * @return array list of attribute codes
 	 */
 	public static function GetZListItems($sClass, $sListCode)
 	{
@@ -1871,6 +1866,82 @@ abstract class MetaModel
 		} // nothing for the mother of all classes
 		// Dig recursively
 		return self::GetZListItems($sParentClass, $sListCode);
+	}
+
+	/**
+	 * @param string $sRemoteClass
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
+	 *
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
+	{
+		$aAttCodesToPrint = [];
+
+		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode)
+		{
+			//TODO: check the state of the attribute: hidden or visible ?
+			if ($sFieldCode == 'finalclass')
+			{
+				continue;
+			}
+
+			$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sFieldCode);
+			$aAttCodesToPrint[] = $oRemoteAttDef;
+		}
+
+		return $aAttCodesToPrint;
+	}
+
+	/**
+	 * @param string $sClass left class
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
+	 *
+	 * @throws \CoreException
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode)
+		{
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode)
+			{
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass'))
+			{
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable()))
+			{
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY))
+			{
+				$aAttCodesToPrint[] = $oLnkAttDef;
+			}
+		}
+
+		return $aAttCodesToPrint;
 	}
 
 	/**
@@ -2047,7 +2118,6 @@ abstract class MetaModel
 	 */
 	protected static function ComputeRelationQueries($sRelCode)
 	{
-		$bHasLegacy = false;
 		$aQueries = array();
 		foreach(self::GetClasses() as $sClass)
 		{
@@ -2133,157 +2203,7 @@ abstract class MetaModel
 					}
 				}
 			}
-
-			// Read legacy definitions
-			// The up/down queries have to be reconcilied, which can only be done later when all the classes have been browsed
-			//
-			// The keys used to store a query (up or down) into the array are built differently between the modern and legacy made data:
-			// Modern way: aQueries[sClass]['up'|'down'][sArrowId], where sArrowId is made of the source class + neighbour id (XML def)
-			// Legacy way: aQueries[sClass]['up'|'down'][sRemoteClass]
-			// The modern way does allow for several arrows between two classes
-			// The legacy way aims at simplifying the transformation (reconciliation between up and down)
-			if ($sRelCode == 'impacts')
-			{
-				$sRevertCode = 'depends on';
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['down'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['down'][$sRemoteClass]['sQueryDown'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['down'][$sRemoteClass] = $aQueries[$sParent]['down'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['down'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sClass,
-							'sFromClass' => $sClass,
-							'sToClass' => $sRemoteClass,
-							'sDirection' => 'down',
-							'sQueryDown' => $aLegacyEntry['sQuery'],
-							'sQueryUp' => null,
-							'sNeighbour' => $sRemoteClass // Normalize the neighbour id
-						);
-					}
-				}
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRevertCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['up'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['up'][$sRemoteClass]['sQueryUp'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['up'][$sRemoteClass] = $aQueries[$sParent]['up'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['up'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sRemoteClass,
-							'sFromClass' => $sRemoteClass,
-							'sToClass' => $sClass,
-							'sDirection' => 'both',
-							'sQueryDown' => null,
-							'sQueryUp' => $aLegacyEntry['sQuery'],
-							'sNeighbour' => $sClass// Normalize the neighbour id
-						);
-					}
-				}
-			}
-			//else
-			//{
-				// Cannot take the legacy system into account... simply ignore it
-			//}
 		} // foreach class
-
-		// Perform the up/down reconciliation for the legacy definitions
-		if ($bHasLegacy)
-		{
-			foreach(self::GetClasses() as $sClass)
-			{
-				// Foreach "up" legacy query, update its "down" counterpart
-				if (isset($aQueries[$sClass]['up']))
-				{
-					foreach($aQueries[$sClass]['up'] as $sNeighbourId => $aNeighbourData)
-					{
-						if (!array_key_exists('_legacy_', $aNeighbourData))
-						{
-							continue;
-						}
-						if (!$aNeighbourData['_legacy_'])
-						{
-							continue;
-						} // Skip modern definitions
-
-						$sLocalClass = $aNeighbourData['sToClass'];
-						foreach(self::EnumChildClasses($aNeighbourData['sFromClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-						{
-							if (isset($aQueries[$sRemoteClass]['down'][$sLocalClass]))
-							{
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sDirection'] = 'both';
-							}
-							// Be silent in order to transparently support legacy data models where the counterpart query does not always exist
-							//else
-							//{
-							//	throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
-							//}
-						}
-					}
-				}
-				// Foreach "down" legacy query, update its "up" counterpart (if any)
-				foreach($aQueries[$sClass]['down'] as $sNeighbourId => $aNeighbourData)
-				{
-					if (!$aNeighbourData['_legacy_'])
-					{
-						continue;
-					} // Skip modern definitions
-
-					$sLocalClass = $aNeighbourData['sFromClass'];
-					foreach(self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-					{
-						if (isset($aQueries[$sRemoteClass]['up'][$sLocalClass]))
-						{
-							$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
-						}
-					}
-				}
-			}
-		}
 
 		return $aQueries;
 	}
@@ -3318,18 +3238,6 @@ abstract class MetaModel
 		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
 	}
 
-	/**
-	 * To be overloaded by biz model declarations
-	 *
-	 * @param string $sRelCode
-	 *
-	 * @return array
-	 */
-	public static function GetRelationQueries($sRelCode)
-	{
-		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
-		return array();
-	}
 
 	/**
 	 * @param array $aParams
@@ -3496,7 +3404,7 @@ abstract class MetaModel
 		}
 		if (array_key_exists($sAttCode, self::$m_aAttribDefs[$sTargetClass]))
 		{
-			throw new Exception("Declaration of $sTargetClass: attempting to redeclare the inherited attribute '$sAttCode', originaly declared in ".self::$m_aAttribOrigins[$sTargetClass][$sAttCode]);
+			throw new Exception("Declaration of $sTargetClass: attempting to redeclare the inherited attribute '$sAttCode', originally declared in ".self::$m_aAttribOrigins[$sTargetClass][$sAttCode]);
 		}
 
 		// Set the "host class" as soon as possible, since HierarchicalKeys use it for their 'target class' as well
@@ -4127,44 +4035,52 @@ abstract class MetaModel
 	 *
 	 * @param array $aArgs Context arguments (some can be persistent objects)
 	 * @param array $aMoreArgs Other query parameters
+	 * @param array $aExpectedArgs variables present in the query
+	 *
 	 * @return array
 	 */
-	public static function PrepareQueryArguments($aArgs, $aMoreArgs = array())
+	public static function PrepareQueryArguments($aArgs, $aMoreArgs = array(), $aExpectedArgs = null)
 	{
 		$aScalarArgs = array();
-		foreach(array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
+		if (is_null($aExpectedArgs) || count($aExpectedArgs) > 0 || count($aMoreArgs)>0)
 		{
-			if (self::IsValidObject($value))
+			foreach (array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
 			{
-				if (strpos($sArgName, '->object()') === false)
+				if (self::IsValidObject($value))
 				{
-					// Normalize object arguments
-					$aScalarArgs[$sArgName.'->object()'] = $value;
+					if (strpos($sArgName, '->object()') === false)
+					{
+						// Normalize object arguments
+						$aScalarArgs[$sArgName.'->object()'] = $value;
+						}
+					else
+					{
+						// Leave as is
+						$aScalarArgs[$sArgName] = $value;
+					}
 				}
 				else
 				{
-					// Leave as is
-					$aScalarArgs[$sArgName] = $value;
+					if (is_scalar($value))
+					{
+						$aScalarArgs[$sArgName] = (string)$value;
+					}
+					elseif (is_null($value))
+					{
+						$aScalarArgs[$sArgName] = null;
+					}
+					elseif (is_array($value))
+					{
+						$aScalarArgs[$sArgName] = $value;
+					}
 				}
 			}
-			else
-			{
-				if (is_scalar($value))
-				{
-					$aScalarArgs[$sArgName] = (string)$value;
-				}
-				elseif (is_null($value))
-				{
-					$aScalarArgs[$sArgName] = null;
-				}
-				elseif (is_array($value))
-				{
-					$aScalarArgs[$sArgName] = $value;
-				}
-			}
+			return static::AddMagicPlaceholders($aScalarArgs, $aExpectedArgs);
 		}
-
-		return static::AddMagicPlaceholders($aScalarArgs);
+		else
+		{
+			return array();
+		}
 	}
 
 	/**
@@ -4172,21 +4088,68 @@ abstract class MetaModel
 	 *
 	 * @return array of placeholder (or name->object()) => value (or object)
 	 */
-	public static function AddMagicPlaceholders($aPlaceholders)
+	public static function AddMagicPlaceholders($aPlaceholders, $aExpectedArgs = null)
 	{
 		// Add standard magic arguments
 		//
-		$aPlaceholders['current_contact_id'] = UserRights::GetContactId(); // legacy
-
-		$oUser = UserRights::GetUserObject();
-		if (!is_null($oUser))
+		if (is_null($aExpectedArgs))
 		{
-			$aPlaceholders['current_user->object()'] = $oUser;
+			$aPlaceholders['current_contact_id'] = UserRights::GetContactId(); // legacy
 
-			$oContact = UserRights::GetContactObject();
-			if (!is_null($oContact))
+			$oUser = UserRights::GetUserObject();
+			if (!is_null($oUser))
 			{
-				$aPlaceholders['current_contact->object()'] = $oContact;
+				$aPlaceholders['current_user->object()'] = $oUser;
+
+				$oContact = UserRights::GetContactObject();
+				if (!is_null($oContact))
+				{
+					$aPlaceholders['current_contact->object()'] = $oContact;
+				}
+			}
+		}
+		else
+		{
+			$aCurrentUser = array();
+			$aCurrentContact = array();
+			foreach ($aExpectedArgs as $expression)
+			{
+				$aName = explode('->', $expression->GetName());
+				if ($aName[0] == 'current_contact_id')
+				{
+					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
+				}
+				if ($aName[0] == 'current_user')
+				{
+					array_push($aCurrentUser, $aName[1]);
+				}
+				if ($aName[0] == 'current_contact')
+				{
+					array_push($aCurrentContact, $aName[1]);
+				}
+			}
+			if (count($aCurrentUser) > 0)
+			{
+				$oSearch = DBObjectSearch::FromOQL("SELECT User WHERE id = :id");
+				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetUserId()));
+				$oSet->OptimizeColumnLoad($aCurrentUser);
+				$oUser = $oSet->fetch();
+				$aPlaceholders['current_user->object()'] = $oUser;
+				foreach ($aCurrentUser as $sField)
+				{
+					$aPlaceholders['current_user->'.$sField] = $oUser->Get($sField);
+				}
+			}
+			if (count($aCurrentContact) > 0)
+			{
+				$oSearch = DBObjectSearch::FromOQL("SELECT Contact WHERE id = :id");
+				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetContactId()));
+				$oSet->OptimizeColumnLoad($aCurrentContact);
+				$oUser = $oSet->fetch();
+				foreach ($aCurrentContact as $sField)
+				{
+					$aPlaceholders['current_contact->'.$sField] = $oUser->Get($sField);
+				}
 			}
 		}
 
@@ -4879,7 +4842,7 @@ abstract class MetaModel
 				//
 				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
@@ -5253,7 +5216,7 @@ abstract class MetaModel
 				$sClassRes .= self::MakeDictEntry("Class:$sClass+", self::GetClassDescription_Obsolete($sClass), '', $bNotInDico);
 				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
@@ -5417,7 +5380,7 @@ abstract class MetaModel
 			{
 				if (!$oAttDef->CopyOnAllTables())
 				{
-					// Skip this attribute if not originaly defined in this class
+					// Skip this attribute if not originally defined in this class
 					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
 					{
 						continue;
@@ -5692,6 +5655,15 @@ abstract class MetaModel
 		{
 			$sTableItems = implode(', ', $aCreateTableItems[$sTable]);
 			$aCondensedQueries[] = "CREATE TABLE `$sTable` ($sTableItems) $sTableOptions";
+			// Add request right after the CREATE TABLE
+			if (isset($aPostTableAlteration[$sTable]))
+			{
+				foreach ($aPostTableAlteration[$sTable] as $sQuery)
+				{
+					$aCondensedQueries[] = $sQuery;
+				}
+				unset($aPostTableAlteration[$sTable]);
+			}
 		}
 		foreach ($aAlterTableMetaData as $sTableAlterQuery)
 		{
@@ -5708,7 +5680,17 @@ abstract class MetaModel
 				{
 					$aCondensedQueries[] = $sQuery;
 				}
+				unset($aPostTableAlteration[$sTable]);
             }
+		}
+
+		// Add alterations not yet managed
+		foreach ($aPostTableAlteration as $aQueries)
+		{
+			foreach ($aQueries as $sQuery)
+			{
+				$aCondensedQueries[] = $sQuery;
+			}
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
@@ -5735,32 +5717,9 @@ abstract class MetaModel
 			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
 			{
-				// Check that the view is complete
-				//
-				// Note: checking the list of attributes is not enough because the columns can be stable while the SELECT is not stable
-				//       Example: new way to compute the friendly name
-				//       The correct comparison algorithm is to compare the queries,
-				//       by using "SHOW CREATE VIEW" (MySQL 5.0.1 required) or to look into INFORMATION_SCHEMA/views
-				//       both requiring some privileges
-				// Decision: to simplify, let's consider the views as being wrong anytime
-				// Rework the view
-				//
-				$oFilter = new DBObjectSearch($sClass, '');
-				$oFilter->AllowAllData();
-				$sSQL = $oFilter->MakeSelectQuery();
-				$aErrors[$sClass]['*'][] = "Redeclare view '$sView' (systematic - to support an eventual change in the friendly name computation)";
-				$aSugFix[$sClass]['*'][] = "ALTER VIEW `$sView` AS $sSQL";
-			}
-			else
-			{
-				// Create the view
-				//
-				$oFilter = new DBObjectSearch($sClass, '');
-				$oFilter->AllowAllData();
-				$sSQL = $oFilter->MakeSelectQuery();
-				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
-				$aSugFix[$sClass]['*'][] = "DROP VIEW IF EXISTS `$sView`";
-				$aSugFix[$sClass]['*'][] = "CREATE VIEW `$sView` AS $sSQL";
+				// Remove deprecated views
+				$aErrors[$sClass]['*'][] = "Remove view '$sView' (deprecated, consider installing combodo-views if needed)";
+				$aSugFix[$sClass]['*'][] = "DROP VIEW `$sView`";
 			}
 		}
 		return array($aErrors, $aSugFix);
@@ -6316,6 +6275,7 @@ abstract class MetaModel
 			self::$m_bLogWebService = self::$m_oConfig->GetLogWebService();
 
 			ToolsLog::Enable(APPROOT.'log/tools.log');
+			DeadLockLog::Enable();
 		}
 		else
 		{
@@ -7165,97 +7125,9 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinkingClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 *
-	 */
-	public static function EnumLinksClasses()
-	{
-		// Returns a flat array of classes having at least two external keys
-		$aResult = array();
-		foreach(self::$m_aAttribDefs as $sSomeClass => $aClassAttributes)
-		{
-			$iExtKeyCount = 0;
-			foreach($aClassAttributes as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$iExtKeyCount++;
-				}
-			}
-			if ($iExtKeyCount >= 2)
-			{
-				$aResult[] = $sSomeClass;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinksClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 *
-	 *@param string $sClass
-	 *
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 * @throws \CoreException
-	 *
-	 */
-	public static function EnumLinkingClasses($sClass = "")
-	{
-		// N-N links, array of sLinkClass => (array of sAttCode=>sClass)
-		$aResult = array();
-		foreach(self::EnumLinksClasses() as $sSomeClass)
-		{
-			$aTargets = array();
-			$bFoundClass = false;
-			foreach(self::ListAttributeDefs($sSomeClass) as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$sRemoteClass = $oAttDef->GetTargetClass();
-					if (empty($sClass))
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-					elseif ($sClass == $sRemoteClass)
-					{
-						$bFoundClass = true;
-					}
-					else
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-				}
-			}
-			if (empty($sClass) || $bFoundClass)
-			{
-				$aResult[$sSomeClass] = $aTargets;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
 	 * Using GetLinkClasses is the recommended way to determine if a class is
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
-	 *
-	 * This function has two siblings that will be soon deprecated:
-	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
 	 *
 	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException

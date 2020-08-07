@@ -201,8 +201,10 @@ function DisplayInconsistenciesReport($aResults)
 {
 	$sDBToolsFolder = str_replace("\\", '/', APPROOT.'log/');
 	$sReportFile = 'dbtools-report-'.date('Y-m-d-H-i-s');
+	$sCleanupFile = 'dbtools-cleanup-'.date('Y-m-d-H-i-s');
 
 	$fReport = fopen($sDBToolsFolder.$sReportFile.'.txt', 'w');
+	$fCleanUp = fopen($sDBToolsFolder.$sCleanupFile.'.txt', 'w');
 	fwrite($fReport, 'Database Maintenance tools: '.date('Y-m-d H:i:s')."\r\n");
 	foreach($aResults as $sClass => $aErrorList)
 	{
@@ -228,6 +230,15 @@ function DisplayInconsistenciesReport($aResults)
 				fwrite($fReport, "\r\n");
 			}
 
+			if (isset($aError['cleanup']))
+			{
+				$aQueries = $aError['cleanup'];
+				foreach($aQueries as $sQuery)
+				{
+					fwrite($fCleanUp, "$sQuery;\r\n");
+				}
+			}
+
 			$sQueryResult = '';
 			$aIdList = array();
 			foreach($aError['res'] as $aRes)
@@ -249,12 +260,15 @@ function DisplayInconsistenciesReport($aResults)
 		}
 	}
 	fclose($fReport);
+	fclose($fCleanUp);
 
 	$oArchive = new ZipArchive();
 	$oArchive->open($sDBToolsFolder.$sReportFile.'.zip', ZipArchive::CREATE);
 	$oArchive->addFile($sDBToolsFolder.$sReportFile.'.txt', $sReportFile.'.txt');
+	$oArchive->addFile($sDBToolsFolder.$sCleanupFile.'.txt', $sCleanupFile.'.txt');
 	$oArchive->close();
 	unlink($sDBToolsFolder.$sReportFile.'.txt');
+	unlink($sDBToolsFolder.$sCleanupFile.'.txt');
 	$sReportFile = $sDBToolsFolder.$sReportFile.'.zip';
 
 

@@ -922,7 +922,7 @@ class DashletObjectList extends Dashlet
 		$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
 		if ($sHtmlTitle != '')
 		{
-			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+			$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
 		}
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$oBlock = new DisplayBlock($oFilter, 'list');
@@ -1121,7 +1121,7 @@ abstract class DashletGroupBy extends Dashlet
 			$this->sFunction = null;
 		}
 
-		if (empty($this->aProperties['order_direction']))
+		if ((!is_null($this->sClass)) && empty($this->aProperties['order_direction']))
 		{
 			$aAttributeTypes = $this->oModelReflection->ListAttributes($this->sClass);
 			if (isset($aAttributeTypes[$this->sGroupByAttCode]))
@@ -1272,10 +1272,10 @@ abstract class DashletGroupBy extends Dashlet
 					break;
 			}
 
-			$oPage->add('<div style="text-align:center" class="dashlet-content">');
+			$oPage->add('<div class="dashlet-content">');
 			if ($sHtmlTitle != '')
 			{
-				$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
 			}
 			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 			$oBlock = new DisplayBlock($oFilter, $sType);
@@ -1868,11 +1868,11 @@ class DashletGroupByTable extends DashletGroupBy
 			$iTotal += $aDisplayData['value'];
 		}
 
-		$oPage->add('<div class="dashlet-content">');
 
 		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 
 		$oPage->add('<div id="'.$sBlockId.'" class="display_block">');
+		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<p>'.Dict::Format('UI:Pagination:HeaderNoSelection', $iTotal).'</p>');
 		$oPage->add('<table class="listResults">');
 		$oPage->add('<thead>');
@@ -1926,7 +1926,7 @@ class DashletHeaderStatic extends Dashlet
 		$oPage->add('<div class="main_header">');
 
 		$oPage->add('<img src="'.$sIconPath.'">');
-		$oPage->add('<h1>'.$this->oModelReflection->DictString($sTitle).'</h1>');
+		$oPage->add('<div class="main_header"><h1>&nbsp;'.$this->oModelReflection->DictString($sTitle).'</h1></div>');
 
 		$oPage->add('</div>');
 		$oPage->add('</div>');

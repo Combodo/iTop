@@ -1044,3 +1044,39 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));

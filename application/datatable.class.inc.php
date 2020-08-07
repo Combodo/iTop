@@ -971,13 +971,13 @@ class DataTableSettings implements Serializable
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	static public function GetDataModelSettings($aClassAliases, $bViewLink, $aDefaultLists)
+	public static function GetDataModelSettings($aClassAliases, $bViewLink, $aDefaultLists)
 	{
 		$oSettings = new DataTableSettings($aClassAliases);
 		// Retrieve the class specific settings for each class/alias based on the 'list' ZList
 		//TODO let the caller pass some other default settings (another Zlist, extre fields...)
 		$aColumns = array();
-		foreach($aClassAliases as $sAlias => $sClass)
+		foreach ($aClassAliases as $sAlias => $sClass)
 		{
 			if ($aDefaultLists == null)
 			{

@@ -402,6 +402,7 @@ class OQLTest extends ItopDataTestCase
 		}
 		catch (Exception $e)
 		{
+			$this->debug($e->getMessage());
 			$sExceptionClass = get_class($e);
 		}
 

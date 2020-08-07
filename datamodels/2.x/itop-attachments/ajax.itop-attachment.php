@@ -32,7 +32,7 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
  */
 function RenderAttachments(ajax_page $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadParam('objclass', '');
+	$sClass = utils::ReadParam('objclass', '', false, 'class');
 	$sId = utils::ReadParam('objkey', '');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
 	$bEditMode = utils::ReadParam('edit_mode', 0);
@@ -46,7 +46,7 @@ function RenderAttachments(ajax_page $oPage, $iTransactionId)
 		: AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
 	if ($bEditMode && !$bIsReadOnlyState)
 	{
-		$oAttachmentsRenderer->RenderEditAttachmentsList($aAttachmentsDeleted);
+		$oAttachmentsRenderer->AddAttachmentsListContent(true, $aAttachmentsDeleted);
 	}
 	else
 	{

@@ -73,19 +73,16 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
-		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
-		$this->add_linked_stylesheet("../css/font-awesome/css/v4-shims.min.css");
 		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
 		$this->add_linked_script("../js/jquery.treeview.js");
-		$this->add_linked_script("../js/jquery.autocomplete.js");
 		$this->add_linked_script("../js/date.js");
 		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
 		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");

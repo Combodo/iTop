@@ -92,6 +92,10 @@ function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 		{
 			$oObj->DBUpdate();
 		}
+		else
+		{
+			throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
+		}
 		ReloadAndDisplay($oP, $oObj);
 	}
 	else
@@ -384,7 +388,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'details': // Details of an object
-			$sClass = utils::ReadParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id))
 			{
@@ -455,7 +459,7 @@ try
 
 		case 'release_lock_and_details':
         $oP->DisableBreadCrumb();
-		$sClass = utils::ReadParam('class', '');
+        $sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$sToken = utils::ReadParam('token', '');
@@ -564,7 +568,6 @@ try
 						$sFullText = trim($aMatches[2]);
 					}
 				}
-				$sFullText = str_replace('_', '\_', $sFullText);
 				if (preg_match('/^"(.*)"$/', $sFullText, $aMatches))
 				{
 					// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
@@ -596,7 +599,7 @@ try
 					break;
 				}
 				$sFullText = implode(' ', $aFullTextNeedles);
-				$sFullText = str_replace('\_', '_', $sFullText);
+
 				// Sanity check of the accelerators
 				/** @var array $aAccelerators */
 				$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
@@ -903,13 +906,22 @@ HTML
 
 		case 'apply_modify': // Applying the modifications to an existing object
 			$oP->DisableBreadCrumb();
-			$sClass = utils::ReadPostedParam('class', '');
+			$sClass = utils::ReadPostedParam('class', '', 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+                IssueLog::Trace('Object not updated (empty class or id)', $sClass, array(
+                    '$operation' => $operation,
+                    '$id' => $id,
+                    '$sTransactionId' => $sTransactionId,
+                    '$sUser' => UserRights::GetUser(),
+                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                ));
+
+                throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 			$bDisplayDetails = true;
 			$oObj = MetaModel::GetObject($sClass, $id, false);
@@ -918,13 +930,34 @@ HTML
 				$bDisplayDetails = false;
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+
+                IssueLog::Trace('Object not updated (id not found)', $sClass, array(
+                    '$operation' => $operation,
+                    '$id' => $id,
+                    '$sTransactionId' => $sTransactionId,
+                    '$sUser' => UserRights::GetUser(),
+                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                ));
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
+				//TODO: since $bDisplayDetails= true, there will be an redirection, thus, the content generated here is ignored, only the $sMessage and $sSeverity are used afeter the redirection
 				$sUser = UserRights::GetUser();
 				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+				$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+				$sSeverity = 'error';
+
+				IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
+					'$operation' => $operation,
+					'$id' => $id,
+					'$sTransactionId' => $sTransactionId,
+					'$sUser' => UserRights::GetUser(),
+					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+					'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+				));
 			}
 			else
 			{
@@ -937,9 +970,31 @@ HTML
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 					$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 					$sSeverity = 'info';
+
+                    IssueLog::Trace('Object not updated (see either $aErrors or IsModified)', $sClass, array(
+                        '$operation' => $operation,
+                        '$id' => $id,
+                        '$sTransactionId' => $sTransactionId,
+                        '$aErrors' => $aErrors,
+                        'IsModified' => $oObj->IsModified(),
+                        '$sUser' => UserRights::GetUser(),
+                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                    ));
 				}
 				else
 				{
+                    IssueLog::Trace('Object updated', $sClass, array(
+                        '$operation' => $operation,
+                        '$id' => $id,
+                        '$sTransactionId' => $sTransactionId,
+                        '$aErrors' => $aErrors,
+                        'IsModified' => $oObj->IsModified(),
+                        '$sUser' => UserRights::GetUser(),
+                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                    ));
+
 					try
 					{
 						if (!empty($aErrors))
@@ -972,7 +1027,6 @@ HTML
 						// - 2) Ok, there was some trouble indeed
 						$sMessage = $e->getMessage();
 						$sSeverity = 'error';
-						$bDisplayDetails = true;
 					}
 					utils::RemoveTransaction($sTransactionId);
 				}
@@ -983,11 +1037,22 @@ HTML
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
-					ApplyNextAction($oP, $oObj, $sNextAction);
+					try
+					{
+						ApplyNextAction($oP, $oObj, $sNextAction);
+					}
+					catch (ApplicationException $e)
+					{
+						$sMessage = $e->getMessage();
+						$sSeverity = 'info';
+						ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
+					}
 				}
 				else
 				{
 					// Nothing more to do
+					$sMessage = isset($sMessage) ? $sMessage : '';
+					$sSeverity = isset($sSeverity) ? $sSeverity : null;
 					ReloadAndDisplay($oP, $oObj, 'update', $sMessage, $sSeverity);
 				}
 				
@@ -1102,6 +1167,14 @@ HTML
 		$aWarnings = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
+            IssueLog::Trace('Object not created (empty class)', $sClass, array(
+                '$operation' => $operation,
+                '$sTransactionId' => $sTransactionId,
+                '$sUser' => UserRights::GetUser(),
+                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+            ));
+
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
 		if (!utils::IsTransactionValid($sTransactionId, false))
@@ -1109,6 +1182,14 @@ HTML
 			$sUser = UserRights::GetUser();
 			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
+
+            IssueLog::Trace('Object not created (invalid transaction_id)', $sClass, array(
+                '$operation' => $operation,
+                '$sTransactionId' => $sTransactionId,
+                '$sUser' => UserRights::GetUser(),
+                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+            ));
 		}
 		else
 		{
@@ -1139,10 +1220,29 @@ HTML
 			{
 				if (!empty($aErrors) || !empty($aWarnings))
 				{
+                    IssueLog::Trace('Object not created (see $aErrors)', $sClass, array(
+                        '$operation' => $operation,
+                        '$sTransactionId' => $sTransactionId,
+                        '$aErrors' => $aErrors,
+                        '$sUser' => UserRights::GetUser(),
+                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                    ));
+
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 				}
 
 				$oObj->DBInsertNoReload();// No need to reload
+
+                IssueLog::Trace('Object created', $sClass, array(
+                    '$operation' => $operation,
+                    '$id' => $oObj->GetKey(),
+                    '$sTransactionId' => $sTransactionId,
+                    '$aErrors' => $aErrors,
+                    '$sUser' => UserRights::GetUser(),
+                    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                ));
 
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
@@ -1156,7 +1256,16 @@ HTML
 				if (!empty($sNextAction))
 				{
 					$oP->add("<h1>$sMessage</h1>");
-					ApplyNextAction($oP, $oObj, $sNextAction);
+					try
+					{
+						ApplyNextAction($oP, $oObj, $sNextAction);
+					}
+					catch (ApplicationException $e)
+					{
+						$sMessage = $e->getMessage();
+						$sSeverity = 'info';
+						ReloadAndDisplay($oP, $oObj, 'create', $sMessage, $sSeverity);
+					}
 				}
 				else
 				{
@@ -1384,7 +1493,7 @@ HTML
 			}
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
-	
+
 			$oP->add_script(
 <<<EOF
 			// Initializes the object once at the beginning of the page...
@@ -1555,7 +1664,8 @@ EOF
 			throw new ApplicationException(Dict::S('UI:Error:ActionNotAllowed'));
 		}
 
-			$oObj = MetaModel::GetObject($sClass, $id, false);
+		/** @var \cmdbAbstractObject $oObj */
+		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
 			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
@@ -1563,7 +1673,16 @@ EOF
 				'stimulus' => $sStimulus,
 				'origin' => 'console'
 			);
-			$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
+			try
+			{
+				$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
+			}
+			catch(ApplicationException $e)
+			{
+				$sMessage = $e->getMessage();
+				$sSeverity = 'info';
+				ReloadAndDisplay($oP, $oObj, 'stimulus', $sMessage, $sSeverity);
+			}
 		}
 		else
 		{
@@ -1576,7 +1695,7 @@ EOF
 
 		case 'apply_stimulus': // Actual state change
 		$oP->DisableBreadCrumb();
-		$sClass = utils::ReadPostedParam('class', '');
+		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$id = utils::ReadPostedParam('id', '');
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
@@ -1584,6 +1703,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
+		/** @var \cmdbAbstractObject $oObj */
 		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
@@ -1683,7 +1803,15 @@ EOF
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
-						$oObj->DisplayStimulusForm($oP, $sStimulus);
+						try
+						{
+							$oObj->DisplayStimulusForm($oP, $sStimulus);
+						}
+						catch(ApplicationException $e)
+						{
+							$sMessage = $e->getMessage();
+							$sSeverity = 'info';
+						}
 						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
 						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 					}
@@ -1810,7 +1938,7 @@ EOF
 		
 		case 'kill_lock':
 		$oP->DisableBreadCrumb();
-		$sClass = utils::ReadParam('class', '');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		iTopOwnershipLock::KillLock($sClass, $id);
 		$oObj = MetaModel::GetObject($sClass, $id);
@@ -1845,7 +1973,7 @@ EOF
 catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	if ($e instanceof SecurityException)
 	{
 		$oP->add("<h1>".Dict::S('UI:SystemIntrusion')."</h1>\n");
@@ -1888,7 +2016,7 @@ catch(CoreException $e)
 catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
 	$oP->output();

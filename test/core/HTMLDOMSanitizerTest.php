@@ -202,5 +202,117 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 
 		return true;
 	}
+
+	/**
+	 * @dataProvider RemoveBlackListedTagContentProvider
+	 */
+	public function testDoSanitizeRemoveBlackListedTagContent($html, $expected)
+	{
+		$oSanitizer = new HTMLDOMSanitizer();
+		$sSanitizedHtml = $oSanitizer->DoSanitize($html);
+
+		$this->assertEquals($expected, str_replace("\n", '', $sSanitizedHtml));
+	}
+
+	public function RemoveBlackListedTagContentProvider()
+	{
+		return array(
+			'basic' => array(
+				'html' => 'foo<iframe>bar</iframe>baz',
+				'expected' => '<p>foobaz</p>',
+			),
+			'basic with body' => array(
+				'html' => '<body>foo<iframe>bar</iframe>baz</body>',
+				'expected' => 'foobaz',
+			),
+			'basic with html and body tags' => array(
+				'html' => '<html><body lang="EN-GB" link="#0563C1" vlink="#954F72">foo<iframe>bar</iframe>baz</body></html>',
+				'expected' => 'foobaz',
+			),
+			'basic with attributes' => array(
+				'html' => 'foo<iframe baz="1">bar</iframe>baz',
+				'expected' => '<p>foobaz</p>',
+			),
+			'basic with comment' => array(
+				'html' => 'foo<iframe baz="1">bar<!-- foo --></iframe>baz',
+				'expected' => '<p>foobaz</p>',
+			),
+			'basic with contentRemovable tag' => array(
+				'html' => 'foo<iframe baz="1">bar<style>foo</style><script>boo</script></iframe>baz',
+				'expected' => '<p>foobaz</p>',
+			),
+			'nested' => array(
+				'html' => 'before<iframe>foo<article>baz</article>oof<article><iframe>bar</iframe>oof</article></iframe>after',
+				'expected' => '<p>beforeafter</p>',
+			),
+			'nested with not closed br' => array(
+				'html' => 'before<iframe>foo<article>baz</article>oof<br><article><iframe>bar</iframe>oof</article></iframe>after',
+				'expected' => '<p>beforeafter</p>',
+			),
+			'nested with allowed' => array(
+				'html' => 'before<iframe><div><article><p>baz</p>zab</article></div>oof</iframe>after',
+				'expected' => '<p>beforeafter</p>',
+			),
+			'nested with spaces' => array(
+				'html' => 'before<iframe><article>baz</article> oof</iframe>after',
+				'expected' => '<p>beforeafter</p>',
+			),
+			'nested with attributes' => array(
+				'html' => 'before<iframe baz="1"><article baz="1" biz="2">baz</article>oof</iframe>after',
+				'expected' => '<p>beforeafter</p>',
+			),
+			'nested with allowed and attributes and spaces ' => array(
+				'html' => '<html><body>before<iframe baz="1"><div baz="baz"><article baz="1" biz="2">baz</article>rab</div> oof</iframe>after</body></html>',
+				'expected' => 'beforeafter',
+			),
+			'nested with allowed and contentRemovable tags' => array(
+				'html' => '<html><body>before<iframe baz="1"><div ><article>baz</article>rab</div> oof<embed>embedTExt</embed></iframe>middle<style>foo</style>after<script>boo</script></body></html>',
+				'expected' => 'beforemiddleafter',
+			),
+
+			'regression: if head present => body is not trimmed' => array(
+				'html' => '<html><head></head><body lang="EN-GB" link="#0563C1" vlink="#954F72">bar</body></html>',
+				'expected' => 'bar',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider CallInlineImageProcessImageTagProvider
+	 */
+	public function testDoSanitizeCallInlineImageProcessImageTag($sHtml, $iExpectedCount)
+	{
+		require_once APPROOT.'test/core/sanitizer/InlineImageMock.php';
+
+		$oSanitizer = new HTMLDOMSanitizer();
+		$oSanitizer->DoSanitize($sHtml);
+
+		$iCalledCount = \InlineImage::GetCallCounter();
+		$this->assertEquals($iExpectedCount, $iCalledCount);
+	}
+
+	public function CallInlineImageProcessImageTagProvider()
+	{
+		return array(
+			'no image' => array(
+				'html' => '<p>bar</p>',
+				'expected' => 0,
+			),
+			'basic image' => array(
+				'html' => '<img />',
+				'expected' => 1,
+			),
+			'nested images within forbidden tags' => array(
+				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><article baz="1" biz="2">baz<img /><img /></article>rab</div> oof<img /></iframe><img /></body></html>',
+				'expected' => 2,
+			),
+//          This test will be restored with the ticket n°2556
+//			'nested images within forbidden and removed tags' => array(
+//				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><object baz="1" biz="2">baz<img /><img /></object>rab</div> oof<img /></iframe><img /></body></html>',
+//				'expected' => 2,
+//			),
+		);
+	}
+
 }
 

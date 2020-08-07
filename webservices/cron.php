@@ -60,7 +60,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 
 function UsageAndExit($oP)
 {
-	$bModeCLI = utils::IsModeCLI();
+	$bModeCLI = ($oP instanceof CLIPage);
 
 	if ($bModeCLI)
 	{
@@ -477,9 +477,12 @@ function ReorderProcesses(&$aProcesses, $aTasks, $oNow, $bVerbose, &$oP)
 
 set_time_limit(0); // Some background actions may really take long to finish (like backup)
 
-if (utils::IsModeCLI())
+$bIsModeCLI = utils::IsModeCLI();
+if ($bIsModeCLI)
 {
 	$oP = new CLIPage("iTop - cron");
+
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
 }
 else
 {
@@ -497,7 +500,7 @@ catch (Exception $e)
 	exit(EXIT_CODE_FATAL);
 }
 
-if (utils::IsModeCLI())
+if ($bIsModeCLI)
 {
 	// Next steps:
 	//   specific arguments: 'csvfile'

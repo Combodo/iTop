@@ -160,8 +160,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '~~',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Ultima data di messa in attesa',
 	'Class:UserRequest/Attribute:last_pending_date+' => '~~',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'cumulatedpending~~',
-	'Class:UserRequest/Attribute:cumulatedpending+' => '~~',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '~~',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

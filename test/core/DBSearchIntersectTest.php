@@ -3,7 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DBSearch;
 
 /**
@@ -15,9 +15,8 @@ use DBSearch;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class DBSearchIntersectTest extends ItopDataTestCase
+class DBSearchIntersectTest extends ItopTestCase
 {
-	const USE_TRANSACTION = false;
 
 	protected function setUp()
 	{
@@ -51,6 +50,19 @@ class DBSearchIntersectTest extends ItopDataTestCase
 	public function FilterProvider()
 	{
 		$aTests = array();
+
+		$aTests['Union filtered by parent class'] = array(
+			'left' => "SELECT ApplicationSolution UNION SELECT BusinessProcess",
+			'right' => "SELECT FunctionalCI WHERE org_id = 3",
+			'alias' => "ApplicationSolution",
+			'result' => "SELECT `ApplicationSolution` FROM ApplicationSolution AS `ApplicationSolution` WHERE (`ApplicationSolution`.`org_id` = 3) UNION SELECT `BusinessProcess` FROM BusinessProcess AS `BusinessProcess` WHERE (`BusinessProcess`.`org_id` = 3)");
+
+// Bug to fix
+//		$aTests['Test union #2902'] = array(
+//			'left' => "SELECT `L-1` FROM ServiceFamily AS `L-1` WHERE 1",
+//			'right' => "SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)",
+//			'alias' => "L-1",
+//			'result' => "SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)");
 
 		$aTests['Multiple selected classes inverted'] = array(
 			'left' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE 1",
@@ -111,6 +123,26 @@ class DBSearchIntersectTest extends ItopDataTestCase
 			'right' => "SELECT Person FROM Person AS Person JOIN Location AS `L` ON Person.location_id = `L`.id WHERE `L`.org_id = 3",
 			'alias' => "P",
 			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `L1` ON `P`.location_id = `L1`.id WHERE (`L1`.`org_id` = 3)");
+
+		$aTests['Test Subclass1'] = array(
+			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "U",
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3))");
+
+		$aTests['Test Subclass and join'] = array(
+			'left' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id  WHERE `UserRequest`.agent_id = 3",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "UserRequest",
+			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id WHERE ((`UserRequest`.`agent_id` = 3) AND (`UserRequest`.`org_id` = 3))");
+
+		$aTests['Test Subclass and union'] = array(
+			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3 UNION SELECT `T` FROM Ticket AS `T` WHERE `T`.agent_id = 3 ",
+			'right' => "SELECT `Ticket` WHERE org_id = 3",
+			'alias' => "U",
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)) UNION SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`agent_id` = 3) AND (`T`.`org_id` = 3))");
+
+
 
 		return $aTests;
 	}
@@ -421,5 +453,54 @@ class DBSearchIntersectTest extends ItopDataTestCase
 		);
 
 		return $aQueries;
+	}
+
+	/**
+	 * Bug #2970
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \OQLException
+	 */
+	public function testFilterOnJoin()
+	{
+		$sReq1 = "SELECT `L-1` FROM Organization AS `L-1` WHERE (`L-1`.`id` = :current_contact->org_id)";
+		$sReq2 = "SELECT `L-1-1` FROM CustomerContract AS `L-1-1` JOIN Organization AS `O` ON `L-1-1`.org_id = `O`.id WHERE (((`L-1-1`.`status` = 'active') OR (`L-1-1`.`status` = 'standby')) AND (`O`.`id` = :current_contact->org_id))";
+
+		$oFilter1 = DBSearch::FromOQL($sReq1);
+		$oFilter2 = DBSearch::FromOQL($sReq2);
+		$aRealiasingMap = array();
+		$oFilter1 = $oFilter1->Join($oFilter2,
+			DBSearch::JOIN_REFERENCED_BY,
+			'org_id',
+			TREE_OPERATOR_EQUALS, $aRealiasingMap);
+
+		$sRes1 = $oFilter1->ToOQL();
+		$this->debug($sRes1);
+
+		foreach($oFilter1->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
+		{
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $index => $oForeignFilter)
+					{
+						$this->debug($oForeignFilter->ToOQL());
+					}
+				}
+			}
+		}
+
+		$this->assertFalse(strpos($sRes1, '`O`.'));
+
+		$sReq3 = "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE (`CustomerContract`.`org_id` IN ('2'))";
+		$oFilter3 = DBSearch::FromOQL($sReq3);
+
+		$oFilter1 = $oFilter1->Filter('L-1-1', $oFilter3);
+
+		$sRes1 = $oFilter1->ToOQL();
+		$this->debug($sRes1);
+
+		$this->assertFalse(strpos($sRes1, '`O`.'));
 	}
 }

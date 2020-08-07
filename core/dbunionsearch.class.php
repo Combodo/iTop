@@ -667,6 +667,16 @@ class DBUnionSearch extends DBSearch
 		return $oSQLQuery;
 	}
 
+	function GetExpectedArguments()
+	{
+		$aVariableCriteria = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
+		}
+
+		return $aVariableCriteria;
+	}
 	/**
 	 * @return \Expression
 	 */
@@ -717,5 +727,15 @@ class DBUnionSearch extends DBSearch
 			$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
 			$oSearch->AddConditionExpression($oInCondition);
 		}
+	}
+
+	public function ListParameters()
+	{
+		$aParameters = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aParameters = array_merge($aParameters, $oSearch->ListParameters());
+		}
+		return $aParameters;
 	}
 }

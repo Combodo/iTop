@@ -283,6 +283,8 @@ class utils
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
+	 *
+	 * @throws \CoreException
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -296,7 +298,7 @@ class utils
 				$retValue = $value;
 				if (!MetaModel::IsValidClass($value))
 				{
-					$retValue = false;
+					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
 
@@ -2190,7 +2192,7 @@ class utils
 	 *      * not contained in base path
 	 *    Otherwise return the real path (see realpath())
 	 *
-	 * @since 2.7.0 N°2538
+	 * @since 2.6.5 2.7.0 N°2538
 	 */
 	final public static function RealPath($sPath, $sBasePath)
 	{

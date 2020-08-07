@@ -37,8 +37,99 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// make sure that the form is clean
 		$('#'+this.id+'_btnRemove').prop('disabled',true);
 		$('#'+this.id+'_linksToRemove').val('');
+	}
+	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
+	{
+		var hasFocus = 0;
+		var cache = {};
+		$('#label_'+me.id).autocomplete({
+				source: function (request, response) {
+					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+
+					if (term in cache)
+					{
+						response(cache[term]);
+						return;
+					}
+					if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120)
+					{
+						//we have already all the possibility in cache
+						var data = [];
+						$.each(cache[this.previous], function (key, value) {
+							if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0)
+							{
+								data.push(value);
+							}
+						});
+						cache[term] = data;
+						response(data);
+					}
+					else
+					{
+						$.post({
+							url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+							dataType: "json",
+							data: {
+								q: request.term,
+								operation: 'ac_extkey',
+								sTargetClass: me.sTargetClass,
+								sFilter: me.sFilter,
+								bSearchMode: me.bSearchMode,
+								sOutputFormat: 'json',
+								json: function () {
+									return sWizHelperJSON;
+								}
+							},
+							success: function (data) {
+								cache[term] = data;
+								response(data);
+							}
+						});
+
+					}
+				},
+				autoFocus: true,
+				minLength: iMinChars,
+				focus: function (event, ui) {
+					// $('#label_$this->iId').val( ui.item.label );
+					return false;
+				},
+				select: function (event, ui) {
+					$('#'+me.id).val(ui.item.value);
+					$('#label_'+me.id).val(ui.item.label);
+					$('#'+me.id).trigger('validate');
+					$('#'+me.id).trigger('extkeychange');
+					$('#'+me.id).trigger('change');
+					return false;
+				}
+			})
+			.autocomplete("instance")._renderItem = function (ul, item) {
+			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+			var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			if (item.obsolete == 'yes')
+			{
+				val = val+' <b>old</b>';
+			}
+			return $("<li>")
+				.append(val)
+				.appendTo(ul);
+		};
+
+		$('#label_'+me.id).focus(function(){
+			// track whether the field has focus, we shouldn't process any
+			// results if the field no longer has focus
+			hasFocus++;
+		}).blur(function() {
+			hasFocus = 0;
+		}).click(
+			function() {
+				if(hasFocus++>1)
+				{
+					$('#label_'+me.id).autocomplete( "search");
+				}
+		});
 	};
-	
+
 	this.StopPendingRequest = function()
 	{
 		if (me.ajax_request)
@@ -600,5 +691,5 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		
 		return false; // Do NOT submit the form in case we are called by OnSubmit...
 	};
-	
+
 }

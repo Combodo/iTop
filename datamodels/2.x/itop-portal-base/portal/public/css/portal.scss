@@ -1077,6 +1077,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /****************/
 /* Filter brick */
 /****************/
+.tile.tile-filter-brick .tile_decoration .icon {
+	color: $link-color;
+}
+
 .tile.tile-filter-brick .tile_filterbox .form-group:first-child{
 	width: 100%;
 }

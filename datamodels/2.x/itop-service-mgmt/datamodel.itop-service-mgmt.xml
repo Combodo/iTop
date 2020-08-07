@@ -1621,7 +1621,39 @@ public function PrefillSearchForm(&$aContextParam)
           <duplicates>true</duplicates>
         </field>
       </fields>
-      <methods/>
+	    <methods>
+		    <method id="DoCheckToWrite">
+			    <static>false</static>
+			    <access>public</access>
+			    <code><![CDATA[
+					public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aCustomerContracts = $this->Get("customercontracts_list");
+		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
+		{
+			// Recurse inside the subdirectories
+			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
+			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
+			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
+			if ($this->Get("id") != null)
+			{
+				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
+				$aQueryParams['sla_id'] = $this->Get("id");
+			}
+			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
+			$oResultSql = new DBObjectSet($oQuery);
+			$oResultSql->OptimizeColumnLoad(['ccs.customercontract_name','ccs.service_name']);
+			if ($aCurrentRow = $oResultSql->Fetch())
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
+			}
+		}
+	}
+			     ]]></code>
+		    </method>
+	    </methods>
       <presentation>
         <details>
           <items>

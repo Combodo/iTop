@@ -239,13 +239,13 @@ EOF
 					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
 				}
 				$oPage->add_ready_script(
-<<<EOF
+<<<JS
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
-EOF
+JS
 				);
 			} // Switch
 		}
@@ -269,10 +269,10 @@ EOF
 			{
 				$sDisplayValue = $this->GetObjectName($value);
 			}
-			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
+			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span>";
 
 			// another hidden input to store & pass the object's Id
@@ -281,30 +281,27 @@ EOF
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
-<<<EOF
+<<<JS
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
-		$('#label_$this->iId').autocomplete(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', { scroll:true, minChars:{$iMinChars}, autoFill:false, matchContains:true, mustMatch: true, keyHolder:'#{$this->iId}', extraParams:{operation:'ac_extkey', sTargetClass:'{$this->sTargetClass}',sFilter:'$sFilter',bSearchMode:$JSSearchMode, json: function() { return $sWizHelperJSON; } }});
-		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
-		$('#label_$this->iId').result( function(event, data, formatted) { OnAutoComplete('{$this->iId}', event, data, formatted); } );
-		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
+		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
 		if ($('#ac_dlg_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
 		}
-EOF
+JS
 );
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<EOF
+<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
 			{
 				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
 			}		
-EOF
+JS
 );
 		}
 		if ($bCreate && $bExtensions)
@@ -313,12 +310,12 @@ EOF
 
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<EOF
+<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ajax_{$this->iId}"></div>');
 		}
-EOF
+JS
 );
 		}
         $sHTMLValue .= "</div>";
@@ -443,15 +440,30 @@ EOF
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
-		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
+		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
 		asort($aValuesContains);
-		$aValues = array();
-		foreach($aValuesContains as $sKey => $sFriendlyName)
+		$aValues = $aValuesContains;
+		if (sizeof($aValues) < $iMax)
 		{
-			if (!isset($aValues[$sKey]))
+			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'contains');
+			asort($aValuesContains);
+			$iSize = sizeof($aValuesContains);
+			foreach ($aValuesContains as $sKey => $sFriendlyName)
 			{
-				$aValues[$sKey] = $sFriendlyName;
+				if (!isset($aValues[$sKey]))
+				{
+					$aValues[$sKey] = $sFriendlyName;
+					if (++$iSize >= $iMax)
+					{
+						break;
+					}
+				}
 			}
+		}
+		elseif (!in_array($sContains, $aValues))
+		{
+			$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
+			$aValues = array_merge($aValuesEquals, $aValues);
 		}
 
 		switch($sOutputFormat)
@@ -652,7 +664,6 @@ HTML
 		$oPage->add('</div></div>');
 
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview({ control: '#treecontrolid',	persist: 'false'});\n");
-		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview();\n");
 		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
 	}
 

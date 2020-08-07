@@ -31,6 +31,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
 	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s~~',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
+Either you have pushed an empty file,
+or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => '显示为图标',
 	'Attachments:Render:Table' => '显示为列表',
 ));

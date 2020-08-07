@@ -1054,3 +1054,39 @@ Dict::Add('FR FR', 'French', 'Français', array(
  'Core:Context=CRON+' => 'cron',
  'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:AbstractResource' => 'Ressource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceAdminMenu' => 'Menu Administration',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceRunQueriesMenu' => 'Menu Requête OQL',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceSystemMenu' => 'Menu System',
+	'Class:ResourceSystemMenu+' => '',
+));

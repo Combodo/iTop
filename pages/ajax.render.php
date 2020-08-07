@@ -1020,7 +1020,18 @@ try
 			{
 				$bReleaseLock = iTopOwnershipLock::ReleaseLock($sObjClass, $iObjKey, $sToken);
 			}
-			break;
+
+            IssueLog::Trace('on_form_cancel', $sObjClass, array(
+                '$iObjKey' => $iObjKey,
+                '$sTransactionId' => $iTransactionId,
+                '$sTempId' => $sTempId,
+                '$sToken' => $sToken,
+                '$sUser' => UserRights::GetUser(),
+                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+            ));
+
+            break;
 
 		case 'dashboard':
 			$oPage->SetContentType('text/html');
@@ -1196,7 +1207,7 @@ EOF
 			break;
 
 		case 'dashboard_editor':
-			$sId = utils::ReadParam('id', '', false, 'element_identifier');
+			$sId = utils::ReadParam('id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
@@ -2649,6 +2660,17 @@ EOF
 							$aResult['width'] = $aDimensions['width'];
 							$aResult['height'] = $aDimensions['height'];
 						}
+
+                        IssueLog::Trace('InlineImage created', 'InlineImage', array(
+                            '$operation' => $operation,
+                            '$aResult' => $aResult,
+                            'secret' => $oAttachment->Get('secret'),
+                            'temp_id' => $sTempId,
+                            'item_class' => $sObjClass,
+                            'user' => UserRights::GetUser(),
+                            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                        ));
 					}
 					else
 					{
@@ -2689,6 +2711,16 @@ EOF
 					$oAttachment->Set('contents', $oDoc);
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
+
+                    IssueLog::Trace('InlineImage created', 'InlineImage', array(
+                        '$operation' => $operation,
+                        'secret' => $oAttachment->Get('secret'),
+                        'temp_id' => $sTempId,
+                        'item_class' => $sObjClass,
+                        'user' => UserRights::GetUser(),
+                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                    ));
 				}
 
 			} catch (FileUploadException $e)

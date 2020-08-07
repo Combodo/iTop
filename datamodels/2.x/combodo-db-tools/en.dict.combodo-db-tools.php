@@ -26,7 +26,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Database integrity',
 	'DBTools:Class' => 'Class',
-	'DBTools:Title' => 'Database Maintenance Tools',
+	'DBTools:Title' => 'Database integrity check',
 	'DBTools:ErrorsFound' => 'Errors Found',
 	'DBTools:Error' => 'Error',
 	'DBTools:Count' => 'Count',
@@ -52,7 +52,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBAnalyzer-Integrity-InvalidValue' => 'Invalid value for %1$s (column: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all',
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
-	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value than `%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class',
 ));
 

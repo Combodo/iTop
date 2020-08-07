@@ -164,8 +164,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => 'Laatste in afwachting op',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
-	'Class:UserRequest/Attribute:cumulatedpending' => 'Opgetelde wachttijd',
-	'Class:UserRequest/Attribute:cumulatedpending+' => '',
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',

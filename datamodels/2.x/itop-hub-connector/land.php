@@ -241,7 +241,6 @@ function DoInstall(WebPage $oPage)
 
 
 	$oPage->add_linked_stylesheet('../css/font-awesome/css/all.min.css');
-	$oPage->add_linked_stylesheet('../css/font-awesome/css/v4-shims.min.css');
 
 
     $oPage->add('<div id="hub_installation_widget"></div>');
@@ -326,7 +325,7 @@ try
 catch(Exception $e)
 {
     require_once(APPROOT.'/setup/setuppage.class.inc.php');
-    $oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+    $oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
     $oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
     $oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
     $oP->output();

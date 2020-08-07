@@ -65,6 +65,10 @@ class ExecAsyncTask implements iBackgroundProcess
  */
 abstract class AsyncTask extends DBObject
 {
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -285,11 +289,13 @@ abstract class AsyncTask extends DBObject
 
 	/**
 	 * Throws an exception (message and code)
+	 *
+	 * @return string
 	 */	 	
 	abstract public function DoProcess();
 
 	/**
-	 * Describes the error codes that DoProcess can return by the mean of exceptions	
+	 * Describes the error codes that DoProcess can return by the mean of exceptions
 	 */	
 	static public function EnumErrorCodes()
 	{
@@ -352,6 +358,11 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->DBInsert();
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function DoProcess()
 	{
 		$sMessage = $this->Get('message');

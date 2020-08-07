@@ -23,6 +23,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
 	'Attachments:Error:FileTooLarge' => 'Файл слишком велик для загрузки. %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
+Either you have pushed an empty file,
+or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 ));
@@ -50,22 +53,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Attachments:File:Thumbnail' => 'Icon~~',
-	'Attachments:File:Name' => 'File name~~',
-	'Attachments:File:Date' => 'Upload date~~',
-	'Attachments:File:Uploader' => 'Uploaded by~~',
-	'Attachments:File:Size' => 'Size~~',
-	'Attachments:File:MimeType' => 'Type~~',
+	'Attachments:File:Thumbnail' => 'Предпросмотр',
+	'Attachments:File:Name' => 'Имя файла',
+	'Attachments:File:Date' => 'Дата',
+	'Attachments:File:Uploader' => 'Пользователь',
+	'Attachments:File:Size' => 'Размер',
+	'Attachments:File:MimeType' => 'Тип',
 ));
 //
 // Class: Attachment
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
-	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => 'User id~~',
-	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
-	'Class:Attachment/Attribute:contact_id+' => '~~',
+	'Class:Attachment/Attribute:creation_date' => 'Дата создания',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Пользователь',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Контакт',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

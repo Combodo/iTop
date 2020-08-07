@@ -35,6 +35,7 @@ use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
+use DBUnionSearch;
 use Dict;
 use Exception;
 use FieldExpression;
@@ -343,11 +344,13 @@ class ManageBrickController extends BrickController
 			// Otherwise we create the tabs from the SQL expressions
 			else
 			{
+				$aConditionQueryGrouping = array();
 				foreach ($aGroupingTabs['groups'] as $aGroup)
 				{
-					$oConditionQuery = $oQuery->Intersect(DBSearch::FromOQL($aGroup['condition']));
+					$oDBSearch = DBSearch::FromOQL($aGroup['condition']);
+					$oConditionQuery = $oQuery->Intersect($oDBSearch);
 					// - Restricting query to scope
-
+					array_push($aConditionQueryGrouping,$oDBSearch);
 					$bHasScope = $oScopeValidator->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
 					if ($bHasScope)
 					{
@@ -368,7 +371,26 @@ class ManageBrickController extends BrickController
 						'condition' => $oConditionQuery,
 						'count' => $iGroupCount,
 					);
-					$iCount += $iGroupCount;
+				}
+				try
+				{
+					$oConditionQuery = $oQuery->Intersect(new DBUnionSearch($aConditionQueryGrouping));
+					$bHasScope = $oScopeValidator->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
+					if ($bHasScope)
+					{
+						// - Building ObjectSet
+						$oConditionSet = new DBObjectSet($oConditionQuery);
+						$iCount = $oConditionSet->Count();
+					}
+					else
+					{
+						$oConditionSet = null;
+						$iCount = 0;
+					}
+				}
+				catch (Exception $e){
+					$oConditionSet = null;
+					$iCount = -1;
 				}
 			}
 		}

@@ -1046,3 +1046,39 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));

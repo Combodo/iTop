@@ -308,7 +308,7 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('tomorrow');
+		$oOccurrence->modify('tomorrow midnight');
 
 		return $oOccurrence;
 	}
@@ -359,8 +359,7 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('Monday next week');
-		$oOccurrence->setTime(0, 0, 0);
+		$oOccurrence->modify('Monday next week midnight');
 
 		return $oOccurrence;
 	}
@@ -411,8 +410,7 @@ class MonthlyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	public function GetCronProcessNextOccurrence(DateTime $oNow)
 	{
 		$oOccurrence = clone $oNow;
-		$oOccurrence->modify('first day of next month');
-		$oOccurrence->setTime(0, 0, 0);
+		$oOccurrence->modify('first day of next month midnight');
 
 		return $oOccurrence;
 	}
@@ -544,6 +542,12 @@ abstract class LogAPI
 	const LEVEL_OK          = 'Ok';
 	const LEVEL_DEBUG       = 'Debug';
 	const LEVEL_TRACE       = 'Trace';
+	/**
+	 * @var string default log level, can be overrided
+	 * @see GetMinLogLevel
+	 * @since 2.7.1 N°2977
+	 */
+	const LEVEL_DEFAULT     = self::LEVEL_OK;
 
 	protected static $aLevelsPriority = array(
 		self::LEVEL_ERROR   => 400,
@@ -641,21 +645,22 @@ abstract class LogAPI
 	/**
 	 * @param $sChannel
 	 *
-	 * @return mixed|null
+	 * @return string one of the LEVEL_* const value
+	 * @uses \LogAPI::LEVEL_DEFAULT
 	 */
 	private static function GetMinLogLevel($sChannel)
 	{
 		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
 		if (!$oConfig instanceof Config)
 		{
-			return self::LEVEL_OK;
+			return static::LEVEL_DEFAULT;
 		}
 
 		$sLogLevelMin = $oConfig->Get('log_level_min');
 
 		if (empty($sLogLevelMin))
 		{
-			return self::LEVEL_OK;
+			return static::LEVEL_DEFAULT;
 		}
 
 		if (!is_array($sLogLevelMin))
@@ -673,7 +678,7 @@ abstract class LogAPI
 			return $sLogLevelMin[$sChannel];
 		}
 
-		return self::LEVEL_OK;
+		return static::LEVEL_DEFAULT;
 	}
 
 }
@@ -681,6 +686,12 @@ abstract class LogAPI
 class SetupLog extends LogAPI
 {
 	const CHANNEL_DEFAULT = 'SetupLog';
+	/**
+	 * @inheritDoc
+	 *
+	 * As this object is used during setup, without any conf file available, customizing the level can be done by changing this constant !
+	 */
+	const LEVEL_DEFAULT = self::LEVEL_INFO;
 
 	protected static $m_oFileLog = null;
 }
@@ -697,6 +708,59 @@ class ToolsLog extends LogAPI
 	const CHANNEL_DEFAULT = 'ToolsLog';
 
 	protected static $m_oFileLog = null;
+}
+
+/**
+ * @see \CMDBSource::LogDeadLock()
+ * @since 2.7.1
+ */
+class DeadLockLog extends LogAPI
+{
+	const CHANNEL_WAIT_TIMEOUT = 'Deadlock-WaitTimeout';
+	const CHANNEL_DEADLOCK_FOUND = 'Deadlock-Found';
+	const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
+
+	/** @var \FileLog we want our own instance ! */
+	protected static $m_oFileLog = null;
+
+	public static function Enable($sTargetFile = null)
+	{
+		if (empty($sTargetFile))
+		{
+			$sTargetFile = APPROOT.'log/deadlocks.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+
+	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
+	{
+		switch ($iMysqlErrorNo)
+		{
+			case 1205:
+				return self::CHANNEL_WAIT_TIMEOUT;
+				break;
+			case 1213:
+				return  self::CHANNEL_DEADLOCK_FOUND;
+				break;
+			default:
+				return self::CHANNEL_DEFAULT;
+				break;
+		}
+	}
+
+	/**
+	 * @param int $iMySQLErrNo will be converted to channel using {@link GetChannelFromMysqlErrorNo}
+	 * @param string $sMessage
+	 * @param null $iMysqlErroNo
+	 * @param array $aContext
+	 *
+	 * @throws \Exception
+	 */
+	public static function Log($iMySQLErrNo, $sMessage, $iMysqlErroNo = null, $aContext = array())
+	{
+		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErroNo);
+		parent::Log($iMySQLErrNo, $sMessage, $sChannel, $aContext);
+	}
 }
 
 

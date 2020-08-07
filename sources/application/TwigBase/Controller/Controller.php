@@ -23,6 +23,7 @@ use ajax_page;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
+use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
@@ -160,7 +161,7 @@ abstract class Controller
 			require_once(APPROOT."/setup/setuppage.class.inc.php");
 
 			http_response_code(500);
-			$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 			$oP->add(get_class($e).' : '.htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8'));
 			$oP->output();
