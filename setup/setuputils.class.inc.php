@@ -916,7 +916,7 @@ class SetupUtils
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
-		$sWikiVersion =  utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+		$sWikiVersion = '2_7_0';
 		$sMysqlTlsWikiPageUrl = 'https://wiki.openitop.org/doku.php?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
 		$oPage->add('<tr><td colspan="2">');
