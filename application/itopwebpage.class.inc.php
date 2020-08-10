@@ -1139,7 +1139,7 @@ EOF
 			]
 		);
 
-		$oTwigEnv = TwigHelper::GetTwigEnvironment(APPROOT.'templates/');
+		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 
 		// Send headers
 		if ($this->GetOutputFormat() === 'html')

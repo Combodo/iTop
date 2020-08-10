@@ -39,6 +39,11 @@ class TwigHelper
 	 * @since 2.8.0
 	 */
 	const ENUM_FILE_TYPE_CSS = 'css';
+	/**
+	 * @var string ENUM_FILE_TYPE_SVG
+	 * @since 2.8.0
+	 */
+	const ENUM_FILE_TYPE_SVG = 'svg';
 
 	/**
 	 * @var string DEFAULT_FILE_TYPE
@@ -51,12 +56,19 @@ class TwigHelper
 	 * This is not a singleton as we might want to use several instances with different base path.
 	 *
 	 * @param string $sViewPath
+	 * @param array $aAdditionalPaths
 	 *
 	 * @return \Twig_Environment
+	 * @throws \Twig\Error\LoaderError
 	 */
-	public static function GetTwigEnvironment($sViewPath)
+	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
+		foreach ($aAdditionalPaths as $sAdditionalPath)
+		{
+			$oLoader->addPath($sAdditionalPath);
+		}
+		
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
 		if (!utils::IsDevelopmentEnvironment())
@@ -64,7 +76,7 @@ class TwigHelper
 			// Disable the cache in development environment
 			$sLocalPath = utils::LocalPath($sViewPath);
 			$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
-			$sCachePath = utils::GetCachePath().$sLocalPath;
+			$sCachePath = utils::GetCachePath().'twig/'.$sLocalPath;
 			$oTwig->setCache($sCachePath);
 		}
 

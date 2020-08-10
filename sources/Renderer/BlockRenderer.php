@@ -34,6 +34,9 @@ use ReflectionClass;
  */
 class BlockRenderer
 {
+	public const TWIG_BASE_PATH = APPROOT.'templates/';
+	public const TWIG_ADDITIONAL_PATHS = [APPROOT.'images/'];
+	
 	/** @var \Twig_Environment $oTwigEnv Singleton used during rendering */
 	protected static $oTwigEnv;
 
@@ -72,7 +75,7 @@ class BlockRenderer
 	{
 		if(null === static::$oTwigEnv)
 		{
-			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(APPROOT.'templates/');
+			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, static::TWIG_ADDITIONAL_PATHS);
 		}
 
 		$this->oBlock = $oBlock;
