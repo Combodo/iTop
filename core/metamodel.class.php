@@ -127,6 +127,13 @@ abstract class MetaModel
 	protected static $m_sEnvironment = 'production';
 
 	/**
+	 * MetaModel constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	/**
 	 * @return array
 	 */
 	public static function GetClassFiles()
@@ -2757,7 +2764,7 @@ abstract class MetaModel
 		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
 		foreach($aInterfaces as $sInterface)
 		{
-			self::$m_aExtensionClasses[$sInterface] = array();
+			self::$m_aExtensionClassNames[$sInterface] = array();
 		}
 
 		foreach(get_declared_classes() as $sPHPClass)
@@ -2768,11 +2775,7 @@ abstract class MetaModel
 			{
 				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable())
 				{
-					if (is_null($oExtensionInstance))
-					{
-						$oExtensionInstance = new $sPHPClass;
-					}
-					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
+					self::$m_aExtensionClassNames[$sInterface][$sPHPClass] = $sPHPClass;
 				}
 			}
 		}
@@ -6357,7 +6360,7 @@ abstract class MetaModel
 			if (is_array($result))
 			{
 				// todo - verifier que toutes les classes mentionnees ici sont chargees dans InitClasses()
-				self::$m_aExtensionClasses = $result['m_aExtensionClasses'];
+				self::$m_aExtensionClassNames = $result['m_aExtensionClassNames'];
 				self::$m_Category2Class = $result['m_Category2Class'];
 				self::$m_aRootClasses = $result['m_aRootClasses'];
 				self::$m_aParentClasses = $result['m_aParentClasses'];
@@ -6394,7 +6397,7 @@ abstract class MetaModel
 				$oKPI = new ExecutionKPI();
 
 				$aCache = array();
-				$aCache['m_aExtensionClasses'] = self::$m_aExtensionClasses;
+				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
 				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
@@ -6480,6 +6483,8 @@ abstract class MetaModel
 
 	/** @var array */
 	protected static $m_aExtensionClasses = array();
+    /** @var array */
+    protected static $m_aExtensionClassNames = array();
 
 	/**
 	 * @param string $sToInclude
@@ -7274,25 +7279,9 @@ abstract class MetaModel
 	 */
 	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{
-		if (!array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			return array();
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames, self::$m_aExtensionClasses);
 
-		if (is_null($sFilterInstanceOf))
-		{
-			return self::$m_aExtensionClasses[$sInterface];
-		}
-
-		$fFilterCallback = function ($instance) use ($sFilterInstanceOf)
-		{
-			return $instance instanceof $sFilterInstanceOf;
-		};
-
-		return array_filter(
-			self::$m_aExtensionClasses[$sInterface],
-			$fFilterCallback
-		);
+		return $pluginManager->EnumPlugins($sInterface, $sFilterInstanceOf);
 	}
 
 	/**
@@ -7303,16 +7292,9 @@ abstract class MetaModel
 	 */
 	public static function GetPlugins($sInterface, $sClassName)
 	{
-		$oInstance = null;
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface]))
-			{
-				return self::$m_aExtensionClasses[$sInterface][$sClassName];
-			}
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames, self::$m_aExtensionClasses);
 
-		return $oInstance;
+		return $pluginManager->GetPlugins($sInterface, $sClassName);
 	}
 
 	/**
@@ -7462,6 +7444,119 @@ abstract class MetaModel
 	}
 }
 
+class PluginManager
+{
+
+	private $m_aExtensionClassNames;
+	private $m_aExtensionClasses;
+	private $m_pluginInstantiationManager ;
+
+	public function __construct($m_aExtensionClassNames, $m_aExtensionClasses, $m_pluginInstanciationManager=null)
+	{
+		$this->m_aExtensionClasses = $m_aExtensionClasses;
+		$this->m_aExtensionClassNames = $m_aExtensionClassNames;
+
+		if ($m_pluginInstanciationManager==null)
+		{
+			$this->m_pluginInstantiationManager = new PluginInstanciationManager();
+		}
+		else
+		{
+			$this->m_pluginInstantiationManager = $m_pluginInstanciationManager;
+		}
+	}
+
+	/**
+	 * @param string $sInterface
+	 * @param bool   $bCanInstantiatePlugins internal use, let this value to true
+	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
+	 * @return array classes=>instance implementing the given interface
+	 */
+	public function EnumPlugins($sInterface, $sFilterInstanceOf = null, $bCanInstantiatePlugins = true)
+	{
+		$aPlugins = array();
+		if (array_key_exists($sInterface, $this->m_aExtensionClasses))
+		{
+			$aAllPlugins = array_values($this->m_aExtensionClasses[$sInterface]);
+
+			if (is_null($sFilterInstanceOf))
+			{
+				return $aAllPlugins;
+			};
+
+			$aPlugins = array();
+			foreach ($aAllPlugins as $instance)
+			{
+				if ($instance instanceof $sFilterInstanceOf)
+				{
+					$aPlugins[] = $instance;
+				}
+			}
+		}
+		else if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames))
+		{
+			$this->InstantiatePlugins($sInterface);
+
+			return $this->EnumPlugins($sInterface, $sFilterInstanceOf, false);
+		}
+		return $aPlugins;
+	}
+
+	public function InstantiatePlugins($sInterface)
+	{
+		$this->m_aExtensionClasses[$sInterface] = $this->m_pluginInstantiationManager->InstantiatePlugins($this->m_aExtensionClassNames, $sInterface);
+	}
+
+	/**
+	 * @param string $sInterface
+	 * @param string $sClassName
+	 * @param bool   $bCanInstantiatePlugins internal use, let this value to true
+	 *
+	 * @return mixed the instance of the specified plug-ins for the given interface
+	 */
+	public function GetPlugins($sInterface, $sClassName, $bCanInstantiatePlugins = true)
+	{
+		$oInstance = null;
+		if (array_key_exists($sInterface, $this->m_aExtensionClasses))
+		{
+			if (array_key_exists($sClassName, $this->m_aExtensionClasses[$sInterface]))
+			{
+				return $this->m_aExtensionClasses[$sInterface][$sClassName];
+			}
+		}
+		else if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames))
+		{
+			$this->InstantiatePlugins($sInterface);
+			return $this->GetPlugins($sInterface, $sClassName, false);
+		}
+
+		return $oInstance;
+	}
+} //PluginManager class
+
+class PluginInstanciationManager
+{
+	public function InstantiatePlugins($m_aExtensionClassNames, $sInterface)
+	{
+		$newPerInstanceClasses = array();
+		if (array_key_exists($sInterface, $m_aExtensionClassNames))
+		{
+			foreach ($m_aExtensionClassNames[$sInterface] as $sClassName)
+			{
+				if (class_exists($sClassName))
+				{
+					$class = new ReflectionClass($sClassName);
+
+					if ($class->isInstantiable())
+					{
+						$newPerInstanceClasses[$sClassName] = new $sClassName();
+					}
+				}
+			}
+		}
+		return $newPerInstanceClasses;
+	}
+}
 
 // Standard attribute lists
 MetaModel::RegisterZList("noneditable", array("description" => "non editable fields", "type" => "attributes"));
