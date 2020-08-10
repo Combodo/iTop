@@ -275,7 +275,11 @@ abstract class User extends cmdbAbstractObject
 
 	/*
 	* Compute a name in best effort mode
-	*/	
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	*/
 	public function GetFriendlyName()
 	{
 		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
@@ -301,6 +305,32 @@ abstract class User extends cmdbAbstractObject
 			}
 		}
 		return $this->Get('login');
+	}
+
+	/*
+	* Compute the initials in best effort mode
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 2.8.0
+	*/
+	public function GetInitials()
+	{
+		$sInitials = '';
+
+		if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
+		{
+			$sInitials .= mb_substr($this->Get('first_name'), 0, 1);
+			$sInitials .= mb_substr($this->Get('last_name'), 0, 1);
+		}
+
+		if (empty($sInitials))
+		{
+			$sInitials = mb_substr($this->Get('login'), 0, 1);
+		}
+
+		return $sInitials;
 	}
 
 	protected $oContactObject;
@@ -1063,7 +1093,7 @@ class UserRights
 		}
 		else
 		{
-			$oUser = FindUser($sName);
+			$oUser = self::FindUser($sName);
 		}
 		if (is_null($oUser))
 		{
@@ -1096,7 +1126,7 @@ class UserRights
 		}
 		else
 		{
-			$oUser = FindUser($sName);
+			$oUser = self::FindUser($sName);
 		}
 
 		// Check that user exists (in case we try to get it for another contact)
@@ -1181,9 +1211,9 @@ class UserRights
 		$sFriendlyname = null;
 
 		$oContact = static::GetContactObject();
-		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), 'friendlyname'))
+		if(!is_null($oContact))
 		{
-			$sFriendlyname = $oContact->Get('friendlyname');
+			$sFriendlyname = $oContact->GetRawName();
 		}
 
 		return $sFriendlyname;
@@ -1210,6 +1240,7 @@ class UserRights
 	 * @param string $sName
 	 *
 	 * @return string
+	 * @throws \OQLException
 	 */
 	public static function GetUserFriendlyName($sName = '')
 	{
@@ -1219,13 +1250,39 @@ class UserRights
 		}
 		else
 		{
-			$oUser = FindUser($sName);
+			$oUser = self::FindUser($sName);
 		}
 		if (is_null($oUser))
 		{
 			return '';
 		}
 		return $oUser->GetFriendlyName();
+	}
+
+	/**
+	 * Render the user initials in best effort mode
+	 *
+	 * @param string $sName
+	 *
+	 * @return string
+	 * @throws \OQLException
+	 * @since 2.8.0
+	 */
+	public static function GetUserInitials($sName = '')
+	{
+		if (empty($sName))
+		{
+			$oUser = self::$m_oUser;
+		}
+		else
+		{
+			$oUser = self::FindUser($sName);
+		}
+		if (is_null($oUser))
+		{
+			return '';
+		}
+		return $oUser->GetInitials();
 	}
 
 	/**
