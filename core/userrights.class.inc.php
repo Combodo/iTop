@@ -1006,6 +1006,8 @@ class UserRights
 	}
 
 	/**
+	 * Return the current user login or an empty string if nobody connected.
+	 *
 	 * @return string
 	 */
 	public static function GetUser()
