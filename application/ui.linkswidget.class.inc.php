@@ -39,6 +39,7 @@ class UILinksWidget
 	protected $m_sLinkedClass;
 	protected $m_sRemoteClass;
 	protected $m_bDuplicatesAllowed;
+	/** @var string[] list of editables attcodes */
 	protected $m_aEditableFields;
 	protected $m_aTableConfig;
 
@@ -93,6 +94,7 @@ class UILinksWidget
 			'label' => MetaModel::GetName($this->m_sRemoteClass),
 			'description' => MetaModel::GetClassDescription($this->m_sRemoteClass),
 		);
+		$this->m_aEditableFields[] = $this->m_sExtKeyToRemote;
 
 		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
 		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef)
@@ -110,7 +112,7 @@ class UILinksWidget
 	 *
 	 * @param WebPage $oP Web page used for the ouput
 	 * @param DBObject $oLinkedObj Remote object
-	 * @param mixed $linkObjOrId Either the object linked or a unique number for new link records to add
+	 * @param DBObject|int $linkObjOrId Either the lnk object or a unique number for new link records to add
 	 * @param array $aArgs Extra context arguments
 	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
 	 * @param int $iUniqueId A unique identifier of new links
@@ -152,15 +154,17 @@ class UILinksWidget
                 $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
                 foreach($this->m_aEditableFields as $sFieldCode)
                 {
-                    $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
-                    $sSafeId = utils::GetSafeId($sFieldId);
-                    $sValue = $linkObjOrId->Get($sFieldCode);
-                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-                    $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-                    $aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-                        cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs).
-	                    '</div></div></div>';
-                    $aFieldsMap[$sFieldCode] = $sSafeId;
+	                $sRowFieldCode = ($sFieldCode === $this->m_sExtKeyToRemote) ? 'static::key' : $sFieldCode;
+	                $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
+	                $sSafeId = utils::GetSafeId($sFieldId);
+	                $sValue = $linkObjOrId->Get($sFieldCode);
+	                $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
+	                $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
+	                $aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
+		                cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue,
+			                $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs).
+		                '</div></div></div>';
+	                $aFieldsMap[$sFieldCode] = $sSafeId;
                 }
             }
 
@@ -216,19 +220,21 @@ EOF
 
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
+				$sRowFieldCode = ($sFieldCode === $this->m_sExtKeyToRemote) ? 'static::key' : $sFieldCode;
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
 				$sSafeId = utils::GetSafeId($sFieldId);
 				$sValue = $oNewLinkObj->Get($sFieldCode);
 				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs).
+				$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
+					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue,
+						$sSafeId /* id */, $sNameSuffix, 0, $aArgs).
 					'</div></div></div>';
 				$aFieldsMap[$sFieldCode] = $sSafeId;
 				$oP->add_ready_script(<<<EOF
 oWidget{$this->m_iInputId}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
 EOF
-					);
+				);
 			}
 			$sState = '';
 		}
@@ -254,7 +260,6 @@ var {$aArgs['wizHelper']} = new WizardHelper('{$this->m_sLinkedClass}', '', '$sS
 {$aArgs['wizHelper']}.SetFieldsCount($iFieldsCount);
 EOF
 		);
-		$aRow['static::key'] = $oLinkedObj->GetHyperLink();
 		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
 		{
 			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
@@ -303,7 +308,7 @@ EOF
 		}
 		$sHtml .= "</tr>\n";
 		$sHtml .= "</thead>\n";
-		
+
 		// Content
 		$sHtml .= "</tbody>\n";
 		$sEmptyRowStyle = '';
@@ -312,16 +317,16 @@ EOF
 			$sEmptyRowStyle = 'style="display:none;"';
 		}
 
-		foreach($aData as $iRowId => $aRow)
+		foreach ($aData as $iRowId => $aRow)
 		{
 			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
-		}		
+		}
 		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
 		$sHtml .= "</tbody>\n";
-		
+
 		// Footer
 		$sHtml .= "</table>\n";
-		
+
 		return $sHtml;
 	}
 
