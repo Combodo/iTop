@@ -58,6 +58,14 @@ $ibo-navigation-menu--square-company-logo--margin-top: 0 !default;
 $ibo-navigation-menu--square-company-logo--margin-x: -5px !default;
 $ibo-navigation-menu--square-company-logo--margin-bottom: $ibo-navigation-menu--body--padding-y * 2 !default;
 
+$ibo-navigation-menu--full-company-logo--width: $ibo-navigation-menu--body--width-expanded !default;
+$ibo-navigation-menu--full-company-logo--margin-top: 0 !default;
+$ibo-navigation-menu--full-company-logo--margin-right: 0 !default;
+$ibo-navigation-menu--full-company-logo--margin-bottom: 0 !default;
+$ibo-navigation-menu--full-company-logo--margin-left: -$ibo-navigation-menu--body--padding-y !default;
+$ibo-navigation-menu--full-company-logo--image--margin-x: auto !default;
+$ibo-navigation-menu--full-company-logo--image--margin-y: 0 !default;
+
 $ibo-navigation-menu--toggler-icon--height: 20px !default;
 $ibo-navigation-menu--toggler-icon--width: $ibo-navigation-menu--action-icon--width !default;
 $ibo-navigation-menu--toggler-bar--height: 3px !default;
@@ -142,6 +150,12 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 	height: $ibo-navigation-menu-height;
 
 	&.ibo-is-expanded{
+		.ibo-navigation-menu--square-company-logo{
+			display: none;
+		}
+		.ibo-navigation-menu--full-company-logo{
+			display: flex;
+		}
 		.ibo-navigation-menu--body{
 			width: $ibo-navigation-menu--body--width-expanded;
 
@@ -233,6 +247,7 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 /* - Top part */
 .ibo-navigation-menu--top-part{
 	padding: $ibo-navigation-menu--top-part--padding-y $ibo-navigation-menu--top-part--padding-x;
+	overflow-x: hidden;
 }
 /* - Middle part */
 .ibo-navigation-menu--middle-part{
@@ -284,6 +299,15 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 	display: flex;
 	width: $ibo-navigation-menu--square-company-logo--width;
 	margin: $ibo-navigation-menu--square-company-logo--margin-top $ibo-navigation-menu--square-company-logo--margin-x $ibo-navigation-menu--square-company-logo--margin-bottom;
+}
+/* - Company logo: full */
+.ibo-navigation-menu--full-company-logo{
+	display: none;
+	width: $ibo-navigation-menu--full-company-logo--width;
+	margin: $ibo-navigation-menu--full-company-logo--margin-top $ibo-navigation-menu--full-company-logo--margin-right $ibo-navigation-menu--full-company-logo--margin-bottom  $ibo-navigation-menu--full-company-logo--margin-left;
+	>img{
+		margin: $ibo-navigation-menu--full-company-logo--image--margin-y $ibo-navigation-menu--full-company-logo--image--margin-x;
+	}
 }
 /* - Toggler */
 .ibo-navigation-menu--toggler{
