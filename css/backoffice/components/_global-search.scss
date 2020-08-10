@@ -51,6 +51,7 @@ $ibo-global-search--compartment-element-image--width: 20px !default;
 
 $ibo-global-search--compartment--placeholder-image--margin-top: 24px !default;
 $ibo-global-search--compartment--placeholder-image--margin-bottom: 16px !default;
+$ibo-global-search--compartment--placeholder-image--margin-y: auto !default;
 $ibo-global-search--compartment--placeholder-image--width: 66% !default;
 
 $ibo-global-search--compartment--placeholder-hint--padding-x: 8px !default;
@@ -187,10 +188,12 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	display: flex;
 	flex-direction: column;
 }
-.ibo-global-search--compartment--placeholder-image{
+.ibo-global-search--compartment--placeholder-image>svg{
 	width: $ibo-global-search--compartment--placeholder-image--width;
-	margin-top: $ibo-global-search--compartment--placeholder-image--margin-top;
-	margin-bottom: $ibo-global-search--compartment--placeholder-image--margin-bottom;
+	height: inherit;
+	margin: $ibo-global-search--compartment--placeholder-image--margin-top $ibo-global-search--compartment--placeholder-image--margin-y $ibo-global-search--compartment--placeholder-image--margin-bottom $ibo-global-search--compartment--placeholder-image--margin-y;
+	display: flex;
+
 }
 .ibo-global-search--compartment--placeholder-hint{
 	text-align: justify;

@@ -55,6 +55,7 @@ $ibo-quick-create--compartment-element-image--width: 20px !default;
 
 $ibo-quick-create--compartment--placeholder-image--margin-top: 24px !default;
 $ibo-quick-create--compartment--placeholder-image--margin-bottom: 16px !default;
+$ibo-quick-create--compartment--placeholder-image--margin-x: auto !default;
 $ibo-quick-create--compartment--placeholder-image--width: 66% !default;
 
 $ibo-quick-create--compartment--placeholder-hint--padding-x: 8px !default;
@@ -210,10 +211,11 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	display: flex;
 	flex-direction: column;
 }
-.ibo-quick-create--compartment--placeholder-image{
+.ibo-quick-create--compartment--placeholder-image>svg{
 	width: $ibo-quick-create--compartment--placeholder-image--width;
-	margin-top: $ibo-quick-create--compartment--placeholder-image--margin-top;
-	margin-bottom: $ibo-quick-create--compartment--placeholder-image--margin-bottom;
+	height: inherit;
+	margin: $ibo-quick-create--compartment--placeholder-image--margin-top $ibo-quick-create--compartment--placeholder-image--margin-x $ibo-quick-create--compartment--placeholder-image--margin-bottom $ibo-quick-create--compartment--placeholder-image--margin-x;
+	display: flex;
 }
 .ibo-quick-create--compartment--placeholder-hint{
 	text-align: justify;

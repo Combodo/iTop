@@ -195,7 +195,8 @@ $(function()
 		},
 		_buildNoMessageItem: function()
 		{
-			return '<div class="ibo-popover-menu--item ibo-popover-menu--item--no-message">' + this.options.labels.no_message + '<img class="ibo-popover-menu--item--no-message--image" src="../images/illustrations/undraw_empty.svg" alt="TODO"/></div>';
+			return '<div class="ibo-popover-menu--item ibo-popover-menu--item--no-message">' + this.options.labels.no_message + 
+				'<div class="ibo-popover-menu--item--no-message--image ibo-svg-illustration--container">' + this.options.no_message_icon + '</div></div>';
 		},
 		_buildSingleShowAllMessagesItem: function()
 		{

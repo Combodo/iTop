@@ -20,6 +20,8 @@ $ibo-hyperlink-color: $ibo-color-primary-500 !default;
 $ibo-hyperlink-color--on-hover: $ibo-color-primary-600 !default;
 $ibo-hyperlink-color--on-active: $ibo-color-primary-700 !default;
 
+$ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
+
 :root{
 	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
 	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
@@ -51,4 +53,8 @@ a{
 	&:active{
 		color: var(--ibo-hyperlink-color--on-active);
 	}
+}
+
+.ibo-svg-illustration--container>svg *[fill="#6c63ff"]{
+	fill: $ibo-svg-illustration--fill;
 }

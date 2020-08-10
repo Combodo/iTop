@@ -82,7 +82,9 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
 .ibo-popover-menu--item--no-message{
   text-align: center;
 }
-.ibo-popover-menu--item--no-message--image{
-  display: block;
-  padding: 5px;
+.ibo-popover-menu--item--no-message--image>svg{
+  display: flex;
+  width: 100%;
+  height: inherit;
+  margin: 10px 0px;
 }

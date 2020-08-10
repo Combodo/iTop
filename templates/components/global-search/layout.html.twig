@@ -9,7 +9,7 @@
 				<span>{{ 'UI:Component:GlobalSearch:Recents:Title'|dict_s }}</span>
 			</div>
 			<div class="ibo-global-search--compartment-content" data-role="ibo-global-search--compartment-content">
-				{% if oUIBlock.GetLastQueries()|length > 0 %}
+				{% if oUIBlock.GetLastQueries()|length > 12 %}
 					{% for aQuery in oUIBlock.GetLastQueries() %}
 						<a href="#" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
@@ -20,7 +20,9 @@
 					{% endfor %}
 				{% else %}
 					<div class="ibo-global-search--compartment--placeholder">
-						<img class="ibo-global-search--compartment--placeholder-image" src="{{ aPage.sAbsoluteUrlAppRoot }}images/illustrations/global-search-empty-history.svg" />
+						<div class="ibo-global-search--compartment--placeholder-image ibo-svg-illustration--container">
+							 {{ source("illustrations/global-search-empty-history.svg") }}
+						</div>
 						<div class="ibo-global-search--compartment--placeholder-hint">{{ 'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder'|dict_s }}</div>
 					</div>
 				{% endif %}
