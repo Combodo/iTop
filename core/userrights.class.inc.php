@@ -767,16 +767,16 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName
+	 * @param string $sLogin Login of the concerned user
 	 * @param string $sAuthentication
 	 *
 	 * @return bool
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public static function Login($sName, $sAuthentication = 'any')
+	public static function Login($sLogin, $sAuthentication = 'any')
 	{
-		$oUser = self::FindUser($sName, $sAuthentication);
+		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
 			return false;
@@ -794,7 +794,7 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName
+	 * @param string $sLogin Login of the user to check the credentials for
 	 * @param string $sPassword
 	 * @param string $sLoginMode
 	 * @param string $sAuthentication
@@ -802,34 +802,34 @@ class UserRights
 	 * @return bool
 	 * @throws \OQLException
 	 */
-	public static function CheckCredentials($sName, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
+	public static function CheckCredentials($sLogin, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
 	{
-		$oUser = self::FindUser($sName, $sAuthentication);
+		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
 			// Check if the user does not exist at all or if it is just disabled
-			if (self::FindUser($sName, $sAuthentication, true) == null)
+			if (self::FindUser($sLogin, $sAuthentication, true) == null)
 			{
 				// User does not exist at all
-				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
-				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => $bCheckCredentialsAndCreateUser);
+				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sLogin, $sPassword, $sLoginMode, $sAuthentication);
+				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => $bCheckCredentialsAndCreateUser);
 				return $bCheckCredentialsAndCreateUser;
 			}
 			else
 			{
 				// User is actually disabled
-				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
+				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
 				return  false;
 			}
 		}
 
 		if (!$oUser->CheckCredentials($sPassword))
 		{
-			self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
+			self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
 			return false;
 		}
 		self::UpdateUser($oUser, $sLoginMode, $sAuthentication);
-		self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => true);
+		self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => true);
 
 		return true;
 	}
@@ -926,21 +926,21 @@ class UserRights
 	/**
 	 * @param string $sOldPassword
 	 * @param string $sNewPassword
-	 * @param string $sName
+	 * @param string $sLogin Login of the concerned user
 	 *
 	 * @return bool
 	 * @throws \OQLException
 	 */
-	public static function ChangePassword($sOldPassword, $sNewPassword, $sName = '')
+	public static function ChangePassword($sOldPassword, $sNewPassword, $sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
 			// find the id out of the login string
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
@@ -954,18 +954,18 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName Login identifier of the user to impersonate
+	 * @param string $sLogin Login identifier of the user to impersonate
 	 *
 	 * @return bool True if an impersonation occurred
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public static function Impersonate($sName)
+	public static function Impersonate($sLogin)
 	{
 		if (!self::CheckLogin()) return false;
 
 		$bRet = false;
-		$oUser = self::FindUser($sName);
+		$oUser = self::FindUser($sLogin);
 		if ($oUser)
 		{
 			$bRet = true;
@@ -984,7 +984,7 @@ class UserRights
 				// Do impersonate!
 				self::$m_oUser = $oUser;
 				Dict::SetUserLanguage(self::GetUserLanguage());
-				$_SESSION['impersonate_user'] = $sName;
+				$_SESSION['impersonate_user'] = $sLogin;
 				self::_ResetSessionCache();
 			}
 		}
@@ -1080,20 +1080,20 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName
+	 * @param string $sLogin Login of the user from which we return the contact ID
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function GetContactId($sName = '')
+	public static function GetContactId($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
@@ -1109,23 +1109,23 @@ class UserRights
 	/**
 	 * Return the absolute URL of the contact picture
 	 *
-	 * @param string $sName
+	 * @param string $sLogin Login of the user from which we return the picture URL
 	 *
 	 * @return mixed|string
 	 * @throws \Exception
 	 * @since 2.8.0
 	 */
-	public static function GetContactPicture($sName = '')
+	public static function GetContactPictureAbsUrl($sLogin = '')
 	{
 		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
 
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 
 		// Check that user exists (in case we try to get it for another contact)
@@ -1236,20 +1236,20 @@ class UserRights
 	/**
 	 * Render the user name in best effort mode
 	 *
-	 * @param string $sName
+	 * @param string $sLogin Login of the user we want to retrieve the friendlyname
 	 *
 	 * @return string
 	 * @throws \OQLException
 	 */
-	public static function GetUserFriendlyName($sName = '')
+	public static function GetUserFriendlyName($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
@@ -1261,21 +1261,21 @@ class UserRights
 	/**
 	 * Render the user initials in best effort mode
 	 *
-	 * @param string $sName
+	 * @param string $sLogin Login of the user from which we want to retrieve the initials
 	 *
 	 * @return string
 	 * @throws \OQLException
 	 * @since 2.8.0
 	 */
-	public static function GetUserInitials($sName = '')
+	public static function GetUserInitials($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{

@@ -228,7 +228,7 @@ class NavigationMenu extends UIBlock
 		$aData = [
 			'sOrganization' => UserRights::GetContactOrganizationFriendlyname(),
 			'sFirstname' => UserRights::GetContactFirstname(),
-			'sPictureUrl' => UserRights::GetContactPicture(),
+			'sPictureUrl' => UserRights::GetContactPictureAbsUrl(),
 			'sWelcomeMessage' => Dict::Format('UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text', UserRights::GetContactFirstname())
 		];
 
