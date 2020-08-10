@@ -189,7 +189,7 @@ $(function()
 					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(this.js_selectors.user_menu).height()) + 'px',
 					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
 				});
-				$(this.js_selectors.user_menu).popover_menu('openPopup');
+				$(this.js_selectors.user_menu).popover_menu('togglePopup');
 			},
 
 			// Methods

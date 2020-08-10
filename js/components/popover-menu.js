@@ -89,5 +89,16 @@ $(function()
 			{
 				this._closePopup();
 			},
+			togglePopup: function()
+			{
+				if(this.element.hasClass(this.css_classes.opened))
+				{
+					this._closePopup();
+				}
+				else
+				{
+					this._openPopup();
+				}
+			},
 		});
 });

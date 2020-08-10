@@ -1117,8 +1117,7 @@ class UserRights
 	 */
 	public static function GetContactPicture($sName = '')
 	{
-		// TODO: replace with console one
-		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
+		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
 
 		if (empty($sName))
 		{

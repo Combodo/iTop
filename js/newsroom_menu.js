@@ -34,7 +34,7 @@ $(function()
 					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px',
 					'max-height' : (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) - 100) + 'px'
 				});
-				$(me.element).popover_menu("openPopup");
+				$(me.element).popover_menu("togglePopup");
 			});
 			this.element
 			.addClass('itop-newsroom_menu');
@@ -199,7 +199,7 @@ $(function()
 		},
 		_buildSingleShowAllMessagesItem: function()
 		{
-			return '<a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-show-all" href="'+me.options.providers[0].view_all_url+'">' + this.options.labels.view_all + '</a>';
+			return '<a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-show-all" href="'+this.options.providers[0].view_all_url+'">' + this.options.labels.view_all + '</a>';
 		},
 		_buildMultipleShowAllMessagesItem: function(aUnreadMessagesByProvider)
 		{
@@ -296,7 +296,7 @@ $(function()
 					oElem.css({
 						'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
 					});
-					oElem.popover_menu("openPopup");
+					oElem.popover_menu("togglePopup");
 				});
 
 			}
@@ -312,7 +312,7 @@ $(function()
 			// window.open(sUrl, '_blank');
 			// $('#newsroom_menu').remove();
 			// $('#newsroom_menu_counter_container').remove();
-			$(me.element).popover_menu("closePopup");
+			$(me.element).popover_menu("togglePopup");
 			this._getAllMessages();
 		},
 		_resetUnseenCount: function()
