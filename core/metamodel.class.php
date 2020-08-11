@@ -1232,15 +1232,36 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return an array of attributes codes for the $sClass. The list can be limited to some attribute types only.
+	 *
 	 * @param string $sClass
+	 * @param string[] $aDesiredAttTypes Array of AttributeDefinition classes to filter the list on
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 */
-	final public static function GetAttributesList($sClass)
+	final public static function GetAttributesList($sClass, $aDesiredAttTypes = [])
 	{
 		self::_check_subclass($sClass);
-		return array_keys(self::$m_aAttribDefs[$sClass]);
+
+		if(empty($aDesiredAttTypes))
+		{
+			return array_keys(self::$m_aAttribDefs[$sClass]);
+		}
+
+		$aMatchingAttCodes = [];
+		foreach(self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
+		{
+			foreach($aDesiredAttTypes as $sDesiredAttType)
+			{
+				if(is_a($oAttDef, $sDesiredAttType))
+				{
+					$aMatchingAttCodes[] = $sAttCode;
+				}
+			}
+		}
+
+		return $aMatchingAttCodes;
 	}
 
 	/**
