@@ -1054,13 +1054,14 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName
+	 * @param string $sLogin
 	 *
 	 * @return string|null
+	 * @throws \OQLException
 	 */
-	public static function GetUserId($sName = '')
+	public static function GetUserId($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			// return current user id
 			if (is_null(self::$m_oUser))
@@ -1072,7 +1073,7 @@ class UserRights
 		else
 		{
 			// find the id out of the login string
-			$oUser = self::$m_oAddOn->FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 			if (is_null($oUser))
 			{
 				return null;
