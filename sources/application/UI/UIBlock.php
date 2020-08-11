@@ -126,6 +126,17 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * Return the block code of the object instance
+	 *
+	 * @see static::BLOCK_CODE
+	 * @return string
+	 */
+	public function GetBlockCode()
+	{
+		return static::BLOCK_CODE;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function GetId()
