@@ -17,20 +17,54 @@
  */
 
 /* SCSS variables */
-// Todo :(
+$ibo-navigation-menu--notifications-menu--min-width: 250px;
+
+$ibo-navigation-menu--notifications--item--image--margin-x: 6px !default;
+$ibo-navigation-menu--notifications--item--image--margin-y: 0 !default;
+$ibo-navigation-menu--notifications--item--image--max-width: 20px !default;
+$ibo-navigation-menu--notifications--item--image--max-height: 20px !default;
+$ibo-navigation-menu--notifications--item--image--border-radius: $ibo-border-radius-full !default;
+
+$ibo-navigation-menu--notifications--item--bottom-text--margin-left: auto !default;
+
+$ibo-navigation-menu--notifications--item--content--padding-y: 0 !default;
+$ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
+$ibo-navigation-menu--notifications--item--content--img--max-height: 100px !default;
+$ibo-navigation-menu--notifications--item--content--img--padding: 5px !default;
+
+$ibo-navigation-menu--notifications--item--new-message-indicator--width: 10px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--height: 10px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--background-color: $ibo-color-blue-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--border-radius: $ibo-border-radius-full !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--margin-top: 4px !default;
+
+$ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right: 15px !default;
+
+$ibo-navigation-menu--notifications-dismiss-all--icon--margin:  0 10px 0 0 !default;
+
+$ibo-popover-menu--item--no-message--image--svg--width : 100% !default;
+$ibo-popover-menu--item--no-message--image--svg--height : inherit !default;
+$ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
 
 #ibo-navigation-menu--notifications-menu {
   flex-flow: column;
+  min-width: $ibo-navigation-menu--notifications-menu--min-width;
   .ibo-navigation-menu--notifications--messages-section{
     overflow-x: auto;
   }
 }
-.ibo-navigation-menu--notifications--item--image{
-  width: 20px;
-  max-height: 20px;
-  margin: 0 6px;
-  border-radius: 100%;
+.ibo-navigation-menu--notifications--show-all-messages, .ibo-navigation-menu--notifications-dismiss-all, .ibo-navigation-menu--notifications-show-all-multiple{
+  overflow-x: inherit;
+  text-align: center;
 }
+
+.ibo-navigation-menu--notifications--item--image{
+  max-width: $ibo-navigation-menu--notifications--item--image--max-width;
+  max-height: $ibo-navigation-menu--notifications--item--image--max-height;
+  margin: $ibo-navigation-menu--notifications--item--image--margin-y $ibo-navigation-menu--notifications--item--image--margin-x;
+  border-radius: $ibo-navigation-menu--notifications--item--image--border-radius;
+}
+
 img.ibo-navigation-menu--notifications--item--image[src=""]{
   display: none;
 }
@@ -39,20 +73,20 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   display: none;
 }
 .ibo-navigation-menu--notifications--item--bottom-text{
-  float: right;
-  font-size: 12px;
-  align-self: center;
-  margin-left: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  float: right;
+  align-self: center;
+  @extend %ibo-font-ral-nor-100;
+  margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
 }
 .ibo-navigation-menu--notifications--item--content{
-  font-size: 14px;
-  padding: 0 14px;
+  @extend %ibo-font-ral-nor-150;
+  padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
   img{
-    max-height: 100px;
-    padding: 5px;
+    max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
+    padding: $ibo-navigation-menu--notifications--item--content--img--padding;
   }
 }
 .ibo-navigation-menu--notifications-item{
@@ -60,31 +94,32 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   flex-direction: row;
 }
 .ibo-navigation-menu--notifications--item--new-message-indicator{
-  width: 10px;
-  height: 10px;
-  background-color: $ibo-color-blue-500;
-  border-radius: 100%;
-  margin-top: 4px;
+  width: $ibo-navigation-menu--notifications--item--new-message-indicator--width;
+  height: $ibo-navigation-menu--notifications--item--new-message-indicator--height;
+  background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--background-color;
+  border-radius: $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius;
+  margin-top: $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top;
 }
+
 .ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu{
   bottom: 0;
   .ibo-navigation-menu--notifications--item--new-message-indicator{
     display: inline-block;
-    margin-right: 15px;
+    margin-right: $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right;
   }
   .ibo-navigation-menu--notifications-show-all-multiple--counter{
     @extend %ibo-font-ral-bol-200;
   }
 }
 .ibo-navigation-menu--notifications-dismiss-all--icon{
-  margin: 0 10px 0 0;
+  margin: $ibo-navigation-menu--notifications-dismiss-all--icon--margin;
 }
 .ibo-popover-menu--item--no-message{
   text-align: center;
 }
 .ibo-popover-menu--item--no-message--image>svg{
   display: flex;
-  width: 100%;
-  height: inherit;
-  margin: 10px 0px;
+  width: $ibo-popover-menu--item--no-message--image--svg--width;
+  height: $ibo-popover-menu--item--no-message--image--svg--height;
+  padding: $ibo-popover-menu--item--no-message--image--svg--padding;
 }

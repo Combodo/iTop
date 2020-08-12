@@ -18,6 +18,15 @@ $(function()
 				'view_all': 'View all messages'
 			}
 		},
+		css_classes:
+		{
+			newsroom_menu: 'ibo-newsroom-menu',
+			empty : 'ibo-is-empty'
+		},
+		js_selectors:
+		{
+			menu_toggler: '[data-role="ibo-navigation-menu--notifications-toggler"]',
+		},
 	
 		// the constructor
 		_create: function()
@@ -29,8 +38,8 @@ $(function()
 		_initializePopoverMenu: function()
 		{
 			var me = this;
-			$(me.element).popover_menu({'toggler': '[data-role="ibo-navigation-menu--notifications-toggler"]'});
-			$('[data-role="ibo-navigation-menu--notifications-toggler"]').on('click', function(oEvent) {
+			$(me.element).popover_menu({'toggler': this.js_selectors.menu_toggler});
+			$(this.js_selectors.menu_toggler).on('click', function(oEvent) {
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
 
@@ -41,8 +50,8 @@ $(function()
 				});
 				$(me.element).popover_menu("togglePopup");
 			});
-			this.element.addClass('itop-newsroom_menu');
-			$('[data-role="ibo-navigation-menu--notifications-toggler"]').addClass('ibo-is-loaded');
+			this.element.addClass(this.css_classes.newsroom_menu);
+			$(this.js_selectors.menu_toggler).addClass('ibo-is-loaded');
 		},
 		// called when created, and later when changing options
 		_refresh: function()
@@ -52,8 +61,7 @@ $(function()
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('itop-newsroom_menu');
+			this.element.removeClass(this.css_classes.newsroom_menu);
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
@@ -167,17 +175,17 @@ $(function()
 		},
 		_buildDismissAllSection: function()
 		{
-			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check ibo-navigation-menu--notifications-dismiss-all--icon"></i>'+this.options.labels.mark_all_as_read+'</a> <hr class="ibo-popover-menu--item ibo-popover-menu--separator"> </div>';
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check ibo-navigation-menu--notifications-dismiss-all--icon"></i>'+this.options.labels.mark_all_as_read+'</a><hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
 		},
 		_buildMessageSection: function()
 		{
-			return '<div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">';
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
 		},
 		_buildShowAllMessagesSection: function()
 		{
-			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--show-all-messages" data-role="ibo-popover-menu--section">';
 		},
-		_buildMessageItems: function(sId, sText, sImage, sStartDate, sProvider, sUrl)
+		_buildMessageItems: function(sId, sText, sImage, sStartDate, sProvider, sUrl, oConverter)
 		{
 			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
 			sImage = '<img class="ibo-navigation-menu--notifications--item--image" src="'+sImage+'"><i class="ibo-navigation-menu--notifications--item--image '+this.options.placeholder_image_icon+'"></i>';
@@ -185,10 +193,8 @@ $(function()
 			var div = document.createElement("div");
 			div.textContent = sText;
 			var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
-			//Todo: make only one converter per loop
-			var converter = new showdown.Converter({noHeaderId: true});
 			
-			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + converter.makeHtml(sDescription) +'</div>';
+			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + oConverter.makeHtml(sDescription) +'</div>';
 			
 			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">'+ sImage + '<span>' + this.options.providers[sProvider].label+'</span> <span> ' + moment(sStartDate).fromNow()+'</span></span>';
 			
@@ -236,14 +242,14 @@ $(function()
 			{
 				aUnreadMessagesByProvider[k] = 0;
 			}
+			var oConverter = new showdown.Converter({noHeaderId: true});
 			for(var k in aAllMessages)
 			{
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
 				if (iCount < this.options.display_limit + 4)
 				{
-					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url)
-					//$(sMessageSection).append(sMessageItem);
+					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oConverter)
 					sMessageSection += sMessageItem;
 				}
 				iCount++;
@@ -254,12 +260,11 @@ $(function()
 				var sNoMessageItem = this._buildNoMessageItem();
 				sMessageSection += sNoMessageItem;
 			}
-			sMessageSection += '    <hr class="ibo-popover-menu--item ibo-popover-menu--separator"> </div>';
+			sMessageSection += '<hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
 			
 			if (this.options.providers.length == 1)
 			{
 				var SingleShowAllMessagesItem = this._buildSingleShowAllMessagesItem();	
-				//$(sShowAllMessagesSection).append(SingleShowAllMessagesItem);
 				sShowAllMessagesSection += SingleShowAllMessagesItem;
 				sShowAllMessagesSection += '</div>'
 			}
@@ -275,14 +280,12 @@ $(function()
 					tippy(this, {'content': this.outerHTML, 'placement': 'left', 'trigger': 'mouseenter focus', 'animation':'shift-away-subtle', 'allowHTML': true });
 				});
 				var me = this;
-				//$('#newsroom_menu_counter').on('click', function() {setTimeout(function(){ $('#newsroom_menu_icon').trigger('click') }, 10);});
-				//$('.newsroom_menu_item[data-msg-id]').on('click', function(ev) { me._handleClick(this); });
 				$('[data-role="ibo-navigation-menu--notifications-item"]').on('click', function(oEvent){
 					me._handleClick(this);
 				});
 				$('[data-role="ibo-navigation-menu--notifications-dismiss-all"]').on('click', function(ev) { me._markAllAsRead(); });
 				// Remove class to show there is new messages
-				$('[data-role="ibo-navigation-menu--notifications-toggler"]').removeClass('ibo-is-empty');
+				$(this.js_selectors.menu_toggler).removeClass(this.css_classes.empty);
 
 			}
 			else
@@ -290,7 +293,7 @@ $(function()
 				$(this.element).html(sMessageSection + sShowAllMessagesSection);
 				var me = this;
 				// Add class to show there is no messages
-				$('[data-role="ibo-navigation-menu--notifications-toggler"]').addClass('ibo-is-empty');
+				$(this.js_selectors.menu_toggler).addClass(this.css_classes.empty);
 			}
 			
 			if (this.options.providers.length != 1)
@@ -317,19 +320,8 @@ $(function()
 			var msgId = $(elem).attr('data-msg-id');
 			
 			this._markOneMessageAsRead(idxProvider, msgId);
-			// window.open(sUrl, '_blank');
-			// $('#newsroom_menu').remove();
-			// $('#newsroom_menu_counter_container').remove();
 			$(me.element).popover_menu("togglePopup");
 			this._getAllMessages();
-		},
-		_resetUnseenCount: function()
-		{
-			var display = $('#newsroom_menu_counter').css('display');
-			$('#newsroom_menu_counter').fadeOut(500, function() {
-				   $(this).css('visibility', 'hidden'); 
-				   $(this).css('display', display);
-				});
 		},
 		clearCache: function(idx)
 		{
@@ -365,7 +357,7 @@ $(function()
 			}
 			catch(e)
 			{
-				console.warn('Newsroom: Failed to store newsroom messages into local storage !! reason: '+e);
+				console.warn('Newsroom: Failed to store newsroom messages into local storage !! reason: ' + e);
 				bSuccess = false;
 			}
 			return bSuccess;
@@ -433,8 +425,6 @@ $(function()
 			{
 				this._markAllMessagesAsRead(k);
 			}
-			$('#newsroom_menu').html('<i class="top-right-icon '+this.options.image_icon+'" style="opacity:0.4" title="'+this.options.labels.no_message+'"></i>');
-			$('#newsroom_menu_counter_container').remove();
 			this._getAllMessages();
 		}
 	});	
