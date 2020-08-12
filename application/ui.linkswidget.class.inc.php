@@ -359,20 +359,21 @@ EOF
 		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script(<<<EOF
-		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
-		oWidget{$this->m_iInputId}.Init();
-EOF
+		$oPage->add_ready_script(<<<JS
+oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
+oWidget{$this->m_iInputId}.Init();
+JS
 		);
 
-		while($oCurrentLink = $oValue->Fetch())
+		while ($oCurrentLink = $oValue->Fetch())
 		{
-		    // We try to retrieve the remote object as usual
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+			// We try to retrieve the remote object as usual
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote),
+				false /* Must not be found */);
 			// If successful, it means that we can edit its link
-			if($oLinkedObj !== null)
-            {
-                $bReadOnly = false;
+			if ($oLinkedObj !== null)
+			{
+				$bReadOnly = false;
             }
             // Else we retrieve it without restrictions (silos) and will display its link as readonly
             else

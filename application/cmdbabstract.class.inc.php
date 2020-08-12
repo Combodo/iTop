@@ -2332,23 +2332,23 @@ EOF
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
 					$oPage->add_ready_script(
-<<<EOF
-    $('#{$iId}_field_set').field_set($sFieldSetOptions);
-    
-    $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
-    $('#{$iId}_console_form').console_form_handler('alignColumns');
-	$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
-    // field_change must be processed to refresh the hidden value at anytime
-    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
-    // Initialize the hidden value with current state
-    // update_value is triggered when preparing the wizard helper object for ajax calls
-    $('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
-    // validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
-    $('#{$iId}').bind('validate', function(evt, sFormId) {
-        $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
-        return ValidateCustomFields('$iId', sFormId); // Custom validation function
-    });
-EOF
+<<<JS
+$('#{$iId}_field_set').field_set($sFieldSetOptions);
+
+$('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
+$('#{$iId}_console_form').console_form_handler('alignColumns');
+$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
+// field_change must be processed to refresh the hidden value at anytime
+$('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+// Initialize the hidden value with current state
+// update_value is triggered when preparing the wizard helper object for ajax calls
+$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
+$('#{$iId}').bind('validate', function(evt, sFormId) {
+    $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
+    return ValidateCustomFields('$iId', sFormId); // Custom validation function
+});
+JS
 );
 					break;
 
@@ -2479,8 +2479,7 @@ EOF
 				$oPage->add_ready_script("$('#$sFieldToValidateId').bind('".implode(' ',
 						$aEventsList)."', function(evt, sFormId) { return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
 			}
-			$aDependencies = MetaModel::GetDependentAttributes($sClass,
-				$sAttCode); // List of attributes that depend on the current one
+			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
 			{
 				// Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form

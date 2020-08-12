@@ -701,6 +701,7 @@ try
 			break;
 
 		////////////////////////////////////////////////////////////
+		/// WizardHelper : see the corresponding PHP class, and JS class
 
 		case 'wizard_helper_preview':
 			$oPage->SetContentType('text/html');
