@@ -23,8 +23,9 @@
 		<div class="ibo-navigation-menu--bottom-part">
 			{% if oUIBlock.IsNewsroomEnabled() == true %}
 				<div class="ibo-navigation-menu--notifications">
-					<a class="ibo-navigation-menu--notifications-toggler" data-role="ibo-navigation-menu--notifications-toggler">
+					<a class="ibo-navigation-menu--notifications-toggler ibo-is-empty" data-role="ibo-navigation-menu--notifications-toggler">
 						<i class="fas fa-bell"></i>
+						<div class="ibo-navigation-menu--notifications-toggler--new-messages"></div>
 					</a>
 					<div class="ibo-navigation-menu--notifications-menu">
 						{{ render_block(oUIBlock.GetNewsroomMenu(), {aPage: aPage}) }}
@@ -37,7 +38,6 @@
 						<img class="ibo-navigation-menu--user-picture--image" 
 							 src="{{ oUIBlock.GetUserData().sPictureUrl }}"
 							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oUIBlock.GetUserData().sFirstname) }}"
-							 
 							 data-tooltip-content="{{ oUIBlock.GetUserData().sLogonMessage }}"
 							 data-tooltip-placement="right"
 							 data-tooltip-distance-offset="20"
@@ -58,10 +58,11 @@
 				</div>
 				{% if oUIBlock.IsNewsroomEnabled() == true %}
 					<div class="ibo-navigation-menu--user-notifications">
-						<a class="ibo-navigation-menu--user-notifications--text" data-role="ibo-navigation-menu--notifications-toggler" href="#">
+						<a class="ibo-navigation-menu--user-notifications--text ibo-navigation-menu--user-notifications--toggler" data-role="ibo-navigation-menu--notifications-toggler" href="#">
 							{{ '0 notification'|dict_s }}
-							<span class="ibo-navigation-menu--user-notifications--toggler">
+							<span class="ibo-navigation-menu--user-notifications--toggler--icon">
 								<i class="fas fa-bell"></i>
+								<div class="ibo-navigation-menu--notifications-toggler--new-messages"></div>
 							</span>
 						</a>
 						<div class="ibo-navigation-menu--user-notifications-menu"></div>

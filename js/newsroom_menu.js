@@ -24,6 +24,11 @@ $(function()
 		{
 			var me = this;
 			this.aMessageByProvider = [];
+			this._load();
+		},
+		_initializePopoverMenu: function()
+		{
+			var me = this;
 			$(me.element).popover_menu({'toggler': '[data-role="ibo-navigation-menu--notifications-toggler"]'});
 			$('[data-role="ibo-navigation-menu--notifications-toggler"]').on('click', function(oEvent) {
 				var oEventTarget = $(oEvent.target);
@@ -36,12 +41,9 @@ $(function()
 				});
 				$(me.element).popover_menu("togglePopup");
 			});
-			this.element
-			.addClass('itop-newsroom_menu');
-			
-			this._load();
+			this.element.addClass('itop-newsroom_menu');
+			$('[data-role="ibo-navigation-menu--notifications-toggler"]').addClass('ibo-is-loaded');
 		},
-	
 		// called when created, and later when changing options
 		_refresh: function()
 		{
@@ -279,11 +281,16 @@ $(function()
 					me._handleClick(this);
 				});
 				$('[data-role="ibo-navigation-menu--notifications-dismiss-all"]').on('click', function(ev) { me._markAllAsRead(); });
+				// Remove class to show there is new messages
+				$('[data-role="ibo-navigation-menu--notifications-toggler"]').removeClass('ibo-is-empty');
+
 			}
 			else
 			{
 				$(this.element).html(sMessageSection + sShowAllMessagesSection);
 				var me = this;
+				// Add class to show there is no messages
+				$('[data-role="ibo-navigation-menu--notifications-toggler"]').addClass('ibo-is-empty');
 			}
 			
 			if (this.options.providers.length != 1)
@@ -301,7 +308,7 @@ $(function()
 				});
 
 			}
-			
+			this._initializePopoverMenu();
 		},
 		_handleClick: function(elem)
 		{
