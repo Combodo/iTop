@@ -145,6 +145,8 @@ $ibo-navigation-menu--user-notifications--toggler--icon--padding-left: 5px !defa
 
 $ibo-navigation-menu--user-picture--image-collapsed--size: 36px !default;
 
+$ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color: $ibo-color-grey-100 !default;
+
 $ibo-navigation-menu--user-info-expanded--height: 100%;
 $ibo-navigation-menu--user-picture--image-expanded--margin: -60px auto 0 auto !default;
 $ibo-navigation-menu--user-picture--image-expanded--border: solid 3px $ibo-color-blue-grey-900 !default;
@@ -611,5 +613,8 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 	.ibo-navigation-menu--user-menu-container{
 		position: absolute;
 		bottom: 10px;
+		.ibo-popover-menu > .ibo-popover-menu--section:nth-child(odd){
+			background-color: $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color;
+		}
 	}
 }
