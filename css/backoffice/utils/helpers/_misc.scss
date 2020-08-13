@@ -16,13 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+.ibo-is-hidden{
+	display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
 %ibo-fully-centered-content{
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-/* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
 %ibo-vertically-centered-content{
+	display: flex;
+	align-items: center;
+}
+/* Typically to align icons and text */
+%ibo-baseline-centered-content{
+	display: flex;
+	align-items: center;
+}
+/* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
+%ibo-full-height-content{
 	display: flex;
 	align-items: stretch;
 }

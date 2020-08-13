@@ -1,0 +1,176 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+
+/* - Entry group */
+$ibo-activity-panel--entry-group--margin-bottom: 24px !default;
+
+/* - Entry */
+$ibo-activity-entry--medallion--margin-with-information: 8px !default;
+$ibo-activity-entry--medallion--margin-bottom: 18px !default;
+$ibo-activity-entry--medallion--diameter: 32px !default;
+$ibo-activity-entry--medallion--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-entry--medallion--has-image--background-color: $ibo-color-blue-100 !default;
+$ibo-activity-entry--medallion--has-image--box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.25) !default;
+$ibo-activity-entry--medallion--has-no-image--background-color: $ibo-color-blue-grey-600 !default;
+$ibo-activity-entry--medallion--has-no-image--text-color: $ibo-color-white-100 !default;
+$ibo-activity-entry--medallion--has-no-image--border: 1px solid $ibo-color-grey-200 !default;
+
+$ibo-activity-entry--information--margin-to-other-side: $ibo-activity-entry--medallion--diameter + $ibo-activity-entry--medallion--margin-with-information !default;
+
+$ibo-activity-entry--main-information--padding-x: 12px !default;
+$ibo-activity-entry--main-information--padding-y: $ibo-activity-entry--main-information--padding-x !default;
+$ibo-activity-entry--main-information--background-color: $ibo-color-grey-200 !default;
+$ibo-activity-entry--main-information--border-radius: $ibo-border-radius-500 !default;
+$ibo-activity-entry--main-information--border-radius--for-tip: 0 !default;
+$ibo-activity-entry--main-information-accent-strip--width: 2px !default;
+$ibo-activity-entry--main-information--is-current-user--background-color: $ibo-color-blue-100 !default;
+$ibo-activity-entry--main-information--is-closed--max-height: 48px !default;
+$ibo-activity-entry--main-information--is-closed--placeholder-top: 30px !default;
+$ibo-activity-entry--main-information--is-closed--placeholder-padding-left: $ibo-activity-entry--main-information--padding-x !default;
+
+$ibo-activity-entry--sub-information--margin-top: 4px !default;
+$ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
+$ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
+
+/* Entry group */
+.ibo-activity-panel--entry-group{
+	&:not(:last-child){
+		margin-bottom: $ibo-activity-panel--entry-group--margin-bottom;
+	}
+}
+
+/* Entry */
+.ibo-activity-entry{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+
+	/* Last entry */
+	&:not(:last-child){
+		.ibo-activity-entry--medallion{
+			visibility: hidden; /* Show only medallion on the last entry */
+		}
+		.ibo-activity-entry--sub-information{
+			margin-bottom: $ibo-activity-entry--sub-information--margin-bottom;
+		}
+	}
+
+	/* Current or not user specificities */
+	&.ibo-is-current-user{
+		flex-direction: row-reverse;
+
+		.ibo-activity-entry--medallion{
+			margin-right: initial;
+			margin-left: $ibo-activity-entry--medallion--margin-with-information;
+		}
+		.ibo-activity-entry--information{
+			margin-right: 0;
+			margin-left: $ibo-activity-entry--information--margin-to-other-side;
+		}
+		.ibo-activity-entry--main-information{
+			background-color: $ibo-activity-entry--main-information--is-current-user--background-color;
+		}
+		.ibo-activity-entry--sub-information{
+			text-align: right;
+		}
+
+		/* Bubble tip on the right for last entry of the group */
+		&:last-child{
+			.ibo-activity-entry--main-information{
+				border-bottom-right-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+				border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius;
+			}
+		}
+	}
+	&:not(.ibo-is-current-user){
+		.ibo-activity-entry--information{
+			margin-right: $ibo-activity-entry--information--margin-to-other-side;
+			margin-left: 0;
+		}
+		/* Bubble tip on the left for last entry of the group */
+		&:last-child{
+			.ibo-activity-entry--main-information{
+				border-bottom-right-radius: $ibo-activity-entry--main-information--border-radius;
+				border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+			}
+		}
+	}
+
+	&.ibo-is-closed{
+		.ibo-activity-entry--main-information{
+			max-height: $ibo-activity-entry--main-information--is-closed--max-height;
+			overflow: hidden;
+			cursor: pointer;
+
+			&::after{
+				content: "...";
+				position: absolute;
+				top: $ibo-activity-entry--main-information--is-closed--placeholder-top;
+				left: 0;
+				padding-left: $ibo-activity-entry--main-information--is-closed--placeholder-padding-left;
+				width: 100%;
+				height: 100%;
+				background-color: inherit;
+			}
+		}
+	}
+}
+.ibo-activity-entry--medallion{
+	margin-right: $ibo-activity-entry--medallion--margin-with-information;
+	margin-bottom: $ibo-activity-entry--medallion--margin-bottom;
+	min-width: $ibo-activity-entry--medallion--diameter; /* We have to set a min-width, otherwise the medallion will be compressed when sibling element is too large */
+	width: $ibo-activity-entry--medallion--diameter;
+	min-height: $ibo-activity-entry--medallion--diameter;
+	height: $ibo-activity-entry--medallion--diameter;
+	overflow: hidden;
+
+	@extend %ibo-fully-centered-content;
+
+	border-radius: $ibo-activity-entry--medallion--border-radius;
+
+	@extend %ibo-font-ral-nor-150;
+
+	&.ibo-has-image{
+		background-color: $ibo-activity-entry--medallion--has-image--background-color;
+		box-shadow: $ibo-activity-entry--medallion--has-image--box-shadow;
+	}
+	&:not(.ibo-has-image){
+		background-color: $ibo-activity-entry--medallion--has-no-image--background-color;
+		color: $ibo-activity-entry--medallion--has-no-image--text-color;
+		border: $ibo-activity-entry--medallion--has-no-image--border;
+	}
+
+	.ibo-activity-entry--author-picture{
+		max-height: 100%;
+	}
+}
+.ibo-activity-entry--main-information{
+	position: relative;
+	padding: $ibo-activity-entry--main-information--padding-y $ibo-activity-entry--main-information--padding-x;
+	background-color: $ibo-activity-entry--main-information--background-color;
+	border-radius: $ibo-activity-entry--main-information--border-radius;
+}
+.ibo-activity-entry--sub-information{
+	margin-top: $ibo-activity-entry--sub-information--margin-top;
+	text-align: left;
+	color: $ibo-activity-entry--sub-information--text-color;
+
+	@extend %ibo-font-ral-nor-50;
+}

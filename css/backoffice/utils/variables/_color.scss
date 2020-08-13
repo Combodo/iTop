@@ -92,6 +92,16 @@ $ibo-color-cyan-700: hsla(186, 100%, 32.7%, 1) !default;
 $ibo-color-cyan-800: hsla(185, 100%, 28%, 1) !default;
 $ibo-color-cyan-900: hsla(182, 100%, 19.6%, 1) !default;
 
+$ibo-color-pink-100: hsla(348, 100%, 98%, 1) !default;
+$ibo-color-pink-200: hsla(343, 95%, 92%, 1) !default;
+$ibo-color-pink-300: hsla(339, 90%, 85%, 1) !default;
+$ibo-color-pink-400: hsla(336, 86%, 75%, 1) !default;
+$ibo-color-pink-500: hsla(331, 79%, 66%, 1) !default;
+$ibo-color-pink-600: hsla(329, 64%, 54%, 1) !default;
+$ibo-color-pink-700: hsla(325, 57%, 46%, 1) !default;
+$ibo-color-pink-800: hsla(322, 60%, 37%, 1) !default;
+$ibo-color-pink-900: hsla(318, 51%, 29%, 1) !default;
+
 :root{
 	--ibo-color-white-100: #{$ibo-color-white-100};
 	--ibo-color-white-200: #{$ibo-color-white-200};
@@ -167,6 +177,16 @@ $ibo-color-cyan-900: hsla(182, 100%, 19.6%, 1) !default;
 	--ibo-color-cyan-700: #{$ibo-color-cyan-700};
 	--ibo-color-cyan-800: #{$ibo-color-cyan-800};
 	--ibo-color-cyan-900: #{$ibo-color-cyan-900};
+
+	--ibo-color-pink-100: #{$ibo-color-pink-100};
+	--ibo-color-pink-200: #{$ibo-color-pink-200};
+	--ibo-color-pink-300: #{$ibo-color-pink-300};
+	--ibo-color-pink-400: #{$ibo-color-pink-400};
+	--ibo-color-pink-500: #{$ibo-color-pink-500};
+	--ibo-color-pink-600: #{$ibo-color-pink-600};
+	--ibo-color-pink-700: #{$ibo-color-pink-700};
+	--ibo-color-pink-800: #{$ibo-color-pink-800};
+	--ibo-color-pink-900: #{$ibo-color-pink-900};
 }
 
 /* Semantic palettes */

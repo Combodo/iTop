@@ -3,7 +3,7 @@
  *
  * This file is part of iTop.
  *
- * iTop is free software; you can redistribute it and/or modify
+ * iTop is free software; you can redistribute it and/or modify	
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -16,7 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-$family-sans-serif: "Monorale";
+$ibo-depression-100: inset 0 1px 1px 0 rgba(0, 0, 0, 0.15) !default;
 
-$body-overflow-x: hidden !default;
-$body-overflow-y: auto !default;
+:root{
+	--ibo-elevation-100: #{$ibo-depression-100};
+}
+
+%ibo-depression-100{
+	box-shadow: $ibo-depression-100;
+}

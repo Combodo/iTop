@@ -1,0 +1,75 @@
+<div id="{{ oUIBlock.GetId() }}" class="ibo-activity-panel">
+	<div class="ibo-activity-panel--header">
+		<div class="ibo-activity-panel--tabs">
+			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+				<div class="ibo-activity-panel--tab ibo-activity-panel--tab-for-caselog" data-role="ibo-activity-panel--tab" data-tab-type="caselog" data-caselog-attribute-code="{{ sCaseLogAttCode }}">
+					<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+						<span class="ibo-activity-panel--tab-decoration ibo-activity-panel--tab-decoration-for-caselog-{{ loop.index }}"></span>
+						<span class="ibo-activity-panel--tab-text">{{ aCaseLogData.title }}</span>
+					</a>
+					<div class="ibo-activity-panel--tab-toolbar">
+						<div class="ibo-activity-panel--tab-left-actions">
+							<a href="#" class="ibo-activity-panel--tab-action ibo-activity-panel--tab-action-open-all" data-role="ibo-activity-panel--caselog-open-all" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:OpenAll:Tooltip'|dict_s }}">
+								<span class="fas fa-book-open"></span>
+							</a>
+							<a href="#" class="ibo-activity-panel--tab-action ibo-activity-panel--tab-action-close-all" data-role="ibo-activity-panel--caselog-close-all" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:CloseAll:Tooltip'|dict_s }}">
+								<span class="fas fa-book"></span>
+							</a>
+						</div>
+						<div class="ibo-activity-panel--tab-right-actions">
+							<span class="ibo-activity-panel--tab-info ibo-activity-panel--tab-info-authors-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip'|dict_s }}">
+								<span class="ibo-activity-panel--tab-info-text">{{ aCaseLogData.authors|length }}</span>
+								<span class="ibo-activity-panel--tab-info-icon fas fa-users"></span>
+							</span>
+							<span class="ibo-activity-panel--tab-info ibo-activity-panel--tab-info-messages-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip'|dict_s }}">
+								<span class="ibo-activity-panel--tab-info-text">{{ aCaseLogData.total_messages_count }}</span>
+								<span class="ibo-activity-panel--tab-info-icon fas fa-comment-alt"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			<div class="ibo-activity-panel--tab ibo-activity-panel--tab-for-activity ibo-is-active" data-role="ibo-activity-panel--tab" data-tab-type="activity">
+				<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+					<span class="ibo-activity-panel--tab-text">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
+				</a>
+				<div class="ibo-activity-panel--tab-toolbar">
+					<div class="ibo-activity-panel--tab-middle-actions">
+						<label class="ibo-activity-panel--tab-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip'|dict_s }}">
+							<input type="checkbox" name="caselogs" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="caselog" checked />
+							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Title'|dict_s }}
+						</label>
+						<label class="ibo-activity-panel--tab-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}">
+							<input type="checkbox" name="transitions" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="transition" checked />
+							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title'|dict_s }}
+						</label>
+						<label class="ibo-activity-panel--tab-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip'|dict_s }}">
+							<input type="checkbox" name="edits" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="edit" checked />
+							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Title'|dict_s }}
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ibo-activity-panel--size-toggler" data-role="ibo-activity-panel--size-toggler">
+			<a href="#" class="ibo-activity-panel--expand-icon"
+			   data-role="ibo-activity-panel--expand-icon"
+			   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
+				<span class="fas fa-fw fa-expand-alt"></span>
+			</a>
+			<a href="#" class="ibo-activity-panel--collapse-icon"
+			   data-role="ibo-activity-panel--collapse-icon"
+			   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Collapse:Tooltip'|dict_s }}">
+				<span class="fas fa-fw fa-compress-alt"></span>
+			</a>
+		</div>
+	</div>
+	<div class="ibo-activity-panel--body">
+		{% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
+			{{ include('layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
+		{% endfor %}
+	</div>
+</div>

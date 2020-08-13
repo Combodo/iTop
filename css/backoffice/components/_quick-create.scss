@@ -77,7 +77,7 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 /* SCSS rules */
 .ibo-quick-create{
 	position: relative;
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 
 	&.ibo-is-opened{
 		.ibo-quick-create--input{
@@ -93,7 +93,7 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	}
 }
 .ibo-quick-create--head{
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 	background-color: $ibo-quick-create--head--background-color;
 }
 .ibo-quick-create--icon{

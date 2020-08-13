@@ -73,7 +73,7 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 /* SCSS rules */
 .ibo-global-search{
 	position: relative;
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 
 	&.ibo-is-opened{
 		.ibo-global-search--input{
@@ -90,7 +90,7 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	}
 }
 .ibo-global-search--head{
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 	background-color: $ibo-global-search--head--background-color;
 }
 .ibo-global-search--icon{

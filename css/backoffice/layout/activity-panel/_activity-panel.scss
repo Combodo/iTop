@@ -1,0 +1,227 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* Color palette for caselog visual identification */
+$ibo-activity-panel--caselog-main-color-1: $ibo-color-green-700 !default;
+$ibo-activity-panel--caselog-main-color-2: $ibo-color-pink-700 !default;
+$ibo-activity-panel--caselog-main-color-3: $ibo-color-blue-600 !default;
+$ibo-activity-panel--caselog-main-color-4: $ibo-color-orange-400 !default;
+$ibo-activity-panel--caselog-main-color-5: $ibo-color-cyan-200 !default;
+$ibo-activity-panel--caselog-main-colors: $ibo-activity-panel--caselog-main-color-1, $ibo-activity-panel--caselog-main-color-2, $ibo-activity-panel--caselog-main-color-3, $ibo-activity-panel--caselog-main-color-4, $ibo-activity-panel--caselog-main-color-5 !default;
+
+/* SCSS variables */
+$ibo-activity-panel--width: 460px !default;
+/* TODO: This should be changed when responsive breakpoints are defined and used */
+$ibo-activity-panel--is-expanded--width: 1200px !default;
+$ibo-activity-panel--padding-x: 16px !default;
+$ibo-activity-panel--padding-y: 0 !default;
+
+@for $iIdx from 1 through 5 {
+	.ibo-activity-panel--tab-decoration-for-caselog-#{$iIdx} {
+		background-color: nth($ibo-activity-panel--caselog-main-colors, $iIdx);
+	}
+}
+
+/* - Header */
+$ibo-activity-panel--header--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
+$ibo-activity-panel--header--background-color: $ibo-color-grey-100 !default;
+
+$ibo-activity-panel--size-toggler--color: $ibo-color-grey-600 !default;
+$ibo-activity-panel--size-toggler--on-hover--color: $ibo-color-grey-800 !default;
+
+/* - Tab */
+$ibo-activity-panel--tab--is-active--background-color: $ibo-color-grey-200 !default;
+
+/* - Tab title */
+$ibo-activity-panel--tab-title--padding-x: 16px !default;
+$ibo-activity-panel--tab-title--padding-y: 8px !default;
+$ibo-activity-panel--tab-title--on-hover--background-color: $ibo-activity-panel--tab--is-active--background-color !default;
+$ibo-activity-panel--tab-title--is-active--background-color: $ibo-activity-panel--tab--is-active--background-color !default;
+
+$ibo-activity-panel--tab-decoration--width: 12px !default;
+$ibo-activity-panel--tab-decoration--height: $ibo-activity-panel--tab-decoration--width !default;
+$ibo-activity-panel--tab-decoration--margin-right: 8px !default;
+$ibo-activity-panel--tab-decoration--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-activity-panel--tab-text--max-width: 100px !default;
+
+/* - Tab toolbar */
+$ibo-activity-panel--tab-toolbar--padding-x: $ibo-activity-panel--padding-x !default;
+$ibo-activity-panel--tab-toolbar--height: 32px !default;
+$ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab--is-active--background-color !default;
+
+$ibo-activity-panel--tab-for-caselog--elements-spacing: 16px !default;
+$ibo-activity-panel--tab-for-caselog--icon-margin-left: 8px !default;
+$ibo-activity-panel--tab-for-caselog--icons-separator-content: "-" !default;
+$ibo-activity-panel--tab-for-caselog--icons-separator-margin-x: 8px !default;
+
+$ibo-activity-panel--tab-for-activity--elements-spacing: 36px !default;
+$ibo-activity-panel--tab-for-activity---checkbox-margin-right: 8px !default;
+
+/* - Body */
+$ibo-activity-panel--body--padding-top: $ibo-activity-panel--tab-toolbar--height + 16px !default;
+$ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
+
+/* Whole layout */
+.ibo-activity-panel{
+	width: $ibo-activity-panel--width;
+	transition: width 0.2s ease-in-out;
+
+	&.ibo-is-expanded{
+		width: $ibo-activity-panel--is-expanded--width;
+	}
+}
+
+/* Header */
+.ibo-activity-panel--header{
+	position: relative;
+	padding-left: $ibo-activity-panel--header--padding-x;
+	padding-right: $ibo-activity-panel--header--padding-x;
+	@extend %ibo-fully-centered-content;
+
+	background-color: $ibo-activity-panel--header--background-color;
+
+	/* Remove hyperlinks default color */
+	a{
+		color: inherit;
+	}
+}
+.ibo-activity-panel--tabs{
+	@extend %ibo-fully-centered-content;
+}
+
+/* Tab */
+.ibo-activity-panel--tab{
+	&.ibo-is-active{
+		.ibo-activity-panel--tab-title{
+			background-color: $ibo-activity-panel--tab-title--is-active--background-color;
+		}
+		.ibo-activity-panel--tab-toolbar{
+			display: flex;
+		}
+	}
+}
+
+/* Tab title */
+.ibo-activity-panel--tab-title{
+	padding: $ibo-activity-panel--tab-title--padding-y $ibo-activity-panel--tab-title--padding-x;
+	@extend %ibo-fully-centered-content;
+
+	&:hover{
+		background-color: $ibo-activity-panel--tab-title--on-hover--background-color;
+	}
+}
+.ibo-activity-panel--tab-decoration{
+	display: inline-flex;
+	margin-right: $ibo-activity-panel--tab-decoration--margin-right;
+	width: $ibo-activity-panel--tab-decoration--width;
+	height: $ibo-activity-panel--tab-decoration--height;
+	border-radius: $ibo-activity-panel--tab-decoration--border-radius;
+	@extend %ibo-depression-100;
+}
+.ibo-activity-panel--tab-text{
+	max-width: $ibo-activity-panel--tab-text--max-width;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+/* Tab toolbar */
+.ibo-activity-panel--tab-toolbar{
+	display: none;
+	align-items: center;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	height: $ibo-activity-panel--tab-toolbar--height;
+	padding-left: $ibo-activity-panel--tab-toolbar--padding-x;
+	padding-right: $ibo-activity-panel--tab-toolbar--padding-x;
+	background-color: $ibo-activity-panel--tab-toolbar--background-color;
+}
+.ibo-activity-panel--tab-left-actions,
+.ibo-activity-panel--tab-right-actions{
+	@extend %ibo-vertically-centered-content;
+}
+.ibo-activity-panel--tab-middle-actions{
+	@extend %ibo-fully-centered-content;
+}
+.ibo-activity-panel--tab-action{
+	@extend %ibo-baseline-centered-content;
+}
+.ibo-activity-panel--tab-for-caselog{
+	.ibo-activity-panel--tab-toolbar{
+		justify-content: space-between;
+
+		.ibo-activity-panel--tab-action{
+			&:not(:first-child){
+				&::before{
+					content: $ibo-activity-panel--tab-for-caselog--icons-separator-content;
+					margin: 0 $ibo-activity-panel--tab-for-caselog--icons-separator-margin-x;
+				}
+			}
+		}
+		.ibo-activity-panel--tab-info{
+			> .ibo-activity-panel--tab-info-icon{
+				margin-left: $ibo-activity-panel--tab-for-caselog--icon-margin-left;
+			}
+
+			&:not(:first-child){
+				margin-left: $ibo-activity-panel--tab-for-caselog--elements-spacing;
+			}
+		}
+	}
+}
+.ibo-activity-panel--tab-for-activity{
+	.ibo-activity-panel--tab-toolbar{
+		justify-content: center;
+
+		.ibo-activity-panel--tab-action{
+			> input{
+				margin-right: $ibo-activity-panel--tab-for-activity---checkbox-margin-right;
+			}
+
+			&:not(:first-child){
+				margin-left: $ibo-activity-panel--tab-for-activity--elements-spacing;
+			}
+		}
+	}
+}
+
+/* Size toggler */
+.ibo-activity-panel--size-toggler{
+	position: absolute;
+	right: $ibo-activity-panel--padding-x;
+	top: 0;
+	bottom: 0;
+	@extend %ibo-fully-centered-content;
+	color: $ibo-activity-panel--size-toggler--color;
+
+	&:hover{
+		color: $ibo-activity-panel--size-toggler--on-hover--color;
+	}
+}
+.ibo-activity-panel--collapse-icon{
+	display: none;
+}
+
+/* Body */
+.ibo-activity-panel--body{
+	padding-top: $ibo-activity-panel--body--padding-top;
+	padding-left: $ibo-activity-panel--body--padding-x;
+	padding-right: $ibo-activity-panel--body--padding-x;
+}
+

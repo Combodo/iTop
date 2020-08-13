@@ -38,7 +38,7 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 	--ibo-top-bar--quick-actions--margin-right: #{$ibo-top-bar--quick-actions--margin-right};
 }
 .ibo-top-bar{
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 	height: var(--ibo-top-bar--height);
 	padding: var(--ibo-top-bar--padding-y) var(--ibo-top-bar--padding-right) var(--ibo-top-bar--padding-y) var(--ibo-top-bar--padding-left);
 	background-color: var(--ibo-top-bar--background-color);
@@ -50,7 +50,7 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 	}
 }
 .ibo-top-bar--quick-actions{
-	@extend %ibo-vertically-centered-content;
+	@extend %ibo-full-height-content;
 	margin-right: var(--ibo-top-bar--quick-actions--margin-right);
 
 	.ibo-global-search{

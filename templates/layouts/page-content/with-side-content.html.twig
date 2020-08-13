@@ -6,7 +6,6 @@
 	{{ parent() }}
 	<aside id="ibo-side-content">
 		{% block iboPageSideContent %}
-			Before GetSideBlocks
 			{% for oSubBlock in oUIBlock.GetSideBlocks() %}
 				{{ render_block(oSubBlock, {aPage: aPage}) }}
 			{% endfor %}

@@ -1,0 +1,8 @@
+// TODO: We need to find a clean way to launch this script only once the JS scripts are loaded
+document.addEventListener("DOMContentLoaded", function(){
+	setTimeout(function(){
+		$('#{{ oUIBlock.GetId() }}').activity_panel({
+			datetime_format: {{ oUIBlock.GetDateTimeFormatForJSWidget()|json_encode|raw }}
+		});
+	}, 500);
+});

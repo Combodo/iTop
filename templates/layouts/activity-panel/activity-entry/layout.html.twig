@@ -1,0 +1,31 @@
+<div class="ibo-activity-entry {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
+     data-role="ibo-activity-entry"
+     data-entry-type="{% block iboActivityEntryType %}generic{% endblock %}"
+     data-entry-datetime-raw="{{ oUIBlock.GetRawDateTime() }}"
+	 data-entry-author-login="{{ oUIBlock.GetAuthorLogin() }}"
+	 {% block iboActivityEntryExtraDataAttributes %}{% endblock %}>
+	<div class="ibo-activity-entry--medallion {% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}ibo-has-image{% endif %}" data-role="ibo-activity-entry--medallion" data-tooltip-content="{{ oUIBlock.GetAuthorFriendlyname() }}">
+		{% block iboActivityEntryMedallion %}
+			{% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}
+				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}" />
+			{% else %}
+				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials() }}</div>
+			{% endif %}
+		{% endblock %}
+	</div>
+	<div class="ibo-activity-entry--information" data-role="ibo-activity-entry--information">
+		{% block iboActivityEntryInformation %}
+			<div class="ibo-activity-entry--main-information" data-role="ibo-activity-entry--main-information">
+				{% block iboActivityEntryMainInformation %}
+					{# Content is printed as raw because it is stored as HTML in the database and should have been sanitized before storage, so we can assume it is safe #}
+					{{ oUIBlock.GetContent()|raw }}
+				{% endblock %}
+			</div>
+			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
+				{% block iboActivityEntrySubInformation %}
+					<span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime" data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
+				{% endblock %}
+			</div>
+		{% endblock %}
+	</div>
+</div>

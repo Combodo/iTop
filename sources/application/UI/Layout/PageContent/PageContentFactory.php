@@ -20,6 +20,8 @@
 namespace Combodo\iTop\Application\UI\Layout\PageContent;
 
 
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanel;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanelFactory;
 use DBObject;
 
 /**
@@ -48,6 +50,7 @@ class PageContentFactory
 	 * @param \DBObject $oObject
 	 *
 	 * @return \Combodo\iTop\Application\UI\Layout\PageContent\PageContentWithSideContent
+	 * @throws \CoreException
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject)
 	{
@@ -55,6 +58,8 @@ class PageContentFactory
 
 		// Add object details layout
 		// Add object activity layout
+		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject);
+		$oLayout->AddSideBlock($oActivityPanel);
 
 		return $oLayout;
 	}

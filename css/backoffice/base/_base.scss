@@ -22,22 +22,29 @@ $ibo-hyperlink-color--on-active: $ibo-color-primary-700 !default;
 
 $ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
 
+$ibo-content-block--background-color: $ibo-color-white-100 !default;
+$ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
+
+/* CSS variables */
 :root{
 	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
 	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
 	--ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
 }
 
+/* Box sizing reset */
 *,
 *::before,
 *::after{
 	box-sizing: border-box;
 }
 
+/* Base font size (used by all typographies) */
 html{
 	font-size: 12px;
 }
 
+/* Hyperlinks reset, ensure that they are of the right color and without decoration everywhere (of course this can be overloaded in some components) */
 a{
 	color: var(--ibo-hyperlink-color);
 	text-decoration: none;
