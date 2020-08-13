@@ -1113,23 +1113,24 @@ class UserRights
 	 * Return the absolute URL of the contact picture
 	 *
 	 * @param string $sLogin Login of the user from which we return the picture URL
+	 * @param bool $bAllowDefaultPicture Set to false if you want it to return null instead of the default picture URL when the contact has no picture defined. This can be useful when we want to display something else than the default picture (eg. initials)
 	 *
-	 * @return mixed|string
-	 * @throws \Exception
+	 * @return null|string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 * @since 2.8.0
 	 */
-	public static function GetContactPictureAbsUrl($sLogin = '')
+	public static function GetContactPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
 	{
-		// First, retrieve the default picture from preferences (users without contact)
-		if(empty($sLogin))
+		// First, the default picture
+		if($bAllowDefaultPicture === true)
 		{
-			$sDefaultPictureFilename = appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . 'user-profile-default-256px.png';
 		}
 		else
 		{
-			$sDefaultPictureFilename = 'user-profile-default-256px.png';
+			$sPictureUrl = null;
 		}
-		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . $sDefaultPictureFilename;
 
 		// Then check if the user has a contact attached and if it has an picture defined
 		$sContactId = UserRights::GetContactId($sLogin);
@@ -1145,9 +1146,16 @@ class UserRights
 				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
 				if($oPicture->IsEmpty())
 				{
-					/** @var \AttributeImage $oAttDef */
-					$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
-					$sPictureUrl = $oAttDef->Get('default_image');
+					if($bAllowDefaultPicture === true)
+					{
+						/** @var \AttributeImage $oAttDef */
+						$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$sPictureUrl = $oAttDef->Get('default_image');
+					}
+					else
+					{
+						$sPictureUrl = null;
+					}
 				}
 				else
 				{
