@@ -17,6 +17,9 @@
  */
 
 /* SCSS variables */
+$ibo-popover-menu--item--padding-y: 12px !default;
+$ibo-popover-menu--item--padding-right: 24px !default;
+$ibo-popover-menu--item--padding-left: 16px !default;
 $ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
 $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
 $ibo-popover-menu--item--hover-background-color: $ibo-color-grey-200 !default;
@@ -26,12 +29,14 @@ $ibo-popover-menu--separator--margin: 0 !default;
 $ibo-popover-menu--separator--background-color: $ibo-color-grey-200 !default;
 
 .ibo-popover-menu--item{
-  padding: 12px 24px 12px 16px;
+  padding: $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-right $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-left;
   color: $ibo-popover-menu--item--text-color;
-  @extend %ibo-font-ral-nor-200;
+  @extend %ibo-font-ral-nor-150;
+
   a {
     color: $ibo-popover-menu--item--text-color;
   }
+
   &:hover{
     background-color: $ibo-popover-menu--item--hover-background-color;
     color: inherit;
