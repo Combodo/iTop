@@ -1120,25 +1120,26 @@ class UserRights
 	 */
 	public static function GetContactPictureAbsUrl($sLogin = '')
 	{
-		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
-
-		if (empty($sLogin))
+		// First, retrieve the default picture from preferences (users without contact)
+		if(empty($sLogin))
 		{
-			$oUser = self::$m_oUser;
+			$sDefaultPictureFilename = appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
 		}
 		else
 		{
-			$oUser = self::FindUser($sLogin);
+			$sDefaultPictureFilename = 'user-profile-default-256px.png';
 		}
+		$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . $sDefaultPictureFilename;
 
-		// Check that user exists (in case we try to get it for another contact)
-		if (!is_null($oUser) && !MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
+		// Then check if the user has a contact attached and if it has an picture defined
+		$sContactId = UserRights::GetContactId($sLogin);
+		if(!empty($sContactId))
 		{
-			$oContact = $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
+			$oContact = MetaModel::GetObject('Contact', $sContactId);
 			$sContactClass = get_class($oContact);
 
-			// Check that user has a contact
-			if(!is_null($oContact) && !MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE))
+			// Check that contact has a picture attribute
+			if(!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE))
 			{
 				/** @var \ormDocument $oPicture */
 				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
