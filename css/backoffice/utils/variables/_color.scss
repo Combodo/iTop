@@ -284,3 +284,25 @@ $ibo-caselog-highlight-colors: ($ibo-caselog-highlight-color-1, $ibo-caselog-hig
 	--ibo-caselog-color-highlight-4: #{$ibo-caselog-highlight-color-4};
 	--ibo-caselog-color-highlight-5: #{$ibo-caselog-highlight-color-5};
 }
+
+$ibo-color-secondary-100: $ibo-color-grey-100 !default;
+$ibo-color-secondary-200: $ibo-color-grey-200 !default;
+$ibo-color-secondary-300: $ibo-color-grey-300!default;
+$ibo-color-secondary-400: $ibo-color-grey-400 !default;
+$ibo-color-secondary-500: $ibo-color-grey-500 !default;
+$ibo-color-secondary-600: $ibo-color-grey-600 !default;
+$ibo-color-secondary-700: $ibo-color-grey-700 !default;
+$ibo-color-secondary-800: $ibo-color-grey-800!default;
+$ibo-color-secondary-900: $ibo-color-grey-900 !default;
+
+:root{
+	--ibo-color-secondary-100: #{$ibo-color-secondary-100};
+	--ibo-color-secondary-200: #{$ibo-color-secondary-200};
+	--ibo-color-secondary-300: #{$ibo-color-secondary-300};
+	--ibo-color-secondary-400: #{$ibo-color-secondary-400};
+	--ibo-color-secondary-500: #{$ibo-color-secondary-500};
+	--ibo-color-secondary-600: #{$ibo-color-secondary-600};
+	--ibo-color-secondary-700: #{$ibo-color-secondary-700};
+	--ibo-color-secondary-800: #{$ibo-color-secondary-800};
+	--ibo-color-secondary-900: #{$ibo-color-secondary-900};
+}
