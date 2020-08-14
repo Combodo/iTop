@@ -25,7 +25,7 @@
  */
 class ThemeHandler
 {
-	const IMAGE_EXTENSIONS = array('png', 'gif', 'jpg', 'jpeg');
+	const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
 	private static $oCompileCSSService;
 	/**
@@ -36,19 +36,19 @@ class ThemeHandler
 	 */
 	public static function GetDefaultThemeInformation()
 	{
-		return array(
+		return [
 			'name' => 'light-grey',
-			'parameters' => array(
-				'variables' => array(),
-				'imports' => array(
+			'parameters' => [
+				'variables' => [],
+				'imports' => [
 					'css-variables' => '../css/css-variables.scss',
-				),
-				'stylesheets' => array(
+				],
+				'stylesheets' => [
 					'jqueryui' => '../css/ui-lightness/jqueryui.scss',
 					'main' => '../css/light-grey.scss',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -111,11 +111,11 @@ class ThemeHandler
 				SetupUtils::builddir($sDefaultThemeDirPath);
 			}
 			
-			static::CompileTheme($sThemeId, false, $aDefaultTheme['parameters']);
+			static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
 		}
 
 		// Return absolute url to theme compiled css
-		return utils::GetAbsoluteUrlModulesRoot().'/branding/themes/'.$sThemeId.'/main.css';
+		return utils::GetAbsoluteUrlModulesRoot().'branding/themes/'.$sThemeId.'/main.css';
 	}
 
 	/**
@@ -124,36 +124,36 @@ class ThemeHandler
 	 * 2) The produced CSS file exists and its signature is equal to the expected signature (imports, stylesheets, variables)
 	 *
 	 * @param string $sThemeId
-	 * @param mix $sSetupCompilationTimestamp : when setup context this is compilation timestamp. otherwise false.
+	 * @param boolean $bSetup
+	 * @param string $sSetupCompilationTimestamp : setup compilation timestamp in micro secunds
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
 	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
 	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
+	 * @return boolean: indicate whether theme compilation occured
 	 */
-	public static function CompileTheme($sThemeId, $sSetupCompilationTimestamp=false, $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	public static function CompileTheme($sThemeId, $bSetup=false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
 	{
-		if ($sSetupCompilationTimestamp===false)
+		if ($sSetupCompilationTimestamp==="")
 		{
 			$sSetupCompilationTimestamp = microtime(true);
-			$bSetup = false;
 		}
-		else
-		{
-			$bSetup = true;
-		}
+
+		$sSetupCompilationTimestampInSecunds = (strpos($sSetupCompilationTimestamp, '.') !==false) ? explode('.', $sSetupCompilationTimestamp)[0] : $sSetupCompilationTimestamp;
+
+		$sEnv = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+
 		// Default working path
 		if($sWorkingPath === null)
 		{
-			$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+			$sWorkingPath = $sEnv;
 		}
 
 		// Default import paths (env-*)
 		if($aImportsPaths === null)
 		{
-			$aImportsPaths = array(
-				APPROOT.'env-'.utils::GetCurrentEnvironment().'/',
-			);
+			$aImportsPaths = [ $sEnv];
 		}
 
 		// Note: We do NOT check that the folder exists!
@@ -163,7 +163,11 @@ class ThemeHandler
 		// Save parameters if passed... (typically during DM compilation)
 		if(is_array($aThemeParameters))
 		{
-			$aThemeParameters = self::PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $sSetupCompilationTimestamp);
+			if (!is_dir($sThemeFolderPath))
+			{
+				mkdir($sWorkingPath.'/branding/');
+				mkdir($sWorkingPath.'/branding/themes/');
+			}
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 		}
 		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
@@ -176,12 +180,14 @@ class ThemeHandler
 			}
 		}
 
+		$aThemeParametersWithVersion = self::CloneThemeParameterAndIncludeVersion($aThemeParameters, $sSetupCompilationTimestampInSecunds);
+
 		$sTmpThemeScssContent = '';
 		$iStyleLastModified = 0;
 		clearstatcache();
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 
-		$aStylesheetFiles = array();
+		$aStylesheetFiles = [];
 		foreach ($aThemeParameters['imports'] as $sImport)
 		{
 			$sTmpThemeScssContent .= '@import "'.$sImport.'";'."\n";
@@ -201,14 +207,10 @@ class ThemeHandler
 			$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 		}
 
-		$aIncludedImages=static::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeFolderPath);
+		$aIncludedImages=static::GetIncludedImages($aThemeParametersWithVersion, $aStylesheetFiles, $sThemeId);
 		foreach ($aIncludedImages as $sImage)
 		{
-			if (!is_file($sImage))
-			{
-				IssueLog::Warning("Cannot find $sImage during SCSS $sThemeId precompilation");
-			}
-			else
+			if (is_file($sImage))
 			{
 				$iStylesheetLastModified = @filemtime($sImage);
 				$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
@@ -262,13 +264,15 @@ CSS;
 					static::$oCompileCSSService = new CompileCSSService();
 				}
 				//store it again to change $version with latest compiled time
-				$aThemeParameters = self::PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $sSetupCompilationTimestamp);
 				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
-					$aThemeParameters['variables']);
+					$aThemeParametersWithVersion);
 				file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
+				SetupLog::Info("Theme $sThemeId file compiled.");
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -286,12 +290,12 @@ CSS;
 	 */
 	public static function ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages)
 	{
-		$aSignature = array(
+		$aSignature = [
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
-			'stylesheets' => array(),
-			'imports' => array(),
-			'images' => array(),
-		);
+			'stylesheets' => [],
+			'imports' => [],
+			'images' => []
+		];
 
 		foreach ($aThemeParameters['imports'] as $key => $sImport)
 		{
@@ -307,7 +311,8 @@ CSS;
 		{
 			if (is_file($sImage))
 			{
-				$aSignature['images'][$sImage] = md5_file($sImage);
+				$sUri = str_replace(APPROOT, '', $sImage);
+				$aSignature['images'][$sUri] = md5_file($sImage);
 			}
 		}
 
@@ -316,25 +321,28 @@ CSS;
 
 	/**
 	 * Search for images referenced in stylesheet files
+	 *
 	 * @param array $aThemeParametersVariables
 	 * @param array $aStylesheetFiles
-	 * @param string $sThemeFolderPath : used as relative paths to find css images
+	 * @param string $sThemeId: used only for logging purpose
 	 *
 	 * @return array
 	 * @since 2.8.0
 	 */
-	public static function GetIncludedImages($aThemeParametersVariables, $aStylesheetFiles, $sThemeFolderPath)
+	public static function GetIncludedImages($aThemeParametersVariables, $aStylesheetFiles, $sThemeId)
 	{
-		$aCompleteUrls = array();
-		$aToCompleteUrls = array();
-		$aMissingVariables = array();
-		$aFoundVariables = array('version'=>'');
-		$aMap = array(
+		$sTargetThemeFolderPath = static::GetCompiledThemeFolderAbsolutePath($sThemeId);
+
+		$aCompleteUrls = [];
+		$aToCompleteUrls = [];
+		$aMissingVariables = [];
+		$aFoundVariables = ['version'=>''];
+		$aMap = [
 			'aCompleteUrls' => $aCompleteUrls,
 			'aToCompleteUrls' => $aToCompleteUrls,
 			'aMissingVariables' => $aMissingVariables,
 			'aFoundVariables' => $aFoundVariables,
-		);
+		];
 
 		foreach ($aStylesheetFiles as $sStylesheetFile)
 		{
@@ -350,8 +358,9 @@ CSS;
 		}
 
 		$aMap = static::ResolveUncompleteUrlsFromScss($aMap, $aThemeParametersVariables, $aStylesheetFiles);
-		$aImages = array();
-		foreach ($aMap ['aCompleteUrls'] as $sUrl)
+		$aImages = [];
+
+		foreach ($aMap ['aCompleteUrls'] as $sUri => $sUrl)
 		{
 			$sImg = $sUrl;
 			if (preg_match("/(.*)\?/", $sUrl, $aMatches))
@@ -362,19 +371,54 @@ CSS;
 			if (static::HasImageExtension($sImg)
 				&& ! array_key_exists($sImg, $aImages))
 			{
-				if (!is_file($sImg))
+				$sFilePath = realpath($sImg);
+				if ($sFilePath!==false)
 				{
-					$sImg=$sThemeFolderPath.DIRECTORY_SEPARATOR.$sImg;
-					if (!is_file($sImg))
-					{
-						$sImg=preg_replace('#'.DIRECTORY_SEPARATOR.'..#', '', $sImg, 1);
-					}
+					$aImages[$sImg]=$sFilePath;
+					continue;
 				}
-				$aImages[$sImg]=$sImg;
+
+				$sCanonicalPath = static::CanonicalizePath($sTargetThemeFolderPath.DIRECTORY_SEPARATOR.$sImg);
+				$sFilePath=realpath($sCanonicalPath);
+				if ($sFilePath!==false)
+				{
+					$aImages[$sImg]=$sFilePath;
+					continue;
+				}
+
+				SetupLog::Warning("Cannot find $sCanonicalPath ($sImg) during SCSS $sThemeId precompilation");
 			}
 		}
 
 		return array_values($aImages);
+	}
+
+	/**
+	 * Reduce path without using realpath (works only when file exists)
+	 * @param $path
+	 *
+	 * @return string
+	 */
+	public static function CanonicalizePath($path)
+	{
+		$path = explode('/', str_replace('//','/', $path));
+		$stack = array();
+		foreach ($path as $seg) {
+			if ($seg == '..') {
+				// Ignore this segment, remove last segment from stack
+				array_pop($stack);
+				continue;
+			}
+
+			if ($seg == '.') {
+				// Ignore this segment
+				continue;
+			}
+
+			$stack[] = $seg;
+		}
+
+		return implode('/', $stack);
 	}
 
 	/**
@@ -422,7 +466,7 @@ CSS;
 	 */
 	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, $bForceEmptyValueWhenNotFound=false)
 	{
-		$aNewMissingVars = array();
+		$aNewMissingVars = [];
 		if (!empty($aMissingVariables))
 		{
 			foreach ($aMissingVariables as $var)
@@ -464,7 +508,7 @@ CSS;
 			}
 		}
 
-		return array($aNewMissingVars, $aFoundVariables);
+		return [ $aNewMissingVars, $aFoundVariables ];
 	}
 
 	/**
@@ -478,6 +522,12 @@ CSS;
 	{
 		if (!empty($aFoundVariables))
 		{
+			$aFoundVariablesWithEmptyValue = [];
+			foreach ($aFoundVariables as $aFoundVariable => $sValue)
+			{
+				$aFoundVariablesWithEmptyValue[$aFoundVariable] = '';
+			}
+
 			foreach ($aToCompleteUrls as $sUrlTemplate)
 			{
 				unset($aToCompleteUrls[$sUrlTemplate]);
@@ -488,12 +538,21 @@ CSS;
 				}
 				else
 				{
-					$aCompleteUrls[$sUrlTemplate] = $sResolvedUrl;
+					$sUri = static::ResolveUrl($sUrlTemplate, $aFoundVariablesWithEmptyValue);
+					$aExplodedUri = explode('?', $sUri);
+					if (empty($aExplodedUri))
+					{
+						$aCompleteUrls[$sUri] = $sResolvedUrl;
+					}
+					else
+					{
+						$aCompleteUrls[$aExplodedUri[0]] = $sResolvedUrl;
+					}
 				}
 			}
 		}
 
-		return array($aToCompleteUrls, $aCompleteUrls);
+		return [ $aToCompleteUrls, $aCompleteUrls];
 	}
 
 	/**
@@ -505,10 +564,10 @@ CSS;
 	 */
 	public static function GetAllUrlFromScss($aThemeParametersVariables, $sStylesheetFile)
 	{
-		$aCompleteUrls = array();
-		$aToCompleteUrls = array();
-		$aMissingVariables = array();
-		$aFoundVariables = array();
+		$aCompleteUrls = [];
+		$aToCompleteUrls = [];
+		$aMissingVariables = [];
+		$aFoundVariables = [];
 
 		if (is_file($sStylesheetFile))
 		{
@@ -546,12 +605,12 @@ CSS;
 			}
 		}
 
-		return array(
+		return  [
 			'aCompleteUrls' => $aCompleteUrls,
 			'aToCompleteUrls' => $aToCompleteUrls,
 			'aMissingVariables' => $aMissingVariables,
-			'aFoundVariables' => $aFoundVariables,
-		);
+			'aFoundVariables' => $aFoundVariables
+		];
 	}
 
 	/**
@@ -563,8 +622,8 @@ CSS;
 	 */
 	public static function ResolveUrl($sUrlTemplate, $aFoundVariables)
 	{
-		$aPattern=array();
-		$aReplacement=array();
+		$aPattern= [];
+		$aReplacement= [];
 		foreach ($aFoundVariables as $aFoundVariable => $aFoundVariableValue)
 		{
 			//XX + $key + YY
@@ -669,35 +728,25 @@ CSS;
 	}
 
 	/**
-	 * main work is to store compilation timestamp as $version variable
-	 * that way each time there is compilation, images and others will be loaded again on client browser side (apart from cache)
+	 * Clone variable array and include $version with bSetupCompilationTimestamp value
 	 * @param $aThemeParameters
-	 * @param $sWorkingPath
-	 * @param $sThemeFolderPath
+	 * @param $bSetupCompilationTimestamp
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public static function PrepareThemeParameterBeforeSavingAndCompiling($aThemeParameters, $sWorkingPath, $sThemeFolderPath, $bSetupCompilationTimestamp)
+	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp)
 	{
+		$aThemeParametersVariable = [];
 		if (array_key_exists('variables', $aThemeParameters))
 		{
 			if (is_array($aThemeParameters['variables']))
 			{
-				$aThemeParameters['variables']['$version'] = $bSetupCompilationTimestamp;
+				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
 			}
 		}
-		else
-		{
-			$aThemeParameters['variables']['$version'] = $bSetupCompilationTimestamp;
-		}
 
-		if (!is_dir($sThemeFolderPath))
-		{
-			mkdir($sWorkingPath.'/branding/');
-			mkdir($sWorkingPath.'/branding/themes/');
-		}
-
-		return $aThemeParameters;
+		$aThemeParametersVariable['$version'] = $bSetupCompilationTimestamp;
+		return $aThemeParametersVariable;
 	}
 }
 
@@ -710,7 +759,7 @@ class CompileCSSService
 	{
 	}
 
-	public function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array()){
+	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = []){
 		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
 	}
 
