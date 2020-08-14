@@ -40,8 +40,13 @@ class CaseLogEntry extends ActivityEntry
 	const BLOCK_CODE = 'ibo-caselog-entry';
 	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/caselog-entry';
 
+	// Specific constants
+	public const DEFAULT_CASELOG_RANK = 0;
+
 	/** @var string $sAttCode Code of the corresponding case log attribute */
 	protected $sAttCode;
+	/** @var int $iCaseLogRank Rank of its case log in the host panel, can be used for highlight purposes for example */
+	protected $iCaseLogRank;
 
 	/**
 	 * CaseLogEntry constructor.
@@ -59,6 +64,7 @@ class CaseLogEntry extends ActivityEntry
 		parent::__construct($sContent, $oDateTime, $sAuthorLogin, $sId);
 
 		$this->sAttCode = $sAttCode;
+		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);
 		$this->SetOrigin('caselog:'.$this->sAttCode);
 	}
 
@@ -70,5 +76,28 @@ class CaseLogEntry extends ActivityEntry
 	public function GetAttCode()
 	{
 		return $this->sAttCode;
+	}
+
+	/**
+	 * Set the rank of the case log in the host panel
+	 *
+	 * @param int $iCaseLogRank
+	 *
+	 * @return $this
+	 */
+	public function SetCaseLogRank($iCaseLogRank)
+	{
+		$this->iCaseLogRank = $iCaseLogRank;
+		return $this;
+	}
+
+	/**
+	 * Return the rank of the case log in the host panel
+	 *
+	 * @return int
+	 */
+	public function GetCaseLogRank()
+	{
+		return $this->iCaseLogRank;
 	}
 }

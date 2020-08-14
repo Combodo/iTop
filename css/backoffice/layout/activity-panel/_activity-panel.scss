@@ -16,26 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-/* Color palette for caselog visual identification */
-$ibo-activity-panel--caselog-main-color-1: $ibo-color-green-700 !default;
-$ibo-activity-panel--caselog-main-color-2: $ibo-color-pink-700 !default;
-$ibo-activity-panel--caselog-main-color-3: $ibo-color-blue-600 !default;
-$ibo-activity-panel--caselog-main-color-4: $ibo-color-orange-400 !default;
-$ibo-activity-panel--caselog-main-color-5: $ibo-color-cyan-200 !default;
-$ibo-activity-panel--caselog-main-colors: $ibo-activity-panel--caselog-main-color-1, $ibo-activity-panel--caselog-main-color-2, $ibo-activity-panel--caselog-main-color-3, $ibo-activity-panel--caselog-main-color-4, $ibo-activity-panel--caselog-main-color-5 !default;
-
 /* SCSS variables */
 $ibo-activity-panel--width: 460px !default;
 /* TODO: This should be changed when responsive breakpoints are defined and used */
 $ibo-activity-panel--is-expanded--width: 1200px !default;
 $ibo-activity-panel--padding-x: 16px !default;
 $ibo-activity-panel--padding-y: 0 !default;
-
-@for $iIdx from 1 through 5 {
-	.ibo-activity-panel--tab-decoration-for-caselog-#{$iIdx} {
-		background-color: nth($ibo-activity-panel--caselog-main-colors, $iIdx);
-	}
-}
 
 /* - Header */
 $ibo-activity-panel--header--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
@@ -45,6 +31,7 @@ $ibo-activity-panel--size-toggler--color: $ibo-color-grey-600 !default;
 $ibo-activity-panel--size-toggler--on-hover--color: $ibo-color-grey-800 !default;
 
 /* - Tab */
+$ibo-activity-panel--tab--caselog-highlight-colors: $ibo-caselog-highlight-colors !default;
 $ibo-activity-panel--tab--is-active--background-color: $ibo-color-grey-200 !default;
 
 /* - Tab title */
@@ -113,6 +100,14 @@ $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 		}
 		.ibo-activity-panel--tab-toolbar{
 			display: flex;
+		}
+	}
+}
+/* - Specific decoration regarding the case log rank */
+@for $iIdx from 1 through 5 {
+	.ibo-activity-panel--tab-for-caselog-#{$iIdx}{
+		.ibo-activity-panel--tab-decoration{
+			background-color: nth($ibo-activity-panel--tab--caselog-highlight-colors, $iIdx);
 		}
 	}
 }

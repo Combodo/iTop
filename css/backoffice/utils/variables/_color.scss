@@ -190,15 +190,52 @@ $ibo-color-pink-900: hsla(318, 51%, 29%, 1) !default;
 }
 
 /* Semantic palettes */
-$ibo-color-primary-100: hsla(40, 100%, 97.1%, 1) !default;
-$ibo-color-primary-200: hsla(39, 96.4%, 89%, 1) !default;
-$ibo-color-primary-300: hsla(38, 93.2%, 76.9%, 1) !default;
-$ibo-color-primary-400: hsla(33, 89.9%, 64.9%, 1) !default;
-$ibo-color-primary-500: hsla(28, 82.9%, 51.8%, 1) !default;
-$ibo-color-primary-600: hsla(24, 74.7%, 49.6%, 1) !default;
-$ibo-color-primary-700: hsla(20, 70.7%, 44.1%, 1) !default;
-$ibo-color-primary-800: hsla(16, 65.1%, 37.1%, 1) !default;
-$ibo-color-primary-900: hsla(14, 60.8%, 30%, 1) !default;
+$ibo-color-primary-100: $ibo-color-orange-100 !default;
+$ibo-color-primary-200: $ibo-color-orange-200 !default;
+$ibo-color-primary-300: $ibo-color-orange-300 !default;
+$ibo-color-primary-400: $ibo-color-orange-400 !default;
+$ibo-color-primary-500: $ibo-color-orange-500 !default;
+$ibo-color-primary-600: $ibo-color-orange-600 !default;
+$ibo-color-primary-700: $ibo-color-orange-700 !default;
+$ibo-color-primary-800: $ibo-color-orange-800 !default;
+$ibo-color-primary-900: $ibo-color-orange-900 !default;
+
+$ibo-color-success-100: $ibo-color-green-100 !default;
+$ibo-color-success-200: $ibo-color-green-200 !default;
+$ibo-color-success-300: $ibo-color-green-300 !default;
+$ibo-color-success-400: $ibo-color-green-400 !default;
+$ibo-color-success-500: $ibo-color-green-500 !default;
+$ibo-color-success-600: $ibo-color-green-600 !default;
+$ibo-color-success-700: $ibo-color-green-700 !default;
+$ibo-color-success-800: $ibo-color-green-800 !default;
+$ibo-color-success-900: $ibo-color-green-900 !default;
+
+$ibo-color-warning-100: $ibo-color-orange-100 !default;
+$ibo-color-warning-200: $ibo-color-orange-200 !default;
+$ibo-color-warning-300: $ibo-color-orange-300 !default;
+$ibo-color-warning-400: $ibo-color-orange-400 !default;
+$ibo-color-warning-500: $ibo-color-orange-500 !default;
+$ibo-color-warning-600: $ibo-color-orange-600 !default;
+$ibo-color-warning-700: $ibo-color-orange-700 !default;
+$ibo-color-warning-800: $ibo-color-orange-800 !default;
+$ibo-color-warning-900: $ibo-color-orange-900 !default;
+
+$ibo-color-danger-100: $ibo-color-red-100 !default;
+$ibo-color-danger-200: $ibo-color-red-200 !default;
+$ibo-color-danger-300: $ibo-color-red-300 !default;
+$ibo-color-danger-400: $ibo-color-red-400 !default;
+$ibo-color-danger-500: $ibo-color-red-500 !default;
+$ibo-color-danger-600: $ibo-color-red-600 !default;
+$ibo-color-danger-700: $ibo-color-red-700 !default;
+$ibo-color-danger-800: $ibo-color-red-800 !default;
+$ibo-color-danger-900: $ibo-color-red-900 !default;
+
+$ibo-caselog-highlight-color-1: $ibo-color-green-700!default;
+$ibo-caselog-highlight-color-2: $ibo-color-pink-700 !default;
+$ibo-caselog-highlight-color-3: $ibo-color-blue-600 !default;
+$ibo-caselog-highlight-color-4: $ibo-color-orange-400 !default;
+$ibo-caselog-highlight-color-5: $ibo-color-cyan-200 !default;
+$ibo-caselog-highlight-colors: $ibo-caselog-highlight-color-1, $ibo-caselog-highlight-color-2, $ibo-caselog-highlight-color-3, $ibo-caselog-highlight-color-4, $ibo-caselog-highlight-color-5 !default;
 
 :root{
 	--ibo-color-primary-100: #{$ibo-color-primary-100};
@@ -210,4 +247,40 @@ $ibo-color-primary-900: hsla(14, 60.8%, 30%, 1) !default;
 	--ibo-color-primary-700: #{$ibo-color-primary-700};
 	--ibo-color-primary-800: #{$ibo-color-primary-800};
 	--ibo-color-primary-900: #{$ibo-color-primary-900};
+
+	--ibo-color-success-100: #{$ibo-color-success-100};
+	--ibo-color-success-200: #{$ibo-color-success-200};
+	--ibo-color-success-300: #{$ibo-color-success-300};
+	--ibo-color-success-400: #{$ibo-color-success-400};
+	--ibo-color-success-500: #{$ibo-color-success-500};
+	--ibo-color-success-600: #{$ibo-color-success-600};
+	--ibo-color-success-700: #{$ibo-color-success-700};
+	--ibo-color-success-800: #{$ibo-color-success-800};
+	--ibo-color-success-900: #{$ibo-color-success-900};
+
+	--ibo-color-warning-100: #{$ibo-color-warning-100};
+	--ibo-color-warning-200: #{$ibo-color-warning-200};
+	--ibo-color-warning-300: #{$ibo-color-warning-300};
+	--ibo-color-warning-400: #{$ibo-color-warning-400};
+	--ibo-color-warning-500: #{$ibo-color-warning-500};
+	--ibo-color-warning-600: #{$ibo-color-warning-600};
+	--ibo-color-warning-700: #{$ibo-color-warning-700};
+	--ibo-color-warning-800: #{$ibo-color-warning-800};
+	--ibo-color-warning-900: #{$ibo-color-warning-900};
+
+	--ibo-color-danger-100: #{$ibo-color-danger-100};
+	--ibo-color-danger-200: #{$ibo-color-danger-200};
+	--ibo-color-danger-300: #{$ibo-color-danger-300};
+	--ibo-color-danger-400: #{$ibo-color-danger-400};
+	--ibo-color-danger-500: #{$ibo-color-danger-500};
+	--ibo-color-danger-600: #{$ibo-color-danger-600};
+	--ibo-color-danger-700: #{$ibo-color-danger-700};
+	--ibo-color-danger-800: #{$ibo-color-danger-800};
+	--ibo-color-danger-900: #{$ibo-color-danger-900};
+
+	--ibo-caselog-color-highlight-1: #{$ibo-caselog-highlight-color-1};
+	--ibo-caselog-color-highlight-2: #{$ibo-caselog-highlight-color-2};
+	--ibo-caselog-color-highlight-3: #{$ibo-caselog-highlight-color-3};
+	--ibo-caselog-color-highlight-4: #{$ibo-caselog-highlight-color-4};
+	--ibo-caselog-color-highlight-5: #{$ibo-caselog-highlight-color-5};
 }

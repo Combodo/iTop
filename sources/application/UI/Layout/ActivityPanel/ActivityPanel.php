@@ -238,6 +238,9 @@ class ActivityPanel extends UIBlock
 				$this->AddCaseLogTab($sCaseLogAttCode);
 			}
 
+			// Add case log rank to the entry
+			$oEntry->SetCaseLogRank($this->aCaseLogs[$sCaseLogAttCode]['rank']);
+
 			// Update metadata
 			// - Message count
 			$this->aCaseLogs[$sCaseLogAttCode]['total_messages_count']++;
@@ -334,6 +337,7 @@ class ActivityPanel extends UIBlock
 		if(!array_key_exists($sAttCode, $this->aCaseLogs))
 		{
 			$this->aCaseLogs[$sAttCode] = [
+				'rank' => count($this->aCaseLogs) + 1,
 				'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
 				'total_messages_count' => 0,
 				'authors' => [],
