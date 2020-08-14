@@ -235,7 +235,7 @@ $ibo-caselog-highlight-color-2: $ibo-color-pink-700 !default;
 $ibo-caselog-highlight-color-3: $ibo-color-blue-600 !default;
 $ibo-caselog-highlight-color-4: $ibo-color-orange-400 !default;
 $ibo-caselog-highlight-color-5: $ibo-color-cyan-200 !default;
-$ibo-caselog-highlight-colors: $ibo-caselog-highlight-color-1, $ibo-caselog-highlight-color-2, $ibo-caselog-highlight-color-3, $ibo-caselog-highlight-color-4, $ibo-caselog-highlight-color-5 !default;
+$ibo-caselog-highlight-colors: ($ibo-caselog-highlight-color-1, $ibo-caselog-highlight-color-2, $ibo-caselog-highlight-color-3, $ibo-caselog-highlight-color-4, $ibo-caselog-highlight-color-5) !default;
 
 :root{
 	--ibo-color-primary-100: #{$ibo-color-primary-100};

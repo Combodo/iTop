@@ -104,10 +104,10 @@ $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 	}
 }
 /* - Specific decoration regarding the case log rank */
-@for $iIdx from 1 through 5 {
-	.ibo-activity-panel--tab-for-caselog-#{$iIdx}{
+@each $sColor in $ibo-activity-panel--tab--caselog-highlight-colors {
+	.ibo-activity-panel--tab-for-caselog-#{index($ibo-activity-panel--tab--caselog-highlight-colors, $sColor)}{
 		.ibo-activity-panel--tab-decoration{
-			background-color: nth($ibo-activity-panel--tab--caselog-highlight-colors, $iIdx);
+			background-color: $sColor;
 		}
 	}
 }

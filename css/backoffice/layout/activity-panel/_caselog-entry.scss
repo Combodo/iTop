@@ -22,27 +22,32 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 
 /* Main information */
 .ibo-caselog-entry{
+	/* Highlight color */
 	.ibo-activity-entry--main-information::before{
 		content: "";
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		left: 0;
 		width: $ibo-caselog-entry--main-information--decoration--width;
-		border-top-left-radius: $ibo-activity-entry--main-information--border-radius;
-		border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius;
 	}
-	&:last-child{
+	/* - User specific (current or not) */
+	&:not(.ibo-is-current-user){
 		.ibo-activity-entry--main-information::before{
-			border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+			left: 0;
+			border-top-left-radius: $ibo-activity-entry--main-information--border-radius;
+			border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius;
+		}
+		&:last-child{
+			.ibo-activity-entry--main-information::before{
+				border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+			}
 		}
 	}
-
 	&.ibo-is-current-user{
 		.ibo-activity-entry--main-information::before{
-			left: initial;
 			right: 0;
-			border-radius: 0 $ibo-activity-entry--main-information--border-radius $ibo-activity-entry--main-information--border-radius 0;
+			border-top-right-radius: $ibo-activity-entry--main-information--border-radius;
+			border-bottom-right-radius: $ibo-activity-entry--main-information--border-radius;
 		}
 		&:last-child{
 			.ibo-activity-entry--main-information::before{
@@ -50,12 +55,25 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 			}
 		}
 	}
+	/* - Closed entry placeholder specific */
+	&.ibo-is-closed{
+		&.ibo-is-current-user{
+			.ibo-activity-entry--main-information::after{
+				margin-left: $ibo-caselog-entry--main-information--decoration--width;
+			}
+		}
+		&:not(.ibo-is-current-user){
+			.ibo-activity-entry--main-information::after{
+				margin-right: $ibo-caselog-entry--main-information--decoration--width;
+			}
+		}
+	}
 }
 /* - Specific decoration regarding the case log rank */
-@for $iIdx from 1 through 5 {
-	.ibo-caselog-entry--entry-for-caselog-#{$iIdx}{
+@each $sColor in $ibo-caselog-entry--highlight-colors {
+	.ibo-caselog-entry--entry-for-caselog-#{index($ibo-caselog-entry--highlight-colors, $sColor)}{
 		.ibo-activity-entry--main-information::before{
-			background-color: nth($ibo-caselog-entry--highlight-colors, $iIdx);
+			background-color: $sColor;
 		}
 	}
 }

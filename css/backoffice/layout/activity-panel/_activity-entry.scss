@@ -165,6 +165,11 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 	padding: $ibo-activity-entry--main-information--padding-y $ibo-activity-entry--main-information--padding-x;
 	background-color: $ibo-activity-entry--main-information--background-color;
 	border-radius: $ibo-activity-entry--main-information--border-radius;
+
+	/* Avoid pre (code snippets) to overflow outside the entry */
+	pre{
+		white-space: pre-wrap;
+	}
 }
 .ibo-activity-entry--sub-information{
 	margin-top: $ibo-activity-entry--sub-information--margin-top;
