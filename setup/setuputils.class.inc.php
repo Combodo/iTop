@@ -92,20 +92,6 @@ class CheckResult {
  */
 class SetupUtils
 {
-	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
-	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
-
-	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = ''; //
-	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
-	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
-
-	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
-	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
-
 	/**
 	 * Check configuration parameters, for example :
 	 * <ul>
@@ -312,9 +298,9 @@ class SetupUtils
 			// Check that the limit will allow us to load the data
 			//
 			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT)) {
+			if (!utils::IsMemoryLimitOk($iMemoryLimit, SetupConst::MIN_MEMORY_LIMIT)) {
 				$aResult[] = new CheckResult(CheckResult::ERROR,
-					"memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
+					"memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".SetupConst::MIN_MEMORY_LIMIT.".");
 			}
 			else {
 				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $iMemoryLimit, ok.");
@@ -335,9 +321,9 @@ class SetupUtils
 			$aOk[] = "Suhosin extension detected (version $sSuhosinVersion).";
 
 			$iGetMaxValueLength = ini_get('suhosin.get.max_value_length');
-			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH) {
+			if ($iGetMaxValueLength < SetupConst::SUHOSIN_GET_MAX_VALUE_LENGTH) {
 				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
+					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".SetupConst::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
 			}
 			else {
 				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
@@ -442,25 +428,25 @@ class SetupUtils
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
-		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>=')) {
+		if (version_compare($sPhpVersion, SetupConst::PHP_MIN_VERSION, '>=')) {
 			$aResult[] = new CheckResult(CheckResult::INFO,
-				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
+				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".SetupConst::PHP_MIN_VERSION.")");
 
 
-			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			$sPhpNextMinVersion = SetupConst::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
 			if (!empty($sPhpNextMinVersion)) {
-				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
+				if (version_compare($sPhpVersion, SetupConst::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".SetupConst::PHP_NEXT_MIN_VERSION.")");
 				}
 				else
 				{
 					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".SetupConst::PHP_NEXT_MIN_VERSION.")");
 				}
 			}
 
-			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>='))
+			if (version_compare($sPhpVersion, SetupConst::PHP_NOT_VALIDATED_VERSION, '>='))
 			{
 				$aResult[] = new CheckResult(CheckResult::WARNING,
 					"The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues.");
@@ -469,7 +455,7 @@ class SetupUtils
 		else
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
+				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".SetupConst::PHP_MIN_VERSION.")");
 		}
 	}
 
@@ -1327,35 +1313,35 @@ EOF
 		$sDBVersion = $oDBSource->GetDBVersion();
 
 		if (
-			!empty(self::MYSQL_NOT_VALIDATED_VERSION)
+			!empty(SetupConst::MYSQL_NOT_VALIDATED_VERSION)
 			&& ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)
-			&& version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=')
+			&& version_compare($sDBVersion, SetupConst::MYSQL_NOT_VALIDATED_VERSION, '>=')
 		)
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
+				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".SetupConst::MYSQL_NOT_VALIDATED_VERSION." and above.");
 
 			return false;
 		}
 
 		$bRet = false;
-		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
+		if (version_compare($sDBVersion, SetupConst::MYSQL_MIN_VERSION, '>='))
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
+				"Current MySQL version ($sDBVersion), greater than minimum required version (".SetupConst::MYSQL_MIN_VERSION.")");
 
-			$sMySqlNextMinVersion = self::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			$sMySqlNextMinVersion = SetupConst::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
 			if (!empty($sMySqlNextMinVersion))
 			{
-				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
+				if (version_compare($sDBVersion, SetupConst::MYSQL_NEXT_MIN_VERSION, '>='))
 				{
 					$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-						"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")");
+						"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".SetupConst::MYSQL_NEXT_MIN_VERSION.")");
 				}
 				else
 				{
 					$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
-						"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION);
+						"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".SetupConst::MYSQL_NEXT_MIN_VERSION);
 				}
 			}
 
@@ -1364,7 +1350,7 @@ EOF
 		else
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-				"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION);
+				"Error: Current MySQL version is $sDBVersion, minimum required version is ".SetupConst::MYSQL_MIN_VERSION);
 			$bRet = false;
 		}
 
