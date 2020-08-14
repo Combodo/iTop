@@ -150,7 +150,7 @@ class LoginWebPage extends NiceWebPage
 			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?t='.utils::GetCacheBusterTimestamp();
 		}
 		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES,
-				self::PAGES_CHARSET)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+				WebPageLight::PAGES_CHARSET)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}
 
 	public function DisplayLoginForm($bFailedLogin = false)
@@ -704,7 +704,7 @@ class LoginWebPage extends NiceWebPage
 	{
 		header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
 		header('HTTP/1.0 401 Unauthorized');
-		header('Content-type: text/html; charset='.self::PAGES_CHARSET);
+		header('Content-type: text/html; charset='.WebPageLight::PAGES_CHARSET);
 		// Note: displayed when the user will click on Cancel
 		echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
 		exit;

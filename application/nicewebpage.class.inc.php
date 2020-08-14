@@ -227,7 +227,7 @@ EOF
 		{
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
 			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".htmlentities($sValue,
-					ENT_QUOTES, self::PAGES_CHARSET)."</option>");
+					ENT_QUOTES, WebPageLight::PAGES_CHARSET)."</option>");
 		}
 		$this->add("</select>");
 	}

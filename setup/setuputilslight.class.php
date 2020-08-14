@@ -90,6 +90,16 @@ class CheckResult
 }
 
 
+class WebPageLight
+{
+	/**
+	 * @since 2.7.0 N°2529
+	 * @since 2.8.0 N°3253 moved from WebPage to new WebPageLight class
+	 */
+	public const PAGES_CHARSET = 'utf-8';
+}
+
+
 /**
  * Contains all the code necessary for a PHP version check. Should
  *

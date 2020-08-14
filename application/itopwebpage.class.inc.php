@@ -70,7 +70,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_sMenu = "";
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
-		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
+		$this->add_header("Content-type: text/html; charset=".WebPageLight::PAGES_CHARSET);
 		$this->add_header("Cache-control: no-cache");
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
@@ -986,8 +986,8 @@ EOF
 				$sNewEntry = json_encode(array(
 					'id' => $this->sBreadCrumbEntryId,
 					'url' => $this->sBreadCrumbEntryUrl,
-					'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, self::PAGES_CHARSET),
-					'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, self::PAGES_CHARSET),
+					'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, WebPageLight::PAGES_CHARSET),
+					'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, WebPageLight::PAGES_CHARSET),
 					'icon' => $this->sBreadCrumbEntryIcon,
 				));
 			}
@@ -1020,7 +1020,7 @@ EOF
 		$sHtml .= "<head>\n";
 		// Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
 		$sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
-		$sPageCharset = self::PAGES_CHARSET;
+		$sPageCharset = WebPageLight::PAGES_CHARSET;
 		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=$sPageCharset\" />\n";
 		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, $sPageCharset)."</title>\n";
 		$sHtml .= $this->get_base_tag();
@@ -1149,10 +1149,10 @@ EOF
 					'<img src="../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
 			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
 			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES,
-					self::PAGES_CHARSET).'</button>';
+					WebPageLight::PAGES_CHARSET).'</button>';
 			$sHtml .= '&nbsp;';
 			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES,
-					self::PAGES_CHARSET).'</button>';
+					WebPageLight::PAGES_CHARSET).'</button>';
 			$sHtml .= '&nbsp;';
 
 			$sDefaultResolution = '27.7cm';
@@ -1190,7 +1190,7 @@ EOF;
 		}
 
 		// Render the text of the global search form
-		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
+		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, WebPageLight::PAGES_CHARSET);
 		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
 		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
 
@@ -1309,7 +1309,8 @@ EOF;
 			{
 				$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
 				$sHtmlMessage = $aMessage['message'];
-				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, self::PAGES_CHARSET).'"' : '';
+				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES,
+						WebPageLight::PAGES_CHARSET).'"' : '';
 				$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
 			}
 
@@ -1341,9 +1342,9 @@ EOF;
 			$sHtml .= ' <div class="ui-layout-north">';
 			$sHtml .= ' <div id="header-logo">';
 			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'
-				.htmlentities($sIconUrl, ENT_QUOTES, self::PAGES_CHARSET)
+				.htmlentities($sIconUrl, ENT_QUOTES, WebPageLight::PAGES_CHARSET)
 				.'"><img src="'.$sDisplayIcon.'" title="'
-				.htmlentities($sVersionString, ENT_QUOTES, self::PAGES_CHARSET)
+				.htmlentities($sVersionString, ENT_QUOTES, WebPageLight::PAGES_CHARSET)
 				.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
 			$sHtml .= ' </div>';
 			$sHtml .= ' <div class="header-menu">';

@@ -97,10 +97,6 @@ Interface Page
  */
 class WebPage implements Page
 {
-	/**
-	 * @since 2.7.0 N°2529
-	 */
-	const PAGES_CHARSET = 'utf-8';
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
