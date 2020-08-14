@@ -149,6 +149,7 @@ return array(
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => $baseDir . '/sources/application/TwigBase/Twig/Extension.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => $baseDir . '/sources/application/TwigBase/Twig/TwigHelper.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Breadcrumbs\\Breadcrumbs' => $baseDir . '/sources/application/UI/Component/Breadcrumbs/Breadcrumbs.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\Button\\Button\\Button' => $baseDir . '/sources/application/UI/Component/Button/Button.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearch' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearch.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchFactory' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearchFactory.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchHelper' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearchHelper.php',
