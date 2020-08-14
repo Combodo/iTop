@@ -73,7 +73,7 @@ class Button extends UIBlock
 	 * @param string $sJsCode
 	 * @param string $sOnClickJsCode
 	 */
-	public function __construct($sId, $sLabel, $sName, $sValue, $sType = '', $sTooltip = '', $sIconClass = '', $sActionType = 'primary', $sColor = 'secondary', $sJsCode = '', $sOnClickJsCode = '')
+	public function __construct($sId, $sLabel, $sName, $sValue, $sType = '', $sTooltip = '', $sIconClass = '', $sActionType = 'regular', $sColor = 'secondary', $sJsCode = '', $sOnClickJsCode = '')
 	{
 		$this->sLabel = $sLabel;
 		$this->sName = $sName;
