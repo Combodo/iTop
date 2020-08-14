@@ -59,12 +59,12 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 	&.ibo-is-closed{
 		&.ibo-is-current-user{
 			.ibo-activity-entry--main-information::after{
-				margin-left: $ibo-caselog-entry--main-information--decoration--width;
+				margin-right: $ibo-caselog-entry--main-information--decoration--width;
 			}
 		}
 		&:not(.ibo-is-current-user){
 			.ibo-activity-entry--main-information::after{
-				margin-right: $ibo-caselog-entry--main-information--decoration--width;
+				margin-left: $ibo-caselog-entry--main-information--decoration--width;
 			}
 		}
 	}
