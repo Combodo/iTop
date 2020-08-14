@@ -930,6 +930,7 @@ class RuntimeDashboard extends Dashboard
 				$sReloadURL = $this->GetReloadURL();
 				$oAppContext = new ApplicationContext();
 				$sContext=$oAppContext->GetForPostParams();
+				//$sContext is named "c"  because it use the existing code for context parameters c[org_id] and c[menu]
 				$oPage->add_script(
 <<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')

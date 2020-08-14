@@ -201,6 +201,7 @@ class ApplicationContext
 		return implode("&", $aParams);
 	}
 	/**
+	 * @since 2.8.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
 	 * Returns the params as c[menu]:..., c[org_id]:....
 	 * @return string The params
 	 */
