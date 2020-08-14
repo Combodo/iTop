@@ -30,8 +30,8 @@ require_once('dbobjectiterator.php');
 
 class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 {
-	const LINK_ALIAS = 'Link';
-	const REMOTE_ALIAS = 'Remote';
+	public const LINK_ALIAS = 'Link';
+	public const REMOTE_ALIAS = 'Remote';
 
 	protected $sHostClass; // subclass of DBObject
 	protected $sAttCode; // xxxxxx_list
