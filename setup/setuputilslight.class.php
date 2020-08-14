@@ -18,6 +18,14 @@
  */
 
 
+define('ITOP_APPLICATION', 'iTop');
+define('ITOP_APPLICATION_SHORT', 'iTop');
+define('ITOP_VERSION', '2.8.0-dev');
+define('ITOP_REVISION', 'svn');
+define('ITOP_BUILD_DATE', '$WCNOW$');
+define('ITOP_VERSION_FULL', ITOP_VERSION.'-'.ITOP_REVISION);
+
+
 require_once APPROOT.'setup/setupconst.class.php';
 
 
