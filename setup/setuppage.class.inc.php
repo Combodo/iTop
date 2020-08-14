@@ -20,6 +20,7 @@
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+require_once(APPROOT.'setup/setuputilslight.class.php');
 require_once(APPROOT.'core/log.class.inc.php');
 
 SetupLog::Enable(APPROOT.'/log/setup.log');
@@ -144,9 +145,12 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png';
-		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" alt=\" \" src=\"{$sLogo}?t=".utils::GetCacheBusterTimestamp()."\"></a>&nbsp;".htmlentities($this->s_title,
-				ENT_QUOTES, WebPageLight::PAGES_CHARSET)."</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
+		$this->s_content = WebPageLight::EmbedSetupPageContent(
+			utils::GetAbsoluteUrlAppRoot(),
+			$this->s_content,
+			$this->s_title,
+			utils::GetCacheBusterTimestamp()
+		);
 
 		return parent::output();
 	}

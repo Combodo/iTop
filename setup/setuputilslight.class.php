@@ -18,10 +18,48 @@
  */
 
 
+require_once APPROOT.'setup/setupconst.class.php';
+
+
 /**
  * ⚠ This file MUST contain only PHP code compatible with 5.4
  * It is used for the setup PHP version check and shouldn't create PHP error !
+ *
+ * @since 2.8.0 N°3253 extract PHP check version in a dedicated page
  */
+class WebPageLight
+{
+	/**
+	 * @since 2.7.0 N°2529
+	 * @since 2.8.0 N°3253 moved from WebPage to new WebPageLight class
+	 */
+	public const PAGES_CHARSET = 'utf-8';
+
+	/**
+	 * @param string $sAbsolutePathRoot see {@link utils::GetAbsoluteUrlAppRoot()}
+	 * @param string $sPageContent
+	 * @param string $sPageTitle
+	 * @param string $sTimeStamp see {@link utils::GetCacheBusterTimestamp()}
+	 *
+	 * @return string content inserted in the Setup page HTML layout
+	 *
+	 * @since 2.8.0 N°3253 extract this method so that we can use in setup/index.php
+	 */
+	public static function EmbedSetupPageContent($sAbsolutePathRoot, $sPageContent, $sPageTitle, $sTimeStamp)
+	{
+		$sLogo = $sAbsolutePathRoot.'/images/itop-logo.png';
+		$sTitleEncoded = htmlentities($sPageTitle, ENT_QUOTES, static::PAGES_CHARSET);
+
+		return <<<HTML
+<div id="header">
+<h1><a href="http://www.combodo.com/itop" target="_blank"><img title="iTop by Combodo" alt=" " src="{$sLogo}?t={$sTimeStamp}"></a>&nbsp;{$sTitleEncoded}</h1>
+</div>
+<div id="setup">{$sPageContent}</div>
+HTML;
+	}
+}
+
+
 class CheckResult
 {
 	// Severity levels
@@ -87,16 +125,6 @@ class CheckResult
 			return $value->__toString();
 		}, $aResults);
 	}
-}
-
-
-class WebPageLight
-{
-	/**
-	 * @since 2.7.0 N°2529
-	 * @since 2.8.0 N°3253 moved from WebPage to new WebPageLight class
-	 */
-	public const PAGES_CHARSET = 'utf-8';
 }
 
 
