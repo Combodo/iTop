@@ -232,18 +232,7 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -411,18 +400,7 @@
         </reconciliation>
       </properties>
       <fields/>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -911,18 +889,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
   </classes>
   <menus>

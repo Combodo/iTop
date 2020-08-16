@@ -2034,8 +2034,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Class:UserRequest/Attribute:resolution_date+' => '',
  'Class:UserRequest/Attribute:last_pending_date' => 'Posledný dátum pozdržania',
  'Class:UserRequest/Attribute:last_pending_date+' => '',
- 'Class:UserRequest/Attribute:cumulatedpending' => 'Kumulatívne pozdržané',
- 'Class:UserRequest/Attribute:cumulatedpending+' => '',
  'Class:UserRequest/Attribute:tto' => 'TTO',
  'Class:UserRequest/Attribute:tto+' => '',
  'Class:UserRequest/Attribute:ttr' => 'TTR',
@@ -2646,7 +2644,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Server:moreinfo' => 'Viac informácií',
  'Server:otherinfo' => 'Iné informácie',
  'Person:info' => 'Všeobecné informácie',
- 'Person:notifiy' => 'Upozornenie',
  'Class:Subnet/Tab:IPUsage' => 'Využívanosť IP adries',
  'Class:Subnet/Tab:IPUsage-explain' => 'Rozhrania majúce IP adresu v rozsahu: <em>%1$s</em> do <em>%2$s</em>',
  'Class:Subnet/Tab:FreeIPs' => 'Voľné IP adresy',
@@ -2924,4 +2921,40 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Portal:SelectLanguage' => 'Zmeň svoj jazyk',
  'Portal:LanguageChangedTo_Lang' => 'Jazyk zmenený na',
  'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

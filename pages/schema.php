@@ -247,32 +247,31 @@ function DisplayClassesList($oPage, $sContext)
 	$oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fas fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
-		<<<EOF
-        $("#search-model").result(function(e,f,g,h){
-		   	//$(this).trigger(jQuery.Event('input'));
+		<<<JS
+	function getListClass (request, response,aListe) {
+        var results = $.ui.autocomplete.filter(aListe, request.term);               
+        var top_suggestions = $.grep(results, function (n,i) {
+                                 return (n.label.substr(0, request.term.length).toLowerCase() == request.term.toLowerCase());
+                              });
+        response($.merge(top_suggestions,results));
+    }
+	 $("#search-model").autocomplete({
+	    source: function (request, response) {
+			getListClass (request, response,autocompleteClassLabelAndCode);  
+        },
+		select: function( event, ui ) {
 		   	var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
-			var code = '';
-		   	switch($("#displaySelector").val()){
-				case 'labelandcode':
-					var id = autocompleteClassLabelAndCode.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-				case 'label':
-					var id = autocompleteClassLabel.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-				case 'code':
-					var id = autocompleteClassCode.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-			}
-			if(code != '')
-				window.location = preUrl + code + sufUrl;
-		});
+			window.location = preUrl + ui.item.value + sufUrl;
+		},
+		focus: true
+	 })
+	.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		  var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+		  var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+		  return $( "<li>" ).append( val ).appendTo( ul );
+	 };
+
 		$("#search-model").on('input', function() {
 			var search_result = [];
 			$("#ClassesList").find("li").each(function(){
@@ -293,11 +292,14 @@ function DisplayClassesList($oPage, $sContext)
 			$("#search-model").val("");
 			$("#search-model").trigger('input');
 		});
-EOF
+JS
 
 	);
 	// Get all the "root" classes for display
 	$aRootClasses = array();
+	$aClassLabelAndCodeAsJSON = [];
+	$aClassLabelAsJSON = array();
+	$aClassCodeAsJSON = array();
 	foreach (MetaModel::GetClasses() as $sClassName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
@@ -312,20 +314,19 @@ EOF
 
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
-		$sClassLabelAndCodeAsJSON = json_encode("$sLabelClassName ($sClassName)");
-		$sClassLabelAsJSON = json_encode($sLabelClassName);
-		$sClassCodeAsJSON = json_encode($sClassName);
-		// - Push to autocomplete
-		$oPage->add_script(
-			<<<EOF
-	autocompleteClassLabelAndCode.push($sClassLabelAndCodeAsJSON);
-	autocompleteClassLabel.push($sClassLabelAsJSON);
-	autocompleteClassCode.push($sClassCodeAsJSON);
-EOF
-		);
+		array_push ($aClassLabelAndCodeAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName ($sClassName)"]);
+		array_push ($aClassLabelAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName"]);
+		array_push ($aClassCodeAsJSON, ["value"=>$sClassName,"label"=>"$sClassName"]);
 	}
+	usort($aClassLabelAndCodeAsJSON, "Label_sort");
+	// - Push to autocomplete
+	$oPage->add_script("autocompleteClassLabelAndCode=".json_encode($aClassLabelAndCodeAsJSON)."; console.warn(autocompleteClassLabelAndCode);");
+	$oPage->add_script("autocompleteClassLabel=".json_encode($aClassLabelAsJSON).";");
+	$oPage->add_script("autocompleteClassCode=".json_encode($aClassCodeAsJSON).";");
+
 	// Sort them alphabetically on their display name
-	asort($aRootClasses);
+	asort($aClassLabelAndCodeAsJSON);
+	//usort($aRootClasses,"Label_sort");
 	foreach ($aRootClasses as $sClassName => $sDisplayName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
@@ -343,6 +344,9 @@ EOF
 	$oPage->add_ready_script('$("#ClassesList").treeview();');
 }
 
+function Label_sort($building_a, $building_b) {
+	return strnatcmp ($building_a["label"], $building_b["label"]);
+}
 
 /**
  * Helper for the list of classes related to the given class in a graphical way
@@ -1055,19 +1059,28 @@ function DisplayGranularityDisplayer($oPage)
 					$('.attrCode').show();
 					$('.attrLabel').show();
 					$('.parenthesis').show();
-					$("#search-model").autocomplete(autocompleteClassLabelAndCode, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassLabelAndCode);  
+				        }});
 				break;
 				case 'label':
 					$('.attrCode').hide();
 					$('.attrLabel').show();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassLabel, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({		 
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassLabel);  
+				        }});
 				break;
 				case 'code':
 					$('.attrCode').show();
 					$('.attrLabel').hide();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassCode, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({			 
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassCode);  
+				        }});
 				break;
 			}
 			SetUserPreference("datamodel_viewer_display_granularity", $('#displaySelector').val(), true);
@@ -1144,13 +1157,28 @@ switch ($operation)
 		if ($sClass != '')
 		{
 			$oPage->add_ready_script(
-				<<<EOF
+				<<<JS
 $('#search-model').val('$sClass');
-$('#search-model').trigger("input");
+var search_result = [];
+$("#ClassesList").find("li").each(function(){
+	if( ! ~$(this).children("a").text().toLowerCase().indexOf('$sClass'.toLowerCase())){
+		$(this).hide();
+	}
+	else{
+		search_result.push($(this));
+	}
+});
+search_result.forEach(function(e){
+	e.show();
+	e.find('ul > li').show();
+	e.parents().show();
+});
+//$('#search-model').trigger("input");
 
-EOF
+JS
 			);
 			DisplayClassDetails($oPage, $sClass, $sContext);
+
 			break;
 		}
 	default:

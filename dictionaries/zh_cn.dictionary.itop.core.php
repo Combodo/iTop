@@ -1050,3 +1050,39 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
  'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AbstractResource' => '抽象资源',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceAdminMenu' => '资源管理菜单',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '',
+));

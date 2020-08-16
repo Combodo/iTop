@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-cas/2.7.0',
+	'authent-cas/2.8.0',
 	array(
 		// Identification
 		//

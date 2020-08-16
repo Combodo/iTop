@@ -255,6 +255,7 @@ class CLILikeWebPage extends WebPage
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {
@@ -533,9 +534,9 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null)
+					if ($value === null) // Source CSV: "<NULL>"
 					{
-						$aValues[] = 'NULL';
+						$aValues[] = null;
 					}
 					elseif ($aIsDateToTransform[$iCol] !== false)
 					{

@@ -26,7 +26,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Database integrity',
 	'DBTools:Class' => 'Class',
-	'DBTools:Title' => 'Database Maintenance Tools',
+	'DBTools:Title' => 'Database integrity check',
 	'DBTools:ErrorsFound' => 'Errors Found',
 	'DBTools:Error' => 'Error',
 	'DBTools:Count' => 'Count',

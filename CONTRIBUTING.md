@@ -60,7 +60,7 @@ For example, if no version is currently prepared for shipping we could have:
 In this example, when 2.8.0-beta is shipped that will become:
 
 - `develop`: future 2.9.0 version
-- `release/2.8`: 2.8.0-beta
+- `release/2.8.0`: 2.8.0-beta
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version

@@ -19,7 +19,6 @@ use LoginTwigContext;
 use LoginWebPage;
 use MetaModel;
 use phpCAS;
-use URP_UserProfile;
 use User;
 use UserExternal;
 use utils;
@@ -58,18 +57,15 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			}
 			else
 			{
-				if ($_SESSION['login_mode'] == 'cas')
+				if (!isset($_SESSION['login_will_redirect']))
 				{
-					if (!isset($_SESSION['login_will_redirect']))
-					{
-						$_SESSION['login_will_redirect'] = true;
-					}
-					else
-					{
-						unset($_SESSION['login_will_redirect']);
-						$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
-						return LoginWebPage::LOGIN_FSM_ERROR;
-					}
+					$_SESSION['login_will_redirect'] = true;
+				}
+				else
+				{
+					unset($_SESSION['login_will_redirect']);
+					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
+					return LoginWebPage::LOGIN_FSM_ERROR;
 				}
 				$_SESSION['login_mode'] = 'cas';
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
@@ -156,7 +152,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		{
 			phpCAS::setDebug(APPROOT.'log/cas.log');
 		}
-		
+
 		// Initialize phpCAS
 		$sCASVersion = Config::Get('cas_version');
 		$sCASHost = Config::Get('cas_host');
@@ -500,15 +496,8 @@ class CASUserProvisioning
 		}
 
 		// Now synchronize the profiles
-		$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
-		foreach($aProfiles as $iProfileId)
-		{
-			$oLink = new URP_UserProfile();
-			$oLink->Set('profileid', $iProfileId);
-			$oLink->Set('reason', 'CAS/LDAP Synchro');
-			$oProfilesSet->AddObject($oLink);
-		}
-		$oUser->Set('profile_list', $oProfilesSet);
+		LoginWebPage::SynchroniseProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
+
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
 		if ($oUser->IsModified())
 		{

@@ -388,7 +388,7 @@ try
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'details': // Details of an object
-			$sClass = utils::ReadParam('class', '');
+			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
 			if ( empty($sClass) || empty($id))
 			{
@@ -459,7 +459,7 @@ try
 
 		case 'release_lock_and_details':
         $oP->DisableBreadCrumb();
-		$sClass = utils::ReadParam('class', '');
+        $sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$sToken = utils::ReadParam('token', '');
@@ -906,7 +906,7 @@ HTML
 
 		case 'apply_modify': // Applying the modifications to an existing object
 			$oP->DisableBreadCrumb();
-			$sClass = utils::ReadPostedParam('class', '');
+			$sClass = utils::ReadPostedParam('class', '', 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
@@ -1493,7 +1493,7 @@ HTML
 			}
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
-	
+
 			$oP->add_script(
 <<<EOF
 			// Initializes the object once at the beginning of the page...
@@ -1695,7 +1695,7 @@ EOF
 
 		case 'apply_stimulus': // Actual state change
 		$oP->DisableBreadCrumb();
-		$sClass = utils::ReadPostedParam('class', '');
+		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$id = utils::ReadPostedParam('id', '');
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
@@ -1938,7 +1938,7 @@ EOF
 		
 		case 'kill_lock':
 		$oP->DisableBreadCrumb();
-		$sClass = utils::ReadParam('class', '');
+		$sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		iTopOwnershipLock::KillLock($sClass, $id);
 		$oObj = MetaModel::GetObject($sClass, $id);

@@ -530,7 +530,7 @@ class SearchForm
 	{
 		$aOrCriterion = array();
 		$bIsEmptyExpression = true;
-		$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
+		$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments());
 
 		if ($oSearch instanceof DBObjectSearch)
 		{

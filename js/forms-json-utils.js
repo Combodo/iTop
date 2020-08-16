@@ -543,6 +543,7 @@ function UpdateDuration(iId)
 }
 
 // Called when filling an autocomplete field
+//deprecated in 2.8
 function OnAutoComplete(id, event, data, formatted)
 {
 	if (data)

@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  * 
  * @author Hipska (2018)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -864,7 +864,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:FatalErrorMessage' => 'Fatale fout, ITOP_APPLICATION_SHORT kan niet doorgaan.',
 	'UI:Error_Details' => 'Fout: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'ITOP_APPLICATION_SHORT gebruikersbeheer - klasse-projecties',
 	'UI:PageTitle:ProfileProjections' => 'ITOP_APPLICATION_SHORT gebruikersbeheer - profiel-projecties',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse van objecten',
@@ -873,8 +872,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:AnyObject' => '* elk *',
 	'UI:UserManagement:User' => 'Gebruiker',
 	'UI:UserManagement:User+' => 'Gebruiker bezig met de projectie',
-	'UI:UserManagement:Profile' => 'Profiel',
-	'UI:UserManagement:Profile+' => 'Profiel waarin de projectie is opgegeven',
 	'UI:UserManagement:Action:Read' => 'Lezen',
 	'UI:UserManagement:Action:Read+' => 'Lezen/weergeven van objecten',
 	'UI:UserManagement:Action:Modify' => 'Aanpassen',
@@ -914,7 +911,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ChangeManagementMenu:Title' => 'Overzicht changes',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes aan de hand van soort',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes aan de hand van soort status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes aan de hand van werkgroep',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nog niet toegewezen Changes',
 
 	'UI:ConfigurationManagementMenu' => 'Configuratie Management',
@@ -1597,4 +1593,43 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:ResetCache' => 'Maak cache leeg',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
+));
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Menu:DataSources' => 'Synchronisatie-databronnen',
+	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
+	'Menu:WelcomeMenu' => 'Welkom',
+	'Menu:WelcomeMenu+' => 'Welkom in iTop',
+	'Menu:WelcomeMenuPage' => 'Welkom',
+	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
+	'Menu:AdminTools' => 'Admintools',
+	'Menu:AdminTools+' => 'Beheertools',
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
+	'Menu:DataModelMenu' => 'Datamodel',
+	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',
+	'Menu:NotificationsMenu' => 'Meldingen',
+	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',
+	'Menu:AuditCategories' => 'Auditcategorieën',
+	'Menu:AuditCategories+' => 'Auditcategorieën',
+	'Menu:Notifications:Title' => 'Auditcategorieën',
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',
+	'Menu:RunQueriesMenu+' => 'Voer een query uit',
+	'Menu:QueryMenu' => 'Favoriete query\'s',
+	'Menu:QueryMenu+' => 'Favoriete query\'s',
+	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',
+	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',
+	'Menu:UserManagementMenu' => 'Gebruikersbeheer',
+	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',
+	'Menu:ProfilesMenu' => 'Profielen',
+	'Menu:ProfilesMenu+' => 'Profielen',
+	'Menu:ProfilesMenu:Title' => 'Profielen',
+	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
+	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
+	'Menu:UserManagement' => 'Gebruikersbeheer',
+	'Menu:Queries' => 'Query\'s',
+	'Menu:ConfigurationTools' => 'Configuratie',
 ));

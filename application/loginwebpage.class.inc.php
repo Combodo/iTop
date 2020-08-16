@@ -92,12 +92,49 @@ class LoginWebPage extends NiceWebPage
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
 	{
 		self::$m_sLoginFailedMessage = $sMessage;
+	}
+
+	/**
+	 * @param $oUser
+	 * @param array $aProfiles
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public static function SynchroniseProfiles(&$oUser, array $aProfiles, $sOrigin)
+	{
+		$oProfilesSet = $oUser->Get(‘profile_list’);
+		//delete old profiles
+		$aExistingProfiles = [];
+		while ($oProfile = $oProfilesSet->Fetch())
+		{
+			array_push($aExistingProfiles, $oProfile->Get('profileid'));
+			$iArrayKey = array_search($oProfile->Get('profileid'), $aProfiles);
+			if (!$iArrayKey)
+			{
+				$oProfilesSet->RemoveItem($oProfile->Get('profileid'));
+			}
+			else
+			{
+				unset($aProfiles[$iArrayKey]);
+			}
+		}
+		//add profiles not already linked with user
+		foreach ($aProfiles as $iProfileId)
+		{
+			$oLink = new URP_UserProfile();
+			$oLink->Set('profileid', $iProfileId);
+			$oLink->Set('reason', $sOrigin);
+
+			$oProfilesSet->AddItem(MetaModel::NewObject('URP_UserProfile', array('profileid' => $iProfileId, 'reason' => $sOrigin)));
+		}
+		$oUser->Set('profile_list', $oProfilesSet);
 	}
 
 	public function DisplayLoginHeader($bMainAppLogo = false)
@@ -886,20 +923,12 @@ class LoginWebPage extends NiceWebPage
 			}
 
 			// Now synchronize the profiles
-			$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
 			$sOrigin = 'External User provisioning';
 			if (isset($_SESSION['login_mode']))
 			{
 				$sOrigin .= " ({$_SESSION['login_mode']})";
 			}
-			foreach ($aProfiles as $iProfileId)
-			{
-				$oLink = new URP_UserProfile();
-				$oLink->Set('profileid', $iProfileId);
-				$oLink->Set('reason', $sOrigin);
-				$oProfilesSet->AddObject($oLink);
-			}
-			$oUser->Set('profile_list', $oProfilesSet);
+			$aExistingProfiles = self::SynchroniseProfiles($oUser, $aProfiles, $sOrigin);
 			if ($oUser->IsModified())
 			{
 				$oUser->DBWrite();

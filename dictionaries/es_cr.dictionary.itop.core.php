@@ -1046,3 +1046,39 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
 	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:AbstractResource' => 'Recurso abstracto',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:ResourceAdminMenu' => 'Recursos de Menú de Administración',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:ResourceRunQueriesMenu' => 'Recurso Libreta de Consultas',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
+	'Class:ResourceSystemMenu+' => '~~',
+));

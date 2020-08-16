@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>, <martin.raenker@itomig.de>
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
@@ -846,7 +846,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop Benutzerverwaltung - Klassenabbildung',
 	'UI:PageTitle:ProfileProjections' => 'iTop Benutzerverwaltung - Profilabbildung',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse von Objekten',
@@ -855,8 +854,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:AnyObject' => '* beliebig *',
 	'UI:UserManagement:User' => 'Benutzer',
 	'UI:UserManagement:User+' => 'Benutzer, der in Abbildung beteiligt ist.',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil, in welchem die Abbildung spezifiziert wird.',
 	'UI:UserManagement:Action:Read' => 'Lesen',
 	'UI:UserManagement:Action:Read+' => 'Lesen/Anzeigen von Objekten',
 	'UI:UserManagement:Action:Modify' => 'Verändern',
@@ -896,7 +893,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ChangeManagementMenu:Title' => 'Übersicht an Changes',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes ~nach Typ',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes nach Status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
@@ -1575,4 +1571,43 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
+));
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
+	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
+	'Menu:WelcomeMenu' => 'Willkommen',
+	'Menu:WelcomeMenu+' => 'Willkommen bei iTop',
+	'Menu:WelcomeMenuPage' => 'Willkommen',
+	'Menu:WelcomeMenuPage+' => 'Willkommen bei iTop',
+	'Menu:AdminTools' => 'Admin-Tools',
+	'Menu:AdminTools+' => 'Administrationswerkzeuge',
+	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',
+	'Menu:DataModelMenu' => 'Datenmodell',
+	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML',
+	'Menu:NotificationsMenu' => 'Benachrichtigungen',
+	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen',
+	'Menu:AuditCategories' => 'Audit-Kategorien',
+	'Menu:AuditCategories+' => 'Audit-Kategorien',
+	'Menu:Notifications:Title' => 'Audit-Kategorien',
+	'Menu:RunQueriesMenu' => 'Abfrage ausführen',
+	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen',
+	'Menu:QueryMenu' => 'Query-Bibliothek',
+	'Menu:QueryMenu+' => '',
+	'Menu:UniversalSearchMenu' => 'Universelle Suche',
+	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...',
+	'Menu:UserManagementMenu' => 'Benutzerverwaltung',
+	'Menu:UserManagementMenu+' => 'Benutzerverwaltung',
+	'Menu:ProfilesMenu' => 'Profile',
+	'Menu:ProfilesMenu+' => 'Profile',
+	'Menu:ProfilesMenu:Title' => 'Profile',
+	'Menu:UserAccountsMenu' => 'Benutzerkonten',
+	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
+	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
+	'Menu:MyShortcuts' => 'Meine Shortcuts',
+	'Menu:UserManagement' => 'Benutzerverwaltung',
+	'Menu:Queries' => 'OQL Abfragen',
+	'Menu:ConfigurationTools' => 'Konfiguration',
 ));

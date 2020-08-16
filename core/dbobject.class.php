@@ -569,43 +569,41 @@ abstract class DBObject implements iDisplay
 			$this->Reload();
 		}
 
-		if ($oAttDef->IsExternalKey())
+		if ($oAttDef->IsExternalKey() && is_object($value))
 		{
-			if (is_object($value))
+			// Setting an external key with a whole object (instead of just an ID)
+			// let's initialize also the external fields that depend on it
+			// (useful when building objects in memory and not from a query)
+			/** @var \AttributeExternalKey $oAttDef */
+			if ((get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
 			{
-				// Setting an external key with a whole object (instead of just an ID)
-				// let's initialize also the external fields that depend on it
-				// (useful when building objects in memory and not from a query)
-				/** @var \AttributeExternalKey $oAttDef */
-				if ( (get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
-				{
-					throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
-				}
+				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
+			}
 
-				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
+			{
+				/** @var \AttributeExternalField $oDef */
+				if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
 				{
-					/** @var \AttributeExternalField $oDef */
-					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
-					{
-						/** @var \DBObject $value */
-						$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
-						$this->m_aLoadedAtt[$sCode] = true;
-					}
+					/** @var \DBObject $value */
+					$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
+					$this->m_aLoadedAtt[$sCode] = true;
+				}
+				elseif (in_array($sAttCode, $oDef->GetPrerequisiteAttributes(get_class($this))))
+				{
+					$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+					unset($this->m_aLoadedAtt[$sCode]);
 				}
 			}
-			else if ($this->m_aCurrValues[$sAttCode] != $value)
+		}
+		else if ($this->m_aCurrValues[$sAttCode] !== $value)
+		{
+			// Invalidate dependent fields so that they get reloaded in case they are needed (See Get())
+			//
+			foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode)
 			{
-				// Setting an external key, but no any other information is available...
-				// Invalidate the corresponding fields so that they get reloaded in case they are needed (See Get())
-				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
-				{
-					/** @var \AttributeExternalKey $oDef */
-					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
-					{
-						$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
-						unset($this->m_aLoadedAtt[$sCode]);
-					}
-				}
+				$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+				unset($this->m_aLoadedAtt[$sCode]);
 			}
 		}
 		if ($oAttDef->IsLinkSet() && ($value != null))
@@ -787,20 +785,20 @@ abstract class DBObject implements iDisplay
 			{
 				// Standard case... we have the information directly
 			}
-			elseif ($this->m_bIsInDB && !$this->m_bDirty)
+			elseif ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 			{
 				// Lazy load (polymorphism): complete by reloading the entire object
-				// #@# non-scalar attributes.... handle that differently?
 				$oKPI = new ExecutionKPI();
 				$this->Reload();
 				$oKPI->ComputeStats('Reload', get_class($this).'/'.$sAttCode);
 			}
-			elseif ($sAttCode == 'friendlyname')
+			elseif ($oAttDef->IsBasedOnOQLExpression())
 			{
-				// The friendly name is not computed and the object is dirty
-				// Todo: implement the computation of the friendly name based on sprintf()
-				// 
-				$this->m_aCurrValues[$sAttCode] = '';
+				// Recompute -which is likely to call Get()
+				//
+				/** @var AttributeFriendlyName|\AttributeObsolescenceFlag $oAttDef */
+				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());
+				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 			else
 			{
@@ -2948,46 +2946,6 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsert()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int|null
-     * @throws CoreException
-     */
-	public function DBInsertTracked(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBInsert();
-	}
-
-    /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBInsertNoReload()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int
-     * @throws ArchivedObjectException
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws CoreWarning
-     * @throws MySQLException
-     * @throws OQLException
-     */
-	public function DBInsertTrackedNoReload(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBInsertNoReload();
-	}
-
-    /**
      * Creates a copy of the current object into the database
      *
      * @internal
@@ -3338,25 +3296,6 @@ abstract class DBObject implements iDisplay
 		$this->m_aPreviousValuesForUpdatedAttributes = $aPreviousValuesForUpdatedAttributes;
 	}
 
-    /**
-     *
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBUpdate()} instead, that will automatically create and persist a CMDBChange object.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     *
-     * @return int
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     */
-	public function DBUpdateTracked(CMDBChange $oChange)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		return $this->DBUpdate();
-	}
-
 	/**
 	 * Make the current changes persistent - clever wrapper for Insert or Update
      *
@@ -3611,32 +3550,7 @@ abstract class DBObject implements iDisplay
 		return $oDeletionPlan;
 	}
 
-    /**
-     * @internal
-     *
-     * @deprecated 2.7.0 N°2361 simply use {@see DBObject::DBDelete()} instead.
-     *    If you need to persist your own, call {@see CMDBObject::SetCurrentChange()} before.
-     *
-     * @param CMDBChange $oChange
-     * @param boolean $bSkipStrongSecurity
-     * @param \DeletionPlan $oDeletionPlan
-     *
-     * @throws ArchivedObjectException
-     * @throws CoreCannotSaveObjectException
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws DeleteException
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
-     * @throws OQLException
-     */
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
-	{
-		CMDBObject::SetCurrentChange($oChange);
-		$this->DBDelete($oDeletionPlan);
-	}
-
-    /**
+     /**
      * @internal
      *
      * @return array
@@ -4420,22 +4334,7 @@ abstract class DBObject implements iDisplay
 	}
 
 
-    /**
-     * implement relations
-     *
-     * Return an empty set for the parent of all
-     *
-     * this way of implementing the relations suffers limitations (not handling the redundancy)
-     * and you should consider defining those things in XML
-     *
-     * @internal
-     * @deprecated
-     */
-	public static function GetRelationQueries($sRelCode)
-	{
-		return array();
-	}
-	
+
     /**
      * Reserved: do not overload
      *
@@ -4444,72 +4343,6 @@ abstract class DBObject implements iDisplay
 	public static function GetRelationQueriesEx($sRelCode)
 	{
 		return array();
-	}
-
-	/**
-	 * Use GetRelatedObjectsDown/Up instead to take redundancy into account
-     *
-     * @internal
-     * @deprecated
-	 */
-	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
-	{
-		// Temporary patch: until the impact analysis GUI gets rewritten,
-		// let's consider that "depends on" is equivalent to "impacts/up"
-		// The current patch has been implemented in DBObject and MetaModel
-		$sHackedRelCode = $sRelCode;
-		$bDown = true;
-		if ($sRelCode == 'depends on')
-		{
-			$sHackedRelCode = 'impacts';
-			$bDown = false;
-		}
-		foreach (MetaModel::EnumRelationQueries(get_class($this), $sHackedRelCode, $bDown) as $sDummy => $aQueryInfo)
-		{
-			$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
-			//$bPropagate = $aQueryInfo["bPropagate"];
-			//$iDepth = $bPropagate ? $iMaxDepth - 1 : 0;
-			$iDepth = $iMaxDepth - 1;
-
-			// Note: the loop over the result set has been written in an unusual way for error reporting purposes
-			// In the case of a wrong query parameter name, the error occurs on the first call to Fetch,
-			// thus we need to have this first call into the try/catch, but
-			// we do NOT want to nest the try/catch for the error message to be clear
-			try
-			{
-				$oFlt = DBObjectSearch::FromOQL($sQuery);
-				$oObjSet = new DBObjectSet($oFlt, array(), $this->ToArgsForQuery());
-				$oObj = $oObjSet->Fetch();
-			}
-			catch (Exception $e)
-			{
-				$sClassOfDefinition = $aQueryInfo['_legacy_'] ? get_class($this).'(or a parent)::GetRelationQueries()' : $aQueryInfo['sDefinedInClass'];
-				throw new Exception("Wrong query for the relation $sRelCode/$sClassOfDefinition/{$aQueryInfo['sNeighbour']}: ".$e->getMessage());
-			}
-			if ($oObj)
-			{
-				do
-				{
-					$sRootClass = MetaModel::GetRootClass(get_class($oObj));
-					$sObjKey = $oObj->GetKey();
-					if (array_key_exists($sRootClass, $aResults))
-					{
-						if (array_key_exists($sObjKey, $aResults[$sRootClass]))
-						{
-							continue; // already visited, skip
-						}
-					}
-	
-					$aResults[$sRootClass][$sObjKey] = $oObj;
-					if ($iDepth > 0)
-					{
-						$oObj->GetRelatedObjects($sRelCode, $iDepth, $aResults);
-					}
-				}
-				while ($oObj = $oObjSet->Fetch());
-			}
-		}
-		return $aResults;
 	}
 
     /**
@@ -5522,6 +5355,34 @@ abstract class DBObject implements iDisplay
 			default:
 				break;
 		}
+	}
+
+	public function EvaluateExpression(Expression $oExpression)
+	{
+		$aFields = $oExpression->ListRequiredFields();
+		$aArgs = array();
+		foreach ($aFields as $sFieldDesc)
+		{
+			$aFieldParts = explode('.', $sFieldDesc);
+			if (count($aFieldParts) == 2)
+			{
+				$sClass = $aFieldParts[0];
+				$sAttCode = $aFieldParts[1];
+			}
+			else
+			{
+				$sClass = get_class($this);
+				$sAttCode = $aFieldParts[0];
+			}
+			if (get_class($this) != $sClass) continue;
+			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) continue;
+
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
+			$value = reset($aSQLValues);
+			$aArgs[$sFieldDesc] = $value;
+		}
+		return $oExpression->Evaluate($aArgs);
 	}
 }
 

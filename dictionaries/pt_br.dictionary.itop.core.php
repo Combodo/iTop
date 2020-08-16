@@ -1051,3 +1051,39 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
  'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:AbstractResource' => 'Recurso abstrato',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceAdminMenu' => 'Recurso Admin Menu',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceRunQueriesMenu' => 'Menu de consultas de execução de recursos',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));

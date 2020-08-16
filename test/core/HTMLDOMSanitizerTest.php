@@ -277,5 +277,42 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider CallInlineImageProcessImageTagProvider
+	 */
+	public function testDoSanitizeCallInlineImageProcessImageTag($sHtml, $iExpectedCount)
+	{
+		require_once APPROOT.'test/core/sanitizer/InlineImageMock.php';
+
+		$oSanitizer = new HTMLDOMSanitizer();
+		$oSanitizer->DoSanitize($sHtml);
+
+		$iCalledCount = \InlineImage::GetCallCounter();
+		$this->assertEquals($iExpectedCount, $iCalledCount);
+	}
+
+	public function CallInlineImageProcessImageTagProvider()
+	{
+		return array(
+			'no image' => array(
+				'html' => '<p>bar</p>',
+				'expected' => 0,
+			),
+			'basic image' => array(
+				'html' => '<img />',
+				'expected' => 1,
+			),
+			'nested images within forbidden tags' => array(
+				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><article baz="1" biz="2">baz<img /><img /></article>rab</div> oof<img /></iframe><img /></body></html>',
+				'expected' => 2,
+			),
+//          This test will be restored with the ticket n°2556
+//			'nested images within forbidden and removed tags' => array(
+//				'html' => '<html><body><img /><iframe baz="1"><div baz="baz"><object baz="1" biz="2">baz<img /><img /></object>rab</div> oof<img /></iframe><img /></body></html>',
+//				'expected' => 2,
+//			),
+		);
+	}
+
 }
 

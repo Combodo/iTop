@@ -859,25 +859,6 @@ class CMDBSource
 		self::$m_iTransactionLevel = 0;
 	}
 
-	/**
-	 *
-	 * @deprecated 2.7.0 N°1627 use ItopCounter instead
-	 *
-	 * @param string $sTable
-	 *
-	 * @return int
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 */
-	public static function GetNextInsertId($sTable)
-	{
-		$sSQL = "SHOW TABLE STATUS LIKE '$sTable'";
-		$oResult = self::Query($sSQL);
-		$aRow = $oResult->fetch_assoc();
-
-		return $aRow['Auto_increment'];
-	}
-
 	public static function GetInsertId()
 	{
 		$iRes = self::$m_oMysqli->insert_id;

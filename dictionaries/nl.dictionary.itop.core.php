@@ -820,9 +820,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroAttribute/Attribute:update' => 'Update',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
 	'Class:SynchroAttribute/Attribute:update_policy' => 'Update Policy',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Gesloten',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Open',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Begin indien leeg',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Geblokkeerd',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Vrij',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Vul in indien leeg',
 	'Class:SynchroAttribute/Attribute:finalclass' => 'Klasse',
 	'Class:SynchroAttExtKey' => 'Synchro Attribuut (ExtKey)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliation-attribuut',
@@ -1051,4 +1051,40 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Uiteindelijke klasse',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:AbstractResource' => 'Abstracte Tool',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceAdminMenu' => 'Tool "Admin Menu"',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceRunQueriesMenu' => 'Tool "Voer query\'s uit" Menu',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
+	'Class:ResourceSystemMenu+' => '',
 ));

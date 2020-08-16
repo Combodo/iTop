@@ -24,14 +24,14 @@ abstract class HTMLSanitizer
 	{
 		// Do nothing..
 	}
-	
+
 	/**
 	 * Sanitizes the given HTML document
 	 * @param string $sHTML
 	 * @return string
 	 */
 	abstract public function DoSanitize($sHTML);
-	
+
 	/**
 	 * Sanitize an HTML string with the configured sanitizer, falling back to HTMLDOMSanitizer in case of Exception or invalid configuration
 	 * @param string $sHTML
@@ -50,7 +50,7 @@ abstract class HTMLSanitizer
 			IssueLog::Warning('The configured "html_sanitizer" class "'.$sSanitizerClass.'" is not a subclass of HTMLSanitizer. Will use HTMLDOMSanitizer as the default sanitizer.');
 			$sSanitizerClass = 'HTMLDOMSanitizer';
 		}
-		
+
 		try
 		{
 			$oSanitizer = new $sSanitizerClass();
@@ -70,7 +70,7 @@ abstract class HTMLSanitizer
 			{
 				IssueLog::Error('Failed to sanitize an HTML string with "HTMLDOMSanitizer". The following exception occured: '.$e->getMessage());
 				IssueLog::Error('The HTML will NOT be sanitized.');
-				$sCleanHTML = $sHTML;	
+				$sCleanHTML = $sHTML;
 			}
 		}
 		return $sCleanHTML;
@@ -97,7 +97,7 @@ class HTMLNullSanitizer extends HTMLSanitizer
 	{
 		return $sHTML;
 	}
-	
+
 }
 
 /**
@@ -109,7 +109,7 @@ class HTMLNullSanitizer extends HTMLSanitizer
 class HTMLPurifierSanitizer extends HTMLSanitizer
 {
 	protected static $oPurifier = null;
-	
+
 	public function __construct()
 	{
 		if (self::$oPurifier == null)
@@ -120,7 +120,7 @@ class HTMLPurifierSanitizer extends HTMLSanitizer
 				throw new Exception("Missing library '$sLibPath', cannot use HTMLPurifierSanitizer.");
 			}
 			require_once($sLibPath);
-			
+
 			$oPurifierConfig = HTMLPurifier_Config::createDefault();
 			$oPurifierConfig->set('Core.Encoding', 'UTF-8'); // defaults to 'UTF-8'
 			$oPurifierConfig->set('HTML.Doctype', 'XHTML 1.0 Strict'); // defaults to 'XHTML 1.0 Transitional'
@@ -142,11 +142,11 @@ class HTMLPurifierSanitizer extends HTMLSanitizer
 			self::$oPurifier = new HTMLPurifier($oPurifierConfig);
 		}
 	}
-	
+
 	public function DoSanitize($sHTML)
 	{
 		$sCleanHtml = self::$oPurifier->purify($sHTML);
-		return $sCleanHtml;		
+		return $sCleanHtml;
 	}
 }
 */
@@ -278,13 +278,13 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
-		
+
 		$this->CleanNode($this->oDoc);
-		
+
 		$oXPath = new DOMXPath($this->oDoc);
 		$sXPath = "//body";
 		$oNodesList = $oXPath->query($sXPath);
-		
+
 		if ($oNodesList->length == 0)
 		{
 			// No body, save the whole document
@@ -297,10 +297,10 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 			// remove the body tag itself
 			$sCleanHtml = str_replace( array('<body>', '</body>'), '', $sCleanHtml);
 		}
-		
+
 		return $sCleanHtml;
 	}
-	
+
 	protected function CleanNode(DOMNode $oElement)
 	{
 		$aAttrToRemove = array();
@@ -341,7 +341,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 				$oElement->removeAttribute($sName);
 			}
 		}
-		
+
 		if ($oElement->hasChildNodes())
 		{
 			$aChildElementsToRemove = array();
@@ -390,7 +390,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		}
 		return implode(';', $aAllowedStyles);
 	}
-	
+
 	protected function IsValidAttributeContent($sAttributeName, $sValue)
 	{
 		if (array_key_exists($sAttributeName, self::$aAttrsWhiteList))

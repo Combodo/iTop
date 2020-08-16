@@ -25,7 +25,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Herramientas de bases de datos',
 	'DBTools:Class' => 'Clase',
-	'DBTools:Title' => 'Herramientas de mantenimiento de base de datos',
+	'DBTools:Title' => 'Herramientas de mantenimiento de base de datos~~',
 	'DBTools:ErrorsFound' => 'Errores encontrados',
 	'DBTools:Error' => 'Error',
 	'DBTools:Count' => 'Cantidad',

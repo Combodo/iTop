@@ -27,7 +27,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Databasetools',
 	'DBTools:Class' => 'Klasse',
-	'DBTools:Title' => 'Onderhoudstools voor de database',
+	'DBTools:Title' => 'Onderhoudstools voor de database~~',
 	'DBTools:ErrorsFound' => 'Fouten gevonden',
 	'DBTools:Error' => 'Fout',
 	'DBTools:Count' => 'Aantal',
