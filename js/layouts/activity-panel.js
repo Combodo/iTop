@@ -30,6 +30,7 @@ $(function()
 			css_classes:
 			{
 				is_expanded: 'ibo-is-expanded',
+				is_opened: 'ibo-is-opened',
 				is_closed: 'ibo-is-closed',
 				is_active: 'ibo-is-active',
 				is_hidden: 'ibo-is-hidden',
@@ -45,7 +46,9 @@ $(function()
 				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
 				entry: '[data-role="ibo-activity-entry"]',
 				entry_main_information: '[data-role="ibo-activity-entry--main-information"]',
-				entry_datetime: '[data-role="ibo-activity-entry--datetime"]'
+				entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
+				edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
+				edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
 			},
 
 			// the constructor
@@ -89,6 +92,10 @@ $(function()
 				// Click on a closed case log message
 				this.element.find(this.js_selectors.entry_group).on('click', '.'+this.css_classes.is_closed + ' ' + this.js_selectors.entry_main_information, function(oEvent){
 					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
+				});
+				// Click on an edits entry long description toggler
+				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function(oEvent){
+					me._onEditsTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function(oEvent){
@@ -145,6 +152,13 @@ $(function()
 			_onCaseLogClosedMessageClick: function(oEntryElem)
 			{
 				this._OpenMessage(oEntryElem);
+			},
+			_onEditsTogglerClick: function(oEvent, oEntryElem)
+			{
+				// Avoid anchor glitch
+				oEvent.preventDefault();
+
+				oEntryElem.toggleClass(this.css_classes.is_opened);
 			},
 			_onBodyClick: function(oEvent)
 			{

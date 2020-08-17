@@ -16,10 +16,19 @@
 	<div class="ibo-activity-entry--information" data-role="ibo-activity-entry--information">
 		{% block iboActivityEntryInformation %}
 			<div class="ibo-activity-entry--main-information" data-role="ibo-activity-entry--main-information">
-				{% block iboActivityEntryMainInformation %}
-					{# Content is printed as raw because it is stored as HTML in the database and should have been sanitized before storage, so we can assume it is safe #}
-					{{ oUIBlock.GetContent()|raw }}
-				{% endblock %}
+				<div class="ibo-activity-entry--main-information-icon">
+					{% block iboActivityEntryMainInformationIcon %}
+						{% if oUIBlock.GetDecorationClasses() is not empty %}
+							<span class="{{ oUIBlock.GetDecorationClasses() }}"></span>
+						{% endif %}
+					{% endblock %}
+				</div>
+				<div class="ibo-activity-entry--main-information-content">
+					{% block iboActivityEntryMainInformationContent %}
+						{# Content is printed as raw because it is stored as HTML in the database and should have been sanitized before storage, so we can assume it is safe #}
+						{{ oUIBlock.GetContent()|raw }}
+					{% endblock %}
+				</div>
 			</div>
 			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
 				{% block iboActivityEntrySubInformation %}

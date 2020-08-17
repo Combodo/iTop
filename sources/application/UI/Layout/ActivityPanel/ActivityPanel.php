@@ -22,7 +22,6 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
-use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CaseLogEntry;
 use Combodo\iTop\Application\UI\UIBlock;
 use DBObject;
@@ -184,8 +183,12 @@ class ActivityPanel extends UIBlock
 			$aCurrentGroup['entries'][] = $oEntry;
 			$aPreviousEntryData = ['author_login' => $sAuthorLogin, 'origin' => $sOrigin];
 		}
+
 		// Flush last group
-		$aGroupedEntries[] = $aCurrentGroup;
+		if(empty($aCurrentGroup['entries']) === false)
+		{
+			$aGroupedEntries[] = $aCurrentGroup;
+		}
 
 		return $aGroupedEntries;
 	}

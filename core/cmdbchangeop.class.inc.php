@@ -31,7 +31,22 @@
  * @package     iTopORM
  */
 
-class CMDBChangeOp extends DBObject
+/**
+ * Interface iCMDBChangeOp
+ *
+ * @since 2.8.0
+ */
+interface iCMDBChangeOp
+{
+	/**
+	 * Describe (as a text string) the modifications corresponding to this change
+	 *
+	 * @return string
+	 */
+	public function GetDescription();
+}
+
+class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 {
 	public static function Init()
 	{
@@ -156,13 +171,22 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 	}
 }
 
+/**
+ * Interface iCMDBChangeOpSetAttribute
+ *
+ * @since 2.8.0
+ */
+interface iCMDBChangeOpSetAttribute
+{
+
+}
 
 /**
  * Record the modification of an attribute (abstract)
  *
  * @package     iTopORM
  */
-class CMDBChangeOpSetAttribute extends CMDBChangeOp
+class CMDBChangeOpSetAttribute extends CMDBChangeOp implements iCMDBChangeOpSetAttribute
 {
 	public static function Init()
 	{
@@ -799,7 +823,6 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 			}
 			$oObj = $oMonoObjectSet->Fetch();
 			$oCaseLog = $oObj->Get($this->Get('attcode'));
-			$iMaxVisibleLength = MetaModel::getConfig()->Get('max_history_case_log_entry_length', 0);
 			$sTextEntry = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$oCaseLog->GetEntryAt($this->Get('lastentry')).'</div></div>';
 
 			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName, $sTextEntry);

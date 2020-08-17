@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "navigation-menu";
-@import "top-bar";
-@import "content";
-@import "activity-panel/activity-panel";
-@import "activity-panel/activity-entry";
-@import "activity-panel/caselog-entry";
-@import "activity-panel/edits-entry";
-@import "activity-panel/transition-entry";
+/* SCSS variables */
+$ibo-transition-entry--original-state-label--text-color: $ibo-color-grey-800 !default;
+$ibo-transition-entry--original-state-label--text-decoration: line-through !default;
+
+/* Main information */
+.ibo-transition-entry--original-state-label{
+	color: $ibo-transition-entry--original-state-label--text-color;
+	text-decoration: $ibo-transition-entry--original-state-label--text-decoration;
+}

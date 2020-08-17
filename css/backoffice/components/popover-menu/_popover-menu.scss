@@ -46,6 +46,7 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   margin: 0px 0px;
   width: 100%;
   white-space: nowrap;
+  overflow: hidden; /* To avoid first/last entries of the menu to have no border-radius on hover */
   
   &:first-child{
     border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;

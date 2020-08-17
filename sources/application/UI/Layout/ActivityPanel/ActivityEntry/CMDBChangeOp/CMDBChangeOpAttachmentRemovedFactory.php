@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -16,11 +17,18 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "navigation-menu";
-@import "top-bar";
-@import "content";
-@import "activity-panel/activity-panel";
-@import "activity-panel/activity-entry";
-@import "activity-panel/caselog-entry";
-@import "activity-panel/edits-entry";
-@import "activity-panel/transition-entry";
+namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp;
+
+
+use iCMDBChangeOp;
+
+/**
+ * Class CMDBChangeOpAttachmentRemovedFactory
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp
+ */
+class CMDBChangeOpAttachmentRemovedFactory extends CMDBChangeOpFactory
+{
+	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-unlink';
+}

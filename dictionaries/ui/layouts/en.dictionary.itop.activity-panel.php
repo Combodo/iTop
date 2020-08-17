@@ -36,4 +36,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:CloseAll:Tooltip' => 'Close all messages',
 	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip' => 'Number of persons interacting in this log',
 	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip' => 'Number of messages in this log',
+
+	// Placeholder
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',
 ));

@@ -18,10 +18,19 @@
 
 /* SCSS variables */
 $ibo-caselog-entry--highlight-colors: $ibo-caselog-highlight-colors !default;
+$ibo-caselog-entry--main-information--padding-y: 12px !default;
 $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 
 /* Main information */
 .ibo-caselog-entry{
+	.ibo-activity-entry--main-information{
+		padding-top: $ibo-caselog-entry--main-information--padding-y;
+		padding-bottom: $ibo-caselog-entry--main-information--padding-y;
+	}
+	.ibo-activity-entry--main-information-icon{
+		display: none;
+	}
+
 	/* Highlight color */
 	.ibo-activity-entry--main-information::before{
 		content: "";

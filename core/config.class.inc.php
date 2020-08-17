@@ -967,15 +967,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'max_history_case_log_entry_length' => array(
-			'type' => 'integer',
-			'description' => 'The length (in number of characters) at which to truncate the (expandable) display (in the history) of a case log entry. If zero, the display in the history is not truncated.',
-			// examples... not used
-			'default' => 60,
-			'value' => 60,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'full_text_chunk_duration' => array(
 			'type' => 'integer',
 			'description' => 'Delay after which the results are displayed.',

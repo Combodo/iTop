@@ -408,6 +408,8 @@ EOF
 	 * @param int $iLimitStart
 	 *
 	 * @throws \CoreException
+	 *
+	 * @deprecated
 	 */
 	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{

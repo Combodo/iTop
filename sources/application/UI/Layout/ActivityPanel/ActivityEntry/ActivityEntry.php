@@ -41,8 +41,13 @@ class ActivityEntry extends UIBlock
 	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/layout';
 
 	// Specific constants
+	/** @var string DEFAULT_ORIGIN */
 	const DEFAULT_ORIGIN = 'unknown';
+	/** @var string DEFAULT_DECORATION_CLASSES */
+	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
 
+	/** @var string $sDecorationClasses CSS classes to use to decorate the entry */
+	protected $sDecorationClasses;
 	/** @var string $sContent Raw content of the entry itself (should not have been processed / escaped) */
 	protected $sContent;
 	/** @var \DateTime $oDateTime Date / time the entry occurred */
@@ -63,21 +68,46 @@ class ActivityEntry extends UIBlock
 	/**
 	 * ActivityEntry constructor.
 	 *
-	 * @param string $sContent
 	 * @param \DateTime $oDateTime
 	 * @param \User $sAuthorLogin
-	 * @param string $sId
+	 * @param string $sContent
+	 * @param string $sIdCode
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct($sContent, DateTime $oDateTime, $sAuthorLogin, $sId = null)
+	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sContent = null, $sIdCode = null)
 	{
-		parent::__construct($sId);
+		parent::__construct($sIdCode);
 
+		$this->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);
 		$this->SetContent($sContent);
 		$this->SetDateTime($oDateTime);
 		$this->SetAuthor($sAuthorLogin);
 		$this->SetOrigin(static::DEFAULT_ORIGIN);
+	}
+
+	/**
+	 * Set the CSS decoration classes
+	 *
+	 * @param string $sDecorationClasses Must be a space-separated list of CSS classes
+	 *
+	 * @return $this
+	 */
+	public function SetDecorationClasses($sDecorationClasses)
+	{
+		$this->sDecorationClasses = $sDecorationClasses;
+
+		return $this;
+	}
+
+	/**
+	 * Return a string of the space separated CSS decoration classes
+	 *
+	 * @return string
+	 */
+	public function GetDecorationClasses()
+	{
+		return $this->sDecorationClasses;
 	}
 
 	/**

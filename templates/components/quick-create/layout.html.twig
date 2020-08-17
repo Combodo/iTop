@@ -15,7 +15,7 @@
 				<span>{{ 'UI:Component:QuickCreate:Recents:Title'|dict_s }}</span>
 			</div>
 			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
-				{% if oUIBlock.GetLastClasses()|length > 0 %}
+				{% if oUIBlock.GetLastClasses()|length > 10 %}
 					{% for aClass in oUIBlock.GetLastClasses() %}
 						<a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
 							{% if aClass.icon_url is defined %}
@@ -27,7 +27,7 @@
 				{% else %}
 					<div class="ibo-quick-create--compartment--placeholder">
 						<div class="ibo-quick-create--compartment--placeholder-image ibo-svg-illustration--container">
-						{{ source("illustrations/quick-create-empty-history.svg") }}
+						{{ source("illustrations/undraw_duplicate.svg") }}
 						</div>
 
 						<div class="ibo-quick-create--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder'|dict_s }}</div>

@@ -33,16 +33,24 @@ $ibo-activity-entry--medallion--has-no-image--border: 1px solid $ibo-color-grey-
 
 $ibo-activity-entry--information--margin-to-other-side: $ibo-activity-entry--medallion--diameter + $ibo-activity-entry--medallion--margin-with-information !default;
 
-$ibo-activity-entry--main-information--padding-x: 12px !default;
-$ibo-activity-entry--main-information--padding-y: $ibo-activity-entry--main-information--padding-x !default;
+$ibo-activity-entry--main-information--padding-x: 16px !default;
+$ibo-activity-entry--main-information--padding-y: 12px !default;
+$ibo-activity-entry--main-information--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-entry--main-information--background-color: $ibo-color-grey-200 !default;
 $ibo-activity-entry--main-information--border-radius: $ibo-border-radius-500 !default;
 $ibo-activity-entry--main-information--border-radius--for-tip: 0 !default;
+$ibo-activity-entry--main-information--elements-spacing: $ibo-activity-entry--main-information--padding-x !default;
 $ibo-activity-entry--main-information-accent-strip--width: 2px !default;
+$ibo-activity-entry--main-information-hyperlink--text-color: $ibo-color-blue-700 !default;
+$ibo-activity-entry--main-information-hyperlink--on-hover--text-color: $ibo-color-blue-900 !default;
+$ibo-activity-entry--main-information-hyperlink--on-active--text-color: $ibo-activity-entry--main-information-hyperlink--on-hover--text-color !default;
 $ibo-activity-entry--main-information--is-current-user--background-color: $ibo-color-blue-100 !default;
 $ibo-activity-entry--main-information--is-closed--max-height: 48px !default;
 $ibo-activity-entry--main-information--is-closed--placeholder-top: 30px !default;
 $ibo-activity-entry--main-information--is-closed--placeholder-padding-left: $ibo-activity-entry--main-information--padding-x !default;
+
+$ibo-activity-entry--main-information-icon--text-color: $ibo-color-grey-700 !default;
+$ibo-activity-entry--main-information-icon--font-size: 16px !default;
 
 $ibo-activity-entry--sub-information--margin-top: 4px !default;
 $ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
@@ -162,7 +170,12 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 }
 .ibo-activity-entry--main-information{
 	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+
 	padding: $ibo-activity-entry--main-information--padding-y $ibo-activity-entry--main-information--padding-x;
+	color: $ibo-activity-entry--main-information--text-color;
 	background-color: $ibo-activity-entry--main-information--background-color;
 	border-radius: $ibo-activity-entry--main-information--border-radius;
 
@@ -170,6 +183,27 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 	pre{
 		white-space: pre-wrap;
 	}
+
+	/* Specific hyperlink color */
+	a{
+		color: $ibo-activity-entry--main-information-hyperlink--text-color;
+
+		&:hover{
+			color: $ibo-activity-entry--main-information-hyperlink--on-hover--text-color;
+		}
+		&:active,
+		&:focus{
+			color: $ibo-activity-entry--main-information-hyperlink--on-active--text-color;
+		}
+	}
+}
+.ibo-activity-entry--main-information-icon{
+	margin-right: $ibo-activity-entry--main-information--elements-spacing;
+	color: $ibo-activity-entry--main-information-icon--text-color;
+	font-size: $ibo-activity-entry--main-information-icon--font-size;
+}
+.ibo-activity-entry--main-information-content{
+
 }
 .ibo-activity-entry--sub-information{
 	margin-top: $ibo-activity-entry--sub-information--margin-top;

@@ -20,9 +20,14 @@
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
+use CMDBChangeOpSetAttributeCaseLog;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use DBObject;
+use DBObjectSearch;
+use DBObjectSet;
 use MetaModel;
+use UserRights;
 
 /**
  * Class ActivityPanelFactory
@@ -45,6 +50,9 @@ class ActivityPanelFactory
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject)
 	{
+		$sObjClass = get_class($oObject);
+		$iObjId = $oObject->GetKey();
+
 		$oActivityPanel = new ActivityPanel($oObject);
 
 		// Retrieve case logs entries
@@ -60,7 +68,48 @@ class ActivityPanelFactory
 			}
 		}
 
-		// Retrieve history changes
+		// Retrieve history changes (including case logs entries)
+		// - Prepare query to retrieve changes
+		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');
+		$oChangesSet = new DBObjectSet($oChangesSearch, ['date' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId]);
+		// Note: This limit will include case log changes which will be skipped, but still we count them as they are displayed anyway by the case log attributes themselves
+		$oChangesSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
+
+		// Prepare previous values to group edits within a same CMDBChange
+		$iPreviousChangeId = 0;
+		$oPreviousEditsEntry = null;
+
+		/** @var \CMDBChangeOp $oChangeOp */
+		while($oChangeOp = $oChangesSet->Fetch())
+		{
+			// Skip case log changes as they are handled directly from the attributes themselves
+			if($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog)
+			{
+				continue;
+			}
+
+			// Make entry from CMDBChangeOp
+			$iChangeId = $oChangeOp->Get('change');
+			$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
+
+			// If same CMDBChange and mergeable edits entry, we merge them
+			if( ($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry))
+			{
+				$oPreviousEditsEntry->Merge($oEntry);
+			}
+			else
+			{
+				$oActivityPanel->AddEntry($oEntry);
+
+				// Set previous edits entry
+				if($oEntry instanceof EditsEntry)
+				{
+					$oPreviousEditsEntry = $oEntry;
+				}
+			}
+
+			$iPreviousChangeId = $iChangeId;
+		}
 
 		return $oActivityPanel;
 	}

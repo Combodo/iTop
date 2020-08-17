@@ -50,6 +50,7 @@ $ibo-activity-panel--tab-text--max-width: 100px !default;
 /* - Tab toolbar */
 $ibo-activity-panel--tab-toolbar--padding-x: $ibo-activity-panel--padding-x !default;
 $ibo-activity-panel--tab-toolbar--height: 32px !default;
+$ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab--is-active--background-color !default;
 
 $ibo-activity-panel--tab-for-caselog--elements-spacing: 16px !default;
@@ -63,6 +64,11 @@ $ibo-activity-panel--tab-for-activity---checkbox-margin-right: 8px !default;
 /* - Body */
 $ibo-activity-panel--body--padding-top: $ibo-activity-panel--tab-toolbar--height + 16px !default;
 $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
+
+$ibo-activity-panel--body--placeholder--margin-top: 16px !default;
+$ibo-activity-panel--body--placeholder-image--width: 250px !default;
+$ibo-activity-panel--body--placeholder-hint--margin-top: 16px !default;
+$ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default;
 
 /* Whole layout */
 .ibo-activity-panel{
@@ -85,7 +91,7 @@ $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 
 	/* Remove hyperlinks default color */
 	a{
-		color: inherit;
+		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
 .ibo-activity-panel--tabs{
@@ -220,3 +226,21 @@ $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 	padding-right: $ibo-activity-panel--body--padding-x;
 }
 
+.ibo-activity-panel--body--placeholder{
+	margin-top: $ibo-activity-panel--body--placeholder--margin-top;
+}
+.ibo-activity-panel--body--placeholder-image{
+	@extend %ibo-fully-centered-content;
+
+	> svg {
+		width: $ibo-activity-panel--body--placeholder-image--width;
+		height: inherit;
+	}
+}
+.ibo-activity-panel--body--placeholder-hint{
+	margin-top: $ibo-activity-panel--body--placeholder-hint--margin-top;
+	color: $ibo-activity-panel--body--placeholder-hint--color;
+
+	@extend %ibo-font-ral-ita-100;
+	@extend %ibo-fully-centered-content;
+}

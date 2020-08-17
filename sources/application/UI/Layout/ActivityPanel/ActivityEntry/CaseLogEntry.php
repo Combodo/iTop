@@ -20,11 +20,7 @@
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry;
 
 
-use AttributeDateTime;
-use Combodo\iTop\Application\UI\UIBlock;
 use DateTime;
-use User;
-use UserRights;
 
 /**
  * Class CaseLogEntry
@@ -51,17 +47,17 @@ class CaseLogEntry extends ActivityEntry
 	/**
 	 * CaseLogEntry constructor.
 	 *
-	 * @param string $sContent
 	 * @param \DateTime $oDateTime
 	 * @param \User $sAuthorLogin
 	 * @param string $sAttCode
+	 * @param string $sContentCode
 	 * @param string $sId
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct($sContent, DateTime $oDateTime, $sAuthorLogin, $sAttCode, $sId = null)
+	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sAttCode, $sContentCode, $sId = null)
 	{
-		parent::__construct($sContent, $oDateTime, $sAuthorLogin, $sId);
+		parent::__construct($oDateTime, $sAuthorLogin, $sContentCode, $sId);
 
 		$this->sAttCode = $sAttCode;
 		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);

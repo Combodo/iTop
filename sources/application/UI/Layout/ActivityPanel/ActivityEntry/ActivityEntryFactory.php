@@ -21,8 +21,11 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry;
 
 
 use AttributeDateTime;
+use CMDBChangeOp;
 use DateTime;
+use Exception;
 use MetaModel;
+use ReflectionClass;
 
 /**
  * Class ActivityEntryFactory
@@ -34,6 +37,31 @@ use MetaModel;
  */
 class ActivityEntryFactory
 {
+	/**
+	 * Make an ActivityEntry entry (for ActivityPanel) based on the $oChangeOp.
+	 *
+	 * @param \CMDBChangeOp $oChangeOp
+	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry
+	 * @throws \Exception
+	 */
+	public static function MakeFromCmdbChangeOp(CMDBChangeOp $oChangeOp)
+	{
+		$sFactoryFqcn = static::GetCmdbChangeOpFactoryClass($oChangeOp);
+
+		// If no factory found, throw an exception as the developer most likely forgot to create it
+		if(empty($sFactoryFqcn))
+		{
+			throw new Exception('No factory found for '.get_class($oChangeOp).', did you forgot to create one?');
+		}
+
+		/** @var \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry $oEntry */
+		/** @noinspection PhpUndefinedMethodInspection Call static method from the $sFactoryFqcn class */
+		$oEntry = $sFactoryFqcn::MakeFromCmdbChangeOp($oChangeOp);
+
+		return $oEntry;
+	}
+
 	/**
 	 * Make a CaseLogEntry entry (for ActivityPanel) from an ormCaseLog array entry.
 	 *
@@ -51,12 +79,51 @@ class ActivityEntryFactory
 		$sUserLogin = ($oUser === null) ? '' : $oUser->Get('login');
 
 		$oEntry = new CaseLogEntry(
-			$aOrmEntry['message_html'],
 			DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $aOrmEntry['date']),
 			$sUserLogin,
-			$sAttCode
+			$sAttCode,
+			$aOrmEntry['message_html']
 		);
 
 		return $oEntry;
+	}
+
+	/**
+	 * Return the FQCN of the best fitted factory for the $oChangeOp. If none found, null will be returned.
+	 *
+	 * @param \CMDBChangeOp $oChangeOp
+	 *
+	 * @return string|null
+	 * @throws \ReflectionException
+	 */
+	protected static function GetCmdbChangeOpFactoryClass(CMDBChangeOp $oChangeOp)
+	{
+		// Classes to search a factory for
+		$aClassesTree = [get_class($oChangeOp)];
+
+		// Add parent classes to tree if not a root class
+		$aParentClasses = class_parents($oChangeOp);
+		if(is_array($aParentClasses))
+		{
+			$aClassesTree = array_merge($aClassesTree, array_values($aParentClasses));
+		}
+
+		$sFactoryFqcn = null;
+		foreach($aClassesTree as $sClass)
+		{
+			// Warning: This will replace all occurrences of 'CMDBChangeOp' which can be an issue on classes using this
+			// We used the case sensitive search to limit this issue.
+			$sSimplifiedClass = (new ReflectionClass($sClass))->getShortName();
+			$sFactoryFqcnToTry = __NAMESPACE__ . '\\CMDBChangeOp\\' . $sSimplifiedClass . 'Factory';
+
+			// Stop at the first factory found
+			if(class_exists($sFactoryFqcnToTry))
+			{
+				$sFactoryFqcn = $sFactoryFqcnToTry;
+				break;
+			}
+		}
+
+		return $sFactoryFqcn;
 	}
 }

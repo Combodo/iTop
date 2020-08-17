@@ -3,3 +3,7 @@
 {% block iboActivityEntryExtraClasses %}ibo-caselog-entry ibo-caselog-entry--entry-for-caselog-{{ oUIBlock.GetCaseLogRank() }}{% endblock %}
 {% block iboActivityEntryType %}caselog{% endblock %}
 {% block iboActivityEntryExtraDataAttributes %}data-entry-caselog-attribute-code="{{ oUIBlock.GetAttCode() }}"{% endblock %}
+
+{% block iboActivityEntryMainInformationIcon %}
+	<span class="fas fa-fw fa-quote-left"></span>
+{% endblock %}
