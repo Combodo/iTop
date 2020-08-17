@@ -59,7 +59,7 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 	&.ibo-is-closed{
 		&.ibo-is-current-user{
 			.ibo-activity-entry--main-information::after{
-				margin-right: $ibo-caselog-entry--main-information--decoration--width;
+				width: calc(100% - #{$ibo-caselog-entry--main-information--decoration--width});
 			}
 		}
 		&:not(.ibo-is-current-user){
