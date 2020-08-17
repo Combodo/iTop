@@ -306,3 +306,5 @@ $ibo-color-secondary-900: $ibo-color-grey-900 !default;
 	--ibo-color-secondary-800: #{$ibo-color-secondary-800};
 	--ibo-color-secondary-900: #{$ibo-color-secondary-900};
 }
+
+$ibo-colors: ('grey', 'red', 'orange', 'green', 'blue-grey', 'blue', 'cyan', 'pink', 'primary', 'seconday')

@@ -1,0 +1,6 @@
+<div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }}">
+    <div class="ibo-panel--title"> {{ oUIBlock.GetTitle() }}</div>
+    <div class="ibo-panel--body">
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
+    </div>
+</div>

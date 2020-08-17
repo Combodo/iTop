@@ -1,0 +1,55 @@
+$ibo-panel-colors: (
+        'grey' : $ibo-color-grey-600,
+        'red': $ibo-color-red-600,
+        'orange' : $ibo-color-orange-600,
+        'green': $ibo-color-green-600,
+        'blue-grey': $ibo-color-blue-grey-600,
+        'blue': $ibo-color-blue-600,
+        'cyan': $ibo-color-cyan-600,
+        'pink': $ibo-color-pink-600,
+        'primary': $ibo-color-primary-600,
+        'seconday': $ibo-color-secondary-600,
+) !default;
+
+$ibo-panel--highlight--width: 100% !default;
+$ibo-panel--highlight--height: 5px !default;
+$ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
+$ibo-panel--highlight--padding-bottom: 5px !default;
+
+$ibo-panel--title--color: $ibo-color-grey-900 !default;
+
+$ibo-panel--body--background-color: $ibo-color-white-100 !default;
+$ibo-panel--body--padding-y: 15px !default;
+$ibo-panel--body--padding-x: 10px !default;
+$ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
+$ibo-panel--body--border-size: 1px !default;
+$ibo-panel--body--border-color: $ibo-color-grey-400 !default;
+
+@each $sColor, $sColorValue in $ibo-panel-colors{
+  .ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    
+    background-color: $sColorValue;
+    content: "";
+    
+    width: $ibo-panel--highlight--width;
+    height: $ibo-panel--highlight--height;
+    border-radius: $ibo-panel--highlight--border-radius;
+    padding-bottom: $ibo-panel--highlight--padding-bottom;
+  }
+}
+
+.ibo-panel--title{
+  color: $ibo-panel--title--color;
+  @extend %ibo-font-ral-med-350;
+}
+.ibo-panel--body{
+  position: relative;
+  padding: $ibo-panel--body--padding-y $ibo-panel--body--padding-x;
+  border-radius: $ibo-panel--body--border-radius;
+  border: solid $ibo-panel--body--border-size $ibo-panel--body--border-color;
+  background-color: $ibo-panel--body--background-color;
+}
