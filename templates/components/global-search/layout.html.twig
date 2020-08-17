@@ -9,7 +9,7 @@
 				<span>{{ 'UI:Component:GlobalSearch:Recents:Title'|dict_s }}</span>
 			</div>
 			<div class="ibo-global-search--compartment-content" data-role="ibo-global-search--compartment-content">
-				{% if oUIBlock.GetLastQueries()|length > 12 %}
+				{% if oUIBlock.GetLastQueries()|length > 0 %}
 					{% for aQuery in oUIBlock.GetLastQueries() %}
 						<a href="#" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
