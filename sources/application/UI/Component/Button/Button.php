@@ -24,7 +24,7 @@ namespace Combodo\iTop\Application\UI\Component\Button\Button;
 use Combodo\iTop\Application\UI\UIBlock;
 
 /**
- * Class JsPopoverMenuItem
+ * Class Button
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Button\Button
