@@ -1112,6 +1112,8 @@ abstract class DBSearch
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°2555
 	 */
 	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
 	{

@@ -345,10 +345,10 @@ abstract class BulkExport
 			$this->oBulkExportResult->Set('format', $this->sFormatCode);
 			$this->oBulkExportResult->Set('search', $this->oSearch->serialize());
 			$this->oBulkExportResult->Set('chunk_size', $this->iChunkSize);
-            $this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
             $this->oBulkExportResult->Set('localize_output', $this->bLocalizeOutput);
         }
 		$this->oBulkExportResult->Set('status_info', json_encode($this->GetStatusInfo()));
+		$this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
 		utils::PushArchiveMode(false);
 		$ret = $this->oBulkExportResult->DBWrite();
 		utils::PopArchiveMode();
@@ -420,6 +420,11 @@ abstract class BulkExport
 	public function GetStatistics()
 	{
 		
+	}
+
+	public function SetFields($sFields)
+	{
+
 	}
 	
 	public function GetDownloadFileName()

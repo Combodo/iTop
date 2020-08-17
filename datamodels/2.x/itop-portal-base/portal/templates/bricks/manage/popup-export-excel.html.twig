@@ -27,9 +27,8 @@
 
 <script type="text/javascript">
     var sDataState = 'not-yet-started';
-    var sOQL = {{ sOQL|json_encode|raw }};
+    var sToken = {{ sToken|raw }};
     var sFormat = 'xlsx';
-    var sFields = "{{ sFields }}";
 
     $(document).ready(function () {
         window.setTimeout(function () {
