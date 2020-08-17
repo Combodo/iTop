@@ -35,16 +35,20 @@
 				</a>
 				<div class="ibo-activity-panel--tab-toolbar">
 					<div class="ibo-activity-panel--tab-middle-actions">
-						<label class="ibo-activity-panel--tab-action"
-						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip'|dict_s }}">
-							<input type="checkbox" name="caselogs" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="caselog" checked />
-							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Title'|dict_s }}
-						</label>
-						<label class="ibo-activity-panel--tab-action"
-						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}">
-							<input type="checkbox" name="transitions" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="transition" checked />
-							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title'|dict_s }}
-						</label>
+						{% if oUIBlock.HasCaseLogTabs() %}
+							<label class="ibo-activity-panel--tab-action"
+							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip'|dict_s }}">
+								<input type="checkbox" name="caselogs" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="caselog" checked />
+								{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Title'|dict_s }}
+							</label>
+						{% endif %}
+						{% if oUIBlock.HasLifecycle() %}
+							<label class="ibo-activity-panel--tab-action"
+							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}">
+								<input type="checkbox" name="transitions" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="transition" checked />
+								{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title'|dict_s }}
+							</label>
+						{% endif %}
 						<label class="ibo-activity-panel--tab-action"
 						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip'|dict_s }}">
 							<input type="checkbox" name="edits" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="edit" checked />

@@ -54,6 +54,8 @@ class ActivityPanel extends UIBlock
 	protected $aEntries;
 	/** @var bool $bAreEntriedSorted True if the entries have been sorted by date */
 	protected $bAreEntriedSorted;
+	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
+	protected $bHasLifecycle;
 
 	/**
 	 * ActivityPanel constructor.
@@ -96,6 +98,9 @@ class ActivityPanel extends UIBlock
 		{
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
+
+		// Check if object has a lifecycle
+		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
 
 		return $this;
 	}
@@ -385,6 +390,16 @@ class ActivityPanel extends UIBlock
 	public function HasCaseLogTabs()
 	{
 		return !empty($this->aCaseLogs);
+	}
+
+	/**
+	 * Return true if the host object has a lifecycle
+	 *
+	 * @return bool
+	 */
+	public function HasLifecycle()
+	{
+		return $this->bHasLifecycle;
 	}
 
 	/**
