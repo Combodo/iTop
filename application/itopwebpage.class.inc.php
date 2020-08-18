@@ -79,6 +79,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/c3.min.css");
 		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
 		$this->add_linked_stylesheet("../js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css");
+		$this->add_linked_stylesheet("../css/selectize.default.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -106,6 +107,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/moment-with-locales.min.js');
 		$this->add_linked_script('../js/showdown.min.js');
 		$this->add_linked_script('../js/newsroom_menu.js');
+		$this->add_linked_script("../js/selectize.min.js");
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -804,21 +806,18 @@ JS
 				break;
 
 			default:
-				$sHtml = '';
 				$oAppContext = new ApplicationContext();
 				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 				$sHtml = '<div id="SiloSelection">';
 				$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
-				$sFavoriteOrgs = '';
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
-				$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '',
+				$sHtml .= $oWidget->DisplaySelect($this, 50, false, '', $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
 					array(
 						'iFieldSize' => 20,
 						'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 						'sDefaultValue' => Dict::S('UI:AllOrganizations'),
-					),
-					null, 'select', false /* bSearchMultiple */);
+					));
 				$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
 				$this->add_ready_script("$('#label_org_id').click( function() { if ($('#org_id').val() == '') { $(this).val(''); } } );\n");
 				// Add other dimensions/context information to this form

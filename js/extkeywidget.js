@@ -38,78 +38,121 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id+'_btnRemove').prop('disabled',true);
 		$('#'+this.id+'_linksToRemove').val('');
 	}
+	this.AddSelectize = function(options, initValue)
+	{
+		$('#'+me.id).selectize({
+				render: {
+					item: function(item) {
+						if ( item.obsolescence_flag == 1)
+						{
+							console.warn("ici");
+							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+						}
+						else
+						{
+							val = item.label;
+						}
+						return $("<div>")
+							.append(val);
+					},
+					option: function(item) {
+						console.warn(item);
+						console.warn(item.obsolescence_flag);
+						console.warn($.inArray(item, 'obsolescence_flag'));
+						if ( item.obsolescence_flag == 1)
+						{
+							console.warn("ici");
+							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+						}
+						else
+						{
+							val = item.label;
+						}
+						return $("<div>")
+							.append(val);
+					}
+				},
+				items:[initValue],
+				valueField: 'value',
+				labelField: 'label',
+				searchField: ['value'],
+				options:JSON.parse(options),
+				maxItems: 1,
+			});
+	}
 	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
 	{
 		var hasFocus = 0;
 		var cache = {};
 		$('#label_'+me.id).autocomplete({
-				source: function (request, response) {
-					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+			source: function (request, response) {
+				term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
 
-					if (term in cache)
-					{
-						response(cache[term]);
-						return;
-					}
-					if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120)
-					{
-						//we have already all the possibility in cache
-						var data = [];
-						$.each(cache[this.previous], function (key, value) {
-							if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0)
-							{
-								data.push(value);
-							}
-						});
-						cache[term] = data;
-						response(data);
-					}
-					else
-					{
-						$.post({
-							url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-							dataType: "json",
-							data: {
-								q: request.term,
-								operation: 'ac_extkey',
-								sTargetClass: me.sTargetClass,
-								sFilter: me.sFilter,
-								bSearchMode: me.bSearchMode,
-								sOutputFormat: 'json',
-								json: function () {
-									return sWizHelperJSON;
-								}
-							},
-							success: function (data) {
-								cache[term] = data;
-								response(data);
-							}
-						});
-
-					}
-				},
-				autoFocus: true,
-				minLength: iMinChars,
-				focus: function (event, ui) {
-					// $('#label_$this->iId').val( ui.item.label );
-					return false;
-				},
-				select: function (event, ui) {
-					$('#'+me.id).val(ui.item.value);
-					$('#label_'+me.id).val(ui.item.label);
-					$('#'+me.id).trigger('validate');
-					$('#'+me.id).trigger('extkeychange');
-					$('#'+me.id).trigger('change');
-					return false;
+				if (term in cache)
+				{
+					response(cache[term]);
+					return;
 				}
-			})
-			.autocomplete("instance")._renderItem = function (ul, item) {
+				if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120)
+				{
+					//we have already all the possibility in cache
+					var data = [];
+					$.each(cache[this.previous], function (key, value) {
+						if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0)
+						{
+							data.push(value);
+						}
+					});
+					cache[term] = data;
+					response(data);
+				}
+				else
+				{
+					$.post({
+						url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+						dataType: "json",
+						data: {
+							q: request.term,
+							operation: 'ac_extkey',
+							sTargetClass: me.sTargetClass,
+							sFilter: me.sFilter,
+							bSearchMode: me.bSearchMode,
+							sOutputFormat: 'json',
+							json: function () {
+								return sWizHelperJSON;
+							}
+						},
+						success: function (data) {
+							cache[term] = data;
+							response(data);
+						}
+					});
+
+				}
+			},
+			autoFocus: true,
+			minLength: iMinChars,
+			focus: function (event, ui) {
+				// $('#label_$this->iId').val( ui.item.label );
+				return false;
+			},
+			select: function (event, ui) {
+				$('#'+me.id).val(ui.item.value);
+				$('#label_'+me.id).val(ui.item.label);
+				$('#'+me.id).trigger('validate');
+				$('#'+me.id).trigger('extkeychange');
+				$('#'+me.id).trigger('change');
+				return false;
+			}
+		})
+		.autocomplete("instance")._renderItem = function (ul, item) {
 			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
 			var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-			if (item.obsolete == 'yes')
+			if (item.obsolescence_flag == '1')
 			{
-				val = val+' <b>old</b>';
+				val = ' <span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+val;
 			}
+			val='<d>'+val+'</d>';
 			return $("<li>")
 				.append(val)
 				.appendTo(ul);
