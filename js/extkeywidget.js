@@ -45,7 +45,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					item: function(item) {
 						if ( item.obsolescence_flag == 1)
 						{
-							console.warn("ici");
 							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
 						}
 						else
@@ -56,9 +55,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							.append(val);
 					},
 					option: function(item) {
-						console.warn(item);
-						console.warn(item.obsolescence_flag);
-						console.warn($.inArray(item, 'obsolescence_flag'));
 						if ( item.obsolescence_flag == 1)
 						{
 							console.warn("ici");

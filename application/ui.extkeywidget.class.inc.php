@@ -298,12 +298,7 @@ JS
 			);
 		}
 		$sHTMLValue .= "</div>";
-
-		// Note: This test is no longer necessary as we changed the markup to extract validation decoration in the standard .field_input_xxx container
-		//if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
-		//{
 		$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
-		//}
 
 		return $sHTMLValue;
 	}
@@ -324,7 +319,6 @@ JS
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
 		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
-		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 
 		if (is_null($oAllowedValues))
 		{
@@ -612,12 +606,7 @@ JS
 );
 		}
         $sHTMLValue .= "</div>";
-
-		// Note: This test is no longer necessary as we changed the markup to extract validation decoration in the standard .field_input_xxx container
-		//if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
-		//{
-			$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
-		//}
+		$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 
 		return $sHTMLValue;
 	}
