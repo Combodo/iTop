@@ -130,45 +130,39 @@ class UILinksWidget
 		$aRow = array();
 		$aFieldsMap = array();
 		$iKey = 0;
-		if(is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
+
+		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
 		{
 			$iKey = $linkObjOrId->GetKey();
-			$iRemoteObjKey =  $linkObjOrId->Get($this->m_sExtKeyToRemote);
+			$iRemoteObjKey = $linkObjOrId->Get($this->m_sExtKeyToRemote);
 			$sPrefix .= "[$iKey][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$iKey}";
 			$aArgs['this'] = $linkObjOrId;
 
-			if($bReadOnly)
-            {
-                $aRow['form::checkbox'] = "";
-                foreach($this->m_aEditableFields as $sFieldCode)
-                {
-                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-                    $aRow[$sFieldCode] = $sDisplayValue;
-                }
-            }
-            else
-            {
-                $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
-                foreach($this->m_aEditableFields as $sFieldCode)
-                {
-	                $sRowFieldCode = ($sFieldCode === $this->m_sExtKeyToRemote) ? 'static::key' : $sFieldCode;
-	                $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
-	                $sSafeId = utils::GetSafeId($sFieldId);
-	                $sValue = $linkObjOrId->Get($sFieldCode);
-	                $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-	                $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-	                $aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-		                cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue,
-			                $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs).
-		                '</div></div></div>';
-	                $aFieldsMap[$sFieldCode] = $sSafeId;
-                }
-            }
+			if ($bReadOnly)
+			{
+				$aRow['form::checkbox'] = "";
+				foreach ($this->m_aEditableFields as $sFieldCode)
+				{
+					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
+					$aRow[$sFieldCode] = $sDisplayValue;
+				}
+			}
+			else
+			{
+				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
+				foreach ($this->m_aEditableFields as $sFieldCode)
+				{
+					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
+					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
+					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
+				}
+			}
 
 			$sState = $linkObjOrId->GetState();
+			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->m_sExtKeyToRemote);;
 		}
 		else
 		{
@@ -178,15 +172,18 @@ class UILinksWidget
 				// New link existing only in memory
 				$oNewLinkObj = $linkObjOrId;
 				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
-				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe,
+					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
 			else
 			{
 				$iRemoteObjKey = $linkObjOrId;
 				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
 				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
-				$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToRemote,
+					$oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe,
+					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
 			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
@@ -220,59 +217,133 @@ EOF
 
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
-				$sRowFieldCode = ($sFieldCode === $this->m_sExtKeyToRemote) ? 'static::key' : $sFieldCode;
-				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
-				$sSafeId = utils::GetSafeId($sFieldId);
+				$sSafeFieldId = $this->GetFieldId($iUniqueId, $sFieldCode);
+				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId);
+				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
+
 				$sValue = $oNewLinkObj->Get($sFieldCode);
-				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue,
-						$sSafeId /* id */, $sNameSuffix, 0, $aArgs).
-					'</div></div></div>';
-				$aFieldsMap[$sFieldCode] = $sSafeId;
-				$oP->add_ready_script(<<<EOF
+				$oP->add_ready_script(
+					<<<JS
 oWidget{$this->m_iInputId}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
-EOF
+JS
 				);
 			}
+
 			$sState = '';
+			$sRemoteKeySafeFieldId = $this->GetFieldId($iUniqueId, $this->m_sExtKeyToRemote);
 		}
 
-		if(!$bReadOnly)
-        {
-            $sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
-            $aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
-            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
+		if (!$bReadOnly)
+		{
+			$sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
+			$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
+			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
 
-            $sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
-            $aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
-            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
-        }
+			$sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
+			$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
+			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
+		}
 
+		// Adding fields from remote class
+		// all fields are embedded in a span + added to $aFieldsMap array so that we can refresh them after extkey change
+		$aRemoteFieldsMap = [];
+		foreach (MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
+		{
+			$sSafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $sFieldCode);
+			$aRow['static::'.$sFieldCode] = "<span id='field_$sSafeFieldId'>".$oLinkedObj->GetAsHTML($sFieldCode).'</span>';
+			$aRemoteFieldsMap[$sFieldCode] = $sSafeFieldId;
+		}
+		// id field is needed so that remote object could be load server side
+		$aRemoteFieldsMap['id'] = $sRemoteKeySafeFieldId;
+
+		// Generate WizardHelper to update dependant fields
+		$this->AddWizardHelperInit($oP, $aArgs['wizHelper'], $this->m_sLinkedClass, $sState, $aFieldsMap);
+		//instantiate specific WizarHelper instance for remote class fields refresh
+		$bHasExtKeyUpdatingRemoteClassFields = (
+			array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
+			&& ($aArgs['replaceDependenciesByRemoteClassFields'])
+		);
+		if ($bHasExtKeyUpdatingRemoteClassFields)
+		{
+			$this->AddWizardHelperInit($oP, $aArgs['wizHelperRemote'], $this->m_sRemoteClass, $sState, $aRemoteFieldsMap);
+		}
+
+		return $aRow;
+	}
+
+	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId): void
+	{
+		if (($sFieldCode === $this->m_sExtKeyToRemote))
+		{
+			// current field is the lnk extkey to the remote class
+			$aArgs['replaceDependenciesByRemoteClassFields'] = true;
+			$sRowFieldCode = 'static::key';
+			$aArgs['wizHelperRemote'] = $aArgs['wizHelper'].'_remote';
+			$aRemoteAttDefs = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
+			$aRemoteCodes = array_map(
+				function ($value) {
+					return $value->GetCode();
+				},
+				$aRemoteAttDefs
+			);
+			$aArgs['remoteCodes'] = $aRemoteCodes;
+		}
+		else
+		{
+			$aArgs['replaceDependenciesByRemoteClassFields'] = false;
+			$sRowFieldCode = $sFieldCode;
+		}
+		$sValue = $oLnk->Get($sFieldCode);
+		$sDisplayValue = $oLnk->GetEditValue($sFieldCode);
+		$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
+
+		$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
+			.cmdbAbstractObject::GetFormElementForField(
+				$oP,
+				$this->m_sLinkedClass,
+				$sFieldCode,
+				$oAttDef,
+				$sValue,
+				$sDisplayValue,
+				$sSafeFieldId,
+				$sNameSuffix,
+				0,
+				$aArgs
+			)
+			.'</div></div></div>';
+	}
+
+	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
+	{
+		$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$iLnkId.']';
+
+		return ($bSafe) ? utils::GetSafeId($sFieldId) : $sFieldId;
+	}
+
+	private function AddWizardHelperInit($oP, $sWizardHelperVarName, $sWizardHelperClass, $sState, $aFieldsMap): void
+	{
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
-		
+
 		$oP->add_script(
-<<<EOF
-var {$aArgs['wizHelper']} = new WizardHelper('{$this->m_sLinkedClass}', '', '$sState');
-{$aArgs['wizHelper']}.SetFieldsMap($sJsonFieldsMap);
-{$aArgs['wizHelper']}.SetFieldsCount($iFieldsCount);
-EOF
+			<<<JS
+var $sWizardHelperVarName = new WizardHelper('$sWizardHelperClass', '', '$sState');
+$sWizardHelperVarName.SetFieldsMap($sJsonFieldsMap);
+$sWizardHelperVarName.SetFieldsCount($iFieldsCount);
+$sWizardHelperVarName.SetReturnNotEditableFields(true);
+$sWizardHelperVarName.SetWizHelperJsVarName('$sWizardHelperVarName');
+JS
 		);
-		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
-		{
-			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
-		}
-		return $aRow;
 	}
 
 	/**
 	 * Display one row of the whole form
+	 *
 	 * @param WebPage $oP
 	 * @param array $aConfig
 	 * @param array $aRow
 	 * @param int $iRowId
+	 *
 	 * @return string
 	 */
 	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)

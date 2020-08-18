@@ -67,7 +67,9 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 		'm_oAllowedValues': {},
 		'm_iFieldsCount': 0,
 		'm_sFormPrefix': sFormPrefix,
-		'm_sState': sState
+		'm_sState': sState,
+		'm_bReturnNotEditableFields': false, // if true then will return values and not editable fields
+		'm_sWizHelperJsVarName': null // if set will use this name when server returns JS code in \WizardHelper::GetJsForUpdateFields
 	};
 	this.m_oData.m_sClass = sClass;
 
@@ -109,6 +111,14 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 
 	this.SetCurrentValue = function (sFieldName, currentValue) {
 		this.m_oData.m_oCurrentValues[sFieldName] = currentValue;
+	};
+
+	this.SetReturnNotEditableFields = function (bReturnNotEditableFields) {
+		this.m_oData.m_bReturnNotEditableFields = bReturnNotEditableFields;
+	};
+
+	this.SetWizHelperJsVarName = function (sWizHelperJsVarName) {
+		this.m_oData.m_sWizHelperJsVarName = sWizHelperJsVarName;
 	};
 
 	this.ToJSON = function () {
@@ -167,9 +177,9 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 
 	this.UpdateWizard = function () {
 		//console.log('** UpdateWizard **')
-		for(sFieldCode in this.m_oData.m_oFieldsMap)
+		for (let sFieldCode in this.m_oData.m_oFieldsMap)
 		{
-			sCleanFieldCode = sFieldCode.replace('"', '');
+			let sCleanFieldCode = sFieldCode.replace('"', '');
 			//console.log(sFieldCode);
 			this.UpdateCurrentValue(sCleanFieldCode);
 		}
@@ -202,16 +212,16 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			});
 	};
 	
-	this.UpdateCurrentValue = function (sFieldCode)
-	{
-		$('#'+this.m_oData.m_oFieldsMap[sFieldCode]).trigger('update_value'); // Give the widget a chance to update its value (if it is aware of this event)
-		value = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]).val();
+	this.UpdateCurrentValue = function (sFieldCode) {
+		var $oField = $('#'+this.m_oData.m_oFieldsMap[sFieldCode]);
+		$oField.trigger('update_value'); // Give the widget a chance to update its value (if it is aware of this event)
+		var value = $oField.val();
 		if (value == '')
 		{
 			value = null;
 		}
 		this.m_oData.m_oCurrentValues[sFieldCode] = value;
-		return value;		
+		return value;
 	};
 
 	this.UpdateDependentFields = function (aFieldNames) {

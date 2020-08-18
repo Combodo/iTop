@@ -377,6 +377,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				$('#'+me.id).val(iObjectId);
 				if (prevValue != iObjectId)
 				{
+					// dependent fields will be updated using the WizardHelper JS object
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
