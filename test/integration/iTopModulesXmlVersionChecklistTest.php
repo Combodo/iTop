@@ -32,48 +32,57 @@ use iTopDesignFormat;
  */
 class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 {
+	protected function setUp()
+	{
+		parent::setUp();
+
+		require_once APPROOT.'setup/itopdesignformat.class.inc.php';
+	}
 
 
 	/**
-	 * Verify if the datamodel.*.xml files refer to the current itop version
+	 * Verify if the datamodel.*.xml files refer to the latest version of the design
 	 * This is an integration test
 	 *
 	 * @group skipPostBuild
 	 *
 	 * @dataProvider DatamodelItopXmlVersionProvider
 	 */
-	public function testDatamodelItopXmlVersion($sExpectedXmlVersion, $sXmlFile)
+	public function testDatamodelItopXmlVersion($sXmlFile)
 	{
-		$sFileContent = file_get_contents($sXmlFile);
+		$oOriginalXml = new DOMDocument();
+		$oOriginalXml->load($sXmlFile);
 
-		preg_match(
-			'/<itop_design .* version="([^"]+)">/',
-			$sFileContent,
-			$matches
-		);
+		$oTransformedXml = new DOMDocument();
+		$oTransformedXml->load($sXmlFile);
+		$oFormat = new iTopDesignFormat($oTransformedXml);
 
-		$this->assertSame($sExpectedXmlVersion, $matches[1], "$sXmlFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedXmlVersion)");
+		if ($oFormat->Convert())
+		{
+			// Compare the original and new format
+			$sExpectedXmlVersion = ITOP_DESIGN_LATEST_VERSION;
+			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(), "Datamodel file $sXmlFile not in the latest format ($sExpectedXmlVersion)");
+		}
+		else
+		{
+			$this->fail("Failed to convert $sXmlFile into the latest format");
+		}
 	}
 
 	public function DatamodelItopXmlVersionProvider()
 	{
-		parent::setUp();
-
-		require_once APPROOT.'core/config.class.inc.php';
-		require_once APPROOT.'application/utils.inc.php';
+		static::setUp();
 
 		$sPath = APPROOT.'datamodels/2.x/*/datamodel.*.xml';
 		$aXmlFiles = glob($sPath);
 
-		$sItopVersionShort = \utils::GetItopPatchVersion();
-		$aItopVersion = explode('.', $sItopVersionShort);
-		$sExpectedXmlVersion = ($aItopVersion[0] - 1).'.'.($aItopVersion[1]); // eg: 2.7.0-dev become 1.7
+		$aXmlFiles[] = APPROOT.'core/datamodel.core.xml';
+		$aXmlFiles[] = APPROOT.'application/datamodel.application.xml';
 
 		$aTestCases = array();
 		foreach ($aXmlFiles as $sXmlFile)
 		{
 			$aTestCases[$sXmlFile] = array(
-				'sExpectedXmlVersion' => $sExpectedXmlVersion,
 				'sXmlFile' => $sXmlFile,
 			);
 		}
