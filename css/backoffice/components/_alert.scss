@@ -18,6 +18,9 @@ $ibo-alert-colors: (
         'pink': ($ibo-color-pink-200, $ibo-color-pink-700, $ibo-color-pink-900),
         'primary': ($ibo-color-primary-200, $ibo-color-primary-700, $ibo-color-primary-900),
         'secondary': ($ibo-color-secondary-200, $ibo-color-secondary-700, $ibo-color-secondary-900),
+        'success': ($ibo-color-success-200, $ibo-color-success-700, $ibo-color-success-900),
+        'warning': ($ibo-color-warning-200, $ibo-color-warning-700, $ibo-color-warning-900),
+        'danger': ($ibo-color-danger-200, $ibo-color-danger-700, $ibo-color-danger-900),
 ) !default;
 
 @each $sColor, $aColorValues in $ibo-alert-colors{
