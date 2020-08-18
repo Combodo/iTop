@@ -148,6 +148,7 @@ return array(
     'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => $baseDir . '/sources/application/TwigBase/Controller/Controller.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => $baseDir . '/sources/application/TwigBase/Twig/Extension.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => $baseDir . '/sources/application/TwigBase/Twig/TwigHelper.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\Alert\\Alert\\Alert' => $baseDir . '/sources/application/UI/Component/Alert/Alert.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Breadcrumbs\\Breadcrumbs' => $baseDir . '/sources/application/UI/Component/Breadcrumbs/Breadcrumbs.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Button\\Button\\Button' => $baseDir . '/sources/application/UI/Component/Button/Button.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearch' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearch.php',

@@ -378,6 +378,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\TwigBase\\Controller\\PageNotFoundException' => __DIR__ . '/../..' . '/sources/application/TwigBase/Controller/Controller.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/Extension.php',
         'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => __DIR__ . '/../..' . '/sources/application/TwigBase/Twig/TwigHelper.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\Alert\\Alert\\Alert' => __DIR__ . '/../..' . '/sources/application/UI/Component/Alert/Alert.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Breadcrumbs\\Breadcrumbs' => __DIR__ . '/../..' . '/sources/application/UI/Component/Breadcrumbs/Breadcrumbs.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Button\\Button\\Button' => __DIR__ . '/../..' . '/sources/application/UI/Component/Button/Button.php',
         'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearch' => __DIR__ . '/../..' . '/sources/application/UI/Component/GlobalSearch/GlobalSearch.php',

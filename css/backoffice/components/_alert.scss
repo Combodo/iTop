@@ -1,0 +1,59 @@
+$ibo-alert--padding-y: 18px !default;
+$ibo-alert--padding-x: 20px !default;
+$ibo-alert--border-radius: 2px !default;
+
+$ibo-alert--title--padding-bottom: 4px !default;
+
+$ibo-alert--title--highlight--width: 4px !default;
+$ibo-alert--title--highlight--height: 100% !default;
+
+$ibo-alert-colors: (
+        'grey' : ($ibo-color-grey-200, $ibo-color-grey-700, $ibo-color-grey-900),
+        'red': ($ibo-color-red-200, $ibo-color-red-700, $ibo-color-red-900),
+        'orange' : ($ibo-color-orange-200, $ibo-color-orange-700, $ibo-color-orange-900),
+        'green': ($ibo-color-green-200, $ibo-color-green-700, $ibo-color-green-900),
+        'blue-grey': ($ibo-color-blue-grey-200, $ibo-color-blue-grey-700, $ibo-color-blue-grey-900),
+        'blue': ($ibo-color-blue-200, $ibo-color-blue-700, $ibo-color-blue-900),
+        'cyan': ($ibo-color-cyan-100, $ibo-color-blue-700, $ibo-color-cyan-900),
+        'pink': ($ibo-color-pink-200, $ibo-color-pink-700, $ibo-color-pink-900),
+        'primary': ($ibo-color-primary-200, $ibo-color-primary-700, $ibo-color-primary-900),
+        'secondary': ($ibo-color-secondary-200, $ibo-color-secondary-700, $ibo-color-secondary-900),
+) !default;
+
+@each $sColor, $aColorValues in $ibo-alert-colors{
+  $bg-color: nth($aColorValues, 1);
+  $highlight-color: nth($aColorValues, 2);
+  $text-color: nth($aColorValues, 3);
+  .ibo-alert.ibo-is-#{$sColor}{
+    background-color: $bg-color;
+    color: $text-color;
+    &::before{
+      background-color: $highlight-color;
+    }
+  }
+}
+
+.ibo-alert{
+  position: relative;
+  padding: $ibo-alert--padding-y $ibo-alert--padding-x;
+  border-radius: $ibo-alert--border-radius;
+  
+  @extend %ibo-font-ral-med-150;
+  
+  .ibo-alert--title{
+    padding-bottom: $ibo-alert--title--padding-bottom;
+    
+    @extend %ibo-font-ral-bol-150;
+  }
+}
+.ibo-alert::before{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+
+  border-radius: $ibo-alert--border-radius 0 0 $ibo-alert--border-radius;
+  width: $ibo-alert--title--highlight--width;
+  height: $ibo-alert--title--highlight--height;
+}
