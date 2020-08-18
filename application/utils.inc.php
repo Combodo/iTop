@@ -309,6 +309,7 @@ class utils
 			case 'context_param':
 			case 'parameter':
 			case 'field_name':
+			case 'transaction_id':
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -2225,7 +2226,7 @@ class utils
 	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
 	 * @param string $sBasePath for example '/var/www/html/itop/data/'
 	 *
-	 * @return bool false if path :
+	 * @return bool|string false if path :
 	 *      * invalid
 	 *      * not allowed
 	 *      * not contained in base path
