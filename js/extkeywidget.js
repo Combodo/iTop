@@ -57,7 +57,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					option: function(item) {
 						if ( item.obsolescence_flag == 1)
 						{
-							console.warn("ici");
 							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
 						}
 						else
@@ -559,9 +558,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					else if (me.bSelectMode)
 					{
 						// Add the newly created object to the drop-down list and select it
-						$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);
+						/*$('<option/>', { value : data.id }).html(data.name).appendTo('#'+me.id);
 						$('#'+me.id+' option[value="'+data.id+'"]').attr('selected', 'selected');
-						$('#'+me.id).focus();
+						$('#'+me.id).focus();*/
+						var select = $('#'+me.id)[0].selectize;
+						select.addOption({label: data.name, value: data.id});
+						select.setValue(data.id);
 					}
 					else
 					{
@@ -700,34 +702,43 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
 		me.StopPendingRequest();
-		
-		// Run the query and get the result back directly in JSON
-		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap, 
-			function(data)
-			{
-				var oTemp = $('<div>'+data.name+'</div>');
-				var txt = oTemp.text(); // this causes HTML entities to be interpreted
-				$('#label_'+me.id).val(txt);
-				$('#label_'+me.id).removeClass('ac_dlg_loading');
-				var prevValue = $('#'+me.id).val();
-				$('#'+me.id).val(iObjectId);
-				if (prevValue != iObjectId)
-				{
-					$('#'+me.id).trigger('validate');
-					$('#'+me.id).trigger('extkeychange');
-					$('#'+me.id).trigger('change');
-				}
-				if ( $('#'+me.id).hasClass('multiselect'))
-				{
-					$('#'+me.id+' option').each(function() { this.selected = ($(this).attr('value') == iObjectId); });
-					$('#'+me.id).multiselect('refresh');
-				}
-				$('#label_'+me.id).focus();
-				me.ajax_request = null;
-			},
-			'json'
-		);
-		
+		if ($('#label_'+me.id).size() == 0)
+		{
+			var prevValue =$('#'+me.id)[0].selectize.getValue();
+			$('#'+me.id)[0].selectize.setValue(iObjectId);
+		}
+		else
+		{
+			// Run the query and get the result back directly in JSON
+			me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
+				function (data) {
+					var oTemp = $('<div>'+data.name+'</div>');
+					var txt = oTemp.text(); // this causes HTML entities to be interpreted
+
+					$('#label_'+me.id).val(txt);
+					$('#label_'+me.id).removeClass('ac_dlg_loading');
+
+					var prevValue = $('#'+me.id).val();
+					$('#'+me.id).val(iObjectId);
+					if (prevValue != iObjectId)
+					{
+						$('#'+me.id).trigger('validate');
+						$('#'+me.id).trigger('extkeychange');
+						$('#'+me.id).trigger('change');
+					}
+					if ($('#'+me.id).hasClass('multiselect'))
+					{
+						$('#'+me.id+' option').each(function () {
+							this.selected = ($(this).attr('value') == iObjectId);
+						});
+						$('#'+me.id).multiselect('refresh');
+					}
+					$('#label_'+me.id).focus();
+					me.ajax_request = null;
+				},
+				'json'
+			);
+		}
 		return false; // Do NOT submit the form in case we are called by OnSubmit...
 	};
 
