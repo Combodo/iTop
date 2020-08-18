@@ -471,6 +471,10 @@ class ValueSetObjects extends ValueSetDefinition
 			{
 				$aData['obsolescence_flag']='1';
 			}
+			else
+			{
+				$aData['obsolescence_flag']='0';
+			}
 			foreach ($aAdditionalFields as $sFieldName)
 			{
 				$aData[$sFieldName] = $oObject->Get($sFieldName);
