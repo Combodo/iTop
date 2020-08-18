@@ -252,7 +252,6 @@ class privUITransactionFile
 				if (!$bResult)
 				{
 					self::Error('IsTransactionValid: FAILED to remove transaction '.$id);
-					return false;
 				}
 				else
 				{
