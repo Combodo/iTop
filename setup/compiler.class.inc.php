@@ -282,8 +282,8 @@ class MFCompiler
 			}
 			else
 			{
-				$sRelativeDir = '';
-				$sRealRelativeDir = '';
+				$sRelativeDir = $sModuleName;
+				$sRealRelativeDir = $sModuleName;
 			}
 			$aModulesInfo[$sModuleName] = array('root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion);
 
@@ -334,10 +334,10 @@ class MFCompiler
 
 						foreach ($aCompiledClasses['code'] as $sClass => $sCompiledClass)
 						{
-							$sClassFileName = DIRECTORY_SEPARATOR.$sRelativeDir.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR.$sClass.'.php';
+							$sClassFileName = '/'.$sRelativeDir.'/src/Model/'.$sClass.'.php';
 							$sClassFile = "{$sTempTargetDir}{$sClassFileName}";
 							$this->WritePHPFile($sClassFile, $sModuleName, $sModuleVersion, $sCompiledClass);
-							$sCompiledCode .= "require_once ('{$sFinalTargetDir}{$sClassFileName}');\n";
+							$sCompiledCode .= "require_once (dirname(__DIR__).'{$sClassFileName}');\n";
 						}
 					}
 					catch (DOMFormatException $e)
@@ -474,7 +474,7 @@ EOF;
 			{
 				// We have compiled something: write the code somewhere
 				//
-				if (strlen($sRelativeDir) > 0)
+				if (strlen($sModuleRootDir) > 0)
 				{
 					// Write the code into the given module as model.<module>.php
 					//
@@ -3018,6 +3018,10 @@ EOF;
 	 */
 	protected function WriteFile($sFilename, $sContent, $flags = null)
 	{
+		if (is_file($sFilename) || is_link($sFilename))
+		{
+			@unlink($sFilename);
+		}
 		$ret = file_put_contents($sFilename, $sContent, $flags);
 		if ($ret === false)
 		{
