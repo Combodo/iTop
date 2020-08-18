@@ -9,7 +9,7 @@ responsible disclosure and will make every effort to acknowledge your contributi
 ### iTop vulnerabilities
 Please send a procedure to reproduce iTop vulnerabilities to [itop-security@combodo.com](mailto:itop-security@combodo.com).
 
-You can send us a standard "given / then / when" report, including iTop version, impacts, and maybe installed modules or data if they are 
+You can send us a standard "given / when / then" report, including iTop version, impacts, and maybe installed modules or data if they are 
 needed to reproduce.
 
 ### Dependencies vulnerabilities
