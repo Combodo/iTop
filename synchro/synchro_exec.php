@@ -45,7 +45,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [max_chunk_size=<limit the count of replica loaded in a single pass>]\n");		
+		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [--max_chunk_size=<limit the count of replica loaded in a single pass>] [--simulate=<If set to 1, then the synchro will not be executed, but the expected report will be produced>]\n");
 	}
 	else
 	{
