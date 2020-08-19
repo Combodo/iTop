@@ -92,12 +92,8 @@ catch(Exception $e)
 
 if (utils::IsModeCLI())
 {
-	// Next steps:
-	//   specific arguments: 'csvfile'
-	//   
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -113,16 +109,15 @@ else
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
-	$sDataSourcesList = utils::ReadParam('data_sources', null, true, 'raw_data');
-	
-	if ($sDataSourcesList == null)
-	{
-		UsageAndExit($oP);
-	}
 }
 
 $bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
+$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
+
+if ($sDataSourcesList == null)
+{
+	UsageAndExit($oP);
+}
 
 
 foreach(explode(',', $sDataSourcesList) as $iSDS)
