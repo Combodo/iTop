@@ -50,8 +50,14 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   
   &:first-child{
     border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;
+    .ibo-popover-menu--item:first-child{
+      border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;
+    }
   }
   &:last-child {
     border-radius: 0 0 $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius;
+    .ibo-popover-menu--item:last-child{
+      border-radius: 0 0 $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius;
+    }
   }
 }
