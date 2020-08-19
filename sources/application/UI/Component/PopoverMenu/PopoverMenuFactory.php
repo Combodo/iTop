@@ -163,6 +163,7 @@ class PopoverMenuFactory
 		}
 
 		// TODO: iPopupMenuExtension::MENU_USER_ACTIONS
+		// Legacy code: utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
 
 		return $aItems;
 	}

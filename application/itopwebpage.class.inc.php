@@ -911,67 +911,6 @@ JS
 	}
 
 	/**
-	* Handles the "newsroom" menu at the top-right of the screen
-	*/
-	protected function InitNewsroom()
-	{
-		$sNewsroomInitialImage = '';
-		$aProviderParams = array();
-
-		if (MetaModel::GetConfig()->Get('newsroom_enabled') !== false)
-	 	{
-			$oUser = UserRights::GetUserObject();
-			/**
-			 * @var iNewsroomProvider[] $aProviders
-			 */
-			$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-			foreach($aProviders as $oProvider)
-			{
-				$oProvider->SetConfig(MetaModel::GetConfig());
-				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider),true);
-				if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
-				{
-					$aProviderParams[] = array(
-						'label' => $oProvider->GetLabel(),
-						'fetch_url' => $oProvider->GetFetchURL(),
-						'view_all_url' => $oProvider->GetViewAllURL(),
-						'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
-						'placeholders' => $oProvider->GetPlaceholders(),
-						'ttl' => $oProvider->GetTTL(),
-					);
-				}
-			}
-		}
-		// Show newsroom only if there are some providers
-		if (count($aProviderParams) > 0)
-		{
-			$sImageUrl= 'fas fa-comment-dots';
-			$sPlaceholderImageUrl= 'far fa-envelope';
-			$aParams = array(
-				'image_icon' => $sImageUrl,
-				'placeholder_image_icon' => $sPlaceholderImageUrl,
-				'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
-				'providers' => $aProviderParams,
-				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
-				'labels' => array(
-					'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
-					'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
-					'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
-				),
-			);
-			$sParams = json_encode($aParams);
-			$this->add_ready_script(
-<<<EOF
-	$('#top-left-newsroom-cell').newsroom_menu($sParams);
-EOF
-			);
-			$sNewsroomInitialImage = '<i style="opacity:0.4" class="top-right-icon fas fa-comment-dots"></i>';
-		}
-		// else no newsroom menu
-		return $sNewsroomInitialImage;
-	}
-
-	/**
 	 * Render the banner HTML which can come from both iTop itself and from extensions
 	 *
 	 * @see \iPageUIExtension::GetBannerHtml()
@@ -1006,10 +945,60 @@ EOF
 	{
 		$sHeaderHtml = '';
 
+		//TODO: NB the whole section needs to be refactored
+
 		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
 		{
 			// TODO: Don't forget this dude!
 			$sHeaderHtml .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
+		}
+
+		// TODO: Don't forget this!
+		if (utils::IsArchiveMode())
+		{
+			$sIcon = '<span class="fas fa-lock fa-1x"></span>';
+			$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
+		}
+
+		// TODO: Move this in the Header method
+		$sRestrictions = '';
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		{
+			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+			{
+				$sRestrictions = Dict::S('UI:AccessRO-All');
+			}
+		}
+		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
+		{
+			$sRestrictions = Dict::S('UI:AccessRO-Users');
+		}
+		if (strlen($sRestrictions) > 0)
+		{
+			$sIcon =
+				<<<EOF
+<span class="fa-stack fa-sm">
+  <i class="fas fa-pencil-alt fa-flip-horizontal fa-stack-1x"></i>
+  <i class="fas fa-ban fa-stack-2x text-danger"></i>
+</span>
+EOF;
+
+			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
+			if (strlen($sAdminMessage) > 0)
+			{
+				$sRestrictions .= '&nbsp;'.$sAdminMessage;
+			}
+			$this->AddApplicationMessage($sRestrictions, $sIcon);
+		}
+
+		// TODO: Move this in the header method
+		$sApplicationMessages = '';
+		foreach ($this->m_aMessages as $aMessage)
+		{
+			$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
+			$sHtmlMessage = $aMessage['message'];
+			$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, self::PAGES_CHARSET).'"' : '';
+			$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
 		}
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
@@ -1195,9 +1184,6 @@ EOF
 EOF
 		);
 
-		// TODO: Extract in a dedicated component and call it in the nav menu
-		$sNewsRoomInitialImage = $this->InitNewsroom();
-
 		$this->outputCollapsibleSectionInit();
 
 		// TODO: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
@@ -1252,11 +1238,6 @@ EOF
 
 		}
 
-
-//		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-
-
-		$sHtml .= "</head>\n";
 		$sBodyClass = "";
 		if ($this->IsPrintableVersion())
 		{
@@ -1298,6 +1279,7 @@ EOF;
 			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
+		// TODO
 //		// Render the text of the global search form
 //		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
 //		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
@@ -1311,218 +1293,6 @@ EOF;
 		}
 		elseif ($this->GetOutputFormat() == 'html')
 		{
-			$oAppContext = new ApplicationContext();
-
-			$sUserName = UserRights::GetUser();
-			// TODO: BEGIN USER MENU
-			$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-			if (UserRights::IsAdministrator())
-			{
-				$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
-			}
-			else
-			{
-				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
-			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-power-off\"></i><ul>";
-			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-			$aActions = array();
-
-//			$aAllowedPortals = UserRights::GetAllowedPortals();
-//			if (count($aAllowedPortals) > 1)
-//			{
-//				// Adding portals
-//				foreach ($aAllowedPortals as $aAllowedPortal)
-//				{
-//					if ($aAllowedPortal['id'] !== 'backoffice')
-//					{
-//						$oPortalMenuItem = new URLPopupMenuItem('portal:'.$aAllowedPortal['id'], Dict::S($aAllowedPortal['label']),
-//							$aAllowedPortal['url'], '_blank');
-//						$aActions[$oPortalMenuItem->GetUID()] = $oPortalMenuItem->GetMenuItem();
-//					}
-//				}
-//				// Adding a separator
-//				$oPortalSeparatorMenuItem = new SeparatorPopupMenuItem();
-//				$aActions[$oPortalSeparatorMenuItem->GetUID()] = $oPortalSeparatorMenuItem->GetMenuItem();
-//			}
-
-//			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'),
-//				utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
-//			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
-
-			if (utils::IsArchiveMode())
-			{
-//				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
-//				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
-
-				$sIcon = '<span class="fas fa-lock fa-1x"></span>';
-				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
-			}
-//			elseif (UserRights::CanBrowseArchive())
-//			{
-//				$oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
-//				$aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
-//			}
-//			if (utils::CanLogOff())
-//			{
-//				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'),
-//					utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
-//				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
-//			}
-//			if (UserRights::CanChangePassword())
-//			{
-//				$oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'),
-//					utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=change_pwd');
-//				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
-//			}
-			utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
-
-//			$oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
-//			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
-
-			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
-			// TODO: END USER MENU
-
-			// TODO: Move this in the Header method
-			$sRestrictions = '';
-			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-			{
-				if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-				{
-					$sRestrictions = Dict::S('UI:AccessRO-All');
-				}
-			}
-			elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
-			{
-				$sRestrictions = Dict::S('UI:AccessRO-Users');
-			}
-
-			if (strlen($sRestrictions) > 0)
-			{
-				$sIcon =
-					<<<EOF
-<span class="fa-stack fa-sm">
-  <i class="fas fa-pencil-alt fa-flip-horizontal fa-stack-1x"></i>
-  <i class="fas fa-ban fa-stack-2x text-danger"></i>
-</span>
-EOF;
-
-				$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-				if (strlen($sAdminMessage) > 0)
-				{
-					$sRestrictions .= '&nbsp;'.$sAdminMessage;
-				}
-				$this->AddApplicationMessage($sRestrictions, $sIcon);
-			}
-
-			// TODO: Move this in the header method
-			$sApplicationMessages = '';
-			foreach ($this->m_aMessages as $aMessage)
-			{
-				$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
-				$sHtmlMessage = $aMessage['message'];
-				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, self::PAGES_CHARSET).'"' : '';
-				$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
-			}
-
-			$sApplicationBanner = "<div class=\"app-banner ui-helper-clearfix\">$sApplicationMessages$sBannerExtraHtml</div>";
-
-			if (!empty($sNorthPane))
-			{
-				$sNorthPane = '<div id="top-pane" class="ui-layout-north">'.$sNorthPane.'</div>';
-			}
-
-			if (!empty($sSouthPane))
-			{
-				$sSouthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sSouthPane.'</div>';
-			}
-
-			// TODO: What do we do with this?
-//			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
-			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
-
-//			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
-//			if (file_exists(MODULESROOT.'branding/main-logo.png'))
-//			{
-//				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png?t='.utils::GetCacheBusterTimestamp();
-//			}
-
-			$sHtml .= $sNorthPane;
-			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
-			$sHtml .= '<!-- Beginning of the left pane -->';
-			$sHtml .= ' <div class="ui-layout-north">';
-//			$sHtml .= ' <div id="header-logo">';
-//			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'
-//				.htmlentities($sIconUrl, ENT_QUOTES, self::PAGES_CHARSET)
-//				.'"><img src="'.$sDisplayIcon.'" title="'
-//				.htmlentities($sVersionString, ENT_QUOTES, self::PAGES_CHARSET)
-//				.'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
-//			$sHtml .= ' </div>';
-			$sHtml .= ' <div class="header-menu">';
-//			if (!MetaModel::GetConfig()->Get('demo_mode'))
-//			{
-//				$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-//			}
-			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
-			$sHtml .= ' </div>';
-			$sHtml .= ' </div>';
-//			$sHtml .= ' <div id="menu" class="ui-layout-center">';
-//			$sHtml .= '		<div id="inner_menu">';
-//			$sHtml .= '			<div id="accordion">';
-//			$sHtml .= self::FilterXSS($this->m_sMenu);
-//			$sHtml .= '			<!-- Beginning of the accordion menu -->';
-//			$sHtml .= '			<!-- End of the accordion menu-->';
-//			$sHtml .= '			</div>';
-//			$sHtml .= '		</div> <!-- /inner menu -->';
-//			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a></div></div>';
-			$sHtml .= '<!-- End of the left pane -->';
-			$sHtml .= '</div>';
-
-			$sHtml .= '<div class="ui-layout-center">';
-			$sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
-			$sHtml .= self::FilterXSS($sApplicationBanner);
-
-//			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
-
-//			$sHtml .= ' <table id="top-bar-table">';
-//			$sHtml .= ' <tr>';
-//			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
-//			$sHtml .= ' <i class="fas fa-bars"></i>';
-//			$sHtml .= ' </td>';
-//			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-//			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><i class="fas fa-home"></i></a>';
-//			$sHtml .= ' </td>';
-//			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-//			$sHtml .= ' </td>';
-//			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
-//			$sHtml .= ' <div id="itop-breadcrumb"></div>';
-//			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="top-bar-table-search">';
-			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
-			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
-			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><i class="top-right-icon fa-flip-horizontal fas fa-search"></i><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-//			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank" title="'.Dict::S('UI:Help').'"><i class="top-right-icon fas fa-question-circle"></i></a></td>';
-			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
-			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
-			$sHtml .= '     </tr></table></form></div>';
-//			$sHtml .= ' </td>';
-//			$sHtml .= ' </tr>';
-//			$sHtml .= ' </table>';
-
-//			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
-//			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
-//			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
-//			$sHtml .= ' <div id="itop-breadcrumb"></div>';
-
-			$sHtml .= ' </div>';
-			$sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';
-			$sHtml .= ' <!-- Beginning of page content -->';
-			$sHtml .= self::FilterXSS($this->s_content);
-			$sHtml .= ' <!-- End of page content -->';
-			$sHtml .= ' </div>';
-			$sHtml .= '</div>';
-			$sHtml .= $sSouthPane;
 
 			// Add the captured output
 			if (trim($s_captured_output) != "")
@@ -1544,8 +1314,6 @@ EOF;
 			$sHtml .= '</div>';
 		}
 
-		$sHtml .= "</body>\n";
-		$sHtml .= "</html>\n";
 
 		if ($this->GetOutputFormat() == 'html')
 		{
@@ -1555,6 +1323,7 @@ EOF;
 		}
 		else
 		{
+			// TODO: Check with ITOMIG if we can remove this
 			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
 			{
 				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
@@ -1585,8 +1354,6 @@ EOF;
 				}
 			}
 		}
-//		DBSearch::RecordQueryTrace();
-//		ExecutionKPI::ReportStats();
 	}
 
 	/**
