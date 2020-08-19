@@ -13,4 +13,13 @@
 			<url>$$http://fr.wikipedia.org/</url>
 		</menu>
 	</menus>
+	<branding>
+		<themes>
+			<theme id="light-grey">
+				<variables>
+					<variable id="foo" _delta="define">bar</variable>
+        </variables>
+			</theme>
+		</themes>
+	</branding>
 </itop_design>

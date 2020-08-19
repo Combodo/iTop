@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <menus>
+    <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>WelcomeMenu</parent>
+      <url>$$http://fr.wikipedia.org/</url>
+      <in_new_window>true</in_new_window>
+    </menu>
+    <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>30</rank>
+      <enable_stimulus/>
+    </menu>
+  </menus>
+  <branding>
+    <main_logo _delta="define">images/itop-logo.png</main_logo>
+  </branding>
+</itop_design>
