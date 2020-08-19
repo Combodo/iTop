@@ -2235,7 +2235,15 @@ class ListExpression extends Expression
 		{
 			if ($oExpr instanceof VariableExpression)
 			{
-				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
+				$oVarExpr = $oExpr->GetAsScalar($aArgs);
+				if ($oVarExpr instanceof ListExpression)
+				{
+					$this->m_aExpressions = $oVarExpr->GetItems();
+				}
+				else
+				{
+					$this->m_aExpressions[$idx] = $oVarExpr;
+				}
 			}
 			else
 			{

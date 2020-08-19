@@ -534,9 +534,9 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null)
+					if ($value === null) // Source CSV: "<NULL>"
 					{
-						$aValues[] = 'NULL';
+						$aValues[] = null;
 					}
 					elseif ($aIsDateToTransform[$iCol] !== false)
 					{

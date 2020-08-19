@@ -928,6 +928,9 @@ class RuntimeDashboard extends Dashboard
 				$sExtraParams = json_encode($aAjaxParams);
 				$iReloadInterval = 1000 * $this->GetAutoReloadInterval();
 				$sReloadURL = $this->GetReloadURL();
+				$oAppContext = new ApplicationContext();
+				$sContext=$oAppContext->GetForPostParams();
+				//$sContext is named "c"  because it use the existing code for context parameters c[org_id] and c[menu]
 				$oPage->add_script(
 <<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
@@ -945,7 +948,7 @@ class RuntimeDashboard extends Dashboard
 					{
 						$('.dashboard_contents#$sDivId').block();
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL'},
+						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, c: $sContext, reload_url: '$sReloadURL'},
 						   function(data){
 							 $('.dashboard_contents#$sDivId').html(data);
 							 $('.dashboard_contents#$sDivId').unblock();

@@ -41,7 +41,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '1.8'); // iTop >= 2.8.0
  */
 class iTopDesignFormat
 {
-	protected static $aVersions = array(
+	public static $aVersions = array(
 		'1.0' => array(
 			'previous' => null,
 			'go_to_previous' => null,
@@ -95,7 +95,7 @@ class iTopDesignFormat
 			'go_to_previous' => 'From18To17',
 			'next' => null,
 			'go_to_next' => null,
-		),
+		)
 	);
 
 	/**

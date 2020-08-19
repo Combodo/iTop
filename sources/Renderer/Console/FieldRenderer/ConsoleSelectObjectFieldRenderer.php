@@ -91,11 +91,10 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$sFormPrefix = '';
 				$oWidget = new \UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
 				$aArgs = array();
-				$sDisplayStyle = 'select';
 				$sTitle = $this->oField->GetLabel();
 				require_once(APPROOT.'application/capturewebpage.class.inc.php');
 				$oPage = new \CaptureWebPage();
-				$sHTMLValue = $oWidget->Display($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $sFieldId, $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle);
+				$sHTMLValue = $oWidget->DisplaySelect($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs);
 				$oOutput->AddHtml($sHTMLValue);
 				$oOutput->AddHtml($oPage->GetHtml());
 				$oOutput->AddJs($oPage->GetJS());

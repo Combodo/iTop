@@ -28,6 +28,7 @@ use AttributeImage;
 use AttributeSet;
 use AttributeTagSet;
 use BinaryExpression;
+use BulkExport;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
@@ -245,11 +246,18 @@ class ManageBrickController extends BrickController
 		}
 
 		$sFields = implode(',', $aFields);
+		$sFormat = 'xlsx';
+		$oSearch->UpdateContextFromUser();
+		$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
+		$oExporter->SetObjectList($oSearch);
+		$oExporter->SetFormat($sFormat);
+		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+		$oExporter->SetFields($sFields);
+
 		$aData = array(
 			'oBrick' => $oBrick,
 			'sBrickId' => $sBrickId,
-			'sFields' => $sFields,
-			'sOQL' => $oSearch->ToOQL(),
+			'sToken' => $oExporter->SaveState(),
 		);
 
 		return $this->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);

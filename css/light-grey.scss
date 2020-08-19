@@ -2376,16 +2376,19 @@
 		noborder-bottom: 2px #fff solid;
 		nowidth: 100%;
 
-		* {
-			box-sizing: border-box;
+	* {
+		box-sizing: border-box;
 		}
 	}
-
-	fieldset .details > .field_container {
+	fieldset .details>.field_container {
 		background: transparent;
 		border: 0;
 	}
-
+	.field_input_zone {
+		.selectize-input {
+			padding: 0;
+		}
+	}
 	.field_container {
 		display: table;
 		width: 100%;
@@ -2477,8 +2480,9 @@
 							}
 						}
 
-						.field_input_zone {
-							width: 100%; /* auto; */
+					.field_input_zone{
+						width: 100%; /* auto; */
+						align-items:center;
 
 							&.field_input_string,
 							&.field_input_password {
@@ -2615,9 +2619,9 @@
 								}
 							}
 
-							&.field_input_extkey {
-								display: table;
-								width: 100%;
+						&.field_input_extkey{
+							display: inline-table;
+							width: 100%;
 
 								> .field_select_wrapper {
 									display: table-cell;

@@ -2464,6 +2464,10 @@ EOF
 				$data = '';
 				if ($token === null)
 				{
+					if (!ContextTag::Check('backoffice'))
+					{
+						throw new Exception('Missing token');
+					}
 					$sFormat = utils::ReadParam('format', '');
 					$sExpression = utils::ReadParam('expression', null, false, 'raw_data');
 					$iQueryId = utils::ReadParam('query', null);
@@ -2499,6 +2503,11 @@ EOF
 				else
 				{
 					$oExporter = BulkExport::FindExporterFromToken($token);
+					if (utils::ReadParam('start', 0, false, 'integer') == 1)
+					{
+						// From portal, the first call is using a token
+						$data .= $oExporter->GetHeader();
+					}
 				}
 
 				if ($oExporter)

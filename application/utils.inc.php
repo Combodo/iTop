@@ -309,6 +309,7 @@ class utils
 			case 'context_param':
 			case 'parameter':
 			case 'field_name':
+			case 'transaction_id':
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -2113,6 +2114,41 @@ class utils
 	}
 
 	/**
+	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 */
+	public static function GetItopVersionWikiSyntax()
+	{
+		$sMinorVersion = self::GetItopMinorVersion();
+		return str_replace('.', '_', $sMinorVersion).'_0';
+	}
+
+	/**
+	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
+	 * @throws \Exception
+	 */
+	public static function GetItopMinorVersion()
+	{
+		$sPatchVersion = self::GetItopPatchVersion();
+		$aExplodedVersion = explode('.', $sPatchVersion);
+
+		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
+		{
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+
+		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
+	}
+
+	/**
+	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
+	 */
+	public static function GetItopPatchVersion()
+	{
+		$aExplodedVersion = explode('-', ITOP_VERSION);
+		return $aExplodedVersion[0];
+	}
+
+	/**
 	 * Check if the given class if configured as a high cardinality class.
 	 *
 	 * @param $sClass
@@ -2224,7 +2260,7 @@ class utils
 	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
 	 * @param string $sBasePath for example '/var/www/html/itop/data/'
 	 *
-	 * @return bool false if path :
+	 * @return bool|string false if path :
 	 *      * invalid
 	 *      * not allowed
 	 *      * not contained in base path
