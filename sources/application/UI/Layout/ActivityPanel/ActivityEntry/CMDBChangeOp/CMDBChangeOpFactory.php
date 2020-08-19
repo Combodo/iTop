@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBCha
 
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use DateTime;
 use iCMDBChangeOp;
 
@@ -35,8 +36,10 @@ use iCMDBChangeOp;
  */
 class CMDBChangeOpFactory
 {
-	/** @var string DEFAULT_DECORATION_CLASSES Use to overload the decoration classes from the ActivityEntry */
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
+	/** @var string DEFAULT_TYPE Used to overload the type from the ActivityEntry */
+	const DEFAULT_TYPE = EditsEntry::DEFAULT_TYPE;
+	/** @var string DEFAULT_DECORATION_CLASSES Used to overload the decoration classes from the ActivityEntry */
+	const DEFAULT_DECORATION_CLASSES = ActivityEntry::DEFAULT_DECORATION_CLASSES;
 
 	/**
 	 * Make an ActivityEntry from the iCMDBChangeOp $oChangeOp
@@ -53,7 +56,8 @@ class CMDBChangeOpFactory
 		$sContent = $oChangeOp->GetDescription();
 
 		$oEntry = new ActivityEntry($oDateTime, $sAuthorFriendlyname, $sContent);
-		$oEntry->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);
+		$oEntry->SetType(static::DEFAULT_TYPE)
+			->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);
 
 		return $oEntry;
 	}

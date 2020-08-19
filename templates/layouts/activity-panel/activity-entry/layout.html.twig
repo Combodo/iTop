@@ -1,6 +1,6 @@
 <div class="ibo-activity-entry {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
      data-role="ibo-activity-entry"
-     data-entry-type="{% block iboActivityEntryType %}generic{% endblock %}"
+     data-entry-type="{% block iboActivityEntryType %}{{ oUIBlock.GetType() }}{% endblock %}"
      data-entry-datetime-raw="{{ oUIBlock.GetRawDateTime() }}"
 	 data-entry-author-login="{{ oUIBlock.GetAuthorLogin() }}"
 	 {% block iboActivityEntryExtraDataAttributes %}{% endblock %}>

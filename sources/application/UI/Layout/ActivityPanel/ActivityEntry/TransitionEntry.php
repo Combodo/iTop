@@ -36,7 +36,7 @@ class TransitionEntry extends ActivityEntry
 	const BLOCK_CODE = 'ibo-transition-entry';
 	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/transition-entry';
 
-	// Specific constants
+	const DEFAULT_TYPE = 'transition';
 	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-map-signs';
 
 	/** @var string $sOriginStateCode Code of the state before the transition */

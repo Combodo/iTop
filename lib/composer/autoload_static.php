@@ -908,6 +908,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'PhpParser\\Serializer\\XML' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Serializer/XML.php',
         'PhpParser\\Unserializer' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Unserializer.php',
         'PhpParser\\Unserializer\\XML' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Unserializer/XML.php',
+        'PluginInstanciationManager' => __DIR__ . '/../..' . '/core/metamodel.class.php',
+        'PluginManager' => __DIR__ . '/../..' . '/core/metamodel.class.php',
         'PortalDispatcher' => __DIR__ . '/../..' . '/application/portaldispatcher.class.inc.php',
         'PortalURLMaker' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'PrintableDataTable' => __DIR__ . '/../..' . '/application/datatable.class.inc.php',

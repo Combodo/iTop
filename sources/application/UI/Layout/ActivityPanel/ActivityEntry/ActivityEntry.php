@@ -43,9 +43,13 @@ class ActivityEntry extends UIBlock
 	// Specific constants
 	/** @var string DEFAULT_ORIGIN */
 	const DEFAULT_ORIGIN = 'unknown';
+	/** @var string DEFAULT_TYPE */
+	const DEFAULT_TYPE = 'generic';
 	/** @var string DEFAULT_DECORATION_CLASSES */
 	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
 
+	/** @var string $sType Type of entry, used for filtering (eg. caselog, edits, transition, ...) */
+	protected $sType;
 	/** @var string $sDecorationClasses CSS classes to use to decorate the entry */
 	protected $sDecorationClasses;
 	/** @var string $sContent Raw content of the entry itself (should not have been processed / escaped) */
@@ -79,11 +83,36 @@ class ActivityEntry extends UIBlock
 	{
 		parent::__construct($sIdCode);
 
+		$this->SetType(static::DEFAULT_TYPE);
 		$this->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);
 		$this->SetContent($sContent);
 		$this->SetDateTime($oDateTime);
 		$this->SetAuthor($sAuthorLogin);
 		$this->SetOrigin(static::DEFAULT_ORIGIN);
+	}
+
+	/**
+	 * Set the type of the entry (eg. case log, edits, transition, ...)
+	 *
+	 * @param string $sType
+	 *
+	 * @return $this
+	 */
+	public function SetType($sType)
+	{
+		$this->sType = $sType;
+
+		return $this;
+	}
+
+	/**
+	 * Return the type of the entry (eg. caselog, edits, transition, ...)
+	 *
+	 * @return string
+	 */
+	public function GetType()
+	{
+		return $this->sType;
 	}
 
 	/**

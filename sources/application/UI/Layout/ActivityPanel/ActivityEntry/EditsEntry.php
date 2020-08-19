@@ -39,7 +39,7 @@ class EditsEntry extends ActivityEntry
 	const BLOCK_CODE = 'ibo-edits-entry';
 	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/edits-entry';
 
-	// Specific constants
+	const DEFAULT_TYPE = 'edits';
 	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-pen';
 
 	/** @var string $sObjectClass */

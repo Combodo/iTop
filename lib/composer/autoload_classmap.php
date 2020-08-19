@@ -678,6 +678,8 @@ return array(
     'PhpParser\\Serializer\\XML' => $vendorDir . '/nikic/php-parser/lib/PhpParser/Serializer/XML.php',
     'PhpParser\\Unserializer' => $vendorDir . '/nikic/php-parser/lib/PhpParser/Unserializer.php',
     'PhpParser\\Unserializer\\XML' => $vendorDir . '/nikic/php-parser/lib/PhpParser/Unserializer/XML.php',
+    'PluginInstanciationManager' => $baseDir . '/core/metamodel.class.php',
+    'PluginManager' => $baseDir . '/core/metamodel.class.php',
     'PortalDispatcher' => $baseDir . '/application/portaldispatcher.class.inc.php',
     'PortalURLMaker' => $baseDir . '/application/applicationcontext.class.inc.php',
     'PrintableDataTable' => $baseDir . '/application/datatable.class.inc.php',
