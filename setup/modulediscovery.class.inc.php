@@ -134,7 +134,11 @@ class ModuleDiscovery
 		{
 			$sModuleName = $aMatches[1];
 			$sDir = dirname($sFilePath);
-			foreach (array($sDir, $sDir.'/dictionaries') as $sRootDir)
+			$aDirs = [
+				$sDir => self::$m_sModulePath,
+				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries'
+			];
+			foreach ($aDirs as $sRootDir => $sPath)
 			{
 				if ($hDir = @opendir($sRootDir))
 				{
@@ -143,7 +147,7 @@ class ModuleDiscovery
 						$aMatches = array();
 						if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
 						{
-							self::$m_aModules[$sId]['dictionary'][] = $sRootDir.'/'.$sFile;
+							self::$m_aModules[$sId]['dictionary'][] = $sPath.'/'.$sFile;
 						}
 					}
 					closedir($hDir);
