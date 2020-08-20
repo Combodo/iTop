@@ -1140,6 +1140,33 @@ EOF
 			}
 		}
 
+		if ($oAdditionalValueForSelect = $oProperties->GetOptionalElement('complement_for_select'))
+		{
+			$oNameAttributes = $oAdditionalValueForSelect->GetUniqueElement('attributes');
+			/** @var \DOMNodeList $oAttributes */
+			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
+			$aNameAttCodes = array();
+			/** @var \MFElement $oAttribute */
+			foreach($oAttributes as $oAttribute)
+			{
+				$aNameAttCodes[] = $oAttribute->getAttribute('id');
+			}
+			if (count($aNameAttCodes) > 0)
+			{
+				// New style...
+				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
+			}
+			else
+			{
+				$sNameAttCode = "''";
+			}
+		}
+		else
+		{
+			$sNameAttCode = "''";
+		}
+		$aClassParams['name_complement_for_select'] = $sNameAttCode;
+
 		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules'))
 		{
 			$aUniquenessRules = array();

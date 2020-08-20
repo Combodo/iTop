@@ -349,11 +349,11 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_bSort = $bSort;
 	}
 
-	public function GetValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains', $aAdditionalFields = array())
+	public function GetValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
 		{
-			$this->LoadValuesForAutocomplete($aArgs, $sContains, $sOperation, $aAdditionalFields);
+			$this->LoadValuesForAutocomplete($aArgs, $sContains, $sOperation);
 			$this->m_bIsLoaded = true;
 		}
 		// The results are already filtered and sorted (on friendly name)
@@ -370,7 +370,7 @@ class ValueSetObjects extends ValueSetDefinition
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	protected function LoadValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains', $aAdditionalFields = array())
+	protected function LoadValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		$this->m_sContains = $sContains;
 		$this->m_sOperation = $sOperation;
@@ -386,6 +386,7 @@ class ValueSetObjects extends ValueSetDefinition
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		}
+
 		if (!$oFilter) return false;
 		if (!is_null($this->m_oExtraCondition))
 		{
@@ -399,7 +400,7 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 		}
 
-		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
+		//$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
 		$sClass = $oFilter->GetClass();
 
 		switch ($sOperation)
@@ -454,7 +455,16 @@ class ValueSetObjects extends ValueSetDefinition
 		{
 			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
 		}
-		$aAttToLoad=array_merge($aAttToLoad,$aAdditionalFields);
+
+		$aComplementAttributeSpec = MetaModel::GetComplementAttributeSpec($sClass);
+		$sFormatAdditionalField = $aComplementAttributeSpec[0];
+		$aAdditionalField =  $aComplementAttributeSpec[1];
+
+		if (count($aAdditionalField)>0)
+		{
+			$aAttToLoad = array_merge ($aAttToLoad, [$oFilter->GetClassAlias() => $aAdditionalField]);
+		}
+
 		$oObjects->OptimizeColumnLoad($aAttToLoad);
 		while ($oObject = $oObjects->Fetch())
 		{
@@ -475,9 +485,18 @@ class ValueSetObjects extends ValueSetDefinition
 			{
 				$aData['obsolescence_flag']='0';
 			}
-			foreach ($aAdditionalFields as $sFieldName)
+			if (count($aAdditionalField)>0)
 			{
-				$aData[$sFieldName] = $oObject->Get($sFieldName);
+				$aArguments = [];
+				foreach ($aAdditionalField as $sAdditionalField)
+				{
+					array_push ($aArguments,$oObject->Get($sAdditionalField));
+				}
+				$aData['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+			}
+			else
+			{
+				$aData['additional_field']='';
 			}
 			$this->m_aValues[$oObject->GetKey()] = $aData;
 		}

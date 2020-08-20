@@ -748,7 +748,47 @@ abstract class MetaModel
 			return array('%1$s', array($nameRawSpec));
 		}
 	}
-
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	final static public function GetComplementAttributeSpec($sClass)
+	{
+		self::_check_subclass($sClass);
+		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
+		if (is_array($nameRawSpec))
+		{
+			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
+			if (strlen($sFormat) == 0)
+			{
+				// Default to "%1$s %2$s..."
+				for($i = 1; $i <= count($nameRawSpec); $i++)
+				{
+					if (empty($sFormat))
+					{
+						$sFormat .= '%'.$i.'$s';
+					}
+					else
+					{
+						$sFormat .= ' %'.$i.'$s';
+					}
+				}
+			}
+			return array($sFormat, $nameRawSpec);
+		}
+		elseif (empty($nameRawSpec))
+		{
+			return array($sClass, array());
+		}
+		else
+		{
+			// string -> attcode
+			return array('%1$s', array($nameRawSpec));
+		}
+	}
 	/**
 	 * Get the friendly name expression for a given class
 	 *

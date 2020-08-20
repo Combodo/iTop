@@ -61,6 +61,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						{
 							val = item.label;
 						}
+						if (item.additional_field != undefined )
+						{
+							val = val+'<br><i>'+item.additional_field+'</i>';
+						}
 						return $("<div>")
 							.append(val);
 					}
@@ -145,9 +149,13 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			{
 				val = ' <span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+val;
 			}
-			val='<d>'+val+'</d>';
+			if (item.additional_field != undefined )
+			{
+				val = val+'<br><i>'+item.additional_field+'</i>';
+			}
+
 			return $("<li>")
-				.append(val)
+				.append("<d>"+val+"</d>")
 				.appendTo(ul);
 		};
 
