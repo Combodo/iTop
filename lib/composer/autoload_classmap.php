@@ -154,6 +154,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearch' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearch.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchFactory' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearchFactory.php',
     'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchHelper' => $baseDir . '/sources/application/UI/Component/GlobalSearch/GlobalSearchHelper.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\Html\\Html\\Html' => $baseDir . '/sources/application/UI/Component/Html/Html.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Panel\\Panel\\Panel' => $baseDir . '/sources/application/UI/Component/Panel/Panel.php',
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenu' => $baseDir . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenu.php',
     'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenuFactory' => $baseDir . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenuFactory.php',
