@@ -44,7 +44,9 @@ $ibo-panel--body--border-color: $ibo-color-grey-400 !default;
     padding-bottom: $ibo-panel--highlight--padding-bottom;
   }
 }
-
+.ibo-panel + .ibo-panel{
+  margin-top: 15px;
+}
 .ibo-panel--title{
   color: $ibo-panel--title--color;
   @extend %ibo-font-ral-med-350;

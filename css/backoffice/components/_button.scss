@@ -206,6 +206,9 @@ $ibo-button-icon--padding-right: 4px !default;
   padding: $ibo-button--padding-y $ibo-button--padding-x;
   border: 0;
   border-radius: $ibo-button--border-radius;
+  &~ .ibo-button{
+    margin-left: 5px;
+  }
 }
 .ibo-button-icon{
   padding-right: $ibo-button-icon--padding-right;
