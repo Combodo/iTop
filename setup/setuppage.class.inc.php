@@ -151,26 +151,27 @@ class SetupPage extends NiceWebPage
 		return parent::output();
 	}
 
+	//@deprecated since 2.8.0 use SetupLog::Error
 	public static function log_error($sText)
 	{
 		SetupLog::Error($sText);
 	}
-
+	//@deprecated since 2.8.0 use SetupLog::Warning
 	public static function log_warning($sText)
 	{
 		SetupLog::Warning($sText);
 	}
-
+	//@deprecated since 2.8.0 use SetupLog::Info
 	public static function log_info($sText)
 	{
 		SetupLog::Info($sText);
 	}
-
+	//@deprecated since 2.8.0 use SetupLog::Ok
 	public static function log_ok($sText)
 	{
 		SetupLog::Ok($sText);
 	}
-
+	//@deprecated since 2.8.0 use SetupLog::Ok
 	public static function log($sText)
 	{
 		SetupLog::Ok($sText);

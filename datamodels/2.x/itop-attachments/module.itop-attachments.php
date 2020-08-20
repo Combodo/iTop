@@ -97,14 +97,14 @@ if (!class_exists('AttachmentInstaller'))
 				$iCount = CMDBSource::QueryToScalar($sCountQuery);
 				if ($iCount > 0)
 				{
-					SetupPage::log_info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted."); 
+					SetupLog::Info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted.");
 					$sRepairQuery = "DELETE FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL)";
 					$iRet = CMDBSource::Query($sRepairQuery); // Throws an exception in case of error
-					SetupPage::log_info("Cleanup of orphan attachments successfully completed.");
+					SetupLog::Info("Cleanup of orphan attachments successfully completed.");
 				}
 				else
 				{
-					SetupPage::log_info("No orphan attachment found.");
+					SetupLog::Info("No orphan attachment found.");
 				}
 			}
 		}
@@ -121,12 +121,12 @@ if (!class_exists('AttachmentInstaller'))
 			//    get the org_id from the container object 
 			//
 			// Prerequisite: change null into 0 (workaround to the fact that we cannot use IS NULL in OQL)
-			SetupPage::log_info("Initializing attachment/item_org_id - null to zero"); 
+			SetupLog::Info("Initializing attachment/item_org_id - null to zero");
 			$sTableName = MetaModel::DBGetTable('Attachment');
 			$sRepair = "UPDATE `$sTableName` SET `item_org_id` = 0 WHERE `item_org_id` IS NULL";
 			CMDBSource::Query($sRepair);
 
-			SetupPage::log_info("Initializing attachment/item_org_id - zero to the container");
+			SetupLog::Info("Initializing attachment/item_org_id - zero to the container");
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_org_id = 0");
 			$oSet = new DBObjectSet($oSearch);
 			$iUpdated = 0;
@@ -140,7 +140,7 @@ if (!class_exists('AttachmentInstaller'))
 				}
 			}
 
-			SetupPage::log_info("Initializing attachment/item_org_id - $iUpdated records have been adjusted"); 
+			SetupLog::Info("Initializing attachment/item_org_id - $iUpdated records have been adjusted");
 		}
 	}
 }
