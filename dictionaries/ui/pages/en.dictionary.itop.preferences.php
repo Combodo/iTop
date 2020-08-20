@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -16,5 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "base";
-@import "preferences";
+// Navigation menu
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:Preferences:Title' => 'Preferences',
+	'UI:Preferences:ChooseAPlaceholder' => 'User placeholder image',
+	'UI:Preferences:ChooseAPlaceholder+' => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one',
+));
