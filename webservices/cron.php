@@ -223,8 +223,9 @@ function CronExec($oP, $aProcesses, $bVerbose, $bDebug=false)
 		}
 
 		$oNow = new DateTime();
+		//don't recalculate next occurence if next_run_date is
 		if (($oTask->Get('status') != 'active')
-			|| ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s')))
+			|| ($oTask->Get('next_run_date') > date('Y-m-d H:i:s',$iTimeLimit)))
 		{
 			if ($bVerbose)
 			{
