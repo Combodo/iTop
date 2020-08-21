@@ -43,6 +43,6 @@ class GlobalSearchFactory
 	{
 		$aLastClasses = GlobalSearchHelper::GetLastQueries();
 
-		return new GlobalSearch(GlobalSearch::BLOCK_CODE, $aLastClasses);
+		return new GlobalSearch($aLastClasses, GlobalSearch::BLOCK_CODE);
 	}
 }

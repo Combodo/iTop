@@ -1,6 +1,6 @@
 // TODO: We need to find a clean way to launch this script only once the JS scripts are loaded
 document.addEventListener("DOMContentLoaded", function(){
 	setTimeout(function(){
-		$('#{{ oUIBlock.Id }}').newsroom_menu({{ oUIBlock.Params|raw }});
+		$('#{{ oUIBlock.GetId() }}').newsroom_menu({{ oUIBlock.GetParamsAsJson()|raw }});
 	}, 500);
 });

@@ -33,13 +33,19 @@ class UrlPopoverMenuItem extends PopoverMenuItem
 	// Overloaded constants
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_url';
 
-	/** @ignore */
+	/**
+	 * @see \URLPopupMenuItem::GetUrl()
+	 * @return string
+	 */
 	public function GetUrl()
 	{
 		return $this->oPopupMenuItem->GetUrl();
 	}
 	
-	/** @ignore */
+	/**
+	 * @see \URLPopupMenuItem::GetTarget()
+	 * @return string
+	 */
 	public function GetTarget()
 	{
 		return $this->oPopupMenuItem->GetTarget();

@@ -54,10 +54,7 @@ class NavigationMenuFactory
 		}
 		
 		return new NavigationMenu(
-			NavigationMenu::BLOCK_CODE,
-			new ApplicationContext(),
-			PopoverMenuFactory::MakeUserMenuForNavigationMenu(),
-			$oNewsroomMenu
+			new ApplicationContext(), PopoverMenuFactory::MakeUserMenuForNavigationMenu(), $oNewsroomMenu, NavigationMenu::BLOCK_CODE
 		);
 	}
 }

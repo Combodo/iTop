@@ -49,13 +49,14 @@ class TopBar extends UIBlock
 	/**
 	 * TopBar constructor.
 	 *
-	 * @param string $sId
-	 * @param \Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreate $oQuickCreate
-	 * @param \Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearch $oGlobalSearch
-	 * @param \Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs $oBreadcrumbs
+	 * @param string|null $sId
+	 * @param \Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreate|null $oQuickCreate
+	 * @param \Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearch|null $oGlobalSearch
+	 * @param \Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs|null $oBreadcrumbs
 	 */
-	public function __construct($sId = null, QuickCreate $oQuickCreate = null, GlobalSearch $oGlobalSearch = null, Breadcrumbs $oBreadcrumbs = null)
-	{
+	public function __construct(
+		$sId = null, QuickCreate $oQuickCreate = null, GlobalSearch $oGlobalSearch = null, Breadcrumbs $oBreadcrumbs = null
+	) {
 		parent::__construct($sId);
 
 		$this->oQuickCreate = $oQuickCreate;

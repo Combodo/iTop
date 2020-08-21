@@ -74,14 +74,14 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @param \DateTime $oDateTime
 	 * @param \User $sAuthorLogin
-	 * @param string $sContent
-	 * @param string $sIdCode
+	 * @param string|null $sContent
+	 * @param string|null $sId
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sContent = null, $sIdCode = null)
+	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sContent = null, $sId = null)
 	{
-		parent::__construct($sIdCode);
+		parent::__construct($sId);
 
 		$this->SetType(static::DEFAULT_TYPE);
 		$this->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);

@@ -47,21 +47,21 @@ class TopBarFactory
 	 */
 	public static function MakeStandard($aBreadcrumbsEntry = null)
 	{
-		$oTopBar =  new TopBar(TopBar::BLOCK_CODE);
+		$oTopBar = new TopBar(TopBar::BLOCK_CODE);
 
-		if(utils::GetConfig()->Get('quick_create.enabled') === true)
+		if (utils::GetConfig()->Get('quick_create.enabled') === true)
 		{
 			$oTopBar->SetQuickCreate(QuickCreateFactory::MakeFromUserHistory());
 		}
 
-		if(utils::GetConfig()->Get('global_search.enabled') === true)
+		if (utils::GetConfig()->Get('global_search.enabled') === true)
 		{
 			$oTopBar->SetGlobalSearch(GlobalSearchFactory::MakeFromUserHistory());
 		}
 
 		if(utils::GetConfig()->Get('breadcrumb.enabled') === true)
 		{
-			$oBreadcrumbs = new Breadcrumbs(Breadcrumbs::BLOCK_CODE, $aBreadcrumbsEntry);
+			$oBreadcrumbs = new Breadcrumbs($aBreadcrumbsEntry, Breadcrumbs::BLOCK_CODE);
 
 			$oTopBar->SetBreadcrumbs($oBreadcrumbs);
 		}

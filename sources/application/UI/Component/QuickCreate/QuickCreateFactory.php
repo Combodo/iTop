@@ -42,6 +42,6 @@ class QuickCreateFactory
 	{
 		$aLastClasses = QuickCreateHelper::GetLastClasses();
 
-		return new QuickCreate(QuickCreate::BLOCK_CODE,$aLastClasses);
+		return new QuickCreate($aLastClasses, QuickCreate::BLOCK_CODE);
 	}
 }

@@ -46,7 +46,7 @@ function DisplayPreferences($oP)
 	// User Language selection
 	//
 	//////////////////////////////////////////////////////////////////////////
-	$oUserLanguageBlock = new Panel('ibo-user-language-selection', Dict::S('UI:FavoriteLanguage'), array(), 'grey');
+	$oUserLanguageBlock = new Panel(Dict::S('UI:FavoriteLanguage'), array(), 'grey', 'ibo-user-language-selection');
 	$oUserLanguageStartForm = new Html('<form method="post">');
 	
   	$aLanguages = Dict::GetLanguages();
@@ -96,7 +96,7 @@ function DisplayPreferences($oP)
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oMiscSettingsBlock = new Panel('ibo-misc-settings', Dict::S('UI:FavoriteOtherSettings'), array(), 'grey');
+	$oMiscSettingsBlock = new Panel(Dict::S('UI:FavoriteOtherSettings'), array(), 'grey', 'ibo-misc-settings');
 
 	$oMiscSettingsStartForm = new Html('<form method="post" onsubmit="return ValidateOtherSettings()">');
 	
@@ -159,7 +159,7 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oFavoriteOrganizationsBlock = new Panel('ibo-favorite-organizations', Dict::S('UI:FavoriteOrganizations'), array(), 'grey');
+	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
 
 	$sFavoriteOrganizationsHtml = '';
 	$sFavoriteOrganizationsHtml .= Dict::S('UI:FavoriteOrganizations+');
@@ -246,7 +246,7 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oShortcutsBlock = new Panel('ibo-shortcuts', Dict::S('Menu:MyShortcuts'), array(), 'grey');
+	$oShortcutsBlock = new Panel(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
 	$sShortcutsHtml = '';
 	$oBMSearch = new DBObjectSearch('Shortcut');
 	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -349,7 +349,7 @@ EOF
 	$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 	if ($bNewsroomEnabled && ($iCountProviders > 0))
 	{
-		$oNewsroomBlock = new Panel('ibo-newsroom', Dict::S('UI:Newsroom:Preferences'), array(), 'grey');
+		$oNewsroomBlock = new Panel(Dict::S('UI:Newsroom:Preferences'), array(), 'grey', 'ibo-newsroom');
 
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
@@ -417,7 +417,7 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oUserPicturePlaceHolderBlock = new Panel('ibo-user-picture-placeholder', Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey');
+	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
 
 	$sUserPicturesFolder = '../images/user-pictures/';
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');

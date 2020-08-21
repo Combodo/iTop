@@ -53,14 +53,14 @@ class CaseLogEntry extends ActivityEntry
 	 * @param \DateTime $oDateTime
 	 * @param \User $sAuthorLogin
 	 * @param string $sAttCode
-	 * @param string $sContentCode
+	 * @param string $sContent
 	 * @param string $sId
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sAttCode, $sContentCode, $sId = null)
+	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sAttCode, $sContent, $sId = null)
 	{
-		parent::__construct($oDateTime, $sAuthorLogin, $sContentCode, $sId);
+		parent::__construct($oDateTime, $sAuthorLogin, $sContent, $sId);
 
 		$this->sAttCode = $sAttCode;
 		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);

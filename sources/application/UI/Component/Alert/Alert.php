@@ -47,12 +47,12 @@ class Alert extends UIBlock
 	/**
 	 * Alert constructor.
 	 *
-	 * @param string $sId
 	 * @param string $sTitle
 	 * @param string $sMainText
 	 * @param string $sColor
+	 * @param string|null $sId
 	 */
-	public function __construct($sId, $sTitle = '', $sMainText = '', $sColor = 'secondary')
+	public function __construct($sTitle = '', $sMainText = '', $sColor = 'secondary', $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->sMainText = $sMainText;

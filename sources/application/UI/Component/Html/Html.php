@@ -35,7 +35,6 @@ class Html extends UIBlock
 	// Overloaded constants
 	const BLOCK_CODE = 'ibo-html';
 	const HTML_TEMPLATE_REL_PATH = 'components/html/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/html/layout';
 
 	/** @var string $sHtml */
 	protected $sHtml;
@@ -44,11 +43,12 @@ class Html extends UIBlock
 	 * Html constructor.
 	 *
 	 * @param string $sHtml
+	 * @param string|null $sId
 	 */
-	public function __construct($sHtml = '')
+	public function __construct($sHtml = '', $sId = null)
 	{
 		$this->sHtml = $sHtml;
-		parent::__construct();
+		parent::__construct($sId);
 	}
 
 	/**

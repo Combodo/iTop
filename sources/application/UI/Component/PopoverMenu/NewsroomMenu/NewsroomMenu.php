@@ -32,23 +32,35 @@ use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
  */
 class NewsroomMenu extends PopoverMenu
 {
+	// Overloaded constants
 	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
 	const JS_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
-
 	const JS_FILES_REL_PATH = [
 		'js/components/newsroom-menu.js',
 	];
 
 	/** @var array $aParams */
 	protected $aParams;
-	
+
+	/**
+	 * Set all parameters at once
+	 *
+	 * @param array $aParams
+	 *
+	 * @return $this
+	 */
 	public function SetParams($aParams)
 	{
 		$this->aParams = $aParams;
 		return $this;
 	}
 
-	public function GetParams()
+	/**
+	 * Return all parameters as a JSON string
+	 *
+	 * @return false|string
+	 */
+	public function GetParamsAsJson()
 	{
 		return json_encode($this->aParams);
 	}

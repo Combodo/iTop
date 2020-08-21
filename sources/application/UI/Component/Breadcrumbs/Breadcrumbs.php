@@ -48,10 +48,10 @@ class Breadcrumbs extends UIBlock
 	/**
 	 * QuickCreate constructor.
 	 *
-	 * @param string $sId
 	 * @param array|null $aNewEntry
+	 * @param string|null $sId
 	 */
-	public function __construct($sId = null, $aNewEntry = null)
+	public function __construct($aNewEntry = null, $sId = null)
 	{
 		parent::__construct($sId);
 		$this->SetNewEntry($aNewEntry);

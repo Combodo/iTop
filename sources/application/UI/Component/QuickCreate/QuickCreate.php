@@ -56,13 +56,13 @@ class QuickCreate extends UIBlock
 	/**
 	 * QuickCreate constructor.
 	 *
-	 * @param string $sId
 	 * @param array $aLastClasses
+	 * @param string|null $sId
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct($sId = null, $aLastClasses = [])
+	public function __construct($aLastClasses = [], $sId = null)
 	{
 		parent::__construct($sId);
 		$this->aAvailableClasses = UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true);

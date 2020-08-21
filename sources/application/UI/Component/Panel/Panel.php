@@ -47,12 +47,12 @@ class Panel extends UIBlock
 	/**
 	 * Panel constructor.
 	 *
-	 * @param string $sId
 	 * @param string $sTitle
 	 * @param array $aSubBlocks
 	 * @param string $sColor
+	 * @param string|null $sId
 	 */
-	public function __construct($sId, $sTitle = '', $aSubBlocks = [], $sColor = 'secondary')
+	public function __construct($sTitle = '', $aSubBlocks = [], $sColor = 'secondary', $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->aSubBlocks = $aSubBlocks;

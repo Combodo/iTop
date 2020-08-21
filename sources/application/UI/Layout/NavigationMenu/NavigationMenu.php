@@ -72,17 +72,18 @@ class NavigationMenu extends UIBlock
 	/**
 	 * NavigationMenu constructor.
 	 *
-	 * @param string|null $sId
 	 * @param \ApplicationContext $oAppContext
 	 * @param \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu $oUserMenu
 	 * @param \Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu|null $oNewsroomMenu
+	 * @param string|null $sId
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
-	public function __construct($sId, ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null)
+	public function __construct(ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null, $sId = null)
 	{
 		parent::__construct($sId);
 

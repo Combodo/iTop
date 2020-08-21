@@ -51,12 +51,12 @@ class GlobalSearch extends UIBlock
 	/**
 	 * GlobalSearch constructor.
 	 *
-	 * @param string $sId
 	 * @param array $aLastQueries
+	 * @param string|null $sId
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($sId = null, $aLastQueries = [])
+	public function __construct($aLastQueries = [], $sId = null)
 	{
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);

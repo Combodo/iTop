@@ -46,20 +46,26 @@ class NewsroomMenuFactory
 	public static function MakeNewsroomMenuForNavigationMenu()
 	{
 			$oMenu = new NewsroomMenu('ibo-navigation-menu--notifications-menu');
-			$oMenu->SetParams(static::PrepareNewsForNewsroomMenu());
+			$oMenu->SetParams(static::PrepareParametersForNewsroomMenu());
 			
 			return $oMenu;
 	}
 
-
-	protected static function PrepareNewsForNewsroomMenu()
+	/**
+	 * Prepare parameters for the newsroom JS widget
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	protected static function PrepareParametersForNewsroomMenu()
 	{
-		$aItems = [];
-
 		$aProviderParams=[];
 		$oUser = UserRights::GetUserObject();
 		/**
-		 * @var iNewsroomProvider[] $aProviders
+		 * @var \iNewsroomProvider[] $aProviders
 		 */
 		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
 		foreach($aProviders as $oProvider)
