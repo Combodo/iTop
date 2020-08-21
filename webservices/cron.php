@@ -112,7 +112,14 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	}
 	catch (Exception $e) // we shouldn't get so much exceptions... but we need to handle legacy code, and cron.php has to keep running
 	{
-		$sMessage = 'Processing failed with message: '.$e->getMessage();
+		if ($oTask->IsDebug())
+		{
+			$sMessage = 'Processing failed with message: '.$e->getTraceAsString();
+		}
+	else
+		{
+			$sMessage = 'Processing failed with message: '.$e->getMessage();
+		}
 	}
 	$fDuration = microtime(true) - $fStart;
 	if ($oTask->Get('total_exec_count') == 0)
@@ -164,8 +171,18 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
  * @param CLIPage|WebPage $oP
  * @param iProcess[] $aProcesses
  * @param boolean $bVerbose
+ * @param bool $bDebug
+ *
+ * @throws \ArchivedObjectException
+ * @throws \CoreCannotSaveObjectException
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \CoreWarning
+ * @throws \MySQLException
+ * @throws \OQLException
+ * @throws \ReflectionException
  */
-function CronExec($oP, $aProcesses, $bVerbose)
+function CronExec($oP, $aProcesses, $bVerbose, $bDebug=false)
 {
 	$iStarted = time();
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
@@ -256,6 +273,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 			{
 				// New entry, let's create a new BackgroundTask record, and plan the first execution
 				$oTask = new BackgroundTask();
+				$oTask->SetDebug($bDebug);
 				$oTask->Set('class_name', get_class($oProcess));
 				$oTask->Set('total_exec_count', 0);
 				$oTask->Set('min_run_duration', 99999.999);
@@ -591,7 +609,7 @@ try
 	{
 		if ($oMutex->TryLock())
 		{
-			CronExec($oP, $aProcesses, $bVerbose);
+			CronExec($oP, $aProcesses, $bVerbose, $bDebug);
 		}
 		else
 		{
