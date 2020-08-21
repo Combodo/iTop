@@ -31,7 +31,10 @@ use utils;
  */
 abstract class UIBlock implements iUIBlock
 {
-	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ... */
+	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ...
+	 *
+	 * Should start "ibo-" for the iTop backoffice blocks, followed by the name of the block in lower case (eg. for a MyCustomBlock class, should be "ibo-my-custom-clock")
+	 */
 	const BLOCK_CODE = 'ibo-block';
 
 	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used to often as JS/CSS files would be duplicated making browser parsing time way longer. */

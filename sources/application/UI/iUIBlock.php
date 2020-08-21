@@ -51,7 +51,7 @@ interface iUIBlock
 	public static function GetJsTemplateRelPath();
 
 	/**
-	 * Return an array of the relative paths (from <ITOP>/) of the JS files to use
+	 * Return an array of the relative paths (from <ITOP>/) of the JS files to use for the block itself
 	 *
 	 * @return array
 	 */
@@ -65,7 +65,7 @@ interface iUIBlock
 	public static function GetCssTemplateRelPath();
 
 	/**
-	 * Return an array of the relative paths (from <ITOP>/) of the CSS files to use
+	 * Return an array of the relative paths (from <ITOP>/) of the CSS files to use for the block itself
 	 *
 	 * @return array
 	 */
@@ -86,8 +86,8 @@ interface iUIBlock
 	public function GetSubBlocks();
 
 	/**
-	 * Return an array of the JS files URL of the block and its sub blocks.
-	 * URL is relative unless the $bAbsolutePath is set to true.
+	 * Return an array of the JS files URL necessary for the block and all its sub blocks.
+	 * URLs are relative unless the $bAbsolutePath is set to true.
 	 *
 	 * @param bool $bAbsoluteUrl
 	 *
@@ -96,8 +96,8 @@ interface iUIBlock
 	public function GetJsFilesUrlRecursively($bAbsoluteUrl = false);
 
 	/**
-	 * Return an array of the CSS files URL of the block and its sub blocks.
-	 * URL is relative unless the $bAbsolutePath is set to true.
+	 * Return an array of the CSS files URL necessary for the block and all its sub blocks.
+	 * URLs are relative unless the $bAbsolutePath is set to true.
 	 *
 	 * @param bool $bAbsoluteUrl
 	 *
