@@ -614,7 +614,14 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							);
 							while ($oTrigger = $oTriggerSet->Fetch())
 							{
-								$oTrigger->DoActivate($oObj->ToArgs('this'));
+								try
+								{
+									$oTrigger->DoActivate($oObj->ToArgs('this'));
+								}
+								catch(Exception $e)
+								{
+									utils::EnrichRaisedException($oTrigger, $e);
+								}
 							}
 						}
 					}

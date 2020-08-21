@@ -2805,7 +2805,14 @@ abstract class DBObject implements iDisplay
 		while ($oTrigger = $oSet->Fetch())
 		{
 			/** @var \Trigger $oTrigger */
-			$oTrigger->DoActivate($this->ToArgs('this'));
+			try
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
 		}
 
 		$this->RecordObjCreation();
@@ -3117,7 +3124,14 @@ abstract class DBObject implements iDisplay
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try
+				{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 
 			$bHasANewExternalKeyValue = false;
@@ -3433,7 +3447,14 @@ abstract class DBObject implements iDisplay
 		while ($oTrigger = $oSet->Fetch())
 		{
 			/** @var \Trigger $oTrigger */
-			$oTrigger->DoActivate($this->ToArgs('this'));
+			try
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
 		}
 
 		$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
@@ -3837,14 +3858,27 @@ abstract class DBObject implements iDisplay
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try
+				{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 
 			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 		}
 		else
