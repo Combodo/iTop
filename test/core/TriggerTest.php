@@ -14,6 +14,10 @@ use TriggerOnObjectCreate;
  *
  * @runTestsInSeparateProcesses
  */
+
+define('APPROOT', dirname(__FILE__).'/../../');
+define('APPCONF', APPROOT.'conf/');
+
 class TriggerTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
@@ -28,5 +32,31 @@ class TriggerTest extends ItopDataTestCase
 		$this->assertFalse($oTrigger->IsContextValid());
 		ContextTag::AddContext(ContextTag::TAG_CRON);
 		$this->assertTrue($oTrigger->IsContextValid());
+	}
+
+	public function testEnrichRaisedException_Trigger()
+	{
+		$oTrigger = MetaModel::NewObject('TriggerOnObjectCreate');
+		$sStackTrace = "";
+		try
+		{
+			try
+			{
+				MetaModel::NewObject('CoreException');
+			}
+			catch (\Exception $e)
+			{
+				$sStackTrace = $e->getTraceAsString();
+				\utils::EnrichRaisedException($oTrigger, $e);
+			}
+			$this->assertTrue(false, "An exception should have been thrown");
+		}
+		catch(\Exception $e1)
+		{
+			$this->assertEquals('CoreException', get_class($e1));
+			$this->assertEquals('Unknown class \'CoreException\' (TriggerOnObjectCreate::-1)', $e1->getMessage());
+			$this->assertEquals($sStackTrace, $e1->getTraceAsString());
+		}
+
 	}
 }

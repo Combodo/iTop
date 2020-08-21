@@ -2316,4 +2316,21 @@ class utils
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
+
+	/**
+	 * @param \cmdbAbstractObject $oCmdAbstract
+	 * @param \Exception $oException
+	 *
+	 * @throws \Exception
+	 */
+	public static function EnrichRaisedException($oCmdAbstract, $oException)
+	{
+		$sMessage = $oException->getMessage() . " (" . get_class($oCmdAbstract) . "::" . $oCmdAbstract->Get('id') . ")";
+		$reflectedObject = new \ReflectionClass(get_class($oException));
+		$property = $reflectedObject->getProperty('message');
+		$property->setAccessible(true);
+		$property->setValue($oException, $sMessage);
+		$property->setAccessible(false);
+		throw $oException;
+	}
 }
