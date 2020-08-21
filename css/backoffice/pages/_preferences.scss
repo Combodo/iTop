@@ -1,4 +1,3 @@
-$ibo-preferences--panel--width: 60% !default;
 $ibo-preferences--panel--margin-x: auto !default;
 
 $ibo-preferences--user-preferences--picture-placeholder--image--diameter: 54px !default;
@@ -10,14 +9,10 @@ $ibo-preferences--user-preferences--picture-placeholder--image--active--border-c
 $ibo-preferences--user-preferences--picture-placeholder--image--hover--border-color: $ibo-color-blue-600;
 
 #ibo-main-content >.ibo-panel{
-  width: $ibo-preferences--panel--width;
   margin-left: $ibo-preferences--panel--margin-x;
   margin-right: $ibo-preferences--panel--margin-x;
 }
 
-.ibo-preferences--title{
-  text-align: center;
-}
 .ibo-preferences--user-preferences--picture-placeholder{
   display: flex;
   flex-direction: row;
