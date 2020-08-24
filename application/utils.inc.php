@@ -2318,14 +2318,20 @@ class utils
 	}
 
 	/**
-	 * @param \cmdbAbstractObject $oCmdAbstract
+	 * @param \cmdbAbstractObject $oCmdbAbstract
 	 * @param \Exception $oException
 	 *
 	 * @throws \Exception
 	 */
-	public static function EnrichRaisedException($oCmdAbstract, $oException)
+	public static function EnrichRaisedException($oCmdbAbstract, $oException)
 	{
-		$sMessage = $oException->getMessage() . " (" . get_class($oCmdAbstract) . "::" . $oCmdAbstract->Get('id') . ")";
+		if (is_null($oCmdbAbstract) ||
+			! is_a($oCmdbAbstract, 'cmdbAbstractObject'))
+		{
+			throw $oException;
+		}
+
+		$sMessage = $oException->getMessage() . " (" . get_class($oCmdbAbstract) . "::" . $oCmdbAbstract->Get('id') . ")";
 		$reflectedObject = new \ReflectionClass(get_class($oException));
 		$property = $reflectedObject->getProperty('message');
 		$property->setAccessible(true);
