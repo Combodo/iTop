@@ -325,20 +325,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$aCompiledClasses = $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
-
-						foreach ($aCompiledClasses['required_files'] as $sIncludeFile)
-						{
-							$sCompiledCode .= "require_once('$sIncludeFile');\n";
-						}
-
-						foreach ($aCompiledClasses['code'] as $sClass => $sCompiledClass)
-						{
-							$sClassFileName = '/'.$sRelativeDir.'/src/Model/'.$sClass.'.php';
-							$sClassFile = "{$sTempTargetDir}{$sClassFileName}";
-							$this->WritePHPFile($sClassFile, $sModuleName, $sModuleVersion, $sCompiledClass);
-							$sCompiledCode .= "require_once (dirname(__DIR__).'{$sClassFileName}');\n";
-						}
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -989,13 +976,14 @@ EOF
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
 	 *
-	 * @return array
+	 * @return string
 	 * @throws \DOMFormatException
 	 */
 	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
+		$sPHP = '';
 	
 		// Class caracteristics
 		//
@@ -2028,7 +2016,7 @@ $sZlists;
 EOF;
 		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
 		// generated PHP
-		$aPHP[$sClassName] = $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $sMethods, $sCodeComment);
+		$sPHP .= $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $sMethods, $aRequiredFiles, $sCodeComment);
 
 		// N°931 generates TagFieldData classes for AttributeTag fields
 		if (!empty($aTagFieldsInfo))
@@ -2057,11 +2045,11 @@ EOF
 			{
 				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
-				$aPHP[$sTagClassName] = $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams, $sTagInitMethodCalls);
+				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams, $sTagInitMethodCalls);
 			}
 		}
 
-		return ['code' => $aPHP, 'required_files' => $aRequiredFiles];
+		return $sPHP;
 	}
 
 	private static function GetTagDataClassName($sClass, $sAttCode)
@@ -2992,6 +2980,7 @@ EOF;
 	 * @param bool $bIsAbstractClass
 	 * @param string $sMethods
 	 *
+	 * @param array $aRequiredFiles
 	 * @param string $sCodeComment
 	 *
 	 * @return string php code for the class
@@ -3003,9 +2992,15 @@ EOF;
 		$sInitMethodCalls = '',
 		$bIsAbstractClass = false,
 		$sMethods = '',
+		$aRequiredFiles = [],
 		$sCodeComment = ''
 	) {
 		$sPHP = "\n\n$sCodeComment\n";
+
+		foreach ($aRequiredFiles as $sIncludeFile)
+		{
+			$sPHP .= "\nrequire_once('$sIncludeFile');\n";
+		}
 
 		if ($bIsAbstractClass)
 		{
