@@ -16,15 +16,15 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	Erik Bøg <erik@boegmoeller.dk>
+ * @author	Hirofumi Kosaka <kosaka@rworks.jp>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:UserLocal' => 'iTop-Bruger',
-	'Class:UserLocal+' => 'Bruger der godkendes af iTop',
-	'Class:UserLocal/Attribute:password' => 'Password',
-	'Class:UserLocal/Attribute:password+' => 'Brugerens password',
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:UserLocal' => 'iTopユーザー',
+	'Class:UserLocal+' => 'iTopローカル認証ユーザー',
+	'Class:UserLocal/Attribute:password' => 'パスワード',
+	'Class:UserLocal/Attribute:password+' => '認証文字列',
 
 	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
 	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
