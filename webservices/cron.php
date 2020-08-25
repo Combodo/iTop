@@ -93,6 +93,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 {
 	$TaskClass = $oTask->Get('class_name');
 	$oProcess = new $TaskClass;
+	$oRefClass = new ReflectionClass(get_class($oProcess));
 	$oDateStarted = new DateTime();
 	$oDatePlanned = new DateTime($oTask->Get('next_run_date'));
 	$fStart = microtime(true);
@@ -106,8 +107,25 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oTask->Set('latest_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 		// Record the current user running the cron
 		$oTask->Set('system_user', utils::GetCurrentUserName());
+		$oTask->Set('running', 1);
 		$oTask->DBUpdate();
-		$sMessage = $oProcess->Process($iTimeLimit);
+		// Compute allowed time
+		if (!$oRefClass->implementsInterface('iScheduledProcess'))
+		{
+			// Periodic task, allow only 10x the period
+			$iCurrTimeLimit = time() + $oProcess->GetPeriodicity() * 10;
+			if ($iCurrTimeLimit > $iTimeLimit)
+			{
+				$iCurrTimeLimit = $iTimeLimit;
+			}
+		}
+		else
+		{
+			$iCurrTimeLimit = $iTimeLimit;
+		}
+		$sMessage = $oProcess->Process($iCurrTimeLimit);
+		$oTask->Set('running', 0);
+
 	}
 	catch (MySQLHasGoneAwayException $e)
 	{
@@ -133,7 +151,6 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 	$oDateEnded = new DateTime();
 	$oTask->Set('latest_run_date', $oDateEnded->format('Y-m-d H:i:s'));
 
-	$oRefClass = new ReflectionClass(get_class($oProcess));
 	if ($oRefClass->implementsInterface('iScheduledProcess'))
 	{
 		// Schedules process do repeat at specific moments
@@ -196,12 +213,7 @@ function CronExec($oP, $bVerbose)
 
 	while (time() < $iTimeLimit)
 	{
-		// Verify files instead of reloading the full config each time
-		if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE))
-		{
-			$oP->p("Maintenance detected, exiting");
-			exit(EXIT_CODE_ERROR);
-		}
+		CheckMaintenanceMode($oP);
 
 		$oNow = new DateTime();
 		$sNow = $oNow->format('Y-m-d H:i:s');
@@ -209,13 +221,16 @@ function CronExec($oP, $bVerbose)
 		$oSearch->AddCondition('next_run_date', $sNow, '<=');
 		$oSearch->AddCondition('status', 'active');
 		$oTasks = new DBObjectSet($oSearch, ['next_run_date' => true]);
+		$bWorkDone = false;
 
 		if ($oTasks->CountExceeds(0))
 		{
+			$bWorkDone = true;
 			$aTasks = array();
 			if ($bVerbose)
 			{
-				$oP->p("Tasks planned to run now ($sNow):");
+				$sCount = $oTasks->Count();
+				$oP->p("$sCount Tasks planned to run now ($sNow):");
 				$oP->p('+---------------------------+---------+---------------------+---------------------+');
 				$oP->p('| Task Class                | Status  | Last Run            | Next Run            |');
 				$oP->p('+---------------------------+---------+---------------------+---------------------+');
@@ -251,6 +266,7 @@ function CronExec($oP, $bVerbose)
 				// Run the task and record its next run time
 				if ($bVerbose)
 				{
+					$oNow = new DateTime();
 					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=49s", ' '.$sTaskClass.' '));
 				}
 				try
@@ -273,18 +289,19 @@ function CronExec($oP, $bVerbose)
 					}
 					$oEnd = new DateTime();
 					$sNextRunDate = $oTask->Get('next_run_date');
-					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=40s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
+					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=42s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
 				}
 				if (time() > $iTimeLimit)
 				{
 					break 2;
 				}
+				CheckMaintenanceMode($oP);
 			}
 
 			// Tasks to run later
 			if ($bVerbose)
 			{
-				$oP->p('');
+				$oP->p('--');
 				$oSearch = new DBObjectSearch('BackgroundTask');
 				$oSearch->AddCondition('next_run_date', $sNow, '>');
 				$oSearch->AddCondition('status', 'active');
@@ -299,9 +316,9 @@ function CronExec($oP, $bVerbose)
 			}
 		}
 
-		if ($bVerbose)
+		if ($bVerbose && $bWorkDone)
 		{
-			$oP->p("Sleeping $iCronSleep s\n");
+			$oP->p("Sleeping...\n");
 		}
 		sleep($iCronSleep);
 	}
@@ -314,18 +331,32 @@ function CronExec($oP, $bVerbose)
 }
 
 /**
+ * @param \WebPage $oP
+ */
+function CheckMaintenanceMode(Page $oP): void
+{
+// Verify files instead of reloading the full config each time
+	if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE))
+	{
+		$oP->p("Maintenance detected, exiting");
+		exit(EXIT_CODE_ERROR);
+	}
+}
+
+/**
  * @param $oP
- * @param array $aOrderBy
+ * @param array $aTaskOrderBy
  *
  * @throws \ArchivedObjectException
  * @throws \CoreException
  * @throws \CoreUnexpectedValue
  * @throws \MySQLException
+ * @throws \OQLException
  */
-function DisplayStatus($oP, $aOrderBy = [])
+function DisplayStatus($oP, $aTaskOrderBy = [])
 {
 	$oSearch = new DBObjectSearch('BackgroundTask');
-	$oTasks = new DBObjectSet($oSearch, $aOrderBy);
+	$oTasks = new DBObjectSet($oSearch, $aTaskOrderBy);
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 	$oP->p('| Task Class                | Status  | Last Run            | Next Run            | Nb Run | Avg. Dur. |');
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
@@ -538,7 +569,6 @@ catch (Exception $e)
 try
 {
 	$oMutex = new iTopMutex('cron');
-	$oConfig = utils::GetConfig();
 	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 	{
 		$oP->p("A maintenance is ongoing");
