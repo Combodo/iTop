@@ -769,19 +769,22 @@ class utils
 		return new Config();
 	}
 
-	public static function InitTimeZone() {
-		$oConfig = self::GetConfig();
+	public static function InitTimeZone($oConfig = null)
+	{
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-
 		if (!empty($sItopTimeZone))
 		{
 			date_default_timezone_set($sItopTimeZone);
 		}
-		else
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
-		}
+		//		else
+		//		{
+		//			// Leave as is... up to the admin to set a value somewhere...
+		//			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		}
 	}
 
     /**

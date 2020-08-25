@@ -6304,6 +6304,7 @@ abstract class MetaModel
 
 		// N°2478 utils has his own private attribute
 		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
+		utils::InitTimeZone($oConfiguration);
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
@@ -6343,19 +6344,6 @@ abstract class MetaModel
 		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries() || self::$m_oConfig->Get('log_kpi_record_oql'));
 		DBSearch::EnableQueryIndentation(self::$m_oConfig->Get('query_indentation_enabled'));
 		DBSearch::EnableOptimizeQuery(self::$m_oConfig->Get('query_optimization_enabled'));
-
-		// PHP timezone first...
-		//
-		$sPHPTimezone = self::$m_oConfig->Get('timezone');
-		if ($sPHPTimezone == '')
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			//$sPHPTimezone = date_default_timezone_get();
-		}
-		else
-		{
-			date_default_timezone_set($sPHPTimezone);
-		}
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur

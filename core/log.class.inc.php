@@ -129,8 +129,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	public function CheckAndRotateLogFile()
 	{
 		$oConfig = utils::GetConfig();
-		$sItopTimeZone = $oConfig->Get('timezone');
-		$timezone = new DateTimeZone($sItopTimeZone);
+		utils::InitTimeZone($oConfig);
 
 		if ($this->GetLastModifiedDateForFile() === null)
 		{
@@ -145,11 +144,13 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 				return;
 			}
 			$oDateTime = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
+			$sItopTimeZone = $oConfig->Get('timezone');
+			$timezone = new DateTimeZone($sItopTimeZone);
 			$oDateTime->setTimezone($timezone);
 			$this->SetLastModifiedDateForFile($oDateTime);
 		}
 
-		$oNow = new DateTime('now', $timezone);
+		$oNow = new DateTime();
 		$bShouldRotate = $this->ShouldRotate($this->GetLastModifiedDateForFile(), $oNow);
 		if (!$bShouldRotate)
 		{
