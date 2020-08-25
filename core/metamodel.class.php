@@ -758,6 +758,10 @@ abstract class MetaModel
 	final static public function GetComplementAttributeSpec($sClass)
 	{
 		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
+		{
+			return array($sClass, array());
+		}
 		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
 		if (is_array($nameRawSpec))
 		{
