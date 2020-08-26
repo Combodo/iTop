@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Component\Panel\Panel;
-
+namespace Combodo\iTop\Application\UI\Component\Panel;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
@@ -27,7 +26,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class Panel
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
- * @package Combodo\iTop\Application\UI\Component\Panel\Panel
+ * @package Combodo\iTop\Application\UI\Component\Panel
  * @since 2.8.0
  */
 class Panel extends UIBlock

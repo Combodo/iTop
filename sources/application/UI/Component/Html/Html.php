@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Component\Html\Html;
-
+namespace Combodo\iTop\Application\UI\Component\Html;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
@@ -27,7 +26,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class Html
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
- * @package Combodo\iTop\Application\UI\Component\Html\Html
+ * @package Combodo\iTop\Application\UI\Component\Html
  * @since 2.8.0
  */
 class Html extends UIBlock
