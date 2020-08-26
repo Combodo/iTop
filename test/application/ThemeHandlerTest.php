@@ -111,6 +111,7 @@ class ThemeHandlerTest extends ItopTestCase
 		{
 			if (is_file($sXmlDataCustoFilePath))
 			{
+				$sXmlDataCustoFilePath = realpath($sXmlDataCustoFilePath);
 				$sContent = file_get_contents($sXmlDataCustoFilePath);
 				if (strpos($sContent, "precompiled_stylesheet") !== false)
 				{
@@ -130,9 +131,9 @@ class ThemeHandlerTest extends ItopTestCase
 
 						$sThemeId = $oTheme->getAttribute('id');
 
-						echo "===  theme: $sThemeId ===\n";
+						//echo "===  theme: $sThemeId ===\n";
 						$sPreCompiledSig = ThemeHandler::GetSignature(dirname(__FILE__)."/../../datamodels/2.x/".$sPrecompiledStylesheetUri);
-						echo "  precompiled signature: $sPreCompiledSig\n";
+						//echo "  precompiled signature: $sPreCompiledSig\n";
 
 						if (empty($sPreCompiledSig))
 						{
@@ -178,11 +179,12 @@ class ThemeHandlerTest extends ItopTestCase
 
 						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeId);
 						$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
-						echo "  current signature: $compiled_json_sig\n";
+						//echo "  current signature: $compiled_json_sig\n";
 
 						if ($sPreCompiledSig !== $compiled_json_sig)
 						{
-							$aErrors[] = "Precompiled signature does not match currently compiled one on theme '".$sThemeId."' (cf precompiledsheet $sPrecompiledStylesheetUri / datamodel $sXmlDataCustoFilePath)";
+							$iLine = $oTheme->GetLineNo();
+							$aErrors[] = "       $sPrecompiledStylesheetUri declared in $sXmlDataCustoFilePath:$iLine.";
 							continue;
 						}
 					}
@@ -190,7 +192,16 @@ class ThemeHandlerTest extends ItopTestCase
 			}
 		}
 
-		$this->assertEquals([], $aErrors, "Precompiled files are not up to date. please have a look.");
+		if (count($aErrors)!=0)
+		{
+			$sMsg = "Below precompiled files are not up to date. Please run a new setup and save your precompiled files again:\n";
+			$sMsg .= implode("\n", $aErrors);
+			$this->fail($sMsg);
+		}
+		else
+		{
+			$this->assertTrue(true);
+		}
 	}
 
 	function recurseMkdir($dir)
