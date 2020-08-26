@@ -57,8 +57,21 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertSame($sExpectedVersion, $matches[1], "$sPhpFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedVersion)");
+		$this->assertSame($this->KeepMajorVersion($sExpectedVersion), $this->KeepMajorVersion($matches[1]),
+			"$sPhpFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedVersion)");
 	}
+
+	private function KeepMajorVersion($sVersion)
+	{
+		preg_match(
+			"#(.*)\.[^\.]*$#",
+			$sVersion,
+			$matches
+		);
+		return $matches[1];
+	}
+
+
 
 	public function iTopModulesPhpVersionProvider()
 	{

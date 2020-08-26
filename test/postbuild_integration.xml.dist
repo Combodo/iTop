@@ -41,8 +41,8 @@
          verbose="false">
 
     <testsuites>
-        <testsuite name="ReleaseChecklist">
-            <directory>releaseChecklist</directory>
+        <testsuite name="PostBuildIntegration">
+            <directory>postbuild_integration</directory>
         </testsuite>
     </testsuites>
 
