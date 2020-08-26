@@ -1860,7 +1860,6 @@ class utils
 	}
 	
 	/**
-	 * @deprecated
 	 * @param string $sModuleName
 	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
 	 */
