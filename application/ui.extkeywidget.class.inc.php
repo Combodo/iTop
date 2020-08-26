@@ -183,6 +183,16 @@ class UIExtKeyWidget
 			array_push($aOptions,$aOption);
 
 			$oAllowedValues->Rewind();
+			$bAddingValue=false;
+
+			$aComplementAttributeSpec = MetaModel::GetComplementAttributeSpec($oAllowedValues->GetClass());
+			$sFormatAdditionalField = $aComplementAttributeSpec[0];
+			$aAdditionalField = $aComplementAttributeSpec[1];
+
+			if (count($aAdditionalField)>0)
+			{
+				$bAddingValue=true;
+			}
 			while($oObj = $oAllowedValues->Fetch())
 			{
 				$aOption=[];
@@ -212,6 +222,15 @@ EOF
 				}
 				if ($oObj->IsObsolete()){
 					$aOption['obsolescence_flag'] ="1";
+				}
+				if ($bAddingValue)
+				{
+					$aArguments = [];
+					foreach ($aAdditionalField as $sAdditionalField)
+					{
+						array_push($aArguments,$oObj->Get($sAdditionalField));
+					}
+					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
 				}
 				array_push($aOptions,$aOption);
 			}
@@ -715,7 +734,6 @@ EOF
 
         // Current extkey value, so we can display event if it is not available anymore (eg. archived).
         $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
-
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
 		$iMax = 150;
 		$oValuesSet->SetLimit($iMax);
@@ -755,7 +773,14 @@ EOF
 			    $aJsonMap = array();
 			    foreach ($aValues as $sKey => $aValue)
                 {
-                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']);
+                    if ($aValue['additional_field'] != '')
+                    {
+	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag'], 'additional_field' => $aValue['additional_field']);
+                    }
+                    else
+                    {
+	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']);
+                    }
                 }
 
 			    $oP->SetContentType('application/json');

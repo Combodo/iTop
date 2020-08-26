@@ -53,7 +53,7 @@ class BackgroundTask extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeDecimal("average_run_duration", array("allowed_values"=>null, "sql"=>"average_run_duration", "digits"=> 8, "decimals"=> 3, "default_value"=>"0", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeBoolean("running", array("allowed_values"=>null, "sql"=>"running", "default_value"=>false, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,paused'), "sql"=>"status", "default_value"=>'active', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('active,paused,removed'), "sql"=>"status", "default_value"=>'active', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("system_user", array("allowed_values"=>null, "sql"=>"system_user", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 	

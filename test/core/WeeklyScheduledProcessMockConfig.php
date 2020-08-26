@@ -17,6 +17,7 @@ class WeeklyScheduledProcessMockConfig extends AbstractWeeklyScheduledProcess
 		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_ENABLED, $bEnabledValue);
 		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_TIME, $sTimeValue);
 		$this->oConfig->SetModuleSetting(self::MODULE_NAME, self::MODULE_SETTING_WEEKDAYS, 'monday, tuesday, wednesday, thursday, friday');
+		utils::InitTimeZone($this->oConfig);
 	}
 
 	protected function GetModuleName()

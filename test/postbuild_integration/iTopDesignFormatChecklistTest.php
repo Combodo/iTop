@@ -54,18 +54,18 @@ class TestForITopDesignFormatClass extends ItopTestCase
 
 		//check we have migration function from new version to previous one
 		$sCurrentVersion = array_values($aDatamodelCurrentVersions)[0];
-		$this->assertTrue(array_key_exists($sCurrentVersion, iTopDesignFormat::$aVersions), "Release checklist: missing $sCurrentVersion config in iTopDesignFormat ");
+		$this->assertTrue(array_key_exists($sCurrentVersion, iTopDesignFormat::$aVersions), "Missing $sCurrentVersion conversion functions in iTopDesignFormat.");
 		$aCurrentVersionInfo = iTopDesignFormat::$aVersions[$sCurrentVersion];
-		$this->assertTrue(is_array($aCurrentVersionInfo), "Release checklist: wrong $sCurrentVersion config in iTopDesignFormat ");
-		$this->assertTrue(array_key_exists('previous', $aCurrentVersionInfo), "Release checklist: missing previous for $sCurrentVersion config in iTopDesignFormat ");
+		$this->assertTrue(is_array($aCurrentVersionInfo), "Wrong $sCurrentVersion config in iTopDesignFormat.");
+		$this->assertTrue(array_key_exists('previous', $aCurrentVersionInfo), "Missing previous for $sCurrentVersion config in iTopDesignFormat.");
 		$this->TestDefinedFunction($aCurrentVersionInfo, 'go_to_previous', $sCurrentVersion);
 
 		//check we have migration function from N-1 version to new one
 		$sPreviousVersion = $aCurrentVersionInfo['previous'];
-		$this->assertTrue(array_key_exists($sPreviousVersion, iTopDesignFormat::$aVersions), "Release checklist: missing $sPreviousVersion config in iTopDesignFormat ");
+		$this->assertTrue(array_key_exists($sPreviousVersion, iTopDesignFormat::$aVersions), "Missing $sPreviousVersion config in iTopDesignFormat.");
 		$aPreviousVersionInfo = iTopDesignFormat::$aVersions[$sPreviousVersion];
-		$this->assertTrue(is_array($aPreviousVersionInfo), "Release checklist: wrong $sPreviousVersion config in iTopDesignFormat ");
-		$this->assertTrue(array_key_exists('previous', $aPreviousVersionInfo), "Release checklist: missing previous for $sPreviousVersion config in iTopDesignFormat ");
+		$this->assertTrue(is_array($aPreviousVersionInfo), "wrong $sPreviousVersion config in iTopDesignFormat.");
+		$this->assertTrue(array_key_exists('previous', $aPreviousVersionInfo), "Missing previous for $sPreviousVersion config in iTopDesignFormat.");
 		$this->TestDefinedFunction($aPreviousVersionInfo, 'go_to_previous', $sPreviousVersion);
 		$this->TestDefinedFunction($aPreviousVersionInfo, 'go_to_next', $sPreviousVersion);
 	}
@@ -73,10 +73,10 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	private function TestDefinedFunction($aCurrentVersionInfo, $sFunctionKey, $sVersion)
 	{
 		$sInfo = json_encode($aCurrentVersionInfo, true);
-		$this->assertTrue(array_key_exists($sFunctionKey, $aCurrentVersionInfo), "Release checklist: missing $sFunctionKey in $sVersion config in iTopDesignFormat: " . $sInfo);
+		$this->assertTrue(array_key_exists($sFunctionKey, $aCurrentVersionInfo), "Missing $sFunctionKey in $sVersion config in iTopDesignFormat: " . $sInfo);
 		echo $aCurrentVersionInfo[$sFunctionKey].'\n';
 		$oReflectionClass = new \ReflectionClass(iTopDesignFormat::class);
-		$this->assertTrue($oReflectionClass->hasMethod($aCurrentVersionInfo[$sFunctionKey]), "Release checklist: wrong go_to_previous function '".$aCurrentVersionInfo[$sFunctionKey]."'' for $sVersion config in iTopDesignFormat " . $sInfo);
+		$this->assertTrue($oReflectionClass->hasMethod($aCurrentVersionInfo[$sFunctionKey]), "wrong go_to_previous function '".$aCurrentVersionInfo[$sFunctionKey]."'' for $sVersion config in iTopDesignFormat." . $sInfo);
 	}
 
 	public function GetDataModelFiles($sFolder)

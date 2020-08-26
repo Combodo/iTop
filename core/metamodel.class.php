@@ -748,7 +748,51 @@ abstract class MetaModel
 			return array('%1$s', array($nameRawSpec));
 		}
 	}
-
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	final static public function GetComplementAttributeSpec($sClass)
+	{
+		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
+		{
+			return array($sClass, array());
+		}
+		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
+		if (is_array($nameRawSpec))
+		{
+			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
+			if (strlen($sFormat) == 0)
+			{
+				// Default to "%1$s %2$s..."
+				for($i = 1; $i <= count($nameRawSpec); $i++)
+				{
+					if (empty($sFormat))
+					{
+						$sFormat .= '%'.$i.'$s';
+					}
+					else
+					{
+						$sFormat .= ' %'.$i.'$s';
+					}
+				}
+			}
+			return array($sFormat, $nameRawSpec);
+		}
+		elseif (empty($nameRawSpec))
+		{
+			return array($sClass, array());
+		}
+		else
+		{
+			// string -> attcode
+			return array('%1$s', array($nameRawSpec));
+		}
+	}
 	/**
 	 * Get the friendly name expression for a given class
 	 *
@@ -6273,6 +6317,7 @@ abstract class MetaModel
 
 		// N°2478 utils has his own private attribute
 		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
+		utils::InitTimeZone($oConfiguration);
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
@@ -6312,19 +6357,6 @@ abstract class MetaModel
 		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries() || self::$m_oConfig->Get('log_kpi_record_oql'));
 		DBSearch::EnableQueryIndentation(self::$m_oConfig->Get('query_indentation_enabled'));
 		DBSearch::EnableOptimizeQuery(self::$m_oConfig->Get('query_optimization_enabled'));
-
-		// PHP timezone first...
-		//
-		$sPHPTimezone = self::$m_oConfig->Get('timezone');
-		if ($sPHPTimezone == '')
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			//$sPHPTimezone = date_default_timezone_get();
-		}
-		else
-		{
-			date_default_timezone_set($sPHPTimezone);
-		}
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur

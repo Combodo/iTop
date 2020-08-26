@@ -769,19 +769,22 @@ class utils
 		return new Config();
 	}
 
-	public static function InitTimeZone() {
-		$oConfig = self::GetConfig();
+	public static function InitTimeZone($oConfig = null)
+	{
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-
 		if (!empty($sItopTimeZone))
 		{
 			date_default_timezone_set($sItopTimeZone);
 		}
-		else
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
-		}
+		//		else
+		//		{
+		//			// Leave as is... up to the admin to set a value somewhere...
+		//			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		}
 	}
 
     /**
@@ -1412,13 +1415,12 @@ class utils
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
 			$aHeaders = explode("\n", $sOptionnalHeaders);
+			// N°3267 - Webservices: Fix optional headers not being taken into account
+			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
 			foreach($aHeaders as $sHeaderString)
 			{
-				if(preg_match('/^([^:]): (.+)$/', $sHeaderString, $aMatches))
-				{
-					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
-				}
+				$aHTTPHeaders[] = trim($sHeaderString);
 			}
 			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 			$aOptions = array(

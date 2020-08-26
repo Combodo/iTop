@@ -371,26 +371,6 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 	}
 }
 
-/*
-function UpdateDependentFields(aFieldNames)
-{
-	//console.log('UpdateDependentFields:');
-	//console.log(aFieldNames);
-	index = 0;
-	oWizardHelper.ResetQuery();
-	oWizardHelper.UpdateWizard();
-	while(index < aFieldNames.length )
-	{
-		sAttCode = aFieldNames[index];
-		sFieldId = oWizardHelper.GetFieldId(sAttCode);
-		$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
-		oWizardHelper.RequestAllowedValues(sAttCode);
-		index++;
-	}
-	oWizardHelper.AjaxQueryServer();
-}
-*/
-
 function ResetPwd(id)
 {
 	// Reset the values of the password fields

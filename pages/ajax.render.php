@@ -701,6 +701,7 @@ try
 			break;
 
 		////////////////////////////////////////////////////////////
+		/// WizardHelper : see the corresponding PHP class, and JS class
 
 		case 'wizard_helper_preview':
 			$oPage->SetContentType('text/html');
@@ -756,14 +757,15 @@ try
 						$value = $oObj->Get($sAttCode);
 						$displayValue = $oObj->GetEditValue($sAttCode);
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if (!$oAttDef->IsWritable())
+						if (!$oAttDef->IsWritable() || ($oWizardHelper->GetReturnNotEditableFields()))
 						{
 							// Even non-writable fields (like AttributeExternal) can be refreshed
 							$sHTMLValue = $oObj->GetAsHTML($sAttCode);
 						}
 						else
 						{
-							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value, $displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix), false);
+							$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value,
+								$displayValue, $sId, '', $iFlags, array('this' => $oObj, 'formPrefix' => $sFormPrefix), false);
 							// Make sure that we immediately validate the field when we reload it
 							$oPage->add_ready_script("$('#$sId').trigger('validate');");
 						}
@@ -771,7 +773,7 @@ try
 					}
 				}
 			}
-			$oPage->add_script("oWizardHelper{$sFormPrefix}.m_oData=".$oWizardHelper->ToJSON().";\noWizardHelper{$sFormPrefix}.UpdateFields();\n");
+			$oPage->add_script($oWizardHelper->GetJsForUpdateFields());
 			break;
 
 		case 'obj_creation_form':

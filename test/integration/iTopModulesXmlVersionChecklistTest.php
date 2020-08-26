@@ -61,7 +61,7 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 		{
 			// Compare the original and new format
 			$sExpectedXmlVersion = ITOP_DESIGN_LATEST_VERSION;
-			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(), "Datamodel file $sXmlFile not in the latest format ($sExpectedXmlVersion)");
+			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(), "Datamodel file $sXmlFile:2 not in the latest format ($sExpectedXmlVersion)");
 		}
 		else
 		{
