@@ -149,7 +149,7 @@ abstract class UIBlock implements iUIBlock
 
 	/**
 	 * @inheritDoc
-	 * @return \Combodo\iTop\Application\UI\UIBlock[]
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 */
 	public function GetSubBlocks()
 	{

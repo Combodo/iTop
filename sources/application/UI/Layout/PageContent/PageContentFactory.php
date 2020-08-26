@@ -57,6 +57,8 @@ class PageContentFactory
 		$oLayout = new PageContentWithSideContent();
 
 		// Add object details layout
+		// TODO
+
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject);
 		$oLayout->AddSideBlock($oActivityPanel);

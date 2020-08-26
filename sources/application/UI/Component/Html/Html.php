@@ -35,7 +35,7 @@ class Html extends UIBlock
 	const BLOCK_CODE = 'ibo-html';
 	const HTML_TEMPLATE_REL_PATH = 'components/html/layout';
 
-	/** @var string $sHtml */
+	/** @var string $sHtml The raw HTML, must be already sanitized */
 	protected $sHtml;
 
 	/**
@@ -51,6 +51,8 @@ class Html extends UIBlock
 	}
 
 	/**
+	 * Return the raw HTML, should have been sanitized
+	 *
 	 * @return string
 	 */
 	public function GetHtml()
@@ -59,7 +61,10 @@ class Html extends UIBlock
 	}
 
 	/**
+	 * Set the raw HTML, must be already sanitized
+	 *
 	 * @param string $sHtml
+	 *
 	 * @return $this
 	 */
 	public function SetHtml($sHtml)

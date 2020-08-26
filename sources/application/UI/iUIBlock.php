@@ -80,6 +80,7 @@ interface iUIBlock
 
 	/**
 	 * Return an array iUIBlock embedded in this iUIBlock
+	 * Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
 	 *
 	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 */
