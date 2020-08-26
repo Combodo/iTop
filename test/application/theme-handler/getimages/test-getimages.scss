@@ -1,0 +1,9 @@
+$approot-relative: "../../../../../"
+$version:"aaa"
+background-image: url('abc/'+ $approot-relative + "css/ui-lightness/images/toutou.png?v=" + $version);
+background-image: url($approot-relative + "css/ui-lightness/images/toto.png?v=" + $version);
+background: #666666 url($approot-relative + 'css/ui-lightness/images/titi.gif?v=' + $version1) 50% 50% repeat;
+list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=" + $version);
+background-image: url('css/ui-lightness/images/tutu.jpg');
+background-image: url("css/ui-lightness/images/tata.jpeg");
+background-image: url("css/ui-lightness/images/tete.jpeg?g=" + $attr);
