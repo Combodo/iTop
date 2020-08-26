@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Component\Button\Button;
-
+namespace Combodo\iTop\Application\UI\Component\Button;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
@@ -27,7 +26,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class Button
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
- * @package Combodo\iTop\Application\UI\Component\Button\Button
+ * @package Combodo\iTop\Application\UI\Component\Button
  * @since 2.8.0
  */
 class Button extends UIBlock
@@ -37,19 +36,55 @@ class Button extends UIBlock
 	const HTML_TEMPLATE_REL_PATH = 'components/button/layout';
 	const JS_TEMPLATE_REL_PATH = 'components/button/layout';
 
+	// Specific constants
+	/** @var string ENUM_TYPE_BUTTON */
+	const ENUM_TYPE_BUTTON = 'button';
+	/** @var string ENUM_TYPE_SUBMIT */
+	const ENUM_TYPE_SUBMIT = 'submit';
+	/** @var string ENUM_TYPE_RESET */
+	const ENUM_TYPE_RESET = 'reset';
+	/** @var string DEFAULT_TYPE */
+	const DEFAULT_TYPE = self::ENUM_TYPE_BUTTON;
+
+	/** @var string ENUM_ACTION_TYPE_REGULAR */
+	const ENUM_ACTION_TYPE_REGULAR = 'regular';
+	/** @var string ENUM_ACTION_TYPE_ALTERNATIVE */
+	const ENUM_ACTION_TYPE_ALTERNATIVE = 'alternative';
+	/** @var string DEFAULT_ACTION_TYPE */
+	const DEFAULT_ACTION_TYPE = self::ENUM_ACTION_TYPE_REGULAR;
+
+	/** @var string ENUM_COLOR_NEUTRAL */
+	const ENUM_COLOR_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_VALIDATION */
+	const ENUM_COLOR_VALIDATION = 'green';
+	/** @var string ENUM_COLOR_DESTRUCTIVE */
+	const ENUM_COLOR_DESTRUCTIVE = 'red';
+	/** @var string ENUM_COLOR_PRIMARY */
+	const ENUM_COLOR_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SECONDARY */
+	const ENUM_COLOR_SECONDARY = 'secondary';
+	/** @var string ENUM_COLOR_GREEN */
+	const ENUM_COLOR_GREEN = 'green';
+	/** @var string ENUM_COLOR_RED */
+	const ENUM_COLOR_RED = 'red';
+	/** @var string ENUM_COLOR_CYAN */
+	const ENUM_COLOR_CYAN = 'cyan';
+	/** @var string DEFAULT_COLOR */
+	const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+
 	/** @var string $sLabel */
 	protected $sLabel;
-	/** @var string $sType */
+	/** @var string $sType The HTML type of the button (eg. 'submit', 'button', ...) */
 	protected $sType;
-	/** @var string $sName */
+	/** @var string $sName The HTML name of the button, used by forms */
 	protected $sName;
-	/** @var string $sValue */
+	/** @var string $sValue The HTML value of the button, used by forms */
 	protected $sValue;
 	/** @var string $sTooltip */
 	protected $sTooltip;
 	/** @var string $sIconClass */
 	protected $sIconClass;
-	/** @var string $sActionType */
+	/** @var string $sActionType The type of action, a 'regular' action or a 'misc' action */
 	protected $sActionType;
 	/** @var string $sColor */
 	protected $sColor;
@@ -61,8 +96,8 @@ class Button extends UIBlock
 	/**
 	 * Button constructor.
 	 *
-	 * @param string $sId
 	 * @param string $sLabel
+	 * @param string|null $sId
 	 * @param string $sName
 	 * @param string $sValue
 	 * @param string $sType
@@ -73,8 +108,10 @@ class Button extends UIBlock
 	 * @param string $sJsCode
 	 * @param string $sOnClickJsCode
 	 */
-	public function __construct($sId, $sLabel, $sName, $sValue, $sType = '', $sTooltip = '', $sIconClass = '', $sActionType = 'regular', $sColor = 'secondary', $sJsCode = '', $sOnClickJsCode = '')
-	{
+	public function __construct(
+		$sLabel, $sId = null, $sName = '', $sValue = '', $sType = self::DEFAULT_TYPE, string $sTooltip = '', $sIconClass = '',
+		$sActionType = self::DEFAULT_ACTION_TYPE, $sColor = self::DEFAULT_COLOR, $sJsCode = '', $sOnClickJsCode = ''
+	) {
 		$this->sLabel = $sLabel;
 		$this->sName = $sName;
 		$this->sValue = $sValue;
@@ -97,7 +134,6 @@ class Button extends UIBlock
 		return $this->sLabel;
 	}
 
-	/**
 	/**
 	 * @param string $sLabel
 	 * 
@@ -220,6 +256,8 @@ class Button extends UIBlock
 	public function SetActionType(string $sActionType)
 	{
 		$this->sActionType = $sActionType;
+
+		return $this;
 	}
 
 	/**

@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Button\Button\Button;
-use Combodo\iTop\Application\UI\Component\Html\Html\Html;
-use Combodo\iTop\Application\UI\Component\Panel\Panel\Panel;
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Html\Html;
+use Combodo\iTop\Application\UI\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
@@ -66,20 +66,22 @@ function DisplayPreferences($oP)
   	ksort($aSortedlang);
   	$sUserLanguageBlockSelect = '';
 	$sUserLanguageBlockSelect .= '<p>'.Dict::S('UI:Favorites:SelectYourLanguage').' <select name="language">';
-  	foreach($aSortedlang as $sCode)
-  	{
-  		$sSelected = ($sCode == Dict::GetUserLanguage()) ? 'selected' : '';
-	    $sUserLanguageBlockSelect .= '<option value="'.$sCode.'" '.$sSelected.'/>'.$aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')</option>';
-  	}
+	foreach ($aSortedlang as $sCode)
+	{
+		$sSelected = ($sCode == Dict::GetUserLanguage()) ? 'selected' : '';
+		$sUserLanguageBlockSelect .= '<option value="'.$sCode.'" '.$sSelected.'/>'.$aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')</option>';
+	}
 	$sUserLanguageBlockSelect .= '</select></p>';
 	$sUserLanguageBlockSelect .= '<input type="hidden" name="operation" value="apply_language"/>';
 	$sUserLanguageBlockSelect .= $oAppContext->GetForForm();
-	
-	//$oUserLanguageCancelButton = new Button('ibo-user-language-cancel', Dict::S('UI:Button:Cancel'), '', Dict::S('UI:Button:Cancel'), )
-
 	$oUserLanguageBlockSelect = new Html($sUserLanguageBlockSelect);
-	$oUserLanguageCancelButton = new Button('ibo-user-language-cancel', Dict::S('UI:Button:Cancel'), '', Dict::S('UI:Button:Cancel'), '', '', '', 'regular', 'secondary', 'window.location.href='.$sURL);
-	$oUserLanguageSubmitButton = new Button('ibo-user-language-submit', Dict::S('UI:Button:Apply'), '', Dict::S('UI:Button:Apply'), 'submit', '', '', 'regular', 'green');
+
+	// - Cancel button
+	$oUserLanguageCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
+
 	$oUserLanguageEndForm = new Html('</form>');
 
 	$oUserLanguageBlock->AddSubBlock($oUserLanguageStartForm);
@@ -104,7 +106,8 @@ function DisplayPreferences($oP)
 	$sMiscSettingsHtml = '';
 	$sMiscSettingsHtml .= '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>';
 
-	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
+	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data',
+			MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
 	$sSelected = $bShow ? ' checked="checked"' : '';
 	$sDisabled = utils::IsArchiveMode() ? 'disabled="disabled"' : '';
 	$sMiscSettingsHtml .=
@@ -112,26 +115,25 @@ function DisplayPreferences($oP)
 		.'<input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"'.$sSelected.$sDisabled.'>'
 		.'<label for="show_obsolete_data" title="'.Dict::S('UI:Favorites:ShowObsoleteData+').'">'.Dict::S('UI:Favorites:ShowObsoleteData').'</label>'
 		.'</p>';
-
-	$sMiscSettingsHtml .= '<input type="hidden" name="operation" value="apply_others"/>';
 	$sMiscSettingsHtml .= $oAppContext->GetForForm();
-	$oMiscSettingsCancelButton = new Button('ibo-misc-settings-cancel', Dict::S('UI:Button:Cancel'), '', Dict::S('UI:Button:Cancel'), '', '', '', 'regular', 'secondary', 'window.location.href='.$sURL);
-	$oMiscSettingsSubmitButton = new Button('ibo-misc-settings-submit', Dict::S('UI:Button:Apply'), '', Dict::S('UI:Button:Apply'), 'submit', '', '', 'regular', 'green');
-
-
 	$oMiscSettingsHtml = new Html($sMiscSettingsHtml);
-	
-	$sMiscSettingsEndHtml = '</form>';
-	$oMiscSettingsEndHtmlBlock = new Html($sMiscSettingsEndHtml);
+
+	// - Cancel button
+	$oMiscSettingsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oMiscSettingsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oMiscSettingsSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
+
+	$oMiscSettingsEndHtmlBlock = new Html('</form>');
 
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsStartForm);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsHtml);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsCancelButton);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsSubmitButton);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsEndHtmlBlock);
-	
+
 	$oContentLayout->AddMainBlock($oMiscSettingsBlock);
-	
+
 	$oP->add_script(
 		<<<EOF
 function ValidateOtherSettings()
@@ -153,6 +155,7 @@ function ValidateOtherSettings()
 }
 EOF
 	);
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Favorite Organizations
@@ -163,27 +166,35 @@ EOF
 
 	$sFavoriteOrganizationsHtml = '';
 	$sFavoriteOrganizationsHtml .= Dict::S('UI:FavoriteOrganizations+');
-	$sFavoriteOrganizationsHtml .= '<form method="post">';	
+	$sFavoriteOrganizationsHtml .= '<form method="post">';
 	// Favorite organizations: the organizations listed in the drop-down menu
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$sFavoriteOrganizationsHtml .=  $oBlock->GetDisplay($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount', 'table_id' => 'user_prefs'));
+	$sFavoriteOrganizationsHtml .= $oBlock->GetDisplay($oP, 1, array(
+		'menu' => false,
+		'selection_mode' => true,
+		'selection_type' => 'multiple',
+		'cssCount' => '.selectedCount',
+		'table_id' => 'user_prefs',
+	));
 	$sFavoriteOrganizationsHtml .= $oAppContext->GetForForm();
-	$sFavoriteOrganizationsHtml .= '<input type="hidden" name="operation" value="apply"/>';
 
-	$oFavoriteOrganizationsCancelButton = new Button('ibo-favorite-organizations-cancel', Dict::S('UI:Button:Cancel'), '', Dict::S('UI:Button:Cancel'), '', '', '', 'regular', 'secondary', 'window.location.href='.$sURL);
-	$oFavoriteOrganizationsSubmitButton = new Button('ibo-favorite-organizations-submit', Dict::S('UI:Button:Apply'), '', Dict::S('UI:Button:Apply'), 'submit', '', '', 'regular', 'green');
-	
+	// - Cancel button
+	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
+
 	$sFavoriteOrganizationsEndHtml = '</form>';
-	$oFavoriteOrganizationsEndHtmlBlock = new Html($sFavoriteOrganizationsEndHtml) ;
-	
+	$oFavoriteOrganizationsEndHtmlBlock = new Html($sFavoriteOrganizationsEndHtml);
+
 	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 	if ($aFavoriteOrgs == null)
 	{
 		// All checked
 		$oP->add_ready_script(
-<<<EOF
+			<<<EOF
 	if ($('#user_prefs table.pagination').length > 0)
 	{
 		// paginated display, restore the selection
@@ -387,21 +398,27 @@ EOF
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
 				}
 				$sChecked = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? ' checked="" ' : '';
-				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider', $oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
+						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
 
-		$sNewsroomHtml .= '<input type="hidden" name="operation" value="apply_newsroom_preferences"/>';
 		$sNewsroomHtml .= $oAppContext->GetForForm();
-		
-		$oNewsroomResetCacheButton = new Button('ibo-newsroom-reset-cache', Dict::S('UI:Newsroom:ResetCache'), '', Dict::S('UI:Newsroom:ResetCache'), '', '', '', 'regular', 'red', "$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
-		$oNewsroomCancelButton = new Button('ibo-newsroom-cancel', Dict::S('UI:Button:Cancel'), '', Dict::S('UI:Button:Cancel'), '', '', '', 'regular', 'secondary', 'window.location.href='.$sURL);
-		$oNewsroomSubmitButton = new Button('ibo-newsroom-submit', Dict::S('UI:Button:Apply'), '', Dict::S('UI:Button:Apply'), 'submit', '', '', 'regular', 'green');
-	
+
+		// - Reset button
+		$oNewsroomResetCacheButton = ButtonFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
+		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		// - Cancel button
+		$oNewsroomCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+		// - Submit button
+		$oNewsroomSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation',
+			'apply_newsroom_preferences', true);
+
 
 		$sNewsroomEndHtml = '</form>';
 		$oNewsroomEndHtmlBlock = new Html($sNewsroomEndHtml);
-		
+
 		$oNewsroomHtmlBlock = new Html($sNewsroomHtml);
 		$oNewsroomBlock->AddSubBlock($oNewsroomHtmlBlock);
 		$oNewsroomBlock->AddSubBlock($oNewsroomResetCacheButton);

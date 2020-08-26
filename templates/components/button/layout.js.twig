@@ -3,12 +3,13 @@
 	document.addEventListener("DOMContentLoaded", function(){
 		setTimeout(function(){
 			{% if oUIBlock.GetOnClickJsCode() is not empty %}
-				$('#{{ oUIBlock.GetId() }}').on('click', function(){
-					{{ oUIBlock.GetOnClickJsCode() }}
-				})
+			$('#{{ oUIBlock.GetId() }}').on('click', function ()
+			{
+				{{ oUIBlock.GetOnClickJsCode()|raw }}
+			})
 			{% endif %}
 			{% if oUIBlock.GetJsCode() is not empty %}
-				{{ oUIBlock.GetJsCode() }}
+			{{ oUIBlock.GetJsCode()|raw }}
 			{% endif %}
 		}, 500);
 	});

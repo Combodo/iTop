@@ -7,39 +7,56 @@ $ibo-button--box-shadow-bottom: 0px 2px 0px !default;
 $ibo-button--box-shadow-top: inset 0px 2px 0px !default;
 $ibo-button-colors: (
 'regular': (
-  'primary': (
-    '': (
-      $ibo-color-primary-400,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-bottom $ibo-color-primary-400,
-    ),
-    ':hover': (
-        $ibo-color-primary-600,
-        $ibo-color-grey-900,
-        $ibo-button--box-shadow-bottom $ibo-color-primary-800,
+		'neutral': (
+				'': (
+						$ibo-color-secondary-100,
+						$ibo-color-grey-900,
+						$ibo-button--box-shadow-bottom $ibo-color-secondary-300,
+				),
+				':hover': (
+						$ibo-color-secondary-200,
+						$ibo-color-grey-900,
+						$ibo-button--box-shadow-bottom $ibo-color-secondary-300,
+				),
+				':active': (
+						$ibo-color-secondary-200,
+						$ibo-color-grey-900,
+						$ibo-button--box-shadow-top $ibo-color-secondary-300 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-200,
+				),
+		),
+		'primary': (
+				'': (
+						$ibo-color-primary-400,
+						$ibo-color-grey-900,
+						$ibo-button--box-shadow-bottom $ibo-color-primary-600,
+				),
+				':hover': (
+						$ibo-color-primary-600,
+						$ibo-color-grey-900,
+						$ibo-button--box-shadow-bottom $ibo-color-primary-800,
     ),
     ':active': (
-      $ibo-color-primary-600,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-top $ibo-color-primary-800 + ',' + $ibo-button--box-shadow-bottom $ibo-color-primary-600,
+			$ibo-color-primary-600,
+			$ibo-color-grey-900,
+			$ibo-button--box-shadow-top $ibo-color-primary-800 #{','} $ibo-button--box-shadow-bottom $ibo-color-primary-600,
     ),
   ),
   'secondary': (
     '': (
       $ibo-color-secondary-100,
       $ibo-color-grey-900,
-      $ibo-button--box-shadow-bottom $ibo-color-secondary-300,
-    ),
-    ':hover': (
-        $ibo-color-secondary-200,
-        $ibo-color-grey-900,
-        $ibo-button--box-shadow-bottom $ibo-color-secondary-300,
-    ),
-    ':active': (
-      $ibo-color-secondary-200,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-top $ibo-color-secondary-300 + ',' + $ibo-button--box-shadow-bottom $ibo-color-secondary-200,
-    ), 
+	  $ibo-button--box-shadow-bottom $ibo-color-secondary-300,
+	),
+		  ':hover': (
+				  $ibo-color-secondary-200,
+				  $ibo-color-grey-900,
+				  $ibo-button--box-shadow-bottom $ibo-color-secondary-300,
+		  ),
+		  ':active': (
+				  $ibo-color-secondary-200,
+				  $ibo-color-grey-900,
+				  $ibo-button--box-shadow-top $ibo-color-secondary-300 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-200,
+		  ),
   ),
     'red': (
     '': (
@@ -47,32 +64,32 @@ $ibo-button-colors: (
       $ibo-color-white-100,
       $ibo-button--box-shadow-bottom $ibo-color-red-800,
     ),
-    ':hover': (
-        $ibo-color-red-700,
-        $ibo-color-white-100,
-        $ibo-button--box-shadow-bottom $ibo-color-red-800,
+			':hover': (
+					$ibo-color-red-700,
+					$ibo-color-white-100,
+					$ibo-button--box-shadow-bottom $ibo-color-red-800,
+			),
+			':active': (
+					$ibo-color-red-700,
+					$ibo-color-white-100,
+					$ibo-button--box-shadow-top $ibo-color-red-800 #{','} $ibo-button--box-shadow-bottom $ibo-color-red-700,
+			),
+	),
+		'green': (
+				'': (
+						$ibo-color-green-700,
+						$ibo-color-white-100,
+						$ibo-button--box-shadow-bottom $ibo-color-green-900,
+				),
+				':hover': (
+						$ibo-color-green-800,
+						$ibo-color-white-100,
+						$ibo-button--box-shadow-bottom $ibo-color-green-900,
     ),
     ':active': (
-      $ibo-color-red-700,
-      $ibo-color-white-100,
-      $ibo-button--box-shadow-top $ibo-color-red-800 + ',' + $ibo-button--box-shadow-bottom $ibo-color-red-700,
-    ),
-  ), 
-  'green': (
-    '': (
-      $ibo-color-green-700,
-      $ibo-color-white-100,
-      $ibo-button--box-shadow-bottom $ibo-color-green-900,
-    ),
-    ':hover': (
-      $ibo-color-green-800,
-      $ibo-color-white-100,
-      $ibo-button--box-shadow-bottom $ibo-color-green-900,
-    ),
-    ':active': (
-      $ibo-color-green-800,
-      $ibo-color-white-100,
-      $ibo-button--box-shadow-top $ibo-color-green-900 + ',' + $ibo-button--box-shadow-bottom $ibo-color-green-800,
+			$ibo-color-green-800,
+			$ibo-color-white-100,
+			$ibo-button--box-shadow-top $ibo-color-green-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-green-800,
     ),
   ),
   'cyan': (
@@ -87,28 +104,45 @@ $ibo-button-colors: (
       $ibo-button--box-shadow-bottom $ibo-color-cyan-900,
     ),
     ':active': (
-      $ibo-color-cyan-700,
-      $ibo-color-white-100,
-      $ibo-button--box-shadow-top $ibo-color-cyan-900 + ',' + $ibo-button--box-shadow-bottom $ibo-color-cyan-700,
+			$ibo-color-cyan-700,
+			$ibo-color-white-100,
+			$ibo-button--box-shadow-top $ibo-color-cyan-900 #{','} $ibo-button--box-shadow-bottom $ibo-color-cyan-700,
     ),
   )
 ),
-'misc': (
-  'primary': (
-    '': (
-      transparent,
-      $ibo-color-primary-600,
-      $ibo-button--box-shadow-bottom transparent,
-    ),
-    ':hover': (
-      $ibo-color-primary-300,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-bottom $ibo-color-primary-300,
+		'alternative': (
+				'neutral': (
+						'': (
+								transparent,
+								$ibo-color-grey-900,
+								$ibo-button--box-shadow-bottom transparent,
+						),
+						':hover': (
+								$ibo-color-secondary-100,
+								$ibo-color-grey-900,
+								$ibo-button--box-shadow-bottom $ibo-color-secondary-100,
+						),
+						':active': (
+								$ibo-color-secondary-100,
+								$ibo-color-grey-900,
+								$ibo-button--box-shadow-top $ibo-color-secondary-200 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-100,
+						),
+				),
+				'primary': (
+						'': (
+								transparent,
+								$ibo-color-primary-600,
+								$ibo-button--box-shadow-bottom transparent,
+						),
+						':hover': (
+								$ibo-color-primary-300,
+								$ibo-color-grey-900,
+								$ibo-button--box-shadow-bottom $ibo-color-primary-300,
     ),
     ':active': (
-      $ibo-color-primary-300,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-top $ibo-color-primary-700 + ',' + $ibo-button--box-shadow-bottom $ibo-color-primary-300,
+			$ibo-color-primary-300,
+			$ibo-color-grey-900,
+			$ibo-button--box-shadow-top $ibo-color-primary-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-primary-300,
     ),
   ),
   'secondary': (
@@ -123,9 +157,9 @@ $ibo-button-colors: (
       $ibo-button--box-shadow-bottom $ibo-color-secondary-100,
     ),
     ':active': (
-      $ibo-color-secondary-100,
-      $ibo-color-grey-900,
-      $ibo-button--box-shadow-top $ibo-color-secondary-200 + ',' + $ibo-button--box-shadow-bottom $ibo-color-secondary-100,
+			$ibo-color-secondary-100,
+			$ibo-color-grey-900,
+			$ibo-button--box-shadow-top $ibo-color-secondary-200 #{','} $ibo-button--box-shadow-bottom $ibo-color-secondary-100,
     ),
   ),
   'red': (
@@ -140,9 +174,9 @@ $ibo-button-colors: (
       $ibo-button--box-shadow-bottom $ibo-color-red-200,
     ),
     ':active': (
-      $ibo-color-red-200,
-      $ibo-color-red-900,
-      $ibo-button--box-shadow-top $ibo-color-red-700 + ',' + $ibo-button--box-shadow-bottom $ibo-color-red-200,
+			$ibo-color-red-200,
+			$ibo-color-red-900,
+			$ibo-button--box-shadow-top $ibo-color-red-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-red-200,
     ),
    ),
     'green': (
@@ -157,9 +191,9 @@ $ibo-button-colors: (
         $ibo-button--box-shadow-bottom $ibo-color-green-100,
       ),
       ':active': (
-              $ibo-color-green-100,
-        $ibo-color-green-900,
-        $ibo-button--box-shadow-top $ibo-color-green-700 + ',' + $ibo-button--box-shadow-bottom $ibo-color-green-100,
+			  $ibo-color-green-100,
+			  $ibo-color-green-900,
+			  $ibo-button--box-shadow-top $ibo-color-green-700 #{','} $ibo-button--box-shadow-bottom $ibo-color-green-100,
       ),
    ),
     'cyan': (
@@ -174,9 +208,9 @@ $ibo-button-colors: (
         $ibo-button--box-shadow-bottom $ibo-color-cyan-100,
       ),
       ':active': (
-        $ibo-color-cyan-100,
-        $ibo-color-cyan-900,
-        $ibo-button--box-shadow-top $ibo-color-cyan-800 + ',' + $ibo-button--box-shadow-bottom $ibo-color-cyan-100,
+			  $ibo-color-cyan-100,
+			  $ibo-color-cyan-900,
+			  $ibo-button--box-shadow-top $ibo-color-cyan-800 #{','} $ibo-button--box-shadow-bottom $ibo-color-cyan-100,
       ),
    ),
   )
