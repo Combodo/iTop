@@ -110,22 +110,21 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 		$oTask->Set('running', 1);
 		$oTask->DBUpdate();
 		// Compute allowed time
-		if (!$oRefClass->implementsInterface('iScheduledProcess'))
+		if ($oRefClass->implementsInterface('iScheduledProcess'))
 		{
-			// Periodic task, allow only 10x the period
-			$iCurrTimeLimit = time() + $oProcess->GetPeriodicity() * 10;
+			$iCurrTimeLimit = $iTimeLimit;
+		}
+		else
+		{
+			// Periodic task, allow only 3x the period
+			$iCurrTimeLimit = time() + $oProcess->GetPeriodicity() * 3;
 			if ($iCurrTimeLimit > $iTimeLimit)
 			{
 				$iCurrTimeLimit = $iTimeLimit;
 			}
 		}
-		else
-		{
-			$iCurrTimeLimit = $iTimeLimit;
-		}
 		$sMessage = $oProcess->Process($iCurrTimeLimit);
 		$oTask->Set('running', 0);
-
 	}
 	catch (MySQLHasGoneAwayException $e)
 	{
