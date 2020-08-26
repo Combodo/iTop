@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry;
 
 
 use DateTime;
+use MetaModel;
 
 /**
  * Class TransitionEntry
@@ -56,7 +57,7 @@ class TransitionEntry extends ActivityEntry
 	 * @param string $sObjectClass Class of the object which made the transition
 	 * @param string $sOriginStateCode
 	 * @param string $sTargetStateCode
-	 * @param string $sId
+	 * @param string|null $sId
 	 *
 	 * @throws \CoreException
 	 * @throws \OQLException
@@ -81,7 +82,7 @@ class TransitionEntry extends ActivityEntry
 	public function SetOriginalState($sObjectClass, $sStateCode)
 	{
 		$this->sOriginStateCode = $sStateCode;
-		$this->sOriginStateLabel = \MetaModel::GetStateLabel($sObjectClass, $sStateCode);
+		$this->sOriginStateLabel = MetaModel::GetStateLabel($sObjectClass, $sStateCode);
 
 		return $this;
 	}
@@ -109,16 +110,16 @@ class TransitionEntry extends ActivityEntry
 	/**
 	 * Set the code / label of the state after the transition
 	 *
-	 * @param string $sObjectClas
+	 * @param string $sObjectClass
 	 * @param string $sStateCode
 	 *
 	 * @return $this
 	 * @throws \CoreException
 	 */
-	public function SetTargetState($sObjectClas, $sStateCode)
+	public function SetTargetState($sObjectClass, $sStateCode)
 	{
 		$this->sTargetStateCode = $sStateCode;
-		$this->sTargetStateLabel = \MetaModel::GetStateLabel($sObjectClas, $sStateCode);
+		$this->sTargetStateLabel = MetaModel::GetStateLabel($sObjectClass, $sStateCode);
 
 		return $this;
 	}

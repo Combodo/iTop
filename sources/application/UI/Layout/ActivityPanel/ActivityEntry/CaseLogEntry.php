@@ -54,7 +54,7 @@ class CaseLogEntry extends ActivityEntry
 	 * @param \User $sAuthorLogin
 	 * @param string $sAttCode
 	 * @param string $sContent
-	 * @param string $sId
+	 * @param string|null $sId
 	 *
 	 * @throws \OQLException
 	 */

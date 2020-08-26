@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 
@@ -33,7 +34,9 @@ $oPage = new iTopWebPage('Render all UI blocks');
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oPage->SetContentLayout($oPageContentLayout);
 
+/////////
 // Alerts
+/////////
 $sContent = <<<HTML
 <div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
 <div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
@@ -50,7 +53,9 @@ $oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingSecondaryColor('
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+//////////
 // Buttons
+//////////
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary'));
@@ -64,7 +69,9 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAc
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+/////////
 // Panels
+/////////
 $aSubBlocks = [
 	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
 	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'),

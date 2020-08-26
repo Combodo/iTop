@@ -49,7 +49,7 @@ class PageContent extends UIBlock
 	/**
 	 * PageContent constructor.
 	 *
-	 * @param string $sId
+	 * @param string|null $sId
 	 */
 	public function __construct($sId = null)
 	{

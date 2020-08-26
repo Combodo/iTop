@@ -42,6 +42,7 @@ class CMDBChangeOpSetAttributeFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public static function MakeFromCmdbChangeOp(iCMDBChangeOpSetAttribute $oChangeOp)
 	{

@@ -27,7 +27,6 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use MetaModel;
-use UserRights;
 
 /**
  * Class ActivityPanelFactory
@@ -40,7 +39,7 @@ use UserRights;
 class ActivityPanelFactory
 {
 	/**
-	 * Make an activity panel for an object details layout, meaning that it should contain the caselogs and the activity.
+	 * Make an activity panel for an object details layout, meaning that it should contain the case logs and the activity.
 	 *
 	 * @param \DBObject $oObject
 	 *

@@ -20,8 +20,6 @@
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp;
 
 
-use iCMDBChangeOp;
-
 /**
  * Class CMDBChangeOpAttachmentRemovedFactory
  *

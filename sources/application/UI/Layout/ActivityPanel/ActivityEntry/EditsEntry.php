@@ -53,7 +53,7 @@ class EditsEntry extends ActivityEntry
 	 * @param \DateTime $oDateTime
 	 * @param \User $sAuthorLogin
 	 * @param string $sObjectClass Class of the object concerned by the edits
-	 * @param string $sId
+	 * @param string|null $sId
 	 *
 	 * @throws \OQLException
 	 */

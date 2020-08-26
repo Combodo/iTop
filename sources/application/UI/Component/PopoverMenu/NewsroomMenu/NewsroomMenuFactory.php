@@ -20,8 +20,6 @@
 namespace Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu;
 
 use appUserPreferences;
-use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
-use Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu;
 use Dict;
 use MetaModel;
 use UserRights;

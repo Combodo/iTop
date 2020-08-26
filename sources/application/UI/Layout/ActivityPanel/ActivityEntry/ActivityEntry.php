@@ -23,7 +23,6 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry;
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\UIBlock;
 use DateTime;
-use User;
 use UserRights;
 
 /**
@@ -48,7 +47,7 @@ class ActivityEntry extends UIBlock
 	/** @var string DEFAULT_DECORATION_CLASSES */
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
 
-	/** @var string $sType Type of entry, used for filtering (eg. caselog, edits, transition, ...) */
+	/** @var string $sType Type of entry, used for filtering (eg. case log, edits, transition, ...) */
 	protected $sType;
 	/** @var string $sDecorationClasses CSS classes to use to decorate the entry */
 	protected $sDecorationClasses;
@@ -106,7 +105,7 @@ class ActivityEntry extends UIBlock
 	}
 
 	/**
-	 * Return the type of the entry (eg. caselog, edits, transition, ...)
+	 * Return the type of the entry (eg. case log, edits, transition, ...)
 	 *
 	 * @return string
 	 */

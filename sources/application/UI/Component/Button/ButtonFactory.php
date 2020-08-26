@@ -19,8 +19,6 @@
 
 namespace Combodo\iTop\Application\UI\Component\Button;
 
-use Combodo\iTop\Application\UI\Component\Button\Button;
-
 /**
  * Class ButtonFactory
  *

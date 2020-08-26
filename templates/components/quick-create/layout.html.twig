@@ -1,8 +1,9 @@
 <div id="{{ oUIBlock.GetId() }}" class="ibo-quick-create" data-role="ibo-quick-create">
 	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
 		<input type="hidden" name="operation" value="new" />
-		<a href="#" class="ibo-quick-create--icon fas fa-plus" data-role="ibo-quick-create--icon" data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25"></a>
-		<select name="class" class="ibo-quick-create--input" data-role="ibo-quick-create--input" placeholder="{{ 'UI:Component:QuickCreate:Input:Placeholder'|dict_s }}">
+		<a href="#" class="ibo-quick-create--icon fas fa-plus" data-role="ibo-quick-create--icon" data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
+		   data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25"></a>
+		<select name="class" class="ibo-quick-create--input" data-role="ibo-quick-create--input">
 			<option value="">{{ 'UI:Component:QuickCreate:Input:Placeholder'|dict_s }}</option>
 			{% for sClassCode, sClassLabel in oUIBlock.GetAvailableClasses() %}
 				<option value="{{ sClassCode }}">{{ sClassLabel }}</option>

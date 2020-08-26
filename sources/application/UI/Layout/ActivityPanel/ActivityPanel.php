@@ -51,8 +51,8 @@ class ActivityPanel extends UIBlock
 	protected $aCaseLogs;
 	/** @var ActivityEntry[] $aEntries */
 	protected $aEntries;
-	/** @var bool $bAreEntriedSorted True if the entries have been sorted by date */
-	protected $bAreEntriedSorted;
+	/** @var bool $bAreEntriesSorted True if the entries have been sorted by date */
+	protected $bAreEntriesSorted;
 	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
 	protected $bHasLifecycle;
 
@@ -73,7 +73,7 @@ class ActivityPanel extends UIBlock
 		$this->InitializeCaseLogTabs();
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
-		$this->bAreEntriedSorted = false;
+		$this->bAreEntriesSorted = false;
 	}
 
 	/**
@@ -141,7 +141,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function GetEntries()
 	{
-		if($this->bAreEntriedSorted === false)
+		if ($this->bAreEntriesSorted === false)
 		{
 			$this->SortEntries();
 		}
@@ -208,7 +208,7 @@ class ActivityPanel extends UIBlock
 				$sDateTimeA = $oEntryA->GetRawDateTime();
 				$sDateTimeB = $oEntryB->GetRawDateTime();
 
-				if($sDateTimeA === $sDateTimeB)
+				if ($sDateTimeA === $sDateTimeB)
 				{
 					return 0;
 				}
@@ -216,7 +216,7 @@ class ActivityPanel extends UIBlock
 				return ($sDateTimeA > $sDateTimeB) ? -1 : 1;
 			});
 		}
-		$this->bAreEntriedSorted = true;
+		$this->bAreEntriesSorted = true;
 
 		return $this;
 	}
@@ -232,16 +232,16 @@ class ActivityPanel extends UIBlock
 	public function AddEntry(ActivityEntry $oEntry)
 	{
 		$this->aEntries[$oEntry->GetId()] = $oEntry;
-		$this->bAreEntriedSorted = false;
+		$this->bAreEntriesSorted = false;
 
 		// Add case log to the panel and update metadata when necessary
-		if($oEntry instanceof CaseLogEntry)
+		if ($oEntry instanceof CaseLogEntry)
 		{
 			$sCaseLogAttCode = $oEntry->GetAttCode();
 			$sAuthorLogin = $oEntry->GetAuthorLogin();
 
 			// Initialize case log metadata
-			if($this->HasCaseLogTab($sCaseLogAttCode) === false)
+			if ($this->HasCaseLogTab($sCaseLogAttCode) === false)
 			{
 				$this->AddCaseLogTab($sCaseLogAttCode);
 			}

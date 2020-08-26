@@ -42,7 +42,7 @@ class PageContentWithSideContent extends PageContent
 	/**
 	 * PageContentWithSideContent constructor.
 	 *
-	 * @param string $sId
+	 * @param string|null $sId
 	 */
 	public function __construct($sId = null)
 	{

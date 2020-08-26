@@ -20,7 +20,6 @@
 namespace Combodo\iTop\Application\UI\Layout\PageContent;
 
 
-use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanel;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanelFactory;
 use DBObject;
 
