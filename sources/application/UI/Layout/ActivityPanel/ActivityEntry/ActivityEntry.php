@@ -78,7 +78,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sContent = null, $sId = null)
+	public function __construct(DateTime $oDateTime, string $sAuthorLogin, ?string $sContent = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -97,7 +97,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetType($sType)
+	public function SetType(string $sType)
 	{
 		$this->sType = $sType;
 
@@ -121,7 +121,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetDecorationClasses($sDecorationClasses)
+	public function SetDecorationClasses(string $sDecorationClasses)
 	{
 		$this->sDecorationClasses = $sDecorationClasses;
 
@@ -145,9 +145,10 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetContent($sContent)
+	public function SetContent(string $sContent)
 	{
 		$this->sContent = $sContent;
+
 		return $this;
 	}
 
@@ -202,7 +203,7 @@ class ActivityEntry extends UIBlock
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function SetAuthor($sAuthorLogin)
+	public function SetAuthor(string $sAuthorLogin)
 	{
 		$this->sAuthorLogin = $sAuthorLogin;
 		// TODO 2.8.0: Check that this does not return '' when author is the CRON or an extension.
@@ -263,9 +264,10 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function SetOrigin($sOrigin)
+	protected function SetOrigin(string $sOrigin)
 	{
 		$this->sOrigin = $sOrigin;
+
 		return $this;
 	}
 

@@ -45,7 +45,7 @@ class TopBarFactory
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public static function MakeStandard($aBreadcrumbsEntry = null)
+	public static function MakeStandard(?array $aBreadcrumbsEntry = null)
 	{
 		$oTopBar = new TopBar(TopBar::BLOCK_CODE);
 

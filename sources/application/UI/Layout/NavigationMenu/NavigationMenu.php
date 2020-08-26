@@ -83,8 +83,9 @@ class NavigationMenu extends UIBlock
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public function __construct(ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null, $sId = null)
-	{
+	public function __construct(
+		ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null, ?string $sId = null
+	) {
 		parent::__construct($sId);
 
 		$this->sAppRevisionNumber = utils::GetAppRevisionNumber();

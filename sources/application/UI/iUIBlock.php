@@ -92,9 +92,9 @@ interface iUIBlock
 	 *
 	 * @param bool $bAbsoluteUrl
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	public function GetJsFilesUrlRecursively($bAbsoluteUrl = false);
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false);
 
 	/**
 	 * Return an array of the CSS files URL necessary for the block and all its sub blocks.
@@ -102,8 +102,8 @@ interface iUIBlock
 	 *
 	 * @param bool $bAbsoluteUrl
 	 *
-	 * @return array
+	 * @return string[]
 	 * @throws \Exception
 	 */
-	public function GetCssFilesUrlRecursively($bAbsoluteUrl = false);
+	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false);
 }

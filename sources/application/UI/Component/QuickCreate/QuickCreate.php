@@ -62,7 +62,7 @@ class QuickCreate extends UIBlock
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct($aLastClasses = [], $sId = null)
+	public function __construct(array $aLastClasses = [], ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->aAvailableClasses = UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true);
@@ -86,9 +86,10 @@ class QuickCreate extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetLastClasses($aLastClasses)
+	public function SetLastClasses(array $aLastClasses)
 	{
 		$this->aLastClasses = $aLastClasses;
+
 		return $this;
 	}
 

@@ -58,7 +58,7 @@ class CaseLogEntry extends ActivityEntry
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sAttCode, $sContent, $sId = null)
+	public function __construct(DateTime $oDateTime, string $sAuthorLogin, string $sAttCode, string $sContent, ?string $sId = null)
 	{
 		parent::__construct($oDateTime, $sAuthorLogin, $sContent, $sId);
 
@@ -84,9 +84,10 @@ class CaseLogEntry extends ActivityEntry
 	 *
 	 * @return $this
 	 */
-	public function SetCaseLogRank($iCaseLogRank)
+	public function SetCaseLogRank(int $iCaseLogRank)
 	{
 		$this->iCaseLogRank = $iCaseLogRank;
+
 		return $this;
 	}
 

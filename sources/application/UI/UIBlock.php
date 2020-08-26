@@ -114,7 +114,7 @@ abstract class UIBlock implements iUIBlock
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct($sId = null)
+	public function __construct(?string $sId = null)
 	{
 		$this->sId = ($sId !== null) ? $sId : $this->GenerateId();
 	}
@@ -161,7 +161,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetJsFilesUrlRecursively($bAbsoluteUrl = false)
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false)
 	{
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, $bAbsoluteUrl);
 	}
@@ -170,7 +170,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetCssFilesUrlRecursively($bAbsoluteUrl = false)
+	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false)
 	{
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, $bAbsoluteUrl);
 	}
@@ -185,14 +185,14 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function GetFilesUrlRecursively($sFilesType, $bAbsoluteUrl = false)
+	protected function GetFilesUrlRecursively(string $sFilesType, bool $bAbsoluteUrl = false)
 	{
 		$aFiles = [];
 		$sFilesRelPathMethodName = 'Get'.ucfirst($sFilesType).'FilesRelPaths';
 		$sFilesAbsUrlMethodName = 'Get'.ucfirst($sFilesType).'FilesUrlRecursively';
 
 		// Files from the block itself
-		foreach($this::$sFilesRelPathMethodName() as $sFilePath)
+		foreach ($this::$sFilesRelPathMethodName() as $sFilePath)
 		{
 			$aFiles[] = (($bAbsoluteUrl === true) ? utils::GetAbsoluteUrlAppRoot() : '').$sFilePath;
 		}

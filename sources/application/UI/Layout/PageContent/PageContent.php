@@ -51,7 +51,7 @@ class PageContent extends UIBlock
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct($sId = null)
+	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -66,9 +66,10 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function SetContentAreaBlocks($sAreaId, $aBlocks)
+	protected function SetContentAreaBlocks(string $sAreaId, array $aBlocks)
 	{
 		$this->aContentAreasBlocks[$sAreaId] = $aBlocks;
+
 		return $this;
 	}
 
@@ -80,9 +81,9 @@ class PageContent extends UIBlock
 	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 * @throws \Exception
 	 */
-	protected function GetContentAreaBlocks($sAreaId)
+	protected function GetContentAreaBlocks(string $sAreaId)
 	{
-		if(!array_key_exists($sAreaId, $this->aContentAreasBlocks))
+		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks))
 		{
 			throw new Exception('Could not retrieve blocks from content area "'.$sAreaId.'" as it does seem to exists for page content "'.$this->GetId().'"');
 		}
@@ -97,7 +98,7 @@ class PageContent extends UIBlock
 	 *
 	 * @return bool
 	 */
-	protected function IsExistingContentArea($sAreaId)
+	protected function IsExistingContentArea(string $sAreaId)
 	{
 		return isset($this->aContentAreasBlocks[$sAreaId]);
 	}
@@ -111,14 +112,15 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function AddBlockToContentArea($sAreaId, iUIBlock $oBlock)
+	protected function AddBlockToContentArea(string $sAreaId, iUIBlock $oBlock)
 	{
-		if(!array_key_exists($sAreaId, $this->aContentAreasBlocks))
+		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks))
 		{
 			$this->aContentAreasBlocks[$sAreaId] = [];
 		}
 
 		$this->aContentAreasBlocks[$sAreaId][$oBlock->GetId()] = $oBlock;
+
 		return $this;
 	}
 
@@ -131,9 +133,9 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function RemoveBlockFromContentArea($sAreaId, $sBlockId)
+	protected function RemoveBlockFromContentArea(string $sAreaId, string $sBlockId)
 	{
-		if(array_key_exists($sAreaId, $this->aContentAreasBlocks) && array_key_exists($sBlockId, $this->aContentAreasBlocks[$sAreaId]))
+		if (array_key_exists($sAreaId, $this->aContentAreasBlocks) && array_key_exists($sBlockId, $this->aContentAreasBlocks[$sAreaId]))
 		{
 			unset($this->aContentAreasBlocks[$sAreaId][$sBlockId]);
 		}
@@ -159,9 +161,10 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetMainBlocks($aBlocks)
+	public function SetMainBlocks(array $aBlocks)
 	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN, $aBlocks);
+
 		return $this;
 	}
 
@@ -198,9 +201,10 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveMainBlock($sBlockId)
+	public function RemoveMainBlock(string $sBlockId)
 	{
 		$this->RemoveBlockFromContentArea(static::ENUM_CONTENT_AREA_MAIN, $sBlockId);
+
 		return $this;
 	}
 
@@ -211,9 +215,10 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetExtraHtmlContent($sExtraHtmlContent)
+	public function SetExtraHtmlContent(string $sExtraHtmlContent)
 	{
 		$this->sExtraHtmlContent = $sExtraHtmlContent;
+
 		return $this;
 	}
 

@@ -49,9 +49,10 @@ class NewsroomMenu extends PopoverMenu
 	 *
 	 * @return $this
 	 */
-	public function SetParams($aParams)
+	public function SetParams(array $aParams)
 	{
 		$this->aParams = $aParams;
+
 		return $this;
 	}
 

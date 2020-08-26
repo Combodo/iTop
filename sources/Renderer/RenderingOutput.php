@@ -106,19 +106,20 @@ class RenderingOutput
      */
 	public function GetCssClasses()
     {
-        return $this->aCssClasses;
+	    return $this->aCssClasses;
     }
 
-    /**
-     *
-     * @param string $sHtml
-     * @param bool $bEncodeHtmlEntities
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
-	public function AddHtml($sHtml, $bEncodeHtmlEntities = false)
+	/**
+	 *
+	 * @param string $sHtml
+	 * @param bool $bEncodeHtmlEntities
+	 *
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
+	public function AddHtml(string $sHtml, bool $bEncodeHtmlEntities = false)
 	{
 		$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
+
 		return $this;
 	}
 
@@ -131,9 +132,10 @@ class RenderingOutput
 	 * @return $this
 	 * @since 2.7.0
 	 */
-	public function AddMetadata($sName, $sValue)
+	public function AddMetadata(string $sName, string $sValue)
 	{
 		$this->aMetadata[$sName] = $sValue;
+
 		return $this;
 	}
 
@@ -145,23 +147,26 @@ class RenderingOutput
 	 * @return $this
 	 * @since 2.7.0
 	 */
-	public function RemoveMetadata($sName)
+	public function RemoveMetadata(string $sName)
 	{
 		if (in_array($sName, $this->aMetadata))
 		{
 			unset($this->aJsFiles[$sName]);
 		}
+
 		return $this;
 	}
 
 	/**
 	 *
 	 * @param string $sJs
+	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function AddJs($sJs)
+	public function AddJs(string $sJs)
 	{
-		$this->sJsInline .= $sJs . "\n";
+		$this->sJsInline .= $sJs."\n";
+
 		return $this;
 	}
 
@@ -173,48 +178,55 @@ class RenderingOutput
 	 * @return $this
 	 * @since 2.8.0
 	 */
-	public function SetJsFiles($aFiles)
+	public function SetJsFiles(array $aFiles)
 	{
 		$this->aJsFiles = $aFiles;
+
 		return $this;
 	}
 
 	/**
 	 *
 	 * @param string $sFile
+	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function AddJsFile($sFile)
+	public function AddJsFile(string $sFile)
 	{
 		if (!in_array($sFile, $this->aJsFiles))
 		{
 			$this->aJsFiles[] = $sFile;
 		}
+
 		return $this;
 	}
 
 	/**
 	 *
 	 * @param string $sFile
+	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function RemoveJsFile($sFile)
+	public function RemoveJsFile(string $sFile)
 	{
 		if (in_array($sFile, $this->aJsFiles))
 		{
 			unset($this->aJsFiles[$sFile]);
 		}
+
 		return $this;
 	}
 
 	/**
 	 *
 	 * @param string $sCss
+	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function AddCss($sCss)
+	public function AddCss(string $sCss)
 	{
-		$this->sCssInline .= $sCss . "\n";
+		$this->sCssInline .= $sCss."\n";
+
 		return $this;
 	}
 
@@ -226,24 +238,27 @@ class RenderingOutput
 	 * @return $this
 	 * @since 2.8.0
 	 */
-	public function SetCssFiles($aFiles)
+	public function SetCssFiles(array $aFiles)
 	{
 		$this->aCssFiles = $aFiles;
+
 		return $this;
 	}
 
-    /**
-     *
-     * @param string $sFile
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
-    public function AddCssFile($sFile)
-    {
-        if (!in_array($sFile, $this->aCssFiles))
-        {
-            $this->aCssFiles[] = $sFile;
-        }
-        return $this;
+	/**
+	 *
+	 * @param string $sFile
+	 *
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
+	public function AddCssFile(string $sFile)
+	{
+		if (!in_array($sFile, $this->aCssFiles))
+		{
+			$this->aCssFiles[] = $sFile;
+		}
+
+		return $this;
     }
 
     /**
@@ -251,13 +266,14 @@ class RenderingOutput
      * @param string $sFile
      * @return \Combodo\iTop\Renderer\RenderingOutput
      */
-    public function RemoveCssFile($sFile)
-    {
-        if (in_array($sFile, $this->aCssFiles))
-        {
-            unset($this->aCssFiles[$sFile]);
-        }
-        return $this;
+	public function RemoveCssFile(string $sFile)
+	{
+		if (in_array($sFile, $this->aCssFiles))
+		{
+			unset($this->aCssFiles[$sFile]);
+		}
+
+		return $this;
     }
 
     /**
@@ -265,13 +281,14 @@ class RenderingOutput
      * @param string $sClass
      * @return \Combodo\iTop\Renderer\RenderingOutput
      */
-    public function AddCssClass($sClass)
-    {
-        if (!in_array($sClass, $this->aCssClasses))
-        {
-            $this->aCssClasses[] = $sClass;
-        }
-        return $this;
+	public function AddCssClass(string $sClass)
+	{
+		if (!in_array($sClass, $this->aCssClasses))
+		{
+			$this->aCssClasses[] = $sClass;
+		}
+
+		return $this;
     }
 
     /**
@@ -279,13 +296,14 @@ class RenderingOutput
      * @param string $sClass
      * @return \Combodo\iTop\Renderer\RenderingOutput
      */
-    public function RemoveCssClass($sClass)
-    {
-        if (in_array($sClass, $this->aCssClasses))
-        {
-            unset($this->aCssClasses[$sClass]);
-        }
-        return $this;
+	public function RemoveCssClass(string $sClass)
+	{
+		if (in_array($sClass, $this->aCssClasses))
+		{
+			unset($this->aCssClasses[$sClass]);
+		}
+
+		return $this;
     }
 
 }

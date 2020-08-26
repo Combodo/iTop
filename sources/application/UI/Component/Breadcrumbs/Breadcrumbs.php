@@ -51,7 +51,7 @@ class Breadcrumbs extends UIBlock
 	 * @param array|null $aNewEntry
 	 * @param string|null $sId
 	 */
-	public function __construct($aNewEntry = null, $sId = null)
+	public function __construct(?array $aNewEntry = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->SetNewEntry($aNewEntry);
@@ -64,9 +64,10 @@ class Breadcrumbs extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetNewEntry($aNewEntry)
+	public function SetNewEntry(array $aNewEntry)
 	{
 		$this->aNewEntry = $aNewEntry;
+
 		return $this;
 	}
 

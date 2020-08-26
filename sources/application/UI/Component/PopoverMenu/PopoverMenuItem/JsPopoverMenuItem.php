@@ -52,14 +52,15 @@ class JsPopoverMenuItem extends PopoverMenuItem
 	{
 		return $this->oPopupMenuItem->GetUrl();
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetJsFilesUrlRecursively($bAbsoluteUrl = false)
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false)
 	{
 		$aJsFiles = array_merge(parent::GetJsFilesUrlRecursively($bAbsoluteUrl), $this->oPopupMenuItem->GetLinkedScripts());
+
 		return $aJsFiles;
 	}
 }

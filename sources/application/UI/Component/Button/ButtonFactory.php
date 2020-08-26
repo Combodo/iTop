@@ -37,7 +37,7 @@ class ButtonFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName): Button
+	public static function MakeNeutral(string $sLabel, string $sName)
 	{
 		$oButton = new Button($sLabel);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
@@ -58,7 +58,7 @@ class ButtonFactory
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForPrimaryAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
 	}
 
@@ -73,7 +73,7 @@ class ButtonFactory
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForSecondaryAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
 	}
 
@@ -89,7 +89,7 @@ class ButtonFactory
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForValidationAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
 	}
 
@@ -105,7 +105,7 @@ class ButtonFactory
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForDestructiveAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
 			$bIsSubmit);
 	}
@@ -118,7 +118,7 @@ class ButtonFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeAlternativeNeutral(string $sLabel, string $sName): Button
+	public static function MakeAlternativeNeutral(string $sLabel, string $sName)
 	{
 		$oButton = new Button($sLabel);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE)
@@ -141,7 +141,7 @@ class ButtonFactory
 	 */
 	public static function MakeForAlternativePrimaryAction(
 		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit);
 	}
@@ -158,7 +158,7 @@ class ButtonFactory
 	 */
 	public static function MakeForAlternativeSecondaryAction(
 		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit);
 	}
@@ -175,7 +175,7 @@ class ButtonFactory
 	 */
 	public static function MakeForAlternativeValidationAction(
 		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit);
 	}
@@ -192,7 +192,7 @@ class ButtonFactory
 	 */
 	public static function MakeForAlternativeDestructiveAction(
 		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit);
 	}
@@ -212,7 +212,7 @@ class ButtonFactory
 	 */
 	protected static function MakeForAction(
 		string $sLabel, string $sColor, string $sActionType, string $sValue = null, string $sName = null, bool $bIsSubmit = false
-	): Button {
+	) {
 		$oButton = new Button($sLabel);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);

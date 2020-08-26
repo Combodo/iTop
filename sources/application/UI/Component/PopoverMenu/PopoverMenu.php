@@ -49,7 +49,7 @@ class PopoverMenu extends UIBlock
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct($sId = null)
+	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->aSections = [];
@@ -63,7 +63,7 @@ class PopoverMenu extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function AddSection($sId)
+	public function AddSection(string $sId)
 	{
 		if (false === $this->HasSection($sId))
 		{
@@ -84,7 +84,7 @@ class PopoverMenu extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function RemoveSection($sId)
+	public function RemoveSection(string $sId)
 	{
 		if (true === $this->HasSection($sId))
 		{
@@ -101,7 +101,7 @@ class PopoverMenu extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasSection($sId)
+	public function HasSection(string $sId)
 	{
 		return array_key_exists($sId, $this->aSections);
 	}
@@ -114,7 +114,7 @@ class PopoverMenu extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function ClearSection($sId)
+	public function ClearSection(string $sId)
 	{
 		if (false === $this->HasSection($sId))
 		{
@@ -145,9 +145,9 @@ class PopoverMenu extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function AddItem($sSectionId, PopoverMenuItem $oItem)
+	public function AddItem(string $sSectionId, PopoverMenuItem $oItem)
 	{
-		if(false === $this->HasSection($sSectionId))
+		if (false === $this->HasSection($sSectionId))
 		{
 			throw new Exception('Could not add an item to the "'.$sSectionId.'" section has it does not seem to exist in the "'.$this->GetId().'" menu.');
 		}
@@ -167,14 +167,14 @@ class PopoverMenu extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function RemoveItem($sSectionId, $sItemId)
+	public function RemoveItem(string $sSectionId, string $sItemId)
 	{
-		if(false === $this->HasSection($sSectionId))
+		if (false === $this->HasSection($sSectionId))
 		{
 			throw new Exception('Could not remove en item from the "'.$sSectionId.'" as it does not seem to exist in the "'.$this->GetId().'" menu.');
 		}
 
-		if(array_key_exists($sItemId, $this->aSections[$sSectionId]['aItems']))
+		if (array_key_exists($sItemId, $this->aSections[$sSectionId]['aItems']))
 		{
 			unset($this->aSections[$sSectionId]['aItems'][$sItemId]);
 		}
@@ -191,9 +191,9 @@ class PopoverMenu extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function SetItems($sSectionId, $aItems)
+	public function SetItems(string $sSectionId, array $aItems)
 	{
-		if(false === $this->HasSection($sSectionId))
+		if (false === $this->HasSection($sSectionId))
 		{
 			throw new Exception('Could not set items to the "'.$sSectionId.'" section has it does not seem to exist in the "'.$this->GetId().'" menu.');
 		}

@@ -70,25 +70,29 @@ class PopoverMenuItem extends UIBlock
 
 	/**
 	 * @see \ApplicationPopupMenuItem::SetCssClasses()
+	 *
 	 * @param array $aCssClasses
 	 *
 	 * @return $this
 	 */
-	public function SetCssClasses($aCssClasses)
+	public function SetCssClasses(array $aCssClasses)
 	{
 		$this->oPopupMenuItem->SetCssClasses($aCssClasses);
+
 		return $this;
 	}
 
 	/**
 	 * @see \ApplicationPopupMenuItem::AddCssClass()
+	 *
 	 * @param string $sCssClass
 	 *
 	 * @return $this
 	 */
-	public function AddCssClass($sCssClass)
+	public function AddCssClass(string $sCssClass)
 	{
 		$this->oPopupMenuItem->AddCssClass($sCssClass);
+
 		return $this;
 	}
 

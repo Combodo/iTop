@@ -109,8 +109,10 @@ class Button extends UIBlock
 	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(
-		$sLabel, $sId = null, $sName = '', $sValue = '', $sType = self::DEFAULT_TYPE, string $sTooltip = '', $sIconClass = '',
-		$sActionType = self::DEFAULT_ACTION_TYPE, $sColor = self::DEFAULT_COLOR, $sJsCode = '', $sOnClickJsCode = ''
+		string $sLabel, string $sId = null, string $sName = '', string $sValue = '', string $sType = self::DEFAULT_TYPE,
+		string $sTooltip = '', string $sIconClass = '',
+		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '',
+		string $sOnClickJsCode = ''
 	) {
 		$this->sLabel = $sLabel;
 		$this->sName = $sName;
@@ -122,21 +124,21 @@ class Button extends UIBlock
 		$this->sColor = $sColor;
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
-		
+
 		parent::__construct($sId);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetLabel(): string
+	public function GetLabel()
 	{
 		return $this->sLabel;
 	}
 
 	/**
 	 * @param string $sLabel
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetLabel(string $sLabel)
@@ -290,12 +292,13 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sOnClickJsCode
-	 * 
+	 *
 	 * @return $this
 	 */
-	public function SetOnClickJsCode($sOnClickJsCode)
+	public function SetOnClickJsCode(string $sOnClickJsCode)
 	{
 		$this->sOnClickJsCode = $sOnClickJsCode;
+
 		return $this;
 	}
 
@@ -309,12 +312,13 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sJsCode
-	 * 
+	 *
 	 * @return $this
 	 */
-	public function SetJsCode($sJsCode)
+	public function SetJsCode(string $sJsCode)
 	{
 		$this->sJsCode = $sJsCode;
+
 		return $this;
 	}
 }

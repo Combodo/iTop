@@ -44,7 +44,7 @@ class PageContentWithSideContent extends PageContent
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct($sId = null)
+	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -58,9 +58,10 @@ class PageContentWithSideContent extends PageContent
 	 *
 	 * @return $this
 	 */
-	public function SetSideBlocks($aBlocks)
+	public function SetSideBlocks(array $aBlocks)
 	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_SIDE, $aBlocks);
+
 		return $this;
 	}
 
@@ -97,9 +98,10 @@ class PageContentWithSideContent extends PageContent
 	 *
 	 * @return $this
 	 */
-	public function RemoveSideBlock($sBlockId)
+	public function RemoveSideBlock(string $sBlockId)
 	{
 		$this->RemoveBlockFromContentArea(static::ENUM_CONTENT_AREA_SIDE, $sBlockId);
+
 		return $this;
 	}
 }

@@ -52,9 +52,10 @@ class BlockRenderer
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function RenderBlockTemplates(iUIBlock $oBlock, $aContextParams = [])
+	public static function RenderBlockTemplates(iUIBlock $oBlock, array $aContextParams = [])
 	{
 		$oSelf = new static($oBlock, $aContextParams);
+
 		return $oSelf->RenderTemplates();
 	}
 
@@ -71,9 +72,9 @@ class BlockRenderer
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 */
-	public function __construct(iUIBlock $oBlock, $aContextParams = [])
+	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
 	{
-		if(null === static::$oTwigEnv)
+		if (null === static::$oTwigEnv)
 		{
 			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, static::TWIG_ADDITIONAL_PATHS);
 		}

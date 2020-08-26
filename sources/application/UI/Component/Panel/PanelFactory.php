@@ -36,7 +36,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeNeutral($sTitle)
+	public static function MakeNeutral(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_NEUTRAL);
@@ -51,7 +51,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeForInformation($sTitle)
+	public static function MakeForInformation(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_INFORMATION);
@@ -66,7 +66,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeForSuccess($sTitle)
+	public static function MakeForSuccess(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_SUCCESS);
@@ -81,7 +81,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeForWarning($sTitle)
+	public static function MakeForWarning(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_WARNING);
@@ -96,7 +96,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeForDanger($sTitle)
+	public static function MakeForDanger(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_DANGER);
@@ -111,7 +111,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeForFailure($sTitle)
+	public static function MakeForFailure(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_FAILURE);
@@ -126,7 +126,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingPrimaryColor($sTitle)
+	public static function MakeWithBrandingPrimaryColor(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_PRIMARY);
@@ -141,7 +141,7 @@ class PanelFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingSecondaryColor($sTitle)
+	public static function MakeWithBrandingSecondaryColor(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_SECONDARY);

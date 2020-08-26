@@ -90,7 +90,7 @@ class Alert extends UIBlock
 	 * @param string $sColor
 	 * @param string|null $sId
 	 */
-	public function __construct($sTitle = '', $sContent = '', $sColor = self::DEFAULT_COLOR, $sId = null)
+	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->sContent = $sContent;
@@ -108,9 +108,10 @@ class Alert extends UIBlock
 
 	/**
 	 * @param string $sTitle
+	 *
 	 * @return $this
 	 */
-	public function SetTitle($sTitle)
+	public function SetTitle(string $sTitle)
 	{
 		$this->sTitle = $sTitle;
 
@@ -134,7 +135,7 @@ class Alert extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetContent($sContent)
+	public function SetContent(string $sContent)
 	{
 		$this->sContent = $sContent;
 
@@ -153,9 +154,10 @@ class Alert extends UIBlock
 	 * @param string $sColor
 	 * @return $this
 	 */
-	public function SetColor($sColor)
+	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
+
 		return $this;
 	}
 }

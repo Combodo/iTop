@@ -37,7 +37,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeNeutral($sTitle, $sContent)
+	public static function MakeNeutral(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_NEUTRAL);
 	}
@@ -50,7 +50,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeForInformation($sTitle, $sContent)
+	public static function MakeForInformation(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_INFORMATION);
 	}
@@ -63,7 +63,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeForSuccess($sTitle, $sContent)
+	public static function MakeForSuccess(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SUCCESS);
 	}
@@ -76,7 +76,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeForWarning($sTitle, $sContent)
+	public static function MakeForWarning(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_WARNING);
 	}
@@ -89,7 +89,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeForDanger($sTitle, $sContent)
+	public static function MakeForDanger(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_DANGER);
 	}
@@ -102,7 +102,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeForFailure($sTitle, $sContent)
+	public static function MakeForFailure(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_FAILURE);
 	}
@@ -115,7 +115,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeWithBrandingPrimaryColor($sTitle, $sContent)
+	public static function MakeWithBrandingPrimaryColor(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_PRIMARY);
 	}
@@ -128,7 +128,7 @@ class AlertFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
 	 */
-	public static function MakeWithBrandingSecondaryColor($sTitle, $sContent)
+	public static function MakeWithBrandingSecondaryColor(string $sTitle, string $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SECONDARY);
 	}

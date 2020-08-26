@@ -51,14 +51,14 @@ class GlobalSearchHelper
 	 * @throws \Exception
 	 * @noinspection PhpUnused Called by /pages/UI.php and extensions overloading the global search
 	 */
-	public static function AddQueryToHistory($sQuery, $sIconRelUrl = null, $sLabelAsHtml = null)
+	public static function AddQueryToHistory(string $sQuery, ?string $sIconRelUrl = null, ?string $sLabelAsHtml = null)
 	{
 		$aNewEntry = [
 			'query' => $sQuery,
 		];
 
 		// Set icon only when necessary
-		if(!empty($sIconRelUrl))
+		if (!empty($sIconRelUrl))
 		{
 			//Ensure URL is relative to limit space in the preferences and avoid broken links in case app_root_url changes
 			$aNewEntry['icon_url'] = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sIconRelUrl);

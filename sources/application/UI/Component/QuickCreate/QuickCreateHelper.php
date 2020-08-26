@@ -49,19 +49,19 @@ class QuickCreateHelper
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public static function AddClassToHistory($Class)
+	public static function AddClassToHistory($sClass)
 	{
 		$aNewEntry = [
-			'class' => $Class,
+			'class' => $sClass,
 		];
 
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Remove same entry from history to avoid duplicates
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
-			if($aHistoryEntries[$iIdx]['class'] === $Class)
+			if ($aHistoryEntries[$iIdx]['class'] === $sClass)
 			{
 				unset($aHistoryEntries[$iIdx]);
 			}

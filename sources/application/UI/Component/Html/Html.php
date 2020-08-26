@@ -44,7 +44,7 @@ class Html extends UIBlock
 	 * @param string $sHtml
 	 * @param string|null $sId
 	 */
-	public function __construct($sHtml = '', $sId = null)
+	public function __construct(string $sHtml = '', ?string $sId = null)
 	{
 		$this->sHtml = $sHtml;
 		parent::__construct($sId);
@@ -67,9 +67,10 @@ class Html extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetHtml($sHtml)
+	public function SetHtml(string $sHtml)
 	{
 		$this->sHtml = $sHtml;
+
 		return $this;
 	}
 }

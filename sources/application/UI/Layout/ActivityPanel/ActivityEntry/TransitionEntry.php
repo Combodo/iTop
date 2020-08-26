@@ -62,8 +62,10 @@ class TransitionEntry extends ActivityEntry
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sObjectClass, $sOriginStateCode, $sTargetStateCode, $sId = null)
-	{
+	public function __construct(
+		DateTime $oDateTime, string $sAuthorLogin, string $sObjectClass, string $sOriginStateCode, string $sTargetStateCode,
+		?string $sId = null
+	) {
 		parent::__construct($oDateTime, $sAuthorLogin, null, $sId);
 
 		$this->SetOriginalState($sObjectClass, $sOriginStateCode);
@@ -79,7 +81,7 @@ class TransitionEntry extends ActivityEntry
 	 * @return $this
 	 * @throws \CoreException
 	 */
-	public function SetOriginalState($sObjectClass, $sStateCode)
+	public function SetOriginalState(string $sObjectClass, string $sStateCode)
 	{
 		$this->sOriginStateCode = $sStateCode;
 		$this->sOriginStateLabel = MetaModel::GetStateLabel($sObjectClass, $sStateCode);
@@ -116,7 +118,7 @@ class TransitionEntry extends ActivityEntry
 	 * @return $this
 	 * @throws \CoreException
 	 */
-	public function SetTargetState($sObjectClass, $sStateCode)
+	public function SetTargetState(string $sObjectClass, string $sStateCode)
 	{
 		$this->sTargetStateCode = $sStateCode;
 		$this->sTargetStateLabel = MetaModel::GetStateLabel($sObjectClass, $sStateCode);

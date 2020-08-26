@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Component\Panel;
 
 
+use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\UIBlock;
 
 /**
@@ -90,7 +91,7 @@ class Panel extends UIBlock
 	 * @param string $sColor
 	 * @param string|null $sId
 	 */
-	public function __construct($sTitle = '', $aSubBlocks = [], $sColor = self::DEFAULT_COLOR, $sId = null)
+	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->aSubBlocks = $aSubBlocks;
@@ -108,9 +109,10 @@ class Panel extends UIBlock
 
 	/**
 	 * @param string $sTitle
+	 *
 	 * @return $this
 	 */
-	public function SetTitle($sTitle)
+	public function SetTitle(string $sTitle)
 	{
 		$this->sTitle = $sTitle;
 
@@ -132,7 +134,7 @@ class Panel extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetSubBlocks($aSubBlocks)
+	public function SetSubBlocks(array $aSubBlocks)
 	{
 		foreach ($aSubBlocks as $oSubBlock)
 		{
@@ -149,7 +151,7 @@ class Panel extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function AddSubBlock($oSubBlock)
+	public function AddSubBlock(iUIBlock $oSubBlock)
 	{
 		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
 
@@ -164,7 +166,7 @@ class Panel extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveSubBlock($sId)
+	public function RemoveSubBlock(string $sId)
 	{
 		if (array_key_exists($sId, $this->aSubBlocks))
 		{
@@ -184,11 +186,13 @@ class Panel extends UIBlock
 
 	/**
 	 * @param string $sColor
+	 *
 	 * @return $this
 	 */
-	public function SetColor($sColor)
+	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
+
 		return $this;
 	}
 }

@@ -73,7 +73,7 @@ class ActivityEntryFactory
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public static function MakeFromCaseLogEntryArray($sAttCode, $aOrmEntry)
+	public static function MakeFromCaseLogEntryArray(string $sAttCode, array $aOrmEntry)
 	{
 		$oUser = MetaModel::GetObject('User', $aOrmEntry['user_id'], false, true);
 		$sUserLogin = ($oUser === null) ? '' : $oUser->Get('login');

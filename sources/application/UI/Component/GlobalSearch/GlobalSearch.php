@@ -56,7 +56,7 @@ class GlobalSearch extends UIBlock
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($aLastQueries = [], $sId = null)
+	public function __construct(array $aLastQueries = [], ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
@@ -73,9 +73,10 @@ class GlobalSearch extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function SetEndpoint($sEndpoint, $bRelativeUrl = true)
+	public function SetEndpoint(string $sEndpoint, bool $bRelativeUrl = true)
 	{
-		$this->sEndpoint = (($bRelativeUrl) ? utils::GetAbsoluteUrlAppRoot() : '') . $sEndpoint;
+		$this->sEndpoint = (($bRelativeUrl) ? utils::GetAbsoluteUrlAppRoot() : '').$sEndpoint;
+
 		return $this;
 	}
 
@@ -97,9 +98,10 @@ class GlobalSearch extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetLastQueries($aLastQueries)
+	public function SetLastQueries(array $aLastQueries)
 	{
 		$this->aLastQueries = $aLastQueries;
+
 		return $this;
 	}
 

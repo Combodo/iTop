@@ -57,7 +57,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @throws \OQLException
 	 */
-	public function __construct(DateTime $oDateTime, $sAuthorLogin, $sObjectClass, $sId = null)
+	public function __construct(DateTime $oDateTime, string $sAuthorLogin, string $sObjectClass, ?string $sId = null)
 	{
 		parent::__construct($oDateTime, $sAuthorLogin, null, $sId);
 
@@ -82,7 +82,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return $this
 	 */
-	public function SetAttributes($aAttributes)
+	public function SetAttributes(array $aAttributes)
 	{
 		$this->aAttributes = $aAttributes;
 
@@ -104,11 +104,12 @@ class EditsEntry extends ActivityEntry
 	 * Note that if an attribute with the same $sAttCode already exists, it will be replaced.
 	 *
 	 * @param string $sAttCode
-	 * @param string $sEditDescriptionAsHtml The description of the edit already in HTML, it MUSt have been sanitized first (Already in HTML because most of the time it comes from CMDBChangeOp::GetDescription())
+	 * @param string $sEditDescriptionAsHtml The description of the edit already in HTML, it MUSt have been sanitized first (Already in
+	 *     HTML because most of the time it comes from CMDBChangeOp::GetDescription())
 	 *
 	 * @throws \Exception
 	 */
-	public function AddAttribute($sAttCode, $sEditDescriptionAsHtml)
+	public function AddAttribute(string $sAttCode, string $sEditDescriptionAsHtml)
 	{
 		$this->aAttributes[$sAttCode] = [
 			'code' => $sAttCode,
@@ -125,9 +126,9 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return array
 	 */
-	public function RemoveAttribute($sAttCode)
+	public function RemoveAttribute(string $sAttCode)
 	{
-		if(array_key_exists($sAttCode, $this->aAttributes))
+		if (array_key_exists($sAttCode, $this->aAttributes))
 		{
 			unset($this->aAttributes[$sAttCode]);
 		}

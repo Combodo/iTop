@@ -66,7 +66,7 @@ class ActivityPanel extends UIBlock
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function __construct(DBObject $oObject, $aEntries = [], $sId = null)
+	public function __construct(DBObject $oObject, array $aEntries = [], ?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -122,15 +122,16 @@ class ActivityPanel extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function SetEntries($aEntries)
+	public function SetEntries(array $aEntries)
 	{
 		// Reset entries
 		$this->aEntries = [];
 
-		foreach($aEntries as $oEntry)
+		foreach ($aEntries as $oEntry)
 		{
 			$this->AddEntry($oEntry);
 		}
+
 		return $this;
 	}
 
@@ -273,13 +274,13 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveEntry($sEntryId)
+	public function RemoveEntry(string $sEntryId)
 	{
-		if(array_key_exists($sEntryId, $this->aEntries))
+		if (array_key_exists($sEntryId, $this->aEntries))
 		{
 			// Recompute case logs metadata only if necessary
 			$oEntry = $this->aEntries[$sEntryId];
-			if($oEntry instanceof CaseLogEntry)
+			if ($oEntry instanceof CaseLogEntry)
 			{
 				$sCaseLogAttCode = $oEntry->GetAttCode();
 				$sAuthorLogin = $oEntry->GetAuthorLogin();
@@ -339,10 +340,10 @@ class ActivityPanel extends UIBlock
 	 * @return $this
 	 * @throws \Exception
 	 */
-	protected function AddCaseLogTab($sAttCode)
+	protected function AddCaseLogTab(string $sAttCode)
 	{
 		// Add case log only if not already existing
-		if(!array_key_exists($sAttCode, $this->aCaseLogs))
+		if (!array_key_exists($sAttCode, $this->aCaseLogs))
 		{
 			$this->aCaseLogs[$sAttCode] = [
 				'rank' => count($this->aCaseLogs) + 1,
@@ -363,9 +364,9 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function RemoveCaseLogTab($sAttCode)
+	protected function RemoveCaseLogTab(string $sAttCode)
 	{
-		if(array_key_exists($sAttCode, $this->aCaseLogs))
+		if (array_key_exists($sAttCode, $this->aCaseLogs))
 		{
 			unset($this->aCaseLogs[$sAttCode]);
 		}
@@ -380,7 +381,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasCaseLogTab($sAttCode)
+	public function HasCaseLogTab(string $sAttCode)
 	{
 		return isset($this->aCaseLogs[$sAttCode]);
 	}
