@@ -34,14 +34,14 @@ use utils;
 class GlobalSearch extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-global-search';
-	const HTML_TEMPLATE_REL_PATH = 'components/global-search/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/global-search/layout';
-	const JS_FILES_REL_PATH = [
+	public const BLOCK_CODE = 'ibo-global-search';
+	public const HTML_TEMPLATE_REL_PATH = 'components/global-search/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/global-search/layout';
+	public const JS_FILES_REL_PATH = [
 		'js/components/global-search.js',
 	];
 
-	const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php?operation=full_text';
+	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php?operation=full_text';
 
 	/** @var string $sEndpoint Absolute endpoint URL of the search form */
 	protected $sEndpoint;

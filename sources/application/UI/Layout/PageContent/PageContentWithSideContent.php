@@ -33,11 +33,11 @@ use Combodo\iTop\Application\UI\iUIBlock;
 class PageContentWithSideContent extends PageContent
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-page-content-with-side-content';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/page-content/with-side-content';
+	public const BLOCK_CODE = 'ibo-page-content-with-side-content';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/page-content/with-side-content';
 
 	// Specific constants
-	const ENUM_CONTENT_AREA_SIDE = 'side';
+	public const ENUM_CONTENT_AREA_SIDE = 'side';
 
 	/**
 	 * PageContentWithSideContent constructor.

@@ -33,9 +33,9 @@ use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
 class NewsroomMenu extends PopoverMenu
 {
 	// Overloaded constants
-	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
-	const JS_FILES_REL_PATH = [
+	public const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/popover-menu/newsroom-menu/layout';
+	public const JS_FILES_REL_PATH = [
 		'js/components/newsroom-menu.js',
 	];
 

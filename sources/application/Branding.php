@@ -31,15 +31,15 @@ use utils;
 class Branding
 {
 	/** @var string Full main logo, used everywhere when there is no need for a special one */
-	const ENUM_LOGO_TYPE_MAIN_LOGO_FULL = 'main_logo_full';
+	public const ENUM_LOGO_TYPE_MAIN_LOGO_FULL = 'main_logo_full';
 	/** @var string Compact main logo, used in the collapsed menu of the backoffice */
-	const ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT = 'main_logo_compact';
+	public const ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT = 'main_logo_compact';
 	/** @var string Logo used in the end-users portal */
-	const ENUM_LOGO_TYPE_PORTAL_LOGO = 'portal_logo';
+	public const ENUM_LOGO_TYPE_PORTAL_LOGO = 'portal_logo';
 	/** @var string Logo used in the login pages */
-	const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
+	public const ENUM_LOGO_TYPE_LOGIN_LOGO = 'login_logo';
 	/** @var string Default logo */
-	const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
+	public const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
 
 	/** @var \string[][] Relative paths to the default/custom logos from the current environment folder */
 	public static $aLogoPaths = [

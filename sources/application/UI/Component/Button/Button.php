@@ -32,45 +32,45 @@ use Combodo\iTop\Application\UI\UIBlock;
 class Button extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-button';
-	const HTML_TEMPLATE_REL_PATH = 'components/button/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/button/layout';
+	public const BLOCK_CODE = 'ibo-button';
+	public const HTML_TEMPLATE_REL_PATH = 'components/button/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/button/layout';
 
 	// Specific constants
 	/** @var string ENUM_TYPE_BUTTON */
-	const ENUM_TYPE_BUTTON = 'button';
+	public const ENUM_TYPE_BUTTON = 'button';
 	/** @var string ENUM_TYPE_SUBMIT */
-	const ENUM_TYPE_SUBMIT = 'submit';
+	public const ENUM_TYPE_SUBMIT = 'submit';
 	/** @var string ENUM_TYPE_RESET */
-	const ENUM_TYPE_RESET = 'reset';
+	public const ENUM_TYPE_RESET = 'reset';
 	/** @var string DEFAULT_TYPE */
-	const DEFAULT_TYPE = self::ENUM_TYPE_BUTTON;
+	public const DEFAULT_TYPE = self::ENUM_TYPE_BUTTON;
 
 	/** @var string ENUM_ACTION_TYPE_REGULAR */
-	const ENUM_ACTION_TYPE_REGULAR = 'regular';
+	public const ENUM_ACTION_TYPE_REGULAR = 'regular';
 	/** @var string ENUM_ACTION_TYPE_ALTERNATIVE */
-	const ENUM_ACTION_TYPE_ALTERNATIVE = 'alternative';
+	public const ENUM_ACTION_TYPE_ALTERNATIVE = 'alternative';
 	/** @var string DEFAULT_ACTION_TYPE */
-	const DEFAULT_ACTION_TYPE = self::ENUM_ACTION_TYPE_REGULAR;
+	public const DEFAULT_ACTION_TYPE = self::ENUM_ACTION_TYPE_REGULAR;
 
 	/** @var string ENUM_COLOR_NEUTRAL */
-	const ENUM_COLOR_NEUTRAL = 'neutral';
+	public const ENUM_COLOR_NEUTRAL = 'neutral';
 	/** @var string ENUM_COLOR_VALIDATION */
-	const ENUM_COLOR_VALIDATION = 'green';
+	public const ENUM_COLOR_VALIDATION = 'green';
 	/** @var string ENUM_COLOR_DESTRUCTIVE */
-	const ENUM_COLOR_DESTRUCTIVE = 'red';
+	public const ENUM_COLOR_DESTRUCTIVE = 'red';
 	/** @var string ENUM_COLOR_PRIMARY */
-	const ENUM_COLOR_PRIMARY = 'primary';
+	public const ENUM_COLOR_PRIMARY = 'primary';
 	/** @var string ENUM_COLOR_SECONDARY */
-	const ENUM_COLOR_SECONDARY = 'secondary';
+	public const ENUM_COLOR_SECONDARY = 'secondary';
 	/** @var string ENUM_COLOR_GREEN */
-	const ENUM_COLOR_GREEN = 'green';
+	public const ENUM_COLOR_GREEN = 'green';
 	/** @var string ENUM_COLOR_RED */
-	const ENUM_COLOR_RED = 'red';
+	public const ENUM_COLOR_RED = 'red';
 	/** @var string ENUM_COLOR_CYAN */
-	const ENUM_COLOR_CYAN = 'cyan';
+	public const ENUM_COLOR_CYAN = 'cyan';
 	/** @var string DEFAULT_COLOR */
-	const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
 
 	/** @var string $sLabel */
 	protected $sLabel;

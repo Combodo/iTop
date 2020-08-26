@@ -28,5 +28,5 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBCha
  */
 class CMDBChangeOpAttachmentAddedFactory extends CMDBChangeOpFactory
 {
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-paperclip';
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-paperclip';
 }

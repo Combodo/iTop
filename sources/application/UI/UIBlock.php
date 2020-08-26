@@ -33,27 +33,28 @@ abstract class UIBlock implements iUIBlock
 {
 	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ...
 	 *
-	 * Should start "ibo-" for the iTop backoffice blocks, followed by the name of the block in lower case (eg. for a MyCustomBlock class, should be "ibo-my-custom-clock")
+	 * Should start "ibo-" for the iTop backoffice blocks, followed by the name of the block in lower case (eg. for a MyCustomBlock class,
+	 * should be "ibo-my-custom-clock")
 	 */
-	const BLOCK_CODE = 'ibo-block';
+	public const BLOCK_CODE = 'ibo-block';
 
 	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used to often as JS/CSS files would be duplicated making browser parsing time way longer. */
-	const GLOBAL_TEMPLATE_REL_PATH = null;
+	public const GLOBAL_TEMPLATE_REL_PATH = null;
 	/** @var string|null HTML_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the HTML template */
-	const HTML_TEMPLATE_REL_PATH = null;
+	public const HTML_TEMPLATE_REL_PATH = null;
 	/** @var array JS_FILES_REL_PATH Relative paths (from <ITOP>/) to the JS files */
-	const JS_FILES_REL_PATH = [];
+	public const JS_FILES_REL_PATH = [];
 	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template */
-	const JS_TEMPLATE_REL_PATH = null;
+	public const JS_TEMPLATE_REL_PATH = null;
 	/** @var array CSS_FILES_REL_PATH Relative paths (from <ITOP>/) to the CSS files */
-	const CSS_FILES_REL_PATH = [];
+	public const CSS_FILES_REL_PATH = [];
 	/** @var string|null CSS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the CSS template */
-	const CSS_TEMPLATE_REL_PATH = null;
+	public const CSS_TEMPLATE_REL_PATH = null;
 
 	/** @var string ENUM_BLOCK_FILES_TYPE_JS */
-	const ENUM_BLOCK_FILES_TYPE_JS = 'js';
+	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
 	/** @var string ENUM_BLOCK_FILES_TYPE_CSS */
-	const ENUM_BLOCK_FILES_TYPE_CSS = 'css';
+	public const ENUM_BLOCK_FILES_TYPE_CSS = 'css';
 
 
 	/**

@@ -35,11 +35,11 @@ use Exception;
 class PageContent extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-page-content';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/page-content/layout';
+	public const BLOCK_CODE = 'ibo-page-content';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/page-content/layout';
 
 	/** @var string ENUM_CONTENT_AREA_MAIN The main content area */
-	const ENUM_CONTENT_AREA_MAIN = 'main';
+	public const ENUM_CONTENT_AREA_MAIN = 'main';
 
 	/** @var \Combodo\iTop\Application\UI\iUIBlock[][] $aContentAreasBlocks Blocks for the different content parts of the layout */
 	protected $aContentAreasBlocks;

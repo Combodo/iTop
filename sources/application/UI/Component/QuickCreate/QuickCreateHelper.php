@@ -35,8 +35,8 @@ use utils;
  */
 class QuickCreateHelper
 {
-	const MAX_HISTORY_SIZE = 10;
-	const USER_PREF_CODE = 'quick_create_history';
+	public const MAX_HISTORY_SIZE = 10;
+	public const USER_PREF_CODE = 'quick_create_history';
 
 	/**
 	 * Add $sQuery to the history. History is limited to the static::MAX_HISTORY_SIZE last classes.

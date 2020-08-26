@@ -28,28 +28,28 @@ class TwigHelper
 	 * @var string ENUM_FILE_TYPE_HTML
 	 * @since 2.8.0
 	 */
-	const ENUM_FILE_TYPE_HTML = 'html';
+	public const ENUM_FILE_TYPE_HTML = 'html';
 	/**
 	 * @var string ENUM_FILE_TYPE_JS
 	 * @since 2.8.0
 	 */
-	const ENUM_FILE_TYPE_JS = 'js';
+	public const ENUM_FILE_TYPE_JS = 'js';
 	/**
 	 * @var string ENUM_FILE_TYPE_CSS
 	 * @since 2.8.0
 	 */
-	const ENUM_FILE_TYPE_CSS = 'css';
+	public const ENUM_FILE_TYPE_CSS = 'css';
 	/**
 	 * @var string ENUM_FILE_TYPE_SVG
 	 * @since 2.8.0
 	 */
-	const ENUM_FILE_TYPE_SVG = 'svg';
+	public const ENUM_FILE_TYPE_SVG = 'svg';
 
 	/**
 	 * @var string DEFAULT_FILE_TYPE
 	 * @since 2.8.0
 	 */
-	const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
+	public const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
 
 	/**
 	 * Return a TWIG environment instance looking for templates under $sViewPath.

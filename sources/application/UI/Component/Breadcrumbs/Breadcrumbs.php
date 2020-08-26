@@ -35,10 +35,10 @@ use utils;
 class Breadcrumbs extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-breadcrumbs';
-	const HTML_TEMPLATE_REL_PATH = 'components/breadcrumbs/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/breadcrumbs/layout';
-	const JS_FILES_REL_PATH = [
+	public const BLOCK_CODE = 'ibo-breadcrumbs';
+	public const HTML_TEMPLATE_REL_PATH = 'components/breadcrumbs/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/breadcrumbs/layout';
+	public const JS_FILES_REL_PATH = [
 		'js/components/breadcrumbs.js',
 	];
 

@@ -36,11 +36,11 @@ use MetaModel;
 class EditsEntry extends ActivityEntry
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-edits-entry';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/edits-entry';
+	public const BLOCK_CODE = 'ibo-edits-entry';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/edits-entry';
 
-	const DEFAULT_TYPE = 'edits';
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-pen';
+	public const DEFAULT_TYPE = 'edits';
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-pen';
 
 	/** @var string $sObjectClass */
 	protected $sObjectClass;

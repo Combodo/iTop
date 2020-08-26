@@ -30,6 +30,6 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
  */
 class SeparatorPopoverMenuItem extends PopoverMenuItem
 {
-	const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_separator';
-	
+	public const HTML_TEMPLATE_REL_PATH = 'components/popover-menu/item/mode_separator';
+
 }

@@ -32,8 +32,8 @@ use Combodo\iTop\Application\UI\UIBlock;
 class Html extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-html';
-	const HTML_TEMPLATE_REL_PATH = 'components/html/layout';
+	public const BLOCK_CODE = 'ibo-html';
+	public const HTML_TEMPLATE_REL_PATH = 'components/html/layout';
 
 	/** @var string $sHtml The raw HTML, must be already sanitized */
 	protected $sHtml;

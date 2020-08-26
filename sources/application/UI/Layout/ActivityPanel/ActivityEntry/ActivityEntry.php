@@ -37,16 +37,16 @@ use UserRights;
 class ActivityEntry extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-activity-entry';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/layout';
+	public const BLOCK_CODE = 'ibo-activity-entry';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/layout';
 
 	// Specific constants
 	/** @var string DEFAULT_ORIGIN */
-	const DEFAULT_ORIGIN = 'unknown';
+	public const DEFAULT_ORIGIN = 'unknown';
 	/** @var string DEFAULT_TYPE */
-	const DEFAULT_TYPE = 'generic';
+	public const DEFAULT_TYPE = 'generic';
 	/** @var string DEFAULT_DECORATION_CLASSES */
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
 
 	/** @var string $sType Type of entry, used for filtering (eg. caselog, edits, transition, ...) */
 	protected $sType;

@@ -30,5 +30,5 @@ use iCMDBChangeOp;
  */
 class CMDBChangeOpAttachmentRemovedFactory extends CMDBChangeOpFactory
 {
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-unlink';
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-unlink';
 }

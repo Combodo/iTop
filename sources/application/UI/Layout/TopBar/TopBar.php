@@ -36,8 +36,8 @@ use Combodo\iTop\Application\UI\UIBlock;
 class TopBar extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-top-bar';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/top-bar/layout';
+	public const BLOCK_CODE = 'ibo-top-bar';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/top-bar/layout';
 
 	/** @var QuickCreate|null $oQuickCreate */
 	protected $oQuickCreate;

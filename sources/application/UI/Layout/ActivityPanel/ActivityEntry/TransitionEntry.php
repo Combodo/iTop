@@ -33,11 +33,11 @@ use DateTime;
 class TransitionEntry extends ActivityEntry
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-transition-entry';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/transition-entry';
+	public const BLOCK_CODE = 'ibo-transition-entry';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activity-entry/transition-entry';
 
-	const DEFAULT_TYPE = 'transition';
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-map-signs';
+	public const DEFAULT_TYPE = 'transition';
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-map-signs';
 
 	/** @var string $sOriginStateCode Code of the state before the transition */
 	protected $sOriginStateCode;

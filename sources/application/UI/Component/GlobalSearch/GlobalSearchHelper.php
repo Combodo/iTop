@@ -33,8 +33,8 @@ use utils;
  */
 class GlobalSearchHelper
 {
-	const MAX_HISTORY_SIZE = 10;
-	const USER_PREF_CODE = 'global_search_history';
+	public const MAX_HISTORY_SIZE = 10;
+	public const USER_PREF_CODE = 'global_search_history';
 
 	/**
 	 * Add $sQuery to the history. History is limited to the static::MAX_HISTORY_SIZE last queries.

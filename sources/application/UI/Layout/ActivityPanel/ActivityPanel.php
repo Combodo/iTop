@@ -38,10 +38,10 @@ use MetaModel;
 class ActivityPanel extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-activity-panel';
-	const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
-	const JS_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
-	const JS_FILES_REL_PATH = [
+	public const BLOCK_CODE = 'ibo-activity-panel';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
+	public const JS_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
+	public const JS_FILES_REL_PATH = [
 		'js/layouts/activity-panel.js',
 	];
 

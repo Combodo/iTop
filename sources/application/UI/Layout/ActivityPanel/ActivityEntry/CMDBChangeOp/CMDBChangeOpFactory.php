@@ -37,9 +37,9 @@ use iCMDBChangeOp;
 class CMDBChangeOpFactory
 {
 	/** @var string DEFAULT_TYPE Used to overload the type from the ActivityEntry */
-	const DEFAULT_TYPE = EditsEntry::DEFAULT_TYPE;
+	public const DEFAULT_TYPE = EditsEntry::DEFAULT_TYPE;
 	/** @var string DEFAULT_DECORATION_CLASSES Used to overload the decoration classes from the ActivityEntry */
-	const DEFAULT_DECORATION_CLASSES = ActivityEntry::DEFAULT_DECORATION_CLASSES;
+	public const DEFAULT_DECORATION_CLASSES = ActivityEntry::DEFAULT_DECORATION_CLASSES;
 
 	/**
 	 * Make an ActivityEntry from the iCMDBChangeOp $oChangeOp

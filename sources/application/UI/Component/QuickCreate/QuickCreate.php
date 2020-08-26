@@ -34,19 +34,19 @@ use UserRights;
 class QuickCreate extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-quick-create';
-	const HTML_TEMPLATE_REL_PATH = 'components/quick-create/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/quick-create/layout';
-	const JS_FILES_REL_PATH = [
+	public const BLOCK_CODE = 'ibo-quick-create';
+	public const HTML_TEMPLATE_REL_PATH = 'components/quick-create/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/quick-create/layout';
+	public const JS_FILES_REL_PATH = [
 		'js/selectize.min.js',
 		'js/components/quick-create.js',
 	];
-	const CSS_FILES_REL_PATH = [
+	public const CSS_FILES_REL_PATH = [
 		'css/selectize.default.css',
 	];
 
 	// Specific constants
-	const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php';
+	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php';
 
 	/** @var array $aAvailableClasses */
 	protected $aAvailableClasses;

@@ -32,48 +32,48 @@ use Combodo\iTop\Application\UI\UIBlock;
 class Alert extends UIBlock
 {
 	// Overloaded constants
-	const BLOCK_CODE = 'ibo-alert';
-	const HTML_TEMPLATE_REL_PATH = 'components/alert/layout';
-	const JS_TEMPLATE_REL_PATH = 'components/alert/layout';
+	public const BLOCK_CODE = 'ibo-alert';
+	public const HTML_TEMPLATE_REL_PATH = 'components/alert/layout';
+	public const JS_TEMPLATE_REL_PATH = 'components/alert/layout';
 
 	// Specific constants
 	/** @var string ENUM_COLOR_PRIMARY */
-	const ENUM_COLOR_PRIMARY = 'primary';
+	public const ENUM_COLOR_PRIMARY = 'primary';
 	/** @var string ENUM_COLOR_SECONDARY */
-	const ENUM_COLOR_SECONDARY = 'secondary';
+	public const ENUM_COLOR_SECONDARY = 'secondary';
 
 	/** @var string ENUM_COLOR_NEUTRAL */
-	const ENUM_COLOR_NEUTRAL = 'neutral';
+	public const ENUM_COLOR_NEUTRAL = 'neutral';
 	/** @var string ENUM_COLOR_INFORMATION */
-	const ENUM_COLOR_INFORMATION = 'information';
+	public const ENUM_COLOR_INFORMATION = 'information';
 	/** @var string ENUM_COLOR_SUCCESS */
-	const ENUM_COLOR_SUCCESS = 'success';
+	public const ENUM_COLOR_SUCCESS = 'success';
 	/** @var string ENUM_COLOR_FAILURE */
-	const ENUM_COLOR_FAILURE = 'failure';
+	public const ENUM_COLOR_FAILURE = 'failure';
 	/** @var string ENUM_COLOR_WARNING */
-	const ENUM_COLOR_WARNING = 'warning';
+	public const ENUM_COLOR_WARNING = 'warning';
 	/** @var string ENUM_COLOR_DANGER */
-	const ENUM_COLOR_DANGER = 'danger';
+	public const ENUM_COLOR_DANGER = 'danger';
 
 	/** @var string ENUM_COLOR_GREY */
-	const ENUM_COLOR_GREY = 'grey';
+	public const ENUM_COLOR_GREY = 'grey';
 	/** @var string ENUM_COLOR_BLUEGREY */
-	const ENUM_COLOR_BLUEGREY = 'blue-grey';
+	public const ENUM_COLOR_BLUEGREY = 'blue-grey';
 	/** @var string ENUM_COLOR_BLUE */
-	const ENUM_COLOR_BLUE = 'blue';
+	public const ENUM_COLOR_BLUE = 'blue';
 	/** @var string ENUM_COLOR_CYAN */
-	const ENUM_COLOR_CYAN = 'cyan';
+	public const ENUM_COLOR_CYAN = 'cyan';
 	/** @var string ENUM_COLOR_GREEN */
-	const ENUM_COLOR_GREEN = 'green';
+	public const ENUM_COLOR_GREEN = 'green';
 	/** @var string ENUM_COLOR_ORANGE */
-	const ENUM_COLOR_ORANGE = 'orange';
+	public const ENUM_COLOR_ORANGE = 'orange';
 	/** @var string ENUM_COLOR_RED */
-	const ENUM_COLOR_RED = 'red';
+	public const ENUM_COLOR_RED = 'red';
 	/** @var string ENUM_COLOR_PINK */
-	const ENUM_COLOR_PINK = 'pink';
+	public const ENUM_COLOR_PINK = 'pink';
 
 	/** @var string DEFAULT_COLOR */
-	const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
 
 	/** @var string $sTitle */
 	protected $sTitle;
