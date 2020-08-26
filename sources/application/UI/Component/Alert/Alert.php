@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-namespace Combodo\iTop\Application\UI\Component\Alert\Alert;
-
+namespace Combodo\iTop\Application\UI\Component\Alert;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
@@ -27,7 +26,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class Alert
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
- * @package Combodo\iTop\Application\UI\Component\Alert\Alert
+ * @package Combodo\iTop\Application\UI\Component\Alert
  * @since 2.8.0
  */
 class Alert extends UIBlock
@@ -37,10 +36,47 @@ class Alert extends UIBlock
 	const HTML_TEMPLATE_REL_PATH = 'components/alert/layout';
 	const JS_TEMPLATE_REL_PATH = 'components/alert/layout';
 
+	// Specific constants
+	/** @var string ENUM_COLOR_PRIMARY */
+	const ENUM_COLOR_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SECONDARY */
+	const ENUM_COLOR_SECONDARY = 'secondary';
+
+	/** @var string ENUM_COLOR_NEUTRAL */
+	const ENUM_COLOR_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_SUCCESS */
+	const ENUM_COLOR_SUCCESS = 'success';
+	/** @var string ENUM_COLOR_WARNING */
+	const ENUM_COLOR_WARNING = 'warning';
+	/** @var string ENUM_COLOR_DANGER */
+	const ENUM_COLOR_DANGER = 'danger';
+	/** @var string ENUM_COLOR_FAILURE */
+	const ENUM_COLOR_FAILURE = 'failure';
+
+	/** @var string ENUM_COLOR_GREY */
+	const ENUM_COLOR_GREY = 'grey';
+	/** @var string ENUM_COLOR_BLUEGREY */
+	const ENUM_COLOR_BLUEGREY = 'blue-grey';
+	/** @var string ENUM_COLOR_BLUE */
+	const ENUM_COLOR_BLUE = 'blue';
+	/** @var string ENUM_COLOR_CYAN */
+	const ENUM_COLOR_CYAN = 'cyan';
+	/** @var string ENUM_COLOR_GREEN */
+	const ENUM_COLOR_GREEN = 'green';
+	/** @var string ENUM_COLOR_ORANGE */
+	const ENUM_COLOR_ORANGE = 'orange';
+	/** @var string ENUM_COLOR_RED */
+	const ENUM_COLOR_RED = 'red';
+	/** @var string ENUM_COLOR_PINK */
+	const ENUM_COLOR_PINK = 'pink';
+
+	/** @var string DEFAULT_COLOR */
+	const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+
 	/** @var string $sTitle */
 	protected $sTitle;
-	/** @var array $sMainText */
-	protected $sMainText;
+	/** @var string $sContent The raw HTML content, must be already sanitized */
+	protected $sContent;
 	/** @var string $sColor */
 	protected $sColor;
 
@@ -48,14 +84,14 @@ class Alert extends UIBlock
 	 * Alert constructor.
 	 *
 	 * @param string $sTitle
-	 * @param string $sMainText
+	 * @param string $sContent
 	 * @param string $sColor
 	 * @param string|null $sId
 	 */
-	public function __construct($sTitle = '', $sMainText = '', $sColor = 'secondary', $sId = null)
+	public function __construct($sTitle = '', $sContent = '', $sColor = self::DEFAULT_COLOR, $sId = null)
 	{
 		$this->sTitle = $sTitle;
-		$this->sMainText = $sMainText;
+		$this->sContent = $sContent;
 		$this->sColor = $sColor;
 		parent::__construct($sId);
 	}
@@ -75,28 +111,33 @@ class Alert extends UIBlock
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
+
 		return $this;
 	}
 
 	/**
+	 * Return the raw HTML content, should be already sanitized.
+	 *
 	 * @return string
 	 */
-	public function GetMainText()
+	public function GetContent()
 	{
-		return $this->sMainText;
+		return $this->sContent;
 	}
 
 	/**
-	 * @param string $aMainText
+	 * Set the raw HTML content, must be already sanitized.
+	 *
+	 * @param string $sContent
+	 *
 	 * @return $this
 	 */
-	public function SetMainText($aMainText)
+	public function SetContent($sContent)
 	{
-		$this->sMainText = $aMainText;
+		$this->sContent = $sContent;
+
 		return $this;
 	}
-	
-	
 
 	/**
 	 * @return string
@@ -115,5 +156,4 @@ class Alert extends UIBlock
 		$this->sColor = $sColor;
 		return $this;
 	}
-
 }
