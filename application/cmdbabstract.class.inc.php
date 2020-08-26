@@ -441,7 +441,7 @@ EOF
 		if (!isset($aExtraParams['disable_plugins']) || !$aExtraParams['disable_plugins'])
 		{
 			/** @var iApplicationUIExtension $oExtensionInstance */
-			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
 			}
@@ -449,15 +449,16 @@ EOF
 
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef instanceof AttributeCaseLog)
-			{
-				$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
-				$this->DisplayCaseLog($oPage, $sAttCode, $sComment, $sPrefix, $bEditMode);
-				$aFieldsMap[$sAttCode] = $this->m_iFormId.'_'.$sAttCode;
-			}
-		}
+		// TODO 2.8.0: Remove when sure everything has been migrated
+//		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+//		{
+//			if ($oAttDef instanceof AttributeCaseLog)
+//			{
+//				$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
+//				$this->DisplayCaseLog($oPage, $sAttCode, $sComment, $sPrefix, $bEditMode);
+//				$aFieldsMap[$sAttCode] = $this->m_iFormId.'_'.$sAttCode;
+//			}
+//		}
 
 		return $aFieldsMap;
 	}
@@ -1054,6 +1055,7 @@ HTML
 		$this->DisplayBareRelations($oPage, $bEditMode);
 		//$oPage->SetCurrentTab('UI:HistoryTab');
 		//$this->DisplayBareHistory($oPage, $bEditMode);
+		// TODO 2.8.0: What to do with this?
 		$oPage->AddAjaxTab('UI:HistoryTab',
 			utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
 		$oPage->add(<<<HTML

@@ -1,4 +1,4 @@
-// TODO: We need to find a clean way to launch this script only once the JS scripts are loaded
+// TODO 2.8.0: We need to find a clean way to launch this script only once the JS scripts are loaded
 {% if (oUIBlock.GetOnClickJsCode() is not empty) or (oUIBlock.GetJsCode() is not empty) %}
 	document.addEventListener("DOMContentLoaded", function(){
 		setTimeout(function(){

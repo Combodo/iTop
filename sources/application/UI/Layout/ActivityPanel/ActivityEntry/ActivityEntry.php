@@ -206,7 +206,7 @@ class ActivityEntry extends UIBlock
 	public function SetAuthor($sAuthorLogin)
 	{
 		$this->sAuthorLogin = $sAuthorLogin;
-		// TODO: Check that this does not return '' when author is the CRON or an extension.
+		// TODO 2.8.0: Check that this does not return '' when author is the CRON or an extension.
 		$this->sAuthorFriendlyname = UserRights::GetUserFriendlyName($this->sAuthorLogin);
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);
 		$this->sAuthorPictureAbsUrl = UserRights::GetContactPictureAbsUrl($this->sAuthorLogin, false);

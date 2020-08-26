@@ -57,7 +57,7 @@ class PageContentFactory
 		$oLayout = new PageContentWithSideContent();
 
 		// Add object details layout
-		// TODO
+		// TODO 2.8.0
 
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject);

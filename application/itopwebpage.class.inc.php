@@ -96,9 +96,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
-		// TODO: Should we keep this? Makes no sense
+		// TODO 2.8.0: Should we keep this? Makes no sense
 		//$this->add_header("Cache-control: no-cache");
-		// TODO: Add only what's necessary
+		// TODO 2.8.0: Add only what's necessary
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.multiselect.css');
@@ -111,7 +111,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 
-		// TODO: Add only what's necessary
+		// TODO 2.8.0: Add only what's necessary
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
@@ -300,8 +300,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 JS
 		);
 
-		// TODO: This is for tag sets, refactor the attribute markup so it contains the necessary
-		// TODO: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
+		// TODO 2.8.0: This is for tag sets, refactor the attribute markup so it contains the necessary
+		// TODO 2.8.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
 		// Attribute set tooltip on items
 		$this->add_ready_script(
 			<<<JS
@@ -334,7 +334,7 @@ JS
 JS
 		);
 
-		// TODO: Change CSS class and extract this in backoffice.js
+		// TODO 2.8.0: Change CSS class and extract this in backoffice.js
 		// Make image attributes zoomable
 		$this->add_ready_script(
 			<<<JS
@@ -345,7 +345,7 @@ JS
 JS
 		);
 
-		// TODO: Change CSS class and extract this in backoffice.js
+		// TODO 2.8.0: Change CSS class and extract this in backoffice.js
 		// Highlight code content created with CKEditor
 		$this->add_ready_script(
 			<<<JS
@@ -414,7 +414,7 @@ JS
 JS
 		);
 
-		// TODO: What is this for?
+		// TODO 2.8.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
 	
@@ -580,7 +580,7 @@ JS
 JS
 		);
 
-		// TODO: To preserve
+		// TODO 2.8.0: To preserve
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 
 		/*
@@ -589,7 +589,7 @@ JS
 		AttributeDate::InitTableSorter($this, 'custom_date');
 		*/
 
-		// TODO: What is this for?
+		// TODO 2.8.0: What is this for?
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 			<<<JS
@@ -672,8 +672,8 @@ JS
 	 */
 	protected function LoadTheme()
 	{
-		// TODO: Remove light-grey when development of Full Moon is done.
-		// TODO: Reuse theming mechanism for Full Moon
+		// TODO 2.8.0: Remove light-grey when development of Full Moon is done.
+		// TODO 2.8.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
 
@@ -809,8 +809,8 @@ JS
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		// TODO: Make it a property so it can be changed programmatically
-		// TODO: How to set both dark/light mode favicons
+		// TODO 2.8.0: Make it a property so it can be changed programmatically
+		// TODO 2.8.0: How to set both dark/light mode favicons
 		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
 	}
 
@@ -949,18 +949,18 @@ JS
 
 		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
 		{
-			// TODO: Don't forget this dude!
+			// TODO 2.8.0: Don't forget this dude!
 			$sHeaderHtml .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
 		}
 
-		// TODO: Don't forget this!
+		// TODO 2.8.0: Don't forget this!
 		if (utils::IsArchiveMode())
 		{
 			$sIcon = '<span class="fas fa-lock fa-1x"></span>';
 			$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
 		}
 
-		// TODO: Move this in the Header method
+		// TODO 2.8.0: Move this in the Header method
 		$sRestrictions = '';
 		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 		{
@@ -991,7 +991,7 @@ EOF;
 			$this->AddApplicationMessage($sRestrictions, $sIcon);
 		}
 
-		// TODO: Move this in the header method
+		// TODO 2.8.0: Move this in the header method
 		$sApplicationMessages = '';
 		foreach ($this->m_aMessages as $aMessage)
 		{
@@ -1050,7 +1050,7 @@ EOF;
 		// - Generate necessary dict. files
 		$this->output_dict_entries();
 
-		// TODO: Check if we can keep this as is
+		// TODO 2.8.0: Check if we can keep this as is
 		// Render the tabs in the page (if any)
 		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 		$this->GetContentLayout()->SetExtraHtmlContent(self::FilterXSS($this->s_content));
@@ -1120,7 +1120,7 @@ EOF;
 				'aJsInlineOnInit' => $this->m_aInitScript,
 				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 				'aJsInlineLive' => $this->a_scripts,
-				// TODO: TEMP, used while developping, remove it.
+				// TODO 2.8.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => self::FilterXSS($this->s_content),
 				'sDeferredContent' => self::FilterXSS($this->s_deferred_content),
 			]
@@ -1186,11 +1186,11 @@ EOF
 
 		$this->outputCollapsibleSectionInit();
 
-		// TODO: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
+		// TODO 2.8.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
 		$s_captured_output = $this->ob_get_clean_safe();
 
-		// TODO: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
-		// TODO: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
+		// TODO 2.8.0: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
+		// TODO 2.8.0: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
 		// special stylesheet for printing, hides the navigation gadgets
 		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 
@@ -1204,7 +1204,7 @@ EOF
 //			}
 
 
-			// TODO: Should we still do this init vs ready separation?
+			// TODO 2.8.0: Should we still do this init vs ready separation?
 //			$this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
 			if ($this->IsPrintableVersion())
 			{
@@ -1279,7 +1279,7 @@ EOF;
 			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
-		// TODO
+		// TODO 2.8.0
 //		// Render the text of the global search form
 //		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
 //		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
@@ -1323,7 +1323,7 @@ EOF;
 		}
 		else
 		{
-			// TODO: Check with ITOMIG if we can remove this
+			// TODO 2.8.0: Check with ITOMIG if we can remove this
 			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
 			{
 				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
