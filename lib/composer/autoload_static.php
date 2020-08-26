@@ -388,6 +388,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Component\\GlobalSearch\\GlobalSearchHelper' => __DIR__ . '/../..' . '/sources/application/UI/Component/GlobalSearch/GlobalSearchHelper.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Html\\Html' => __DIR__ . '/../..' . '/sources/application/UI/Component/Html/Html.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Panel\\Panel' => __DIR__ . '/../..' . '/sources/application/UI/Component/Panel/Panel.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\Panel\\PanelFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/Panel/PanelFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenu' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenu.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\NewsroomMenu\\NewsroomMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/NewsroomMenu/NewsroomMenuFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\PopoverMenu\\PopoverMenu' => __DIR__ . '/../..' . '/sources/application/UI/Component/PopoverMenu/PopoverMenu.php',

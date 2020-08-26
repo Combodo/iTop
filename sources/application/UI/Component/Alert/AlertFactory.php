@@ -19,9 +19,6 @@
 
 namespace Combodo\iTop\Application\UI\Component\Alert;
 
-
-use Combodo\iTop\Application\UI\Component\Alert\Alert;
-
 /**
  * Class AlertFactory
  *
@@ -43,6 +40,19 @@ class AlertFactory
 	public static function MakeNeutral($sTitle, $sContent)
 	{
 		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_NEUTRAL);
+	}
+
+	/**
+	 * Make an Alert component for informational messages
+	 *
+	 * @param string $sTitle
+	 * @param string $sContent The raw HTML content, must be already sanitized
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Alert\Alert
+	 */
+	public static function MakeForInformation($sTitle, $sContent)
+	{
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_INFORMATION);
 	}
 
 	/**

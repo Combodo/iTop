@@ -35,7 +35,46 @@ class Panel extends UIBlock
 	const BLOCK_CODE = 'ibo-panel';
 	const HTML_TEMPLATE_REL_PATH = 'components/panel/layout';
 	const JS_TEMPLATE_REL_PATH = 'components/panel/layout';
-	
+
+	// Specific constants
+	/** @var string ENUM_COLOR_PRIMARY */
+	const ENUM_COLOR_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SECONDARY */
+	const ENUM_COLOR_SECONDARY = 'secondary';
+
+	/** @var string ENUM_COLOR_NEUTRAL */
+	const ENUM_COLOR_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_INFORMATION */
+	const ENUM_COLOR_INFORMATION = 'information';
+	/** @var string ENUM_COLOR_SUCCESS */
+	const ENUM_COLOR_SUCCESS = 'success';
+	/** @var string ENUM_COLOR_FAILURE */
+	const ENUM_COLOR_FAILURE = 'failure';
+	/** @var string ENUM_COLOR_WARNING */
+	const ENUM_COLOR_WARNING = 'warning';
+	/** @var string ENUM_COLOR_DANGER */
+	const ENUM_COLOR_DANGER = 'danger';
+
+	/** @var string ENUM_COLOR_GREY */
+	const ENUM_COLOR_GREY = 'grey';
+	/** @var string ENUM_COLOR_BLUEGREY */
+	const ENUM_COLOR_BLUEGREY = 'blue-grey';
+	/** @var string ENUM_COLOR_BLUE */
+	const ENUM_COLOR_BLUE = 'blue';
+	/** @var string ENUM_COLOR_CYAN */
+	const ENUM_COLOR_CYAN = 'cyan';
+	/** @var string ENUM_COLOR_GREEN */
+	const ENUM_COLOR_GREEN = 'green';
+	/** @var string ENUM_COLOR_ORANGE */
+	const ENUM_COLOR_ORANGE = 'orange';
+	/** @var string ENUM_COLOR_RED */
+	const ENUM_COLOR_RED = 'red';
+	/** @var string ENUM_COLOR_PINK */
+	const ENUM_COLOR_PINK = 'pink';
+
+	/** @var string DEFAULT_COLOR */
+	const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+
 	/** @var string $sTitle */
 	protected $sTitle;
 	/** @var array $aSubBlocks */
@@ -47,11 +86,11 @@ class Panel extends UIBlock
 	 * Panel constructor.
 	 *
 	 * @param string $sTitle
-	 * @param array $aSubBlocks
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
 	 * @param string $sColor
 	 * @param string|null $sId
 	 */
-	public function __construct($sTitle = '', $aSubBlocks = [], $sColor = 'secondary', $sId = null)
+	public function __construct($sTitle = '', $aSubBlocks = [], $sColor = self::DEFAULT_COLOR, $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->aSubBlocks = $aSubBlocks;
@@ -74,6 +113,7 @@ class Panel extends UIBlock
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
+
 		return $this;
 	}
 
@@ -84,24 +124,53 @@ class Panel extends UIBlock
 	{
 		return $this->aSubBlocks;
 	}
-	
+
 	/**
-	 * @param \Combodo\iTop\Application\UI\UIBlock $oSubBlock
-	 * @return $this
-	 */
-	public function AddSubBlock($oSubBlock)
-	{
-		$this->aSubBlocks[] = $oSubBlock;
-		return $this;
-	}
-	
-	/**
-	 * @param array $aSubBlocks
+	 * Set all sub blocks at once, replacing all existing ones
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
+	 *
 	 * @return $this
 	 */
 	public function SetSubBlocks($aSubBlocks)
 	{
-		$this->aSubBlocks = $aSubBlocks;
+		foreach ($aSubBlocks as $oSubBlock)
+		{
+			$this->AddSubBlock($oSubBlock);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add $oSubBlock, replacing any block with the same ID
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oSubBlock
+	 *
+	 * @return $this
+	 */
+	public function AddSubBlock($oSubBlock)
+	{
+		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
+
+		return $this;
+	}
+
+	/**
+	 * Remove the sub block identified by $sId.
+	 * Note that if no sub block matches the ID, it proceeds silently.
+	 *
+	 * @param string $sId ID of the sub block to remove
+	 *
+	 * @return $this
+	 */
+	public function RemoveSubBlock($sId)
+	{
+		if (array_key_exists($sId, $this->aSubBlocks))
+		{
+			unset($this->aSubBlocks[$sId]);
+		}
+
 		return $this;
 	}
 
@@ -122,5 +191,4 @@ class Panel extends UIBlock
 		$this->sColor = $sColor;
 		return $this;
 	}
-	
 }

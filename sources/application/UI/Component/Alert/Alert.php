@@ -44,14 +44,16 @@ class Alert extends UIBlock
 
 	/** @var string ENUM_COLOR_NEUTRAL */
 	const ENUM_COLOR_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_INFORMATION */
+	const ENUM_COLOR_INFORMATION = 'information';
 	/** @var string ENUM_COLOR_SUCCESS */
 	const ENUM_COLOR_SUCCESS = 'success';
+	/** @var string ENUM_COLOR_FAILURE */
+	const ENUM_COLOR_FAILURE = 'failure';
 	/** @var string ENUM_COLOR_WARNING */
 	const ENUM_COLOR_WARNING = 'warning';
 	/** @var string ENUM_COLOR_DANGER */
 	const ENUM_COLOR_DANGER = 'danger';
-	/** @var string ENUM_COLOR_FAILURE */
-	const ENUM_COLOR_FAILURE = 'failure';
 
 	/** @var string ENUM_COLOR_GREY */
 	const ENUM_COLOR_GREY = 'grey';

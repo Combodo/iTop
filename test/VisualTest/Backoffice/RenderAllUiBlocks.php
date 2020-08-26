@@ -22,6 +22,7 @@ namespace Combodo\iTop\Test\VisualTest\Backoffice;
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
+use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 
@@ -39,6 +40,7 @@ $sContent = <<<HTML
 HTML;
 
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeNeutral('Neutral alert', $sContent));
+$oPageContentLayout->AddMainBlock(AlertFactory::MakeForInformation('Alert for information', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeForSuccess('Alert for success', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeForWarning('Alert for warning', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeForDanger('Alert for danger', $sContent));
@@ -59,6 +61,46 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
+
+$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+
+// Panels
+$aSubBlocks = [
+	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
+	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'),
+];
+
+$oPanel = PanelFactory::MakeNeutral('Neutral alert');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeForInformation('Alert for information');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeForSuccess('Alert for success');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeForWarning('Alert for warning');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeForDanger('Alert for danger');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeForFailure('Alert for failure');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
