@@ -1,6 +1,26 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-alert--spacing-top: 6px !default;
 $ibo-alert--padding-y: 18px !default;
 $ibo-alert--padding-x: 20px !default;
-$ibo-alert--border-radius: 2px !default;
+$ibo-alert--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-alert--title--padding-bottom: 4px !default;
 
@@ -26,40 +46,47 @@ $ibo-alert-colors: (
 		'pink': ($ibo-color-pink-200, $ibo-color-pink-700, $ibo-color-pink-900),
 ) !default;
 
-@each $sColor, $aColorValues in $ibo-alert-colors{
-  $bg-color: nth($aColorValues, 1);
-  $highlight-color: nth($aColorValues, 2);
-  $text-color: nth($aColorValues, 3);
-  .ibo-alert.ibo-is-#{$sColor}{
-    background-color: $bg-color;
-    color: $text-color;
-    &::before{
-      background-color: $highlight-color;
-    }
-  }
+@each $sColor, $aColorValues in $ibo-alert-colors {
+	$bg-color: nth($aColorValues, 1);
+	$highlight-color: nth($aColorValues, 2);
+	$text-color: nth($aColorValues, 3);
+	.ibo-alert.ibo-is-#{$sColor} {
+		background-color: $bg-color;
+		color: $text-color;
+
+		&::before {
+			background-color: $highlight-color;
+		}
+	}
 }
 
-.ibo-alert{
-  position: relative;
-  padding: $ibo-alert--padding-y $ibo-alert--padding-x;
-  border-radius: $ibo-alert--border-radius;
-  
-  @extend %ibo-font-ral-med-150;
-  
-  .ibo-alert--title{
-    padding-bottom: $ibo-alert--title--padding-bottom;
-    
-    @extend %ibo-font-ral-bol-150;
-  }
-}
-.ibo-alert::before{
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: '';
+/* Rules */
+.ibo-alert {
+	position: relative;
+	padding: $ibo-alert--padding-y $ibo-alert--padding-x;
+	border-radius: $ibo-alert--border-radius;
+	overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
-  border-radius: $ibo-alert--border-radius 0 0 $ibo-alert--border-radius;
-  width: $ibo-alert--title--highlight--width;
-  height: $ibo-alert--title--highlight--height;
+	@extend %ibo-font-ral-med-150;
+
+	&::before {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		content: '';
+
+		width: $ibo-alert--title--highlight--width;
+		height: $ibo-alert--title--highlight--height;
+	}
+
+	.ibo-alert--title {
+		padding-bottom: $ibo-alert--title--padding-bottom;
+
+		@extend %ibo-font-ral-bol-150;
+	}
+}
+
+.ibo-alert + .ibo-alert {
+	margin-top: $ibo-alert--spacing-top;
 }

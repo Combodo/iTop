@@ -1,3 +1,38 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-panel--spacing-top: 24px !default;
+
+$ibo-panel--highlight--width: 100% !default;
+$ibo-panel--highlight--height: 5px !default;
+$ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
+$ibo-panel--highlight--padding-bottom: 5px !default;
+
+$ibo-panel--title--color: $ibo-color-grey-900 !default;
+
+$ibo-panel--body--background-color: $ibo-color-white-100 !default;
+$ibo-panel--body--padding-y: 15px !default;
+$ibo-panel--body--padding-x: 10px !default;
+$ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
+$ibo-panel--body--border-size: 1px !default;
+$ibo-panel--body--border-color: $ibo-color-grey-400 !default;
+
 $ibo-panel-colors: (
 		'primary': $ibo-color-primary-600,
 		'secondary': $ibo-color-secondary-600,
@@ -17,47 +52,37 @@ $ibo-panel-colors: (
 		'pink': $ibo-color-pink-600,
 ) !default;
 
-$ibo-panel--highlight--width: 100% !default;
-$ibo-panel--highlight--height: 5px !default;
-$ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
-$ibo-panel--highlight--padding-bottom: 5px !default;
+@each $sColor, $sColorValue in $ibo-panel-colors {
+	.ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
 
-$ibo-panel--title--color: $ibo-color-grey-900 !default;
+		background-color: $sColorValue;
+		content: "";
 
-$ibo-panel--body--background-color: $ibo-color-white-100 !default;
-$ibo-panel--body--padding-y: 15px !default;
-$ibo-panel--body--padding-x: 10px !default;
-$ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
-$ibo-panel--body--border-size: 1px !default;
-$ibo-panel--body--border-color: $ibo-color-grey-400 !default;
+		width: $ibo-panel--highlight--width;
+		height: $ibo-panel--highlight--height;
+		padding-bottom: $ibo-panel--highlight--padding-bottom;
+	}
+}
 
-@each $sColor, $sColorValue in $ibo-panel-colors{
-  .ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before{
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    
-    background-color: $sColorValue;
-    content: "";
-    
-    width: $ibo-panel--highlight--width;
-    height: $ibo-panel--highlight--height;
-    border-radius: $ibo-panel--highlight--border-radius;
-    padding-bottom: $ibo-panel--highlight--padding-bottom;
-  }
+/* Rules */
+.ibo-panel + .ibo-panel {
+	margin-top: $ibo-panel--spacing-top;
 }
-.ibo-panel + .ibo-panel{
-  margin-top: 15px;
+
+.ibo-panel--title {
+	color: $ibo-panel--title--color;
+	@extend %ibo-font-ral-med-350;
 }
-.ibo-panel--title{
-  color: $ibo-panel--title--color;
-  @extend %ibo-font-ral-med-350;
-}
-.ibo-panel--body{
-  position: relative;
-  padding: $ibo-panel--body--padding-y $ibo-panel--body--padding-x;
-  border-radius: $ibo-panel--body--border-radius;
-  border: solid $ibo-panel--body--border-size $ibo-panel--body--border-color;
-  background-color: $ibo-panel--body--background-color;
+
+.ibo-panel--body {
+	position: relative;
+	padding: $ibo-panel--body--padding-y $ibo-panel--body--padding-x;
+	background-color: $ibo-panel--body--background-color;
+	border: solid $ibo-panel--body--border-size $ibo-panel--body--border-color;
+	border-radius: $ibo-panel--body--border-radius;
+	overflow: hidden; /* To force highlight color to be cropped by the border radius */
 }
