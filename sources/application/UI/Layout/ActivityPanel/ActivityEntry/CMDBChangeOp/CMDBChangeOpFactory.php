@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use DateTime;
 use iCMDBChangeOp;
+use MetaModel;
 
 /**
  * Class CMDBChangeOpFactory
@@ -52,13 +53,42 @@ class CMDBChangeOpFactory
 	public static function MakeFromCmdbChangeOp(iCMDBChangeOp $oChangeOp)
 	{
 		$oDateTime = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oChangeOp->Get('date'));
-		$sAuthorFriendlyname = $oChangeOp->Get('userinfo');
 		$sContent = $oChangeOp->GetDescription();
 
-		$oEntry = new ActivityEntry($oDateTime, $sAuthorFriendlyname, $sContent);
+		// Retrieve author login
+		$sAuthorLogin = static::GetUserLoginFromChangeOp($oChangeOp);
+
+		$oEntry = new ActivityEntry($oDateTime, $sAuthorLogin, $sContent);
 		$oEntry->SetType(static::DEFAULT_TYPE)
 			->SetDecorationClasses(static::DEFAULT_DECORATION_CLASSES);
 
 		return $oEntry;
+	}
+
+	/**
+	 * Return the login of the $oChangeOp author or its friendlyname if the user cannot be retrieved.
+	 *
+	 * @param \iCMDBChangeOp $oChangeOp
+	 *
+	 * @return string|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public static function GetUserLoginFromChangeOp(iCMDBChangeOp $oChangeOp)
+	{
+		$iAuthorId = $oChangeOp->Get('user_id');
+		// - Set login in the friendlyname as a fallback
+		$sAuthorLogin = $oChangeOp->Get('userinfo');
+		// - Try to find user login from its ID if present (since iTop 2.8.0)
+		if(empty($iAuthorId) === false)
+		{
+			$oAuthor = MetaModel::GetObject('User', $iAuthorId, false, true);
+			if(empty($oAuthor) === false)
+			{
+				$sAuthorLogin = $oAuthor->Get('login');
+			}
+		}
+
+		return $sAuthorLogin;
 	}
 }

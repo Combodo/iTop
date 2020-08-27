@@ -176,21 +176,11 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 }
 
 /**
- * Interface iCMDBChangeOpSetAttribute
- *
- * @since 2.8.0
- */
-interface iCMDBChangeOpSetAttribute
-{
-
-}
-
-/**
  * Record the modification of an attribute (abstract)
  *
  * @package     iTopORM
  */
-class CMDBChangeOpSetAttribute extends CMDBChangeOp implements iCMDBChangeOpSetAttribute
+class CMDBChangeOpSetAttribute extends CMDBChangeOp
 {
 	/**
 	 * @inheritDoc

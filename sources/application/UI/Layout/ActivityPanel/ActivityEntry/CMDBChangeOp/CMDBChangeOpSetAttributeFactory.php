@@ -23,7 +23,7 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBCha
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use DateTime;
-use iCMDBChangeOpSetAttribute;
+use iCMDBChangeOp;
 
 /**
  * Class CMDBChangeOpSetAttributeFactory
@@ -33,25 +33,27 @@ use iCMDBChangeOpSetAttribute;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp
  */
-class CMDBChangeOpSetAttributeFactory
+class CMDBChangeOpSetAttributeFactory extends CMDBChangeOpFactory
 {
 	/**
 	 * Make an EditsEntry from the iCMDBChangeOpSetAttribute $oChangeOp
 	 *
-	 * @param \iCMDBChangeOpSetAttribute $oChangeOp
+	 * @param \iCMDBChangeOp $oChangeOp
 	 *
 	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public static function MakeFromCmdbChangeOp(iCMDBChangeOpSetAttribute $oChangeOp)
+	public static function MakeFromCmdbChangeOp(iCMDBChangeOp $oChangeOp)
 	{
 		$sHostObjectClass = $oChangeOp->Get('objclass');
 		$sAttCode = $oChangeOp->Get('attcode');
 		$oDateTime = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oChangeOp->Get('date'));
-		$sAuthorFriendlyname = $oChangeOp->Get('userinfo');
 
-		$oEntry = new EditsEntry($oDateTime, $sAuthorFriendlyname, $sHostObjectClass);
+		// Retrieve author login
+		$sAuthorLogin = static::GetUserLoginFromChangeOp($oChangeOp);
+
+		$oEntry = new EditsEntry($oDateTime, $sAuthorLogin, $sHostObjectClass);
 		$oEntry->AddAttribute($sAttCode, $oChangeOp->GetDescription());
 
 		return $oEntry;

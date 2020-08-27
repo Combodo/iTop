@@ -51,7 +51,7 @@ class ActivityEntry extends UIBlock
 	protected $sType;
 	/** @var string $sDecorationClasses CSS classes to use to decorate the entry */
 	protected $sDecorationClasses;
-	/** @var string $sContent Raw content of the entry itself (should not have been processed / escaped) */
+	/** @var string|null $sContent Raw content of the entry itself (should not have been processed / escaped) */
 	protected $sContent;
 	/** @var \DateTime $oDateTime Date / time the entry occurred */
 	protected $oDateTime;
@@ -72,7 +72,7 @@ class ActivityEntry extends UIBlock
 	 * ActivityEntry constructor.
 	 *
 	 * @param \DateTime $oDateTime
-	 * @param \User $sAuthorLogin
+	 * @param string $sAuthorLogin
 	 * @param string|null $sContent
 	 * @param string|null $sId
 	 *
@@ -141,11 +141,11 @@ class ActivityEntry extends UIBlock
 	/**
 	 * Set the content without any filtering / escaping
 	 *
-	 * @param string $sContent
+	 * @param string|null $sContent
 	 *
 	 * @return $this
 	 */
-	public function SetContent(string $sContent)
+	public function SetContent(?string $sContent)
 	{
 		$this->sContent = $sContent;
 
@@ -206,8 +206,18 @@ class ActivityEntry extends UIBlock
 	public function SetAuthor(string $sAuthorLogin)
 	{
 		$this->sAuthorLogin = $sAuthorLogin;
-		// TODO 2.8.0: Check that this does not return '' when author is the CRON or an extension.
-		$this->sAuthorFriendlyname = UserRights::GetUserFriendlyName($this->sAuthorLogin);
+
+		// Set friendlyname to whatever we have in case $sAuthorLogin is not a valid login (deleted user, cron, ...)
+		$iAuthorId = UserRights::GetUserId($this->sAuthorLogin);
+		if(empty($iAuthorId) === true)
+		{
+			$this->sAuthorFriendlyname = $this->sAuthorLogin;
+		}
+		else
+		{
+			// TODO 2.8.0: Check that this does not return '' when author is the CRON or an extension.
+			$this->sAuthorFriendlyname = UserRights::GetUserFriendlyName($this->sAuthorLogin);
+		}
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);
 		$this->sAuthorPictureAbsUrl = UserRights::GetContactPictureAbsUrl($this->sAuthorLogin, false);
 		$this->bIsFromCurrentUser = UserRights::GetUserId($this->sAuthorLogin) === UserRights::GetUserId();

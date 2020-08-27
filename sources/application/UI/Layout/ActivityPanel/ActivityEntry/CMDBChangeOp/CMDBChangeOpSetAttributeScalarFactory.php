@@ -21,7 +21,7 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBCha
 
 
 use AttributeDateTime;
-use iCMDBChangeOpSetAttribute;
+use iCMDBChangeOp;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\TransitionEntry;
 use DateTime;
 use MetaModel;
@@ -39,7 +39,7 @@ class CMDBChangeOpSetAttributeScalarFactory extends CMDBChangeOpSetAttributeFact
 	 * @inheritDoc
 	 * @throws \CoreException
 	 */
-	public static function MakeFromCmdbChangeOp(iCMDBChangeOpSetAttribute $oChangeOp)
+	public static function MakeFromCmdbChangeOp(iCMDBChangeOp $oChangeOp)
 	{
 		$sHostObjectClass = $oChangeOp->Get('objclass');
 		$sAttCode = $oChangeOp->Get('attcode');
@@ -48,12 +48,14 @@ class CMDBChangeOpSetAttributeScalarFactory extends CMDBChangeOpSetAttributeFact
 		if($sAttCode === MetaModel::GetStateAttributeCode($sHostObjectClass))
 		{
 			$oDateTime = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oChangeOp->Get('date'));
-			$sAuthorFriendlyname = $oChangeOp->Get('userinfo');
+
+			// Retrieve author login
+			$sAuthorLogin = static::GetUserLoginFromChangeOp($oChangeOp);
 
 			$sOriginStateLabel = MetaModel::GetStateLabel($sHostObjectClass, $oChangeOp->Get('oldvalue'));
 			$sTargetStateLabel = MetaModel::GetStateLabel($sHostObjectClass, $oChangeOp->Get('newvalue'));
 
-			$oEntry = new TransitionEntry($oDateTime, $sAuthorFriendlyname, $sHostObjectClass, $sOriginStateLabel, $sTargetStateLabel);
+			$oEntry = new TransitionEntry($oDateTime, $sAuthorLogin, $sHostObjectClass, $sOriginStateLabel, $sTargetStateLabel);
 		}
 		else
 		{

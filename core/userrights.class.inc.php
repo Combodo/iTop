@@ -1291,7 +1291,20 @@ class UserRights
 		}
 		if (is_null($oUser))
 		{
-			return '';
+			$sInitials = '';
+			$aLoginParts = explode(' ', $sLogin);
+			foreach($aLoginParts as $sLoginPart)
+			{
+				// Keep only upper case first letters
+				// eg. "My first name My last name" => "MM"
+				// eg. "Carrie Anne Moss" => "CAM"
+				if(preg_match('/^\p{Lu}/u', $sLoginPart) > 0)
+				{
+					$sInitials .= mb_substr($sLoginPart, 0, 1);
+				}
+			}
+
+			return $sInitials;
 		}
 		return $oUser->GetInitials();
 	}
