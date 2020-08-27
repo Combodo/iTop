@@ -57,7 +57,7 @@ class CMDBChange extends DBObject
 
 	// Helper to keep track of the author of a given change,
 	// taking into account a variety of cases (contact attached or not, impersonation)
-	static public function GetCurrentUserName()
+	public static function GetCurrentUserName()
 	{
 		if (UserRights::IsImpersonated())
 		{
@@ -83,5 +83,3 @@ class CMDBChange extends DBObject
 		return $sUser;
 	}
 }
-
-?>
