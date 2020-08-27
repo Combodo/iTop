@@ -64,7 +64,7 @@ class Breadcrumbs extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetNewEntry(array $aNewEntry)
+	public function SetNewEntry(?array $aNewEntry)
 	{
 		$this->aNewEntry = $aNewEntry;
 
