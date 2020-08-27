@@ -580,7 +580,7 @@ CSS;
 					if (!array_key_exists($path, $aCompleteUrls)
 						&& !array_key_exists($path, $aToCompleteUrls))
 					{
-						if (preg_match_all("/\\$([\w-_]+)/", $path, $aCurrentVars))
+						if (preg_match_all("/\\$([\w\-_]+)/", $path, $aCurrentVars))
 						{
 							/** @var string $aCurrentVars */
 							foreach ($aCurrentVars[1] as $var)
