@@ -496,7 +496,7 @@ class CASUserProvisioning
 		}
 
 		// Now synchronize the profiles
-		LoginWebPage::SynchroniseProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
+		LoginWebPage::SynchronizeProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
 
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
 		if ($oUser->IsModified())
