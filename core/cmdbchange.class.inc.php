@@ -55,8 +55,13 @@ class CMDBChange extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum('interactive,csv-interactive,csv-import.php,webservice-soap,webservice-rest,synchro-data-source,email-processing,custom-extension'), "sql"=>"origin", "default_value"=>"interactive", "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 
-	// Helper to keep track of the author of a given change,
-	// taking into account a variety of cases (contact attached or not, impersonation)
+	/**
+	 * Helper to keep track of the author of a given change,
+	 * taking into account a variety of cases (contact attached or not, impersonation)
+	 *
+	 * @return string
+	 * @throws \OQLException
+	 */
 	public static function GetCurrentUserName()
 	{
 		if (UserRights::IsImpersonated())
