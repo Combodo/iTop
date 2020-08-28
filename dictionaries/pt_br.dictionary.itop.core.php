@@ -633,7 +633,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnThresholdReached' => 'Gatilho (na atingimento de liimite)',
+	'Class:TriggerOnThresholdReached' => 'Gatilho (na atingimento de limite)',
 	'Class:TriggerOnThresholdReached+' => 'Gatilho de limite do cronômetro atingido',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronômetro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
