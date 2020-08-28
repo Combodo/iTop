@@ -94,6 +94,7 @@ abstract class CMDBObject extends DBObject
 	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
 	protected static $m_sInfo = null; // null => the information is built in a standard way
+	protected static $m_sUserId = null; // null => the user doing the change is unknown
 	protected static $m_sOrigin = null; // null => the origin is 'interactive'
 
 	/**
@@ -147,6 +148,21 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
+	 * Provide information about the user doing the change
+	 *
+	 * @see static::SetTrackInfo
+	 * @see static::SetCurrentChange
+	 *
+	 * @param string $sId ID of the user doing the change, null if not done by a user (eg. background task)
+	 *
+	 * @since 2.8.0
+	 */
+	public static function SetTrackUserId($sId)
+	{
+		self::$m_sUserId = $sId;
+	}
+
+	/**
 	 * Provides information about the origin of the change
 	 *
 	 * @see SetTrackInfo
@@ -174,6 +190,25 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sInfo;
 		}
 	}
+
+	/**
+	 * Get the ID of the user doing the change (defaulting to null)
+	 *
+	 * @return string|null
+	 * @throws \OQLException
+	 * @since 2.8.0
+	 */
+	protected static function GetTrackUserId()
+	{
+		if (is_null(self::$m_sUserId))
+		{
+			return CMDBChange::GetCurrentUserId();
+		}
+		else
+		{
+			return self::$m_sUserId;
+		}
+	}
 	
 	/**
 	 * Get the 'origin' information (defaulting to 'interactive')
@@ -189,15 +224,24 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sOrigin;
 		}
 	}
-	
+
 	/**
 	 * Create a standard change record (done here 99% of the time, and nearly once per page)
-	 */	 	
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
+		self::$m_oCurrChange->Set("user_id", self::GetTrackUserId());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
 		self::$m_oCurrChange->DBInsert();
 	}

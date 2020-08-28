@@ -69,6 +69,7 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"userinfo")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("user_id", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"user_id")));
 		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("objkey", array("allowed_values"=>null, "class_attcode"=>"objclass", "sql"=>"objkey", "is_null_allowed"=>false, "depends_on"=>array())));
 

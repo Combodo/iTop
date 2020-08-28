@@ -52,6 +52,7 @@ class CMDBChange extends DBObject
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("user_id", array("allowed_values" => null, "sql" => "user_id", "default_value" => null, "is_null_allowed" => true, "depends_on" => array(),)));
 		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum('interactive,csv-interactive,csv-import.php,webservice-soap,webservice-rest,synchro-data-source,email-processing,custom-extension'), "sql"=>"origin", "default_value"=>"interactive", "is_null_allowed"=>true, "depends_on"=>array())));
 	}
 
@@ -73,6 +74,19 @@ class CMDBChange extends DBObject
 			$sUserString = UserRights::GetUserFriendlyName();
 		}
 		return $sUserString;
+	}
+
+	/**
+	 * Return the current user
+	 *
+	 * @return string|null
+	 * @throws \OQLException
+	 * @since 2.8.0
+	 */
+	public static function GetCurrentUserId()
+	{
+		// Note: We might have use only UserRights::GetRealUserId() as it would have done the same thing in the end
+		return UserRights::IsImpersonated() ? UserRights::GetRealUserId() : UserRights::GetUserId();
 	}
 
 	public function GetUserName()
