@@ -62,7 +62,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 				$aCurrentVersionInfo = iTopDesignFormat::$aVersions[$sCurrentVersion];
 				$this->CheckCondition(is_array($aCurrentVersionInfo), "Wrong $sCurrentVersion config in iTopDesignFormat.");
 				$this->CheckCondition(array_key_exists('previous', $aCurrentVersionInfo), "Missing previous for $sCurrentVersion config in iTopDesignFormat.");
-				$this->TestDefinedFunction($aCurrentVersionInfo, 'go_to_previous', $sCurrentVersion);
+				$this->TestDefinedFunction($aCurrentVersionInfo, 'go_to_previous', $sCurrentVersion, ($sCurrentVersion==='1.0'));
 
 				//check we have migration function from N-1 version to current one
 				$sPreviousVersion = $aCurrentVersionInfo['previous'];
@@ -71,7 +71,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 				$this->CheckCondition(is_array($aPreviousVersionInfo), "wrong $sPreviousVersion config in iTopDesignFormat.");
 				$this->CheckCondition(array_key_exists('previous', $aPreviousVersionInfo), "Missing previous for $sPreviousVersion config in iTopDesignFormat.");
 				$this->TestDefinedFunction($aPreviousVersionInfo, 'go_to_previous', $sPreviousVersion);
-				$this->TestDefinedFunction($aPreviousVersionInfo, 'go_to_next', $sPreviousVersion);
+				$this->TestDefinedFunction($aPreviousVersionInfo, 'go_to_next', $sPreviousVersion, ($sCurrentVersion==='1.7'));
 			}
 			catch(Exception $e)
 			{
@@ -99,13 +99,20 @@ class TestForITopDesignFormatClass extends ItopTestCase
 		}
 	}
 
-	private function TestDefinedFunction($aCurrentVersionInfo, $sFunctionKey, $sVersion)
+	private function TestDefinedFunction($aCurrentVersionInfo, $sFunctionKey, $sVersion, $bNullFunction=false)
 	{
 		$sInfo = json_encode($aCurrentVersionInfo, true);
 		$this->CheckCondition(array_key_exists($sFunctionKey, $aCurrentVersionInfo), "Missing $sFunctionKey in $sVersion config in iTopDesignFormat: " . $sInfo);
 		echo $aCurrentVersionInfo[$sFunctionKey].'\n';
-		$oReflectionClass = new \ReflectionClass(iTopDesignFormat::class);
-		$this->CheckCondition($oReflectionClass->hasMethod($aCurrentVersionInfo[$sFunctionKey]), "wrong go_to_previous function '".$aCurrentVersionInfo[$sFunctionKey]."'' for $sVersion config in iTopDesignFormat." . $sInfo);
+		if ($bNullFunction === false)
+		{
+			$oReflectionClass = new \ReflectionClass(iTopDesignFormat::class);
+			$this->CheckCondition($oReflectionClass->hasMethod($aCurrentVersionInfo[$sFunctionKey]), "wrong go_to_previous function '".$aCurrentVersionInfo[$sFunctionKey]."'' for $sVersion config in iTopDesignFormat." . $sInfo);
+		}
+		else
+		{
+			$this->CheckCondition(is_null($aCurrentVersionInfo[$sFunctionKey]), "$sVersion $sFunctionKey function should be null");
+		}
 	}
 
 	public function GetDataModelFiles($sFolder)
