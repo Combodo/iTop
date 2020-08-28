@@ -226,7 +226,9 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 
 			$('#v_'+sFieldId).tooltip({
 				items: 'span',
-				tooltipClass: 'form_field_error',
+				classes: {
+					"ui-tooltip": "form_field_error"
+				},
 				content: function() {
 					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
 				}

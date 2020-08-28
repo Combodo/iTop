@@ -155,7 +155,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 
 			return $("<li>")
-				.append("<d>"+val+"</d>")
+				.append("<div>"+val+"</div>")
 				.appendTo(ul);
 		};
 

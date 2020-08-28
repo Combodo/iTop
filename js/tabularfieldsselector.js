@@ -409,7 +409,9 @@ $(function()
 					return sTooltipContent;
 				},
 				items: '.tfs_advanced',
-				tooltipClass: 'tooltip-tfs',
+				classes: {
+					'ui-tooltip': 'tooltip-tfs'
+				},
 				position: {
 					my: "center bottom-10",
 					at: "center  top",					

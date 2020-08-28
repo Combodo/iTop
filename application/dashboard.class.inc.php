@@ -491,7 +491,7 @@ abstract class Dashboard
 		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 	} );
 
-	$('#select_layout').buttonset();
+	$('#select_layout').controlgroup();
 	$('#select_dashlet').droppable({
 		accept: '.dashlet',
 		drop: function(event, ui) {
