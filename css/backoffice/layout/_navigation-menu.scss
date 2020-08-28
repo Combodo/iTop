@@ -129,7 +129,8 @@ $ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
 
 $ibo-navigation-menu--notifications-toggler--font-size: 24px !default;
 $ibo-navigation-menu--notifications-toggler--color: $ibo-color-grey-600 !default;
-$ibo-navigation-menu--notifications-toggler--loaded--color: $ibo-color-grey-300 !default;
+$ibo-navigation-menu--notifications-toggler--color--is-loaded: $ibo-color-grey-300 !default;
+$ibo-navigation-menu--notifications-toggler--color--on-hover: $ibo-color-white-200 !default;
 
 $ibo-navigation-menu--notifications-toggler--new-messages--width: 16px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--height: 16px !default;
@@ -557,12 +558,18 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 	font-size: $ibo-navigation-menu--notifications-toggler--font-size;
 	color: $ibo-navigation-menu--notifications-toggler--color;
 
+	&:hover,
+	&.ibo-is-loaded:hover{
+		color: $ibo-navigation-menu--notifications-toggler--color--on-hover;
+	}
 	&.ibo-is-loaded{
-		color: $ibo-navigation-menu--notifications-toggler--loaded--color;
+		color: $ibo-navigation-menu--notifications-toggler--color--is-loaded;
+
 		&:not(.ibo-is-empty) .ibo-navigation-menu--notifications-toggler--new-messages{
 			display: inline;
 		}
 	}
+
 	.ibo-navigation-menu--notifications-toggler--new-messages{
 		top: $ibo-navigation-menu--notifications-toggler--new-messages--top;
 		right: $ibo-navigation-menu--notifications-toggler--new-messages--right;
@@ -575,7 +582,7 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 	position: relative;
 
 	&.ibo-is-loaded{
-		color: $ibo-navigation-menu--notifications-toggler--loaded--color;
+		color: $ibo-navigation-menu--notifications-toggler--color--is-loaded;
 		&:not(.ibo-is-empty) .ibo-navigation-menu--notifications-toggler--new-messages{
 			display: inline;
 		}
