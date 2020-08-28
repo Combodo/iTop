@@ -33,6 +33,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	 */
 	public function testCurrentVersion_DataModelConversionFunctions()
 	{
+		$aErrors = [];
 		$aDatamodelCurrentVersions = array();
 		$aDataModelFiles = $this->GetDataModelFiles(APPROOT.'/datamodels');
 
@@ -44,6 +45,12 @@ class TestForITopDesignFormatClass extends ItopTestCase
 				$sVersion = $aMatches[1];
 				if (!array_key_exists($sVersion, $aDatamodelCurrentVersions))
 				{
+					if (trim($sVersion) === '')
+					{
+						$aErrors[] = "cannot retrieve itop_design datamodel version in $sDataModelFile:1";
+						continue;
+					}
+					
 					$aDatamodelCurrentVersions[$sVersion] = $sVersion;
 				}
 			}
@@ -51,8 +58,6 @@ class TestForITopDesignFormatClass extends ItopTestCase
 
 		//make sure there is only one found
 		$this->assertTrue(is_array($aDatamodelCurrentVersions));
-
-		$aErrors = [];
 
 		foreach ($aDatamodelCurrentVersions as $sCurrentVersion)
 		{
