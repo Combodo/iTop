@@ -239,7 +239,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo baseado em um SLT do tipo TTR',
 
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+	'portal:itop-portal' => 'Portal do usuário~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => 'iTop - Portal do Usuário',
 	'Brick:Portal:UserProfile:Title' => 'Meu Perfil',
 	'Brick:Portal:NewRequest:Title' => 'Nova Solicitação',
