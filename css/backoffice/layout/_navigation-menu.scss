@@ -42,7 +42,7 @@ $ibo-navigation-menu--middle-part--scrollbar-thumb-border: none !default;
 $ibo-navigation-menu--middle-part--scrollbar-thumb-border-radius: $ibo-border-radius-500 !default;
 
 $ibo-navigation-menu--bottom-part--padding-top: 20px !default;
-$ibo-navigation-menu--bottom-part--padding-bottom: 10px !default;
+$ibo-navigation-menu--bottom-part--padding-bottom: 16px !default;
 $ibo-navigation-menu--bottom-part--padding-x: 0px !default;
 $ibo-navigation-menu--bottom-part--height: 126px !default;
 $ibo-navigation-menu--bottom-part--background-color: $ibo-color-grey-800 !default;
@@ -146,19 +146,19 @@ $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--r
 
 $ibo-navigation-menu--user--text-color: $ibo-color-white-100 !default;
 $ibo-navigation-menu--user-welcome-message--toggler--padding-left : 6px !default;
-$ibo-navigation-menu--user-picture--image--border-radius: $ibo-border-radius-full !default;
-$ibo-navigation-menu--user-picture--image--background-color: $ibo-color-grey-300;
+$ibo-navigation-menu--user-picture--border-radius: $ibo-border-radius-full !default;
+$ibo-navigation-menu--user-picture--background-color: $ibo-color-grey-300;
 $ibo-navigation-menu--user-notifications--toggler--icon--padding-left: 5px !default;
 $ibo-navigation-menu--user-organization--text-color: $ibo-color-blue-100 !default;
 
-$ibo-navigation-menu--user-picture--image-collapsed--size: 36px !default;
+$ibo-navigation-menu--user-picture--size--is-collapsed: 36px !default;
+$ibo-navigation-menu--user-picture--size--is-expanded: 72px !default;
+$ibo-navigation-menu--user-picture--margin-top--is-expanded: -60px !default;
+$ibo-navigation-menu--user-picture--border--is-expanded: solid 3px $ibo-color-blue-grey-900 !default;
 
 $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color: $ibo-color-grey-100 !default;
 
-$ibo-navigation-menu--user-info-expanded--height: 100%;
-$ibo-navigation-menu--user-picture--image-expanded--margin: -60px auto 0 auto !default;
-$ibo-navigation-menu--user-picture--image-expanded--border: solid 3px $ibo-color-blue-grey-900 !default;
-$ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
+$ibo-navigation-menu--user-info--height--is-expanded: 100%;
 
 /* CSS variables (can be changed directly from the browser) */
 :root {
@@ -216,17 +216,19 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 					display: none;
 				}
 				.ibo-navigation-menu--user-info{
-					height: $ibo-navigation-menu--user-info-expanded--height;
+					height: $ibo-navigation-menu--user-info--height--is-expanded;
 					.ibo-navigation-menu--user-welcome-message, .ibo-navigation-menu--user-notifications, .ibo-navigation-menu--user-organization{
 						display: block;
 					}
 					.ibo-navigation-menu--user-picture{
-						>a {
-							margin: $ibo-navigation-menu--user-picture--image-expanded--margin;
-							.ibo-navigation-menu--user-picture--image {
-								border: $ibo-navigation-menu--user-picture--image-expanded--border;
-								width: $ibo-navigation-menu--user-picture--image-expanded--size;
-							}
+						margin-top: $ibo-navigation-menu--user-picture--margin-top--is-expanded;
+						width: $ibo-navigation-menu--user-picture--size--is-expanded;
+						height: $ibo-navigation-menu--user-picture--size--is-expanded;
+						border: $ibo-navigation-menu--user-picture--border--is-expanded;
+
+						.ibo-navigation-menu--user-picture--image {
+							max-width: $ibo-navigation-menu--user-picture--size--is-expanded;
+							max-height: $ibo-navigation-menu--user-picture--size--is-expanded;
 						}
 					}
 				}
@@ -600,11 +602,18 @@ $ibo-navigation-menu--user-picture--image-expanded--size: 72px !default;
 	flex-direction: column;
 	
 	.ibo-navigation-menu--user-picture{
-		display: flex;
+		@extend %ibo-fully-centered-content;
+		width: $ibo-navigation-menu--user-picture--size--is-collapsed;
+		height: $ibo-navigation-menu--user-picture--size--is-collapsed;
+		overflow: hidden; /* Crop the image, for example when tall but narrow, it would overlap on top and bottom */
+
+		background-color: $ibo-navigation-menu--user-picture--background-color;
+		border-radius: $ibo-navigation-menu--user-picture--border-radius;
+
 		.ibo-navigation-menu--user-picture--image{
-			width: $ibo-navigation-menu--user-picture--image-collapsed--size;
-			border-radius: $ibo-navigation-menu--user-picture--image--border-radius;
-			background-color: $ibo-navigation-menu--user-picture--image--background-color;
+			display: flex;
+			max-width: $ibo-navigation-menu--user-picture--size--is-collapsed;
+			max-height: $ibo-navigation-menu--user-picture--size--is-collapsed;
 		}
 	}
 	.ibo-navigation-menu--user-welcome-message,
