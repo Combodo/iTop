@@ -248,5 +248,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:OngoingRequests:Title+' => '<p>Acompanhar suas solicitações em andamento, adicionar comentários, anexar documentos e confirmar a solução.</p>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Abrir',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolvido',
-	'Brick:Portal:ClosedRequests:Title' => 'Fechar solicitações',
+	'Brick:Portal:ClosedRequests:Title' => 'Solicitações Fechadas',
 ));
