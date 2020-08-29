@@ -345,8 +345,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Solicitação serviço',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Solicitação serviço',
-	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
-	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
+	'Class:ServiceSubcategory/Attribute:service_provider' => 'Nome do provedor',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provedor',
 ));
 
 //
@@ -427,16 +427,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Nome SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT metric~~',
-	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT request type~~',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'SLT ticket priority~~',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT value~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Métrica SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Tipo de requisição SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Prioridade do ticket SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Valor do SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Unidade de valor do SLT',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));
 
 //

@@ -25,18 +25,18 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserLocal/Attribute:password' => 'Senha',
 	'Class:UserLocal/Attribute:password+' => '',
 
-	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
-	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Can expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Never expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
-	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
+	'Class:UserLocal/Attribute:expiration' => 'Expiração de senha',
+	'Class:UserLocal/Attribute:expiration+' => 'Status de expiraçãoo de senha (requer uma extensão para fazer efeito)',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Pode expirar',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Nunca expira',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirada',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovação de senha',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando a senha foi trocada antiormente',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A senha deve ter no mínimo 8 caracteres e incluir letras maiúsculas, minúsculas, números e símbolos.',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => 'O campo abaixo requer uma extensão'
 ));

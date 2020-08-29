@@ -259,7 +259,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação principal para a própria solicitação',
 
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a resolução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de resolução',
 ));
 

@@ -287,7 +287,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:LanguageChangedTo_Lang' => 'Linguagem alterada para',
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha sua linguagem favorita',
 
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a resolução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de resolução',
 ));
 
