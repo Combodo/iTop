@@ -34,13 +34,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachment:Max_Mo' => '(Tamanho máximo arquivo: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Tamanho máximo arquivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'Nenhum anexo. ',
-	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
-	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
-Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
-	'Attachments:Render:Icons' => 'Display as icons~~',
-	'Attachments:Render:Table' => 'Display as list~~',
+	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo.',
+	'Attachments:Error:FileTooLarge' => 'Arquivo muito grande para ser anexado. %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado.
+Ou você anexou um arquivo vazio,
+ou entre em contato com o seu administrador do iTOP pois o servidor pode estar sem espaço de armazenamento.',
+	'Attachments:Render:Icons' => 'Mostrar como ícones',
+	'Attachments:Render:Table' => 'Mostrar como lista',
 ));
 
 //
@@ -48,40 +48,40 @@ or ask your iTop administrator if the iTop server disk is full.~~',
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Attachment' => 'Attachment~~',
-	'Class:Attachment+' => '~~',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
-	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
-	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => 'Item class~~',
-	'Class:Attachment/Attribute:item_class+' => '~~',
-	'Class:Attachment/Attribute:item_id' => 'Item~~',
-	'Class:Attachment/Attribute:item_id+' => '~~',
-	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
-	'Class:Attachment/Attribute:item_org_id+' => '~~',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
-	'Class:Attachment/Attribute:contents+' => '~~',
+	'Class:Attachment' => 'Anexo',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => 'Expira',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Identificador temporário',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Classe do item',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Organização do item',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Conteúdo',
+	'Class:Attachment/Attribute:contents+' => '',
 ));
 
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Attachments:File:Thumbnail' => 'Icon~~',
-	'Attachments:File:Name' => 'File name~~',
-	'Attachments:File:Date' => 'Upload date~~',
-	'Attachments:File:Uploader' => 'Uploaded by~~',
-	'Attachments:File:Size' => 'Size~~',
-	'Attachments:File:MimeType' => 'Type~~',
+	'Attachments:File:Thumbnail' => 'Ícone',
+	'Attachments:File:Name' => 'Nome do arquivo',
+	'Attachments:File:Date' => 'Data de envio',
+	'Attachments:File:Uploader' => 'Enviado por',
+	'Attachments:File:Size' => 'Tamanho',
+	'Attachments:File:MimeType' => 'Tipo',
 ));
 //
 // Class: Attachment
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
-	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => 'User id~~',
-	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
-	'Class:Attachment/Attribute:contact_id+' => '~~',
+	'Class:Attachment/Attribute:creation_date' => 'Data de criação',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Identificador do usuário',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

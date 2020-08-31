@@ -43,8 +43,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Número de mudanças nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Mudanças por domínio nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Mudanças por status nos últimos 7 dias',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Tickets:Related:OpenChanges' => 'Mudanças abertas',
+	'Tickets:Related:RecentChanges' => 'Mudanças recentes (72h)',
 ));
 
 // Dictionnay conventions
@@ -132,9 +132,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Change/Stimulus:ev_finish' => 'Fechar',
 	'Class:Change/Stimulus:ev_finish+' => '',
 	'Class:Change/Attribute:outage' => 'Outage',
-	'Class:Change/Attribute:outage+' => '~~',
+	'Class:Change/Attribute:outage+' => '',
 	'Class:Change/Attribute:outage/Value:no' => 'Não',
-	'Class:Change/Attribute:outage/Value:no+' => '~~',
+	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Sim',
-	'Class:Change/Attribute:outage/Value:yes+' => '~~',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));

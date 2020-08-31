@@ -233,7 +233,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente principal ao próprio incidente',
 
-	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a resolução ao ticket filho (ev_autoresolve) e alinhe as seguintes características: service, team, agent, resolution info',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
 ));
