@@ -33,6 +33,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'config-no-change' => 'Sem alteração: o arquivo ficou sem alteração.',
 	'config-reverted' => 'A configuração foi restaurada.',
 	'config-parse-error' => 'Linha %2$d: %1$s.<br/>O arquivo não foi atualizado.',
-	'config-current-line' => 'Editando linha: %1$s~~',
+	'config-current-line' => 'Editando linha: %1$s',
 	'config-saved-warning-db-password' => 'Salvado com sucesso, mas o backup não vai funcionar devido aos caracteres não suportados na senha da base de dados.',
 ));

@@ -70,7 +70,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
     'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Verificando arquivos de sistema',
     'iTopUpdate:UI:CanCoreUpdate:Error' => 'Falha ao verificar arquivos de sistema (%1$s)',
-    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Falha ao verificar arquivos de sistema (arquivo não existe %1$s)~~',
+    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Falha ao verificar arquivos de sistema (arquivo não existe %1$s)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Falha ao verificar arquivos de sistema',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Aplicação pode ser atualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Aplicação não pode ser atualizada: %1$s',
