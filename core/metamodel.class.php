@@ -4181,7 +4181,7 @@ abstract class MetaModel
 			{
 				$oSearch = DBObjectSearch::FromOQL("SELECT Contact WHERE id = :id");
 				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetContactId()));
-				$oSet->OptimizeColumnLoad($aCurrentContact);
+				$oSet->OptimizeColumnLoad(['Contact' => $aCurrentContact]);
 				$oUser = $oSet->fetch();
 				foreach ($aCurrentContact as $sField)
 				{
