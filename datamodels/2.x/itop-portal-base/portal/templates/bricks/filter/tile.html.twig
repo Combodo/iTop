@@ -10,10 +10,9 @@
 <div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
 	{% block pTileWrapper %}
 		<div class="tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
-			<div class="tile_decoration">
+			<a href="#" onclick="return false;" class="tile_decoration">
 				<span class="icon {{ brick.GetDecorationClassHome }}"></span>
-
-			</div>
+			</a>
 			<div class="tile_body">
 				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
