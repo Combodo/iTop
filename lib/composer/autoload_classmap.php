@@ -148,6 +148,7 @@ return array(
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\Extension' => $baseDir . '/sources/application/TwigBase/Twig/Extension.php',
     'Combodo\\iTop\\Application\\TwigBase\\Twig\\TwigHelper' => $baseDir . '/sources/application/TwigBase/Twig/TwigHelper.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
+    'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\TwigExtension' => $baseDir . '/application/twigextension.class.inc.php',
