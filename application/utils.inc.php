@@ -925,10 +925,19 @@ class utils
 	{
 		$bSecured = false;
 
-		if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
 		{
-			$bSecured = true;
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 		}
+		elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']))
+		{
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
+		}
+		elseif (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
+		{
+			$bSecured = (strcasecmp($_SERVER['HTTPS'], 'off') !== 0);
+		}
+
 		return $bSecured;
 	}
 
