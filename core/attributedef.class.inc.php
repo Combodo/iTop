@@ -7490,6 +7490,16 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		return false;
 	}
+
+	public function GetFormat()
+	{
+		$oRemoteAttDef = $this->GetExtAttDef();
+		if (method_exists($oRemoteAttDef, 'GetFormat')) {
+			/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
+			return $oRemoteAttDef->GetFormat();
+		}
+		return 'text';
+	}
 }
 
 
