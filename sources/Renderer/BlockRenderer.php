@@ -21,7 +21,6 @@ namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
-use ReflectionClass;
 
 /**
  * Class BlockRenderer
@@ -34,7 +33,9 @@ use ReflectionClass;
  */
 class BlockRenderer
 {
+	/** @var string TWIG_BASE_PATH base path of the templates */
 	public const TWIG_BASE_PATH = APPROOT.'templates/';
+	/** @var string[] TWIG_ADDITIONAL_PATHS Additional paths for resources to be loaded either as a template or as an image, ... */
 	public const TWIG_ADDITIONAL_PATHS = [APPROOT.'images/'];
 	
 	/** @var \Twig_Environment $oTwigEnv Singleton used during rendering */
@@ -70,7 +71,9 @@ class BlockRenderer
 	 * BlockRenderer constructor.
 	 *
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
-	 * @param array $aContextParams
+	 * @param array                                 $aContextParams
+	 *
+	 * @throws \Twig\Error\LoaderError
 	 */
 	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
 	{
