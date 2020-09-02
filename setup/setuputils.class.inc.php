@@ -136,29 +136,8 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
-		$aMandatoryExtensions = array(
-			'mysqli',
-			'iconv',
-			'simplexml',
-			'soap',
-			'hash',
-			'json',
-			'session',
-			'pcre',
-			'dom',
-			'zlib',
-			'gd', // test image type (always returns false if not installed), image resizing, PDF export
-		);
-		$aOptionalExtensions = array(
-			'mcrypt, sodium or openssl' =>
-				array(
-					'mcrypt' => 'Strong encryption will not be used.',
-					'sodium' => 'Strong encryption will not be used.',
-					'openssl' => 'Strong encryption will not be used.',
-				),
-			'ldap' => 'LDAP authentication will be disabled.',
-			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
-		);
+		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
+		$aOptionalExtensions = self::GetPHPOptionalExtensions();
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
@@ -2121,6 +2100,50 @@ JS
 		{
 			IssueLog::Info($sText);
 		}
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public static function GetPHPMandatoryExtensions(): array
+	{
+		return [
+			'mysqli',
+			'iconv',
+			'simplexml',
+			'soap',
+			'hash',
+			'json',
+			'session',
+			'pcre',
+			'dom',
+			'zlib',
+			'zip',
+			'fileinfo', // N°3123
+			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function GetPHPOptionalExtensions(): array
+	{
+		$aOptionalExtensions = [
+			'mcrypt, sodium or openssl' => [
+					'mcrypt' => 'Strong encryption will not be used.',
+					'sodium' => 'Strong encryption will not be used.',
+					'openssl' => 'Strong encryption will not be used.',
+				],
+			'ldap' => 'LDAP authentication will be disabled.',
+			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
+		];
+
+		if (utils::IsDevelopmentEnvironment()) {
+			$aOptionalExtensions['xdebug'] = 'For debugging';
+		}
+
+		return $aOptionalExtensions;
 	}
 }
 
