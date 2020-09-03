@@ -177,8 +177,20 @@ class DBObjectTest extends ItopDataTestCase
 		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
 		$oOrg = \MetaModel::GetObject('Organization', 2);
 		$oObject->Set('org_id', $oOrg);
-		static::assertEquals(0, $oObject->Get('location_id'));
-	}
+
+		// though it's a dependent field, it keeps its value (not OQL based nor External field)
+		static::assertEquals(2, $oObject->Get('location_id'));
+
+		// Dependent external field is updated because the Set('org_id') is done with an object
+		static::assertDBQueryCount(0, function() use (&$oObject){
+			static::assertNotEmpty($oObject->Get('org_name'));
+		});
+
+		// Dependent external field is reset and reloaded from DB
+		$oObject->Set('org_id', 3);
+		static::assertDBQueryCount(1, function() use (&$oObject){
+			static::assertNotEmpty($oObject->Get('org_name'));
+		});	}
 
 	/**
 	 * @group Integration

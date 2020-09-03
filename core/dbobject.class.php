@@ -547,72 +547,64 @@ abstract class DBObject implements iDisplay
      */
 	public function Set($sAttCode, $value)
 	{
-		if ($sAttCode == 'finalclass')
-		{
+		if ($sAttCode == 'finalclass') {
 			// Ignore it - this attribute is set upon object creation and that's it
 			return false;
 		}
 
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 
-		if (!$oAttDef->IsWritable())
-		{
+		if (!$oAttDef->IsWritable()) {
 			$sClass = get_class($this);
 			throw new Exception("Attempting to set the value on the read-only attribute $sClass::$sAttCode");
 		}
 
-		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
-		{
+		if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty) {
 			// First time Set is called... ensure that the object gets fully loaded
 			// Otherwise we would lose the values on a further Reload
 			//           + consistency does not make sense !
 			$this->Reload();
 		}
 
-		if ($oAttDef->IsExternalKey() && is_object($value))
-		{
+		if ($oAttDef->IsExternalKey() && is_object($value)) {
 			// Setting an external key with a whole object (instead of just an ID)
 			// let's initialize also the external fields that depend on it
 			// (useful when building objects in memory and not from a query)
 			/** @var \AttributeExternalKey $oAttDef */
-			if ((get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass())))
-			{
+			if ((get_class($value) != $oAttDef->GetTargetClass()) && (!is_subclass_of($value, $oAttDef->GetTargetClass()))) {
 				throw new CoreUnexpectedValue("Trying to set the value of '$sAttCode', to an object of class '".get_class($value)."', whereas it's an ExtKey to '".$oAttDef->GetTargetClass()."'. Ignored");
 			}
 
-			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
-			{
+			foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode) {
+				$oDef = MetaModel::GetAttributeDef(get_class($this), $sCode);
 				/** @var \AttributeExternalField $oDef */
-				if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode))
-				{
+				if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode)) {
 					/** @var \DBObject $value */
 					$this->m_aCurrValues[$sCode] = $value->Get($oDef->GetExtAttCode());
 					$this->m_aLoadedAtt[$sCode] = true;
 				}
-				elseif (in_array($sAttCode, $oDef->GetPrerequisiteAttributes(get_class($this))))
-				{
+				elseif ($oDef->IsBasedOnOQLExpression()) {
 					$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
 					unset($this->m_aLoadedAtt[$sCode]);
 				}
 			}
-		}
-		else if ($this->m_aCurrValues[$sAttCode] !== $value)
-		{
-			// Invalidate dependent fields so that they get reloaded in case they are needed (See Get())
-			//
-			foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode)
-			{
-				$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
-				unset($this->m_aLoadedAtt[$sCode]);
+		} else {
+			if ($this->m_aCurrValues[$sAttCode] !== $value) {
+				// Invalidate dependent fields so that they get reloaded in case they are needed (See Get())
+				//
+				foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode) {
+					$oDef = MetaModel::GetAttributeDef(get_class($this), $sCode);
+					if (($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sAttCode)) || $oDef->IsBasedOnOQLExpression()) {
+						$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
+						unset($this->m_aLoadedAtt[$sCode]);
+					}
+				}
 			}
 		}
-		if ($oAttDef->IsLinkSet() && ($value != null))
-		{
+		if ($oAttDef->IsLinkSet() && ($value != null)) {
 			$realvalue = clone $this->m_aCurrValues[$sAttCode];
 			$realvalue->UpdateFromCompleteList($value);
-		}
-		else
-		{
+		} else {
 			$realvalue = $oAttDef->MakeRealValue($value, $this);
 		}
 		$this->_Set($sAttCode, $realvalue);
