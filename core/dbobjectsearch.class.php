@@ -443,7 +443,6 @@ class DBObjectSearch extends DBSearch
 		case '<|':
 		case '=|':
 			throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', array('operator' => $sOpCode));
-			break;
 
 		case 'IN':
 			if (!is_array($value)) $value = array($value);
@@ -635,7 +634,7 @@ class DBObjectSearch extends DBSearch
 		}
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
 
-		$sQueryParam = 'needle';
+		$sQueryParam = str_replace('.', '', uniqid('needle_', true));
 		$oFlexNeedle = new CharConcatExpression(array(new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')));
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
