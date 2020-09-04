@@ -576,7 +576,13 @@ try
 				else
 				{
 					// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
-					$aFullTextNeedles = explode(' ', $sFullText);
+					$aExplodedFullTextNeedles = explode(' ', $sFullText);
+					$aFullTextNeedles = [];
+					foreach ($aExplodedFullTextNeedles as $sValue) {
+						if (strlen($sValue) > 0) {
+							$aFullTextNeedles[] = $sValue;
+						}
+					}
 				}
 
 				// Check the needle length

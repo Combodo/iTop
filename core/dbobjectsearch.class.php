@@ -624,14 +624,29 @@ class DBObjectSearch extends DBSearch
 	public function AddCondition_FullText($sNeedle)
 	{
 		// Transform the full text condition into additional condition expression
-		$aFullTextFields = array();
-		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef)
-		{
+		$aAttCodes = [];
+		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef) {
 			if (!$oAttDef->IsScalar()) continue;
 			if ($oAttDef->IsExternalKey()) continue;
 			if (!$oAttDef->IsSearchable()) continue;
+			$aAttCodes[] = $sAttCode;
+		}
+		$this->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+	}
+
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		$aFullTextFields = [];
+		foreach ($aAttCodes as $sAttCode) {
 			$aFullTextFields[] = new FieldExpression($sAttCode, $this->GetClassAlias());
 		}
+
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
 
 		$sQueryParam = str_replace('.', '', uniqid('needle_', true));
