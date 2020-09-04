@@ -89,7 +89,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../js/utils.js");
-		$this->add_linked_script("../js/swfobject.js");
 		$this->add_linked_script("../js/ckeditor/ckeditor.js");
 		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
 		$this->add_linked_script("../js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js");
