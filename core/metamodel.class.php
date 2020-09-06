@@ -2889,6 +2889,7 @@ abstract class MetaModel
 					if (!empty($aCurrentClassUniquenessRules))
 					{
 						$aClassFields = self::GetAttributesList($sPHPClass);
+						$aClassFields[] = "finalclass";
 						foreach ($aCurrentClassUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
 						{
 							$bIsRuleOverride = self::HasSameUniquenessRuleInParent($sPHPClass, $sUniquenessRuleId);
