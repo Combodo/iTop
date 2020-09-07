@@ -136,7 +136,14 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 	}
 	catch (Exception $e) // we shouldn't get so much exceptions... but we need to handle legacy code, and cron.php has to keep running
 	{
-		$sMessage = 'Processing failed with message: '.$e->getMessage();
+		if ($oTask->IsDebug())
+		{
+			$sMessage = 'Processing failed with message: '. $e->getMessage() . '. ' . $e->getTraceAsString();
+		}
+		else
+		{
+			$sMessage = 'Processing failed with message: '. $e->getMessage();
+		}
 	}
 	$fDuration = microtime(true) - $fStart;
 	if ($oTask->Get('total_exec_count') == 0)
@@ -186,16 +193,20 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
  * @param CLIPage|WebPage $oP
  * @param boolean $bVerbose
  *
+ * @param bool $bDebug
+ *
  * @throws \ArchivedObjectException
  * @throws \CoreCannotSaveObjectException
  * @throws \CoreException
  * @throws \CoreUnexpectedValue
+ * @throws \CoreWarning
  * @throws \MissingQueryArgument
  * @throws \MySQLException
  * @throws \MySQLHasGoneAwayException
+ * @throws \OQLException
  * @throws \ReflectionException
  */
-function CronExec($oP, $bVerbose)
+function CronExec($oP, $bVerbose, $bDebug=false)
 {
 	$iStarted = time();
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
@@ -208,7 +219,7 @@ function CronExec($oP, $bVerbose)
 		$oP->p("Loop pause = $iCronSleep seconds");
 	}
 
-	ReSyncProcesses($oP, $bVerbose);
+	ReSyncProcesses($oP, $bVerbose, $bDebug);
 
 	while (time() < $iTimeLimit)
 	{
@@ -376,6 +387,7 @@ function DisplayStatus($oP, $aTaskOrderBy = [])
 /**
  * @param $oP
  * @param $bVerbose
+ * @param $bDebug
  *
  * @throws \ArchivedObjectException
  * @throws \CoreCannotSaveObjectException
@@ -386,7 +398,7 @@ function DisplayStatus($oP, $aTaskOrderBy = [])
  * @throws \OQLException
  * @throws \ReflectionException
  */
-function ReSyncProcesses($oP, $bVerbose)
+function ReSyncProcesses($oP, $bVerbose, $bDebug)
 {
 	// Enumerate classes implementing BackgroundProcess
 	//
@@ -417,6 +429,7 @@ function ReSyncProcesses($oP, $bVerbose)
 			{
 				// New entry, let's create a new BackgroundTask record, and plan the first execution
 				$oTask = new BackgroundTask();
+				$oTask->SetDebug($bDebug);
 				$oTask->Set('class_name', $sTaskClass);
 				$oTask->Set('total_exec_count', 0);
 				$oTask->Set('min_run_duration', 99999.999);
@@ -576,7 +589,7 @@ try
 	{
 		if ($oMutex->TryLock())
 		{
-			CronExec($oP, $bVerbose);
+			CronExec($oP, $bVerbose, $bDebug);
 		}
 		else
 		{
