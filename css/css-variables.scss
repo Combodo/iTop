@@ -124,3 +124,8 @@ $highlight-item-color: $white !default;
 $content-color: #eeeeee !default; 
 $default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
 $icons-filter: hue-rotate(0deg) !default;
+
+%font-awesome-prerequisites{
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 600;
+}

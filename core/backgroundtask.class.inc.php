@@ -26,6 +26,24 @@
  */
 class BackgroundTask extends DBObject
 {
+	protected $bDebug = false;
+
+	/**
+	 * @return bool
+	 */
+	public function IsDebug()
+	{
+		return $this->bDebug;
+	}
+
+	/**
+	 * @param bool $bDebug
+	 */
+	public function SetDebug($bDebug)
+	{
+		$this->bDebug = $bDebug;
+	}
+
 	public static function Init()
 	{
 		$aParams = array

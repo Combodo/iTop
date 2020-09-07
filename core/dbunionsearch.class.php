@@ -376,7 +376,15 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	/**
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+		}
+	}
+
+		/**
 	 * @param DBObjectSearch $oFilter
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode

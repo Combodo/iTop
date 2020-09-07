@@ -404,7 +404,9 @@ abstract class DBSearch
      */
 	abstract public function AddCondition_FullText($sFullText);
 
-	/**
+	abstract public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle);
+
+		/**
      * Perform a join, the remote class being matched by the mean of its primary key
      *
      * The join is performed

@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 
@@ -7466,6 +7467,12 @@ class AttributeExternalField extends AttributeDefinition
 			}
 		}
 		parent::MakeFormField($oObject, $oFormField);
+		if ($oFormField instanceof TextAreaField) {
+			if (method_exists($oRemoteAttDef, 'GetFormat')) {
+				/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
+				$oFormField->SetFormat($oRemoteAttDef->GetFormat());
+			}
+		}
 
 		// Manually setting for remote ExternalKey, otherwise, the id would be displayed.
 		if ($oRemoteAttDef instanceof AttributeExternalKey)
@@ -7482,6 +7489,16 @@ class AttributeExternalField extends AttributeDefinition
 	public function IsPartOfFingerprint()
 	{
 		return false;
+	}
+
+	public function GetFormat()
+	{
+		$oRemoteAttDef = $this->GetExtAttDef();
+		if (method_exists($oRemoteAttDef, 'GetFormat')) {
+			/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
+			return $oRemoteAttDef->GetFormat();
+		}
+		return 'text';
 	}
 }
 

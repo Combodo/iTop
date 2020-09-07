@@ -60,6 +60,10 @@ class ThemeHandler
 	{
 		try
 		{
+			if (is_null(MetaModel::GetConfig()))
+			{
+				throw new CoreException('no config');
+			}
 			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
 		}
 		catch(CoreException $oCompileException)
