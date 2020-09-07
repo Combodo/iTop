@@ -1852,7 +1852,8 @@ EOF
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		
+
+		case 'swf_navigate': /** @deprecated SWF was removed in iTop */
 		case 'navigate': // Graphical display of the relations "impact" / "depends on"
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
