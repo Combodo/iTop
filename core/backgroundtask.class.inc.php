@@ -31,7 +31,7 @@ class BackgroundTask extends DBObject
 	/**
 	 * @return bool
 	 */
-	public function IsDebug(): bool
+	public function IsDebug()
 	{
 		return $this->bDebug;
 	}
@@ -39,7 +39,7 @@ class BackgroundTask extends DBObject
 	/**
 	 * @param bool $bDebug
 	 */
-	public function SetDebug(bool $bDebug): void
+	public function SetDebug($bDebug)
 	{
 		$this->bDebug = $bDebug;
 	}
