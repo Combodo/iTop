@@ -18,7 +18,8 @@
 
 @import 'css-variables.scss';
 
-#ibo-main-content {
+#ibo-main-content,
+.ui-dialog {
 	/* CSS Document */
 	// IMPORTANT: Some parts are commented while developing Full Moon so we can still use the pages in the "legacy" theme.
 	//body {
