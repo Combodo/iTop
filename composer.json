@@ -52,6 +52,7 @@
       "application",
       "sources/application",
       "sources/Composer",
+      "sources/Controller",
       "sources/Form",
       "sources/Renderer"
     ],

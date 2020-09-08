@@ -709,10 +709,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Ativo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'Inativo',
-	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Análise de impacto: configuração da redundância',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A solução está funcionando se todos os CIs estiverem funcionando',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A solução está funcionando se no mínimo %1$s CI(s) estiver(em) funcionando',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A solução está funcionando se no mínimo %1$s %% dos CIs estiverem funcionando',
 ));
 
 //

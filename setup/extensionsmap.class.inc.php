@@ -450,18 +450,18 @@ class iTopExtensionsMap
 			
 			if (count($aModuleInfo) === 0)
 			{
-				SetupPage::log_warning("Eval of $sModuleFile did  not return the expected information...");
+				SetupLog::Warning("Eval of $sModuleFile did  not return the expected information...");
 			}
 		}
 		catch(ParseError $e)
 		{
 		    // Continue...
-		    SetupPage::log_warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
+			SetupLog::Warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
 		}
 		catch(Exception $e)
 		{
 			// Continue...
-			SetupPage::log_warning("Eval of $sModuleFile caused an exception: ".$e->getMessage());
+			SetupLog::Warning("Eval of $sModuleFile caused an exception: ".$e->getMessage());
 		}
 		return $aModuleInfo;
 	}

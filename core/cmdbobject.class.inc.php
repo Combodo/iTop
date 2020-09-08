@@ -547,7 +547,13 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
 	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here	 	 
+	 * Anyhow, if the user has found a workaround... the security gets enforced here
+	 *
+	 * @param $bSkipStrongSecurity
+	 * @param $iActionCode
+	 *
+	 * @throws \SecurityException
+	 * @deprecated in 2.8.0 will be removed in 2.9
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{

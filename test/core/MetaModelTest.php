@@ -198,7 +198,7 @@ class MetaModelTest extends ItopDataTestCase
 		$mPluginInstanciationManager->expects($this->exactly($expectedInstanciationCalls))
 			->method('InstantiatePlugins')
 			->willReturn($res);
-		$m_PluginManager = new \PluginManager($m_aExtensionClassNames, $m_aExtensionClasses, $mPluginInstanciationManager);
+		$m_PluginManager = new \PluginManager($m_aExtensionClassNames, $mPluginInstanciationManager);
 
 		//warning: called twice on purpose
 		$m_PluginManager->EnumPlugins($interface, $sFilterInstanceOf);
@@ -249,7 +249,7 @@ class MetaModelTest extends ItopDataTestCase
 		$mPluginInstanciationManager->expects($this->exactly($expectedInstanciationCalls))
 			->method('InstantiatePlugins')
 			->willReturn($res);
-		$m_PluginManager = new \PluginManager($m_aExtensionClassNames, $m_aExtensionClasses, $mPluginInstanciationManager);
+		$m_PluginManager = new \PluginManager($m_aExtensionClassNames, $mPluginInstanciationManager);
 
 		//warning: called twice on purpose
 		$m_PluginManager->GetPlugins($interface, $className);

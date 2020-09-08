@@ -22,9 +22,9 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	// Errors
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+	'FilesInformation:Error:MissingFile' => 'Faltando arquivo: %1$s',
+	'FilesInformation:Error:CorruptedFile' => 'Arquivo %1$s está corrompido',
+	'FilesInformation:Error:CantWriteToFile' => 'Sem permissão de escrita no arquivo %1$s',
 ));
 
 

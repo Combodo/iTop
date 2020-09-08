@@ -61,7 +61,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abrir</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'pt-br', //work with moment.js locales
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos.',
 ));
 
 // UserProfile brick
@@ -111,7 +111,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:All' => 'Todos',
 	'Brick:Portal:Manage:Group' => 'Group',
 	'Brick:Portal:Manage:fct:count' => 'Total',
-	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
+	'Brick:Portal:Manage:fct:sum' => 'Soma',
 	'Brick:Portal:Manage:fct:avg' => 'Média',
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:max' => 'Max',
@@ -125,12 +125,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, preencha as seguintes informações:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));
 
 // CreateBrick brick

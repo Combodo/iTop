@@ -136,29 +136,8 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
-		$aMandatoryExtensions = array(
-			'mysqli',
-			'iconv',
-			'simplexml',
-			'soap',
-			'hash',
-			'json',
-			'session',
-			'pcre',
-			'dom',
-			'zlib',
-			'gd', // test image type (always returns false if not installed), image resizing, PDF export
-		);
-		$aOptionalExtensions = array(
-			'mcrypt, sodium or openssl' =>
-				array(
-					'mcrypt' => 'Strong encryption will not be used.',
-					'sodium' => 'Strong encryption will not be used.',
-					'openssl' => 'Strong encryption will not be used.',
-				),
-			'ldap' => 'LDAP authentication will be disabled.',
-			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
-		);
+		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
+		$aOptionalExtensions = self::GetPHPOptionalExtensions();
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
@@ -253,7 +232,7 @@ class SetupUtils
 					}
 				}
 			}
-			SetupPage::log("Info - php.ini file(s): '$sPhpIniFile'");
+			SetupLog::Ok("Info - php.ini file(s): '$sPhpIniFile'");
 		}
 
 		if (!ini_get('file_uploads'))
@@ -280,7 +259,7 @@ class SetupUtils
 			}
 			else
 			{
-				SetupPage::log("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+				SetupLog::Ok("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
 			}
 		}
 
@@ -305,9 +284,9 @@ class SetupUtils
 		}
 
 
-		SetupPage::log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-		SetupPage::log("Info - post_max_size: ".ini_get('post_max_size'));
-		SetupPage::log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
+		SetupLog::Ok("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+		SetupLog::Ok("Info - post_max_size: ".ini_get('post_max_size'));
+		SetupLog::Ok("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 		// Check some more ini settings here, needed for file upload
 		$sMemoryLimit = trim(ini_get('memory_limit'));
@@ -329,7 +308,7 @@ class SetupUtils
 			}
 			else
 			{
-				SetupPage::log("Info - memory_limit is $iMemoryLimit, ok.");
+				SetupLog::Ok("Info - memory_limit is $iMemoryLimit, ok.");
 			}
 		}
 
@@ -353,7 +332,7 @@ class SetupUtils
 			}
 			else
 			{
-				SetupPage::log("Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
+				SetupLog::Ok("Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
 			}
 		}
 
@@ -380,7 +359,7 @@ class SetupUtils
 		if (ini_get('session.save_handler') == 'files')
 		{
 			$sSavePath = ini_get('session.save_path');
-			SetupPage::log("Info - session.save_path is: '$sSavePath'.");
+			SetupLog::Ok("Info - session.save_path is: '$sSavePath'.");
 
 			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
 			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
@@ -450,7 +429,7 @@ class SetupUtils
 	 */
 	private static function CheckPhpVersion(&$aResult)
 	{
-		SetupPage::log('Info - CheckPHPVersion');
+		SetupLog::Ok('Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
 		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>='))
@@ -497,7 +476,7 @@ class SetupUtils
 	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
 	{
 		$aResult = array();
-		SetupPage::log('Info - CheckSelectedModules');
+		SetupLog::Ok('Info - CheckSelectedModules');
 
 		$aDirsToScan = array(APPROOT.$sSourceDir);
 		$sExtensionsPath = APPROOT.$sExtensionDir;
@@ -528,7 +507,7 @@ class SetupUtils
 	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
 	{
 		$aResult = array();
-		SetupPage::log('Info - CheckBackupPrerequisites');
+		SetupLog::Ok('Info - CheckBackupPrerequisites');
 
 		// zip extension
 		//
@@ -546,7 +525,7 @@ class SetupUtils
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		SetupLog::Ok('Info - PHP functions disabled: '.implode(', ', $aDisabled));
 		if (in_array('exec', $aDisabled))
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
@@ -564,7 +543,7 @@ class SetupUtils
 		}
 		else
 		{
-			SetupPage::log('Info - Found mysql_bindir: '.$sMySQLBinDir);
+			SetupLog::Ok('Info - Found mysql_bindir: '.$sMySQLBinDir);
 			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
 		}
 		$sCommand = "$sMySQLDump -V 2>&1";
@@ -588,7 +567,7 @@ class SetupUtils
 		}
 		foreach($aOutput as $sLine)
 		{
-			SetupPage::log('Info - mysqldump -V said: '.$sLine);
+			SetupLog::Ok('Info - mysqldump -V said: '.$sLine);
 		}
 		
 		// create and test destination location
@@ -618,12 +597,12 @@ class SetupUtils
 	public static function CheckGraphviz($sGraphvizPath)
 	{
 		$oResult = null;
-		SetupPage::log('Info - CheckGraphviz');
+		SetupLog::Ok('Info - CheckGraphviz');
 
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		SetupLog::Ok('Info - PHP functions disabled: '.implode(', ', $aDisabled));
 		if (in_array('exec', $aDisabled))
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
@@ -653,7 +632,7 @@ class SetupUtils
 		}
 		foreach($aOutput as $sLine)
 		{
-			SetupPage::log('Info - '.$sGraphvizPath.' -V said: '.$sLine);
+			SetupLog::Ok('Info - '.$sGraphvizPath.' -V said: '.$sLine);
 		}
 
 		return $oResult;
@@ -726,11 +705,11 @@ class SetupUtils
 					{
 						if (!unlink($dir.'/'.$file))
 						{
-							SetupPage::log("Warning - FAILED to remove file '$dir/$file'");
+							SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
 						}
 						else if (file_exists($dir.'/'.$file))
 						{
-							SetupPage::log("Warning - FAILED to remove file '$dir/.$file'");
+							SetupLog::Ok("Warning - FAILED to remove file '$dir/.$file'");
 						}
 					}
 				}
@@ -2115,12 +2094,57 @@ JS
 	{
 		if (class_exists('SetupPage'))
 		{
-			SetupPage::log($sText);
+			SetupLog::Ok($sText);
 		}
 		else
 		{
 			IssueLog::Info($sText);
 		}
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public static function GetPHPMandatoryExtensions(): array
+	{
+		return [
+			'mysqli',
+			'iconv',
+			'simplexml',
+			'soap',
+			'hash',
+			'json',
+			'session',
+			'pcre',
+			'dom',
+			'zlib',
+			'zip',
+			'fileinfo', // N°3123
+			'mbstring', // N°2899
+			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function GetPHPOptionalExtensions(): array
+	{
+		$aOptionalExtensions = [
+			'mcrypt, sodium or openssl' => [
+					'mcrypt' => 'Strong encryption will not be used.',
+					'sodium' => 'Strong encryption will not be used.',
+					'openssl' => 'Strong encryption will not be used.',
+				],
+			'ldap' => 'LDAP authentication will be disabled.',
+			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
+		];
+
+		if (utils::IsDevelopmentEnvironment()) {
+			$aOptionalExtensions['xdebug'] = 'For debugging';
+		}
+
+		return $aOptionalExtensions;
 	}
 }
 

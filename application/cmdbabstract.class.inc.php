@@ -4204,6 +4204,16 @@ EOF
 	}
 
 	/**
+	 * Whether to bypass the checks of user rights when writing this object, could be used in {@link \iApplicationObjectExtension::OnCheckToWrite()}
+	 *
+	 * @return bool
+	 */
+	public function GetAllowWrite()
+	{
+		return $this->bAllowWrite;
+	}
+
+	/**
 	 * Bypass the check of the user rights when deleting this object
 	 *
 	 * @param bool $bAllow True to bypass the checks, false to restore the default behavior

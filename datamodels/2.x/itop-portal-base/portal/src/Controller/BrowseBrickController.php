@@ -84,8 +84,9 @@ class BrowseBrickController extends BrickController
 		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oRequestManipulator->ReadParam('sDataLoading',
 			$oBrick->GetDataLoading());
 		// Getting search value
-		$sSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
-		if (!empty($sSearchValue))
+		$sRawSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
+		$sSearchValue = html_entity_decode($sRawSearchValue);
+		if (strlen($sSearchValue) > 0)
 		{
 			$sDataLoading = AbstractBrick::ENUM_DATA_LOADING_LAZY;
 		}
@@ -167,13 +168,16 @@ class BrowseBrickController extends BrickController
 
 				// Adding search clause
 				// Note : For know the search is naive and looks only for the exact match. It doesn't search for words separately
-				if (!empty($sSearchValue))
+				if (strlen($sSearchValue) > 0)
 				{
 					// - Cleaning the search value by exploding and trimming spaces
-					$aSearchValues = explode(' ', $sSearchValue);
-					array_walk($aSearchValues, function (&$sSearchValue /*, $sKey*/) {
-						trim($sSearchValue);
-					});
+					$aExplodedSearchValues = explode(' ', $sSearchValue);
+					$aSearchValues = [];
+					foreach ($aExplodedSearchValues as $sValue) {
+						if (strlen($sValue) > 0) {
+							$aSearchValues[] = $sValue;
+						}
+					}
 
 					// - Retrieving fields to search
 					$aSearchFields = array($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']);
@@ -257,7 +261,7 @@ class BrowseBrickController extends BrickController
 				{
 					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetSelectedClasses($aLevelsClasses);
 
-					if (!empty($sSearchValue))
+					if (strlen($sSearchValue) > 0)
 					{
 						// Note : This could be way more simpler if we had a SetInternalParam($sParam, $value) verb
 						$aQueryParams = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetInternalParams();
@@ -452,7 +456,7 @@ class BrowseBrickController extends BrickController
 					'sBrickId' => $sBrickId,
 					'sBrowseMode' => $sBrowseMode,
 					'aBrowseButtons' => $aBrowseButtons,
-					'sSearchValue' => $sSearchValue,
+					'sSearchValue' => $sRawSearchValue,
 					'sDataLoading' => $sDataLoading,
 					'aItems' => json_encode($aItems),
 					'iItemsCount' => count($aItems),

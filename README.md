@@ -78,10 +78,10 @@ We would like to give a special thank you to the people from the community who c
  - Alves, David
  - Beck, Pedro
  - Bilger, Jean-François
- - Bostoen, Jeffrey
+ - Bostoen, Jeffrey (a.k.a @jbostoen)
  - Cardoso, Anderson
  - Cassaro, Bruno
- - Casteleyn, Thomas
+ - Casteleyn, Thomas (a.k.a @Hipska)
  - Castro, Randall Badilla
  - Colantoni, Maria Laura
  - Couronné, Guy
@@ -97,6 +97,7 @@ We would like to give a special thank you to the people from the community who c
  - Lazcano, Federico
  - Lucas, Jonathan
  - Malik, Remie
+ - Mindêllo de Andrade, Lucas (a.k.a @rokam)
  - Rosenke, Stephan
  - Seki, Shoji
  - Shilov, Vladimir

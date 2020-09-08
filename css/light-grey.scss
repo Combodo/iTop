@@ -3157,15 +3157,34 @@
 	}
 
 	.sort_none {
-		background: url($approot-relative + "images/bg.gif?v=" + $version) no-repeat center;
+		padding-right: 5px;
+		&::after {
+			@extend %font-awesome-prerequisites;
+			text-align: right;
+			content: '\f0dc';
+			color: $complement-color;
+			float: right;
+		}
 	}
-
 	.sort_asc {
-		background: url($approot-relative + "images/desc.gif?v=" + $version) no-repeat center;
+		padding-right: 5px;
+		&::after {
+			@extend %font-awesome-prerequisites;
+			text-align: right;
+			content: '\f0d8';
+			color: $complement-color;
+			float: right;
+		}
 	}
-
 	.sort_desc {
-		background: url($approot-relative + "images/asc.gif?v=" + $version) no-repeat center;
+		padding-right: 5px;
+		&::after {
+			@extend %font-awesome-prerequisites;
+			text-align: right;
+			content: '\f0d7';
+			color: $complement-color;
+			float: right;
+		}
 	}
 
 	.sort_hidden {

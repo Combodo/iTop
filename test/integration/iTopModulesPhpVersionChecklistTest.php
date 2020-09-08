@@ -57,21 +57,9 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertSame($this->KeepMajorVersion($sExpectedVersion), $this->KeepMajorVersion($matches[1]),
-			"$sPhpFile file refer does not refer to current itop version ($matches[1] instead of expected $sExpectedVersion)");
+		$this->assertRegExp("#$sExpectedVersion#", $matches[1], "$sPhpFile file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
+
 	}
-
-	private function KeepMajorVersion($sVersion)
-	{
-		preg_match(
-			"#(.*)\.[^\.]*$#",
-			$sVersion,
-			$matches
-		);
-		return $matches[1];
-	}
-
-
 
 	public function iTopModulesPhpVersionProvider()
 	{
@@ -96,7 +84,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sExpectedVersion = \utils::GetItopPatchVersion();
+		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+'; // ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
 
 		$aTestCases = array();
 		foreach ($aPhpFiles as $sPhpFile)

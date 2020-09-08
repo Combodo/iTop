@@ -50,7 +50,7 @@ try
 		$sHtml = "<select id=\"select_$sName\" name=\"$sName\">";
 		$sHtml .= "<option style=\"width: ".$iWidthPx."px;\" title=\"Select the class you want to load\" value=\"\">".Dict::S('UI:CSVImport:ClassesSelectOne')."</option>\n";
 		$aValidClasses = array();
-		$aClassCategories = array('bizmodel');
+		$aClassCategories = array('bizmodel', 'addon/authentication');
 		if (UserRights::IsAdministrator())
 		{
 			$aClassCategories = array('bizmodel', 'application', 'addon/authentication');

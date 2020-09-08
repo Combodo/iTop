@@ -1049,6 +1049,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
 ));
 
 //
