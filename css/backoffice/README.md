@@ -10,6 +10,17 @@ SCSS files are structured following the [7-1 pattern](https://sass-guidelin.es/#
 ```
 css/backoffice/
 |
+|– utils/
+|   |– _variables.scss   # Sass Variables
+|   |– _functions.scss   # Sass Functions
+|   |– _mixins.scss      # Sass Mixins
+|   |– _helpers.scss     # Class & placeholders helpers
+|
+|– vendors/
+|   |– _bootstrap.scss   # Bootstrap
+|   |– _jquery-ui.scss   # jQuery UI
+|   ...                  # Etc…
+|
 |– base/
 |   |– _reset.scss       # Reset/normalize
 |   |– _typography.scss  # Typography rules
@@ -39,17 +50,6 @@ css/backoffice/
 |– themes/
 |   |– _theme.scss       # Default theme
 |   |– _admin.scss       # Admin theme
-|   ...                  # Etc…
-|
-|– utils/
-|   |– _variables.scss   # Sass Variables
-|   |– _functions.scss   # Sass Functions
-|   |– _mixins.scss      # Sass Mixins
-|   |– _helpers.scss     # Class & placeholders helpers
-|
-|– vendors/
-|   |– _bootstrap.scss   # Bootstrap
-|   |– _jquery-ui.scss   # jQuery UI
 |   ...                  # Etc…
 |
 |
