@@ -2120,6 +2120,7 @@ JS
 			'zlib',
 			'zip',
 			'fileinfo', // N°3123
+			'mbstring', // N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];
 	}
