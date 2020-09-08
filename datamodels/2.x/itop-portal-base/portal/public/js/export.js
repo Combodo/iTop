@@ -18,10 +18,10 @@
 
 function ExportStartExport() {
     var oParams = {};
-    oParams.operation = 'export_build';
+    oParams.operation = 'export_build_portal';
     oParams.format = sFormat;
-    oParams.expression = sOQL;
-    oParams.fields = sFields;
+    oParams.token = sToken;
+    oParams.start = 1;
     $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {
         if (data == null) {
             ExportError('Export failed (no data provided), please contact your administrator');
@@ -56,7 +56,7 @@ function ExportRun(data) {
                 $('#export-close').show();
             }
             else {
-                oParams.operation = 'export_build';
+                oParams.operation = 'export_build_portal';
             }
 
             $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {

@@ -309,6 +309,7 @@ class utils
 			case 'context_param':
 			case 'parameter':
 			case 'field_name':
+			case 'transaction_id':
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -768,19 +769,22 @@ class utils
 		return new Config();
 	}
 
-	public static function InitTimeZone() {
-		$oConfig = self::GetConfig();
+	public static function InitTimeZone($oConfig = null)
+	{
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-
 		if (!empty($sItopTimeZone))
 		{
 			date_default_timezone_set($sItopTimeZone);
 		}
-		else
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
-		}
+		//		else
+		//		{
+		//			// Leave as is... up to the admin to set a value somewhere...
+		//			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		}
 	}
 
     /**
@@ -1389,13 +1393,12 @@ class utils
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
 			$aHeaders = explode("\n", $sOptionnalHeaders);
+			// N°3267 - Webservices: Fix optional headers not being taken into account
+			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
 			foreach($aHeaders as $sHeaderString)
 			{
-				if(preg_match('/^([^:]): (.+)$/', $sHeaderString, $aMatches))
-				{
-					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
-				}
+				$aHTTPHeaders[] = trim($sHeaderString);
 			}
 			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 			$aOptions = array(
@@ -2091,6 +2094,41 @@ class utils
 	}
 
 	/**
+	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 */
+	public static function GetItopVersionWikiSyntax()
+	{
+		$sMinorVersion = self::GetItopMinorVersion();
+		return str_replace('.', '_', $sMinorVersion).'_0';
+	}
+
+	/**
+	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
+	 * @throws \Exception
+	 */
+	public static function GetItopMinorVersion()
+	{
+		$sPatchVersion = self::GetItopPatchVersion();
+		$aExplodedVersion = explode('.', $sPatchVersion);
+
+		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
+		{
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+
+		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
+	}
+
+	/**
+	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
+	 */
+	public static function GetItopPatchVersion()
+	{
+		$aExplodedVersion = explode('-', ITOP_VERSION);
+		return $aExplodedVersion[0];
+	}
+
+	/**
 	 * Check if the given class if configured as a high cardinality class.
 	 *
 	 * @param $sClass
@@ -2190,7 +2228,7 @@ class utils
 	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
 	 * @param string $sBasePath for example '/var/www/html/itop/data/'
 	 *
-	 * @return bool false if path :
+	 * @return bool|string false if path :
 	 *      * invalid
 	 *      * not allowed
 	 *      * not contained in base path

@@ -437,8 +437,7 @@ abstract class Controller
 
 		if ($bFileTransfer)
 		{
-			header('Content-Description: File Transfer');
-			header('Content-Disposition: inline; filename="'.$sDownloadArchiveName);
+			header('Content-Disposition: attachment; filename="'.$sDownloadArchiveName.'"');
 		}
 
 		header('Expires: 0');

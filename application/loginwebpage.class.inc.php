@@ -107,7 +107,7 @@ class LoginWebPage extends NiceWebPage
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SynchroniseProfiles(&$oUser, array $aProfiles, $sOrigin)
+	public static function SynchronizeProfiles(&$oUser, array $aProfiles, $sOrigin)
 	{
 		$oProfilesSet = $oUser->Get(‘profile_list’);
 		//delete old profiles
@@ -928,7 +928,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				$sOrigin .= " ({$_SESSION['login_mode']})";
 			}
-			$aExistingProfiles = self::SynchroniseProfiles($oUser, $aProfiles, $sOrigin);
+			$aExistingProfiles = self::SynchronizeProfiles($oUser, $aProfiles, $sOrigin);
 			if ($oUser->IsModified())
 			{
 				$oUser->DBWrite();

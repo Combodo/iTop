@@ -376,19 +376,26 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	/**
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+		}
+	}
+
+		/**
 	 * @param DBObjectSearch $oFilter
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
-	 * @throws CoreException
-	 * @throws CoreWarning
+	 * @param null $aRealiasingMap array of [old-alias][] => <new-alias>, for each alias that has changed (@since 2.7.2)
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_PointingTo($oConditionFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 
@@ -396,13 +403,14 @@ class DBUnionSearch extends DBSearch
 	 * @param DBObjectSearch $oFilter
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param null $aRealiasingMap array of [old-alias][] => <new-alias>, for each alias that has changed (@since 2.7.2)
 	 */
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_ReferencedBy($oConditionFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 

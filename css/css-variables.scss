@@ -15,10 +15,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
-// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.8.0";
-$approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
+$approot-relative: "../../../../" !default; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
 $gray-base:              #000 !default;
@@ -127,3 +124,8 @@ $highlight-item-color: $white !default;
 $content-color: #eeeeee !default; 
 $default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
 $icons-filter: hue-rotate(0deg) !default;
+
+%font-awesome-prerequisites{
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 600;
+}

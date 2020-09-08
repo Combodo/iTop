@@ -185,12 +185,9 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			static::DEFAULT_MODULE_SETTING_ENABLED
 		);
 
-		$sItopTimeZone = $this->getOConfig()->Get('timezone');
-		$timezone = new DateTimeZone($sItopTimeZone);
-
 		if (!$bEnabled)
 		{
-			return new DateTime('3000-01-01', $timezone);
+			return new DateTime('3000-01-01');
 		}
 
 		// 1st - Interpret the list of days as ordered numbers (monday = 1)
@@ -209,7 +206,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
 		}
 
-		$oNow = new DateTime($sCurrentTime, $timezone);
+		$oNow = new DateTime($sCurrentTime);
 		$iNextPos = false;
 		$sDay = $oNow->format('N');
 		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
@@ -244,7 +241,6 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$oRet->modify('+'.$iMove.' days');
 		}
 		list($sHours, $sMinutes) = explode(':', $sProcessTime);
-		/** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection non used new parameter in PHP 7.1 */
 		$oRet->setTime((int)$sHours, (int)$sMinutes);
 
 		return $oRet;

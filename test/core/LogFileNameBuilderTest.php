@@ -6,8 +6,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DailyRotatingLogFileNameBuilder;
-use WeeklyRotatingLogFileNameBuilder;
-use MonthlyRotatingLogFileNameBuilder;
 use DateTime;
 
 /**
@@ -90,7 +88,7 @@ class LogFileNameBuilderTest extends ItopTestCase
 		$oFileBuilder->ResetLastModifiedDateForFile();
 		$oFileBuilder->CheckAndRotateLogFile();
 		$this->assertFileNotExists($sLogFile, 'Test log file modification date is yesterday, file rotated !');
-		$this->assertFileExists($sRotatedLogFile, 'Rotation was done');
+		$this->assertFileExists($sRotatedLogFile, 'Rotation was not done');
 
 		// file cleanup will be done in tearDown !
 	}

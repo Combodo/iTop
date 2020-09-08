@@ -30,8 +30,11 @@ function mb_str_replace($search, $replace, $subject, &$count = 0) {
 		$replacements = array_pad($replacements, count($searches), '');
 		foreach ($searches as $key => $search) {
 			$parts = mb_split(preg_quote($search), $subject);
-			$count += count($parts) - 1;
-			$subject = implode($replacements[$key], $parts);
+			if (is_countable($parts))
+			{
+				$count += count($parts) - 1;
+				$subject = implode($replacements[$key], $parts);
+			}
 		}
 	} else {
 		// Call mb_str_replace for each subject in array, recursively

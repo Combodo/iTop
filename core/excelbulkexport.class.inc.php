@@ -353,7 +353,8 @@ EOF
 			
 		$fStartExcel = microtime(true);
 		$writer = new XLSXWriter();
-		$oDateTimeFormat = new DateTimeFormat($this->aStatusInfo['date_format']);
+		$sDateFormat = isset($this->aStatusInfo['date_format']) ? $this->aStatusInfo['date_format'] : (string)AttributeDateTime::GetFormat();
+		$oDateTimeFormat = new DateTimeFormat($sDateFormat);
 		$writer->setDateTimeFormat($oDateTimeFormat->ToExcel());
 		$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
 		$writer->setDateFormat($oDateFormat->ToExcel());

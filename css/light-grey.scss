@@ -2165,6 +2165,11 @@ fieldset .details>.field_container {
 	background: transparent;
 	border: 0;
 }
+.field_input_zone {
+	.selectize-input {
+		padding: 0px;
+	}
+}
 .field_container {
 	display: table;
 	width: 100%;
@@ -2257,6 +2262,7 @@ fieldset .details>.field_container {
 
 					.field_input_zone{
 						width: 100%; /* auto; */
+						align-items:center;
 
 						&.field_input_string,
 						&.field_input_password{
@@ -2390,7 +2396,7 @@ fieldset .details>.field_container {
 						}
 
 						&.field_input_extkey{
-							display: table;
+							display: inline-table;
 							width: 100%;
 
 							> .field_select_wrapper{
@@ -2874,13 +2880,34 @@ a.summary,  a.summary:hover {
 	height: 12px;
 }
 .sort_none {
-	background: url($approot-relative + "images/bg.gif?v=" + $version) no-repeat center;
+	padding-right: 5px;
+	&::after {
+		@extend %font-awesome-prerequisites;
+		text-align: right;
+		content: '\f0dc';
+		color: $complement-color;
+		float: right;
+	}
 }
 .sort_asc {
-	background: url($approot-relative + "images/desc.gif?v=" + $version) no-repeat center;
+	padding-right: 5px;
+	&::after {
+		@extend %font-awesome-prerequisites;
+		text-align: right;
+		content: '\f0d8';
+		color: $complement-color;
+		float: right;
+	}
 }
 .sort_desc {
-	background: url($approot-relative + "images/asc.gif?v=" + $version) no-repeat center;
+	padding-right: 5px;
+	&::after {
+		@extend %font-awesome-prerequisites;
+		text-align: right;
+		content: '\f0d7';
+		color: $complement-color;
+		float: right;
+	}
 }
 .sort_hidden {
 	display: none;

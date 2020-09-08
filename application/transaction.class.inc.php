@@ -234,7 +234,14 @@ class privUITransactionFile
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
-		$sFilepath = APPROOT.'data/transactions/'.$id;
+		// Constraint the transaction file within APPROOT.'data/transactions'
+		$sTransactionDir = realpath(APPROOT.'data/transactions');
+		$sFilepath = utils::RealPath($sTransactionDir.'/'.$id, $sTransactionDir);
+		if (($sFilepath === false) || (strlen($sTransactionDir) == strlen($sFilepath)))
+		{
+			return false;
+		}
+
 		clearstatcache(true, $sFilepath);
 		$bResult = file_exists($sFilepath);
 		if ($bResult)

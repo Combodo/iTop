@@ -127,6 +127,13 @@ abstract class MetaModel
 	protected static $m_sEnvironment = 'production';
 
 	/**
+	 * MetaModel constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	/**
 	 * @return array
 	 */
 	public static function GetClassFiles()
@@ -741,7 +748,51 @@ abstract class MetaModel
 			return array('%1$s', array($nameRawSpec));
 		}
 	}
-
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	final static public function GetComplementAttributeSpec($sClass)
+	{
+		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
+		{
+			return array($sClass, array());
+		}
+		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
+		if (is_array($nameRawSpec))
+		{
+			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
+			if (strlen($sFormat) == 0)
+			{
+				// Default to "%1$s %2$s..."
+				for($i = 1; $i <= count($nameRawSpec); $i++)
+				{
+					if (empty($sFormat))
+					{
+						$sFormat .= '%'.$i.'$s';
+					}
+					else
+					{
+						$sFormat .= ' %'.$i.'$s';
+					}
+				}
+			}
+			return array($sFormat, $nameRawSpec);
+		}
+		elseif (empty($nameRawSpec))
+		{
+			return array($sClass, array());
+		}
+		else
+		{
+			// string -> attcode
+			return array('%1$s', array($nameRawSpec));
+		}
+	}
 	/**
 	 * Get the friendly name expression for a given class
 	 *
@@ -1848,7 +1899,7 @@ abstract class MetaModel
 	 * @param string $sClass
 	 * @param string $sListCode
 	 *
-	 * @return array
+	 * @return array list of attribute codes
 	 */
 	public static function GetZListItems($sClass, $sListCode)
 	{
@@ -1866,6 +1917,82 @@ abstract class MetaModel
 		} // nothing for the mother of all classes
 		// Dig recursively
 		return self::GetZListItems($sParentClass, $sListCode);
+	}
+
+	/**
+	 * @param string $sRemoteClass
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
+	 *
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
+	{
+		$aAttCodesToPrint = [];
+
+		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode)
+		{
+			//TODO: check the state of the attribute: hidden or visible ?
+			if ($sFieldCode == 'finalclass')
+			{
+				continue;
+			}
+
+			$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sFieldCode);
+			$aAttCodesToPrint[] = $oRemoteAttDef;
+		}
+
+		return $aAttCodesToPrint;
+	}
+
+	/**
+	 * @param string $sClass left class
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
+	 *
+	 * @throws \CoreException
+	 * @since 2.8.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode)
+		{
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode)
+			{
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass'))
+			{
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable()))
+			{
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY))
+			{
+				$aAttCodesToPrint[] = $oLnkAttDef;
+			}
+		}
+
+		return $aAttCodesToPrint;
 	}
 
 	/**
@@ -2681,7 +2808,7 @@ abstract class MetaModel
 		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
 		foreach($aInterfaces as $sInterface)
 		{
-			self::$m_aExtensionClasses[$sInterface] = array();
+			self::$m_aExtensionClassNames[$sInterface] = array();
 		}
 
 		foreach(get_declared_classes() as $sPHPClass)
@@ -2692,11 +2819,7 @@ abstract class MetaModel
 			{
 				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable())
 				{
-					if (is_null($oExtensionInstance))
-					{
-						$oExtensionInstance = new $sPHPClass;
-					}
-					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
+					self::$m_aExtensionClassNames[$sInterface][$sPHPClass] = $sPHPClass;
 				}
 			}
 		}
@@ -4068,7 +4191,7 @@ abstract class MetaModel
 			{
 				$oSearch = DBObjectSearch::FromOQL("SELECT Contact WHERE id = :id");
 				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetContactId()));
-				$oSet->OptimizeColumnLoad($aCurrentContact);
+				$oSet->OptimizeColumnLoad(['Contact' => $aCurrentContact]);
 				$oUser = $oSet->fetch();
 				foreach ($aCurrentContact as $sField)
 				{
@@ -5421,7 +5544,7 @@ abstract class MetaModel
 							{
 								$sIndexName = $sField;
 								$sColumns = '`'.$sField.'`';
-								if (!is_null($aLength[0]))
+								if (isset($aLength[0]))
 								{
 									$sColumns .= ' ('.$aLength[0].')';
 								}
@@ -6185,6 +6308,7 @@ abstract class MetaModel
 
 		// N°2478 utils has his own private attribute
 		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
+		utils::InitTimeZone($oConfiguration);
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
@@ -6224,19 +6348,6 @@ abstract class MetaModel
 		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries() || self::$m_oConfig->Get('log_kpi_record_oql'));
 		DBSearch::EnableQueryIndentation(self::$m_oConfig->Get('query_indentation_enabled'));
 		DBSearch::EnableOptimizeQuery(self::$m_oConfig->Get('query_optimization_enabled'));
-
-		// PHP timezone first...
-		//
-		$sPHPTimezone = self::$m_oConfig->Get('timezone');
-		if ($sPHPTimezone == '')
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			//$sPHPTimezone = date_default_timezone_get();
-		}
-		else
-		{
-			date_default_timezone_set($sPHPTimezone);
-		}
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
@@ -6281,7 +6392,7 @@ abstract class MetaModel
 			if (is_array($result))
 			{
 				// todo - verifier que toutes les classes mentionnees ici sont chargees dans InitClasses()
-				self::$m_aExtensionClasses = $result['m_aExtensionClasses'];
+				self::$m_aExtensionClassNames = $result['m_aExtensionClassNames'];
 				self::$m_Category2Class = $result['m_Category2Class'];
 				self::$m_aRootClasses = $result['m_aRootClasses'];
 				self::$m_aParentClasses = $result['m_aParentClasses'];
@@ -6318,7 +6429,7 @@ abstract class MetaModel
 				$oKPI = new ExecutionKPI();
 
 				$aCache = array();
-				$aCache['m_aExtensionClasses'] = self::$m_aExtensionClasses;
+				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
 				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
@@ -6402,8 +6513,8 @@ abstract class MetaModel
 		return md5(APPROOT).'-'.self::$m_sEnvironment;
 	}
 
-	/** @var array */
-	protected static $m_aExtensionClasses = array();
+    /** @var array */
+    protected static $m_aExtensionClassNames = [];
 
 	/**
 	 * @param string $sToInclude
@@ -7198,25 +7309,9 @@ abstract class MetaModel
 	 */
 	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{
-		if (!array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			return array();
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames);
 
-		if (is_null($sFilterInstanceOf))
-		{
-			return self::$m_aExtensionClasses[$sInterface];
-		}
-
-		$fFilterCallback = function ($instance) use ($sFilterInstanceOf)
-		{
-			return $instance instanceof $sFilterInstanceOf;
-		};
-
-		return array_filter(
-			self::$m_aExtensionClasses[$sInterface],
-			$fFilterCallback
-		);
+		return $pluginManager->EnumPlugins($sInterface, $sFilterInstanceOf);
 	}
 
 	/**
@@ -7227,16 +7322,9 @@ abstract class MetaModel
 	 */
 	public static function GetPlugins($sInterface, $sClassName)
 	{
-		$oInstance = null;
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface]))
-			{
-				return self::$m_aExtensionClasses[$sInterface][$sClassName];
-			}
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames);
 
-		return $oInstance;
+		return $pluginManager->GetPlugins($sInterface, $sClassName);
 	}
 
 	/**

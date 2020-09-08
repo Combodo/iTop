@@ -365,29 +365,37 @@ EOF
 		{
 			throw new BulkExportMissingParameterException('fields');
 		}
-		else if(($sQueryId !== null) && ($sQueryId !== null))
+		else
 		{
-			$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
-			$oQueries = new DBObjectSet($oSearch);
-			if ($oQueries->Count() > 0)
+			if (($sQueryId !== null) && ($sQueryId !== null))
 			{
-				$oQuery = $oQueries->Fetch();
-				if (($sFields === null) || ($sFields === ''))
+				$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+				$oQueries = new DBObjectSet($oSearch);
+				if ($oQueries->Count() > 0)
 				{
-					// No 'fields' parameter supplied, take the fields from the query phrasebook definition
-					$sFields = trim($oQuery->Get('fields'));
-					if ($sFields === '')
+					$oQuery = $oQueries->Fetch();
+					if (($sFields === null) || ($sFields === ''))
 					{
-						throw new BulkExportMissingParameterException('fields');
+						// No 'fields' parameter supplied, take the fields from the query phrasebook definition
+						$sFields = trim($oQuery->Get('fields'));
+						if ($sFields === '')
+						{
+							throw new BulkExportMissingParameterException('fields');
+						}
 					}
 				}
-			}
-			else
-			{
-				throw BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
+				else
+				{
+					throw BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
+				}
 			}
 		}
 
+		$this->SetFields($sFields);
+	}
+
+	public function SetFields($sFields)
+	{
 		// Interpret (and check) the list of fields
 		//
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();

@@ -335,20 +335,41 @@ class WizardHelper
 		{
 			$sResult = $this->m_aData['m_oFieldsMap'][$sFieldName];
 		}
+
 		return $sResult;
 	}
-	
+
+	public function GetReturnNotEditableFields()
+	{
+		return $this->m_aData['m_bReturnNotEditableFields'] ?? false;
+	}
+
+	/**
+	 * @return string JS code to be executed for fields update
+	 * @since 2.8.0 N°3198
+	 */
+	public function GetJsForUpdateFields()
+	{
+		$sWizardHelperJsVar = ($this->m_aData['m_sWizHelperJsVarName']) ?? 'oWizardHelper'.$this->GetFormPrefix();
+		$sWizardHelperJson = $this->ToJSON();
+
+		return <<<JS
+{$sWizardHelperJsVar}.m_oData = {$sWizardHelperJson};
+{$sWizardHelperJsVar}.UpdateFields();
+JS;
+	}
+
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object
 		$oSet = CMDBObjectSet::FromScratch($sLinkClass);
-		foreach($aSet as $aLinkObj)
+		foreach ($aSet as $aLinkObj)
 		{
 			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach($aLinkObj as $sAttCode => $value)
+			foreach ($aLinkObj as $sAttCode => $value)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
-				if (($oAttDef->IsExternalKey()) && ($value != '')  && ($value > 0))
+				if (($oAttDef->IsExternalKey()) && ($value != '') && ($value > 0))
 				{
 					// For external keys: load the target object so that external fields
 					// get filled too

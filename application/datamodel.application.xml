@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -399,7 +399,8 @@
 				<stylesheets>
 					<stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
 					<stylesheet id="main">../css/light-grey.scss</stylesheet>
-				</stylesheets>
+				</stylesheets>        
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/light-grey/main.css</precompiled_stylesheet>
 			</theme>
 			<theme id="test-red" _delta="define">
 				<variables>
@@ -415,6 +416,7 @@
 					<stylesheet id="main">../css/light-grey.scss</stylesheet>
 					<stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
 				</stylesheets>
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/test-red/main.css</precompiled_stylesheet>
 			</theme>
 		</themes>
 	</branding>

@@ -404,7 +404,9 @@ abstract class DBSearch
      */
 	abstract public function AddCondition_FullText($sFullText);
 
-	/**
+	abstract public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle);
+
+		/**
      * Perform a join, the remote class being matched by the mean of its primary key
      *
      * The join is performed
@@ -631,7 +633,7 @@ abstract class DBSearch
 		}
 
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties));
+		return urlencode(json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties)));
 	}
 
 	/**
@@ -648,7 +650,7 @@ abstract class DBSearch
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = json_decode($sValue, true);
+		$aData = json_decode(urldecode($sValue), true);
 		if (is_null($aData))
 		{
 			throw new CoreException("Invalid filter parameter");
@@ -1112,6 +1114,8 @@ abstract class DBSearch
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°2555
 	 */
 	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
 	{

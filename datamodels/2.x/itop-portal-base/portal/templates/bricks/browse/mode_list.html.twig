@@ -44,140 +44,148 @@
 					"defaultContent": "",
 					"type": "html",
 					"data": oLevelsProperties[sKey].alias,
-					"render": function(data, type, row){
-						var cellElem;
-						var levelAltId = data.level_alias+'_'+data.id;
-						var levelActions;
-						var levelActionsKeys;
-						var drilldownActionIndex;
-						var levelPrimaryAction;
-						var url = '';
-						
-						// Preparing actions on the cell
-						levelActions = oLevelsProperties[data.level_alias].actions;
-						// - Removing explicit (not default) drilldown action as it has no prupose on that browse mode
-						delete levelActions['{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}'];
-						// - Removing implciit (default) drilldown action
-						if( (levelActions['default'] !== undefined) && (levelActions['default'].type === '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}') ) 
-						{
-							delete levelActions['default'];
-						}
-						levelActionsKeys = Object.keys(levelActions);
-						
-						// Preparing the cell data
-						cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
-						cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
+					"render":
+						{_: function(data, type, row){
+							var cellElem;
+							var levelAltId = data.level_alias+'_'+data.id;
+							var levelActions;
+							var levelActionsKeys;
+							var drilldownActionIndex;
+							var levelPrimaryAction;
+							var url = '';
 
-						// Building metadata
-						for(var sPropName in data.metadata)
-						{
-							var propValue = data.metadata[sPropName];
-							cellElem.attr('data-'+sPropName.replace('_', '-'), propValue);
-						}
-
-						// Building tooltip for the node
-						// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
-						// For the same reason, tooltip widget is created in "drawCallback" instead of here.
-						if( (data.tooltip !== undefined) && (data.tooltip !== ''))
-						{
-							cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').html(data.name).prop('outerHTML') );
-						}
-						else
-						{
-							cellElem.html(data.name);
-						}
-						
-						// Building actions
-						if(levelActionsKeys.length > 0)
-						{
-							// - Primary action (click on item)
-							levelPrimaryAction = levelActions[levelActionsKeys[0]];
-							switch(levelPrimaryAction.type)
+							// Preparing actions on the cell
+							levelActions = oLevelsProperties[data.level_alias].actions;
+							// - Removing explicit (not default) drilldown action as it has no prupose on that browse mode
+							delete levelActions['{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}'];
+							// - Removing implciit (default) drilldown action
+							if( (levelActions['default'] !== undefined) && (levelActions['default'].type === '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}') )
 							{
-								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
-									url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-                                    break;
-								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
-									url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-									break;
-								case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
-									url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-									url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
-									break;
-								default:
-								    url = '#';
-									//console.log('Action "'+levelPrimaryAction.type+'" not implemented');
-									break;
+								delete levelActions['default'];
 							}
-                            SetActionUrl(cellElem, url);
-                            SetActionOpeningTarget(cellElem, levelPrimaryAction.opening_target);
+							levelActionsKeys = Object.keys(levelActions);
 
-							// - Secondary actions
-							if(levelActionsKeys.length > 1)
+							// Preparing the cell data
+							cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+							cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
+
+							// Building metadata
+							for(var sPropName in data.metadata)
 							{
-								// Retrieving secondary action (Now we also display primary action)
-								var actionsButtons = {};
-								for(j = 0; j < levelActionsKeys.length; j++)
-								{
-									actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
-								}
-								
-								// Preparing secondary actions container
-								var actionsElem = $('<div></div>').addClass('pull-right group-actions');
-								cellElem.append(actionsElem);
-								// Preparing secondary actions
-								var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-								var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-								var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-								actionsSSMenuElem.append(actionsSSMenuContainerElem);
-								actionsElem.append(actionsSSTogglerElem);
-								actionsElem.append(actionsSSMenuElem);
+								var propValue = data.metadata[sPropName];
+								cellElem.attr('data-'+sPropName.replace('_', '-'), propValue);
+							}
 
-								// Adding secondary actions
-								for(j in actionsButtons)
+							// Building tooltip for the node
+							// We have to concatenate the HTML as we return the raw HTML of the cell. If we did a jQuery.insertAfter, the tooltip would not be returned.
+							// For the same reason, tooltip widget is created in "drawCallback" instead of here.
+							if( (data.tooltip !== undefined) && (data.tooltip !== ''))
+							{
+								cellElem.html( $('<span></span>').attr('title', data.tooltip).attr('data-toggle', 'tooltip').html(data.name).prop('outerHTML') );
+							}
+							else
+							{
+								cellElem.html(data.name);
+							}
+
+							// Building actions
+							if(levelActionsKeys.length > 0)
+							{
+								// - Primary action (click on item)
+								levelPrimaryAction = levelActions[levelActionsKeys[0]];
+								switch(levelPrimaryAction.type)
 								{
-									var action = actionsButtons[j];
-									var actionElem = $('<a></a>');
-									var actionIconElem = $('<span></span>').appendTo(actionElem);
-									
-									switch(action.type)
+									case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+										url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+	                                    break;
+									case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+										url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+										break;
+									case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+										url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+										url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
+										break;
+									default:
+									    url = '#';
+										//console.log('Action "'+levelPrimaryAction.type+'" not implemented');
+										break;
+								}
+	                            SetActionUrl(cellElem, url);
+	                            SetActionOpeningTarget(cellElem, levelPrimaryAction.opening_target);
+
+								// - Secondary actions
+								if(levelActionsKeys.length > 1)
+								{
+									// Retrieving secondary action (Now we also display primary action)
+									var actionsButtons = {};
+									for(j = 0; j < levelActionsKeys.length; j++)
 									{
-										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
-											url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											break;
-										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
-											url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											break;
-										case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
-											url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-											url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
-											break;
-										default:
-										    url = '#';
-											//console.log('Action "'+action.type+'" not implemented for secondary action');
-											break;
+										actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
 									}
-                                    SetActionUrl(actionElem, url);
-                                    SetActionOpeningTarget(actionElem, action.opening_target);
-									
-									// Adding title if present
-									if(action.title !== undefined)
+
+									// Preparing secondary actions container
+									var actionsElem = $('<div></div>').addClass('pull-right group-actions');
+									cellElem.append(actionsElem);
+									// Preparing secondary actions
+									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+									var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+									var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+									actionsSSMenuElem.append(actionsSSMenuContainerElem);
+									actionsElem.append(actionsSSTogglerElem);
+									actionsElem.append(actionsSSMenuElem);
+
+									// Adding secondary actions
+									for(j in actionsButtons)
 									{
-										actionElem.attr('title', action.title);
+										var action = actionsButtons[j];
+										var actionElem = $('<a></a>');
+										var actionIconElem = $('<span></span>').appendTo(actionElem);
+
+										switch(action.type)
+										{
+											case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+												url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+												break;
+											case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+												url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+												break;
+											case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+												url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
+												url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
+												break;
+											default:
+											    url = '#';
+												//console.log('Action "'+action.type+'" not implemented for secondary action');
+												break;
+										}
+	                                    SetActionUrl(actionElem, url);
+	                                    SetActionOpeningTarget(actionElem, action.opening_target);
+
+										// Adding title if present
+										if(action.title !== undefined)
+										{
+											actionElem.attr('title', action.title);
+										}
+										// Adding icon class if present
+										if(action.icon_class !== undefined)
+										{
+											actionIconElem.addClass(action.icon_class);
+										}
+
+										actionElem.append(action.title);
+										actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
 									}
-									// Adding icon class if present
-									if(action.icon_class !== undefined)
-									{
-										actionIconElem.addClass(action.icon_class);
-									}
-						
-									actionElem.append(action.title);
-									actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
 								}
 							}
-						}
-						
-						return cellElem.prop('outerHTML');
+
+							return cellElem.prop('outerHTML');
+						},
+						filter:function (data, type, row) {
+                        	return $.text($.parseHTML(data.name));
+						},
+						sort:function (data, type, row) {
+							return $.text($.parseHTML(data.name));
+						},
 					},
 				});
 				
@@ -195,25 +203,29 @@
 							"defaultContent": "",
 							"type": "html",
 							"data": oLevelsProperties[sKey].alias+".fields."+oLevelsProperties[sKey].fields[i].code,
-							"render": function(data, type, row){
-								var cellElem = $('<span></span>');
-
-								// Building value and metadata
-								for(var sPropName in data)
+							"render":
 								{
-									var sPropValue = data[sPropName];
-									if(sPropName === 'value_html')
-									{
-										cellElem.html(sPropValue);
-									}
-									else
-									{
-										cellElem.attr('data-'+sPropName.replace('_', '-'), sPropValue);
-									}
-								}
+									_: function (data, type, row) {
+										var cellElem = $('<span></span>');
 
-								return cellElem.prop('outerHTML');
-							},
+										// Building value and metadata
+										for (var sPropName in data) {
+											var sPropValue = data[sPropName];
+											if (sPropName === 'value_html') {
+												cellElem.html(sPropValue);
+											} else {
+												cellElem.attr('data-' + sPropName.replace('_', '-'), sPropValue);
+											}
+										}
+										return cellElem.prop('outerHTML');
+									},
+									sort: function (data, type, row) {
+										return $.text($.parseHTML(data['value_html']));
+									},
+									filter: function (data, type, row) {
+                        				return $.text($.parseHTML(data['value_html']));
+									},
+								},
 						});
 					}
 				}

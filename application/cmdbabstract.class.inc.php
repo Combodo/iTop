@@ -663,7 +663,30 @@ EOF
 				{
 					// n:n links
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
+					$sLinkingAttCode = $oLinkingAttDef->GetCode();
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
+
+					// N°2334 fields to display for n:n relations
+					$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
+					$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sTargetClass);
+					$aLnkAttCodesToDisplay = array_map(function ($oLnkAttDef) {
+						return ormLinkSet::LINK_ALIAS.'.'.$oLnkAttDef->GetCode();
+					},
+						$aLnkAttDefsToDisplay
+					);
+					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay))
+					{
+						// we need to display a link to the remote class instance !
+						$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
+					}
+					$aRemoteAttCodesToDisplay = array_map(function ($oRemoteAttDef) {
+						return ormLinkSet::REMOTE_ALIAS.'.'.$oRemoteAttDef->GetCode();
+					},
+						$aRemoteAttDefsToDisplay
+					);
+					$aAttCodesToDisplay = array_merge($aLnkAttCodesToDisplay, $aRemoteAttCodesToDisplay);
+					$sAttCodesToDisplay = implode(',', $aAttCodesToDisplay);
+
 					$aParams = array(
 						'link_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
@@ -671,8 +694,12 @@ EOF
 						'view_link' => false,
 						'menu' => false,
 						//'menu_actions_target' => '_blank',
-						'display_limit' => true, // By default limit the list to speed up the initial load & display
+						// By default limit the list to speed up the initial load & display
+						'display_limit' => true,
 						'table_id' => $sClass.'_'.$sAttCode,
+						// N°2334 specify fields to display for n:n relations
+						'zlist' => false,
+						'extra_fields' => $sAttCodesToDisplay,
 					);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
@@ -1286,7 +1313,14 @@ HTML
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams key used :
+	 *      <ul>
+	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
+	 *          <li>menu : if true prints DisplayBlock menu, default true
+	 *          <li>display_aliases : list of query aliases that will be printed, defaults to [] (displays all)
+	 *          <li>zlist : name of the zlist to use, false to disable zlist lookup, default to 'list'
+	 *          <li>extra_fields : list of <alias>.<attcode> to add to the result, separator ',', defaults to empty string
+	 *      </ul>
 	 *
 	 * @return string
 	 * @throws \CoreException
@@ -1365,7 +1399,7 @@ HTML
 			}
 
 			// Filter the list to removed linked set since we are not able to display them here
-			foreach($aList[$sAlias] as $index => $sAttCode)
+			foreach ($aList[$sAlias] as $index => $sAttCode)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 				if ($oAttDef instanceof AttributeLinkedSet)
@@ -1373,6 +1407,11 @@ HTML
 					// Removed from the display list
 					unset($aList[$sAlias][$index]);
 				}
+			}
+
+			if (empty($aList[$sAlias]))
+			{
+				unset($aList[$sAlias], $aAuthorizedClasses[$sAlias]);
 			}
 		}
 
@@ -1932,6 +1971,11 @@ HTML
 			$sNullValue = $oAttDef->GetNullValue(); // used for the ValidateField() call in js/forms-json-utils.js
 			$sFieldToValidateId = $iId; // can be different than the displayed field (for example in TagSet)
 
+			// List of attributes that depend on the current one
+			// Might be modified depending on the current field
+			$sWizardHelperJsVarName = "oWizardHelper{$sFormPrefix}";
+			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode);
+
 			switch ($oAttDef->GetEditClass())
 			{
 				case 'Date':
@@ -2222,6 +2266,7 @@ EOF
 					break;
 
 				case 'ExtKey':
+					/** @var \AttributeExternalKey $oAttDef */
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 
@@ -2240,6 +2285,19 @@ EOF
 					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(),
 						$oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
+
+					$bHasExtKeyUpdatingRemoteClassFields = (
+						array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
+						&& ($aArgs['replaceDependenciesByRemoteClassFields'])
+					);
+					if ($bHasExtKeyUpdatingRemoteClassFields)
+					{
+						// On this field update we need to update all the corresponding remote class fields
+						// Used when extkey widget is in a linkedset indirect
+						$sWizardHelperJsVarName = $aArgs['wizHelperRemote'];
+						$aDependencies = $aArgs['remoteCodes'];
+					}
+
 					break;
 
 				case 'RedundancySetting':
@@ -2293,23 +2351,23 @@ EOF
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
 					$oPage->add_ready_script(
-<<<EOF
-    $('#{$iId}_field_set').field_set($sFieldSetOptions);
-    
-    $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
-    $('#{$iId}_console_form').console_form_handler('alignColumns');
-	$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
-    // field_change must be processed to refresh the hidden value at anytime
-    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
-    // Initialize the hidden value with current state
-    // update_value is triggered when preparing the wizard helper object for ajax calls
-    $('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
-    // validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
-    $('#{$iId}').bind('validate', function(evt, sFormId) {
-        $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
-        return ValidateCustomFields('$iId', sFormId); // Custom validation function
-    });
-EOF
+<<<JS
+$('#{$iId}_field_set').field_set($sFieldSetOptions);
+
+$('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
+$('#{$iId}_console_form').console_form_handler('alignColumns');
+$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
+// field_change must be processed to refresh the hidden value at anytime
+$('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+// Initialize the hidden value with current state
+// update_value is triggered when preparing the wizard helper object for ajax calls
+$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
+$('#{$iId}').bind('validate', function(evt, sFormId) {
+    $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
+    return ValidateCustomFields('$iId', sFormId); // Custom validation function
+});
+JS
 );
 					break;
 
@@ -2437,16 +2495,39 @@ EOF
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
 				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
-				$oPage->add_ready_script("$('#$sFieldToValidateId').bind('".implode(' ',
-						$aEventsList)."', function(evt, sFormId) { return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
+				$sEventList = implode(' ', $aEventsList);
+				$oPage->add_ready_script(<<<JS
+$('#$sFieldToValidateId')
+	.bind('$sEventList',  
+		function(evt, sFormId) {
+			// Bind to a custom event: validate
+			return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue);
+		} 
+	); 
+JS
+				);
 			}
-			$aDependencies = MetaModel::GetDependentAttributes($sClass,
-				$sAttCode); // List of attributes that depend on the current one
+
+			// handle dependent fields updates (init for WizardHelper JS object)
 			if (count($aDependencies) > 0)
 			{
-				// Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
-				$oPage->add_ready_script("$('#$iId').unbind('change.dependencies').bind('change.dependencies', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','",
-						$aDependencies)."']) } );\n"); // Bind to a custom event: validate
+				//--- Add an event handler to launch a custom event: validate
+				// * Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
+				// * We were using off/on directly on the node before, but that was causing an issue when adding dynamically new nodes
+				//   indeed the events weren't attached on the of the new nodes !
+				//   So we're adding the handler on a node above, and we're using a selector to catch only the event we're interested in !
+				$sDependencies = implode("','", $aDependencies);
+
+				$oPage->add_ready_script(<<<JS
+$('div#field_{$iId}')
+	.off('change.dependencies', '#$iId') 
+	.on('change.dependencies', '#$iId', 
+		function(evt, sFormId) { 
+			return $sWizardHelperJsVarName.UpdateDependentFields(['$sDependencies']); 
+		} 
+	);
+JS
+				);
 			}
 		}
 		$oPage->add_dict_entry('UI:ValueMustBeSet');
@@ -3111,7 +3192,7 @@ EOF
 			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
 		}
 
-		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug n°1240.
+		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
 		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 	}
@@ -3796,18 +3877,23 @@ EOF
 				break;
 
 			case 'Image':
+				$value = null;
 				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
-				$aSize = utils::GetImageSize($oImage->GetData());
-				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'),
-					$oAttDef->Get('storage_max_height'));
+				if (!is_null($oImage->GetData()))
+				{
+					$aSize = utils::GetImageSize($oImage->GetData());
+					$oImage = utils::ResizeImageToFit(
+						$oImage,
+						$aSize[0],
+						$aSize[1],
+						$oAttDef->Get('storage_max_width'),
+						$oAttDef->Get('storage_max_height')
+					);
+				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))
 				{
 					$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
-				}
-				else
-				{
-					$value = null;
 				}
 				break;
 
@@ -4129,6 +4215,16 @@ EOF
 	public function AllowWrite($bAllow = true)
 	{
 		$this->bAllowWrite = $bAllow;
+	}
+
+	/**
+	 * Whether to bypass the checks of user rights when writing this object, could be used in {@link \iApplicationObjectExtension::OnCheckToWrite()}
+	 *
+	 * @return bool
+	 */
+	public function GetAllowWrite()
+	{
+		return $this->bAllowWrite;
 	}
 
 	/**

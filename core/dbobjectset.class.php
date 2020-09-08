@@ -222,6 +222,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		if (!is_array($aAttToLoad))
 		{
 			$this->m_aAttToLoad = null;
+			trigger_error ( "OptimizeColumnLoad : wrong format actual :(".print_r($aAttToLoad, true)."). should be [alias=>[attributes]]",  E_USER_WARNING );
 			return;
 		}
 		foreach ($aAttToLoad as $sAlias => $aAttCodes)
@@ -229,6 +230,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			if (!is_array($aAttCodes))
 			{
 				$this->m_aAttToLoad = null;
+				trigger_error ( "OptimizeColumnLoad : wrong format actual :(".print_r($aAttToLoad, true)."). should be [alias=>[attributes]]",  E_USER_WARNING );
 				return;
 			}
 		}
@@ -267,6 +269,7 @@ class DBObjectSet implements iDBObjectSetIterator
 					}
 				}
 			}
+
 			// Add the friendly name anytime
 			$oFriendlyNameAttDef = MetaModel::GetAttributeDef($sClass, 'friendlyname');
 			$aAttToLoadWithAttDef[$sClassAlias]['friendlyname'] = $oFriendlyNameAttDef;

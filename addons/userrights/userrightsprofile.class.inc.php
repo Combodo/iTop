@@ -434,7 +434,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
-			$oOrg = new Organization();
+			$oOrg = MetaModel::NewObject('Organization');
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
 			$iOrgId = $oOrg->DBInsertNoReload();
@@ -442,16 +442,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			// Support drastic data model changes: no Person class  (or not writable)!
 			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
 			{
-				$oContact = new Person();
+				$oContact = MetaModel::NewObject('Person');
 				$oContact->Set('name', 'My last name');
 				$oContact->Set('first_name', 'My first name');
 				if (MetaModel::IsValidAttCode('Person', 'org_id'))
 				{
 					$oContact->Set('org_id', $iOrgId);
-				}
-				if (MetaModel::IsValidAttCode('Person', 'phone'))
-				{
-					$oContact->Set('phone', '+00 000 000 000');
 				}
 				$oContact->Set('email', 'my.email@foo.org');
 				$iContactId = $oContact->DBInsertNoReload();
@@ -561,7 +557,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * @param $oUser User
-	 * @return array
+	 * @return bool
 	 */
 	public function IsAdministrator($oUser)
 	{
@@ -571,16 +567,22 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * @param $oUser User
-	 * @return array
+	 * @return bool
 	 */
 	public function IsPortalUser($oUser)
 	{
 		// UserRights caches the list for us
 		return UserRights::HasProfile(PORTAL_PROFILE_NAME, $oUser);
 	}
+
 	/**
 	 * @param $oUser User
-	 * @return bool
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function ListProfiles($oUser)
 	{

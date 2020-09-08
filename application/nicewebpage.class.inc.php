@@ -39,7 +39,7 @@ class NiceWebPage extends WebPage
 		{
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting

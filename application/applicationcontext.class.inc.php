@@ -200,7 +200,15 @@ class ApplicationContext
 		}
 		return implode("&", $aParams);
 	}
-	
+	/**
+	 * @since 2.8.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
+	 * Returns the params as c[menu]:..., c[org_id]:....
+	 * @return string The params
+	 */
+	public function GetForPostParams()
+	{
+		return json_encode( $this->aValues);
+	}
 	/**
 	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
 	 * @return string The context as a sequence of <input type="hidden" /> tags

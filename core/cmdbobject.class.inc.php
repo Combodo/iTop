@@ -95,11 +95,17 @@ abstract class CMDBObject extends DBObject
 	protected static $m_oCurrChange = null;
 	protected static $m_sInfo = null; // null => the information is built in a standard way
 	protected static $m_sOrigin = null; // null => the origin is 'interactive'
-	
+
 	/**
-	 * Specify another change (this is mainly for backward compatibility)
+	 * Specify the change to be used by the API to attach any CMDBChangeOp* object created
+	 *
+	 * @see SetTrackInfo if CurrentChange is null, then a new one will be create using trackinfo
+	 *
+	 * @param CMDBChange|null $oChange use null so that the API will recreate a new CMDBChange using TrackInfo & TrackOrigin
+	 *
+	 * @since 2.7.2 N°3219 can now reset CMDBChange by passing null
 	 */
-	public static function SetCurrentChange(CMDBChange $oChange)
+	public static function SetCurrentChange($oChange)
 	{
 		self::$m_oCurrChange = $oChange;
 	}
@@ -126,11 +132,15 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Override the additional information (defaulting to user name)
 	 * A call to this verb should replace every occurence of
-	 *    $oMyChange = MetaModel::NewObject("CMDBChange");	  	 
+	 *    $oMyChange = MetaModel::NewObject("CMDBChange");
 	 *    $oMyChange->Set("date", time());
 	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
 	 *    $iChangeId = $oMyChange->DBInsert();
-	 */	 	
+	 *
+	 * @see SetCurrentChange to specify a CMDBObject instance instead
+	 *
+	 * @param string $sInfo
+	 */
 	public static function SetTrackInfo($sInfo)
 	{
 		self::$m_sInfo = $sInfo;
@@ -138,8 +148,13 @@ abstract class CMDBObject extends DBObject
 
 	/**
 	 * Provides information about the origin of the change
-	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source, email-processing, custom-extension
-	 */	 	
+	 *
+	 * @see SetTrackInfo
+	 * @see SetCurrentChange to specify a CMDBObject instance instead
+	 *
+	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source,
+	 *     email-processing, custom-extension
+	 */
 	public static function SetTrackOrigin($sOrigin)
 	{
 		self::$m_sOrigin = $sOrigin;
@@ -488,7 +503,13 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
 	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here	 	 
+	 * Anyhow, if the user has found a workaround... the security gets enforced here
+	 *
+	 * @param $bSkipStrongSecurity
+	 * @param $iActionCode
+	 *
+	 * @throws \SecurityException
+	 * @deprecated in 2.8.0 will be removed in 2.9
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{

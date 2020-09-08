@@ -134,7 +134,11 @@ class ModuleDiscovery
 		{
 			$sModuleName = $aMatches[1];
 			$sDir = dirname($sFilePath);
-			foreach (array($sDir, $sDir.'/dictionaries') as $sRootDir)
+			$aDirs = [
+				$sDir => self::$m_sModulePath,
+				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries'
+			];
+			foreach ($aDirs as $sRootDir => $sPath)
 			{
 				if ($hDir = @opendir($sRootDir))
 				{
@@ -143,7 +147,7 @@ class ModuleDiscovery
 						$aMatches = array();
 						if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
 						{
-							self::$m_aModules[$sId]['dictionary'][] = $sRootDir.'/'.$sFile;
+							self::$m_aModules[$sId]['dictionary'][] = $sPath.'/'.$sFile;
 						}
 					}
 					closedir($hDir);
@@ -333,7 +337,7 @@ class ModuleDiscovery
 				$bOk = @eval('$bResult = '.$sBooleanExpr.'; return true;');
 				if ($bOk == false)
 				{
-					SetupPage::log_warning("Eval of '$sBooleanExpr' returned false");
+					SetupLog::Warning("Eval of '$sBooleanExpr' returned false");
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 				}
 			}
@@ -463,7 +467,7 @@ class ModuleDiscovery
 						
 						if ($bRet === false)
 						{
-							SetupPage::log_warning("Eval of $sRelDir/$sFile returned false");
+							SetupLog::Warning("Eval of $sRelDir/$sFile returned false");
 						}
 						
 						//echo "<p>Done.</p>\n";
@@ -471,12 +475,12 @@ class ModuleDiscovery
 					catch(ParseError $e)
 					{
 					    // PHP 7
-					    SetupPage::log_warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage()." at line ".$e->getLine());
+						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage()." at line ".$e->getLine());
 					}
 					catch(Exception $e)
 					{
 						// Continue...
-						SetupPage::log_warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage());
+						SetupLog::Warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage());
 					}
 				}
 			}
@@ -499,27 +503,27 @@ class SetupWebPage extends ModuleDiscovery
 	// For backward compatibility with old modules...
 	public static function log_error($sText)
 	{
-		SetupPage::log_error($sText);
+		SetupLog::Error($sText);
 	}
 
 	public static function log_warning($sText)
 	{
-		SetupPage::log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 
 	public static function log_info($sText)
 	{
-		SetupPage::log_info($sText);
+		SetupLog::Info($sText);
 	}
 
 	public static function log_ok($sText)
 	{
-		SetupPage::log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	public static function log($sText)
 	{
-		SetupPage::log($sText);
+		SetupLog::Ok($sText);
 	}	
 }
 		

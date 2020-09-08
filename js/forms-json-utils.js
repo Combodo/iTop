@@ -226,7 +226,9 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 
 			$('#v_'+sFieldId).tooltip({
 				items: 'span',
-				tooltipClass: 'form_field_error',
+				classes: {
+					"ui-tooltip": "form_field_error"
+				},
 				content: function() {
 					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
 				}
@@ -370,26 +372,6 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
 	}
 }
-
-/*
-function UpdateDependentFields(aFieldNames)
-{
-	//console.log('UpdateDependentFields:');
-	//console.log(aFieldNames);
-	index = 0;
-	oWizardHelper.ResetQuery();
-	oWizardHelper.UpdateWizard();
-	while(index < aFieldNames.length )
-	{
-		sAttCode = aFieldNames[index];
-		sFieldId = oWizardHelper.GetFieldId(sAttCode);
-		$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
-		oWizardHelper.RequestAllowedValues(sAttCode);
-		index++;
-	}
-	oWizardHelper.AjaxQueryServer();
-}
-*/
 
 function ResetPwd(id)
 {

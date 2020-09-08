@@ -2,7 +2,7 @@
   "type": "project",
   "license": "AGPLv3",
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.1.3",
     "ext-ctype": "*",
     "ext-dom": "*",
     "ext-gd": "*",
@@ -51,7 +51,8 @@
       "core",
       "application",
       "sources/application",
-      "sources/Composer"
+      "sources/Composer",
+      "sources/Controller"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
