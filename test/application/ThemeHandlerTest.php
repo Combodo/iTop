@@ -248,7 +248,7 @@ JSON;
 	 * @throws \CoreException
 	 * @dataProvider CompileThemesProviderWithoutCss
 	 */
-	public function testCompileThemeWithoutCssFile_FocusOnParamAttribute($readFromParamAttributeFromJson=false)
+	/*public function testCompileThemeWithoutCssFile_FocusOnParamAttribute($readFromParamAttributeFromJson=false)
 	{
 		$sExpectJsonFilePath = APPROOT.'test/application/theme-handler/expected/themes/basque-red/theme-parameters.json';
 		$sExpectedThemeParamJson = file_get_contents($sExpectJsonFilePath);
@@ -278,7 +278,7 @@ JSON;
 		$this->assertTrue(is_file($this->sCssPath));
 		$this->assertEquals($sExpectedThemeParamJson, file_get_contents($this->sJsonThemeParamFile));
 		$this->assertEquals(file_get_contents(APPROOT . 'test/application/theme-handler/expected/themes/basque-red/main.css'), file_get_contents($this->sCssPath));
-	}
+	}*/
 
 	public function CompileThemesProviderWithoutCss()
 	{
