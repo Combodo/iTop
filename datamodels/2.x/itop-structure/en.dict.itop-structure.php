@@ -21,22 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-//////////////////////////////////////////////////////////////////////
-// Relations
-//////////////////////////////////////////////////////////////////////
-//
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Relation:impacts/Description' => 'Elements impacted by',
-	'Relation:impacts/DownStream' => 'Impacts...',
-	'Relation:impacts/DownStream+' => 'Elements impacted by',
-	'Relation:impacts/UpStream' => 'Depends on......',
-	'Relation:impacts/UpStream+' => 'Elements impacting',
-	// Legacy entries
-	'Relation:depends on/Description' => 'Elements impacting',
-	'Relation:depends on/DownStream' => 'Depends on...',
-	'Relation:depends on/UpStream' => 'Impacts...',
-));
 
 
 // Dictionnay conventions
@@ -261,10 +246,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document',
-	'Class:Document/Attribute:contracts_list' => 'Contracts',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
 	'Class:Document/Attribute:finalclass' => 'Document sub-class',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
 ));

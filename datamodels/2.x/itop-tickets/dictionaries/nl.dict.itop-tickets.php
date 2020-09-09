@@ -218,3 +218,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Doel gebaseerd op een SLT (TTR)',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:Document/Attribute:contracts_list' => 'Contracten',
+	'Class:Document/Attribute:contracts_list+' => 'Alle contracten gerelateerd aan dit document',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
+));

@@ -1,72 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installation>
-<!-- On manual installs, this file is generated in setup/install-*.xml -->
-    <mode>install</mode>
-    <preinstall>
-        <copies type="array"/>
-    </preinstall>
-    <source_dir>datamodels/2.x/</source_dir>
-    <datamodel_version>2.5.0</datamodel_version>
-    <previous_configuration_file>default-config-itop.php</previous_configuration_file>
-    <extensions_dir>extensions</extensions_dir>
-    <target_env>production</target_env>
-    <workspace_dir></workspace_dir>
-    <database>
-        <server></server>
-        <user>jenkins_itop</user>
-        <pwd>IKnowYouSeeMeInJenkinsConf</pwd>
-        <name>itop_ci</name>
-        <db_tls_enabled></db_tls_enabled>
-        <db_tls_ca></db_tls_ca>
-        <prefix></prefix>
-    </database>
-    <url>http://localhost/iTop/</url>
-    <graphviz_path>/usr/bin/dot</graphviz_path>
-    <admin_account>
-        <user>admin</user>
-        <pwd>admin</pwd>
-        <language>EN US</language>
-    </admin_account>
-    <language>EN US</language>
-    <selected_modules type="array">
-      <item>authent-external</item>
-      <item>authent-local</item>
-      <item>itop-backup</item>
-      <item>itop-config</item>
-      <item>itop-profiles-itil</item>
-      <item>itop-sla-computation</item>
-      <item>itop-tickets</item>
-      <item>itop-welcome-itil</item>
-      <item>itop-config-mgmt</item>
-      <item>itop-attachments</item>
-      <item>itop-datacenter-mgmt</item>
-      <item>itop-endusers-devices</item>
-      <item>itop-storage-mgmt</item>
-      <item>itop-virtualization-mgmt</item>
-      <item>itop-bridge-virtualization-storage</item>
-      <item>itop-service-mgmt</item>
-      <item>itop-request-mgmt</item>
-      <item>itop-portal</item>
-      <item>itop-portal-base</item>
-      <item>itop-change-mgmt</item>
-      <item>itop-knownerror-mgmt</item>
-    </selected_modules>
-    <selected_extensions type="array">
-      <item>itop-config-mgmt-core</item>
-      <item>itop-config-mgmt-datacenter</item>
-      <item>itop-config-mgmt-end-user</item>
-      <item>itop-config-mgmt-storage</item>
-      <item>itop-config-mgmt-virtualization</item>
-      <item>itop-service-mgmt-enterprise</item>
-      <item>itop-ticket-mgmt-simple-ticket</item>
-      <item>itop-ticket-mgmt-simple-ticket-enhanced-portal</item>
-      <item>itop-change-mgmt-simple</item>
-      <item>itop-kown-error-mgmt</item>
-    </selected_extensions>
-    <sample_data>1</sample_data>
-    <old_addon></old_addon>
-    <options>
-        <generate_config>1</generate_config>
-    </options>
-    <mysql_bindir></mysql_bindir>
+	<!-- On manual installs, this file is generated in setup/install-*.xml -->
+	<mode>install</mode>
+	<preinstall>
+		<copies type="array"/>
+	</preinstall>
+	<source_dir>datamodels/2.x/</source_dir>
+	<datamodel_version>2.5.0</datamodel_version>
+	<previous_configuration_file>default-config-itop.php</previous_configuration_file>
+	<extensions_dir>extensions</extensions_dir>
+	<target_env>production</target_env>
+	<workspace_dir></workspace_dir>
+	<database>
+		<server></server>
+		<user>jenkins_itop</user>
+		<pwd>IKnowYouSeeMeInJenkinsConf</pwd>
+		<name>itop_ci</name>
+		<db_tls_enabled></db_tls_enabled>
+		<db_tls_ca></db_tls_ca>
+		<prefix></prefix>
+	</database>
+	<url>http://localhost/iTop/</url>
+	<graphviz_path>/usr/bin/dot</graphviz_path>
+	<admin_account>
+		<user>admin</user>
+		<pwd>admin</pwd>
+		<language>EN US</language>
+	</admin_account>
+	<language>EN US</language>
+	<selected_modules type="array">
+		<item>authent-cas</item>
+		<item>authent-external</item>
+		<item>authent-ldap</item>
+		<item>authent-local</item>
+		<item>itop-backup</item>
+		<item>itop-config</item>
+		<item>itop-files-information</item>
+		<item>itop-portal-base</item>
+		<item>itop-profiles-itil</item>
+		<item>itop-sla-computation</item>
+		<item>itop-welcome-itil</item>
+		<item>itop-structure</item>
+		<item>itop-config-mgmt</item>
+		<item>itop-attachments</item>
+		<item>itop-tickets</item>
+		<item>combodo-db-tools</item>
+		<item>itop-core-update</item>
+		<item>itop-hub-connector</item>
+		<item>itop-datacenter-mgmt</item>
+		<item>itop-endusers-devices</item>
+		<item>itop-storage-mgmt</item>
+		<item>itop-virtualization-mgmt</item>
+		<item>itop-bridge-virtualization-storage</item>
+		<item>itop-service-mgmt</item>
+		<item>itop-bridge-cmdb-ticket</item>
+		<item>itop-request-mgmt</item>
+		<item>itop-portal</item>
+		<item>itop-change-mgmt</item>
+		<item>itop-knownerror-light</item>
+		<item>itop-faq-light</item>
+	</selected_modules>
+	<selected_extensions type="array">
+		<item>itop-config-mgmt-core</item>
+		<item>itop-config-mgmt-datacenter</item>
+		<item>itop-config-mgmt-end-user</item>
+		<item>itop-config-mgmt-storage</item>
+		<item>itop-config-mgmt-virtualization</item>
+		<item>itop-service-mgmt-enterprise</item>
+		<item>itop-ticket-mgmt-simple-ticket</item>
+		<item>itop-ticket-mgmt-simple-ticket-enhanced-portal</item>
+		<item>itop-change-mgmt-simple</item>
+		<item>itop-kown-error-mgmt</item>
+	</selected_extensions>
+	<sample_data>1</sample_data>
+	<old_addon></old_addon>
+	<options>
+		<generate_config>1</generate_config>
+	</options>
+	<mysql_bindir></mysql_bindir>
 </installation>

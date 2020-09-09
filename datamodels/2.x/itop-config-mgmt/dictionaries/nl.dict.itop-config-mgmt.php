@@ -82,6 +82,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:lnkContactToFunctionalCI' => 'Link Contact / Functioneel CI',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Naam functioneel CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Naam contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -112,14 +129,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'Alle documenten gelinkt aan dit configuratie-item.',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Applicatieoplossingen',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Alle applicatieoplossingen die afhankelijk zijn van dit configuratie-item',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Leverancierscontracten',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Alle leverancierscontracten voor dit configuratie-item',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Alle services die impact hebben op dit configuratie-item',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Alle software geïnstalleerd op dit configuratie-item',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle tickets voor dit configuratie-item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Subklasse CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Actieve tickets',

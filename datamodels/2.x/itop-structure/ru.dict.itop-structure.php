@@ -200,10 +200,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'КЕ',
 	'Class:Document/Attribute:cis_list+' => 'Связанные конфигурационные единицы',
-	'Class:Document/Attribute:contracts_list' => 'Договоры',
-	'Class:Document/Attribute:contracts_list+' => 'Связанные договоры',
-	'Class:Document/Attribute:services_list' => 'Услуги',
-	'Class:Document/Attribute:services_list+' => 'Связанные услуги',
 	'Class:Document/Attribute:finalclass' => 'Тип',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

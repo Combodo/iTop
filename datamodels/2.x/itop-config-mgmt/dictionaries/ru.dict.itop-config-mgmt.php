@@ -63,6 +63,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:lnkContactToFunctionalCI' => 'Связь Контакт/Функциональная КЕ',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Функциональная КЕ',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Функциональная КЕ',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Контакт',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Контакт',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -93,14 +110,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'Связанные документы',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Прикладные решения',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Связанные прикладные решения',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Договоры',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Связанные договоры',
-	'Class:FunctionalCI/Attribute:services_list' => 'Услуги',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Связанные услуги',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'ПО',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Связанное программное обеспечение',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Тикеты',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Связанные тикеты',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Тип',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Активные тикеты',

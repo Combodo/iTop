@@ -131,42 +131,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
 ));
 
-//
-// Class: FAQ
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'Často kladené dotazy',
-	'Class:FAQ/Attribute:title' => 'Název',
-	'Class:FAQ/Attribute:title+' => '',
-	'Class:FAQ/Attribute:summary' => 'Shrnutí',
-	'Class:FAQ/Attribute:summary+' => '',
-	'Class:FAQ/Attribute:description' => 'Popis',
-	'Class:FAQ/Attribute:description+' => '',
-	'Class:FAQ/Attribute:category_id' => 'Kategorie',
-	'Class:FAQ/Attribute:category_id+' => '',
-	'Class:FAQ/Attribute:category_name' => 'Název kategorie',
-	'Class:FAQ/Attribute:category_name+' => '',
-	'Class:FAQ/Attribute:error_code' => 'Kód chyby',
-	'Class:FAQ/Attribute:error_code+' => '',
-	'Class:FAQ/Attribute:key_words' => 'Klíčová slova',
-	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:FAQCategory' => 'Kategorie FAQ',
-	'Class:FAQCategory+' => 'Kategorie pro FAQ',
-	'Class:FAQCategory/Attribute:name' => 'Název',
-	'Class:FAQCategory/Attribute:name+' => '',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => 'Všechny často kladené dotazy v této kategorii',
-));
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:ProblemManagement' => 'Správa problémů',
 	'Menu:ProblemManagement+' => 'Správa problémů',
@@ -177,12 +141,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:SearchError+' => 'Hledat známé chyby',
 	'Menu:Problem:KnownErrors' => 'Všechny známé chyby',
 	'Menu:Problem:KnownErrors+' => 'Všechny známé chyby',
-	'Menu:FAQCategory' => 'Kategorie FAQ',
-	'Menu:FAQCategory+' => '',
-	'Menu:FAQ' => 'FAQ',
-	'Menu:FAQ+' => 'FAQ - Často kladené dotazy',
-
-	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'Často kladené dotazy (FAQ)',
-	'Brick:Portal:FAQ:Title+' => '<p>Spěcháte?</p><p>Podívejte se na seznam nejčastějších otázek a (možná) najdete hledanou odpověď ihned.</p>',
 ));

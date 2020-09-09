@@ -77,6 +77,23 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkContactToFunctionalCI' => 'Relación Contacto y  EC Funcional',
+	'Class:lnkContactToFunctionalCI+' => 'Relación Contacto y  EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contacto',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => 'Contacto',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -107,14 +124,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'Documentación para este EC',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Soluciones Aplicativa',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Soluciones Aplicativa',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contratos',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Contratos',
-	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Servicios',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Software',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tickets relacionados con este EC',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Clase',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Clase',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets Activos',

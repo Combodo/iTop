@@ -3,18 +3,17 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-knownerror-mgmt/2.8.0',
+	'itop-faq-light/2.8.0',
 	array(
 		// Identification
 		//
-		'label' => 'Known Errors Database',
+		'label' => 'Frequently Asked Questions Database',
 		'category' => 'business',
 
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.2.0',
-			'itop-tickets/2.3.0',
+			'itop-structure/2.7.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -23,7 +22,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.itop-knownerror-mgmt.php',
+			'model.itop-faq-light.php',
 		),
 		'data.struct' => array(
 			//'data.struct.itop-knownerror-mgmt.xml',

@@ -215,10 +215,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs~~',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Services~~',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Document Type~~',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 ));

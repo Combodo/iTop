@@ -192,14 +192,15 @@
 		<step>
 			<title>Additional ITIL tickets</title>
 			<description><![CDATA[<h2>Pick from the list below the additional ITIL processes that are to be implemented in iTop.</h2>]]></description>
-			<banner>./itop-knownerror-mgmt/images/known-error.png</banner>
+			<banner>./itop-knownerror-light/images/known-error.png</banner>
 			<options type="array">
 				<choice>
 					<extension_code>itop-kown-error-mgmt</extension_code>
-					<title>Known Errors Management</title>
+					<title>Known Errors Management and FAQ</title>
 					<description>Select this option to track "Known Errors" and FAQs in iTop.</description>
 					<modules type="array">
-						<module>itop-knownerror-mgmt</module>
+						<module>itop-faq-light</module>
+						<module>itop-knownerror-light</module>
 					</modules>
 				</choice>
 				<choice>

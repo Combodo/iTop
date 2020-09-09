@@ -142,7 +142,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 // Fieldset translation
 Dict::Add('FR FR', 'French', 'Français', array(
-
 	'Ticket:baseinfo' => 'Informations générales',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -200,4 +199,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Temps de Résolution (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTR',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Document/Attribute:contracts_list' => 'Contrats',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => '',
 ));

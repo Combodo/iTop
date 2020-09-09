@@ -142,7 +142,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // Fieldset translation
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-
 	'Ticket:baseinfo' => 'Allgemeine Informationen',
 	'Ticket:date' => 'Daten',
 	'Ticket:contact' => 'Kontakte',
@@ -156,7 +155,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'WorkOrder:Details' => 'Details',
 	'WorkOrder:Moreinfo' => 'Weitere Informationen',
 	'Tickets:ResolvedFrom' => 'Automatisch durch %1$s gelöst',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Ein Attribut (Feld) mit einem statischen Wert beschreiben',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Zielfeld',
@@ -201,4 +199,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Document/Attribute:contracts_list' => 'Verträge',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => '',
 ));

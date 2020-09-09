@@ -154,7 +154,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'WorkOrder:Details' => 'Detaljer',
 	'WorkOrder:Moreinfo' => 'Yderligere information',
 	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s~~',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',
@@ -199,4 +198,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
+));
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Ydelser',
+	'Class:Document/Attribute:services_list+' => '',
 ));

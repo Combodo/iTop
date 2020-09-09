@@ -39,7 +39,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por Nivel de Servicio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
-
 	'Menu:ProviderContract' => 'Contratos con Proveedores',
 	'Menu:ProviderContract+' => 'Contratos con Proveedores',
 	'Menu:CustomerContract' => 'Acuerdos con Clientes',
@@ -198,23 +197,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => 'Documento',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Documento',
 	'Class:lnkContractToDocument/Attribute:document_name+' => 'Documento',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Relación EC Funcional y Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract+' => 'Relación EC Funcional y Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => 'Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => 'Contrato con Proveedor',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'EC',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => 'Elemento de Configuración',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Elemento de Configuración',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => 'Elemento de Configuración',
 ));
 
 //
@@ -466,23 +448,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => 'Contrato con Proveedor',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Contrato con Proveedor',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => 'Contrato con Proveedor',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkFunctionalCIToService' => 'Relación EC Funcional y Servicio',
-	'Class:lnkFunctionalCIToService+' => 'Relación EC Funcional y Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => 'Servicio',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'EC',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => 'Elemento de Configuración',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'EC',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => 'Elemento de Configuración',
 ));
 
 //

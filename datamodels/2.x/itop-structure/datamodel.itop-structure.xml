@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
 <classes>
 		<class id="Organization" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -588,9 +588,6 @@
 				</field>
 				<field id="manager_id" xsi:type="AttributeExternalKey">
 					<filter><![CDATA[SELECT Person]]></filter>
-					<dependencies>
-						<attribute id="org_id"/>
-					</dependencies>
 					<sql>manager_id</sql>
 					<target_class>Person</target_class>
 					<is_null_allowed>true</is_null_allowed>

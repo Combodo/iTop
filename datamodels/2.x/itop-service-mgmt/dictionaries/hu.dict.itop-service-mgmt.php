@@ -27,7 +27,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Szerződések szolgáltatás szintenként',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Szerződések státuszonként',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 napon belül lejáró szerződések',
-
 	'Menu:ProviderContract' => 'Szállítói szerződés',
 	'Menu:ProviderContract+' => '',
 	'Menu:CustomerContract' => 'Ügyfél szerződés',
@@ -186,23 +185,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Document Name~~',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
-	'Class:lnkFunctionalCIToProviderContract+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 ));
 
 //
@@ -454,23 +436,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Provider contract Name~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '~~',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service~~',
-	'Class:lnkFunctionalCIToService+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
 ));
 
 //

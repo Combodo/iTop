@@ -105,42 +105,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
 ));
 
-//
-// Class: FAQ
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'Question fréquement posée',
-	'Class:FAQ/Attribute:title' => 'Titre',
-	'Class:FAQ/Attribute:title+' => '',
-	'Class:FAQ/Attribute:summary' => 'Résumé',
-	'Class:FAQ/Attribute:summary+' => '',
-	'Class:FAQ/Attribute:description' => 'Description',
-	'Class:FAQ/Attribute:description+' => '',
-	'Class:FAQ/Attribute:category_id' => 'Categorie',
-	'Class:FAQ/Attribute:category_id+' => '',
-	'Class:FAQ/Attribute:category_name' => 'Nom catégorie',
-	'Class:FAQ/Attribute:category_name+' => '',
-	'Class:FAQ/Attribute:error_code' => 'Code d\'erreur',
-	'Class:FAQ/Attribute:error_code+' => '',
-	'Class:FAQ/Attribute:key_words' => 'Mots clés',
-	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domaines',
-));
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:FAQCategory' => 'Catégorie de FAQ',
-	'Class:FAQCategory+' => 'Catégorie de FAQ',
-	'Class:FAQCategory/Attribute:name' => 'Nom',
-	'Class:FAQCategory/Attribute:name+' => '',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => '',
-));
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => 'Gestion des problèmes',
@@ -151,12 +115,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:SearchError+' => 'Rechercher une erreur connue',
 	'Menu:Problem:KnownErrors' => 'Toutes les erreurs connues',
 	'Menu:Problem:KnownErrors+' => 'Toutes les erreurs connues',
-	'Menu:FAQCategory' => 'Catégories de FAQ',
-	'Menu:FAQCategory+' => 'Toutes les catégories de FAQ',
-	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => 'Toutes les  FAQs',
-
-	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
-	'Brick:Portal:FAQ:Title+' => '<p>Vous êtes pressé&nbsp;?</p><p>Consultez la liste des questions les plus fréquentes et vous trouverez (peut-être) immédiatement la réponse à votre besoin.</p>',
 ));

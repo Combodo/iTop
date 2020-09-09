@@ -191,3 +191,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Document/Attribute:contracts_list' => 'Договоры',
+	'Class:Document/Attribute:contracts_list+' => 'Связанные договоры',
+	'Class:Document/Attribute:services_list' => 'Услуги',
+	'Class:Document/Attribute:services_list+' => 'Связанные услуги',
+));
