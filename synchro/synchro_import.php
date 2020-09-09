@@ -534,11 +534,7 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null) // Source CSV: "<NULL>"
-					{
-						$aValues[] = null;
-					}
-					elseif ($aIsDateToTransform[$iCol] !== false)
+					if ($aIsDateToTransform[$iCol] !== false)
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
