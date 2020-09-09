@@ -216,10 +216,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Document/Attribute:status/Value:published+' => 'Publicado',
 	'Class:Document/Attribute:cis_list' => 'ECs',
 	'Class:Document/Attribute:cis_list+' => 'Elementos de Configuración referenciados en este documento',
-	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Contratos Referenciados con este Documento',
-	'Class:Document/Attribute:services_list' => 'Servicios',
-	'Class:Document/Attribute:services_list+' => 'Servicios Referenciados con este Documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo de Documento',
 	'Class:Document/Attribute:finalclass+' => 'Tipo de Documento',
 ));

@@ -30,23 +30,6 @@
 //
 
 //
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkContactToFunctionalCI' => 'Relación Contacto y  EC Funcional',
-	'Class:lnkContactToFunctionalCI+' => 'Relación Contacto y  EC Funcional',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contacto',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => 'Contacto',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contacto',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => 'Contacto',
-));
-
-//
 // Class: lnkFunctionalCIToTicket
 //
 
@@ -69,4 +52,51 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Agregado Manualmente',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculado',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'No impactado',
+));
+
+//
+// Class: lnkFunctionalCIToProviderContract
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkFunctionalCIToProviderContract' => 'Relación EC Funcional y Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract+' => 'Relación EC Funcional y Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => 'Contrato con Proveedor',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'EC',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => 'Elemento de Configuración',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Elemento de Configuración',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => 'Elemento de Configuración',
+));
+
+//
+// Class: lnkFunctionalCIToService
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkFunctionalCIToService' => 'Relación EC Funcional y Servicio',
+	'Class:lnkFunctionalCIToService+' => 'Relación EC Funcional y Servicio',
+	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servicio',
+	'Class:lnkFunctionalCIToService/Attribute:service_id+' => 'Servicio',
+	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Servicio',
+	'Class:lnkFunctionalCIToService/Attribute:service_name+' => 'Servicio',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'EC',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => 'Elemento de Configuración',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'EC',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => 'Elemento de Configuración',
+));
+
+//
+// Class: FunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contratos',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Contratos',
+	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Servicios',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tickets relacionados con este EC',
 ));

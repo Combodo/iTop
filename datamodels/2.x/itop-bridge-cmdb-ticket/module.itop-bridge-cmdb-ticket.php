@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-bridge-cmdb-ticket/1.0.0',
+	'itop-bridge-cmdb-ticket/2.8.0',
 	array(
 		// Identification
 		//

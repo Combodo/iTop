@@ -77,6 +77,23 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functionalci',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contact name',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -107,14 +124,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider contracts',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',

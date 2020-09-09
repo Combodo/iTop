@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-structure/2.7.1',
+	'itop-structure/2.8.0',
 	array(
 		// Identification
 		//
@@ -28,10 +28,11 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			'data.sample.organizations.xml',
+			'data.sample.locations.xml',
 			'data.sample.persons.xml',
 			'data.sample.teams.xml',
 			'data.sample.contactteam.xml',
-
+			'data.sample.contacttype.xml',
 		),
 		
 		// Documentation

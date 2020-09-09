@@ -73,6 +73,23 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkContactToFunctionalCI' => 'Verknüpfung Kontakt/FunctionalCI',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI-Name',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kontakt-Name',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -103,14 +120,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Anwendungslösungen',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider-Verträge',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Typ',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Offene Tickets',

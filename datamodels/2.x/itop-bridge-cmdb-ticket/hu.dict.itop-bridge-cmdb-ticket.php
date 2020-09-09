@@ -30,23 +30,6 @@
 //
 
 //
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI~~',
-	'Class:lnkContactToFunctionalCI+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contact name~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-));
-
-//
 // Class: lnkFunctionalCIToTicket
 //
 
@@ -69,4 +52,51 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted~~',
+));
+
+//
+// Class: lnkFunctionalCIToProviderContract
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
+	'Class:lnkFunctionalCIToProviderContract+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name~~',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
+));
+
+//
+// Class: lnkFunctionalCIToService
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service~~',
+	'Class:lnkFunctionalCIToService+' => '~~',
+	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service~~',
+	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
+	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service Name~~',
+	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Name~~',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
+));
+
+//
+// Class: FunctionalCI
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider contracts~~',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item~~',
+	'Class:FunctionalCI/Attribute:services_list' => 'Services~~',
+	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item~~',
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets~~',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
 ));

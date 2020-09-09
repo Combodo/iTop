@@ -220,10 +220,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CI\'s',
 	'Class:Document/Attribute:cis_list+' => 'Alle configuratie-items gerelateerd aan dit document',
-	'Class:Document/Attribute:contracts_list' => 'Contracten',
-	'Class:Document/Attribute:contracts_list+' => 'Alle contracten gerelateerd aan dit document',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
 	'Class:Document/Attribute:finalclass' => 'Subklasse document',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

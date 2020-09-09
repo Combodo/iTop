@@ -76,6 +76,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:lnkContactToFunctionalCI' => 'Link Contato / CI',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CIs',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contato',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nome contato',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -106,14 +123,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'Todos os documentos vinculados a este item de configuração',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Soluções de aplicações',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Todas as soluções de aplicação, dependente desse item de configuração',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato provedor(a)',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Todos os contratos para esse item de configuração',
-	'Class:FunctionalCI/Attribute:services_list' => 'Serviços',
-	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os serviços impactados por esse item de configuração',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Todos os softwares instalados neste item de configuração',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Solicitações',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Ingressos Ativos',

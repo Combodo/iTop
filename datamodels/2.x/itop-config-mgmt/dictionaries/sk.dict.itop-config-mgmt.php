@@ -75,6 +75,23 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:lnkContactToFunctionalCI' => 'väzba - Kontakt / Komponent',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Komponent',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Názov funkčných CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Názov kontaktu',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -105,14 +122,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Zoznam aplikačných riešení',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Poskytovateľské zmluvy',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softvér',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickety',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Typ komponentu',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',

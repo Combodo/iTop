@@ -75,6 +75,23 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:lnkContactToFunctionalCI' => '链接 联系人 / 功能项',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => '功能项',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => '联系人',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => '联系人名称',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -105,14 +122,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '该配置项关联的所有文档',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => '应用方案',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '该配置项依赖的所有应用方案',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => '供应商合同',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '该配置项的所有供应商合同',
-	'Class:FunctionalCI/Attribute:services_list' => '服务',
-	'Class:FunctionalCI/Attribute:services_list+' => '该配置项影响的所有服务',
 	'Class:FunctionalCI/Attribute:softwares_list' => '软件',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '该配置项上已安装的所有软件',
-	'Class:FunctionalCI/Attribute:tickets_list' => '工单',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '该配置项包含的所有工单',
 	'Class:FunctionalCI/Attribute:finalclass' => '二级配置项',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => '活跃的工单',

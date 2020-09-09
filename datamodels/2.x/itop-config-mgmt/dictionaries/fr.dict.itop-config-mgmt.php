@@ -73,6 +73,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 //
+// Class: lnkContactToFunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nom contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
+));
+
+//
 // Class: FunctionalCI
 //
 
@@ -103,14 +120,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Solutions applicatives',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrats fournisseur',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Logiciels',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',

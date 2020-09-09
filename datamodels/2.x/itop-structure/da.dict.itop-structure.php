@@ -212,10 +212,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Ydelser',
-	'Class:Document/Attribute:services_list+' => '',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttype',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

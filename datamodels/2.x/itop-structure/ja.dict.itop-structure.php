@@ -215,10 +215,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CI',
 	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => '契約',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'サービス',
-	'Class:Document/Attribute:services_list+' => '',
 	'Class:Document/Attribute:finalclass' => '文書タイプ',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

@@ -223,10 +223,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => 'Verträge',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttyp',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

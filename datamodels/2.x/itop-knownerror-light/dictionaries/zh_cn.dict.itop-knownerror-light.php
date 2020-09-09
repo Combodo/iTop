@@ -128,42 +128,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
 ));
 
-//
-// Class: FAQ
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'FAQ',
-	'Class:FAQ/Attribute:title' => '标题',
-	'Class:FAQ/Attribute:title+' => '',
-	'Class:FAQ/Attribute:summary' => '概要',
-	'Class:FAQ/Attribute:summary+' => '',
-	'Class:FAQ/Attribute:description' => '描述',
-	'Class:FAQ/Attribute:description+' => '',
-	'Class:FAQ/Attribute:category_id' => '类别',
-	'Class:FAQ/Attribute:category_id+' => '',
-	'Class:FAQ/Attribute:category_name' => '类别名称',
-	'Class:FAQ/Attribute:category_name+' => '',
-	'Class:FAQ/Attribute:error_code' => '错误代码',
-	'Class:FAQ/Attribute:error_code+' => '',
-	'Class:FAQ/Attribute:key_words' => '关键字',
-	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FAQCategory' => 'FAQ 类别',
-	'Class:FAQCategory+' => 'FAQ 类别',
-	'Class:FAQCategory/Attribute:name' => '名称',
-	'Class:FAQCategory/Attribute:name+' => '',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => '该类别FAQ 相关的所有常见问题',
-));
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
@@ -174,12 +138,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:SearchError+' => '搜索已知问题',
 	'Menu:Problem:KnownErrors' => '所有已知错误',
 	'Menu:Problem:KnownErrors+' => '所有已知错误',
-	'Menu:FAQCategory' => 'FAQ 类别',
-	'Menu:FAQCategory+' => '所有FAQ 类别',
-	'Menu:FAQ' => 'FAQ',
-	'Menu:FAQ+' => '所有FAQ',
-
-	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'FAQ',
-	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题,或许可以立即找到令您满意的答案.</p>',
 ));

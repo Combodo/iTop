@@ -215,10 +215,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => 'Todos os itens de configuração vinculados a esse documento',
-	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos vinculados com esse documento',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Todos os serviços vinculados a esse documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo documento',
 	'Class:Document/Attribute:finalclass+' => '',
 ));

@@ -214,10 +214,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs~~',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Services~~',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Document Type~~',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 ));
@@ -267,6 +263,24 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Type~~',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
+));
+
+//
+// Class: DocumentType
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:DocumentType' => 'Document Type~~',
+	'Class:DocumentType+' => '~~',
+));
+
+//
+// Class: ContactType
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:ContactType' => 'Contact Type~~',
+	'Class:ContactType+' => '~~',
 ));
 
 //
@@ -331,5 +345,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
 ));
-
 ?>

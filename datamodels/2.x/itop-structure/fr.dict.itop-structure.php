@@ -23,17 +23,7 @@
 //
 // Class: Organization
 //
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Relation:impacts/Description' => 'Eléments impactés par',
-	'Relation:impacts/DownStream' => 'Impacte...',
-	'Relation:impacts/DownStream+' => 'Eléments impactés par',
-	'Relation:impacts/UpStream' => 'Dépend de...',
-	'Relation:impacts/UpStream+' => 'Eléments dont dépend',
-	// Legacy entries
-	'Relation:depends on/Description' => 'Eléments dont dépend',
-	'Relation:depends on/DownStream' => 'Dépend de...',
-	'Relation:depends on/UpStream' => 'Impacte...',
-));
+
 
 
 // Dictionnay conventions
@@ -259,10 +249,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => 'Contrats',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
 	'Class:Document/Attribute:finalclass' => 'Sous-classe de Document',
 	'Class:Document/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ));

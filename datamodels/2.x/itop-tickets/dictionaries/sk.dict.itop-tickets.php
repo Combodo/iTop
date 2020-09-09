@@ -212,3 +212,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Document/Attribute:contracts_list' => 'Zmluvy',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Služby',
+	'Class:Document/Attribute:services_list+' => '',
+));

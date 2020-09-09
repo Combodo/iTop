@@ -130,42 +130,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkDocumentToError/Attribute:link_type+' => 'Tipo',
 ));
 
-//
-// Class: FAQ
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
-	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
-	'Class:FAQ/Attribute:title' => 'Asunto',
-	'Class:FAQ/Attribute:title+' => 'Asunto',
-	'Class:FAQ/Attribute:summary' => 'Resumen',
-	'Class:FAQ/Attribute:summary+' => 'Resumen',
-	'Class:FAQ/Attribute:description' => 'Descripción',
-	'Class:FAQ/Attribute:description+' => 'Descripción',
-	'Class:FAQ/Attribute:category_id' => 'Categoría',
-	'Class:FAQ/Attribute:category_id+' => 'Categoría',
-	'Class:FAQ/Attribute:category_name' => 'Categoría',
-	'Class:FAQ/Attribute:category_name+' => 'Categoría',
-	'Class:FAQ/Attribute:error_code' => 'Código de Error',
-	'Class:FAQ/Attribute:error_code+' => 'Código de Error',
-	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
-	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
-	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
-	'Class:FAQCategory/Attribute:name' => 'Nombre',
-	'Class:FAQCategory/Attribute:name+' => 'Nombre de Categoría de Preguntas y Respuestas Frecuentes',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
-));
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:ProblemManagement' => 'Gestión de problemas',
 	'Menu:ProblemManagement+' => 'Gestión de problemas',
@@ -176,12 +140,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:SearchError+' => 'Búsqueda de Errores Conocidos',
 	'Menu:Problem:KnownErrors' => 'Errores Conocidos',
 	'Menu:Problem:KnownErrors+' => 'Errores Conocidos',
-	'Menu:FAQCategory' => 'Categorías de FAQ',
-	'Menu:FAQCategory+' => 'Categorías FAQ',
-	'Menu:FAQ' => 'Preguntas y Respuestas Frecuentes',
-	'Menu:FAQ+' => 'Preguntas y Respuestas Frecuentes',
-
-	'Brick:Portal:FAQ:Menu' => 'Preguntas y Respuestas',
-	'Brick:Portal:FAQ:Title' => 'Preguntas y Respuestas Frecuentes',
-	'Brick:Portal:FAQ:Title+' => '<p>¿En una prisa?</p><p>Vea la lista de las preguntas más comunes y encontrará (tal vez) la respuesta inmediata a sus necesidades.</p>',
 ));

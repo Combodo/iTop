@@ -199,3 +199,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:Document/Attribute:contracts_list' => '契約',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'サービス',
+	'Class:Document/Attribute:services_list+' => '',
+));
