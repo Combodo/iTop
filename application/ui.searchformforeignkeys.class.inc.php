@@ -21,7 +21,6 @@
  */
 
 
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UISearchFormForeignKeys

@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 /**

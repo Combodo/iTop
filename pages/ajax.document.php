@@ -31,8 +31,6 @@ if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HT
 try
 {
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/webpage.class.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');

@@ -24,7 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('itopwebpage.class.inc.php');
 /**
  * Web page to display a wizard in the iTop framework
  */

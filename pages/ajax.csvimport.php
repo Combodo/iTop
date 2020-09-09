@@ -19,11 +19,9 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'/application/csvpage.class.inc.php');
 
 /**
  * Determines if the name of the field to be mapped correspond

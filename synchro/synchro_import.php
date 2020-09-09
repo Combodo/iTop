@@ -29,9 +29,6 @@ if (!defined('__DIR__'))
 }
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
-require_once APPROOT.'/application/webpage.class.inc.php';
-require_once APPROOT.'/application/csvpage.class.inc.php';
-require_once APPROOT.'/application/clipage.class.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
 
 class ExchangeException extends Exception
@@ -240,14 +237,6 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 	return false;
 }
 
-
-class CLILikeWebPage extends WebPage
-{
-	public function add_comment($sText)
-	{
-		$this->add('#'.$sText."<br/>\n");
-	}
-}
 
 /////////////////////////////////
 // Main program

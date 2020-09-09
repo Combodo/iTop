@@ -24,7 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."/application/webpage.class.inc.php");
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers

@@ -222,6 +222,13 @@ class PageContent extends UIBlock
 		return $this;
 	}
 
+	public function AddExtraHtmlContent(string $sExtraHtmlContent):iUIBlock
+	{
+		$this->sExtraHtmlContent .= $sExtraHtmlContent;
+
+		return $this;
+	}
+
 	/**
 	 * Get the extra HTML content as-is, no processing is done on it
 	 *

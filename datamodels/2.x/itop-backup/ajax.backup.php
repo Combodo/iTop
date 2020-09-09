@@ -20,7 +20,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');

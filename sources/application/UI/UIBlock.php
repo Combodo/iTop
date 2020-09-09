@@ -208,4 +208,11 @@ abstract class UIBlock implements iUIBlock
 
 		return $aFiles;
 	}
+
+
+	public function AddExtraHtmlContent(string $sHTML) :iUIBlock
+	{
+		// By default this does nothing
+		return $this;
+	}
 }

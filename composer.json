@@ -63,6 +63,7 @@
       "core/legacy/querybuildercontextlegacy.class.inc.php",
       "core/querybuilderexpressions.class.inc.php",
       "core/legacy/querybuilderexpressionslegacy.class.inc.php",
+      "application/startup.inc.php",
       "application/loginform.class.inc.php",
       "application/loginbasic.class.inc.php",
       "application/logindefault.class.inc.php",

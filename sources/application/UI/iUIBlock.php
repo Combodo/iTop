@@ -106,4 +106,14 @@ interface iUIBlock
 	 * @throws \Exception
 	 */
 	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false);
+
+
+	/**
+	 * Add HTML code to the current block
+	 *
+	 * @param string $sHTML
+	 *
+	 * @return $this
+	 */
+	public function AddExtraHtmlContent(string $sHTML) :iUIBlock;
 }

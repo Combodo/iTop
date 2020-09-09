@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 /**
  * Helper class to manage 'blocks' of HTML pieces that are parts of a page and contain some list of cmdb objects

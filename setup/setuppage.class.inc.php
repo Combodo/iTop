@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');

@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT."/application/applicationcontext.class.inc.php");
-require_once(APPROOT."/application/user.preferences.class.inc.php");
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
@@ -1051,6 +1048,9 @@ EOF;
 		$this->output_dict_entries();
 
 		// TODO 2.8.0: Check if we can keep this as is
+		// Render the blocks
+		$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
+
 		// Render the tabs in the page (if any)
 		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 		$this->GetContentLayout()->SetExtraHtmlContent(self::FilterXSS($this->s_content));
@@ -1248,7 +1248,7 @@ EOF
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";
 			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable',
-					'<img src="../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
+					'<img src="../../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
 			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
 			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES,
 					self::PAGES_CHARSET).'</button>';
@@ -1543,41 +1543,6 @@ EOF;
 <div class="header_message $sCssClasses">$sContent</div>
 EOF
 		);
-	}
-
-	/**
-	 * Add a UIBlock in the page by dispatching its parts in the right places (CSS, JS, HTML)
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
-	 *
-	 * @return void
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 * @throws \Exception
-	 * @since 2.8.0
-	 */
-	public function AddUiBlock(iUIBlock $oBlock)
-	{
-		$oBlockRenderer = new BlockRenderer($oBlock);
-
-		// Add HTML
-		$this->add($oBlockRenderer->RenderHtml());
-
-		// Add inline CSS and JS
-		$this->add_style($oBlockRenderer->RenderCssInline());
-		$this->add_ready_script($oBlockRenderer->RenderJsInline());
-
-		// Add external files
-		foreach($oBlockRenderer->GetCssFiles() as $sFile)
-		{
-			$this->add_linked_stylesheet($sFile);
-		}
-		foreach($oBlockRenderer->GetJsFiles() as $sFile)
-		{
-			$this->add_linked_script($sFile);
-		}
 	}
 
 	/**

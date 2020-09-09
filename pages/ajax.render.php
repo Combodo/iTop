@@ -22,9 +22,7 @@ use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/webpage.class.inc.php');
 require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'application/pdfpage.class.inc.php');
 require_once(APPROOT.'application/wizardhelper.class.inc.php');
 require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
