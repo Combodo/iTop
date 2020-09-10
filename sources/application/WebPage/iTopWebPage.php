@@ -1248,7 +1248,7 @@ EOF
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";
 			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable',
-					'<img src="../../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
+					'<img src="../../../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
 			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
 			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES,
 					self::PAGES_CHARSET).'</button>';
