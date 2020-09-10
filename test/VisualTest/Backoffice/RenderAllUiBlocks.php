@@ -57,15 +57,25 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 // Buttons
 //////////
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive')->SetIsDisabled(true));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

@@ -88,6 +88,8 @@ class Button extends UIBlock
 	protected $sActionType;
 	/** @var string $sColor */
 	protected $sColor;
+	/** @var bool $bIsDisabled */
+	protected $bIsDisabled;
 	/** @var string $sJsCode */
 	protected $sJsCode;
 	/** @var string $sOnClickJsCode */
@@ -124,6 +126,7 @@ class Button extends UIBlock
 		$this->sColor = $sColor;
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
+		$this->bIsDisabled = false;
 
 		parent::__construct($sId);
 	}
@@ -281,7 +284,24 @@ class Button extends UIBlock
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled()
+	{
+		return $this->bIsDisabled;
+	}
 
+	/**
+	 * @param bool $bIsDisabled
+	 *
+	 * @return $this
+	 */
+	public function SetIsDisabled(bool $bIsDisabled)
+	{
+		$this->bIsDisabled = $bIsDisabled;
+		return $this;
+	}
 	/**
 	 * @return string
 	 */
