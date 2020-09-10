@@ -33,8 +33,7 @@ class CheckResult
 	public $sLabel;
 	public $sDescription;
 
-	public function __construct($iSeverity, $sLabel, $sDescription = '')
-	{
+	public function __construct($iSeverity, $sLabel, $sDescription = '') {
 		$this->iSeverity = $iSeverity;
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
@@ -44,28 +43,29 @@ class CheckResult
 	 * @return string
 	 * @since 2.8.0 N°2214
 	 */
-	public function __toString()
-	{
+	public function __toString(): string {
 		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
+
 		return "{$this->sLabel}$sPrintDesc";
 	}
 
 	/**
 	 * @param \CheckResult[] $aResults
+	 * @param string[] $aCheckResultSeverities list of CheckResult object severities to keep
 	 *
-	 * @return \CheckResult[] only elements that are error (iSeverity===ERROR)
+	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
 	 * @since 2.8.0 N°2214
 	 */
-	public static function KeepOnlyErrors($aResults)
-	{
+	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array {
 		return array_filter($aResults,
-			static function ($v)
-				{
-					if ($v->iSeverity === CheckResult::ERROR) {
+			static function ($v) use ($aCheckResultSeverities) {
+				if (in_array($v->iSeverity, $aCheckResultSeverities, true)) {
 					return $v;
-					}
-				},
+				}
+
+				return false;
+			},
 			ARRAY_FILTER_USE_BOTH);
 	}
 
@@ -77,9 +77,8 @@ class CheckResult
 	 *
 	 * @since 2.8.0 N°2214
 	 */
-	public static function FromObjectsToStrings($aResults)
-	{
-		return array_map(function ($value) {
+	public static function FromObjectsToStrings(array $aResults): array {
+		return array_map(static function ($value) {
 			return $value->__toString();
 		}, $aResults);
 	}
@@ -117,16 +116,26 @@ class SetupUtils
 	 * <li>...
 	 * </ul>
 	 *
-	 * @internal SetupPage $oP The page used only for its 'log' method
 	 * @return CheckResult[]
+	 *
+	 * @uses SetupPage $oP The page used only for its 'log' method
+	 * @uses utils::IsModeCLI() to disable following checks :
+	 *         <ul>
+	 *            <li>php.ini option : file_uploads
+	 *            <li>Temp upload dir valid
+	 *            <li>php.ini option : upload_max_filesize
+	 *            <li>php.ini option : max_file_uploads
+	 *            <li>php.ini option : upload_max_filesize, post_max_size
+	 *            <li>php.ini option : session.save_handler
+	 *         </ul>
+	 *
+	 * @since 2.8.0 N°2214 disable some checks when in CLI mode
 	 */
-	public static function CheckPhpAndExtensions()
-	{
+	public static function CheckPhpAndExtensions(): array {
 		$aResult = array();
 
 		// For log file(s)
-		if (!is_dir(APPROOT.'log'))
-		{
+		if (!is_dir(APPROOT.'log')) {
 			@mkdir(APPROOT.'log');
 		}
 
@@ -220,14 +229,11 @@ class SetupUtils
 		{
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
-			if ($sFileList = php_ini_scanned_files())
-			{
-				if (strlen($sFileList) > 0)
-				{
+			if ($sFileList = php_ini_scanned_files()) {
+				if (strlen($sFileList) > 0) {
 					$aFiles = explode(',', $sFileList);
 
-					foreach ($aFiles as $sFile)
-					{
+					foreach ($aFiles as $sFile) {
 						$sPhpIniFile .= ', '.trim($sFile);
 					}
 				}
@@ -235,58 +241,60 @@ class SetupUtils
 			SetupLog::Ok("Info - php.ini file(s): '$sPhpIniFile'");
 		}
 
-		if (!ini_get('file_uploads'))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+		if (!utils::IsModeCLI() && !ini_get('file_uploads')) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
 		}
 
-		$sUploadTmpDir = self::GetUploadTmpDir();
-		if (empty($sUploadTmpDir))
-		{
-			$sUploadTmpDir = '/tmp';
-			$aResult[] = new CheckResult(CheckResult::WARNING, "Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
-		}
-		// check that the upload directory is indeed writable from PHP
-		if (!empty($sUploadTmpDir))
-		{
-			if (!file_exists($sUploadTmpDir))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+		if (!utils::IsModeCLI()) {
+			$sUploadTmpDir = self::GetUploadTmpDir();
+			if (empty($sUploadTmpDir)) {
+				$sUploadTmpDir = '/tmp';
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
 			}
-			else if (!is_writable($sUploadTmpDir))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "Temporary directory for files upload ($sUploadTmpDir) is not writable.");
-			}
-			else
-			{
-				SetupLog::Ok("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+			// check that the upload directory is indeed writable from PHP
+			if (!empty($sUploadTmpDir)) {
+				if (!file_exists($sUploadTmpDir)) {
+					$aResult[] = new CheckResult(CheckResult::ERROR,
+						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+				}
+				else {
+					if (!is_writable($sUploadTmpDir)) {
+						$aResult[] = new CheckResult(CheckResult::ERROR,
+							"Temporary directory for files upload ($sUploadTmpDir) is not writable.");
+					}
+					else {
+						SetupLog::Ok("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+					}
+				}
 			}
 		}
 
-
-		if (!ini_get('upload_max_filesize'))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").");
+		if (!utils::IsModeCLI() && !ini_get('upload_max_filesize')) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").");
 		}
 
 		$iMaxFileUploads = ini_get('max_file_uploads');
-		if (!empty($iMaxFileUploads) && ($iMaxFileUploads < 1))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
+		if (!utils::IsModeCLI() && !empty($iMaxFileUploads) && ($iMaxFileUploads < 1)) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
 		}
 
-		$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-		$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
+		if (!utils::IsModeCLI()) {
+			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
 
-		if ($iMaxPostSize <= $iMaxUploadSize)
-		{
-			$aResult[] = new CheckResult(CheckResult::WARNING, "post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
+			if ($iMaxPostSize <= $iMaxUploadSize) {
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
+			}
+
+			SetupLog::Ok("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+			SetupLog::Ok("Info - post_max_size: ".ini_get('post_max_size'));
+			SetupLog::Ok("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 		}
-
-
-		SetupLog::Ok("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-		SetupLog::Ok("Info - post_max_size: ".ini_get('post_max_size'));
-		SetupLog::Ok("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 		// Check some more ini settings here, needed for file upload
 		$sMemoryLimit = trim(ini_get('memory_limit'));
@@ -340,79 +348,78 @@ class SetupUtils
 		{
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
-			if ($sFileList = php_ini_scanned_files())
-			{
-				if (strlen($sFileList) > 0)
-				{
+			if ($sFileList = php_ini_scanned_files()) {
+				if (strlen($sFileList) > 0) {
 					$aFiles = explode(',', $sFileList);
 
-					foreach ($aFiles as $sFile)
-					{
+					foreach ($aFiles as $sFile) {
 						$sPhpIniFile .= ', '.trim($sFile);
 					}
 				}
 			}
-			$aResult[] = new CheckResult(CheckResult::INFO,  "Loaded php.ini files: $sPhpIniFile");
+			$aResult[] = new CheckResult(CheckResult::INFO, "Loaded php.ini files: $sPhpIniFile");
 		}
 
 		// Check the configuration of the sessions persistence, since this is critical for the authentication
-		if (ini_get('session.save_handler') == 'files')
-		{
+		if (!utils::IsModeCLI() && ini_get('session.save_handler') == 'files') {
 			$sSavePath = ini_get('session.save_path');
 			SetupLog::Ok("Info - session.save_path is: '$sSavePath'.");
 
 			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
 			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
 
-			if (!empty($sSavePath))
-			{
-				if (($iPos = strrpos($sSavePath, ';', 0)) !== false)
-				{
+			if (!empty($sSavePath)) {
+				if (($iPos = strrpos($sSavePath, ';', 0)) !== false) {
 					// The actual path is after the last semicolon
-					$sSavePath = substr($sSavePath, $iPos+1);
+					$sSavePath = substr($sSavePath, $iPos + 1);
 				}
-				if (!is_writable($sSavePath))
-				{
-					$aResult[] = new CheckResult(CheckResult::ERROR, "The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+				if (!is_writable($sSavePath)) {
+					$aResult[] = new CheckResult(CheckResult::ERROR,
+						"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
 				}
-				else
-				{
-					$aResult[] = new CheckResult(CheckResult::INFO, "The value for session.save_path ($sSavePath) is writable for the web server.");
+				else {
+					$aResult[] = new CheckResult(CheckResult::INFO,
+						"The value for session.save_path ($sSavePath) is writable for the web server.");
 				}
 			}
-			else
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING, "Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+			else {
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
 			}
 		}
-		else
-		{
-			$aResult[] = new CheckResult(CheckResult::INFO, "session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
+		else {
+			$aResult[] = new CheckResult(CheckResult::INFO,
+				"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
 		}
 
 		return $aResult;
 	}
 
 	/**
+	 * Call the platform checks. If those checks return CheckResult::ERROR, then output and log them, then exit. Otherwise just return.
+	 *
 	 * @param \CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
-	 * @since 2.8.0 N°2214
+	 * @uses CheckPhpAndExtensions
+	 * @uses \CheckResult::FilterCheckResultArray()
+	 * @uses \CLIPage::output()
+	 * @uses \IssueLog::Error()
+	 * @uses \exit()
+	 *
+	 * @since 2.8.0 N°2214 Add PHP version checks in CLI scripts
 	 */
-	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
-	{
+	public static function CheckPhpAndExtensionsForCli(CLIPage $oCliPage, int $iExitCode = -1): void {
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
-		$aPhpCheckErrors = CheckResult::KeepOnlyErrors($aPhpCheckResults);
-		if (empty($aPhpCheckErrors))
-		{
+		$aPhpCheckErrors = CheckResult::FilterCheckResultArray($aPhpCheckResults, [CheckResult::ERROR]);
+		if (empty($aPhpCheckErrors)) {
 			return;
 		}
 
 		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
 		$oCliPage->p($sMessageTitle);
 		$aPhpCheckErrorsForPrint = CheckResult::FromObjectsToStrings($aPhpCheckErrors);
-		foreach ($aPhpCheckErrorsForPrint as $sError)
-		{
+		foreach ($aPhpCheckErrorsForPrint as $sError) {
 			$oCliPage->p(' * '.$sError);
 		}
 		$oCliPage->output();
