@@ -388,13 +388,12 @@ function ToggleField(value, field_id) {
  */
 function BlockField(field_id, bBlocked) {
 	if (bBlocked) {
-		$('#'+field_id).block({message: ' ** disabled ** '});
+		$('#'+field_id).block({message: ' ** disabled ** ', enableValidation : true});
 	}
 	else {
 		$('#'+field_id).unblock();
 	}
 }
-
 /**
  * Updates (enables/disables) a "duration" field
  */
