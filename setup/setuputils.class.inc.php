@@ -22,12 +22,12 @@
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-class CheckResult
-{
+class CheckResult {
 	// Severity levels
 	const ERROR = 0;
 	const WARNING = 1;
 	const INFO = 2;
+	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
 	public $iSeverity;
 	public $sLabel;
@@ -130,6 +130,7 @@ class SetupUtils
 	 *         </ul>
 	 *
 	 * @since 2.8.0 N°2214 disable some checks when in CLI mode
+	 * @since 2.8.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
 	public static function CheckPhpAndExtensions(): array {
 		$aResult = array();
@@ -238,7 +239,7 @@ class SetupUtils
 					}
 				}
 			}
-			SetupLog::Ok("Info - php.ini file(s): '$sPhpIniFile'");
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - php.ini file(s): '$sPhpIniFile'");
 		}
 
 		if (!utils::IsModeCLI() && !ini_get('file_uploads')) {
@@ -265,7 +266,8 @@ class SetupUtils
 							"Temporary directory for files upload ($sUploadTmpDir) is not writable.");
 					}
 					else {
-						SetupLog::Ok("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+						$aResult[] = new CheckResult(CheckResult::TRACE,
+							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
 					}
 				}
 			}
@@ -291,9 +293,9 @@ class SetupUtils
 					"post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
 			}
 
-			SetupLog::Ok("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-			SetupLog::Ok("Info - post_max_size: ".ini_get('post_max_size'));
-			SetupLog::Ok("Info - max_file_uploads: ".ini_get('max_file_uploads'));
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - post_max_size: ".ini_get('post_max_size'));
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - max_file_uploads: ".ini_get('max_file_uploads'));
 		}
 
 		// Check some more ini settings here, needed for file upload
@@ -310,13 +312,12 @@ class SetupUtils
 			// Check that the limit will allow us to load the data
 			//
 			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
+			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT)) {
+				$aResult[] = new CheckResult(CheckResult::ERROR,
+					"memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
 			}
-			else
-			{
-				SetupLog::Ok("Info - memory_limit is $iMemoryLimit, ok.");
+			else {
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $iMemoryLimit, ok.");
 			}
 		}
 
@@ -334,13 +335,12 @@ class SetupUtils
 			$aOk[] = "Suhosin extension detected (version $sSuhosinVersion).";
 
 			$iGetMaxValueLength = ini_get('suhosin.get.max_value_length');
-			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH)
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING,  "suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
+			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH) {
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
 			}
-			else
-			{
-				SetupLog::Ok("Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
+			else {
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
 			}
 		}
 
@@ -363,7 +363,7 @@ class SetupUtils
 		// Check the configuration of the sessions persistence, since this is critical for the authentication
 		if (!utils::IsModeCLI() && ini_get('session.save_handler') == 'files') {
 			$sSavePath = ini_get('session.save_path');
-			SetupLog::Ok("Info - session.save_path is: '$sSavePath'.");
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - session.save_path is: '$sSavePath'.");
 
 			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
 			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
@@ -433,23 +433,21 @@ class SetupUtils
 
 	/**
 	 * @param CheckResult[] $aResult checks log
+	 *
+	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	private static function CheckPhpVersion(&$aResult)
-	{
-		SetupLog::Ok('Info - CheckPHPVersion');
+	private static function CheckPhpVersion(array &$aResult): void {
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
-		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>='))
-		{
+		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>=')) {
 			$aResult[] = new CheckResult(CheckResult::INFO,
 				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
 
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
-			if (!empty($sPhpNextMinVersion))
-			{
-				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
-				{
+			if (!empty($sPhpNextMinVersion)) {
+				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
 						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
@@ -475,30 +473,28 @@ class SetupUtils
 
 	/**
 	 * Check that the selected modules meet their dependencies
+	 *
 	 * @param $sSourceDir
 	 * @param $sExtensionDir
 	 * @param $aSelectedModules
+	 *
 	 * @return array
+	 *
+	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
-	{
+	public static function CheckSelectedModules(string $sSourceDir, string $sExtensionDir, array $aSelectedModules): array {
 		$aResult = array();
-		SetupLog::Ok('Info - CheckSelectedModules');
 
 		$aDirsToScan = array(APPROOT.$sSourceDir);
 		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath))
-		{
+		if (is_dir($sExtensionsPath)) {
 			// if the extensions dir exists, scan it for additional modules as well
 			$aDirsToScan[] = $sExtensionsPath;
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
-		try
-		{
+		try {
 			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 		}
 		return $aResult;
@@ -506,25 +502,25 @@ class SetupUtils
 
 	/**
 	 * Check that the backup could be executed
+	 *
 	 * @param $sDBBackupPath
 	 * @param $sMySQLBinDir
-	 * @return array An array of CheckResults objects
-	 * @internal param Page $oP The page used only for its 'log' method
+	 *
+	 * @return \CheckResult[] An array of CheckResults objects
+	 *
+	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
-	{
+	public static function CheckBackupPrerequisites(string $sDBBackupPath, string $sMySQLBinDir = null): array {
 		$aResult = array();
-		SetupLog::Ok('Info - CheckBackupPrerequisites');
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckBackupPrerequisites');
 
 		// zip extension
 		//
-		if (!extension_loaded('phar'))
-		{
+		if (!extension_loaded('phar')) {
 			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.phar.php\" target=\"_blank\">zip</a>";
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: phar", $sMissingExtensionLink);
 		}
-		if (!extension_loaded('zlib'))
-		{
+		if (!extension_loaded('zlib')) {
 			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.zlib.php\" target=\"_blank\">zip</a>";
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: zlib", $sMissingExtensionLink);
 		}
@@ -532,25 +528,21 @@ class SetupUtils
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupLog::Ok('Info - PHP functions disabled: '.implode(', ', $aDisabled));
-		if (in_array('exec', $aDisabled))
-		{
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
 		}
 
 		// availability of mysqldump
-		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig())
-		{
+		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig()) {
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
 
-		if (empty($sMySQLBinDir))
-		{
+		if (empty($sMySQLBinDir)) {
 			$sMySQLDump = 'mysqldump';
 		}
-		else
-		{
-			SetupLog::Ok('Info - Found mysql_bindir: '.$sMySQLBinDir);
+		else {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
 			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
 		}
 		$sCommand = "$sMySQLDump -V 2>&1";
@@ -562,27 +554,25 @@ class SetupUtils
 		{
 			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: Ok.");
 		}
-		elseif ($iRetCode == 1)
-		{
+		elseif ($iRetCode == 1) {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be found. Please make sure it is installed and in the path.");
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"mysqldump could not be found. Please make sure it is installed and in the path.");
 		}
-		else
-		{
+		else {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and " . (empty($sMySQLBinDir) ? "in the path" :  "located at : $sMySQLDump"));
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and ".(empty($sMySQLBinDir) ? "in the path" : "located at : $sMySQLDump"));
 		}
-		foreach($aOutput as $sLine)
-		{
-			SetupLog::Ok('Info - mysqldump -V said: '.$sLine);
+		foreach ($aOutput as $sLine) {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - mysqldump -V said: '.$sLine);
 		}
-		
+
 		// create and test destination location
 		//
 		$sDestDir = dirname($sDBBackupPath);
 		setuputils::builddir($sDestDir);
-		if (!is_dir($sDestDir))
-		{
+		if (!is_dir($sDestDir)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "$sDestDir does not exist and could not be created.");
 		}
 
@@ -597,27 +587,28 @@ class SetupUtils
 
 	/**
 	 * Check that graphviz can be launched
-	 * @param $sGraphvizPath
-	 * @return CheckResult The result of the check
-	 * @internal param string $GraphvizPath The path where graphviz' dot program is installed
+	 *
+	 * @param string $sGraphvizPath The path where graphviz' dot program is installed
+	 *
+	 * @return CheckResult[] The result of the check AS CheckResult::INFO or CheckResult::WARNING, plus debug traces as some
+	 *     CheckResult::TRACE
+	 *
+	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckGraphviz($sGraphvizPath)
-	{
-		$oResult = null;
-		SetupLog::Ok('Info - CheckGraphviz');
+	public static function CheckGraphviz(string $sGraphvizPath): array {
+		$aResult = [];
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckGraphviz');
 
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupLog::Ok('Info - PHP functions disabled: '.implode(', ', $aDisabled));
-		if (in_array('exec', $aDisabled))
-		{
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
 		}
 
 		// availability of dot / dot.exe
-		if (empty($sGraphvizPath))
-		{
+		if (empty($sGraphvizPath)) {
 			$sGraphvizPath = 'dot';
 		}
 		$sCommand = "\"$sGraphvizPath\" -V 2>&1";
@@ -625,24 +616,22 @@ class SetupUtils
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		if ($iRetCode == 0)
-		{
-			$oResult = new CheckResult(CheckResult::INFO, "dot is present: ".$aOutput[0]);
+		if ($iRetCode == 0) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "dot is present: ".$aOutput[0]);
 		}
-		elseif ($iRetCode == 1)
-		{
-			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
+		elseif ($iRetCode == 1) {
+			$aResult[] = new CheckResult(CheckResult::WARNING,
+				"dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
 		}
-		else
-		{
-			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+		else {
+			$aResult[] = new CheckResult(CheckResult::WARNING,
+				"dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
 		}
-		foreach($aOutput as $sLine)
-		{
-			SetupLog::Ok('Info - '.$sGraphvizPath.' -V said: '.$sLine);
+		foreach ($aOutput as $sLine) {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - '.$sGraphvizPath.' -V said: '.$sLine);
 		}
 
-		return $oResult;
+		return $aResult;
 	}
 
 	/**
@@ -686,30 +675,25 @@ class SetupUtils
 
 	/**
 	 * Helper to recursively cleanup a directory
+	 *
 	 * @param $dir
+	 *
 	 * @throws Exception
 	 */
-	public static function tidydir($dir)
-	{
-		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
-		{
+	public static function tidydir(string $dir): void {
+		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\')) {
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 
 		$aFiles = scandir($dir); // Warning glob('.*') does not seem to return the broken symbolic links, thus leaving a non-empty directory
-		if ($aFiles !== false)
-		{
-			foreach($aFiles as $file)
-			{
-				if (($file != '.') && ($file != '..'))
-				{
-					if(is_dir($dir.'/'.$file))
-					{
+		if ($aFiles !== false) {
+			foreach ($aFiles as $file) {
+				if (($file != '.') && ($file != '..')) {
+					if (is_dir($dir.'/'.$file)) {
 						self::tidydir($dir.'/'.$file);
 						self::rmdir_safe($dir.'/'.$file);
 					}
-					else
-					{
+					else {
 						if (!unlink($dir.'/'.$file))
 						{
 							SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
@@ -2083,28 +2067,28 @@ JS
 	 *
 	 * @throws \SecurityException
 	 */
-	public final static function CheckSetupToken($bRemoveToken = false)
-	{
+	public final static function CheckSetupToken($bRemoveToken = false) {
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 		$sTokenFile = APPROOT.'data/setup/authent';
-		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile))
-		{
+		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile)) {
 			throw new SecurityException('Setup operations are not allowed outside of the setup');
 		}
-		if ($bRemoveToken)
-		{
+		if ($bRemoveToken) {
 			@unlink($sTokenFile);
 		}
 	}
 
-	private final static function Log($sText)
-	{
-		if (class_exists('SetupPage'))
-		{
+	/**
+	 * @param string $sText
+	 *
+	 * @since 2.7.0 N°2240 Maintenance mode
+	 * @since 2.8.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
+	 */
+	private static function Log(string $sText): void {
+		if (class_exists('SetupPage')) {
 			SetupLog::Ok($sText);
 		}
-		else
-		{
+		else {
 			IssueLog::Info($sText);
 		}
 	}

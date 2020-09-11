@@ -106,17 +106,21 @@ EOF
 			switch($oCheckResult->iSeverity)
 			{
 				case CheckResult::ERROR:
-				$aErrors[] = $oCheckResult->sLabel;
-				$this->bCanMoveForward = false;
-				break;
+					$aErrors[] = $oCheckResult->sLabel;
+					$this->bCanMoveForward = false;
+					break;
 
 				case CheckResult::WARNING:
-				$aWarnings[] = $oCheckResult->sLabel;
-				break;
+					$aWarnings[] = $oCheckResult->sLabel;
+					break;
 
 				case CheckResult::INFO:
-				$aInfo[] = $oCheckResult->sLabel;
-				break;
+					$aInfo[] = $oCheckResult->sLabel;
+					break;
+
+				case CheckResult::TRACE:
+					SetupLog::Ok($oCheckResult->sLabel);
+					break;
 			}
 		}
 		$sStyle = 'style="display:none;max-height:196px;overflow:auto;"';
@@ -287,16 +291,18 @@ HTML
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
 		$bCanBackup = true;
 		$sMySQLDumpMessage = '';
-		foreach($aBackupChecks as $oCheck)
-		{
-			if ($oCheck->iSeverity == CheckResult::ERROR)
-			{
-				$bCanBackup = false;
-				$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
-			}
-			else
-			{
-				$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
+		foreach ($aBackupChecks as $oCheck) {
+			switch ($oCheck->iSeverity) {
+				case CheckResult::ERROR:
+					$bCanBackup = false;
+					$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
+					break;
+				case CheckResult::TRACE:
+					SetupLog::Ok($oCheck->sLabel);
+					break;
+				default:
+					$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
+					break;
 			}
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
@@ -1033,38 +1039,47 @@ EOF
 		);
 	}
 
-	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
-	{
-		switch($sCode)
-		{
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters) {
+		switch ($sCode) {
 			case 'check_graphviz':
-			$sGraphvizPath = $aParameters['graphviz_path'];
-			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
-			$sMessage = json_encode($oCheck->sLabel);
-			switch($oCheck->iSeverity)
-			{
-				case CheckResult::INFO:
-				$sStatus = 'ok';
-				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+				$sGraphvizPath = $aParameters['graphviz_path'];
+				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
-				break;
+				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
+				foreach ($aTraceCheck as $oTraceCheck) {
+					SetupLog::Ok($oTraceCheck->sLabel);
+				}
 
-				default:
-				case CheckResult::ERROR:
-				case CheckResult::WARNING:
-				$sStatus = 'ko';
-				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
-				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
+				$oCheck = array_values($aNonTraceCheck)[0];
+				$sMessage = json_encode($oCheck->sLabel);
+				switch ($oCheck->iSeverity) {
+					case CheckResult::INFO:
+						$sStatus = 'ok';
+						$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+						$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
-			}
-			$oPage->add_ready_script(
-<<<EOF
+						break;
+
+					default:
+					case CheckResult::ERROR:
+					case CheckResult::WARNING:
+						$sStatus = 'ko';
+						$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+						break;
+				}
+
+				if ($oCheck->iSeverity !== CheckResult::TRACE) {
+					$oPage->add_ready_script(
+						<<<JS
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');
-EOF
-			);
-			break;
+JS
+					);
+				}
+
+				break;
 		}
 	}
 
@@ -1167,27 +1182,33 @@ EOF
 		switch($sCode)
 		{
 			case 'check_graphviz':
-			$sGraphvizPath = $aParameters['graphviz_path'];
-			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
-			$sMessage = json_encode($oCheck->sLabel);
-			switch($oCheck->iSeverity)
-			{
-				case CheckResult::INFO:
-				$sStatus = 'ok';
-				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+				$sGraphvizPath = $aParameters['graphviz_path'];
+				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
-				break;
+				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
+				foreach ($aTraceCheck as $oTraceCheck) {
+					SetupLog::Ok($oTraceCheck->sLabel);
+				}
 
-				default:
-				case CheckResult::ERROR:
-				case CheckResult::WARNING:
-				$sStatus = 'ko';
-				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
-				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
+				$oCheck = array_values($aNonTraceCheck)[0];
+				$sMessage = json_encode($oCheck->sLabel);
+				switch ($oCheck->iSeverity) {
+					case CheckResult::INFO:
+						$sStatus = 'ok';
+						$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
+						$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+						break;
 
-			}
-			$oPage->add_ready_script(
+					default:
+					case CheckResult::ERROR:
+					case CheckResult::WARNING:
+						$sStatus = 'ko';
+						$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+						break;
+				}
+				$oPage->add_ready_script(
 <<<EOF
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');

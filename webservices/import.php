@@ -33,7 +33,6 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/csvpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
-require_once(APPROOT.'/setup/setuppage.class.inc.php');
 
 
 require_once(APPROOT.'/application/startup.inc.php');
