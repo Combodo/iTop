@@ -343,11 +343,9 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 /**
  * @param \WebPage $oP
  */
-function CheckMaintenanceMode(Page $oP): void
-{
+function CheckMaintenanceMode(Page $oP) {
 // Verify files instead of reloading the full config each time
-	if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE))
-	{
+	if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE)) {
 		$oP->p("Maintenance detected, exiting");
 		exit(EXIT_CODE_ERROR);
 	}

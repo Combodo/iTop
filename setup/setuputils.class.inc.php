@@ -436,7 +436,7 @@ class SetupUtils
 	 *
 	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	private static function CheckPhpVersion(array &$aResult): void {
+	private static function CheckPhpVersion(array &$aResult) {
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
