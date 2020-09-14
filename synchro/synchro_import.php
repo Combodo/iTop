@@ -159,27 +159,16 @@ $aPageParams = array
 function UsageAndExit($oP)
 {
 	global $aPageParams;
-	$bModeCLI = utils::IsModeCLI();
+	$sMode = utils::IsModeCLI() ? 'cli' : 'http';
 
 	$oP->p("USAGE:\n");
 	foreach ($aPageParams as $sParam => $aParamData)
 	{
 		$aModes = explode(',', $aParamData['modes']);
-		if ($bModeCLI)
+		if (in_array($sMode, $aModes, false))
 		{
-			if (in_array('cli', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
-		}
-		else
-		{
-			if (in_array('http', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
+			$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+			$oP->p("$sParam = $sDesc");
 		}
 	}
 	$oP->output();
