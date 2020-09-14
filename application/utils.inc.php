@@ -2326,7 +2326,7 @@ class utils
 	public static function EnrichRaisedException($oCmdbAbstract, $oException)
 	{
 		if (is_null($oCmdbAbstract) ||
-			! is_a($oCmdbAbstract, 'cmdbAbstractObject'))
+			! is_a($oCmdbAbstract, \cmdbAbstractObject::class))
 		{
 			throw $oException;
 		}
