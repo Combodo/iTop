@@ -132,7 +132,7 @@ class SetupUtils
 	 * @since 2.8.0 N°2214 disable some checks when in CLI mode
 	 * @since 2.8.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
-	public static function CheckPhpAndExtensions(): array {
+	public static function CheckPhpAndExtensions() {
 		$aResult = array();
 
 		// For log file(s)
@@ -409,7 +409,7 @@ class SetupUtils
 	 *
 	 * @since 2.8.0 N°2214 Add PHP version checks in CLI scripts
 	 */
-	public static function CheckPhpAndExtensionsForCli(CLIPage $oCliPage, int $iExitCode = -1): void {
+	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1) {
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
 		$aPhpCheckErrors = CheckResult::FilterCheckResultArray($aPhpCheckResults, [CheckResult::ERROR]);
 		if (empty($aPhpCheckErrors)) {
@@ -482,7 +482,7 @@ class SetupUtils
 	 *
 	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules(string $sSourceDir, string $sExtensionDir, array $aSelectedModules): array {
+	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules) {
 		$aResult = array();
 
 		$aDirsToScan = array(APPROOT.$sSourceDir);
@@ -510,7 +510,7 @@ class SetupUtils
 	 *
 	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckBackupPrerequisites(string $sDBBackupPath, string $sMySQLBinDir = null): array {
+	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null) {
 		$aResult = array();
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckBackupPrerequisites');
 
@@ -595,7 +595,7 @@ class SetupUtils
 	 *
 	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckGraphviz(string $sGraphvizPath): array {
+	public static function CheckGraphviz($sGraphvizPath) {
 		$aResult = [];
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckGraphviz');
 
@@ -2084,7 +2084,7 @@ JS
 	 * @since 2.7.0 N°2240 Maintenance mode
 	 * @since 2.8.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
 	 */
-	private static function Log(string $sText): void {
+	private static function Log($sText) {
 		if (class_exists('SetupPage')) {
 			SetupLog::Ok($sText);
 		}
@@ -2096,8 +2096,7 @@ JS
 	/**
 	 * @return string[]
 	 */
-	public static function GetPHPMandatoryExtensions(): array
-	{
+	public static function GetPHPMandatoryExtensions() {
 		return [
 			'mysqli',
 			'iconv',
@@ -2119,14 +2118,13 @@ JS
 	/**
 	 * @return array
 	 */
-	public static function GetPHPOptionalExtensions(): array
-	{
+	public static function GetPHPOptionalExtensions() {
 		$aOptionalExtensions = [
 			'mcrypt, sodium or openssl' => [
-					'mcrypt' => 'Strong encryption will not be used.',
-					'sodium' => 'Strong encryption will not be used.',
-					'openssl' => 'Strong encryption will not be used.',
-				],
+				'mcrypt' => 'Strong encryption will not be used.',
+				'sodium' => 'Strong encryption will not be used.',
+				'openssl' => 'Strong encryption will not be used.',
+			],
 			'ldap' => 'LDAP authentication will be disabled.',
 			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
 		];
