@@ -855,7 +855,7 @@ abstract class DBObject implements iDisplay
 
     /**
      * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
-     * @see https://wiki.combodo.com/doku.php?id=latest:customization:sequence_crud iTop CRUD stack documentation
+     * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
      *
      * @param string $sAttCode
      *
@@ -2382,7 +2382,7 @@ abstract class DBObject implements iDisplay
 	 * @api-advanced
 	 *
 	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
-	 * @see https://wiki.combodo.com/doku.php?id=latest:customization:sequence_crud iTop CRUD stack documentation
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
 	 * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
 	 *         Reset during {@see DBObject::DBUpdate()}
 	 * @throws Exception
