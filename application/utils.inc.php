@@ -2332,11 +2332,8 @@ class utils
 		}
 
 		$sMessage = $oException->getMessage() . " (" . get_class($oCmdbAbstract) . "::" . $oCmdbAbstract->Get('id') . ")";
-		$reflectedObject = new \ReflectionClass(get_class($oException));
-		$property = $reflectedObject->getProperty('message');
-		$property->setAccessible(true);
-		$property->setValue($oException, $sMessage);
-		$property->setAccessible(false);
-		throw $oException;
+
+		$e = new CoreException($sMessage, null, '', $oException);
+		throw $e;
 	}
 }

@@ -97,7 +97,7 @@ class TriggerTest extends ItopDataTestCase
 		}
 		catch(\Exception $e1)
 		{
-			$this->assertEquals('CoreException', get_class($e1));
+			$this->assertEquals('CoreContextEnrichmentException', get_class($e1));
 			$this->assertEquals('Unknown class \'CoreException\'', $e1->getMessage());
 			$this->assertEquals($sStackTrace, $e1->getTraceAsString());
 		}
