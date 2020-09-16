@@ -22,30 +22,29 @@
  */
 class NiceWebPage extends WebPage
 {
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
 	var $m_aReadyScripts;
 	var $m_sRootUrl;
-	
-    public function __construct($s_title, $bPrintable = false)
-    {
-        parent::__construct($s_title, $bPrintable);
+
+	public function __construct($s_title, $bPrintable = false)
+	{
+		parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
-		if(utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
+		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
-		}
-		else
-		{
+		} else {
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
@@ -249,13 +248,24 @@ EOF
 		parent::output();
 	}
 
+
 	/**
+	 * @inheritDoc
 	 * @throws \Exception
-	 * @since 2.7.0
 	 */
 	protected function LoadTheme()
 	{
+		// TODO 2.8.0: Remove light-grey when development of Full Moon is done.
+		// TODO 2.8.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
+
+		$sCssRelPath = utils::GetCSSFromSASS(
+			'css/backoffice/main.scss',
+			array(
+				APPROOT.'css/backoffice/',
+			)
+		);
+		$this->add_saas($sCssRelPath);
 	}
 }

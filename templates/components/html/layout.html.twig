@@ -1,1 +1,3 @@
-<div class="ibo-html">{{ oUIBlock.GetHtml()|raw }}</div>
+{% apply spaceless %}
+    {{ oUIBlock.GetHtml()|raw }}
+{% endapply %}

@@ -19,6 +19,7 @@
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 
@@ -42,6 +43,8 @@ class WebPage implements Page
 	 * @since 2.7.0 N°2529
 	 */
 	const PAGES_CHARSET = 'utf-8';
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
+
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
@@ -64,8 +67,14 @@ class WebPage implements Page
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
 	protected $bAddJSDict;
-	/** @var UIBlockManager */
-	protected $oUIBlockManager;
+	/** @var \Combodo\iTop\Application\UI\Layout\iUIContentBlock $oContentLayout */
+	protected $oContentLayout;
+	protected $sTemplateRelPath;
+
+	/**
+	 * @var bool|string|string[]
+	 */
+	private $s_OutputFormat;
 
 	/**
 	 * WebPage constructor.
@@ -97,7 +106,9 @@ class WebPage implements Page
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
 		$this->bAddJSDict = true;
-		$this->oUIBlockManager = new UIBlockManager();
+		$this->oContentLayout = new UIContentBlock();
+		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
+
 		ob_start(); // Start capturing the output
 	}
 
@@ -128,13 +139,9 @@ class WebPage implements Page
 	/**
 	 * @inheritDoc
 	 */
-	public function add($s_html)
+	public function add($s_html): ?iUIBlock
 	{
-		if ($this->oUIBlockManager->HasCurrentBlock()) {
-			$this->oUIBlockManager->AddHtml($s_html);
-		} else {
-			$this->s_content .= $s_html;
-		}
+		return $this->oContentLayout->AddHtml($s_html);
 	}
 
 	/**
@@ -303,19 +310,13 @@ class WebPage implements Page
 	 *
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
 	 *
-	 * @param \WebPage $iTopWebPage
-	 *
-	 * @return void
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 * @throws \Exception
+	 * @return \Combodo\iTop\Application\UI\iUIBlock block added
 	 * @since 2.8.0
 	 */
-	public function AddUiBlock(iUIBlock $oBlock, WebPage $iTopWebPage)
+	public function AddUiBlock(iUIBlock $oBlock): iUIBlock
 	{
-		$iTopWebPage->GetUIBlockManager()->AddBlock($oBlock);
+		$this->oContentLayout->AddSubBlock($oBlock);
+		return $oBlock;
 	}
 
 	/**
@@ -695,112 +696,84 @@ class WebPage implements Page
 	 */
 	public function output()
 	{
-		foreach ($this->a_headers as $s_header)
-		{
-			header($s_header);
-		}
-
-		$s_captured_output = $this->ob_get_clean_safe();
-		echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-		echo "<html>\n";
-		echo "<head>\n";
-		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-		echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\" />";
-		echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
-		echo $this->get_base_tag();
-
-		// Render the blocks
-		$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
-
-		// First put stylesheets so they can be loaded before browser interprets JS files, otherwise visual glitch can occur.
-		foreach ($this->a_linked_stylesheets as $a_stylesheet)
-		{
-			if (strpos($a_stylesheet['link'], '?') === false)
-			{
-				$s_stylesheet = $a_stylesheet['link']."?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
-				$s_stylesheet = $a_stylesheet['link']."&t=".utils::GetCacheBusterTimestamp();
-			}
-			if ($a_stylesheet['condition'] != "")
-			{
-				echo "<!--[if {$a_stylesheet['condition']}]>\n";
-			}
-			echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
-			if ($a_stylesheet['condition'] != "")
-			{
-				echo "<![endif]-->\n";
+		// Send headers
+		if ($this->GetOutputFormat() === 'html') {
+			foreach ($this->a_headers as $sHeader) {
+				header($sHeader);
 			}
 		}
 
-		// Then inline styles
-		if (count($this->a_styles) > 0)
-		{
-			echo "<style>\n";
-			foreach ($this->a_styles as $s_style)
-			{
-				echo "$s_style\n";
-			}
-			echo "</style>\n";
+		$this->s_content = $this->ob_get_clean_safe();
+
+		$aData = [];
+
+		$aData['oLayout'] = $this->oContentLayout;
+
+		// CSS files
+		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$this->add_linked_stylesheet($sFileAbsUrl);
+		}
+		// JS files
+		foreach ($this->oContentLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$this->add_linked_script($sFileAbsUrl);
+		}
+
+		// Base structure of data to pass to the TWIG template
+		$aData['aPage'] = [
+			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
+			'sTitle' => $this->s_title,
+			'aMetadata' => [
+				'sCharset' => static::PAGES_CHARSET,
+				'sLang' => $this->GetLanguageForMetadata(),
+			],
+			'aCssFiles' => $this->a_linked_stylesheets,
+			'aCssInline' => $this->a_styles,
+			'aJsFiles' => $this->a_linked_scripts,
+			'aJsInlineLive' => $this->a_scripts,
+			// TODO 2.8.0: TEMP, used while developping, remove it.
+			'sSanitizedContent' => utils::FilterXSS($this->s_content),
+			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+		];
+
+		if ($this->a_base['href'] != '') {
+			$aData['aPage']['aMetadata']['sBaseUrl'] = $this->a_base['href'];
+		}
+
+		if ($this->a_base['target'] != '') {
+			$aData['aPage']['aMetadata']['sBaseTarget'] = $this->a_base['target'];
 		}
 
 		// Favicon
-		if (class_exists('MetaModel') && MetaModel::GetConfig())
-		{
-			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
+		if (class_exists('MetaModel') && MetaModel::GetConfig()) {
+			$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
 		}
 
 		// Dict entries for JS
-		if ($this->bAddJSDict)
-		{
-			$this->output_dict_entries();
-		}
+		//		if ($this->bAddJSDict) {
+		//			$this->output_dict_entries();
+		//		}
 
-		// JS files
-		foreach ($this->a_linked_scripts as $s_script)
-		{
-			// Make sure that the URL to the script contains the application's version number
-			// so that the new script do NOT get reloaded from the cache when the application is upgraded
-			if (strpos($s_script, '?') === false)
-			{
-				$s_script .= "?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
-				$s_script .= "&t=".utils::GetCacheBusterTimestamp();
-			}
-			echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-		}
 
-		// JS inline scripts
-		if (count($this->a_scripts) > 0)
-		{
-			echo "<script type=\"text/javascript\">\n";
-			foreach ($this->a_scripts as $s_script)
-			{
-				echo "$s_script\n";
-			}
-			echo "</script>\n";
-		}
+		//		if (trim($s_captured_output) != "") {
+		//			echo "<div class=\"raw_output\">".utils::FilterXSS($s_captured_output)."</div>\n";
+		//		}
 
-		echo "</head>\n";
-		echo "<body>\n";
-		echo self::FilterXSS($this->s_content);
-		if (trim($s_captured_output) != "")
-		{
-			echo "<div class=\"raw_output\">".self::FilterXSS($s_captured_output)."</div>\n";
-		}
-		echo '<div id="at_the_end">'.self::FilterXSS($this->s_deferred_content).'</div>';
-		echo "</body>\n";
-		echo "</html>\n";
+		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
+		// Render final TWIG into global HTML
+		$oKpi = new ExecutionKPI();
+		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
+		$oKpi->ComputeAndReport('TWIG rendering');
 
-		if (class_exists('DBSearch'))
-		{
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+
+		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
-		if (class_exists('ExecutionKPI'))
-		{
+		if (class_exists('ExecutionKPI')) {
 			ExecutionKPI::ReportStats();
 		}
 	}
@@ -822,31 +795,6 @@ class WebPage implements Page
 				$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
 			}
 		}
-	}
-
-	/**
-	 * Return the HTML base tag
-	 *
-	 * @return string
-	 */
-	protected function get_base_tag()
-	{
-		$sTag = '';
-		if (($this->a_base['href'] != '') || ($this->a_base['target'] != ''))
-		{
-			$sTag = '<base ';
-			if (($this->a_base['href'] != ''))
-			{
-				$sTag .= "href =\"{$this->a_base['href']}\" ";
-			}
-			if (($this->a_base['target'] != ''))
-			{
-				$sTag .= "target =\"{$this->a_base['target']}\" ";
-			}
-			$sTag .= " />\n";
-		}
-
-		return $sTag;
 	}
 
 	/**
@@ -905,11 +853,6 @@ class WebPage implements Page
 	public function GetTransactionId()
 	{
 		return $this->iTransactionId;
-	}
-
-	public static function FilterXSS($sHTML)
-	{
-		return str_ireplace('<script', '&lt;script', $sHTML);
 	}
 
 	/**
@@ -1149,11 +1092,55 @@ EOD
 	}
 
 	/**
-	 * @return \UIBlockManager
+	 * Return the language for the page metadata based on the current user
+	 *
+	 * @return string
+	 * @since 2.8.0
 	 */
-	public function GetUIBlockManager(): \UIBlockManager
+	protected function GetLanguageForMetadata()
 	{
-		return $this->oUIBlockManager;
+		$sUserLang = UserRights::GetUserLanguage();
+
+		return strtolower(substr($sUserLang, 0, 2));
+	}
+
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 * @since 2.8.0
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		// TODO 2.8.0: Make it a property so it can be changed programmatically
+		// TODO 2.8.0: How to set both dark/light mode favicons
+		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
+	}
+
+	/**
+	 * Set the template path to use for the page
+	 *
+	 * @param string $sTemplateRelPath Relative path (from <ITOP>/templates/) to the template path
+	 *
+	 * @return $this
+	 * @since 2.8.0
+	 */
+	public function SetTemplateRelPath($sTemplateRelPath)
+	{
+		$this->sTemplateRelPath = $sTemplateRelPath;
+		return $this;
+	}
+
+	/**
+	 * Return the relative path (from <ITOP>/templates/) to the page template
+	 *
+	 * @return string
+	 * @since 2.8.0
+	 */
+	public function GetTemplateRelPath()
+	{
+		return $this->sTemplateRelPath;
 	}
 
 }

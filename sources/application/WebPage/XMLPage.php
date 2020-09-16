@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use \Combodo\iTop\Application\UI\iUIBlock;
 
 /**
  * Class XMLPage
@@ -68,7 +69,7 @@ class XMLPage extends WebPage
 		}
 	}
 
-	public function add($sText)
+	public function add($sText): ?iUIBlock
 	{
 		if (!$this->m_bPassThrough)
 		{
@@ -95,6 +96,7 @@ class XMLPage extends WebPage
 				$this->m_bHeaderSent = true;
 			}
 		}
+		return null;
 	}
 
 	public function small_p($sText)

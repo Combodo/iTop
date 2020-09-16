@@ -35,14 +35,13 @@ try
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 
 	$operation = utils::ReadParam('operation', '');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 
-	switch($operation)
-	{
+	switch ($operation) {
 		case 'download_document':
 			LoginWebPage::DoLoginEx('backoffice', false);
 			$id = utils::ReadParam('id', '');

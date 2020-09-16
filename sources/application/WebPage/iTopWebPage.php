@@ -39,14 +39,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
-	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template  */
+	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/layout';
 
 	private $m_aMessages;
 	private $m_aInitScript = array();
-	protected $sTemplateRelPath;
-	/** @var \Combodo\iTop\Application\UI\Layout\PageContent\PageContent $oContentLayout */
-	protected $oContentLayout;
+
 	protected $m_oTabs;
 	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
@@ -72,7 +70,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_oTabs = new TabManager();
 		$this->oCtx = new ContextTag(ContextTag::TAG_CONSOLE);
 
-		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
 		// By default, content layout is empty, only manually added content will be displayed (eg. $this->add(xxx))
 		$this->SetContentLayout(PageContentFactory::MakeStandardEmpty());
 
@@ -153,31 +150,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		{
 			$this->PrepareLayout();
 		}
-	}
-
-	/**
-	 * Set the template path to use for the page
-	 *
-	 * @param string $sTemplateRelPath Relative path (from <ITOP>/templates/) to the template path
-	 *
-	 * @return $this
-	 * @since 2.8.0
-	 */
-	public function SetTemplateRelPath($sTemplateRelPath)
-	{
-		$this->sTemplateRelPath = $sTemplateRelPath;
-		return $this;
-	}
-
-	/**
-	 * Return the relative path (from <ITOP>/templates/) to the page template
-	 *
-	 * @return string
-	 * @since 2.8.0
-	 */
-	public function GetTemplateRelPath()
-	{
-		return $this->sTemplateRelPath;
 	}
 
 	/**
@@ -663,25 +635,7 @@ JS
 		);
 	}
 
-	/**
-	 * @inheritDoc
-	 * @throws \Exception
-	 */
-	protected function LoadTheme()
-	{
-		// TODO 2.8.0: Remove light-grey when development of Full Moon is done.
-		// TODO 2.8.0: Reuse theming mechanism for Full Moon
-		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
-		$this->add_linked_stylesheet($sCssThemeUrl);
 
-		$sCssRelPath = utils::GetCSSFromSASS(
-			'css/backoffice/main.scss',
-			array(
-				APPROOT.'css/backoffice/',
-			)
-		);
-		$this->add_saas($sCssRelPath);
-	}
 
 	/**
 	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
@@ -784,32 +738,6 @@ JS
 		return $sHtml;
 	}
 
-	/**
-	 * Return the language for the page metadata based on the current user
-	 *
-	 * @return string
-	 * @since 2.8.0
-	 */
-	protected function GetLanguageForMetadata()
-	{
-		$sUserLang = UserRights::GetUserLanguage();
-
-		return strtolower(substr($sUserLang, 0 ,2));
-	}
-
-	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
-	 * @throws \Exception
-	 * @since 2.8.0
-	 */
-	protected function GetFaviconAbsoluteUrl()
-	{
-		// TODO 2.8.0: Make it a property so it can be changed programmatically
-		// TODO 2.8.0: How to set both dark/light mode favicons
-		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
-	}
 
 	/**
 	 * Return the navigation menu layout (id, menu groups, ...)
@@ -855,6 +783,7 @@ JS
 	public function SetContentLayout(PageContent $oLayout)
 	{
 		$this->oContentLayout = $oLayout;
+
 		return $this;
 	}
 
@@ -867,7 +796,9 @@ JS
 	 */
 	protected function GetContentLayout()
 	{
-		return $this->oContentLayout;
+		/** @var PageContent $oPageContent */
+		$oPageContent = $this->oContentLayout;
+		return $oPageContent;
 	}
 
 	/**
@@ -1046,14 +977,7 @@ EOF;
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
 		$this->output_dict_entries();
-
-		// TODO 2.8.0: Check if we can keep this as is
-		// Render the blocks
-		$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
-
-		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-		$this->GetContentLayout()->SetExtraHtmlContent(self::FilterXSS($this->s_content));
+		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
@@ -1068,9 +992,12 @@ EOF;
 
 		// Base tag
 		// Note: We might consider to put the app_root_url parameter here, but that would need a BIG rework on iTop AND the extensions to replace all the "../images|js|css/xxx.yyy"...
-		if(!empty($this->a_base['href']))
-		{
+		if (!empty($this->a_base['href'])) {
 			$aData['aPage']['aMetadata']['sBaseUrl'] = $this->a_base['href'];
+		}
+
+		if ($this->a_base['target'] != '') {
+			$aData['aPage']['aMetadata']['sBaseTarget'] = $this->a_base['target'];
 		}
 
 		// Layouts
@@ -1121,8 +1048,8 @@ EOF;
 				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 				'aJsInlineLive' => $this->a_scripts,
 				// TODO 2.8.0: TEMP, used while developping, remove it.
-				'sSanitizedContent' => self::FilterXSS($this->s_content),
-				'sDeferredContent' => self::FilterXSS($this->s_deferred_content),
+				'sSanitizedContent' => utils::FilterXSS($this->s_content),
+				'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
 			]
 		);
 
@@ -1285,28 +1212,22 @@ EOF;
 //		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
 //		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
 
-		if ($this->IsPrintableVersion())
-		{
+		if ($this->IsPrintableVersion()) {
 			$sHtml .= ' <!-- Beginning of page content -->';
-			$sHtml .= self::FilterXSS($this->s_content);
+			$sHtml .= utils::FilterXSS($this->s_content);
 			$sHtml .= ' <!-- End of page content -->';
-		}
-		elseif ($this->GetOutputFormat() == 'html')
-		{
+		} elseif ($this->GetOutputFormat() == 'html') {
 
 			// Add the captured output
-			if (trim($s_captured_output) != "")
-			{
-				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".self::FilterXSS($s_captured_output)."</div></div>\n";
+			if (trim($s_captured_output) != "") {
+				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".utils::FilterXSS($s_captured_output)."</div></div>\n";
 			}
-			$sHtml .= "<div id=\"at_the_end\">".self::FilterXSS($this->s_deferred_content)."</div>";
+			$sHtml .= "<div id=\"at_the_end\">".utils::FilterXSS($this->s_deferred_content)."</div>";
 			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
 			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
 			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
-		}
-		else
-		{
-			$sHtml .= self::FilterXSS($this->s_content);
+		} else {
+			$sHtml .= utils::FilterXSS($this->s_content);
 		}
 
 		if ($this->IsPrintableVersion())
@@ -1362,7 +1283,7 @@ EOF;
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
-		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
+		$this->AddUiBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
 	/**
@@ -1432,6 +1353,8 @@ EOF;
 	 *
 	 * @param string $sTabContainer
 	 * @param string $sTabCode
+	 *
+	 * @deprecated 2.8.0
 	 */
 	public function SelectTab($sTabContainer, $sTabCode)
 	{
@@ -1442,16 +1365,14 @@ EOF;
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function add($sHtml)
+	public function add($sHtml): ?iUIBlock
 	{
-		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
-		{
+		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
 			$this->m_oTabs->AddToCurrentTab($sHtml);
+		} else {
+			return parent::add($sHtml);
 		}
-		else
-		{
-			parent::add($sHtml);
-		}
+		return null;
 	}
 
 	/**

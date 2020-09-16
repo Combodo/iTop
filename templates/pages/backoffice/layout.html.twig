@@ -1,38 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{ aPage.aMetadata.sLang }}">
-<head>
-	<meta charset="{{ aPage.aMetadata.sCharset }}">
-	{# This block can be used to add your own meta tags by extending the default template #}
-	{% block iboPageExtraMetas %}
-	{% endblock %}
-	{% if aPage.aMetadata.sBaseUrl is defined %}
-		<base href="{{ aPage.aMetadata.sBaseUrl }}">
-	{% endif %}
-	<title>{{ aPage.sTitle }}</title>
-	<link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version }}" />
-	<link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php" />
+{% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
 
-	{# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
-	- Visual glitches
-	- jQuery scripts spurious problems (like failing on a 'reload') #}
-	{% block iboPageCssFiles %}
-		{% for aCssFileData in aPage.aCssFiles %}
-			{% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
-			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version }}" rel="stylesheet" />
-			{% if aCssFileData['condition'] != '' %}<![endif]-->{% endif %}
-        {% endfor %}
-	{% endblock %}
-
-	{% block iboPageCssInline %}
-		{# We put each styles in a dedicated style tag to prevent massive failure if 1 style is broken (eg. missing semi-colon, bracket, ...) #}
-		{% for sCssInline in aPage.aCssInline %}
-			<style>
-				{{ sCssInline|raw }}
-			</style>
-		{% endfor %}
-	{% endblock %}
-</head>
-<body data-gui-type="backoffice">
+{% block iboPageBodyHtml %}
 	{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
 	<div id="ibo-page-container">
 		<div id="ibo-top-container">
@@ -49,41 +17,10 @@
 		<div style="display:none" title="dialog" id="ModalDlg"></div>
 		<div style="display:none" id="ajax_content"></div>
 	</div>
+{% endblock %}
 
-	{% block iboPageJsFiles %}
-		{% for sJsFile in aPage.aJsFiles %}
-			<script type="text/javascript" src="{{ sJsFile|add_itop_version }}"></script>
-		{% endfor %}
-	{% endblock %}
-
-	{% block iboPageJsInlineScripts %}
-		<script type="text/javascript">
-			{# TODO: How to do this in native JS? #}
-			$(document).ready(function(){
-				{% block iboPageJsInlineOnInit %}
-					{% for sJsInline in aPage.aJsInlineOnInit %}
-						{{ sJsInline|raw }}
-					{% endfor %}
-				{% endblock %}
-
-				{% block iboPageJsInlineOnDomReady %}
-					setTimeout(function(){
-						{% for sJsInline in aPage.aJsInlineOnDomReady %}
-							{{ sJsInline|raw }}
-						{% endfor %}
-					}, 50);
-				{% endblock %}
-			});
-		</script>
-
-		{% block iboPageJsInlineLive %}
-			{% for sJsInline in aPage.aJsInlineLive %}
-				{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
-				<script type="text/javascript">
-					{{ sJsInline|raw }}
-				</script>
-			{% endfor %}
-		{% endblock %}
-	{% endblock %}
-</body>
-</html>
+{% block iboPageJsInlineOnInit %}
+	{% for sJsInline in aPage.aJsInlineOnInit %}
+		{{ sJsInline|raw }}
+	{% endfor %}
+{% endblock %}

@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use \Combodo\iTop\Application\UI\iUIBlock;
 
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
@@ -64,9 +65,10 @@ class CSVPage extends WebPage
 	{
 	}
 
-	public function add($sText)
+	public function add($sText): ?iUIBlock
 	{
 		$this->s_content .= $sText;
+		return null;
 	}	
 
 	public function p($sText)

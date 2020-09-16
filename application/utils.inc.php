@@ -2353,4 +2353,9 @@ class utils
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
+
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace('<script', '&lt;script', $sHTML);
+	}
 }

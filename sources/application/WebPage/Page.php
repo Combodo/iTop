@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\iUIBlock;
+
 
 /**
  * Generic interface common to CLI and Web pages
@@ -24,7 +26,7 @@ interface Page
 	 *
 	 * @return void
 	 */
-	public function add($sText);
+	public function add($sText): ?iUIBlock;
 
 	/**
 	 * Add a paragraph to the body of the page

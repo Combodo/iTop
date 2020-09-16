@@ -4,6 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -15,6 +18,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	protected $m_sReadyScript;
 	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
 
 	/**
 	 * constructor for the web page
@@ -44,7 +48,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
-		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
+		$this->AddUiBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
 	/**
@@ -195,10 +199,10 @@ EOF
 		}
 
 		// Render the blocks
-		$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
+		//$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
 
 		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
+		//$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 
 		// Additional UI widgets to be activated inside the ajax fragment
 		// Important: Testing the content type is not enough because some ajax handlers have not correctly positionned the flag (e.g json response corrupted by the script)
@@ -210,6 +214,40 @@ EOF
 			);
 		}
 		$this->outputCollapsibleSectionInit();
+
+
+		$aData = [];
+		$aData['oLayout'] = $this->oContentLayout;
+
+		$aData['aPage'] = [
+			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
+			'sTitle' => $this->s_title,
+			'aMetadata' => [
+				'sCharset' => static::PAGES_CHARSET,
+				'sLang' => $this->GetLanguageForMetadata(),
+			],
+			'aCssFiles' => $this->a_linked_stylesheets,
+			'aCssInline' => $this->a_styles,
+			'aJsFiles' => $this->a_linked_scripts,
+			'aJsInlineLive' => $this->a_scripts,
+			// TODO 2.8.0: TEMP, used while developping, remove it.
+			'sSanitizedContent' => utils::FilterXSS($this->s_content),
+			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+		];
+
+		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
+		// Render final TWIG into global HTML
+		$oKpi = new ExecutionKPI();
+		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
+		$oKpi->ComputeAndReport('TWIG rendering');
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+
+
+		return;
 
 		$oKPI = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
@@ -297,13 +335,14 @@ EOF
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function add($sHtml)
+	public function add($sHtml): ?iUIBlock
 	{
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
 			$this->m_oTabs->AddToTab($this->m_oTabs->GetCurrentTabContainer(), $this->m_oTabs->GetCurrentTab(), $sHtml);
 		} else {
-			parent::add($sHtml);
+			return parent::add($sHtml);
 		}
+		return null;
 	}
 
 	/**

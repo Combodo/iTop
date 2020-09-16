@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use \Combodo\iTop\Application\UI\iUIBlock;
 
 /**
  * CLI page 
@@ -48,9 +49,10 @@ class CLIPage implements Page
         }
     }
 
-	public function add($sText)
+	public function add($sText): ?iUIBlock
 	{
 		echo $sText;
+		return null;
 	}
 
 	public function p($sText)

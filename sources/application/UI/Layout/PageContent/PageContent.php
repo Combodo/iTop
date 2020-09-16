@@ -20,9 +20,13 @@
 namespace Combodo\iTop\Application\UI\Layout\PageContent;
 
 
+use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\UIBlock;
-use Exception;
+use Combodo\iTop\Application\UI\UIException;
+use Dict;
 
 /**
  * Class PageContent
@@ -32,7 +36,7 @@ use Exception;
  * @internal
  * @since 2.8.0
  */
-class PageContent extends UIBlock
+class PageContent extends UIBlock implements iUIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-page-content';
@@ -41,8 +45,9 @@ class PageContent extends UIBlock
 	/** @var string ENUM_CONTENT_AREA_MAIN The main content area */
 	public const ENUM_CONTENT_AREA_MAIN = 'main';
 
-	/** @var \Combodo\iTop\Application\UI\iUIBlock[][] $aContentAreasBlocks Blocks for the different content parts of the layout */
+	/** @var iUIContentBlock[] $aContentAreasBlocks Blocks for the different content parts of the layout */
 	protected $aContentAreasBlocks;
+
 	/** @var string $sExtraHtmlContent HTML content that do not come from blocks and will be output as-is by the component */
 	protected $sExtraHtmlContent;
 
@@ -59,109 +64,13 @@ class PageContent extends UIBlock
 	}
 
 	/**
-	 * Set all block for a content area at once, replacing all existing ones.
-	 *
-	 * @param string $sAreaId
-	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aBlocks
-	 *
-	 * @return $this
-	 */
-	protected function SetContentAreaBlocks(string $sAreaId, array $aBlocks)
-	{
-		$this->aContentAreasBlocks[$sAreaId] = $aBlocks;
-
-		return $this;
-	}
-
-	/**
-	 * Return all blocks from the $sAreaId content area
-	 *
-	 * @param string $sAreaId
-	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
-	 * @throws \Exception
-	 */
-	protected function GetContentAreaBlocks(string $sAreaId)
-	{
-		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks))
-		{
-			throw new Exception('Could not retrieve blocks from content area "'.$sAreaId.'" as it does seem to exists for page content "'.$this->GetId().'"');
-		}
-
-		return $this->aContentAreasBlocks[$sAreaId];
-	}
-
-	/**
-	 * Return true if the $sAreaId content area exists
-	 *
-	 * @param string $sAreaId
-	 *
-	 * @return bool
-	 */
-	protected function IsExistingContentArea(string $sAreaId)
-	{
-		return isset($this->aContentAreasBlocks[$sAreaId]);
-	}
-
-	/**
-	 * Add $oBlock to the $sAreaId content area.
-	 * Note that if the area doesn't exist yet, it is created. Also if a block with the same ID already exists, it will be replaced.
-	 *
-	 * @param string $sAreaId
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
-	 *
-	 * @return $this
-	 */
-	protected function AddBlockToContentArea(string $sAreaId, iUIBlock $oBlock)
-	{
-		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks))
-		{
-			$this->aContentAreasBlocks[$sAreaId] = [];
-		}
-
-		$this->aContentAreasBlocks[$sAreaId][$oBlock->GetId()] = $oBlock;
-
-		return $this;
-	}
-
-	/**
-	 * Remove the $sBlockId from the $sAreaId content area.
-	 * Note that if the $sBlockId or the $sAreaId do not exist, it proceeds silently.
-	 *
-	 * @param string $sAreaId
-	 * @param string $sBlockId
-	 *
-	 * @return $this
-	 */
-	protected function RemoveBlockFromContentArea(string $sAreaId, string $sBlockId)
-	{
-		if (array_key_exists($sAreaId, $this->aContentAreasBlocks) && array_key_exists($sBlockId, $this->aContentAreasBlocks[$sAreaId]))
-		{
-			unset($this->aContentAreasBlocks[$sAreaId][$sBlockId]);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Return the content areas IDs
-	 *
-	 * @see static::ENUM_CONTENT_AREA_MAIN, ...
-	 * @return array
-	 */
-	protected function EnumContentAreas()
-	{
-		return array_keys($this->aContentAreasBlocks);
-	}
-
-	/**
 	 * Set all main blocks at once.
 	 *
 	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aBlocks
 	 *
 	 * @return $this
 	 */
-	public function SetMainBlocks(array $aBlocks)
+	public function SetMainBlocks(array $aBlocks): self
 	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN, $aBlocks);
 
@@ -208,6 +117,111 @@ class PageContent extends UIBlock
 		return $this;
 	}
 
+
+	/**
+	 * Add $oBlock to the $sAreaId content area.
+	 * Note that if the area doesn't exist yet, it is created. Also if a block with the same ID already exists, it will be replaced.
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	protected function AddBlockToContentArea(string $sAreaId, iUIBlock $oBlock): self
+	{
+		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
+			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
+		}
+
+		$this->aContentAreasBlocks[$sAreaId]->AddSubBlock($oBlock);
+
+		return $this;
+	}
+
+	public function AddSubBlock(iUIBlock $oSubBlock): iUIContentBlock
+	{
+		$this->AddMainBlock($oSubBlock);
+		return $this->aContentAreasBlocks[static::ENUM_CONTENT_AREA_MAIN];
+	}
+
+	/**
+	 * Remove the $sBlockId from the $sAreaId content area.
+	 * Note that if the $sBlockId or the $sAreaId do not exist, it proceeds silently.
+	 *
+	 * @param string $sAreaId
+	 * @param string $sBlockId
+	 *
+	 * @return $this
+	 */
+	protected function RemoveBlockFromContentArea(string $sAreaId, string $sBlockId)
+	{
+		if (array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
+			$this->aContentAreasBlocks[$sAreaId]->RemoveSubBlock($sBlockId);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set all block for a content area at once, replacing all existing ones.
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 */
+	protected function SetContentAreaBlocks(string $sAreaId, array $aBlocks): self
+	{
+		if (!isset($this->aContentAreasBlocks[$sAreaId])) {
+			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
+		}
+
+		$this->aContentAreasBlocks[$sAreaId]->SetSubBlocks($aBlocks);
+
+		return $this;
+	}
+
+	/**
+	 * Return all blocks from the $sAreaId content area
+	 *
+	 * @param string $sAreaId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
+	 * @throws \Combodo\iTop\Application\UI\UIException
+	 */
+	protected function GetContentAreaBlocks(string $sAreaId): array
+	{
+		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
+			throw new UIException($this, Dict::Format('UIBlock:Error:CannotGetBlocks', $sAreaId, $this->GetId()));
+		}
+
+		return $this->aContentAreasBlocks[$sAreaId]->GetSubBlocks();
+	}
+
+	/**
+	 * Return true if the $sAreaId content area exists
+	 *
+	 * @param string $sAreaId
+	 *
+	 * @return bool
+	 */
+	protected function IsExistingContentArea(string $sAreaId)
+	{
+		return isset($this->aContentAreasBlocks[$sAreaId]);
+	}
+
+	/**
+	 * Return the content areas IDs
+	 *
+	 * @return array
+	 * @see static::ENUM_CONTENT_AREA_MAIN, ...
+	 */
+	protected function EnumContentAreas()
+	{
+		return array_keys($this->aContentAreasBlocks);
+	}
+
+
 	/**
 	 * Set the extra HTML content
 	 *
@@ -215,18 +229,19 @@ class PageContent extends UIBlock
 	 *
 	 * @return $this
 	 */
-	public function SetExtraHtmlContent(string $sExtraHtmlContent)
+	public function SetExtraHtmlContent(string $sExtraHtmlContent): self
 	{
 		$this->sExtraHtmlContent = $sExtraHtmlContent;
 
 		return $this;
 	}
 
-	public function AddExtraHtmlContent(string $sExtraHtmlContent):iUIBlock
+	public function AddHtml(string $sHtml): iUIBlock
 	{
-		$this->sExtraHtmlContent .= $sExtraHtmlContent;
+		$oBlock = new Html($sHtml);
+		$this->AddMainBlock($oBlock);
 
-		return $this;
+		return $oBlock;
 	}
 
 	/**
@@ -239,21 +254,30 @@ class PageContent extends UIBlock
 		return $this->sExtraHtmlContent;
 	}
 
-	/**
-	 * @inheritDoc
-	 * @throws \Exception
-	 */
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
-		$aSubBlocks = [];
-		foreach($this->EnumContentAreas() as $sAreaId)
-		{
-			foreach($this->GetContentAreaBlocks($sAreaId) as $oBlock)
-			{
-				$aSubBlocks[$oBlock->GetId()] = $oBlock;
-			}
-		}
+		return $this->GetMainBlocks();
+	}
 
-		return $aSubBlocks;
+	public function GetSubBlock(string $sId): ?iUIBlock
+	{
+		return $this->aContentAreasBlocks[static::ENUM_CONTENT_AREA_MAIN]->GetSubBlock($sId);
+	}
+
+	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock
+	{
+		$this->SetMainBlocks($aSubBlocks);
+		return $this;
+	}
+
+	public function RemoveSubBlock(string $sId): iUIContentBlock
+	{
+		$this->RemoveMainBlock($sId);
+		return $this;
+	}
+
+	public function HasSubBlock(string $sId): bool
+	{
+		return $this->aContentAreasBlocks[static::ENUM_CONTENT_AREA_MAIN]->HasSubBlock($sId);
 	}
 }

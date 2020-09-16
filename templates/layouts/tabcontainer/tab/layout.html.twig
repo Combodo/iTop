@@ -1,0 +1,7 @@
+<div id="{{ oUIBlock.GetId() }}" class="ibo-tab-content-block">
+    {% block iboContentBlockContainer %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    {% endblock %}
+</div>

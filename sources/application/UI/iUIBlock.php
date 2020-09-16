@@ -115,5 +115,5 @@ interface iUIBlock
 	 *
 	 * @return $this
 	 */
-	public function AddExtraHtmlContent(string $sHTML) :iUIBlock;
+	public function AddHtml(string $sHTML): iUIBlock;
 }

@@ -4,6 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Layout\TabContainer\Tab\Tab;
+use Combodo\iTop\Application\UI\Layout\TabContainer\TabContainer;
+
 
 /**
  * Helper class to implement JQueryUI tabs inside a page
@@ -15,13 +18,16 @@ class TabManager
 
 	const DEFAULT_TAB_TYPE = self::ENUM_TAB_TYPE_HTML;
 
+	/**
+	 * @var TabContainer[]
+	 */
 	protected $m_aTabs;
 	protected $m_sCurrentTabContainer;
 	protected $m_sCurrentTab;
 
 	public function __construct()
 	{
-		$this->m_aTabs = array();
+		$this->m_aTabs = [];
 		$this->m_sCurrentTabContainer = '';
 		$this->m_sCurrentTab = '';
 	}
@@ -30,13 +36,14 @@ class TabManager
 	 * @param string $sTabContainer
 	 * @param string $sPrefix
 	 *
-	 * @return string
+	 * @return \Combodo\iTop\Application\UI\iUIBlock
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '')
+	public function AddTabContainer(string $sTabContainer, $sPrefix = ''): TabContainer
 	{
-		$this->m_aTabs[$sTabContainer] = array('prefix' => $sPrefix, 'tabs' => array());
+		$oTabContainer = new TabContainer($sTabContainer, $sPrefix);
+		$this->m_aTabs[$sTabContainer] = $oTabContainer;
 
-		return "\$Tabs:$sTabContainer\$";
+		return $oTabContainer;
 	}
 
 	/**
@@ -44,19 +51,18 @@ class TabManager
 	 *
 	 * @throws \Exception
 	 */
-	public function AddToCurrentTab($sHtml)
+	public function AddToCurrentTab(string $sHtml): void
 	{
 		$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
 	}
 
 	/**
 	 * @return int
+	 * @deprecated 2.8.0
 	 */
 	public function GetCurrentTabLength()
 	{
-		$iLength = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) : 0;
-
-		return $iLength;
+		return 0;
 	}
 
 	/**
@@ -67,15 +73,11 @@ class TabManager
 	 * @param integer $iLength The length/offset at which to truncate the tab
 	 *
 	 * @return string The truncated part
+	 * @deprecated 2.8.0
 	 */
-	public function TruncateTab($sTabContainer, $sTab, $iLength)
+	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
 	{
-		$sResult = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'],
-			$iLength);
-		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'] = substr($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html'],
-			0, $iLength);
-
-		return $sResult;
+		return '';
 	}
 
 	/**
@@ -84,9 +86,9 @@ class TabManager
 	 *
 	 * @return bool
 	 */
-	public function TabExists($sTabContainer, $sTab)
+	public function TabExists(string $sTabContainer, string $sTab)
 	{
-		return isset($this->m_aTabs[$sTabContainer]['tabs'][$sTab]);
+		return isset($this->m_aTabs[$sTabContainer]) ? $this->m_aTabs[$sTabContainer]->TabExists($sTab) : false;
 	}
 
 	/**
@@ -95,6 +97,14 @@ class TabManager
 	public function TabsContainerCount()
 	{
 		return count($this->m_aTabs);
+	}
+
+	private function GetTab(string $sTabContainer, string $sTab): ?Tab
+	{
+		if ($this->TabExists($sTabContainer, $sTab)) {
+			return $this->m_aTabs[$sTabContainer]->GetTab($sTab);
+		}
+		return null;
 	}
 
 	/**
@@ -106,19 +116,16 @@ class TabManager
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function AddToTab($sTabContainer, $sTabCode, $sHtml, $sTabTitle = null)
+	public function AddToTab(string $sTabContainer, string $sTabCode, string $sHtml, $sTabTitle = null): string
 	{
 		if (!$this->TabExists($sTabContainer, $sTabCode)) {
 			$this->InitTab($sTabContainer, $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle);
 		}
 
-		// If target tab is not of type 'html', throw an exception
-		if ($this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['type'] != static::ENUM_TAB_TYPE_HTML) {
-			throw new Exception("Cannot add HTML content to the tab '$sTabCode' of type '{$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['type']}'");
-		}
+		$oTab = $this->GetTab($sTabContainer, $sTabCode);
 
 		// Append to the content of the tab
-		$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['html'] .= $sHtml;
+		$oTab->AddHtml($sHtml);
 
 		return ''; // Nothing to add to the page for now
 	}
@@ -139,16 +146,21 @@ class TabManager
 	/**
 	 * @param string $sTabCode
 	 *
+	 * @param string|null $sTabTitle
+	 *
 	 * @return string
+	 * @throws \Combodo\iTop\Application\UI\UIException
 	 */
-	public function SetCurrentTab($sTabCode = '', $sTabTitle = null)
+	public function SetCurrentTab(string $sTabCode = '', string $sTabTitle = null): ?string
 	{
 		$sPreviousTabCode = $this->m_sCurrentTab;
 		$this->m_sCurrentTab = $sTabCode;
 
-		// Init tab to HTML tab if not existing
-		if (!$this->TabExists($this->GetCurrentTabContainer(), $sTabCode)) {
-			$this->InitTab($this->GetCurrentTabContainer(), $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle);
+		if ($sTabCode != '') {
+			// Init tab to HTML tab if not existing
+			if (!$this->TabExists($this->GetCurrentTabContainer(), $sTabCode)) {
+				$this->InitTab($this->GetCurrentTabContainer(), $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle);
+			}
 		}
 
 		return $sPreviousTabCode;
@@ -166,16 +178,20 @@ class TabManager
 	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. false will cause
 	 *     the tab to be reloaded upon each activation.
 	 *
+	 * @param string|null $sTabTitle
+	 *
 	 * @return string
 	 *
+	 * @throws \Combodo\iTop\Application\UI\UIException
 	 * @since 2.0.3
 	 */
-	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
+	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, string $sTabTitle = null): string
 	{
 		// Set the content of the tab
-		$this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle);
-		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$sTabCode]['url'] = $sUrl;
-		$this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$sTabCode]['cache'] = $bCache;
+		/** @var \Combodo\iTop\Application\UI\Layout\TabContainer\Tab\AjaxTab $oTab */
+		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle);
+		$oTab->SetURL($sUrl)
+			->SetCache($bCache);
 
 		return ''; // Nothing to add to the page for now
 	}
@@ -200,14 +216,14 @@ class TabManager
 	 * @param string $sTabCode
 	 * @param string|null $sTabContainer
 	 */
-	public function RemoveTab($sTabCode, $sTabContainer = null)
+	public function RemoveTab(string $sTabCode, string $sTabContainer = null)
 	{
 		if ($sTabContainer == null) {
 			$sTabContainer = $this->m_sCurrentTabContainer;
 		}
-		if (isset($this->m_aTabs[$sTabContainer]['tabs'][$sTabCode])) {
+		if (isset($this->m_aTabs[$sTabContainer]) && $this->m_aTabs[$sTabContainer]->TabExists($sTabCode)) {
 			// Delete the content of the tab
-			unset($this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]);
+			$this->m_aTabs[$sTabContainer]->RemoveTab($sTabCode);
 
 			// If we just removed the active tab, let's reset the active tab
 			if (($this->m_sCurrentTabContainer == $sTabContainer) && ($this->m_sCurrentTab == $sTabCode)) {
@@ -224,16 +240,18 @@ class TabManager
 	 *
 	 * @return mixed The actual name of the tab (as a string) or false if not found
 	 */
-	public function FindTab($sPattern, $sTabContainer = null)
+	public function FindTab(string $sPattern, string $sTabContainer = null)
 	{
 		$result = false;
 		if ($sTabContainer == null) {
 			$sTabContainer = $this->m_sCurrentTabContainer;
 		}
-		foreach ($this->m_aTabs[$sTabContainer]['tabs'] as $sTabCode => $void) {
-			if (preg_match($sPattern, $sTabCode)) {
-				$result = $sTabCode;
-				break;
+		if (isset($this->m_aTabs[$sTabContainer])) {
+			foreach ($this->m_aTabs[$sTabContainer]->GetSubBlocks() as $sTabCode => $void) {
+				if (preg_match($sPattern, $sTabCode)) {
+					$result = $sTabCode;
+					break;
+				}
 			}
 		}
 
@@ -250,26 +268,11 @@ class TabManager
 	 * @param string $sTabCode
 	 *
 	 * @return string
+	 * @deprecated 2.8.0
 	 */
-	public function SelectTab($sTabContainer, $sTabCode)
+	public function SelectTab(string $sTabContainer, string $sTabCode)
 	{
-		$container_index = 0;
-		$tab_index = 0;
-		foreach ($this->m_aTabs as $sCurrentTabContainerName => $aTabs) {
-			if ($sTabContainer == $sCurrentTabContainerName) {
-				foreach ($aTabs['tabs'] as $sCurrentTabLabel => $void) {
-					if ($sCurrentTabLabel == $sTabCode) {
-						break;
-					}
-					$tab_index++;
-				}
-				break;
-			}
-			$container_index++;
-		}
-		$sSelector = '#tabbedContent_'.$container_index.' > ul';
-
-		return "window.setTimeout(\"$('$sSelector').tabs('select', $tab_index);\", 100);"; // Let the time to the tabs widget to initialize
+		return '';
 	}
 
 	/**
@@ -277,14 +280,15 @@ class TabManager
 	 * @param \WebPage $oPage
 	 *
 	 * @return mixed
+	 * @deprecated 2.8.0
 	 */
-	public function RenderIntoContent($sContent, WebPage $oPage)
+	public function RenderIntoContent(string $sContent, WebPage $oPage)
 	{
 		// Render the tabs in the page (if any)
+		$container_index = 0;
 		foreach ($this->m_aTabs as $sTabContainerName => $aTabs) {
 			$sTabs = '';
 			$sPrefix = $aTabs['prefix'];
-			$container_index = 0;
 			if (count($aTabs['tabs']) > 0) {
 				// Clean tabs
 				foreach ($aTabs['tabs'] as $sTabCode => $aTabData) {
@@ -384,37 +388,36 @@ EOF
 	 * @param string $sTabType
 	 * @param string|null $sTabTitle
 	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\TabContainer\Tab\Tab
+	 * @throws \Combodo\iTop\Application\UI\UIException
 	 * @since 2.7.0
 	 */
-	protected function InitTab($sTabContainer, $sTabCode, $sTabType = self::DEFAULT_TAB_TYPE, $sTabTitle = null)
+	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, string $sTabTitle = null): Tab
 	{
+		$oTab = null;
 		if (!$this->TabExists($sTabContainer, $sTabCode)) {
-			// Container
-			if (!array_key_exists($sTabContainer, $this->m_aTabs)) {
-				$this->m_aTabs[$sTabContainer] = array(
-					'prefix' => '',
-					'tabs' => array(),
-				);
+			if (!isset($this->m_aTabs[$sTabContainer])) {
+				$oTabContainer = $this->AddTabContainer($sTabContainer);
+			} else {
+				$oTabContainer = $this->m_aTabs[$sTabContainer];
 			}
 
-			// Common properties
-			$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode] = array(
-				'type' => $sTabType,
-				'title' => ($sTabTitle !== null) ? Dict::S($sTabTitle) : Dict::S($sTabCode),
-			);
+			$sTitle = ($sTabTitle !== null) ? Dict::S($sTabTitle) : Dict::S($sTabCode);
 
-			// Specific properties
 			switch ($sTabType) {
 				case static::ENUM_TAB_TYPE_AJAX:
-					$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['url'] = null;
-					$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['cache'] = null;
+					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle);
 					break;
 
 				case static::ENUM_TAB_TYPE_HTML:
 				default:
-					$this->m_aTabs[$sTabContainer]['tabs'][$sTabCode]['html'] = null;
+					$oTab = $oTabContainer->AddTab($sTabCode, $sTitle);
 					break;
 			}
+		} else {
+			$oTab = $this->GetTab($sTabContainer, $sTabCode);
 		}
+
+		return $oTab;
 	}
 }

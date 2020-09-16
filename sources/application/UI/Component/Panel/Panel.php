@@ -20,8 +20,7 @@
 namespace Combodo\iTop\Application\UI\Component\Panel;
 
 
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\UIBlock;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 
 /**
  * Class Panel
@@ -30,7 +29,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * @package Combodo\iTop\Application\UI\Component\Panel
  * @since 2.8.0
  */
-class Panel extends UIBlock
+class Panel extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-panel';
@@ -115,63 +114,6 @@ class Panel extends UIBlock
 	public function SetTitle(string $sTitle)
 	{
 		$this->sTitle = $sTitle;
-
-		return $this;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetSubBlocks()
-	{
-		return $this->aSubBlocks;
-	}
-
-	/**
-	 * Set all sub blocks at once, replacing all existing ones
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
-	 *
-	 * @return $this
-	 */
-	public function SetSubBlocks(array $aSubBlocks)
-	{
-		foreach ($aSubBlocks as $oSubBlock)
-		{
-			$this->AddSubBlock($oSubBlock);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Add $oSubBlock, replacing any block with the same ID
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oSubBlock
-	 *
-	 * @return $this
-	 */
-	public function AddSubBlock(iUIBlock $oSubBlock)
-	{
-		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
-
-		return $this;
-	}
-
-	/**
-	 * Remove the sub block identified by $sId.
-	 * Note that if no sub block matches the ID, it proceeds silently.
-	 *
-	 * @param string $sId ID of the sub block to remove
-	 *
-	 * @return $this
-	 */
-	public function RemoveSubBlock(string $sId)
-	{
-		if (array_key_exists($sId, $this->aSubBlocks))
-		{
-			unset($this->aSubBlocks[$sId]);
-		}
 
 		return $this;
 	}
