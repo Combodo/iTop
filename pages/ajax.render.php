@@ -1670,12 +1670,11 @@ JS
 		case 'full_text_search':
 			$aFullTextNeedles = utils::ReadParam('needles', array(), false, 'raw_data');
 			$sFullText = trim(implode(' ', $aFullTextNeedles));
-			$sClassName = utils::ReadParam('class', '');
+			$sClassName = utils::ReadParam('classname', '');
 			$iCount = utils::ReadParam('count', 0);
 			$iCurrentPos = utils::ReadParam('position', 0);
 			$iTune = utils::ReadParam('tune', 0);
-			if (empty($sFullText))
-			{
+			if (empty($sFullText)) {
 				$oPage->p(Dict::S('UI:Search:NoSearch'));
 				break;
 			}

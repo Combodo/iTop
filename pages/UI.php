@@ -675,7 +675,7 @@ try
 					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
 <<<EOF
-						var oParams = {operation: 'full_text_search', position: 0, 'class': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
+						var oParams = {operation: 'full_text_search', position: 0, 'classname': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
 						});
