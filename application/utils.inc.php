@@ -296,8 +296,7 @@ class utils
 
 			case 'class':
 				$retValue = $value;
-				if (!MetaModel::IsValidClass($value))
-				{
+				if (($value != '') && !MetaModel::IsValidClass($value)) {
 					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
