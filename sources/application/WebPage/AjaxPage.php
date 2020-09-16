@@ -15,7 +15,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 *
 	 * @var array
 	 */
-	protected $m_sReadyScript;
+	protected $m_aReadyScripts;
 	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
@@ -31,7 +31,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		$bPrintable = ($sPrintable == '1');
 
 		parent::__construct($s_title, $bPrintable);
-		$this->m_sReadyScript = "";
+		$this->m_aReadyScripts = [];
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->add_header("Cache-control: no-cache");
 		$this->m_oTabs = new TabManager();
@@ -135,6 +135,8 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public function output()
 	{
+		$s_captured_output = $this->ob_get_clean_safe();
+
 		if (!empty($this->sContentType)) {
 			$this->add_header('Content-type: '.$this->sContentType);
 		}
@@ -199,11 +201,6 @@ EOF
 		}
 
 		// Render the blocks
-		//$this->s_content = $this->oUIBlockManager->RenderIntoContent($this->s_content, $this);
-
-		// Render the tabs in the page (if any)
-		//$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-
 		// Additional UI widgets to be activated inside the ajax fragment
 		// Important: Testing the content type is not enough because some ajax handlers have not correctly positionned the flag (e.g json response corrupted by the script)
 		if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content))) {
@@ -230,9 +227,12 @@ EOF
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
+			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
+			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
 			// TODO 2.8.0: TEMP, used while developping, remove it.
 			'sSanitizedContent' => utils::FilterXSS($this->s_content),
-			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+			'sDeferredContent' => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
+			'sCapturedOutput' => $s_captured_output,
 		];
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
@@ -246,8 +246,8 @@ EOF
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
-
 		return;
+
 
 		$oKPI = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
@@ -257,6 +257,8 @@ EOF
 		} else {
 			echo $this->s_content;
 		}
+
+		// TODO 2.8.0 Only for designer ?
 		if (!empty($this->m_sMenu)) {
 			$uid = time();
 			echo "<div id=\"accordion_temp_$uid\">\n";
@@ -291,9 +293,9 @@ EOF
 			echo "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
 			echo "\n</script>\n";
 		}
-		if (!empty($this->m_sReadyScript)) {
+		if (!empty($this->m_aReadyScripts)) {
 			echo "<script type=\"text/javascript\">\n";
-			echo $this->m_sReadyScript; // Ready Scripts are output as simple scripts
+			echo $this->m_aReadyScripts; // Ready Scripts are output as simple scripts
 			echo "\n</script>\n";
 		}
 		if (count($this->a_linked_stylesheets) > 0) {
@@ -394,7 +396,9 @@ EOF
 	 */
 	public function add_ready_script($sScript)
 	{
-		$this->m_sReadyScript .= $sScript."\n";
+		if (!empty(trim($sScript))) {
+			$this->m_aReadyScripts[] = $sScript;
+		}
 	}
 
 	/**

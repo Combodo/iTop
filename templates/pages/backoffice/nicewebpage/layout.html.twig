@@ -1,10 +1,10 @@
 {% extends "pages/backoffice/webpage/layout.html.twig" %}
 
 {% block iboPageJsInlineOnDomReady %}
-    setTimeout(function () {
     {% for sJsInline in aPage.aJsInlineOnDomReady %}
+        setTimeout(function () {
         {{ sJsInline|raw }}
+        }, 50);
     {% endfor %}
-    }, 50);
 {% endblock %}
 

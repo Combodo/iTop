@@ -232,7 +232,9 @@ EOF
 	
 	public function add_ready_script($sScript)
 	{
-		$this->m_aReadyScripts[] = $sScript;
+		if (!empty(trim($sScript))) {
+			$this->m_aReadyScripts[] = $sScript;
+		}
 	}
 	
 		/**

@@ -1,1 +1,49 @@
-{{ render_block(oLayout, {aPage: aPage}) }}
+{% apply spaceless %}
+    {% if bEscapeContent %}
+        {{ render_block(oLayout, {aPage: aPage})|escape }}
+    {% else %}
+        {{ render_block(oLayout, {aPage: aPage}) }}
+    {% endif %}
+
+    {% block iboPageJsInlineLive %}
+        {% for sJsInline in aPage.aJsInlineLive %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+                {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {% block iboPageJsFiles %}
+        {% for sJsFile in aPage.aJsFiles %}
+            <script type="text/javascript">
+                $.getScript({{ sJsFile|json_encode }});
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {% if sDeferredContent %}
+        <script type="text/javascript">
+            $('body').append('{{ sDeferredContent|raw }}');
+        </script>
+    {% endif %}
+
+    {% block iboPageJsInlineOnDomReady %}
+        {% for sJsInline in aPage.aJsInlineOnDomReady %}
+            <script type="text/javascript">
+                {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {% block iboPageCssFiles %}
+        {% for aCssFileData in aPage.aCssFiles %}
+            <script type="text/javascript">
+                if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {{ sCapturedOutput }}
+
+{% endapply %}
