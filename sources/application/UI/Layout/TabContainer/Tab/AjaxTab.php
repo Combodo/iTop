@@ -35,16 +35,15 @@ class AjaxTab extends Tab
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-ajaxtab';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/ajaxtab/layout';
-	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/ajaxtab/layout';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/ajaxtab';
+	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/ajaxtab';
 
+	protected const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
+
+	/** @var string */
 	private $sURL;
+	/** @var bool */
 	private $bCache;
-
-	public function GetType(): string
-	{
-		return TabManager::ENUM_TAB_TYPE_AJAX;
-	}
 
 	/**
 	 * @param string $sHtml
@@ -88,28 +87,28 @@ class AjaxTab extends Tab
 	}
 
 	/**
-	 * @param mixed $bCache
+	 * @param bool $bCache
 	 *
 	 * @return AjaxTab
 	 */
-	public function SetCache(string $bCache): self
+	public function SetCache(bool $bCache): self
 	{
 		$this->bCache = $bCache;
 		return $this;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function GetURL()
+	public function GetURL(): string
 	{
 		return $this->sURL;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function GetCache()
+	public function GetCache(): string
 	{
 		return $this->bCache ? 'true' : 'false';
 	}

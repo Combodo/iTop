@@ -32,8 +32,10 @@ class Tab extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-tab';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/layout';
-	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/layout';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/tab';
+	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/tab';
+
+	protected const TAB_TYPE = TabManager::ENUM_TAB_TYPE_HTML;
 
 	protected $sTitle;
 
@@ -45,7 +47,7 @@ class Tab extends UIContentBlock
 
 	public function GetType(): string
 	{
-		return TabManager::ENUM_TAB_TYPE_HTML;
+		return static::TAB_TYPE;
 	}
 
 	public function GetTitle(): string
