@@ -40,7 +40,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/layout';
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
 
 	private $m_aMessages;
 	private $m_aInitScript = array();
@@ -979,6 +979,9 @@ EOF;
 		$this->output_dict_entries();
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
+		// TODO 2.8.0 : to be removed
+		$this->outputCollapsibleSectionInit();
+
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => $sAbsoluteUrlAppRoot,
@@ -1056,10 +1059,8 @@ EOF;
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 
 		// Send headers
-		if ($this->GetOutputFormat() === 'html')
-		{
-			foreach ($this->a_headers as $sHeader)
-			{
+		if ($this->GetOutputFormat() === 'html') {
+			foreach ($this->a_headers as $sHeader) {
 				header($sHeader);
 			}
 		}

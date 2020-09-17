@@ -21,7 +21,6 @@ namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
-use utils;
 
 /**
  * Class BlockRenderer
@@ -221,8 +220,6 @@ class BlockRenderer
 HTML;
 		}
 
-		// TODO 2.8.0
-		//$sOutput .= utils::FilterXSS($this->RenderHtml());
 		$sOutput .= $this->RenderHtml();
 
 		// JS last so all markup is build and ready

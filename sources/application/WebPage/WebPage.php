@@ -697,10 +697,8 @@ class WebPage implements Page
 	public function output()
 	{
 		// Send headers
-		if ($this->GetOutputFormat() === 'html') {
-			foreach ($this->a_headers as $sHeader) {
-				header($sHeader);
-			}
+		foreach ($this->a_headers as $sHeader) {
+			header($sHeader);
 		}
 
 		$this->s_content = $this->ob_get_clean_safe();
@@ -730,7 +728,7 @@ class WebPage implements Page
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
-			// TODO 2.8.0: TEMP, used while developping, remove it.
+			// TODO 2.8.0: TEMP, used while developing, remove it.
 			'sSanitizedContent' => utils::FilterXSS($this->s_content),
 			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
 		];
@@ -1012,8 +1010,7 @@ class WebPage implements Page
 	 */
 	protected function outputCollapsibleSectionInit()
 	{
-		if (!$this->bHasCollapsibleSection)
-		{
+		if (!$this->bHasCollapsibleSection) {
 			return;
 		}
 
