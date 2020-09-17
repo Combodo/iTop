@@ -48,6 +48,8 @@ use UserRights;
 
 class SearchForm
 {
+	private $sClass;
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -63,6 +65,7 @@ class SearchForm
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
+		$this->sClass = $sClassName;
 		$aListParams = array();
 
 		foreach($aExtraParams as $key => $value)
@@ -437,7 +440,7 @@ class SearchForm
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
      */
-	public static function GetFieldAllowedValues($oAttrDef)
+	public static function GetFieldAllowedValues($oAttrDef, $sClass = '')
 	{
 		$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
@@ -509,7 +512,11 @@ class SearchForm
 			}
 		}
 
-		$aAllowedValues = $oAttrDef->GetAllowedValues();
+		$aArgs = array(
+			"this->finalclass" => $sClass
+		);
+
+		$aAllowedValues = $oAttrDef->GetAllowedValues($aArgs);
 
 		return array('values' => $aAllowedValues);
 	}
@@ -719,7 +726,7 @@ class SearchForm
 			$aField['target_class'] = $sTargetClass;
 			$aField['label'] = $sLabel;
 			$aField['widget'] = $oAttDef->GetSearchType();
-			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
+			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef, $this->sClass);
 			$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
 			$aField['has_index'] = $bHasIndex;
 			$aFields[$sClassAlias.'.'.$sAttCode] = $aField;
