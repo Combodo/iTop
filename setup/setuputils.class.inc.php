@@ -361,35 +361,37 @@ class SetupUtils
 		}
 
 		// Check the configuration of the sessions persistence, since this is critical for the authentication
-		if (!utils::IsModeCLI() && ini_get('session.save_handler') == 'files') {
-			$sSavePath = ini_get('session.save_path');
-			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - session.save_path is: '$sSavePath'.");
+		if (!utils::IsModeCLI()) {
+			if (ini_get('session.save_handler') == 'files') {
+				$sSavePath = ini_get('session.save_path');
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - session.save_path is: '$sSavePath'.");
 
-			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
-			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
+				// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
+				$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
 
-			if (!empty($sSavePath)) {
-				if (($iPos = strrpos($sSavePath, ';', 0)) !== false) {
-					// The actual path is after the last semicolon
-					$sSavePath = substr($sSavePath, $iPos + 1);
-				}
-				if (!is_writable($sSavePath)) {
-					$aResult[] = new CheckResult(CheckResult::ERROR,
-						"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+				if (!empty($sSavePath)) {
+					if (($iPos = strrpos($sSavePath, ';', 0)) !== false) {
+						// The actual path is after the last semicolon
+						$sSavePath = substr($sSavePath, $iPos + 1);
+					}
+					if (!is_writable($sSavePath)) {
+						$aResult[] = new CheckResult(CheckResult::ERROR,
+							"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+					}
+					else {
+						$aResult[] = new CheckResult(CheckResult::INFO,
+							"The value for session.save_path ($sSavePath) is writable for the web server.");
+					}
 				}
 				else {
-					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The value for session.save_path ($sSavePath) is writable for the web server.");
+					$aResult[] = new CheckResult(CheckResult::WARNING,
+						"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
 				}
 			}
 			else {
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+				$aResult[] = new CheckResult(CheckResult::INFO,
+					"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
 			}
-		}
-		else {
-			$aResult[] = new CheckResult(CheckResult::INFO,
-				"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
 		}
 
 		return $aResult;
@@ -604,7 +606,8 @@ class SetupUtils
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
 		if (in_array('exec', $aDisabled)) {
-			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				self::GetStringForJsonEncode('The PHP exec() function has been disabled on this server', 'Could not find Graphviz\' dot'));
 		}
 
 		// availability of dot / dot.exe
@@ -617,16 +620,24 @@ class SetupUtils
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
 		if ($iRetCode == 0) {
-			$aResult[] = new CheckResult(CheckResult::INFO, "dot is present: ".$aOutput[0]);
-		}
-		elseif ($iRetCode == 1) {
+			$aResult[] = new CheckResult(CheckResult::INFO,
+				self::GetStringForJsonEncode("dot is present: ".$aOutput[0], 'Graphviz\' dot found'));
+		} elseif ($iRetCode == 1) {
 			$aResult[] = new CheckResult(CheckResult::WARNING,
-				"dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
-		}
-		else {
+				self::GetStringForJsonEncode(
+					"dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.",
+					'Could not find Graphviz\' dot'
+				)
+			);
+		} else {
 			$aResult[] = new CheckResult(CheckResult::WARNING,
-				"dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+				self::GetStringForJsonEncode(
+					"dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path",
+					'Could not find Graphviz\' dot'
+				)
+			);
 		}
+
 		foreach ($aOutput as $sLine) {
 			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - '.$sGraphvizPath.' -V said: '.$sLine);
 		}
@@ -635,26 +646,42 @@ class SetupUtils
 	}
 
 	/**
+	 * This was introduced as on Windows certain messages are not returned correctly :(
+	 *
+	 * @param string $sValue
+	 * @param string $sFallbackValue
+	 *
+	 * @return string
+	 *
+	 * @since 2.8.0
+	 */
+	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string {
+		return (json_encode($sValue) !== false)
+			? $sValue
+			: $sFallbackValue;
+	}
+
+	/**
 	 * Helper function to retrieve the system's temporary directory
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
+	 *
 	 * @return string Path to the system's temp directory
 	 */
-	public static function GetTmpDir()
-	{
+	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());
 	}
 
 	/**
 	 * Helper function to retrieve the directory where files are to be uploaded
+	 *
 	 * @return string Path to the temp directory used for uploading files
 	 */
-	public static function GetUploadTmpDir()
-	{
+	public static function GetUploadTmpDir() {
 		$sPath = ini_get('upload_tmp_dir');
-		if (empty($sPath))
-		{
+		if (empty($sPath)) {
 			$sPath = self::GetTmpDir();
 		}
+
 		return $sPath;
 	}
 

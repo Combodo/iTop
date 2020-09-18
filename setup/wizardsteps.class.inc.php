@@ -1045,38 +1045,39 @@ EOF
 				$sGraphvizPath = $aParameters['graphviz_path'];
 				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
+				// N°2214 logging TRACE results
 				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
 				foreach ($aTraceCheck as $oTraceCheck) {
 					SetupLog::Ok($oTraceCheck->sLabel);
 				}
 
 				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
-				$oCheck = array_values($aNonTraceCheck)[0];
-				$sMessage = json_encode($oCheck->sLabel);
-				switch ($oCheck->iSeverity) {
-					case CheckResult::INFO:
-						$sStatus = 'ok';
-						$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-						$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+				foreach ($aNonTraceCheck as $oCheck) {
+					switch ($oCheck->iSeverity) {
+						case CheckResult::INFO:
+							$sStatus = 'ok';
+							$sInfoExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
-						break;
+							break;
 
-					default:
-					case CheckResult::ERROR:
-					case CheckResult::WARNING:
+						default:
+						case CheckResult::ERROR:
+						case CheckResult::WARNING:
 						$sStatus = 'ko';
-						$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
+						$sErrorExplanation = $oCheck->sLabel;
 						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
 						break;
-				}
+					}
 
-				if ($oCheck->iSeverity !== CheckResult::TRACE) {
-					$oPage->add_ready_script(
-						<<<JS
+					if ($oCheck->iSeverity !== CheckResult::TRACE) {
+						$oPage->add_ready_script(
+							<<<JS
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');
 JS
-					);
+						);
+					}
 				}
 
 				break;
@@ -1185,35 +1186,36 @@ EOF
 				$sGraphvizPath = $aParameters['graphviz_path'];
 				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
+				// N°2214 logging TRACE results
 				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
 				foreach ($aTraceCheck as $oTraceCheck) {
 					SetupLog::Ok($oTraceCheck->sLabel);
 				}
 
 				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
-				$oCheck = array_values($aNonTraceCheck)[0];
-				$sMessage = json_encode($oCheck->sLabel);
-				switch ($oCheck->iSeverity) {
-					case CheckResult::INFO:
-						$sStatus = 'ok';
-						$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-						$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
-						break;
+				foreach ($aNonTraceCheck as $oCheck) {
+					switch ($oCheck->iSeverity) {
+						case CheckResult::INFO:
+							$sStatus = 'ok';
+							$sInfoExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+							break;
 
-					default:
-					case CheckResult::ERROR:
-					case CheckResult::WARNING:
-						$sStatus = 'ko';
-						$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
-						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
-						break;
-				}
-				$oPage->add_ready_script(
-<<<EOF
+						default:
+						case CheckResult::ERROR:
+						case CheckResult::WARNING:
+							$sStatus = 'ko';
+							$sErrorExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+							break;
+					}
+					$oPage->add_ready_script(
+						<<<JS
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');
-EOF
-			);
+JS
+					);
+				}
 			break;
 		}
 	}
