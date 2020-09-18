@@ -188,7 +188,9 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values"=>null, "sql"=>"test_recipient", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values"=>null, "sql"=>"from_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values"=>null, "sql"=>"reply_to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values"=>null, "sql"=>"reply_to_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -198,7 +200,7 @@ class ActionEmail extends ActionNotification
 
 		// Display lists
 		// - Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'from_label', 'reply_to', 'reply_to_label', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
 		// - Attributes to be displayed for a list
 		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
 		// Search criteria
@@ -371,10 +373,12 @@ class ActionEmail extends ActionNotification
 			$sTo = $this->FindRecipients('to', $aContextArgs);
 			$sCC = $this->FindRecipients('cc', $aContextArgs);
 			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-	
+
 			$sFrom = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
+			$sFromLabel = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
 			$sReplyTo = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
-	
+			$sReplyToLabel = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
+
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
 			
@@ -397,7 +401,7 @@ class ActionEmail extends ActionNotification
 			if (isset($sTo))       $oLog->Set('to', $sTo);
 			if (isset($sCC))       $oLog->Set('cc', $sCC);
 			if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
-			if (isset($sFrom))     $oLog->Set('from', $sFrom);
+			if (isset($sFrom))     $oLog->Set('from', empty($sFromLabel) ? $sFrom : "$sFromLabel <$sFrom>");
 			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
 			if (isset($sBody))     $oLog->Set('body', $sBody);
 		}
@@ -417,15 +421,15 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "<li>TO: $sTo</li>\n";
 			$sTestBody .= "<li>CC: $sCC</li>\n";
 			$sTestBody .= "<li>BCC: $sBCC</li>\n";
-			$sTestBody .= "<li>From: $sFrom</li>\n";
-			$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
+			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n": "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
+			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n": "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
 			$sTestBody .= "<li>References: $sReference</li>\n";
 			$sTestBody .= "</ul>\n";
 			$sTestBody .= "</p>\n";
 			$sTestBody .= "</div>\n";
 			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
-			$oEmail->SetRecipientFrom($sFrom);
+			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}
@@ -436,8 +440,8 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientTO($sTo);
 			$oEmail->SetRecipientCC($sCC);
 			$oEmail->SetRecipientBCC($sBCC);
-			$oEmail->SetRecipientFrom($sFrom);
-			$oEmail->SetRecipientReplyTo($sReplyTo);
+			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
+			$oEmail->SetRecipientReplyTo($sReplyTo, $sReplyToLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}

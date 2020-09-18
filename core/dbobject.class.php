@@ -846,13 +846,17 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
+     * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
+     * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
+     *
      * @param string $sAttCode
      *
      * @return mixed|null the value as it was before changed with {@see DBObject::Set()}.
      *        Returns null if the attribute wasn't changed.
+     *        Values are reset during {@see DBObject::DBUpdate()}
      *
-     * @see DBObject::$m_aOrigValues
      * @throws CoreException if the attribute is unknown for the current object
+     * @uses DBObject::$m_aOrigValues
      */
 	public function GetOriginal($sAttCode)
 	{
@@ -2365,14 +2369,16 @@ abstract class DBObject implements iDisplay
 		return $aDelta;
 	}
 
-    /**
-     * @api
-     * @api-advanced
-     *
-     * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}. Reset during {@see DBObject::DBUpdate()}
-     * @uses m_aCurrValues
-     * @see \DBObject::ListPreviousValuesForUpdatedAttributes()
-     * @throws Exception
+	/**
+	 * @api
+	 * @api-advanced
+	 *
+	 * @see  \DBObject::ListPreviousValuesForUpdatedAttributes() to get previous values anywhere in the CRUD stack
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Asequence_crud iTop CRUD stack documentation
+	 * @return array attname => currentvalue List the attributes that have been changed using {@see DBObject::Set()}.
+	 *         Reset during {@see DBObject::DBUpdate()}
+	 * @throws Exception
+	 * @uses m_aCurrValues
      */
 	public function ListChanges()
 	{
@@ -2392,10 +2398,10 @@ abstract class DBObject implements iDisplay
 	 *
 	 * To get values that were set to the changed fields, simply use {@link \DBObject::Get()}
 	 *
+	 * @see  \DBObject::ListChanges() old method, but using data that are reset during DBObject::DBUpdate
 	 * @return array attname => value : value that was present before the last {@see DBObject::Set()} call.
 	 *       This array is set at the beginning of {@see DBObject::DBpdate()} using {@see DBObject::InitPreviousValuesForUpdatedAttributes()}.
 	 * @uses m_aPreviousValuesForUpdatedAttributes
-	 * @see \DBObject::ListChanges()
 	 * @since 2.7.0 N°2293
 	 */
 	public function ListPreviousValuesForUpdatedAttributes()

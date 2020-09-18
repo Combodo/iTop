@@ -156,27 +156,16 @@ $aPageParams = array
 function UsageAndExit($oP)
 {
 	global $aPageParams;
-	$bModeCLI = utils::IsModeCLI();
+	$sMode = utils::IsModeCLI() ? 'cli' : 'http';
 
 	$oP->p("USAGE:\n");
 	foreach ($aPageParams as $sParam => $aParamData)
 	{
 		$aModes = explode(',', $aParamData['modes']);
-		if ($bModeCLI)
+		if (in_array($sMode, $aModes, false))
 		{
-			if (in_array('cli', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
-		}
-		else
-		{
-			if (in_array('http', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
+			$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+			$oP->p("$sParam = $sDesc");
 		}
 	}
 	$oP->output();
@@ -523,11 +512,7 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null) // Source CSV: "<NULL>"
-					{
-						$aValues[] = null;
-					}
-					elseif ($aIsDateToTransform[$iCol] !== false)
+					if ($aIsDateToTransform[$iCol] !== false)
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
@@ -539,7 +524,7 @@ try
 						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
 						if ($sDate === false)
 						{
-							$aValues[] = CMDBSource::Quote('');
+							$aValues[] = '';
 							if ($sOutput === 'details')
 							{
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
@@ -547,15 +532,15 @@ try
 						}
 						else
 						{
-							$aValues[] = CMDBSource::Quote($sDate);
+							$aValues[] = $sDate;
 						}
 					}
 					else
 					{
-						$aValues[] = CMDBSource::Quote($value);
+						$aValues[] = $value;
 					}
 				}
-				$sValues = implode(', ', $aValues);
+				$sValues = implode(', ', CMDBSource::Quote($aValues));
 				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
 				try
 				{

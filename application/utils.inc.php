@@ -1020,19 +1020,19 @@ class utils
 			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
 		}
 
-		$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
-		$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
-		$sParamFile = self::GetParamSourceFile('auth_user');
-		if (is_null($sParamFile))
-		{
+		if (!isset($aArguments['auth_user'])) {
+			$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
 			$aArguments['auth_user'] = $sAuthUser;
+		}
+		if (!isset($aArguments['auth_pwd'])) {
+			$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
 			$aArguments['auth_pwd'] = $sAuthPwd;
 		}
-		else
-		{
+		if (!isset($aArguments['param_file'])) {
+			$sParamFile = self::ReadParam('param_file', '', 'raw_data');
 			$aArguments['param_file'] = $sParamFile;
 		}
-		
+
 		$aArgs = array();
 		foreach($aArguments as $sName => $value)
 		{
