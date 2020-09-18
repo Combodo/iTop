@@ -19,7 +19,7 @@
     {% block iboPageJsFiles %}
         {% for sJsFile in aPage.aJsFiles %}
             <script type="text/javascript">
-                $.getScript({{ sJsFile|json_encode }});
+                $.getScript('{{ sJsFile|raw }}');
             </script>
         {% endfor %}
     {% endblock %}
@@ -46,6 +46,6 @@
         {% endfor %}
     {% endblock %}
 
-    {{ sCapturedOutput }}
+    {{ aPage.sCapturedOutput|raw }}
 
 {% endapply %}
