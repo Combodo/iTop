@@ -40,11 +40,6 @@ test/vendor/*
 
 # Jetbrains
 /.idea/**
-!/.idea/encodings.xml
-!/.idea/codeStyles
-!/.idea/codeStyles/*
-!/.idea/inspectionProfiles
-!/.idea/inspectionProfiles/*
 
 # doc. generation
 /.doc/vendor
