@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
@@ -35,11 +36,9 @@ function DisplayPreferences($oP)
 	$oContentLayout = PageContentFactory::MakeStandardEmpty();
 	$oAppContext = new ApplicationContext();
 	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
-	
-	$sTitleHtml = '<h1 class="ibo-preferences--title title is-size-2">'.Dict::S('UI:Preferences:Title').'</h1>';
-	$sTitleHtmlBlock = new Html($sTitleHtml);
-	$oContentLayout->AddMainBlock($sTitleHtmlBlock);
-	
+
+	$oContentLayout->AddMainBlock(TitleFactory::MakeForPage(Dict::S('UI:Preferences:Title')));
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// User Language selection
@@ -47,23 +46,20 @@ function DisplayPreferences($oP)
 	//////////////////////////////////////////////////////////////////////////
 	$oUserLanguageBlock = new Panel(Dict::S('UI:FavoriteLanguage'), array(), 'grey', 'ibo-user-language-selection');
 	$oUserLanguageStartForm = new Html('<form method="post">');
-	
-  	$aLanguages = Dict::GetLanguages();
-  	$aSortedlang = array();
-  	foreach($aLanguages as $sCode => $aLang)
-  	{
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			if ($sCode != Dict::GetUserLanguage())
-			{
+
+	$aLanguages = Dict::GetLanguages();
+	$aSortedlang = array();
+	foreach ($aLanguages as $sCode => $aLang) {
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
+			if ($sCode != Dict::GetUserLanguage()) {
 				// Demo mode: only the current user language is listed in the available choices
 				continue;
 			}
 		}
-  		$aSortedlang[$aLang['description']] = $sCode;
-  	}
-  	ksort($aSortedlang);
-  	$sUserLanguageBlockSelect = '';
+		$aSortedlang[$aLang['description']] = $sCode;
+	}
+	ksort($aSortedlang);
+	$sUserLanguageBlockSelect = '';
 	$sUserLanguageBlockSelect .= '<p>'.Dict::S('UI:Favorites:SelectYourLanguage').' <select name="language">';
 	foreach ($aSortedlang as $sCode)
 	{

@@ -34,12 +34,13 @@ class ButtonFactory
 	 *
 	 * @param string $sLabel
 	 * @param string $sName See Button::$sName
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName)
+	public static function MakeNeutral(string $sLabel, string $sName, ?string $sId = null)
 	{
-		$oButton = new Button($sLabel);
+		$oButton = new Button($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
 			->SetColor(Button::ENUM_COLOR_NEUTRAL)
 			->SetName($sName);
@@ -54,12 +55,18 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeForPrimaryAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+	public static function MakeForPrimaryAction(
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -69,12 +76,18 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeForSecondaryAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+	public static function MakeForSecondaryAction(
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -85,12 +98,18 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeForValidationAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+	public static function MakeForValidationAction(
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -101,13 +120,19 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeForDestructiveAction(string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+	public static function MakeForDestructiveAction(
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
-			$bIsSubmit);
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -115,12 +140,13 @@ class ButtonFactory
 	 *
 	 * @param string $sLabel
 	 * @param string $sName See Button::$sName
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeAlternativeNeutral(string $sLabel, string $sName)
+	public static function MakeAlternativeNeutral(string $sLabel, string $sName, ?string $sId = null)
 	{
-		$oButton = new Button($sLabel);
+		$oButton = new Button($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE)
 			->SetColor(Button::ENUM_COLOR_NEUTRAL)
 			->SetName($sName);
@@ -136,14 +162,19 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForAlternativePrimaryAction(
-		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
-			$bIsSubmit);
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -153,14 +184,19 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForAlternativeSecondaryAction(
-		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
-			$bIsSubmit);
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -170,14 +206,19 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForAlternativeValidationAction(
-		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
-			$bIsSubmit);
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -187,14 +228,19 @@ class ButtonFactory
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
 	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
 	public static function MakeForAlternativeDestructiveAction(
-		string $sLabel, string $sName = null, string $sValue = null, bool $bIsSubmit = false
+		string $sLabel,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
-			$bIsSubmit);
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -206,30 +252,34 @@ class ButtonFactory
 	 * @param string|null $sValue See Button::$sValue
 	 * @param string|null $sName See Button::$sValue
 	 * @param bool $bIsSubmit
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 * @interal
 	 */
 	protected static function MakeForAction(
-		string $sLabel, string $sColor, string $sActionType, string $sValue = null, string $sName = null, bool $bIsSubmit = false
+		string $sLabel,
+		string $sColor,
+		string $sActionType,
+		string $sValue = null,
+		string $sName = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
 	) {
-		$oButton = new Button($sLabel);
+		$oButton = new Button($sLabel, $sId);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
 
-		if (empty($sValue) === false)
-		{
+		if (empty($sValue) === false) {
 			$oButton->SetValue($sValue);
 		}
 
-		if (empty($sName) === false)
-		{
+		if (empty($sName) === false) {
 			$oButton->SetName($sName);
 		}
 
 		// Set as submit button if necessary
-		if ($bIsSubmit === true)
-		{
+		if ($bIsSubmit === true) {
 			$oButton->SetType(Button::ENUM_TYPE_SUBMIT);
 		}
 
