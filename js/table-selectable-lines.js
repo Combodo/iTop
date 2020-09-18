@@ -104,7 +104,7 @@ $(document).ready(function () {
 		if ($eventTarget.is(".fas, i.fa")) { // Font Awesome buttons
 			return true;
 		}
-		if ($eventTarget.parent().is('a, button')) {
+		if ($eventTarget.parent().is("a, button")) {
 			return true;
 		}
 		if ($eventTarget.is("input, select, option")) {
