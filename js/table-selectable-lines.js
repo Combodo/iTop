@@ -95,19 +95,24 @@ $(document).ready(function () {
 	 * @returns {boolean} true if our custom handler shouldn't be run
 	 */
 	function shouldExitHandler($eventTarget) {
-		if ($eventTarget.is("table")) { // might happen on cell padding/margin/border
+		if ($eventTarget.is("table"))
+		{ // might happen on cell padding/margin/border
 			return true;
 		}
-		if ($eventTarget.is("a, button")) {
+		if ($eventTarget.is("a, button"))
+		{
 			return true;
 		}
-		if ($eventTarget.parent().is('a, button')) {
+		if ($eventTarget.parent().is("a, button"))
+		{
 			return true;
 		}
-		if ($eventTarget.is("input, select, option")) {
+		if ($eventTarget.is("input, select, option"))
+		{
 			return true;
 		}
-		if ($eventTarget.is("img")) { // too hard to determine if an event handler is attached so excluding all !
+		if ($eventTarget.is("img"))
+		{ // too hard to determine if an event handler is attached so excluding all !
 			return true;
 		}
 
