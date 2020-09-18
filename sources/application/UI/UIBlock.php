@@ -55,6 +55,10 @@ abstract class UIBlock implements iUIBlock
 	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
 	/** @var string ENUM_BLOCK_FILES_TYPE_CSS */
 	public const ENUM_BLOCK_FILES_TYPE_CSS = 'css';
+	/** @var string ENUM_BLOCK_FILES_TYPE_FILE */
+	public const ENUM_BLOCK_FILES_TYPE_FILES = 'files';
+	/** @var string ENUM_BLOCK_FILES_TYPE_TEMPLATE */
+	public const ENUM_BLOCK_FILES_TYPE_TEMPLATE = 'template';
 
 
 	/**
@@ -176,42 +180,91 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function GetJsTemplateRelPathRecursively(): array
+	{
+		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
+	}
+
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function GetCssTemplateRelPathRecursively(): array
+	{
+		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
+	}
+
+	/**
 	 * Return an array of the URL of the block $sFilesType and its sub blocks.
 	 * URL is relative unless the $bAbsoluteUrl is set to true.
 	 *
-	 * @param string $sFilesType (see static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_CSS)
+	 * @param string $sFileType (see static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_CSS)
 	 * @param bool $bAbsoluteUrl
 	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function GetFilesUrlRecursively(string $sFilesType, bool $bAbsoluteUrl = false)
+	protected function GetFilesUrlRecursively(string $sFileType, bool $bAbsoluteUrl = false)
 	{
 		$aFiles = [];
-		$sFilesRelPathMethodName = 'Get'.ucfirst($sFilesType).'FilesRelPaths';
-		$sFilesAbsUrlMethodName = 'Get'.ucfirst($sFilesType).'FilesUrlRecursively';
+		$sFilesRelPathMethodName = 'Get'.ucfirst($sFileType).'FilesRelPaths';
 
 		// Files from the block itself
-		foreach ($this::$sFilesRelPathMethodName() as $sFilePath)
-		{
+		foreach ($this::$sFilesRelPathMethodName() as $sFilePath) {
 			$aFiles[] = (($bAbsoluteUrl === true) ? utils::GetAbsoluteUrlAppRoot() : '').$sFilePath;
 		}
 
 		// Files from its sub blocks
-		foreach($this->GetSubBlocks() as $sSubBlockName => $oSubBlock)
-		{
+		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
 			$aFiles = array_merge(
 				$aFiles,
-				call_user_func_array([$oSubBlock, $sFilesAbsUrlMethodName], [$bAbsoluteUrl])
+				$oSubBlock->GetFilesUrlRecursively($sFileType, $bAbsoluteUrl)
 			);
 		}
 
 		return $aFiles;
 	}
 
+
+	/**
+	 * Return an array of the URL of the block $sFilesType and its sub blocks.
+	 * URL is relative unless the $bAbsoluteUrl is set to true.
+	 *
+	 * @param string $sExtensionFileType (see static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_CSS)
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	protected function GetTemplateRelPathRecursively(string $sExtensionFileType)
+	{
+		$aFiles = [];
+
+		$sFilesRelPathMethodName = 'Get'.ucfirst($sExtensionFileType).'TemplateRelPath';
+		$aFiles[] = $this::$sFilesRelPathMethodName();
+
+		// Files from its sub blocks
+		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
+			$aFiles = array_merge(
+				$aFiles,
+				$oSubBlock->GetTemplateRelPathRecursively($sExtensionFileType)
+			);
+		}
+
+		return $aFiles;
+	}
+
+
 	public function AddHtml(string $sHTML): iUIBlock
 	{
 		// By default this does nothing
 		return $this;
+	}
+
+	public function GetParameters(): array
+	{
+		return [];
 	}
 }

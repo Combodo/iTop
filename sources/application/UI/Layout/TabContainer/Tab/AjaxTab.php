@@ -113,5 +113,13 @@ class AjaxTab extends Tab
 		return $this->bCache ? 'true' : 'false';
 	}
 
+	public function GetParameters(): array
+	{
+		$aParams = parent::GetParameters();
 
+		$aParams['sURL'] = $this->GetURL();
+		$aParams['sCache'] = $this->GetCache() ? 'true' : 'false';
+
+		return $aParams;
+	}
 }

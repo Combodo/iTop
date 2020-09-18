@@ -54,4 +54,14 @@ class Tab extends UIContentBlock
 	{
 		return $this->sTitle;
 	}
+
+	public function GetParameters(): array
+	{
+		return [
+			'sBlockId' => $this->GetId(),
+			'sTitle' => $this->GetTitle(),
+			'sType' => $this->GetType(),
+			'oBlock' => $this,
+		];
+	}
 }

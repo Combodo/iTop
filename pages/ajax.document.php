@@ -85,7 +85,7 @@ try
 			
 		case 'dict':
 			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
-			$oPage = new ajax_page(""); // New page to cleanup the no_cache done above
+			$oPage = new AjaxPage(""); // New page to cleanup the no_cache done above
 			$oPage->SetContentType('text/javascript');
 			$oPage->add_header('Cache-control: public, max-age=86400'); // Cache for 24 hours
 			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?

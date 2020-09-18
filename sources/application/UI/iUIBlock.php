@@ -116,4 +116,11 @@ interface iUIBlock
 	 * @return $this
 	 */
 	public function AddHtml(string $sHTML): iUIBlock;
+
+	/**
+	 * Return block specific parameters
+	 *
+	 * @return array
+	 */
+	public function GetParameters(): array;
 }

@@ -1,8 +1,1 @@
-// TODO 2.8.0: We need to find a clean way to launch this script only once the JS scripts are loaded
-document.addEventListener("DOMContentLoaded", function ()
-{
-	setTimeout(function ()
-	{
-		$('#{{ oUIBlock.GetId() }}').quick_create();
-	}, 500);
-});
+$('#{{ oUIBlock.GetId() }}').quick_create();

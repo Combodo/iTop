@@ -1,16 +1,10 @@
-// TODO 2.8.0: We need to find a clean way to launch this script only once the JS scripts are loaded
 {% if (oUIBlock.GetOnClickJsCode() is not empty) or (oUIBlock.GetJsCode() is not empty) %}
-	document.addEventListener("DOMContentLoaded", function(){
-		setTimeout(function(){
-			{% if oUIBlock.GetOnClickJsCode() is not empty %}
-			$('#{{ oUIBlock.GetId() }}').on('click', function ()
-			{
-				{{ oUIBlock.GetOnClickJsCode()|raw }}
-			})
-			{% endif %}
-			{% if oUIBlock.GetJsCode() is not empty %}
-			{{ oUIBlock.GetJsCode()|raw }}
-			{% endif %}
-		}, 500);
-	});
+{% if oUIBlock.GetOnClickJsCode() is not empty %}
+$('#{{ oUIBlock.GetId() }}').on('click', function () {
+    {{ oUIBlock.GetOnClickJsCode()|raw }}
+})
+{% endif %}
+{% if oUIBlock.GetJsCode() is not empty %}
+{{ oUIBlock.GetJsCode()|raw }}
+{% endif %}
 {% endif %}

@@ -1,8 +1,1 @@
-// TODO 2.8.0: We need to find a clean way to launch this script only once the JS scripts are loaded
-document.addEventListener("DOMContentLoaded", function ()
-{
-	setTimeout(function ()
-	{
-		$('#{{ oUIBlock.GetId() }}').navigation_menu();
-	}, 500);
-});
+$('#{{ oUIBlock.GetId() }}').navigation_menu();

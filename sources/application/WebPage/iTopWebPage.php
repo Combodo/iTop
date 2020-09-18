@@ -329,60 +329,6 @@ JS
 JS
 		);
 
-		$this->add_init_script(
-			<<< JS
-	try
-	{
-		// Tabs, using JQuery BBQ to store the history
-		// The "tab widgets" to handle.
-		var tabs = $('div[id^=tabbedContent]');
-			
-		// This selector will be reused when selecting actual tab widget A elements.
-		var tab_a_selector = 'ul.ui-tabs-nav a';
-		
-		// Ugly patch for a change in the behavior of jQuery UI:
-		// Before jQuery UI 1.9, tabs were always considered as "local" (opposed to Ajax)
-		// when their href was beginning by #. Starting with 1.9, a <base> tag in the page
-		// is taken into account and causes "local" tabs to be considered as Ajax
-		// unless their URL is equal to the URL of the page...
-		$('div[id^=tabbedContent] > ul > li > a').each(function() {
-			var sHash = location.hash;
-			var sHref = $(this).attr("href");
-			if (sHref.match(/^#/))
-			{
-				var sCleanLocation = location.href.toString().replace(sHash, '').replace(/#$/, '');
-				$(this).attr("href", sCleanLocation+$(this).attr("href"));
-			}
-		});
-
-		// Enable tabs on all tab widgets. The `event` property must be overridden so
-		// that the tabs aren't changed on click, and any custom event name can be
-		// specified. Note that if you define a callback for the 'select' event, it
-		// will be executed for the selected tab whenever the hash changes.
-		tabs.tabs({
-			event: 'change', 'show': function(event, ui) {
-				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
-			},
-			beforeLoad: function( event, ui ) {
-				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
-					event.preventDefault();
-					return;
-				}
-				ui.panel.html('<div><img src="../images/indicator.gif"></div>');
-				ui.jqXHR.done(function() {
-					ui.tab.data( "loaded", true );
-				});
-			}
-		});
-	}
-	catch(err)
-	{
-		// Do something with the error !
-		alert(err);
-	}
-JS
-		);
-
 		// TODO 2.8.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
@@ -419,29 +365,7 @@ JS
 		}
 	} );
 		
-	// Tabs, using JQuery BBQ to store the history
-	// The "tab widgets" to handle.
-	var tabs = $('div[id^=tabbedContent]');
-		
-	// This selector will be reused when selecting actual tab widget A elements.
-	var tab_a_selector = 'ul.ui-tabs-nav a';
-	  
-	// Define our own click handler for the tabs, overriding the default.
-	tabs.find( tab_a_selector ).click(function()
-	{
-		var state = {};
-				  
-		// Get the id of this tab widget.
-		var id = $(this).closest( 'div[id^=tabbedContent]' ).attr( 'id' );
-		  
-		// Get the index of this tab.
-		var idx = $(this).parent().prevAll().length;
-		
-		// Set the state!
-		state[ id ] = idx;
-		$.bbq.pushState( state );
-	});
-	
+
 	// refresh the hash when the tab is changed (from a JS script)
 	$('body').on( 'tabsactivate', '.ui-tabs', function(event, ui) {
 		var state = {};
@@ -952,12 +876,30 @@ EOF;
 		$sFooterHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
 
 		return $sFooterHtml;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	{
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$this->add_init_script($oBlockRenderer->RenderJsInline());
+		$this->add_style($oBlockRenderer->RenderCssInline());
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$this->RenderInlineTemplatesRecursively($oSubBlock);
+		}
 	}
 
 	/**
@@ -969,6 +911,8 @@ EOF;
 		// Data to be passed to the view
 		$aData = [];
 
+		$s_captured_output = $this->ob_get_clean_safe();
+
 		// Prepare page metadata
 		$sAbsoluteUrlAppRoot = addslashes($this->m_sRootUrl);
 		$sFaviconUrl = $this->GetFaviconAbsoluteUrl();
@@ -977,6 +921,7 @@ EOF;
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
 		$this->output_dict_entries();
+		// TODO 2.8.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
 		// TODO 2.8.0 : to be removed
@@ -1018,23 +963,21 @@ EOF;
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
 		/** @var \Combodo\iTop\Application\UI\UIBlock|string $oLayout */
-		foreach ($aData['aLayouts'] as $oLayout)
-		{
-			if (!$oLayout instanceof UIBlock)
-			{
+		foreach ($aData['aLayouts'] as $oLayout) {
+			if (!$oLayout instanceof UIBlock) {
 				continue;
 			}
 
 			// CSS files
-			foreach ($oLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl)
-			{
+			foreach ($oLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
 				$this->add_linked_stylesheet($sFileAbsUrl);
 			}
 			// JS files
-			foreach ($oLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl)
-			{
+			foreach ($oLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
 				$this->add_linked_script($sFileAbsUrl);
 			}
+
+			$this->RenderInlineTemplatesRecursively($oLayout);
 		}
 
 		// Components
@@ -1053,6 +996,7 @@ EOF;
 				// TODO 2.8.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
 				'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+				'sCapturedOutput' => utils::FilterXSS($s_captured_output),
 			]
 		);
 
@@ -1476,6 +1420,8 @@ EOF
 	 */
 	public function add_init_script($sScript)
 	{
-		$this->m_aInitScript[] = $sScript;
+		if (!empty(trim($sScript))) {
+			$this->m_aInitScript[] = $sScript;
+		}
 	}
 }

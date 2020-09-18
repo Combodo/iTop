@@ -254,30 +254,82 @@ class PageContent extends UIBlock implements iUIContentBlock
 		return $this->sExtraHtmlContent;
 	}
 
+	/**
+	 * Get ALL the blocks in all the areas
+	 *
+	 * @return array
+	 */
 	public function GetSubBlocks(): array
 	{
-		return $this->GetMainBlocks();
+		$aSubBlocks = [];
+		foreach ($this->aContentAreasBlocks as $oContentArea) {
+			$aSubBlocks = array_merge($aSubBlocks, $oContentArea->GetSubBlocks());
+		}
+		return $aSubBlocks;
 	}
 
+	/**
+	 * Get a specific subBlock within all the areas
+	 *
+	 * @param string $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock|null
+	 */
 	public function GetSubBlock(string $sId): ?iUIBlock
 	{
-		return $this->aContentAreasBlocks[static::ENUM_CONTENT_AREA_MAIN]->GetSubBlock($sId);
+		foreach ($this->aContentAreasBlocks as $oContentArea) {
+			$oSubBlock = $oContentArea->GetSubBlock($sId);
+			if (!is_null($oSubBlock)) {
+				return $oSubBlock;
+			}
+		}
+
+		return null;
 	}
 
+	/**
+	 * Set the MAIN AREA subBlocks
+	 *
+	 * @param array $aSubBlocks
+	 *
+	 * @return $this|\Combodo\iTop\Application\UI\Layout\iUIContentBlock
+	 */
 	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock
 	{
 		$this->SetMainBlocks($aSubBlocks);
 		return $this;
 	}
 
+	/**
+	 * Remove a specified subBlock from all the areas
+	 *
+	 * @param string $sId
+	 *
+	 * @return $this|\Combodo\iTop\Application\UI\Layout\iUIContentBlock
+	 */
 	public function RemoveSubBlock(string $sId): iUIContentBlock
 	{
-		$this->RemoveMainBlock($sId);
+		foreach ($this->aContentAreasBlocks as $oContentArea) {
+			$oContentArea->RemoveSubBlock($sId);
+		}
 		return $this;
 	}
 
+	/**
+	 * Check if the specified subBlock is within one of all the areas
+	 *
+	 * @param string $sId
+	 *
+	 * @return bool
+	 */
 	public function HasSubBlock(string $sId): bool
 	{
-		return $this->aContentAreasBlocks[static::ENUM_CONTENT_AREA_MAIN]->HasSubBlock($sId);
+		foreach ($this->aContentAreasBlocks as $oContentArea) {
+			if ($oContentArea->HasSubBlock($sId)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

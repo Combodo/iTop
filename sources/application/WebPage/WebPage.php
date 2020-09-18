@@ -326,7 +326,9 @@ class WebPage implements Page
 	 */
 	public function add_script($s_script)
 	{
-		$this->a_scripts[] = $s_script;
+		if (!empty(trim($s_script))) {
+			$this->a_scripts[] = $s_script;
+		}
 	}
 
 	/**
@@ -401,7 +403,9 @@ class WebPage implements Page
 	 */
 	public function add_style($s_style)
 	{
-		$this->a_styles[] = $s_style;
+		if (!empty(trim($s_style))) {
+			$this->a_styles[] = $s_style;
+		}
 	}
 
 	/**
@@ -413,7 +417,9 @@ class WebPage implements Page
 	 */
 	public function add_linked_script($s_linked_script)
 	{
-		$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		if (!empty(trim($s_linked_script))) {
+			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		}
 	}
 
 	/**
@@ -678,8 +684,7 @@ class WebPage implements Page
 			{
 				if (trim($sOutput) != '')
 				{
-					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars'))
-					{
+					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars')) {
 						IssueLog::Error("Trashing unexpected output:'$sOutput'\n");
 					}
 				}
@@ -688,6 +693,32 @@ class WebPage implements Page
 		}
 
 		return $sOutput;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	{
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$sInlineScript = trim($oBlockRenderer->RenderJsInline());
+		if (!empty($sInlineScript)) {
+			$this->add_script($sInlineScript);
+		}
+
+		$sInlineStyle = trim($oBlockRenderer->RenderCssInline());
+		if (!empty($sInlineStyle)) {
+			$this->add_style($sInlineStyle);
+		}
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$this->RenderInlineTemplatesRecursively($oSubBlock);
+		}
 	}
 
 	/**
@@ -701,7 +732,7 @@ class WebPage implements Page
 			header($sHeader);
 		}
 
-		$this->s_content = $this->ob_get_clean_safe();
+		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
 
@@ -716,6 +747,9 @@ class WebPage implements Page
 			$this->add_linked_script($sFileAbsUrl);
 		}
 
+		// Inline Templates
+		$this->RenderInlineTemplatesRecursively($this->oContentLayout);
+
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
@@ -729,7 +763,7 @@ class WebPage implements Page
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
 			// TODO 2.8.0: TEMP, used while developing, remove it.
-			'sSanitizedContent' => utils::FilterXSS($this->s_content),
+			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
 			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
 		];
 

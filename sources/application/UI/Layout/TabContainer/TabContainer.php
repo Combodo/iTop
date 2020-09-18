@@ -39,6 +39,9 @@ class TabContainer extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-tabcontainer';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/layout';
 	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/layout';
+	public const JS_FILES_REL_PATH = [
+		'js/layouts/tab-container.js'
+	];
 
 	private $sName;
 	private $sPrefix;
@@ -121,5 +124,25 @@ class TabContainer extends UIContentBlock
 			throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockNotTabForbidden', $oSubBlock->GetId(), $this->GetId()));
 		}
 		return parent::AddSubBlock($oSubBlock);
+	}
+
+
+	/**
+	 * Return tab list
+	 *
+	 * @return array
+	 */
+	public function Get(): array
+	{
+		$aTabs = [];
+
+		foreach ($this->GetSubBlocks() as $oTab) {
+			$aTabs[] = $oTab->GetParameters();
+		}
+
+		return [
+			'sBlockId' => $this->GetId(),
+			'aTabs' => $aTabs
+		];
 	}
 }

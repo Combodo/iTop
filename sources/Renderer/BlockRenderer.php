@@ -37,9 +37,28 @@ class BlockRenderer
 	public const TWIG_BASE_PATH = APPROOT.'templates/';
 	/** @var string[] TWIG_ADDITIONAL_PATHS Additional paths for resources to be loaded either as a template or as an image, ... */
 	public const TWIG_ADDITIONAL_PATHS = [APPROOT.'images/'];
-	
+
 	/** @var \Twig_Environment $oTwigEnv Singleton used during rendering */
 	protected static $oTwigEnv;
+
+	/**
+	 * BlockRenderer constructor.
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param array $aContextParams
+	 *
+	 * @throws \Twig\Error\LoaderError
+	 */
+	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
+	{
+		if (null === static::$oTwigEnv) {
+			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, static::TWIG_ADDITIONAL_PATHS);
+		}
+
+		$this->oBlock = $oBlock;
+		$this->aContextParams = $aContextParams;
+		$this->ResetRenderingOutput();
+	}
 
 	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
@@ -57,7 +76,7 @@ class BlockRenderer
 	{
 		$oSelf = new static($oBlock, $aContextParams);
 
-		return $oSelf->RenderTemplates();
+		return $oSelf->RenderHtml();
 	}
 
 	/** @var \Combodo\iTop\Application\UI\iUIBlock $oBlock */
@@ -68,26 +87,6 @@ class BlockRenderer
 	protected $oRenderingOutput;
 
 	/**
-	 * BlockRenderer constructor.
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
-	 * @param array                                 $aContextParams
-	 *
-	 * @throws \Twig\Error\LoaderError
-	 */
-	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
-	{
-		if (null === static::$oTwigEnv)
-		{
-			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, static::TWIG_ADDITIONAL_PATHS);
-		}
-
-		$this->oBlock = $oBlock;
-		$this->aContextParams = $aContextParams;
-		$this->ResetRenderingOutput();
-	}
-
-	/**
 	 * Reset the rendering output so it can be computed again
 	 *
 	 * @return $this
@@ -96,29 +95,6 @@ class BlockRenderer
 	{
 		$this->oRenderingOutput = new RenderingOutput();
 		return $this;
-	}
-
-	/**
-	 * Return the processed rendering output.
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 * @throws \Exception
-	 */
-	public function GetRenderingOutput()
-	{
-		$this->ResetRenderingOutput();
-
-		$this->oRenderingOutput->AddHtml($this->RenderHtml())
-			->AddCss($this->RenderCssInline())
-			->AddJs($this->RenderJsInline())
-			->SetCssFiles($this->GetCssFiles())
-			->SetJsFiles($this->GetJsFiles());
-
-		return $this->oRenderingOutput;
 	}
 
 	/**
@@ -197,46 +173,6 @@ class BlockRenderer
 	}
 
 	/**
-	 * Return the cumulated HTML output of the CSS, HTML and JS templates
-	 *
-	 * @return string
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function RenderTemplates()
-	{
-		$sOutput = '';
-
-		// CSS first to avoid visual glitches
-		$sCssOutput = $this->RenderCssInline();
-		if(!empty($sCssOutput))
-		{
-			$sOutput .= <<<HTML
-<style>
-{$sCssOutput}
-</style>
-HTML;
-		}
-
-		$sOutput .= $this->RenderHtml();
-
-		// JS last so all markup is build and ready
-		$sJsOutput = $this->RenderJsInline();
-		if(!empty($sJsOutput))
-		{
-			$sOutput .= <<<HTML
-<script type="text/javascript">
-{$sJsOutput}
-</script>
-HTML;
-		}
-
-		return $sOutput;
-	}
-
-	/**
 	 * Return an array of the absolute URL of the block JS files
 	 *
 	 * @return array
@@ -266,7 +202,6 @@ HTML;
 	 */
 	protected function GetTemplateParameters()
 	{
-		return array_merge(['oUIBlock' => $this->oBlock], $this->aContextParams);
-
+		return array_merge(['oUIBlock' => $this->oBlock], $this->aContextParams, $this->oBlock->GetParameters());
 	}
 }

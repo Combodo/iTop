@@ -1,12 +1,12 @@
 <button id="{{ oUIBlock.GetId() }}"
-        class="ibo-button ibo-is-{{ oUIBlock.GetActionType()}} ibo-is-{{ oUIBlock.GetColor() }}"
+        class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }}"
         type="{{ oUIBlock.GetType() }}"
         name="{{ oUIBlock.GetName() }}"
         value="{{ oUIBlock.GetValue() }}"
-		{% if oUIBlock.IsDisabled() is same as(true) %} disabled {% endif %}
+        {% if oUIBlock.IsDisabled() is same as(true) %} disabled {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
-      <span class="ibo-button-icon {{ oUIBlock.GetIconClass() }}"></span>
+        <span class="ibo-button-icon {{ oUIBlock.GetIconClass() }}"></span>
     {% endif %}
     {{ oUIBlock.GetLabel() }}
 </button>
