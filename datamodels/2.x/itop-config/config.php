@@ -26,7 +26,9 @@
 
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\Html\Html;
+use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
@@ -167,23 +169,22 @@ try {
 			$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
-			$oP->add("<form method=\"POST\">");
-			$oP->add("<input id=\"operation\" type=\"hidden\" name=\"operation\" value=\"save\">");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">");
+			$oForm = new Form();
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'save'));
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 
 			// - Cancel button
 			$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
 			$oCancelButton->SetOnClickJsCode("return ResetConfig();");
-			$oP->AddUiBlock($oCancelButton);
+			$oForm->AddSubBlock($oCancelButton);
 
 			// - Submit button
 			$oSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
-			$oP->AddUiBlock($oSubmitButton);
-
-			$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
-			$oP->add("<input type=\"hidden\"  name=\"new_config\" value=\"$sConfigEscaped\">");
-			$oP->add("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
-			$oP->add("</form>");
+			$oForm->AddSubBlock($oSubmitButton);
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped));
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('new_config', $sConfigEscaped));
+			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
+			$oP->AddUiBlock($oForm);
 
 			$oP->add_script(
 				<<<'JS'

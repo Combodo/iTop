@@ -18,7 +18,9 @@
  */
 
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\Html\Html;
+use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
@@ -45,48 +47,10 @@ function DisplayPreferences($oP)
 	//
 	//////////////////////////////////////////////////////////////////////////
 	$oUserLanguageBlock = new Panel(Dict::S('UI:FavoriteLanguage'), array(), 'grey', 'ibo-user-language-selection');
-	$oUserLanguageStartForm = new Html('<form method="post">');
-
-	$aLanguages = Dict::GetLanguages();
-	$aSortedlang = array();
-	foreach ($aLanguages as $sCode => $aLang) {
-		if (MetaModel::GetConfig()->Get('demo_mode')) {
-			if ($sCode != Dict::GetUserLanguage()) {
-				// Demo mode: only the current user language is listed in the available choices
-				continue;
-			}
-		}
-		$aSortedlang[$aLang['description']] = $sCode;
-	}
-	ksort($aSortedlang);
-	$sUserLanguageBlockSelect = '';
-	$sUserLanguageBlockSelect .= '<p>'.Dict::S('UI:Favorites:SelectYourLanguage').' <select name="language">';
-	foreach ($aSortedlang as $sCode)
-	{
-		$sSelected = ($sCode == Dict::GetUserLanguage()) ? 'selected' : '';
-		$sUserLanguageBlockSelect .= '<option value="'.$sCode.'" '.$sSelected.'/>'.$aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')</option>';
-	}
-	$sUserLanguageBlockSelect .= '</select></p>';
-	$sUserLanguageBlockSelect .= '<input type="hidden" name="operation" value="apply_language"/>';
-	$sUserLanguageBlockSelect .= $oAppContext->GetForForm();
-	$oUserLanguageBlockSelect = new Html($sUserLanguageBlockSelect);
-
-	// - Cancel button
-	$oUserLanguageCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
-	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	// - Submit button
-	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
-
-	$oUserLanguageEndForm = new Html('</form>');
-
-	$oUserLanguageBlock->AddSubBlock($oUserLanguageStartForm);
-	$oUserLanguageBlock->AddSubBlock($oUserLanguageBlockSelect);
-	$oUserLanguageBlock->AddSubBlock($oUserLanguageCancelButton);
-	$oUserLanguageBlock->AddSubBlock($oUserLanguageSubmitButton);
-	$oUserLanguageBlock->AddSubBlock($oUserLanguageEndForm);
-
+	$oUserLanguageForm = GetUserLanguageForm($oAppContext, $sURL);
+	$oUserLanguageBlock->AddSubBlock($oUserLanguageForm);
 	$oContentLayout->AddMainBlock($oUserLanguageBlock);
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Other (miscellaneous) settings
@@ -478,6 +442,48 @@ HTML
 	//
 	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
 	$oP->SetContentLayout($oContentLayout);
+}
+
+/**
+ * @param \ApplicationContext $oAppContext
+ * @param string $sURL
+ *
+ * @return \Combodo\iTop\Application\UI\Component\Form\Form
+ */
+function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): Form
+{
+	$oUserLanguageForm = new Form();
+	$oUserLanguageForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_language'));
+
+	// Lang selector
+	$aLanguages = Dict::GetLanguages();
+	$aSortedLang = array();
+	foreach ($aLanguages as $sCode => $aLang) {
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
+			if ($sCode != Dict::GetUserLanguage()) {
+				// Demo mode: only the current user language is listed in the available choices
+				continue;
+			}
+		}
+		$aSortedLang[$aLang['description']] = $sCode;
+	}
+	ksort($aSortedLang);
+	$oUserLanguageBlockSelect = InputFactory::MakeForSelect('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	foreach ($aSortedLang as $sCode) {
+		$bSelected = ($sCode == Dict::GetUserLanguage());
+		$oUserLanguageBlockSelect->AddOption(InputFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
+	}
+	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
+
+	$oUserLanguageForm->AddSubBlock($oAppContext->GetForFormBlock());
+	// - Cancel button
+	$oUserLanguageCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	$oUserLanguageForm->AddSubBlock($oUserLanguageCancelButton);
+	// - Submit button
+	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
+	return $oUserLanguageForm;
 }
 
 /////////////////////////////////////////////////////////////////////////////
