@@ -1822,13 +1822,13 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Check if the given (or current) value is suitable for the attribute
 	 *
-     * @api
-     * @api-advanced
-     *
-	 * @param string $sAttCode
-	 * @param boolean|string $value true if successful, the error description otherwise
+	 * @api
+	 * @api-advanced
 	 *
-	 * @return bool|string
+	 * @param string $sAttCode
+	 * @param mixed $value if not passed, then will get value using Get method
+	 *
+	 * @return bool|string true if successful, the error description otherwise
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
@@ -2108,8 +2108,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$aChildClassesWithRuleDisabled = MetaModel::GetChildClassesWithDisabledUniquenessRule($sRuleRootClass, $sUniquenessRuleId);
-		if (!empty($aChildClassesWithRuleDisabled))
-		{
+		if (!empty($aChildClassesWithRuleDisabled)) {
 			$oUniquenessQuery->AddConditionForInOperatorUsingParam('finalclass', $aChildClassesWithRuleDisabled, false);
 		}
 
@@ -2117,14 +2116,67 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @param string $sAttCode
+	 * @param mixed $value
+	 *
+	 * @uses m_aCheckWarnings to log to user duplicates found
+	 *
+	 * @since 2.8.0 N°3198 check duplicates if necessary :<br>
+	 *     Before we could only add or remove lnk using the uilinks widget. This widget has a filter based on existing values, and so
+	 *     forbids to add duplicates.<br>
+	 *     Now we can modify existing entries using the extkey widget, and the widget doesn't have (yet !) such
+	 *     a filter. The widget will be updated later on, but as a first step we're checking for duplicates server side. This is a non
+	 *     blocking warning, as it was already possible to add duplicates by other means.
+	 */
+	protected function DoCheckLinkedSetDuplicates($sAttCode, $value)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+
+		if (!($oAttDef instanceof AttributeLinkedSetIndirect)) {
+			return;
+		}
+
+		if ($oAttDef->DuplicatesAllowed()) {
+			return true;
+		}
+
+		/** @var \ormLinkSet $value */
+		$aModifiedLnk = $value->ListModifiedLinks();
+		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
+		$aExistingRemotesId = $value->GetColumnAsArray($sExtKeyToRemote, true);
+		$aExistingRemotesFriendlyName = $value->GetColumnAsArray($sExtKeyToRemote.'_friendlyname', true);
+		$aDuplicatesFields = [];
+		foreach ($aModifiedLnk as $oModifiedLnk) {
+			$iModifiedLnkId = $oModifiedLnk->GetKey();
+			$iModifiedLnkRemoteId = $oModifiedLnk->Get($sExtKeyToRemote);
+			$aExistingRemotesIdToCheck = array_filter($aExistingRemotesId, function ($iLnkKey) use ($iModifiedLnkId) {
+				return ($iLnkKey != $iModifiedLnkId);
+			}, ARRAY_FILTER_USE_KEY);
+
+			if (!in_array($iModifiedLnkRemoteId, $aExistingRemotesIdToCheck, true)) {
+				continue;
+			}
+
+			$iLnkId = $oModifiedLnk->GetKey();
+			$aDuplicatesFields[] = $aExistingRemotesFriendlyName[$iLnkId];
+		}
+
+		if (!empty($aDuplicatesFields)) {
+			$this->m_aCheckWarnings[] = Dict::Format('Core:AttributeLinkedSetDuplicatesFound',
+				$oAttDef->GetLabel(),
+				implode(', ', $aDuplicatesFields));
+		}
+	}
+
+	/**
 	 * Check integrity rules (before inserting or updating the object)
 	 *
-     * **This method is not meant to be called directly, use DBObject::CheckToWrite()!**
+	 * **This method is not meant to be called directly, use DBObject::CheckToWrite()!**
 	 * Errors should be inserted in $m_aCheckIssues and $m_aCheckWarnings arrays
-     *
-     * @overwritable-hook You can extend this method in order to provide your own logic.
-     * @see CheckToWrite()
-     * @see $m_aCheckIssues
+	 *
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+	 * @see CheckToWrite()
+	 * @see $m_aCheckIssues
      * @see $m_aCheckWarnings
      *
 	 * @throws \ArchivedObjectException
@@ -2140,14 +2192,14 @@ abstract class DBObject implements iDisplay
 
 		$aChanges = $this->ListChanges();
 
-		foreach($aChanges as $sAttCode => $value)
-		{
+		foreach($aChanges as $sAttCode => $value) {
 			$res = $this->CheckValue($sAttCode);
-			if ($res !== true)
-			{
+			if ($res !== true) {
 				// $res contains the error description
 				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
 			}
+
+			$this->DoCheckLinkedSetDuplicates($sAttCode, $value);
 		}
 		if (count($this->m_aCheckIssues) > 0)
 		{
