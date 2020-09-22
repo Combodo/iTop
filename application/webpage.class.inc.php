@@ -487,8 +487,9 @@ class WebPage implements Page
 	 */
 	public function no_cache()
 	{
-		$this->add_header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
-		$this->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
 	}
 
 	/**
