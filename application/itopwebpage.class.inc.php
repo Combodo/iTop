@@ -71,7 +71,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
-		$this->add_header("Cache-control: no-cache");
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");

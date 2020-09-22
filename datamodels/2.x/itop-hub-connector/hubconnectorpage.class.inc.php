@@ -5,8 +5,10 @@ class HubConnectorPage extends NiceWebPage
     public function __construct($sTitle)
     {
         parent::__construct($sTitle);
-        
-        $this->add_header("Cache-control: no-cache");
+
+	    $this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+	    $this->add_header('Pragma: no-cache');
+	    $this->add_header('Expires: 0');
         
         $sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
         $sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
