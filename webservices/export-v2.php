@@ -50,6 +50,7 @@ function ReportErrorAndExit($sErrorMessage)
 	else
 	{
 		$oP = new WebPage("iTop - Export");
+		$oP->add_header('X-Frame-Options: deny');
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
 		exit(-1);
@@ -69,6 +70,7 @@ function ReportErrorAndUsage($sErrorMessage)
 	else
 	{
 		$oP = new WebPage("iTop - Export");
+		$oP->add_header('X-Frame-Options: deny');
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
@@ -350,6 +352,7 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 	if ($sMode == 'dialog')
 	{
 		$oP = new ajax_page('');
+		$oP->add_header('X-Frame-Options: deny');
 		$oP->add('<div id="interactive_export_dlg">');
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
 		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
@@ -375,6 +378,7 @@ EOF
 	else
 	{
 		$oP = new iTopWebPage('iTop Export');
+		$oP->add_header('X-Frame-Options: deny');
 		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 	}
 	
@@ -735,11 +739,13 @@ try
 			if($oExporter instanceof HTMLBulkExport)
 			{
 				$oP = new NiceWebPage('iTop export');
+				$oP->add_header('X-Frame-Options: deny');
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
 			}
 			else
 			{
 				$oP = new WebPage('iTop export');
+				$oP->add_header('X-Frame-Options: deny');
                 $oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
@@ -747,6 +753,7 @@ try
 		else
 		{
 			$oP = new ajax_page('iTop export');
+			$oP->add_header('X-Frame-Options: deny');
 			$oP->SetContentType($oExporter->GetMimeType());
 		}
 		DoExport($oP, $oExporter, false);
@@ -756,6 +763,7 @@ try
 catch (BulkExportMissingParameterException $e)
 {
 	$oP = new ajax_page('iTop Export');
+	$oP->add_header('X-Frame-Options: deny');
 	$oP->add($e->getMessage());
 	Usage($oP);
 	$oP->output();
@@ -763,6 +771,7 @@ catch (BulkExportMissingParameterException $e)
 catch (Exception $e)
 {
 	$oP = new WebPage('iTop Export');
+	$oP->add_header('X-Frame-Options: deny');
 	$oP->add('Error: '.$e->getMessage());
 	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
 	$oP->output();

@@ -1780,6 +1780,7 @@ EOF
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		default: // Menu node rendering (templates)
+		$oP->add_header('X-Frame-Options: deny');
 		ApplicationMenu::LoadAdditionalMenus();
 		$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
 		if (is_object($oMenuNode))

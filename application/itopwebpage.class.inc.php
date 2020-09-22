@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -72,7 +72,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=utf-8");
-		$this->add_header("Cache-control: no-cache");
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
@@ -337,7 +339,7 @@ EOF
 		.magnificPopup({type: 'image', closeOnContentClick: true });
 EOF
 		);
-		
+
 		$this->add_init_script(
 			<<< EOF
 	try

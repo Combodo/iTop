@@ -37,6 +37,7 @@ try
 {
 	$sTransactionId = utils::GetNewTransactionId();
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
+	$oP->add_header('X-Frame-Options: deny');
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 
 	$oP->add("<h1>".Dict::S('bkp-status-title')."</h1>");

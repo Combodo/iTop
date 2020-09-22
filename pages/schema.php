@@ -1074,6 +1074,7 @@ $operation = utils::ReadParam('operation', '');
 
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
+$oPage->add_header('X-Frame-Options: deny');
 
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 $oPage->add_script(

@@ -37,6 +37,7 @@ ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
+$oP->add_header('X-Frame-Options: deny');
 
 $oP->add('<div class="page_header" style="padding:0.5em;">');
 $oP->add('<h1>'.dict::S('UI:NotificationsMenu:Title').'</h1>');
