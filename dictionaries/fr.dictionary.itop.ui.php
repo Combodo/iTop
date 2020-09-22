@@ -339,7 +339,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
 <ul>il contient:
-<li>Une base de gestion des configuration (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
+<li>Une base de gestion des configurations (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
 <li>Un module de gestion des incidents pour suivre les incidents d\'exploitation et gérer la communication à propos de ces incidents.</li>
 <li>Un module de gestion des changements pour planifier et suivre les modifications de votre SI.</li>
 <li>Une base des erreurs connues, pour accélérer la résolution des incidents.</li>
@@ -355,7 +355,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Améliorer la satisfaction client et fournir aux responsables des vues sur la performance interne du SI.</li>
 </ul>
 </p>
-<p>iTop est complètement ouvert pour s\'intéger avec votre environnement informatique.</p>
+<p>iTop est complètement ouvert pour s\'intégrer avec votre environnement informatique.</p>
 <p>
 <ul>Grâce à ce portail opérationnel de nouvelle génération:
 <li>Gérez un environnement informatique de plus en plus complexe.</li>
