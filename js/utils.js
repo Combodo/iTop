@@ -669,6 +669,23 @@ function DisplayHistory(sSelector, sFilter, iCount, iStart) {
 	);
 }
 
+/**
+ * @param sValue value to escape
+ * @returns {string} sanitized value, ready to insert in the DOM without XSS risk
+ *
+ * @since 2.6.5, 2.7.2, 2.8.0 N°3332
+ * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+ */
+function SanitizeHtml(sValue) {
+	return (sValue+'')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#x27;')
+		.replace(/\//g, '&#x2F;');
+}
+
 // Very simple equivalent to format: placeholders are %1$s %2$d ...
 function Format() {
 	var args = [];
@@ -676,8 +693,7 @@ function Format() {
 	if (arguments[0] instanceof Array) {
 		str = arguments[0][0].toString();
 		args = arguments[0];
-	}
-	else {
+	} else {
 		str = arguments[0].toString();
 		if (arguments.length > 1) {
 			var t = typeof arguments[1];
