@@ -17,6 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Field\Field;
+use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Layout\Column\Column;
+use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
+
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
 define('HILIGHT_CLASS_CRITICAL', 'red');
@@ -806,93 +811,43 @@ EOF
 		$sClass = get_class($this);
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
-		// Compute the list of properties to display, first the attributes in the 'details' list, then 
-		// all the remaining attributes that are not external fields
-		$sEditMode = ($bEditMode) ? 'edit' : 'view';
-		$aDetails = array();
-		$iInputId = 0;
 		$aFieldsMap = array();
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 
-		foreach($aDetailsStruct as $sTab => $aCols)
-		{
-			$aDetails[$sTab] = array();
-			$aTableStyles[] = 'vertical-align:top';
-			$aTableClasses = array();
-			$aColStyles[] = 'vertical-align:top';
-			$aColClasses = array();
-
+		foreach ($aDetailsStruct as $sTab => $aCols) {
 			ksort($aCols);
-			$iColCount = count($aCols);
-			if ($iColCount > 1)
-			{
-				$aTableClasses[] = 'n-cols-details';
-				$aTableClasses[] = $iColCount.'-cols-details';
-
-				$aColStyles[] = 'width:'.floor(100 / $iColCount).'%';
-			}
-			else
-			{
-				$aTableClasses[] = 'one-col-details';
-			}
-
 			$oPage->SetCurrentTab($sTab);
-			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ',
-					$aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
-			foreach($aCols as $sColIndex => $aFieldsets)
-			{
-				$oPage->add('<td style="'.implode('; ', $aColStyles).'" class="'.implode(' ', $aColClasses).'">');
-				$sPreviousLabel = '';
-				$aDetails[$sTab][$sColIndex] = array();
-				foreach($aFieldsets as $sFieldsetName => $aFields)
-				{
-					if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
-					{
-						$sLabel = $sFieldsetName;
+			$oMultiColumn = new MultiColumn();
+			$oPage->AddUiBlock($oMultiColumn);
+
+			foreach ($aCols as $sColIndex => $aFieldsets) {
+				$oColumn = new Column();
+				$oMultiColumn->AddColumn($oColumn);
+
+				foreach ($aFieldsets as $sFieldsetName => $aFields) {
+					if ($sFieldsetName[0] != '_') {
+						$oFieldSet = new FieldSet(Dict::S($sFieldsetName));
+						$oColumn->AddSubBlock($oFieldSet);
 					}
-					else
-					{
-						$sLabel = '';
-					}
-					if ($sLabel != $sPreviousLabel)
-					{
-						if (!empty($sPreviousLabel))
-						{
-							$oPage->add('<fieldset>');
-							$oPage->add('<legend>'.Dict::S($sPreviousLabel).'</legend>');
-						}
-						$oPage->Details($aDetails[$sTab][$sColIndex]);
-						if (!empty($sPreviousLabel))
-						{
-							$oPage->add('</fieldset>');
-						}
-						$aDetails[$sTab][$sColIndex] = array();
-						$sPreviousLabel = $sLabel;
-					}
-					foreach($aFields as $sAttCode)
-					{
+					$aDetails = [];
+					foreach ($aFields as $sAttCode) {
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
 
-						if ($bEditMode)
-						{
+						if ($bEditMode) {
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
 							$sInfos = '';
 							$iFlags = $this->GetFormAttributeFlags($sAttCode);
-							if (array_key_exists($sAttCode, $aExtraFlags))
-							{
+							if (array_key_exists($sAttCode, $aExtraFlags)) {
 								// the caller may override some flags if needed
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
-							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
-							{
+							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard)) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
-								if ($oAttDef->IsWritable())
-								{
-									if ($sStateAttCode == $sAttCode)
-									{
+								if ($oAttDef->IsWritable()) {
+									if ($sStateAttCode == $sAttCode) {
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetStateLabel();
 										$val = array(
@@ -901,20 +856,15 @@ EOF
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);
-									}
-									else
-									{
-										if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE))
-										{
+									} else {
+										if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
 											// Check if the attribute is not read-only because of a synchro...
-											if ($iFlags & OPT_ATT_SLAVE)
-											{
+											if ($iFlags & OPT_ATT_SLAVE) {
 												$aReasons = array();
 												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
-												foreach($aReasons as $aRow)
-												{
+												foreach ($aReasons as $aRow) {
 													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
 														'UTF-8');
 													$sDescription = str_replace(array("\r\n", "\n"), "<br/>",
@@ -985,10 +935,8 @@ EOF
 
 							// - For simple fields, we get the raw (stored) value as well
 							$bExcludeRawValue = false;
-							foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-							{
-								if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
-								{
+							foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
+								if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 									$bExcludeRawValue = true;
 									break;
 								}
@@ -996,24 +944,22 @@ EOF
 							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
 							// The field is visible, add it to the current column
-							$aDetails[$sTab][$sColIndex][] = $val;
-							$iInputId++;
+							$aDetails[] = $val;
+							$oField = new Field($val);
+							if ($sFieldsetName[0] != '_') {
+								$oFieldSet->AddSubBlock($oField);
+							} else {
+								$oColumn->AddSubBlock($oField);
+							}
 						}
 					}
+//					if ($sFieldsetName[0] != '_') {
+//						$oFieldSet->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
+//					} else {
+//						$oColumn->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
+//					}
 				}
-				if (!empty($sPreviousLabel))
-				{
-					$oPage->add('<fieldset>');
-					$oPage->add('<legend>'.Dict::S($sFieldsetName).'</legend>');
-				}
-				$oPage->Details($aDetails[$sTab][$sColIndex]);
-				if (!empty($sPreviousLabel))
-				{
-					$oPage->add('</fieldset>');
-				}
-				$oPage->add('</td>');
 			}
-			$oPage->add('</tr></table>');
 		}
 
 		return $aFieldsMap;

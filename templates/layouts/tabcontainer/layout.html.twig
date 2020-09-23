@@ -1,27 +1,26 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-<div id="{{ oUIBlock.GetId() }}" class="ibo-tab-container">
-    {% block iboTabContainer %}
-        <!-- tabs -->
-        <div id="tabbedContent_{$sPrefix}{$container_index}" class="light">
-            <ul>
-                {% for oTab in oUIBlock.GetSubBlocks() %}
-                    {% if oTab.GetType() == 'ajax' %}
-                        <li data-cache="{{ oTab.GetCache() }}"><a href="{{ oTab.GetURL() }}" class="tab" data-tab-id="$sTabCodeForHtml"><span>{{ oTab.GetTitle() }}</span></a></li>
-                    {% elseif oTab.GetType() == 'html' %}
-                        <li><a href="#tab_{{ oTab.GetId() }}" class="tab" data-tab-id="$sTabCodeForHtml"><span>{{ oTab.GetTitle() }}</span></a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+{% block iboTabContainer %}
+    <div class="ibo-tab-container-spinner"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+    <!-- tabs -->
+    <div id="tabbedContent_{$sPrefix}{$container_index}" class="ibo-tab-container light" style="display: none;">
+        <ul class="ibo-tab-container-header">
             {% for oTab in oUIBlock.GetSubBlocks() %}
-                {% if oTab.GetType() == 'html' %}
-                    <div id="tab_{{ oTab.GetId() }}">
-                        {{ render_block(oTab, {aPage: aPage}) }}
-                    </div>
+                {% if oTab.GetType() == 'ajax' %}
+                    <li class="ibo-tab-header ibo-tab-header-ajax" data-cache="{{ oTab.GetCache() }}"><a href="{{ oTab.GetURL() }}" class="ibo-tab-link" data-tab-id="$sTabCodeForHtml"><span>{{ oTab.GetTitle() }}</span></a></li>
+                {% elseif oTab.GetType() == 'html' %}
+                    <li class="ibo-tab-header ibo-tab-header-html"><a href="#tab_{{ oTab.GetId() }}" class="ibo-tab-link" data-tab-id="$sTabCodeForHtml"><span>{{ oTab.GetTitle() }}</span></a></li>
                 {% endif %}
             {% endfor %}
-        </div>
-        <!-- end of tabs-->
-    {% endblock %}
-</div>
+        </ul>
+        {% for oTab in oUIBlock.GetSubBlocks() %}
+            {% if oTab.GetType() == 'html' %}
+                <div id="tab_{{ oTab.GetId() }}">
+                    {{ render_block(oTab, {aPage: aPage}) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <!-- end of tabs-->
+{% endblock %}
 

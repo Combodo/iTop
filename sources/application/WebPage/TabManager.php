@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Layout\TabContainer\TabContainer;
 
@@ -54,6 +55,24 @@ class TabManager
 	public function AddToCurrentTab(string $sHtml): void
 	{
 		$this->AddToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $sHtml);
+	}
+
+	public function AddUIBlockToCurrentTab(iUIBlock $oBlock): iUIBlock
+	{
+		$this->AddUIBlockToTab($this->m_sCurrentTabContainer, $this->m_sCurrentTab, $oBlock);
+		return $oBlock;
+	}
+
+	public function AddUIBlockToTab(string $sTabContainer, string $sTabCode, iUIBlock $oBlock, $sTabTitle = null): void
+	{
+		if (!$this->TabExists($sTabContainer, $sTabCode)) {
+			$this->InitTab($sTabContainer, $sTabCode, static::ENUM_TAB_TYPE_HTML, $sTabTitle);
+		}
+
+		$oTab = $this->GetTab($sTabContainer, $sTabCode);
+
+		// Append to the content of the tab
+		$oTab->AddSubBlock($oBlock);
 	}
 
 	/**

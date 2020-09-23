@@ -1,0 +1,6 @@
+<fieldset class="ibo-fieldset">
+    <legend>{{ oUIBlock.GetLegend() }}</legend>
+    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% endfor %}
+</fieldset>

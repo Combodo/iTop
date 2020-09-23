@@ -40,3 +40,5 @@ if ($.bbq) {
 } else {
     tabs.tabs();
 }
+$('.ibo-tab-container-spinner').hide();
+$('.ibo-tab-container').show();

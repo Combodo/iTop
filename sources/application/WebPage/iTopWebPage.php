@@ -45,6 +45,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	private $m_aMessages;
 	private $m_aInitScript = array();
 
+	/** @var \TabManager */
 	protected $m_oTabs;
 	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
@@ -1318,6 +1319,14 @@ EOF;
 			return parent::add($sHtml);
 		}
 		return null;
+	}
+
+	public function AddUiBlock(iUIBlock $oBlock): iUIBlock
+	{
+		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
+			return $this->m_oTabs->AddUIBlockToCurrentTab($oBlock);
+		}
+		return parent::AddUiBlock($oBlock);
 	}
 
 	/**

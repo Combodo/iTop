@@ -1,0 +1,5 @@
+{% set aParams = oUIBlock.GetParams() %}
+<div class="ibo-field ibo-field-{{ aParams.layout }}">
+    <div class="ibo-field-label">{{ aParams.label|raw }}</div>
+    <div class="ibo-field-value">{{ aParams.value|raw }}</div>
+</div>
