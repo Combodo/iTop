@@ -4,4 +4,9 @@
  */
 
 .ibo-column {
+  min-width: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0 20px;
+  flex-basis: 10%;
 }

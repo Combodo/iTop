@@ -15,7 +15,7 @@
         </ul>
         {% for oTab in oUIBlock.GetSubBlocks() %}
             {% if oTab.GetType() == 'html' %}
-                <div id="tab_{{ oTab.GetId() }}">
+                <div id="tab_{{ oTab.GetId() }}" class="ibo-tab-content">
                     {{ render_block(oTab, {aPage: aPage}) }}
                 </div>
             {% endif %}

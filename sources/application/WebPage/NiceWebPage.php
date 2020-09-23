@@ -113,18 +113,18 @@ class NiceWebPage extends WebPage
 	});
 	$("table.listResults").tableHover(); // hover tables
 EOF
-		);
-	    $this->LoadTheme();
+	    );
+		$this->LoadTheme();
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
-     	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
-    	$sAbsURLModulesRoot = addslashes($this->GetAbsoluteUrlModulesRoot());
-    	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
+		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+		$sAbsURLModulesRoot = addslashes($this->GetAbsoluteUrlModulesRoot());
+		$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
 		$sAppContext = addslashes($this->GetApplicationContext());
 
 		$this->add_script(
-<<<EOF
+			<<<EOF
 function GetAbsoluteUrlAppRoot()
 {
 	return '$sAbsURLAppRoot';

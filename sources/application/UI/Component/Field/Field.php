@@ -31,7 +31,7 @@ class Field extends UIBlock
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
 	public function GetParams(): array
 	{

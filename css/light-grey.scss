@@ -356,7 +356,7 @@
 		padding: 3px;
 		padding-right: 10px;
 	}
-
+/*
 	fieldset {
 		margin-top: 3px;
 		-moz-border-radius: 6px;
@@ -377,6 +377,7 @@
 		-webkit-border-radius: 6px;
 		border-radius: 6px;
 	}
+*/
 
 	legend.transparent {
 		background: transparent;
@@ -386,25 +387,26 @@
 		padding: 0;
 	}
 
-	.ui-widget-content td legend a, .ui-widget-content td legend a:hover, .ui-widget-content td legend a:visited {
-		color: #fff;
-	}
+	/*
+        .ui-widget-content td legend a, .ui-widget-content td legend a:hover, .ui-widget-content td legend a:visited {
+            color: #fff;
+        }
 
-	.ui-widget-content td a, p a, p a:visited, td a, td a:visited {
-		text-decoration: none;
-		color: $complement-color;
-	}
+        .ui-widget-content td a, p a, p a:visited, td a, td a:visited {
+            text-decoration: none;
+            color: $complement-color;
+        }
 
-	.ui-widget-content td a.cke_button, .ui-widget-content td a.cke_toolbox_collapser, .ui-widget-content td a.cke_combo_button, cke_dialog a {
-		padding-left: 0;
-		background-image: none;
-	}
+        .ui-widget-content td a.cke_button, .ui-widget-content td a.cke_toolbox_collapser, .ui-widget-content td a.cke_combo_button, cke_dialog a {
+            padding-left: 0;
+            background-image: none;
+        }
 
-	.ui-widget-content td a:hover, p a:hover, td a:hover {
-		text-decoration: underline;
-		color: $highlight-color;
-	}
-
+        .ui-widget-content td a:hover, p a:hover, td a:hover {
+            text-decoration: underline;
+            color: $highlight-color;
+        }
+    */
 	.cke_reset_all *:hover {
 		text-decoration: none;
 		color: $text-color;
@@ -623,7 +625,7 @@
 		padding: 0;
 		font-size: 8pt;
 		text-decoration: none;
-		color: $grey-color;
+		//		color: $grey-color;
 	}
 
 	td a.CollapsibleLabel::before, a.CollapsibleLabel::before {

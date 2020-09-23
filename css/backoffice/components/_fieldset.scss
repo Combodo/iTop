@@ -2,3 +2,20 @@
  * copyright   Copyright (C) 2010-2020 Combodo SARL
  * license     http://opensource.org/licenses/AGPL-3.0
  */
+
+.ibo-fieldset {
+
+  & ~ .ibo-fieldset {
+    margin-top: 20px;
+  }
+}
+
+
+.ibo-fieldset-legend {
+  @extend %ibo-font-ral-med-250;
+}
+
+.ibo-fieldset-legend-separator {
+  height: 2px;
+  background: $ibo-color-grey-500;
+}

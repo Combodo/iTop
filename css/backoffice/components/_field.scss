@@ -3,6 +3,16 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-field-value--color: $ibo-color-grey-700 !default;
+
+.ibo-field {
+  @extend %ibo-font-ral-nor-150;
+
+  & ~ .ibo-field {
+    margin-top: 10px;
+  }
+}
+
 .ibo-field-large {
   display: inherit;
 
@@ -31,4 +41,5 @@
 .ibo-field-value {
   display: table;
   width: 100%;
+  color: $ibo-field-value--color;
 }

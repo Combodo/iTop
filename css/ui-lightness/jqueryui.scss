@@ -13,7 +13,7 @@
     display: none;
 }
 .ui-helper-hidden-accessible {
-    border: 0;
+    // border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
     margin: -1px;
@@ -25,7 +25,7 @@
 .ui-helper-reset {
     margin: 0;
     padding: 0;
-    border: 0;
+    // border: 0;
     outline: 0;
     line-height: 1.3;
     text-decoration: none;
@@ -91,7 +91,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #666666 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=" + $version) 50% 50% repeat;
+    // background: #666666 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=" + $version) 50% 50% repeat;
     opacity: .5;
     filter: Alpha(Opacity=50);
 }
@@ -178,7 +178,7 @@
 .ui-selectable-helper {
     position: absolute;
     z-index: 100;
-    border: 1px dotted black;
+    // border: 1px dotted black;
 }
 .ui-sortable-handle {
     -ms-touch-action: none;
@@ -269,41 +269,47 @@
     user-select: none;
     overflow: visible;
     text-decoration: none;
-    border: 1px solid #cccccc;
-    background: #f1f1f1;
+    // // border: 1px solid #cccccc;
+    // background: #f1f1f1;
     font-weight: bold;
     color: $secondary-text-color;
+
     &:link {
         text-decoration: none;
     }
+
     &:visited {
         text-decoration: none;
     }
+
     &:hover {
         text-decoration: none;
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
+        // // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
         font-weight: bold;
         color: $highlight-color;
+
         .ui-icon {
             background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_E87C1E_256x240.png?v=" + $version);
         }
     }
     &:active {
         text-decoration: none;
-        border: 1px solid $highlight-color;
-        background: #ffffff;
+        // // border: 1px solid $highlight-color;
+        // background: #ffffff;
         font-weight: bold;
         color: $highlight-color;
+
         .ui-icon {
             background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_E87C1E_256x240.png?v=" + $version);
         }
     }
     &:focus {
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
+        // // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
         font-weight: bold;
         color: $highlight-color;
+
         .ui-icon {
             background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_E87C1E_256x240.png?v=" + $version);
         }
@@ -351,13 +357,13 @@ input.ui-button.ui-icon-notext {
 }
 input.ui-button {
     &::-moz-focus-inner {
-        border: 0;
+        // // border: 0;
         padding: 0;
     }
 }
 button.ui-button {
     &::-moz-focus-inner {
-        border: 0;
+        // // border: 0;
         padding: 0;
     }
 }
@@ -425,7 +431,7 @@ button.ui-button {
     .ui-icon-background {
         box-shadow: inset 1px 1px 1px #ccc;
         border-radius: .12em;
-        border: none;
+        // // border: none;
     }
 }
 .ui-checkboxradio-radio-label {
@@ -434,7 +440,7 @@ button.ui-button {
         height: 16px;
         border-radius: 1em;
         overflow: visible;
-        border: none;
+        // // border: none;
     }
 }
 .ui-checkboxradio-radio-label.ui-checkboxradio-checked {
@@ -529,10 +535,10 @@ button.ui-button {
         padding: .7em .3em;
         text-align: center;
         font-weight: bold;
-        border: 0;
+        // // border: 0;
     }
     td {
-        border: 0;
+        // // border: 0;
         padding: 1px;
         span {
             display: block;
@@ -692,9 +698,9 @@ button.ui-button {
     }
     .ui-dialog-content {
         position: relative;
-        border: 0;
+        // // border: 0;
         padding: .5em 1em;
-        background: none;
+        // background: none;
         overflow: auto;
     }
     .ui-dialog-buttonpane {
@@ -766,7 +772,7 @@ button.ui-button {
         height: 100%;
     }
     .ui-progressbar-overlay {
-        background: url("data:image/gif;base64,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");
+        // background: url("data:image/gif;base64,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");
         height: 100%;
         filter: alpha(opacity=25);
         opacity: 0.25;
@@ -795,7 +801,7 @@ button.ui-button {
             padding: 2px 0.4em;
             margin: 0.5em 0 0 0;
             height: auto;
-            border: 0;
+            // // border: 0;
         }
     }
 }
@@ -834,7 +840,7 @@ button.ui-button {
         z-index: 1;
         font-size: .7em;
         display: block;
-        border: 0;
+        // border: 0;
         background-position: 0 0;
     }
 }
@@ -895,8 +901,8 @@ button.ui-button {
     }
 }
 .ui-spinner-input {
-    border: none;
-    background: none;
+    // border: none;
+    // background: none;
     color: inherit;
     padding: .222em 0;
     margin: .2em 0;
@@ -966,7 +972,7 @@ button.ui-button {
         display: block;
         border-width: 0;
         padding: 1em 1.4em;
-        background: none;
+        // background: none;
     }
 }
 .ui-tabs-collapsible {
@@ -991,87 +997,89 @@ body {
 }
 .ui-widget {
     font-family: $default-font-family;
-    font-size: 1.1em;
+    //font-size: 1.1em;
     .ui-widget {
-        font-size: 1em;
+        //font-size: 1em;
     }
     input {
         font-family: $default-font-family;
-        font-size: 1em;
+        //font-size: 1em;
     }
     select {
         font-family: $default-font-family;
-        font-size: 1em;
+        //font-size: 1em;
     }
     textarea {
         font-family: $default-font-family;
-        font-size: 1em;
+        //font-size: 1em;
     }
     button {
         font-family: $default-font-family;
-        font-size: 1em;
+        //font-size: 1em;
     }
 }
 .ui-widget.ui-widget-content {
-    border: 1px solid #cccccc;
+    // border: 1px solid #cccccc;
 }
 .ui-widget-content {
-    border: 1px solid #dddddd;
-    background: $content-color;
-    color: $primary-text-color;
+    // border: 1px solid #dddddd;
+    // background: $content-color;
+    //color: $primary-text-color;
     a {
-        color: $primary-text-color;
+        //color: $primary-text-color;
     }
+
     .ui-state-default {
-        border: 1px solid #cccccc;
-        background: $button-content-background-color;
-        font-weight: bold;
-        color: $secondary-text-color;
+        // border: 1px solid #cccccc;
+        // background: $button-content-background-color;
+        //font-weight: bold;
+        //color: $secondary-text-color;
     }
+
     .ui-state-hover {
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-focus {
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-active {
-        border: 1px solid $highlight-color;
-        background: $highlight-item-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $highlight-item-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-highlight {
-        border: 1px solid #fed22f;
-        background: #ffe45c;
-        color: $highlight-text-color;
+        // border: 1px solid #fed22f;
+        // background: #ffe45c;
+        //color: $highlight-text-color;
         a {
-            color: $highlight-text-color;
+            //color: $highlight-text-color;
         }
     }
     .ui-state-error {
-        border: 1px solid #cd0a0a;
-        background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
-        color: $error-text-color;
+        // border: 1px solid #cd0a0a;
+        // background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
+        //color: $error-text-color;
         a {
-            color: $error-text-color;
+            //color: $error-text-color;
         }
     }
     .ui-state-error-text {
-        color: $error-text-color;
+        //color: $error-text-color;
     }
     .ui-priority-primary {
-        font-weight: bold;
+        //font-weight: bold;
     }
     .ui-priority-secondary {
         opacity: .7;
         filter: Alpha(Opacity=70);
-        font-weight: normal;
+        //font-weight: normal;
     }
     .ui-state-disabled {
         opacity: .35;
@@ -1083,63 +1091,65 @@ body {
     }
 }
 .ui-widget-header {
-    border: 1px solid $border-highlight-color;
-    background: $highlight-color;
-    color: $error-text-color;
-    font-weight: bold;
+    // border: 1px solid $border-highlight-color;
+    // background: $highlight-color;
+    //color: $error-text-color;
+    //font-weight: bold;
     a {
-        color: $error-text-color;
+        //color: $error-text-color;
     }
+
     .ui-state-default {
-        border: 1px solid #cccccc;
-        background: $button-header-background-color;
-        font-weight: bold;
-        color: $secondary-text-color;
+        // border: 1px solid #cccccc;
+        // background: $button-header-background-color;
+        //font-weight: bold;
+        //color: $secondary-text-color;
     }
+
     .ui-state-hover {
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-focus {
-        border: 1px solid $highlight-color;
-        background: $hover-background-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $hover-background-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-active {
-        border: 1px solid $highlight-color;
-        background: $highlight-item-color;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: $highlight-item-color;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
     .ui-state-highlight {
-        border: 1px solid #fed22f;
-        background: #ffe45c;
-        color: $highlight-text-color;
+        // border: 1px solid #fed22f;
+        // background: #ffe45c;
+        //color: $highlight-text-color;
         a {
-            color: $highlight-text-color;
+            //color: $highlight-text-color;
         }
     }
     .ui-state-error {
-        border: 1px solid #cd0a0a;
-        background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
-        color: $error-text-color;
+        // border: 1px solid #cd0a0a;
+        // background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
+        //color: $error-text-color;
         a {
-            color: $error-text-color;
+            //color: $error-text-color;
         }
     }
     .ui-state-error-text {
-        color: $error-text-color;
+        //color: $error-text-color;
     }
     .ui-priority-primary {
-        font-weight: bold;
+        //font-weight: bold;
     }
     .ui-priority-secondary {
         opacity: .7;
         filter: Alpha(Opacity=70);
-        font-weight: normal;
+        //font-weight: normal;
     }
     .ui-state-disabled {
         opacity: .35;
@@ -1151,19 +1161,21 @@ body {
     }
 }
 .ui-state-default {
-    border: 1px solid #cccccc;
-    background: $main-menu-background-color;
-    font-weight: bold;
-    color: $secondary-text-color;
+    // border: 1px solid #cccccc;
+    // background: $main-menu-background-color;
+    //font-weight: bold;
+    //color: $secondary-text-color;
     a {
-        color: $secondary-text-color;
+        //color: $secondary-text-color;
         text-decoration: none;
+
         &:link {
-            color: $secondary-text-color;
+            //color: $secondary-text-color;
             text-decoration: none;
         }
+
         &:visited {
-            color: $secondary-text-color;
+            //color: $secondary-text-color;
             text-decoration: none;
         }
     }
@@ -1174,65 +1186,67 @@ body {
 html {
     .ui-button.ui-state-disabled {
         &:hover {
-            border: 1px solid #cccccc;
-            background: #f1f1f1;
-            font-weight: bold;
-            color: $secondary-text-color;
+            // border: 1px solid #cccccc;
+            // background: #f1f1f1;
+            //font-weight: bold;
+            //color: $secondary-text-color;
         }
         &:active {
-            border: 1px solid #cccccc;
-            background: #f1f1f1;
-            font-weight: bold;
-            color: $secondary-text-color;
+            // border: 1px solid #cccccc;
+            // background: #f1f1f1;
+            //font-weight: bold;
+            //color: $secondary-text-color;
         }
     }
 }
 a.ui-button {
-    color: $secondary-text-color;
+    //color: $secondary-text-color;
     text-decoration: none;
     &:hover {
-        color: $highlight-color;
+        //color: $highlight-color;
         text-decoration: none;
     }
     &:focus {
-        color: $highlight-color;
+        //color: $highlight-color;
         text-decoration: none;
     }
     &:active {
-        border: 1px solid $highlight-color;
-        background: #ffffff;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: #ffffff;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
 }
 a {
     &:link.ui-button {
-        color: $secondary-text-color;
+        //color: $secondary-text-color;
         text-decoration: none;
     }
     &:visited.ui-button {
-        color: $secondary-text-color;
+        //color: $secondary-text-color;
         text-decoration: none;
     }
 }
 .ui-state-hover {
-    border: 1px solid $highlight-color;
-    background: $hover-background-color;
-    font-weight: bold;
-    color: $highlight-color;
+    // border: 1px solid $highlight-color;
+    // background: $hover-background-color;
+    //font-weight: bold;
+    //color: $highlight-color;
     a {
-        color: $highlight-color;
+        //color: $highlight-color;
         text-decoration: none;
+
         &:hover {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
+
         &:link {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
         &:visited {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
     }
@@ -1241,23 +1255,25 @@ a {
     }
 }
 .ui-state-focus {
-    border: 1px solid $highlight-color;
-    background: $hover-background-color;
-    font-weight: bold;
-    color: $highlight-color;
+    // border: 1px solid $highlight-color;
+    // background: $hover-background-color;
+    //font-weight: bold;
+    //color: $highlight-color;
     a {
-        color: $highlight-color;
+        //color: $highlight-color;
         text-decoration: none;
+
         &:hover {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
+
         &:link {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
         &:visited {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
     }
@@ -1269,23 +1285,25 @@ a {
     box-shadow: 0 0 3px 1px rgb(94, 158, 214);
 }
 .ui-state-active {
-    border: 1px solid $highlight-color;
-    background: $highlight-item-color;
-    font-weight: bold;
-    color: $highlight-color;
+    // border: 1px solid $highlight-color;
+    // background: $highlight-item-color;
+    //font-weight: bold;
+    //color: $highlight-color;
     .ui-icon-background {
-        border: $highlight-color;
+        // border: $highlight-color;
         background-color: $highlight-color;
     }
+
     a {
-        color: $highlight-color;
+        //color: $highlight-color;
         text-decoration: none;
+
         &:link {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
         &:visited {
-            color: $highlight-color;
+            //color: $highlight-color;
             text-decoration: none;
         }
     }
@@ -1295,44 +1313,46 @@ a {
 }
 .ui-button.ui-state-active {
     &:hover {
-        border: 1px solid $highlight-color;
-        background: #ffffff;
-        font-weight: bold;
-        color: $highlight-color;
+        // border: 1px solid $highlight-color;
+        // background: #ffffff;
+        //font-weight: bold;
+        //color: $highlight-color;
     }
 }
 .ui-icon-background {
-    border: $highlight-color;
+    // border: $highlight-color;
     background-color: $highlight-color;
 }
 .ui-state-highlight {
-    border: 1px solid #fed22f;
-    background: #ffe45c;
-    color: $highlight-text-color;
+    // border: 1px solid #fed22f;
+    // background: #ffe45c;
+    //color: $highlight-text-color;
     a {
-        color: $highlight-text-color;
+        //color: $highlight-text-color;
     }
+
     .ui-icon {
         background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_1c94c4_256x240.png?v=" + $version);
     }
 }
 .ui-state-checked {
-    border: 1px solid #fed22f;
-    background: #ffe45c;
+    // border: 1px solid #fed22f;
+    // background: #ffe45c;
 }
 .ui-state-error {
-    border: 1px solid #cd0a0a;
-    background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
-    color: $error-text-color;
+    // border: 1px solid #cd0a0a;
+    // background: #b81900 url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png?v=" + $version) 50% 50% repeat;
+    //color: $error-text-color;
     a {
-        color: $error-text-color;
+        //color: $error-text-color;
     }
+
     .ui-icon {
         background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffd27a_256x240.png?v=" + $version);
     }
 }
 .ui-state-error-text {
-    color: $error-text-color;
+    //color: $error-text-color;
     .ui-icon {
         background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffd27a_256x240.png?v=" + $version);
     }
@@ -1343,7 +1363,7 @@ a {
 .ui-priority-secondary {
     opacity: .7;
     filter: Alpha(Opacity=70);
-    font-weight: normal;
+    //font-weight: normal;
 }
 .ui-icon-blank {
     background-position: 16px 16px;
