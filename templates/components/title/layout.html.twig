@@ -1,1 +1,16 @@
-<h{{ oUIBlock.GetLevel() }} class="ibo-preferences--title title is-size-{{ oUIBlock.GetLevel() + 2 }}">{{ oUIBlock.GetTitle() }}</h{{ oUIBlock.GetLevel() }}>
+{% apply spaceless %}
+    <div class="ibo-title">
+        {% if oUIBlock.HasIcon() %}
+            <div class="ibo-title--icon">
+                {{ oUIBlock.GetIcon()|raw }}
+            </div>
+        {% endif %}
+        <div class="ibo-title--content">
+            {% block iboPageTitleText %}
+                <h{{ oUIBlock.GetLevel() }} class="ibo-title--text title is-size-{{ oUIBlock.GetLevel() + 2 }}">
+                    {{ oUIBlock.GetTitle()|raw }}
+                </h{{ oUIBlock.GetLevel() }}>
+            {% endblock %}
+        </div>
+    </div>
+{% endapply %}

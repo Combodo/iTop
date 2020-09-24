@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Field\Field;
 use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Layout\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
 
@@ -215,46 +217,51 @@ EOF
 		// Standard Header with name, actions menu and history block
 		//
 
-		if (!$oPage->IsPrintableVersion())
-		{
+		if (!$oPage->IsPrintableVersion()) {
 			// Is there a message for this object ??
-			$aMessages = array();
-			$aRanks = array();
-			if (MetaModel::GetConfig()->Get('concurrent_lock_enabled'))
-			{
+			$aMessages = [];
+			$aRanks = [];
+			if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
 				$aLockInfo = iTopOwnershipLock::IsLocked(get_class($this), $this->GetKey());
-				if ($aLockInfo['locked'])
-				{
+				if ($aLockInfo['locked']) {
 					$aRanks[] = 0;
 					$sName = $aLockInfo['owner']->GetName();
-					if ($aLockInfo['owner']->Get('contactid') != 0)
-					{
+					if ($aLockInfo['owner']->Get('contactid') != 0) {
 						$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
 					}
 					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
-					$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User',
-							$sName)."</div>";
+					$aMessages[] = AlertFactory::MakeForDanger('', Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName));
 				}
 			}
 			$sMessageKey = get_class($this).'::'.$this->GetKey();
 			if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
-					$_SESSION['obj_messages']))
-			{
-				foreach($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
-				{
-					$sMsgClass = 'message_'.$aMessageData['severity'];
-					if(!in_array("<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>",$aMessages))
-					{
-						$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
+					$_SESSION['obj_messages'])) {
+				$aReadMessages = [];
+				foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData) {
+					if (!in_array($aMessageData['message'], $aReadMessages)) {
+						$aReadMessages[] = $aMessageData['message'];
 						$aRanks[] = $aMessageData['rank'];
+						switch ($aMessageData['severity']) {
+							case 'info':
+								$aMessages[] = AlertFactory::MakeForInformation('', $aMessageData['message']);
+								break;
+							case 'ok':
+								$aMessages[] = AlertFactory::MakeForSuccess('', $aMessageData['message']);
+								break;
+							case 'warning':
+								$aMessages[] = AlertFactory::MakeForWarning('', $aMessageData['message']);
+								break;
+							case 'error':
+								$aMessages[] = AlertFactory::MakeForDanger('', $aMessageData['message']);
+								break;
+						}
 					}
 				}
 				unset($_SESSION['obj_messages'][$sMessageKey]);
 			}
 			array_multisort($aRanks, $aMessages);
-			foreach($aMessages as $sMessage)
-			{
-				$oPage->add($sMessage);
+			foreach ($aMessages as $oMessage) {
+				$oPage->AddUiBlock($oMessage);
 			}
 		}
 
@@ -364,14 +371,11 @@ EOF
 			}
 		}
 
-		if ($this->IsArchived())
-		{
+		if ($this->IsArchived()) {
 			$sLabel = htmlentities(Dict::S('Tag:Archived'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fas fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
-		}
-		elseif ($this->IsObsolete())
-		{
+		} elseif ($this->IsObsolete()) {
 			$sLabel = htmlentities(Dict::S('Tag:Obsolete'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Obsolete+'), ENT_QUOTES, 'UTF-8');
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
@@ -380,28 +384,13 @@ EOF
 		$sObjectIcon = $this->GetIcon();
 		$sClassName = MetaModel::GetName(get_class($this));
 		$sObjectName = $this->GetName();
-		if (count($aIcons) > 0)
-		{
+		if (count($aIcons) > 0) {
 			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
-		}
-		else
-		{
+		} else {
 			$sTags = '';
 		}
 
-		$oPage->add(
-			<<<EOF
-<div class="page_header">
-   <div class="object-details-header">
-      <div class ="object-icon">$sObjectIcon</div>
-      <div class ="object-infos">
-		  <h1 class="object-name">$sClassName: <span class="hilite">$sObjectName</span></h1>
-		  $sTags
-      </div>
-   </div>
-</div>
-EOF
-		);
+		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($sClassName, $sObjectName, $sObjectIcon));
 	}
 
 	/**

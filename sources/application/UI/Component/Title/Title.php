@@ -25,12 +25,15 @@ class Title extends UIBlock
 	protected $sTitle;
 	/** @var int */
 	protected $iLevel;
+	/** @var string */
+	protected $sIconHtml;
 
 	public function __construct(string $sTitle = '', int $iLevel = 1, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sTitle = $sTitle;
 		$this->iLevel = $iLevel;
+		$this->sIconHtml = null;
 	}
 
 	/**
@@ -48,4 +51,21 @@ class Title extends UIBlock
 	{
 		return $this->iLevel;
 	}
+
+	public function SetIcon(string $sIconHtml): self
+	{
+		$this->sIconHtml = $sIconHtml;
+		return $this;
+	}
+
+	public function GetIcon(): string
+	{
+		return $this->sIconHtml;
+	}
+
+	public function HasIcon(): string
+	{
+		return !is_null($this->sIconHtml);
+	}
+
 }

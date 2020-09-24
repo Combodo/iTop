@@ -413,6 +413,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreateHelper' => __DIR__ . '/../..' . '/sources/application/UI/Component/QuickCreate/QuickCreateHelper.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Title\\Title' => __DIR__ . '/../..' . '/sources/application/UI/Component/Title/Title.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Title\\TitleFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/Title/TitleFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\Title\\TitleForObjectDetails' => __DIR__ . '/../..' . '/sources/application/UI/Component/Title/TitleForObjectDetails.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\ActivityEntry' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/ActivityEntry.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\ActivityEntryFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/ActivityEntryFactory.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\CMDBChangeOp\\CMDBChangeOpAttachmentAddedFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/CMDBChangeOp/CMDBChangeOpAttachmentAddedFactory.php',

@@ -15,4 +15,12 @@ class TitleFactory
 	{
 		return new Title($sTitle, 1, $sId);
 	}
+
+	public static function MakeForObjectDetails(string $sClassName, string $sObjectName, string $sIconHtml, ?string $sId = null)
+	{
+		$oTitle = new TitleForObjectDetails($sClassName, $sObjectName, $sId);
+		$oTitle->SetIcon($sIconHtml);
+
+		return $oTitle;
+	}
 }

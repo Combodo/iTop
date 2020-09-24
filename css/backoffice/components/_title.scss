@@ -2,3 +2,26 @@
  * copyright   Copyright (C) 2010-2020 Combodo SARL
  * license     http://opensource.org/licenses/AGPL-3.0
  */
+
+.ibo-title {
+
+  color: $ibo-color-grey-900;
+
+  .ibo-title--icon {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .ibo-title--content {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .ibo-title--emphasis {
+
+  }
+
+  .ibo-title--for-object-details {
+    @extend %ibo-font-ral-med-350;
+  }
+}

@@ -183,6 +183,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Component\\QuickCreate\\QuickCreateHelper' => $baseDir . '/sources/application/UI/Component/QuickCreate/QuickCreateHelper.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Title\\Title' => $baseDir . '/sources/application/UI/Component/Title/Title.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Title\\TitleFactory' => $baseDir . '/sources/application/UI/Component/Title/TitleFactory.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\Title\\TitleForObjectDetails' => $baseDir . '/sources/application/UI/Component/Title/TitleForObjectDetails.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\ActivityEntry' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/ActivityEntry.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\ActivityEntryFactory' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/ActivityEntryFactory.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\CMDBChangeOp\\CMDBChangeOpAttachmentAddedFactory' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/CMDBChangeOp/CMDBChangeOpAttachmentAddedFactory.php',

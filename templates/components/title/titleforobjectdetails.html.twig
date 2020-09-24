@@ -1,0 +1,7 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'components/title/layout.html.twig' %}
+
+{% block iboPageTitleText %}
+    <h1 class="ibo-title--for-object-details">{{ oUIBlock.GetClassName() }} <span class="ibo-title--emphasis">{{ oUIBlock.GetObjectName()|raw }}</span></h1>
+{% endblock %}

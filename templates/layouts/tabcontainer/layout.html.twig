@@ -3,7 +3,7 @@
 {% block iboTabContainer %}
     <div class="ibo-tab-container-spinner"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
     <!-- tabs -->
-    <div id="tabbedContent_{$sPrefix}{$container_index}" class="ibo-tab-container light" style="display: none;">
+    <div id="tabbedContent_{$sPrefix}{$container_index}" class="ibo-tab-container" style="display: none;">
         <ul class="ibo-tab-container-header">
             {% for oTab in oUIBlock.GetSubBlocks() %}
                 {% if oTab.GetType() == 'ajax' %}
