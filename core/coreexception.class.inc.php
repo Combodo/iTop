@@ -28,7 +28,7 @@
 
 class CoreException extends Exception
 {
-	public function __construct($sIssue, $aContextData = null, $sImpact = '', Throwable $previous = null)
+	public function __construct($sIssue, $aContextData = null, $sImpact = '', $oPrevious = null)
 	{
 		$this->m_sIssue = $sIssue;
 		$this->m_sImpact = $sImpact;
@@ -66,7 +66,7 @@ class CoreException extends Exception
 			}
 			$sMessage .= implode(', ', $aContextItems);
 		}
-		parent::__construct($sMessage, 0, $previous);
+		parent::__construct($sMessage, 0, $oPrevious);
 	}
 
 	/**
