@@ -27,12 +27,12 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir=$this->tmpdir();
-		$aDirsToCleanup[] = $this->sTmpDir;
+		$this->sTmpDir = $this->tmpdir();
+		$this->aDirsToCleanup[] = $this->sTmpDir;
 
 		$this->recurseMkdir($this->sTmpDir."/branding/themes/basque-red");
-		$this->sCssPath = $this->sTmpDir . '/branding/themes/basque-red/main.css';
-		$this->sJsonThemeParamFile = $this->sTmpDir . '/branding/themes/basque-red/theme-parameters.json';
+		$this->sCssPath = $this->sTmpDir.'/branding/themes/basque-red/main.css';
+		$this->sJsonThemeParamFile = $this->sTmpDir.'/branding/themes/basque-red/theme-parameters.json';
 		$this->recurse_copy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
