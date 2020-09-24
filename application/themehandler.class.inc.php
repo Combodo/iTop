@@ -28,6 +28,12 @@ class ThemeHandler
 	const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
 	private static $oCompileCSSService;
+
+	public static function GetAppRootWithSlashes()
+	{
+		return str_replace('\\', '/', APPROOT);
+	}
+
 	/**
 	 * Return default theme name and parameters
 	 *
@@ -314,9 +320,8 @@ CSS;
 		}
 		foreach ($aIncludedImages as $sImage)
 		{
-			if (is_file($sImage))
-			{
-				$sUri = str_replace(APPROOT, '', $sImage);
+			if (is_file($sImage)) {
+				$sUri = str_replace(self::GetAppRootWithSlashes(), '', $sImage);
 				$aSignature['images'][$sUri] = md5_file($sImage);
 			}
 		}
@@ -329,9 +334,9 @@ CSS;
 	 *
 	 * @param array $aThemeParametersVariables
 	 * @param array $aStylesheetFiles
-	 * @param string $sThemeId: used only for logging purpose
+	 * @param string $sThemeId : used only for logging purpose
 	 *
-	 * @return array
+	 * @return array complete path of the images, but with slashes as dir separator instead of DIRECTORY_SEPARATOR
 	 * @since 2.8.0
 	 */
 	public static function GetIncludedImages($aThemeParametersVariables, $aStylesheetFiles, $sThemeId)
@@ -377,17 +382,17 @@ CSS;
 				&& ! array_key_exists($sImg, $aImages))
 			{
 				$sFilePath = realpath($sImg);
-				if ($sFilePath!==false)
-				{
-					$aImages[$sImg]=$sFilePath;
+				if ($sFilePath !== false) {
+					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
+					$aImages[$sImg] = $sFilePathWithSlashes;
 					continue;
 				}
 
-				$sCanonicalPath = static::CanonicalizePath($sTargetThemeFolderPath.DIRECTORY_SEPARATOR.$sImg);
-				$sFilePath=realpath($sCanonicalPath);
-				if ($sFilePath!==false)
-				{
-					$aImages[$sImg]=$sFilePath;
+				$sCanonicalPath = static::CanonicalizePath($sTargetThemeFolderPath.'/'.$sImg);
+				$sFilePath = realpath($sCanonicalPath);
+				if ($sFilePath !== false) {
+					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
+					$aImages[$sImg] = $sFilePathWithSlashes;
 					continue;
 				}
 
