@@ -1997,7 +1997,7 @@ catch(CoreException $e)
 				$oLog->Set('userinfo', '');
 				$oLog->Set('issue', $e->GetIssue());
 				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $e->getTrace());
+				$oLog->Set('callstack', $e->getFullStackTraceAsString());
 				$oLog->Set('data', $e->getContextData());
 				$oLog->DBInsertNoReload();
 			}
@@ -2007,7 +2007,7 @@ catch(CoreException $e)
 			}
 		}
 
-		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getTraceAsString());
+		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getFullStackTraceAsString());
 	}
 
 	// For debugging only

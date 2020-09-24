@@ -81,6 +81,16 @@ class CoreException extends Exception
 		return $this->getMessage();
 	}
 
+	/**
+	 * getTraceAsString() cannot be overrided and it is limited as only current exception stack is returned.
+	 * we need stack of all previous exceptions
+	 * @uses __tostring() already does the work.
+	 * @since 2.7.2/ 2.8.0
+	 */
+	public function getFullStackTraceAsString(){
+		return "" . $this;
+	}
+
 	public function getTraceAsHtml()
 	{
 		$aBackTrace = $this->getTrace();

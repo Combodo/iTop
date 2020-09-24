@@ -50,7 +50,7 @@ class TriggerTest extends ItopDataTestCase
 		{
 			try
 			{
-				MetaModel::NewObject('CoreException');
+				MetaModel::NewObject('Toto');
 			}
 			catch (\Exception $e)
 			{
@@ -59,11 +59,13 @@ class TriggerTest extends ItopDataTestCase
 			}
 			$this->assertTrue(false, "An exception should have been thrown");
 		}
-		catch(\Exception $e1)
+		catch(\CoreException $e1)
 		{
 			$this->assertEquals('CoreException', get_class($e1));
-			$this->assertEquals('Unknown class \'CoreException\' (TriggerOnObjectCreate::-1)', $e1->getMessage());
-			$this->assertEquals($sStackTrace, $e1->getTraceAsString());
+			$this->assertEquals('Unknown class \'Toto\' (<b title="Trigger">TriggerOnObjectCreate</b>::-1 ()<br/>)', $e1->getMessage());
+
+			$fullStackTraceAsString = $e1->getFullStackTraceAsString();
+			$this->assertContains("MetaModel::NewObject", $fullStackTraceAsString,"new enriched exception should contain root cause method: " . $fullStackTraceAsString);
 		}
 	}
 
@@ -97,9 +99,7 @@ class TriggerTest extends ItopDataTestCase
 		}
 		catch(\Exception $e1)
 		{
-			$this->assertEquals('CoreContextEnrichmentException', get_class($e1));
-			$this->assertEquals('Unknown class \'CoreException\'', $e1->getMessage());
-			$this->assertEquals($sStackTrace, $e1->getTraceAsString());
+			$this->assertEquals($e, $e1);
 		}
 	}
 }
