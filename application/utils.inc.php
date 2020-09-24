@@ -2332,8 +2332,8 @@ class utils
 			throw $oException;
 		}
 
-		$sCmdAbstractInfo = str_replace("\n", '', "" . $oCmdbAbstract);
-		$sMessage = $oException->getMessage() . " (" . $sCmdAbstractInfo . ")";
+		$sCmdbAbstractInfo = str_replace("\n", '', "" . $oCmdbAbstract);
+		$sMessage = $oException->getMessage() . " (" . $sCmdbAbstractInfo . ")";
 
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
