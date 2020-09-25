@@ -21,10 +21,8 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu;
 
 
 
-use appUserPreferences;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Dict;
-use iNewsroomProvider;
 use JSPopupMenuItem;
 use MetaModel;
 use URLPopupMenuItem;
@@ -197,5 +195,52 @@ class PopoverMenuFactory
 		);
 
 		return $aItems;
+	}
+
+	public static function MakeMenuForActions(string $sId, array $aMenuItems): PopoverMenu
+	{
+		$oMenu = new PopoverMenu($sId);
+
+		$bFirst = true;
+		foreach ($aMenuItems as $sSection => $aActions) {
+			$aItems = [];
+
+			if (!$bFirst) {
+				$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+					new \SeparatorPopupMenuItem()
+				);
+			}
+
+			foreach ($aActions as $aAction) {
+				if (!empty($aAction['on_click'])) {
+					// JS
+					$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+						new JSPopupMenuItem(
+							$aAction['uid'],
+							$aAction['label'],
+							$aAction['on_click'])
+					);
+				} else {
+					// URL
+					$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+						new URLPopupMenuItem(
+							$aAction['uid'],
+							$aAction['label'],
+							$aAction['url'],
+							$aAction['target'])
+					);
+				}
+				if (!empty($aAction['css_classes'])) {
+					$oPopoverMenuItem->SetCssClasses($aAction['css_classes']);
+				}
+				$aItems[] = $oPopoverMenuItem;
+			}
+
+			$oMenu->AddSection($sSection)
+				->SetItems($sSection, $aItems);
+			$bFirst = false;
+		}
+
+		return $oMenu;
 	}
 }

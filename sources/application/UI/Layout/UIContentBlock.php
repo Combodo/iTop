@@ -18,19 +18,23 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	public const BLOCK_CODE = 'ibo-contentblock';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/contentblock/layout';
 	public const JS_TEMPLATE_REL_PATH = 'layouts/contentblock/layout';
-
+	/** @var array */
+	protected $aCSSClasses;
+	/** @var array */
 	protected $aSubBlocks;
 
 	/**
 	 * UIContentBlock constructor.
 	 *
 	 * @param string|null $sName
+	 * @param string $sContainerClass
 	 */
-	public function __construct(string $sName = null)
+	public function __construct(string $sName = null, string $sContainerClass = '')
 	{
 		parent::__construct($sName);
 
 		$this->aSubBlocks = [];
+		$this->SetCSSClasses($sContainerClass);
 	}
 
 	public function AddHtml(string $sHtml): iUIBlock
@@ -110,4 +114,40 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	{
 		return array_key_exists($sId, $this->aSubBlocks);
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetCSSClasses(): string
+	{
+		return implode(' ', $this->aCSSClasses);
+	}
+
+	/**
+	 * @param string $sCSSClasses
+	 *
+	 * @return UIContentBlock
+	 */
+	public function SetCSSClasses(string $sCSSClasses): UIContentBlock
+	{
+		$this->aCSSClasses = [];
+		$this->AddCSSClasses($sCSSClasses);
+		return $this;
+	}
+
+	/**
+	 * @param string $sCSSClasses
+	 *
+	 * @return $this
+	 */
+	public function AddCSSClasses(string $sCSSClasses): UIContentBlock
+	{
+		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
+			if (!empty($sCSSClass)) {
+				$this->aCSSClasses[$sCSSClass] = $sCSSClass;
+			}
+		}
+		return $this;
+	}
+
 }

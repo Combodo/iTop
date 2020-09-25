@@ -236,14 +236,14 @@ EOF
 			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"></select>";
 			$sJsonOptions=json_encode($aOptions);
 			$oPage->add_ready_script(
-				<<<JS
+				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$sDisplayValue');
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
-JS
+EOF
 			);
 		}
 		else
@@ -278,7 +278,7 @@ JS
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
-				<<<JS
+				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
@@ -286,7 +286,7 @@ JS
 		{
 			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
 		}
-JS
+EOF
 			);
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
@@ -544,13 +544,13 @@ EOF
 					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
 				}
 				$oPage->add_ready_script(
-<<<JS
+					<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
-JS
+EOF
 				);
 			} // Switch
 		}
@@ -586,7 +586,7 @@ JS
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
-<<<JS
+				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
@@ -594,8 +594,8 @@ JS
 		{
 			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
 		}
-JS
-);
+EOF
+			);
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
@@ -631,53 +631,55 @@ JS
 
 	public function GetSearchDialog(WebPage $oPage, $sTitle, $oCurrObject = null)
 	{
-		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
+		$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">');
 
-		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
-		{
+		if (($oCurrObject != null) && ($this->sAttCode != '')) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oCurrObject), $this->sAttCode);
 			/** @var \DBObject $oCurrObject */
 			$aArgs = $oCurrObject->ToArgsForQuery();
 			$aParams = array('query_params' => $aArgs);
 			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aArgs);
 			$oFilter = $oSet->GetFilter();
-		}
-		else
-		{
+		} else {
 			$aParams = array();
 			$oFilter = new DBObjectSearch($this->sTargetClass);
 		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
-		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId,
-            array(
-                'menu' => false,
-                'currentId' => $this->iId,
-                'table_id' => "dr_{$this->iId}",
-                'table_inner_id' => "{$this->iId}_results",
-                'selection_mode' => true,
-                'selection_type' => 'single',
-                'cssCount' => '#count_'.$this->iId)
-        );
-		$sHTML .= "<form id=\"fr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoOk();\">\n";
-		$sHTML .= "<div id=\"dr_{$this->iId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHTML .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHTML .= "</div>\n";
-		$sHTML .= "<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_dlg_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
-		$sHTML .= "<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoOk();\">";
-		$sHTML .= "<input type=\"hidden\" id=\"count_{$this->iId}\" value=\"0\">";
-		$sHTML .= "</form>\n";
-		$sHTML .= '</div></div>';
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, $this->iId,
+			array(
+				'menu' => false,
+				'currentId' => $this->iId,
+				'table_id' => "dr_{$this->iId}",
+				'table_inner_id' => "{$this->iId}_results",
+				'selection_mode' => true,
+				'selection_type' => 'single',
+				'cssCount' => '#count_'.$this->iId
+			)
+		));
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sOK = Dict::S('UI:Button:Ok');
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$oPage->add(<<<HTML
+<form id="fr_{$this->iId}" OnSubmit="return oACWidget_{$this->iId}.DoOk();">
+		<div id="dr_{$this->iId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+		<div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+		</div>
+		<input type="button" id="btn_cancel_{$this->iId}" value="{$sCancel}" onClick="$('#ac_dlg_{$this->iId}').dialog('close');">&nbsp;&nbsp;
+		<input type="button" id="btn_ok_{$this->iId}" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
+		<input type="hidden" id="count_{$this->iId}" value="0">
+		</form>
+		</div></div>
+HTML
+		);
 
 		$sDialogTitle = addslashes($sTitle);
-		$oPage->add_ready_script(
-<<<EOF
+		$oPage->add_ready_script(<<<JS
 		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
 		$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
-EOF
-);
-		$oPage->add($sHTML);
+JS
+		);
 	}
 
 	/**

@@ -893,7 +893,7 @@ EOF;
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	protected function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	public function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
 		$this->add_init_script($oBlockRenderer->RenderJsInline());
@@ -1326,8 +1326,11 @@ EOF;
 		return null;
 	}
 
-	public function AddUiBlock(iUIBlock $oBlock): iUIBlock
+	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
 	{
+		if (is_null($oBlock)) {
+			return null;
+		}
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
 			return $this->m_oTabs->AddUIBlockToCurrentTab($oBlock);
 		}

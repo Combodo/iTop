@@ -94,6 +94,8 @@ class Button extends UIBlock
 	protected $sJsCode;
 	/** @var string $sOnClickJsCode */
 	protected $sOnClickJsCode;
+	/** @var array */
+	protected $aAdditionalCSSClasses;
 
 	/**
 	 * Button constructor.
@@ -127,6 +129,7 @@ class Button extends UIBlock
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
 		$this->bIsDisabled = false;
+		$this->aAdditionalCSSClasses = [];
 
 		parent::__construct($sId);
 	}
@@ -160,7 +163,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sType
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetType(string $sType)
@@ -179,7 +182,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sName
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetName(string $sName)
@@ -198,7 +201,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sValue
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetValue(string $sValue)
@@ -217,7 +220,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sTooltip
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetTooltip(string $sTooltip)
@@ -236,7 +239,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sIconClass
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetIconClass(string $sIconClass)
@@ -255,7 +258,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sActionType
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetActionType(string $sActionType)
@@ -275,7 +278,7 @@ class Button extends UIBlock
 
 	/**
 	 * @param string $sColor
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetColor(string $sColor)
@@ -302,6 +305,7 @@ class Button extends UIBlock
 		$this->bIsDisabled = $bIsDisabled;
 		return $this;
 	}
+
 	/**
 	 * @return string
 	 */
@@ -341,4 +345,24 @@ class Button extends UIBlock
 
 		return $this;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetAdditionalCSSClass(): string
+	{
+		return implode(' ', $this->aAdditionalCSSClasses);
+	}
+
+	public function AddCSSClasses(string $sCSSClasses): self
+	{
+		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
+			if (!empty($sCSSClass)) {
+				$this->aAdditionalCSSClasses[$sCSSClass] = $sCSSClass;
+			}
+		}
+		return $this;
+	}
+
+
 }

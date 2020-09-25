@@ -294,20 +294,17 @@ class UILinksWidgetDirect
 	 */
 	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = array())
 	{
-		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oHiddenFilter = new DBObjectSearch($this->sLinkedClass);
-		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass))
-		{
+		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass)) {
 			// Prevent linking to self if the linked object is of the same family
 			// and already present in the database
-			if (!$oCurrentObj->IsNew())
-			{
+			if (!$oCurrentObj->IsNew()) {
 				$oHiddenFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
 			}
 		}
-		if (count($aAlreadyLinked) > 0)
-		{
+		if (count($aAlreadyLinked) > 0) {
 			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
@@ -319,18 +316,14 @@ class UILinksWidgetDirect
 		if ($valuesDef === null)
 		{
 			$oFilter = new DBObjectSearch($this->sLinkedClass);
-		}
-		else
-		{
-			if (!$valuesDef instanceof ValueSetObjects)
-			{
+		} else {
+			if (!$valuesDef instanceof ValueSetObjects) {
 				throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
 			}
 			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 		}
 
-		if ($oCurrentObj != null)
-		{
+		if ($oCurrentObj != null) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
@@ -339,7 +332,7 @@ class UILinksWidgetDirect
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
 			array(
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
 				'table_id' => "add_{$this->sInputid}",
@@ -349,16 +342,22 @@ class UILinksWidgetDirect
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sHiddenCriteria,
 			)
-        );
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->sInputid}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->sInputid}\" value=\"0\"/>";
-		$sHtml .= "<button type=\"button\" class=\"cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;<button type=\"button\" class=\"ok\" disabled=\"disabled\">".Dict::S('UI:Button:Add')."</button>";
-		$sHtml .= "</div>\n";
-		$sHtml .= "</form>\n";
-		$oPage->add($sHtml);
+		));
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sAdd = Dict::S('UI:Button:Add');
+
+		$oPage->add(<<<HTML
+<form id="ObjectsAddForm_{$this->sInputid}">
+    <div id="SearchResultsToAdd_{$this->sInputid}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+    </div>
+    <input type="hidden" id="count_{$this->sInputid}" value="0"/>
+    <button type="button" class="cancel">{$sCancel}</button>&nbsp;&nbsp;<button type="button" class="ok" disabled="disabled">{$sAdd}</button>
+</form>
+</div>
+HTML
+		);
 	}
 
 	/**

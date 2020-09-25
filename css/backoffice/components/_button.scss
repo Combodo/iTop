@@ -303,8 +303,13 @@ $ibo-button-icon--padding-right: 4px !default;
 	& ~ .ibo-button {
 		margin-left: 5px;
 	}
+
+	&.ibo-action-button {
+		float: right;
+	}
 }
 
 .ibo-button-icon {
 	padding-right: $ibo-button-icon--padding-right;
 }
+

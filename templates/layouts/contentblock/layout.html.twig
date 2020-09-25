@@ -1,7 +1,17 @@
 {% apply spaceless %}
     {% block iboContentBlockContainer %}
+
+        {% if oUIBlock.GetCSSClasses() %}
+            <div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetCSSClasses() }}">
+        {% endif %}
+
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
+
+        {% if oUIBlock.GetCSSClasses() %}
+            </div>
+        {% endif %}
+
     {% endblock %}
 {% endapply %}

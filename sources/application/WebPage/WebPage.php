@@ -18,6 +18,8 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -313,8 +315,11 @@ class WebPage implements Page
 	 * @return \Combodo\iTop\Application\UI\iUIBlock block added
 	 * @since 2.8.0
 	 */
-	public function AddUiBlock(iUIBlock $oBlock): iUIBlock
+	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
 	{
+		if (is_null($oBlock)) {
+			return null;
+		}
 		$this->oContentLayout->AddSubBlock($oBlock);
 		return $oBlock;
 	}
@@ -703,7 +708,7 @@ class WebPage implements Page
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	protected function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	public function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
 		$sInlineScript = trim($oBlockRenderer->RenderJsInline());
@@ -978,32 +983,26 @@ class WebPage implements Page
 	{
 		$sPrevUrl = '';
 		$sHtml = '';
-		if (!$this->IsPrintableVersion())
-		{
-			foreach ($aActions as $sActionId => $aAction)
-			{
+		if (!$this->IsPrintableVersion()) {
+			foreach ($aActions as $sActionId => $aAction) {
 				$sDataActionId = 'data-action-id="'.$sActionId.'"';
 				$sClass = isset($aAction['css_classes']) ? 'class="'.implode(' ', $aAction['css_classes']).'"' : '';
 				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
 						"UTF-8").'"' : '';
 				$sTarget = isset($aAction['target']) ? "target=\"{$aAction['target']}\"" : "";
-				if (empty($aAction['url']))
-				{
+				if (empty($aAction['url'])) {
 					if ($sPrevUrl != '') // Don't output consecutively two separators...
 					{
 						$sHtml .= "<li $sDataActionId>{$aAction['label']}</li>";
 					}
 					$sPrevUrl = '';
-				}
-				else
-				{
+				} else {
 					$sHtml .= "<li $sDataActionId><a $sTarget href=\"{$aAction['url']}\" $sClass $sOnClick>{$aAction['label']}</a></li>";
 					$sPrevUrl = $aAction['url'];
 				}
 			}
 			$sHtml .= "</ul></li></ul></div>";
-			foreach (array_reverse($aFavoriteActions) as $sActionId => $aAction)
-			{
+			foreach (array_reverse($aFavoriteActions) as $sActionId => $aAction) {
 				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
 				$sHtml .= "<div class=\"actions_button\" data-action-id=\"$sActionId\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";
 			}
@@ -1013,22 +1012,52 @@ class WebPage implements Page
 	}
 
 	/**
+	 * @param string $sId
+	 * @param array $aActions
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu|null
+	 */
+	public function GetPopoverMenu(string $sId, array $aActions): ?PopoverMenu
+	{
+		if ($this->IsPrintableVersion()) {
+			return null;
+		}
+
+		$iSectionIndex = 0;
+		$aMenuItems = [];
+		foreach ($aActions as $sActionId => $aAction) {
+			if (empty($aAction['url'])) {
+				$iSectionIndex++;
+				continue;
+			}
+
+			$aMenuItems["{$sId}_section_{$iSectionIndex}"][] = [
+				'uid' => $sActionId,
+				'css_classes' => isset($aAction['css_classes']) ? $aAction['css_classes'] : [],
+				'on_click' => isset($aAction['onclick']) ? $aAction['onclick'] : '',
+				'target' => isset($aAction['target']) ? $aAction['target'] : '',
+				'url' => $aAction['url'],
+				'label' => $aAction['label'],
+			];
+		}
+
+		return PopoverMenuFactory::MakeMenuForActions($sId, $aMenuItems);
+	}
+
+	/**
 	 * @param bool $bReturnOutput
 	 *
 	 * @throws \Exception
 	 */
 	protected function output_dict_entries($bReturnOutput = false)
 	{
-		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0))
-		{
-			if (class_exists('Dict'))
-			{
+		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
+			if (class_exists('Dict')) {
 				// The dictionary may not be available for example during the setup...
 				// Create a specific dictionary file and load it as a JS script
 				$sSignature = $this->get_dict_signature();
 				$sJSFileName = utils::GetCachePath().$sSignature.'.js';
-				if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath()))
-				{
+				if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath())) {
 					file_put_contents($sJSFileName, $this->get_dict_file_content());
 				}
 				// Load the dictionary as the first javascript file, so that other JS file benefit from the translations

@@ -513,31 +513,27 @@ JS
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
-		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
-		{
+		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 			$oAlreadyLinkedExpression = $oAlreadyLinkedFilter->GetCriteria();
 			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->Render();
-		}
-		else
-		{
+		} else {
 			$sAlreadyLinkedExpression = '';
 		}
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
-		if(!empty($oCurrentObj))
-		{
+		if (!empty($oCurrentObj)) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 			$aPrefillFormParam['filter'] = $oFilter;
 			$aPrefillFormParam['dest_class'] = $this->m_sRemoteClass;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
@@ -548,16 +544,23 @@ JS
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sAlreadyLinkedExpression,
-			));
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"0\"/>";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
-		$sHtml .= "</div>\n";
-		$sHtml .= "</form>\n";
-		$oPage->add($sHtml);
+			)));
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sAdd = Dict::S('UI:Button:Add');
+
+		$oPage->add(<<<HTML
+<form id="ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}">
+    <div id="SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+    </div>
+    <input type="hidden" id="count_{$this->m_sAttCode}{$this->m_sNameSuffix}" value="0"/>
+    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;<input id="btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
+</form>
+</div>
+HTML
+		);
+
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");

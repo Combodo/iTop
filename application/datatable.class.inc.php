@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Renderer\BlockRenderer;
+
 /**
  * Copyright (C) 2013-2020 Combodo SARL
  *
@@ -157,17 +160,17 @@ class DataTable
 		$sPager = $this->GetPager($oPage, $iPageSize, $iDefaultPageSize, $iPageIndex);
 		$sActionsMenu = '';
 		$sToolkitMenu = '';
-		if ($bActionsMenu)
-		{
+		if ($bActionsMenu) {
 			$sActionsMenu = $this->GetActionsMenu($oPage, $aExtraParams);
 		}
-		if ($bToolkitMenu)
-		{
-			$sToolkitMenu = $this->GetToolkitMenu($oPage, $aExtraParams);
-		}
+//		if ($bToolkitMenu)
+//		{
+//			$sToolkitMenu = $this->GetToolkitMenu($oPage, $aExtraParams);
+//		}
+
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
-		
+
 		$sHtml = "<table id=\"{$this->sDatatableContainerId}\" class=\"datatable\">";
 		$sHtml .= "<tr><td>";
 		$sHtml .= "<table style=\"width:100%;\">";
@@ -355,9 +358,18 @@ EOF;
 	protected function GetActionsMenu(WebPage $oPage, $aExtraParams)
 	{
 		$oMenuBlock = new MenuBlock($this->oSet->GetFilter(), 'list');
-		
-		$sHtml = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
-		return $sHtml;
+
+		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
+		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_stylesheet($sFileAbsUrl);
+		}
+		// JS files
+		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_script($sFileAbsUrl);
+		}
+
+		$oPage->RenderInlineTemplatesRecursively($oBlock);
+		return BlockRenderer::RenderBlockTemplates($oBlock);
 	}
 
 	/**

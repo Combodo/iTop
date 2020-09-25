@@ -123,21 +123,20 @@ EOF
 
 	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
 
-	$sFavoriteOrganizationsHtml = '';
-	$sFavoriteOrganizationsHtml .= Dict::S('UI:FavoriteOrganizations+');
-	$sFavoriteOrganizationsHtml .= '<form method="post">';
+	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->AddHtml('<form method="post">');
 	// Favorite organizations: the organizations listed in the drop-down menu
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$sFavoriteOrganizationsHtml .= $oBlock->GetDisplay($oP, 1, array(
+	$oFavoriteOrganizationsBlock->AddSubBlock($oBlock->GetDisplay($oP, 1, array(
 		'menu' => false,
 		'selection_mode' => true,
 		'selection_type' => 'multiple',
 		'cssCount' => '.selectedCount',
 		'table_id' => 'user_prefs',
-	));
-	$sFavoriteOrganizationsHtml .= $oAppContext->GetForForm();
+	)));
+	$oFavoriteOrganizationsBlock->AddSubBlock($oAppContext->GetForFormBlock());
 
 	// - Cancel button
 	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
@@ -202,8 +201,6 @@ EOF
 );
 	}
 	
-	$oFavoriteOrganizationsHtmlBlock = new Html($sFavoriteOrganizationsHtml);
-	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsHtmlBlock);
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsCancelButton);
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsEndHtmlBlock);
@@ -217,18 +214,16 @@ EOF
 	//////////////////////////////////////////////////////////////////////////
 
 	$oShortcutsBlock = new Panel(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
-	$sShortcutsHtml = '';
 	$oBMSearch = new DBObjectSearch('Shortcut');
 	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 
 	$aExtraParams = array();
 	$oBlock = new DisplayBlock($oBMSearch, 'list', false, $aExtraParams);
-	$sShortcutsHtml .= $oBlock->GetDisplay($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts'));
-	$sShortcutsHtml .='<p>';
+	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount' => '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts')));
+	$sShortcutsHtml = '<p>';
 
 	$oSet = new DBObjectSet($oBMSearch);
-	if ($oSet->Count() > 0)
-	{
+	if ($oSet->Count() > 0) {
 		$sButtons = '<img src="../images/tv-item-last.gif">';
 		$sButtons .= '<button id="shortcut_btn_rename">'.Dict::S('UI:Button:Rename').'</button>';
 		$sButtons .= '<button id="shortcut_btn_delete">'.Dict::S('UI:Button:Delete').'</button>';

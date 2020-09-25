@@ -285,4 +285,40 @@ class ButtonFactory
 
 		return $oButton;
 	}
+
+
+	/**
+	 * Make a basis Button component for any purpose
+	 *
+	 * @param string $sLabel
+	 * @param string $sName See Button::$sName
+	 * @param string $sIconClass
+	 * @param string $sURL
+	 * @param string $sTarget
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
+	 */
+	public static function MakeAlternativeNeutralActionButton(string $sLabel, string $sName, string $sIconClass = '', string $sURL = '', string $sTarget = '', ?string $sId = null): Button
+	{
+		$oButton = new Button($sLabel, $sId);
+		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE)
+			->SetColor(Button::ENUM_COLOR_NEUTRAL)
+			->SetName($sName);
+
+		if (!empty($sIconClass)) {
+			$oButton->SetIconClass($sIconClass);
+		}
+
+		if (!empty($sURL)) {
+			if (empty($sTarget)) {
+				$sJS = "window.location='{$sURL}';";
+			} else {
+				$sJS = "window.open('{$sURL}', '{$sTarget}');";
+			}
+			$oButton->SetOnClickJsCode($sJS);
+		}
+
+		return $oButton;
+	}
 }
