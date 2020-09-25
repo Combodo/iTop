@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use Combodo\iTop\Portal\Controller\ObjectController;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContextTag;
 use MetaModel;
@@ -16,9 +17,6 @@ use TriggerOnObjectCreate;
  * @runTestsInSeparateProcesses
  */
 
-//define('APPROOT', dirname(__FILE__).'/../../');
-//define('APPCONF', APPROOT.'conf/');
-
 class TriggerTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
@@ -26,7 +24,6 @@ class TriggerTest extends ItopDataTestCase
 
 	protected function setUp()
 	{
-		//@include_once APPROOT . 'approot.inc.php';
 		parent::setUp();
 	}
 
@@ -45,7 +42,6 @@ class TriggerTest extends ItopDataTestCase
 	public function testEnrichRaisedException_Trigger()
 	{
 		$oTrigger = MetaModel::NewObject('TriggerOnObjectCreate');
-		$sStackTrace = "";
 		try
 		{
 			try
@@ -54,7 +50,6 @@ class TriggerTest extends ItopDataTestCase
 			}
 			catch (\Exception $e)
 			{
-				$sStackTrace = $e->getTraceAsString();
 				\utils::EnrichRaisedException($oTrigger, $e);
 			}
 			$this->assertTrue(false, "An exception should have been thrown");
@@ -73,7 +68,7 @@ class TriggerTest extends ItopDataTestCase
 	{
 		return [
 			[ null ],
-			[ new \PHPUnit\Runner\Exception() ],
+			[ new NonCmdbAbstractObject() ],
 		]	;
 	}
 
@@ -83,7 +78,6 @@ class TriggerTest extends ItopDataTestCase
 	 */
 	public function testEnrichRaisedException_NoEnrichment($oCmdbAbstract)
 	{
-		$sStackTrace = "";
 		try
 		{
 			try
@@ -92,7 +86,6 @@ class TriggerTest extends ItopDataTestCase
 			}
 			catch (\Exception $e)
 			{
-				$sStackTrace = $e->getTraceAsString();
 				\utils::EnrichRaisedException($oCmdbAbstract, $e);
 			}
 			$this->assertTrue(false, "An exception should have been thrown");
@@ -102,4 +95,8 @@ class TriggerTest extends ItopDataTestCase
 			$this->assertEquals($e, $e1);
 		}
 	}
+}
+
+class NonCmdbAbstractObject{
+
 }
