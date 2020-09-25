@@ -59,24 +59,25 @@ $(function()
 					var oEntry = aBreadCrumb[iEntry];
 					if (oEntry['label'].length > 0)
 					{
-                        var sIconSpec = '';
-                        if (oEntry['icon'].length > 0)
-                        {
-                            sIconSpec = '<span class="icon"><img src="'+oEntry['icon']+'"/></span>';
-                        }
-						var sTitle = oEntry['description'];
+						var sIconSpec = '';
+						if (oEntry['icon'].length > 0) {
+							sIconSpec = '<span class="icon"><img src="'+oEntry['icon']+'"/></span>';
+						}
+
+						var sTitle = oEntry['description'],
+							sLabel = oEntry['label'];
 						if (sTitle.length == 0) {
 							sTitle = oEntry['label'];
 						}
-						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
-						{
+						sTitle = SanitizeHtml(sTitle);
+						sLabel = SanitizeHtml(sLabel);
+
+						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length-1)) {
 							// Last entry is the current page
-							sBreadCrumbHtml += '<div class="breadcrumb-item breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></div>';
-						}
-						else
-						{
+							sBreadCrumbHtml += '<div class="breadcrumb-item breadcrumb-current" breadcrumb-entry="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+sLabel+'</span></div>';
+						} else {
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
-							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+oEntry['label']+'</span></a></div>';
+							sBreadCrumbHtml += '<div class="breadcrumb-item"><a class="breadcrumb-link" breadcrumb-entry="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="truncate">'+sLabel+'</span></a></div>';
 						}
 					}
 				}
