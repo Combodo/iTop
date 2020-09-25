@@ -181,7 +181,7 @@ try {
 			// - Submit button
 			$oSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
 			$oForm->AddSubBlock($oSubmitButton);
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped));
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('new_config', $sConfigEscaped));
 			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 			$oP->AddUiBlock($oForm);
@@ -236,9 +236,8 @@ var EditorUtils = (function() {
 	};
 	
 	var getEditorForm = function(editor) {
-        var $editorContainer = $(editor.container);
-        var $editorForm = $editorContainer.closest("form");
-        return $editorForm;
+        var editorContainer = $(editor.container);
+        return editorContainer.closest("form");
 	};
 	
 	var updateConfigEditorButtonState = function(editor) {
@@ -263,12 +262,12 @@ JS
 			<<<'JS'
 var editor = ace.edit("new_config");
 
-var $configurationSource = $('input[name="new_config"]');
-editor.getSession().setValue($configurationSource.val());
+var configurationSource = $('input[name="new_config"]');
+editor.getSession().setValue(configurationSource.val());
 
 editor.getSession().on('change', function()
 {
-  $configurationSource.val(editor.getSession().getValue());
+  configurationSource.val(editor.getSession().getValue());
   EditorUtils.updateConfigEditorButtonState(editor);
 });
 editor.getSession().on("changeAnnotation", function()
@@ -282,18 +281,18 @@ editor.commands.addCommand({
     name: 'save',
     bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
     exec: function(editor) {
-        $editorForm = EditorUtils.getEditorForm(editor);
-        $submitButton = $('#submit_button');
+        var editorForm = EditorUtils.getEditorForm(editor);
+        var submitButton = $('#submit_button');
         
-        if ($submitButton.is(":enabled")) {
-            $editorForm.submit();
+        if (submitButton.is(":enabled")) {
+            editorForm.submit();
         }
     }
 });
 
 
-var $editorForm = EditorUtils.getEditorForm(editor);
-$editorForm.submit(function() {
+var editorForm = EditorUtils.getEditorForm(editor);
+editorForm.submit(function() {
 	EditorUtils.saveEditorDisplay(editor);
 });
 
