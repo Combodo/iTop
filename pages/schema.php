@@ -938,7 +938,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			$sAllowedValuesEscpd = json_encode($sAllowedValues);
 
 			$sFilterURL = urlencode($sAllowedValues);
-			$sAllowedValues = "<span id=\"values".$sAttrCode."\"><a href=\"run_query.php?expression=".$sFilterURL."\">⚵</a>".Dict::S('UI:Schema:Attribute/Filter')."</span>";
+			$sAllowedValues = "<span id=\"values".$sAttrCode."\"><a href=\"run_query.php?expression=".$sFilterURL."\">🔎</a> ".Dict::S('UI:Schema:Attribute/Filter')."</span>";
 		}
 		else
 		{
