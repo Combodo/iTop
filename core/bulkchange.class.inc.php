@@ -378,7 +378,7 @@ class BulkChange
 			}
 			else
 			{
-				$oReconFilter = new DBObjectSearch($oExtKey->GetTargetClass());
+				$oReconFilter = $oExtKey->GetAllowedValuesAsFilter();
 
 				$aCacheKeys = array();
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
@@ -417,7 +417,7 @@ class BulkChange
 				else
 				{
 					// Cache miss, let's initialize it
-					$oExtObjects = new CMDBObjectSet($oReconFilter);
+					$oExtObjects = new CMDBObjectSet($oReconFilter, array(), $oTargetObj->ToArgs());
 					$iCount = $oExtObjects->Count();
 					if ($iCount == 1)
 					{
