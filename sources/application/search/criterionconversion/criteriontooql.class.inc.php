@@ -114,12 +114,21 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return addslashes($aValues[$iIndex]['value']);
 	}
 
+	private static function IsEmpty($sValue)
+	{
+		if ($sValue === "0")
+		{
+			return false;
+		}
+		return empty($sValue);
+	}
+
 	protected static function ContainsToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue))
+		if (self::IsEmpty($sValue))
 		{
 			return "1";
 		}
@@ -132,7 +141,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue))
+		if (self::IsEmpty($sValue))
 		{
 			return "1";
 		}
@@ -145,7 +154,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue))
+		if (self::IsEmpty($sValue))
 		{
 			return "1";
 		}
@@ -162,7 +171,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return "({$sRef} = '0')";
 		}
 
-		if (empty($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined'])))
+		if (self::IsEmpty($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined'])))
 		{
 			return "1";
 		}
@@ -175,7 +184,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue))
+		if (self::IsEmpty($sValue))
 		{
 			return "1";
 		}
