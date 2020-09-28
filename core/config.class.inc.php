@@ -22,7 +22,7 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '2.8.0-dev'); // @see utils::GetItopVersionShort() and utils::GetItopVersionWikiSyntax()
+define('ITOP_VERSION', '2.8.0-dev');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 define('ITOP_VERSION_FULL', ITOP_VERSION.'-'.ITOP_REVISION);
@@ -232,7 +232,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		// Deprecated in 2.8.0 to be removed in 2.9
 		'skip_strong_security' => array(
 			'type' => 'bool',
 			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',

@@ -72,231 +72,21 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //////////////////////////////////////////////////////////////////////
 //
 
-
 //
-// Class: Organization
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Organization' => 'Organisation',
-	'Class:Organization+' => '',
-	'Class:Organization/Attribute:name' => 'Nom organisation',
-	'Class:Organization/Attribute:name+' => 'Nom commun',
-	'Class:Organization/Attribute:code' => 'Code',
-	'Class:Organization/Attribute:code+' => 'Organisation code (Siret, DUNS,...)',
-	'Class:Organization/Attribute:status' => 'Statut',
-	'Class:Organization/Attribute:status+' => '',
-	'Class:Organization/Attribute:status/Value:active' => 'active',
-	'Class:Organization/Attribute:status/Value:active+' => 'active',
-	'Class:Organization/Attribute:status/Value:inactive' => 'inactive',
-	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive',
-	'Class:Organization/Attribute:parent_id' => 'Organisation Parent',
-	'Class:Organization/Attribute:parent_id+' => 'Organisation parent',
-	'Class:Organization/Attribute:parent_name' => 'Nom du parent',
-	'Class:Organization/Attribute:parent_name+' => 'Nom de l\'organisation parente',
-	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
-	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
-	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Nom commun',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
-	'Class:Organization/Attribute:overview' => 'Tableau de bord',
-	'Organization:Overview:FunctionalCIs' => 'Infrastructure de cette organisation',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'par type',
-	'Organization:Overview:Users' => 'Utilisateurs iTop dans cette organisation',
-));
-
-//
-// Class: Location
+// Class: lnkContactToFunctionalCI
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Location' => 'Lieu',
-	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, batiment, Bureau,...',
-	'Class:Location/Attribute:name' => 'Nom',
-	'Class:Location/Attribute:name+' => '',
-	'Class:Location/Attribute:status' => 'Statut',
-	'Class:Location/Attribute:status+' => '',
-	'Class:Location/Attribute:status/Value:active' => 'Actif',
-	'Class:Location/Attribute:status/Value:active+' => 'Actif',
-	'Class:Location/Attribute:status/Value:inactive' => 'Inactif',
-	'Class:Location/Attribute:status/Value:inactive+' => 'Inactif',
-	'Class:Location/Attribute:org_id' => 'Organisation',
-	'Class:Location/Attribute:org_id+' => '',
-	'Class:Location/Attribute:org_name' => 'Nom organisation',
-	'Class:Location/Attribute:org_name+' => '',
-	'Class:Location/Attribute:address' => 'Adresse',
-	'Class:Location/Attribute:address+' => 'Adresse postale',
-	'Class:Location/Attribute:postal_code' => 'Code postal',
-	'Class:Location/Attribute:postal_code+' => 'Code postal',
-	'Class:Location/Attribute:city' => 'Ville',
-	'Class:Location/Attribute:city+' => '',
-	'Class:Location/Attribute:country' => 'Pays',
-	'Class:Location/Attribute:country+' => '',
-	'Class:Location/Attribute:physicaldevice_list' => 'Matériels',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
-	'Class:Location/Attribute:person_list' => 'Contacts',
-	'Class:Location/Attribute:person_list+' => '',
-));
-
-//
-// Class: Contact
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Contact' => 'Contact',
-	'Class:Contact+' => '',
-	'Class:Contact/Attribute:name' => 'Nom',
-	'Class:Contact/Attribute:name+' => '',
-	'Class:Contact/Attribute:status' => 'Statut',
-	'Class:Contact/Attribute:status+' => '',
-	'Class:Contact/Attribute:status/Value:active' => 'Actif',
-	'Class:Contact/Attribute:status/Value:active+' => 'Actif',
-	'Class:Contact/Attribute:status/Value:inactive' => 'Inactif',
-	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactif',
-	'Class:Contact/Attribute:org_id' => 'Organisation',
-	'Class:Contact/Attribute:org_id+' => '',
-	'Class:Contact/Attribute:org_name' => 'Nom organisation',
-	'Class:Contact/Attribute:org_name+' => '',
-	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
-	'Class:Contact/Attribute:phone' => 'Téléphone',
-	'Class:Contact/Attribute:phone+' => '',
-	'Class:Contact/Attribute:notify' => 'Notification',
-	'Class:Contact/Attribute:notify+' => '',
-	'Class:Contact/Attribute:notify/Value:no' => 'non',
-	'Class:Contact/Attribute:notify/Value:no+' => 'non',
-	'Class:Contact/Attribute:notify/Value:yes' => 'oui',
-	'Class:Contact/Attribute:notify/Value:yes+' => 'oui',
-	'Class:Contact/Attribute:function' => 'Fonction',
-	'Class:Contact/Attribute:function+' => '',
-	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
-	'Class:Contact/Attribute:finalclass' => 'Sous-classe de Contact',
-	'Class:Contact/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
-
-//
-// Class: Person
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Person' => 'Personne',
-	'Class:Person+' => '',
-	'Class:Person/Attribute:name' => 'Nom',
-	'Class:Person/Attribute:name+' => '~~',
-	'Class:Person/Attribute:first_name' => 'Prénom',
-	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'Numéro d\'employé',
-	'Class:Person/Attribute:employee_number+' => '',
-	'Class:Person/Attribute:mobile_phone' => 'Téléphone mobile',
-	'Class:Person/Attribute:mobile_phone+' => '',
-	'Class:Person/Attribute:location_id' => 'Site',
-	'Class:Person/Attribute:location_id+' => '',
-	'Class:Person/Attribute:location_name' => 'Nom site',
-	'Class:Person/Attribute:location_name+' => '',
-	'Class:Person/Attribute:manager_id' => 'Manager',
-	'Class:Person/Attribute:manager_id+' => '',
-	'Class:Person/Attribute:manager_name' => 'Nom Manager',
-	'Class:Person/Attribute:manager_name+' => '',
-	'Class:Person/Attribute:team_list' => 'Equipes',
-	'Class:Person/Attribute:team_list+' => '',
-	'Class:Person/Attribute:tickets_list' => 'Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
-	'Class:Person/Attribute:picture' => 'Photo',
-	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number+' => 'Le numéro d\'employé doit être unique dans l\'organisation',
-	'Class:Person/UniquenessRule:employee_number' => 'il y a déjà une personne avec ce numéro d\'employé dans l\'organisation 
-	\'$this->org_name$\'',
-	'Class:Person/UniquenessRule:name+' => 'Le nom de l\'employé devrait être unique dans l\'organisation',
-	'Class:Person/UniquenessRule:name' => 'Il y a déjà une personne avec ce nom dans l\'organisation \'$this->org_name$\'',
-));
-
-//
-// Class: Team
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Team' => 'Equipe',
-	'Class:Team+' => '',
-	'Class:Team/Attribute:persons_list' => 'Membres',
-	'Class:Team/Attribute:persons_list+' => '',
-	'Class:Team/Attribute:tickets_list' => 'Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
-));
-
-//
-// Class: Document
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Document' => 'Document',
-	'Class:Document+' => '',
-	'Class:Document/Attribute:name' => 'Nom',
-	'Class:Document/Attribute:name+' => '',
-	'Class:Document/Attribute:org_id' => 'Organisation',
-	'Class:Document/Attribute:org_id+' => '',
-	'Class:Document/Attribute:org_name' => 'Nom organisation',
-	'Class:Document/Attribute:org_name+' => '',
-	'Class:Document/Attribute:documenttype_id' => 'Type de document',
-	'Class:Document/Attribute:documenttype_id+' => '',
-	'Class:Document/Attribute:documenttype_name' => 'Nom type de document',
-	'Class:Document/Attribute:documenttype_name+' => '',
-	'Class:Document/Attribute:version' => 'Version',
-	'Class:Document/Attribute:version+' => '',
-	'Class:Document/Attribute:description' => 'Description',
-	'Class:Document/Attribute:description+' => '',
-	'Class:Document/Attribute:status' => 'Statut',
-	'Class:Document/Attribute:status+' => '',
-	'Class:Document/Attribute:status/Value:draft' => 'Brouillon',
-	'Class:Document/Attribute:status/Value:draft+' => '',
-	'Class:Document/Attribute:status/Value:obsolete' => 'Obsolète',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
-	'Class:Document/Attribute:status/Value:published' => 'Publié',
-	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => 'Contrats',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => '',
-	'Class:Document/Attribute:finalclass' => 'Sous-classe de Document',
-	'Class:Document/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DocumentFile' => 'Document Fichier',
-	'Class:DocumentFile+' => '',
-	'Class:DocumentFile/Attribute:file' => 'Fichier',
-	'Class:DocumentFile/Attribute:file+' => '',
-));
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DocumentNote' => 'Document Note',
-	'Class:DocumentNote+' => '',
-	'Class:DocumentNote/Attribute:text' => 'Texte',
-	'Class:DocumentNote/Attribute:text+' => '',
-));
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DocumentWeb' => 'Document Web',
-	'Class:DocumentWeb+' => '',
-	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nom contact',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
 ));
 
 //
@@ -330,14 +120,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Solutions applicatives',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrats fournisseur',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Logiciels',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
@@ -1224,35 +1008,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
 ));
 
-//
-// Class: lnkDocumentToLicence
-//
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
-	'Class:lnkDocumentToLicence+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
-
-//
-// Class: Typology
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Typology' => 'Typologie',
-	'Class:Typology+' => '',
-	'Class:Typology/Attribute:name' => 'Nom',
-	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => 'Sous-classe de Typologie',
-	'Class:Typology/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
 
 //
 // Class: OSVersion
@@ -1276,23 +1032,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSFamily+' => '',
 ));
 
-//
-// Class: DocumentType
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DocumentType' => 'Type de document',
-	'Class:DocumentType+' => '',
-));
-
-//
-// Class: ContactType
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ContactType' => 'Type de contact',
-	'Class:ContactType+' => '',
-));
 
 //
 // Class: Brand
@@ -1387,23 +1126,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
-	'Class:lnkDocumentToPatch+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
-
-//
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
@@ -1437,56 +1159,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
 ));
 
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
-	'Class:lnkDocumentToSoftware+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
-	'Class:lnkContactToFunctionalCI+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nom contact',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
 
 //
 // Class: Subnet
@@ -1717,26 +1389,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
 ));
 
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
-	'Class:lnkPersonToTeam+' => '',
-	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nom Equipe',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_id' => 'Personne',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nom Personne',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rôle',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nom Role',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
 
 //
 // Class: Group
@@ -1794,41 +1446,107 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Server:baseinfo' => 'Informations générales',
+	'Server:Date' => 'Dates',
+	'Server:moreinfo' => 'Informations complémentaires',
+	'Server:otherinfo' => 'Autres informations',
+	'Server:power' => 'Alimentation électrique',
+	'Person:info' => 'Informations générales',
+	'UserLocal:info' => 'Informations générales',
+	'Person:personal_info' => 'Informations personnelles',
+	'Person:notifiy' => 'Notification',
+	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+	'Class:Document:PreviewTab' => 'Aperçu',
+));
+
+
+//
+// Class: lnkDocumentToLicence
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
+	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
+));
+
+
+//
+// Class: lnkDocumentToPatch
+//
+
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
+	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
+));
+
+
+//
+// Class: lnkDocumentToSoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
+	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
+));
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+));
+
 //
 // Application Menu
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:DataAdministration' => 'Administration des données',
-	'Menu:DataAdministration+' => 'Administration des données',
-	'Menu:Catalogs' => 'Catalogues',
-	'Menu:Catalogs+' => 'Types de données',
-	'Menu:Audit' => 'Audit',
-	'Menu:Audit+' => 'Audit',
-	'Menu:CSVImport' => 'Import CSV',
-	'Menu:CSVImport+' => 'Import ou mise à jour en masse',
-	'Menu:Organization' => 'Organisations',
-	'Menu:Organization+' => 'Toutes les organisations',
 	'Menu:Application' => 'Logiciels',
 	'Menu:Application+' => 'Tous les logiciels',
 	'Menu:DBServer' => 'Serveur de base de données',
 	'Menu:DBServer+' => '',
-	'Menu:ConfigManagement' => 'Gestion des configurations',
-	'Menu:ConfigManagement+' => 'Gestion des configurations',
-	'Menu:ConfigManagementOverview' => 'Tableaux de bord',
-	'Menu:ConfigManagementOverview+' => 'Tableaux de bord',
-	'Menu:Contact' => 'Contacts',
-	'Menu:Contact+' => 'Contacts',
-	'Menu:Contact:Count' => '%1$d contacts',
-	'Menu:Person' => 'Personnes',
-	'Menu:Person+' => 'Toutes les personnes',
-	'Menu:Team' => 'Equipes',
-	'Menu:Team+' => 'Toutes les équipes',
-	'Menu:Document' => 'Documents',
-	'Menu:Document+' => 'Tous les documents',
-	'Menu:Location' => 'Lieux',
-
-	'Menu:Location+' => 'Tous les lieux',
 	'Menu:ConfigManagementCI' => 'CIs',
 	'Menu:ConfigManagementCI+' => 'CIs',
 	'Menu:BusinessProcess' => 'Processus métier',
@@ -1855,10 +1573,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:MobilePhone+' => 'Tous les téléphones portables',
 	'Menu:PC' => 'PCs',
 	'Menu:PC+' => 'Tous les PCs',
-	'Menu:NewContact' => 'Nouveau contact',
-	'Menu:NewContact+' => 'Nouveau contact',
-	'Menu:SearchContacts' => 'Rechercher des contacts',
-	'Menu:SearchContacts+' => 'Rechercher des contacts',
 	'Menu:NewCI' => 'Nouveau CI',
 	'Menu:NewCI+' => 'Nouveau CI',
 	'Menu:SearchCIs' => 'Rechercher des CIs',
@@ -1871,36 +1585,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:Misc' => 'Divers',
 	'Menu:Group' => 'Groupe de CIs',
 	'Menu:Group+' => 'Groupe de CIs',
-	'Menu:ConfigManagement:Shortcuts' => 'Raccourcis',
-	'Menu:ConfigManagement:AllContacts' => 'Tous les contacts: %1$d',
-	'Menu:Typology' => 'Typologie configuration',
-	'Menu:Typology+' => 'Typologie configuration',
 	'Menu:OSVersion' => 'Versions d\'OS',
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-	'UI_WelcomeMenu_AllConfigItems' => 'Résumé',
-	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
-
 ));
 
 
-// Add translation for Fieldsets
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Server:baseinfo' => 'Informations générales',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'Informations complémentaires',
-	'Server:otherinfo' => 'Autres informations',
-	'Server:power' => 'Alimentation électrique',
-	'Person:info' => 'Informations générales',
-	'UserLocal:info' => 'Informations générales',
-	'Person:personal_info' => 'Informations personnelles',
-	'Person:notifiy' => 'Notification',
-	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
-	'Class:Document:PreviewTab' => 'Aperçu',
-));
+?>

@@ -70,230 +70,21 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 //////////////////////////////////////////////////////////////////////
 //
 
-
 //
-// Class: Organization
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Organization' => 'Organisation',
-	'Class:Organization+' => '',
-	'Class:Organization/Attribute:name' => 'Navn',
-	'Class:Organization/Attribute:name+' => 'Almindeligt navn',
-	'Class:Organization/Attribute:code' => 'Kodenummer',
-	'Class:Organization/Attribute:code+' => '',
-	'Class:Organization/Attribute:status' => 'Status',
-	'Class:Organization/Attribute:status+' => '',
-	'Class:Organization/Attribute:status/Value:active' => 'Aktiv',
-	'Class:Organization/Attribute:status/Value:active+' => 'Aktiv',
-	'Class:Organization/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:Organization/Attribute:status/Value:inactive+' => 'Inaktiv',
-	'Class:Organization/Attribute:parent_id' => 'Parent id',
-	'Class:Organization/Attribute:parent_id+' => '',
-	'Class:Organization/Attribute:parent_name' => 'Parent name',
-	'Class:Organization/Attribute:parent_name+' => 'Parent name',
-	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings Model Id',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Leveringsmodel navn',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
-));
-
-//
-// Class: Location
+// Class: lnkContactToFunctionalCI
 //
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Location' => 'Placering',
-	'Class:Location+' => 'Enhver type af placering: Region, land, by, bygning, rum rack, ...',
-	'Class:Location/Attribute:name' => 'Navn',
-	'Class:Location/Attribute:name+' => '',
-	'Class:Location/Attribute:status' => 'Status',
-	'Class:Location/Attribute:status+' => '',
-	'Class:Location/Attribute:status/Value:active' => 'Aktiv',
-	'Class:Location/Attribute:status/Value:active+' => 'Aktiv',
-	'Class:Location/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:Location/Attribute:status/Value:inactive+' => 'Inaktiv',
-	'Class:Location/Attribute:org_id' => 'Organisation',
-	'Class:Location/Attribute:org_id+' => '',
-	'Class:Location/Attribute:org_name' => 'Organisationsnavn',
-	'Class:Location/Attribute:org_name+' => '',
-	'Class:Location/Attribute:address' => 'Adresse',
-	'Class:Location/Attribute:address+' => 'Postadresse',
-	'Class:Location/Attribute:postal_code' => 'Postnummer',
-	'Class:Location/Attribute:postal_code+' => 'Postnummer',
-	'Class:Location/Attribute:city' => 'By',
-	'Class:Location/Attribute:city+' => '',
-	'Class:Location/Attribute:country' => 'Land',
-	'Class:Location/Attribute:country+' => '',
-	'Class:Location/Attribute:physicaldevice_list' => 'List Fysiske Enheder',
-	'Class:Location/Attribute:physicaldevice_list+' => '',
-	'Class:Location/Attribute:person_list' => 'List Kontakter',
-	'Class:Location/Attribute:person_list+' => '',
-));
-
-//
-// Class: Contact
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Contact' => 'Kontakt',
-	'Class:Contact+' => '',
-	'Class:Contact/Attribute:name' => 'Navn',
-	'Class:Contact/Attribute:name+' => '',
-	'Class:Contact/Attribute:status' => 'Status',
-	'Class:Contact/Attribute:status+' => '',
-	'Class:Contact/Attribute:status/Value:active' => 'Aktiv',
-	'Class:Contact/Attribute:status/Value:active+' => 'Aktiv',
-	'Class:Contact/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:Contact/Attribute:status/Value:inactive+' => 'Inaktiv',
-	'Class:Contact/Attribute:org_id' => 'Organisation',
-	'Class:Contact/Attribute:org_id+' => '',
-	'Class:Contact/Attribute:org_name' => 'Organisation',
-	'Class:Contact/Attribute:org_name+' => '',
-	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
-	'Class:Contact/Attribute:phone' => 'Telefonnummer',
-	'Class:Contact/Attribute:phone+' => '',
-	'Class:Contact/Attribute:notify' => 'Underretning',
-	'Class:Contact/Attribute:notify+' => '',
-	'Class:Contact/Attribute:notify/Value:no' => 'Nej',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
-	'Class:Contact/Attribute:notify/Value:yes' => 'Ja',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
-	'Class:Contact/Attribute:function' => 'Funktion',
-	'Class:Contact/Attribute:function+' => '',
-	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => '',
-	'Class:Contact/Attribute:finalclass' => 'Type',
-	'Class:Contact/Attribute:finalclass+' => '',
-));
-
-//
-// Class: Person
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Person' => 'Person',
-	'Class:Person+' => '',
-	'Class:Person/Attribute:name' => 'Efternavn',
-	'Class:Person/Attribute:name+' => '~~',
-	'Class:Person/Attribute:first_name' => 'Fornavn',
-	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'Personalenummer',
-	'Class:Person/Attribute:employee_number+' => '',
-	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefon',
-	'Class:Person/Attribute:mobile_phone+' => '',
-	'Class:Person/Attribute:location_id' => 'Placering',
-	'Class:Person/Attribute:location_id+' => '',
-	'Class:Person/Attribute:location_name' => 'Placering',
-	'Class:Person/Attribute:location_name+' => '',
-	'Class:Person/Attribute:manager_id' => 'Manager',
-	'Class:Person/Attribute:manager_id+' => '',
-	'Class:Person/Attribute:manager_name' => 'Manager-Navn',
-	'Class:Person/Attribute:manager_name+' => '',
-	'Class:Person/Attribute:team_list' => 'List Teams',
-	'Class:Person/Attribute:team_list+' => '',
-	'Class:Person/Attribute:tickets_list' => 'List Tickets',
-	'Class:Person/Attribute:tickets_list+' => '',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager Friendly Name',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
-	'Class:Person/Attribute:picture' => 'Picture~~',
-	'Class:Person/Attribute:picture+' => '~~',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
-));
-
-//
-// Class: Team
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Team' => 'Team',
-	'Class:Team+' => '',
-	'Class:Team/Attribute:persons_list' => 'List Medlemmer',
-	'Class:Team/Attribute:persons_list+' => '',
-	'Class:Team/Attribute:tickets_list' => 'List Tickets',
-	'Class:Team/Attribute:tickets_list+' => '',
-));
-
-//
-// Class: Document
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Document' => 'Dokument',
-	'Class:Document+' => '',
-	'Class:Document/Attribute:name' => 'Navn',
-	'Class:Document/Attribute:name+' => '',
-	'Class:Document/Attribute:org_id' => 'Organisation',
-	'Class:Document/Attribute:org_id+' => '',
-	'Class:Document/Attribute:org_name' => 'Organisationsnavn',
-	'Class:Document/Attribute:org_name+' => '',
-	'Class:Document/Attribute:documenttype_id' => 'Dokumenttype',
-	'Class:Document/Attribute:documenttype_id+' => '',
-	'Class:Document/Attribute:documenttype_name' => 'Dokumenttypnavn',
-	'Class:Document/Attribute:documenttype_name+' => '',
-	'Class:Document/Attribute:version' => 'Version~~',
-	'Class:Document/Attribute:version+' => '~~',
-	'Class:Document/Attribute:description' => 'Beskrivelse',
-	'Class:Document/Attribute:description+' => '',
-	'Class:Document/Attribute:status' => 'Status',
-	'Class:Document/Attribute:status+' => '',
-	'Class:Document/Attribute:status/Value:draft' => 'Udkast',
-	'Class:Document/Attribute:status/Value:draft+' => '',
-	'Class:Document/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
-	'Class:Document/Attribute:status/Value:published' => 'Offentlig',
-	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => '',
-	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
-	'Class:Document/Attribute:contracts_list+' => '',
-	'Class:Document/Attribute:services_list' => 'Ydelser',
-	'Class:Document/Attribute:services_list+' => '',
-	'Class:Document/Attribute:finalclass' => 'Dokumenttype',
-	'Class:Document/Attribute:finalclass+' => '',
-));
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:DocumentFile' => 'Dokument (Data)',
-	'Class:DocumentFile+' => '',
-	'Class:DocumentFile/Attribute:file' => 'Data',
-	'Class:DocumentFile/Attribute:file+' => '',
-));
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:DocumentNote' => 'Dokument (Noter)',
-	'Class:DocumentNote+' => '',
-	'Class:DocumentNote/Attribute:text' => 'Tekst',
-	'Class:DocumentNote/Attribute:text+' => '',
-));
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:DocumentWeb' => 'Dokument (Web)',
-	'Class:DocumentWeb+' => '',
-	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
+	'Class:lnkContactToFunctionalCI' => 'Sammenhæng Kontakt/FunctionalCI',
+	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kontakt navn',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
 ));
 
 //
@@ -327,14 +118,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => '',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Applikations løsning',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => '',
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Leverandør kontrakter',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
-	'Class:FunctionalCI/Attribute:services_list' => 'Ydelser',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '',
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
-	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
@@ -1239,19 +1024,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
-// Class: Typology
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:Typology' => 'Typologi',
-	'Class:Typology+' => '',
-	'Class:Typology/Attribute:name' => 'Navn',
-	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => 'Type',
-	'Class:Typology/Attribute:finalclass+' => '',
-));
-
-//
 // Class: OSVersion
 //
 
@@ -1271,24 +1043,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:OSFamily' => 'OS-Familie',
 	'Class:OSFamily+' => '',
-));
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:DocumentType' => 'Dokumentype',
-	'Class:DocumentType+' => '',
-));
-
-//
-// Class: ContactType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:ContactType' => 'Kontakttype',
-	'Class:ContactType+' => '',
 ));
 
 //
@@ -1452,23 +1206,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:lnkContactToFunctionalCI' => 'Sammenhæng Kontakt/FunctionalCI',
-	'Class:lnkContactToFunctionalCI+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kontakt navn',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
-
-//
 // Class: lnkDocumentToFunctionalCI
 //
 
@@ -1570,8 +1307,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP Adresse',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'MAC Adresse',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Kommentar',
@@ -1715,27 +1450,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:lnkPersonToTeam' => 'Sammenhæng Person/Team',
-	'Class:lnkPersonToTeam+' => '',
-	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:team_name' => 'Team navn',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person navn',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rolle',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
-	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollen navn',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
-
-//
 // Class: Group
 //
 
@@ -1791,41 +1505,37 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 
+
+
+// Add translation for Fieldsets
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Server:baseinfo' => 'Almindelig Informationen',
+	'Server:Date' => 'Dato',
+	'Server:moreinfo' => 'Yderligere Information',
+	'Server:otherinfo' => 'Øvrig Information',
+	'Server:power' => 'Power supply~~',
+	'Person:info' => 'Almindelig Information',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Underretning',
+	'Class:Subnet/Tab:IPUsage' => 'IP Brug',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces der har en IP i området: <em>%1$s</em> til <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Ledige IP',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Ledige IP: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Her er et udtræk af 10 ledige IP adresser',
+	'Class:Document:PreviewTab' => 'Preview~~',
+));
+
 //
 // Application Menu
 //
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Menu:DataAdministration' => 'Data administration',
-	'Menu:DataAdministration+' => '',
-	'Menu:Catalogs' => 'Katalog',
-	'Menu:Catalogs+' => 'Datatyper',
-	'Menu:Audit' => 'Audit',
-	'Menu:Audit+' => 'Audit',
-	'Menu:CSVImport' => 'CSV import~~',
-	'Menu:CSVImport+' => 'Bulk creation or update~~',
-	'Menu:Organization' => 'Organisation',
-	'Menu:Organization+' => 'Alle Organisationer',
 	'Menu:Application' => 'Anvendelse',
 	'Menu:Application+' => 'Alle Anvendelser',
 	'Menu:DBServer' => 'Database server',
 	'Menu:DBServer+' => 'Database server',
-	'Menu:ConfigManagement' => 'Configuration Management',
-	'Menu:ConfigManagement+' => 'Configuration Management',
-	'Menu:ConfigManagementOverview' => 'Oversigt',
-	'Menu:ConfigManagementOverview+' => 'Oversigt',
-	'Menu:Contact' => 'Kontakt',
-	'Menu:Contact+' => 'Kontakt',
-	'Menu:Contact:Count' => '%1$d kontakter',
-	'Menu:Person' => 'Person',
-	'Menu:Person+' => 'Alle Personer',
-	'Menu:Team' => 'Teams',
-	'Menu:Team+' => 'Alle Teams',
-	'Menu:Document' => 'Dokument',
-	'Menu:Document+' => 'Alle Dokumenter',
-	'Menu:Location' => 'Placering',
-
-	'Menu:Location+' => 'Alle Placeringer',
 	'Menu:ConfigManagementCI' => 'Configuration Items',
 	'Menu:ConfigManagementCI+' => 'Configuration Items',
 	'Menu:BusinessProcess' => 'Forretnings proces',
@@ -1852,10 +1562,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:MobilePhone+' => 'Alle Mobiltelefoner',
 	'Menu:PC' => 'PC',
 	'Menu:PC+' => 'Alle PCer',
-	'Menu:NewContact' => 'Ny Kontakt',
-	'Menu:NewContact+' => 'Ny Kontakt',
-	'Menu:SearchContacts' => 'Søg efter kontakter',
-	'Menu:SearchContacts+' => 'Søg efter kontakter',
 	'Menu:NewCI' => 'Ny CI',
 	'Menu:NewCI+' => 'Ny CI',
 	'Menu:SearchCIs' => 'Søg efter CIs',
@@ -1868,36 +1574,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ConfigManagement:Misc' => 'Diverse',
 	'Menu:Group' => 'Gruppe af CIs',
 	'Menu:Group+' => 'Gruppe af CIs',
-	'Menu:ConfigManagement:Shortcuts' => 'Genveje',
-	'Menu:ConfigManagement:AllContacts' => 'Alle Kontakter: %1$d',
-	'Menu:Typology' => 'Typologi-Konfiguration',
-	'Menu:Typology+' => '',
 	'Menu:OSVersion' => 'OS versioner',
 	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Software Katalog',
 	'Menu:Software+' => '',
-	'UI_WelcomeMenu_AllConfigItems' => 'Sammenfatning',
-	'Menu:ConfigManagement:Typology' => 'Typologi Konfiguration',
-
-));
-
-
-// Add translation for Fieldsets
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Server:baseinfo' => 'Almindelig Informationen',
-	'Server:Date' => 'Dato',
-	'Server:moreinfo' => 'Yderligere Information',
-	'Server:otherinfo' => 'Øvrig Information',
-	'Server:power' => 'Power supply~~',
-	'Person:info' => 'Almindelig Information',
-	'UserLocal:info' => 'General information~~',
-	'Person:personal_info' => 'Personal information~~',
-	'Person:notifiy' => 'Underretning',
-	'Class:Subnet/Tab:IPUsage' => 'IP Brug',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces der har en IP i området: <em>%1$s</em> til <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Ledige IP',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Ledige IP: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Her er et udtræk af 10 ledige IP adresser',
-	'Class:Document:PreviewTab' => 'Preview~~',
 ));

@@ -101,32 +101,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkFunctionalCIToTicket' => 'Verknüpfung FunctionalCI/Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenz',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Tickettitel',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Auswirkung (Text)',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Auswirkung',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Manuell hinzugefügt',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Berechnet',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nicht betroffen',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -168,7 +142,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // Fieldset translation
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-
 	'Ticket:baseinfo' => 'Allgemeine Informationen',
 	'Ticket:date' => 'Daten',
 	'Ticket:contact' => 'Kontakte',
@@ -182,7 +155,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'WorkOrder:Details' => 'Details',
 	'WorkOrder:Moreinfo' => 'Weitere Informationen',
 	'Tickets:ResolvedFrom' => 'Automatisch durch %1$s gelöst',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Ein Attribut (Feld) mit einem statischen Wert beschreiben',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Zielfeld',
@@ -227,15 +199,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
+));
 
-	'portal:itop-portal' => 'Standard Portal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
-	'Brick:Portal:UserProfile:Title' => 'Mein Profile',
-	'Brick:Portal:NewRequest:Title' => 'Neue Störung/Anfrage',
-	'Brick:Portal:NewRequest:Title+' => '<p>Hilfe?</p><p>Wählen Sie einen Service aus und senden Sie Ihre Anfrage zum Service Desk.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Offene Störungen/Anfragen',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Hier können Sie Ihre laufenden Anfragen und Störungsmeldungen ansehen,</p><p>den Verlauf verfolgen, Kommentare und Anhänge hinzufügen und gelöste Anfragen schließen.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Offen',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Gelöst',
-	'Brick:Portal:ClosedRequests:Title' => 'Geschlossene Störungen/Anfragen',
+//
+// Class: Document
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Document/Attribute:contracts_list' => 'Verträge',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => '',
 ));

@@ -11,19 +11,11 @@
           <cell id="0">
             <rank>0</rank>
             <dashlets>
-              <dashlet id="1" xsi:type="DashletHeaderStatic">
-                <rank>0</rank>
-                <title>Menu:ConfigManagementCI</title>
-                <icon>itop-welcome-itil/images/database.png</icon>
-              </dashlet>
-              <dashlet id="2" xsi:type="DashletBadge">
-                <rank>1</rank>
-                <class>BusinessProcess</class>
-              </dashlet>
-              <dashlet id="3" xsi:type="DashletBadge">
-                <rank>2</rank>
-                <class>ApplicationSolution</class>
-              </dashlet>
+	            <dashlet id="1" xsi:type="DashletHeaderStatic">
+		            <rank>0</rank>
+		            <title>Menu:ConfigManagementCI</title>
+		            <icon>itop-welcome-itil/images/database.png</icon>
+	            </dashlet>
               <dashlet id="4" xsi:type="DashletBadge">
                 <rank>3</rank>
                 <class>Contact</class>
@@ -31,18 +23,6 @@
               <dashlet id="5" xsi:type="DashletBadge">
                 <rank>4</rank>
                 <class>Location</class>
-              </dashlet>
-              <dashlet id="6" xsi:type="DashletBadge">
-                <rank>5</rank>
-                <class>Contract</class>
-              </dashlet>
-              <dashlet id="7" xsi:type="DashletBadge">
-                <rank>6</rank>
-                <class>Server</class>
-              </dashlet>
-              <dashlet id="8" xsi:type="DashletBadge">
-                <rank>7</rank>
-                <class>NetworkDevice</class>
               </dashlet>
             </dashlets>
           </cell>
