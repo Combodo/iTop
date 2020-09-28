@@ -8,3 +8,8 @@ vendor
 .buildpath
 .project
 .settings
+# pear
+.tarballs
+*.tgz
+# phpunit
+build
