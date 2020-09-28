@@ -29,6 +29,10 @@ namespace Combodo\iTop\Application\UI\Component\Button;
  */
 class ButtonFactory
 {
+	//---------------------------------------------
+	// Regular action buttons, mostly used in forms
+	//---------------------------------------------
+
 	/**
 	 * Make a basis Button component for any purpose
 	 *
@@ -38,8 +42,7 @@ class ButtonFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName, ?string $sId = null)
-	{
+	public static function MakeNeutral(string $sLabel, string $sName, ?string $sId = null): Button {
 		$oButton = new Button($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
 			->SetColor(Button::ENUM_COLOR_NEUTRAL)
@@ -65,7 +68,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -86,7 +89,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -108,7 +111,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -130,28 +133,35 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
+	//-------------------------------------------------
+	// Alternative action buttons, mostly used in forms
+	//-------------------------------------------------
+
 	/**
 	 * Make a basis Button component for any purpose
 	 *
-	 * @param string $sLabel
-	 * @param string $sName See Button::$sName
+	 * @param string      $sLabel
+	 * @param string      $sName See Button::$sName
+	 * @param string|null $sValue See Button::$sValue
+	 * @param bool        $bIsSubmit See Button::$sType
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeAlternativeNeutral(string $sLabel, string $sName, ?string $sId = null)
-	{
-		$oButton = new Button($sLabel, $sId);
-		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE)
-			->SetColor(Button::ENUM_COLOR_NEUTRAL)
-			->SetName($sName);
-
-		return $oButton;
+	public static function MakeAlternativeNeutral(
+		string $sLabel,
+		string $sName,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
+	): Button {
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+			$bIsSubmit, $sId);
 	}
 
 	/**
@@ -172,7 +182,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -194,7 +204,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -216,7 +226,7 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -238,10 +248,48 @@ class ButtonFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
+
+	//----------------------------------------------------------------------------------------------
+	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
+	//----------------------------------------------------------------------------------------------
+
+	/**
+	 * Make a link Button component to open an URL instead of triggering a form action
+	 *
+	 * @param string $sURL
+	 * @param string|null $sLabel
+	 * @param string|null $sIconClass
+	 * @param string|null $sName See Button::$sName
+	 * @param string|null $sTarget
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
+	 */
+	public static function MakeLinkNeutral(string $sURL, ?string $sLabel = null, ?string $sIconClass = null, ?string $sName = null, ?string $sTarget = null, ?string $sId = null): Button
+	{
+		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
+
+		if (!empty($sIconClass)) {
+			$oButton->SetIconClass($sIconClass);
+		}
+
+		if (!empty($sURL)) {
+			if (empty($sTarget)) {
+				$sTarget = "_self";
+			}
+			$oButton->SetOnClickJsCode("window.open('{$sURL}', '{$sTarget}');");
+		}
+
+		return $oButton;
+	}
+
+	//--------
+	// Helpers
+	//--------
 
 	/**
 	 * Internal helper
@@ -265,7 +313,7 @@ class ButtonFactory
 		string $sName = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	) {
+	): Button {
 		$oButton = new Button($sLabel, $sId);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
@@ -281,42 +329,6 @@ class ButtonFactory
 		// Set as submit button if necessary
 		if ($bIsSubmit === true) {
 			$oButton->SetType(Button::ENUM_TYPE_SUBMIT);
-		}
-
-		return $oButton;
-	}
-
-
-	/**
-	 * Make a basis Button component for any purpose
-	 *
-	 * @param string $sLabel
-	 * @param string $sName See Button::$sName
-	 * @param string $sIconClass
-	 * @param string $sURL
-	 * @param string $sTarget
-	 * @param string|null $sId
-	 *
-	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
-	 */
-	public static function MakeAlternativeNeutralActionButton(string $sLabel, string $sName, string $sIconClass = '', string $sURL = '', string $sTarget = '', ?string $sId = null): Button
-	{
-		$oButton = new Button($sLabel, $sId);
-		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_ALTERNATIVE)
-			->SetColor(Button::ENUM_COLOR_NEUTRAL)
-			->SetName($sName);
-
-		if (!empty($sIconClass)) {
-			$oButton->SetIconClass($sIconClass);
-		}
-
-		if (!empty($sURL)) {
-			if (empty($sTarget)) {
-				$sJS = "window.location='{$sURL}';";
-			} else {
-				$sJS = "window.open('{$sURL}', '{$sTarget}');";
-			}
-			$oButton->SetOnClickJsCode($sJS);
 		}
 
 		return $oButton;

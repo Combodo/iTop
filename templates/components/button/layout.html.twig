@@ -6,7 +6,9 @@
         {% if oUIBlock.IsDisabled() is same as(true) %} disabled {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
-        <span class="ibo-button-icon {{ oUIBlock.GetIconClass() }}"></span>
+        <span class="ibo-button--icon {{ oUIBlock.GetIconClass() }}"></span>
     {% endif %}
-    {{ oUIBlock.GetLabel() }}
+    {% if oUIBlock.GetLabel() is not empty %}
+        <span class="ibo-button--label">{{ oUIBlock.GetLabel() }}</span>
+    {% endif %}
 </button>

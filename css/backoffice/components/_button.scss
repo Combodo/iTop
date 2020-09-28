@@ -1,10 +1,13 @@
+$ibo-button--sibling-spacing: 5px !default;
 $ibo-button--padding-y: 6px !default;
 $ibo-button--padding-x: 9px !default;
 $ibo-button--border: 0 !default;
 $ibo-button--border-radius: $ibo-border-radius-400 !default;
-
 $ibo-button--box-shadow-bottom: 0px 2px 0px !default;
 $ibo-button--box-shadow-top: inset 0px 2px 0px !default;
+
+$ibo-button--label--margin-left: 4px !default;
+
 $ibo-button-colors: (
 		'regular': (
 				'neutral': (
@@ -275,7 +278,6 @@ $ibo-button-colors: (
 				),
 		)
 ) !default;
-
 @each $sType, $aColors in $ibo-button-colors {
 	@each $sColor, $aPseudoclasses in $aColors {
 		@each $sPseudoclass, $sAttributes in $aPseudoclasses {
@@ -291,17 +293,15 @@ $ibo-button-colors: (
 	}
 }
 
-$ibo-button-icon--padding-right: 4px !default;
-
 .ibo-button {
 	cursor: pointer;
 	@extend %ibo-font-ral-med-150;
 	padding: $ibo-button--padding-y $ibo-button--padding-x;
-	border: 0;
+	border: $ibo-button--border;
 	border-radius: $ibo-button--border-radius;
 
 	& ~ .ibo-button {
-		margin-left: 5px;
+		margin-left: $ibo-button--sibling-spacing;
 	}
 
 	&.ibo-action-button {
@@ -309,7 +309,8 @@ $ibo-button-icon--padding-right: 4px !default;
 	}
 }
 
-.ibo-button-icon {
-	padding-right: $ibo-button-icon--padding-right;
+/* Only when a button has both an icon and a label */
+.ibo-button-icon + .ibo-button-label {
+	margin-left: $ibo-button--label--margin-left;
 }
 

@@ -1367,7 +1367,7 @@ class HistoryBlock extends DisplayBlock
 		$this->iLimitCount = $iCount;
 	}
 
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), string $sId = null): iUIBlock
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
 	{
 		$sHtml = '';
 		$bTruncated = false;
@@ -1804,10 +1804,10 @@ class MenuBlock extends DisplayBlock
 			} else {
 				$sName = 'UI:Menu:Actions';
 			}
-			$oActionButton = ButtonFactory::MakeAlternativeNeutralActionButton('', $sName, 'fas fa-ellipsis-v', '', '', $sMenuTogglerId);
+			$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
 			// TODO Add Js
-			$oActionsBlock->AddSubBlock($oActionButton);
-			$oActionsBlock->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
+			$oActionsBlock->AddSubBlock($oActionButton)
+				->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
 			$oActionButton->AddCSSClasses('ibo-action-button')
 				->SetJsCode(<<<JS
 $("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
@@ -1829,7 +1829,7 @@ JS
 				);
 
 			if ($this->m_sStyle == 'details') {
-				$oActionButton = ButtonFactory::MakeAlternativeNeutralActionButton('', 'UI:SearchFor_Class', 'fas fa-search', "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}");
+				$oActionButton = ButtonFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
 				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
 					->AddCSSClasses('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
@@ -1840,8 +1840,9 @@ JS
 				$sRefreshAction = "window.location.reload();";
 			}
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction != '')) {
-				$oActionButton = ButtonFactory::MakeAlternativeNeutralActionButton('', 'UI:Button:Refresh', 'fas fa-sync');
-				$oActionButton->SetOnClickJsCode($sRefreshAction)
+				$oActionButton = ButtonFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
+				$oActionButton->SetIconClass('fas fa-sync')
+					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
 					->AddCSSClasses('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
@@ -1882,7 +1883,7 @@ JS
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonFactory::MakeAlternativeNeutralActionButton($sLabel, $sActionId, $sIconClass, $sUrl, $sTarget);
+				$oActionButton = ButtonFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sActionId, $sTarget);
 				$oActionButton->AddCSSClasses('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}

@@ -36,7 +36,6 @@ class AjaxTab extends Tab
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-ajaxtab';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/ajaxtab';
-	public const JS_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/ajaxtab';
 
 	protected const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
 

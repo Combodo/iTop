@@ -1,4 +1,7 @@
 <?php
+
+/** @noinspection PhpUnhandledExceptionInspection */
+
 /*
  * Copyright (C) 2013-2020 Combodo SARL
  *
@@ -26,6 +29,7 @@ use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
+use utils;
 
 require_once '../../../approot.inc.php';
 require_once APPROOT.'application/startup.inc.php';
@@ -57,25 +61,27 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 // Buttons
 //////////
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral dis.', 'alt-neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
