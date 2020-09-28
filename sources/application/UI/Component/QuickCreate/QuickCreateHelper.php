@@ -41,7 +41,7 @@ class QuickCreateHelper
 	/**
 	 * Add $sQuery to the history. History is limited to the static::MAX_HISTORY_SIZE last classes.
 	 *
-	 * @param string $Class Class of the created object
+	 * @param string $sClass Class of the created object
 	 *
 	 * @return void
 	 * @throws \CoreException
