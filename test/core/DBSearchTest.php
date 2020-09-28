@@ -28,6 +28,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 
 use CMDBSource;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreOqlMultipleResultsForbiddenException;
 use DBSearch;
@@ -682,7 +683,8 @@ class DBSearchTest extends ItopDataTestCase
 		$_SERVER['REQUEST_METHOD'] = 'FAKE_REQUEST_METHOD';
 		$oP = new \iTopWebPage("test");
 		$oBlock = new \DisplayBlock($oSet->GetFilter(), 'list', false);
-		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array('menu' => true, 'display_limit' => false));
+		$oHtml = $oBlock->GetDisplay($oP, 'package_table', array('menu' => true, 'display_limit' => false));
+		$sHtml = BlockRenderer::RenderBlockTemplates($oHtml);
 
 		$iHtmlUserRequestLineCount = substr_count($sHtml, '<tr><td  data-object-class="UserRequest"');
 		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :".$sHtml);
