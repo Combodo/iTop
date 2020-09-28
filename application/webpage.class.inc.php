@@ -1547,6 +1547,12 @@ class TabManager
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
+
+					// N°3320: Do not display empty tabs
+					if (empty($aTabData['html']))
+					{
+						unset($aTabs['tabs'][$sTabCode]);
+					}
 				}
 
 				// Render tabs
