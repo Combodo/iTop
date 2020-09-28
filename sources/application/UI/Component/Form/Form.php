@@ -19,7 +19,6 @@ class Form extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-form';
 	public const HTML_TEMPLATE_REL_PATH = 'components/form/layout';
-	public const JS_TEMPLATE_REL_PATH = 'components/form/layout';
 
 	/** @var string */
 	protected $sOnSubmitJsCode;

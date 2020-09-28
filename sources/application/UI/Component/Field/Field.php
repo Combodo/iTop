@@ -19,7 +19,6 @@ class Field extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-field';
 	public const HTML_TEMPLATE_REL_PATH = 'components/field/layout';
-	public const JS_TEMPLATE_REL_PATH = 'components/field/layout';
 
 	/** @var array */
 	protected $aParams;

@@ -34,7 +34,6 @@ class Alert extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-alert';
 	public const HTML_TEMPLATE_REL_PATH = 'components/alert/layout';
-	public const JS_TEMPLATE_REL_PATH = 'components/alert/layout';
 
 	// Specific constants
 	/** @var string ENUM_COLOR_PRIMARY */

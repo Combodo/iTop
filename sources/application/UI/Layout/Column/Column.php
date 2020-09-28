@@ -19,5 +19,4 @@ class Column extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-column';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/column/layout';
-	public const JS_TEMPLATE_REL_PATH = 'layouts/column/layout';
 }

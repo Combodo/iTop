@@ -20,7 +20,6 @@ class MultiColumn extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-multicolumn';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/multicolumn/layout';
-	public const JS_TEMPLATE_REL_PATH = 'layouts/multicolumn/layout';
 
 	/** @var array */
 	protected $aColumns;

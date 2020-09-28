@@ -19,7 +19,6 @@ class Title extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-title';
 	public const HTML_TEMPLATE_REL_PATH = 'components/title/layout';
-	public const JS_TEMPLATE_REL_PATH = 'components/title/layout';
 
 	/** @var string */
 	protected $sTitle;

@@ -19,7 +19,6 @@ class FieldSet extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-fieldset';
 	public const HTML_TEMPLATE_REL_PATH = 'components/fieldset/layout';
-	public const JS_TEMPLATE_REL_PATH = 'components/fieldset/layout';
 
 	/** @var string */
 	protected $sLegend;
