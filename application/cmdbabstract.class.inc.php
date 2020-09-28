@@ -991,8 +991,7 @@ HTML
 		//$oPage->SetCurrentTab('UI:HistoryTab');
 		//$this->DisplayBareHistory($oPage, $bEditMode);
 		// TODO 2.8.0: What to do with this?
-		$oPage->AddAjaxTab('UI:HistoryTab',
-			utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
+		//$oPage->AddAjaxTab('UI:HistoryTab', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
 		$oPage->add(<<<HTML
 </div><!-- End of object-details -->
 HTML
