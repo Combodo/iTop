@@ -18,11 +18,17 @@
  */
 
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Component\Button\Button;
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Field\Field;
 use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Component\Form\Form;
+use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Layout\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -2511,8 +2517,14 @@ JS
 			}
 		}
 
-		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
-		{
+		$oContentBlock = new UIContentBlock();
+		$oContentBlock->SetCSSClasses("object-details")
+			->AddDataAttributes('object-class', $sClass)
+			->AddDataAttributes('object-id', $iKey)
+			->AddDataAttributes('object-mode', $sMode);
+		$oPage->AddUiBlock($oContentBlock);
+
+		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
 			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
 				$this->GetName());
@@ -2520,97 +2532,87 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
 
-			$oPage->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
-	<div class="page_header">
-		<h1>{$this->GetIcon()} $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-			);
+			$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails('', $sHeaderTitle, $this->GetIcon()));
+
+//			$oPage->add(<<<HTML
+//<!-- Beginning of object-details -->
+//<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+//	<div class="page_header">
+//		<h1>{$this->GetIcon()} $sHeaderTitle</h1>
+//	</div>
+//	<!-- Beginning of wizContainer -->
+//	<div class="wizContainer">
+//HTML
+//			);
 		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
 		$sPrefix = '';
-		if (isset($aExtraParams['formPrefix']))
-		{
+		if (isset($aExtraParams['formPrefix'])) {
 			$sPrefix = $aExtraParams['formPrefix'];
 		}
 
 		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
 		$oAppContext = new ApplicationContext();
-		if (!isset($aExtraParams['action']))
-		{
+		if (!isset($aExtraParams['action'])) {
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/'.$this->GetUIPage(); // No parameter in the URL, the only parameter will be the ones passed through the form
-		}
-		else
-		{
+		} else {
 			$sFormAction = $aExtraParams['action'];
 		}
 		// Custom label for the apply button ?
-		if (isset($aExtraParams['custom_button']))
-		{
+		if (isset($aExtraParams['custom_button'])) {
 			$sApplyButton = $aExtraParams['custom_button'];
-		}
-		else
-		{
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
-			{
+		} else {
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 				$sApplyButton = Dict::S('UI:Button:Apply');
-			}
-			else
-			{
+			} else {
 				$sApplyButton = Dict::S('UI:Button:Create');
 			}
 		}
 		// Custom operation for the form ?
-		if (isset($aExtraParams['custom_operation']))
-		{
+		if (isset($aExtraParams['custom_operation'])) {
 			$sOperation = $aExtraParams['custom_operation'];
-		}
-		else
-		{
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
-			{
+		} else {
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 				$sOperation = 'apply_modify';
-			}
-			else
-			{
+			} else {
 				$sOperation = 'apply_new';
 			}
 		}
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
-		{
+
+		$oForm = new Form("form_{$this->m_iFormId}");
+		$oForm->SetAction($sFormAction)
+			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
+		$oContentBlock->AddSubBlock($oForm);
+
+		$oToolbarTop = new Toolbar();
+
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
-			$sButtons = "<input id=\"{$sPrefix}_id\" type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
-			$sButtons .= "<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n";
-			$sButtons .= "<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
-			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
-		else
-		{
-			// The object does not exist in the database it's a creation
-			$sButtons = "<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n";
-			$sButtons .= "<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
-			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
-		}
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
+		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oCancelButton->AddCSSClasses('action cancel');
+		$oToolbarTop->AddSubBlock($oCancelButton);
+		$oApplyButton = ButtonFactory::MakeForValidationAction($sApplyButton, null, null, true);
+		$oApplyButton->AddCSSClasses('action');
+		$oToolbarTop->AddSubBlock($oApplyButton);
 
 		$aTransitions = $this->EnumTransitions();
-		if (!isset($aExtraParams['custom_operation']) && count($aTransitions))
-		{
+		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
 			// transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);
 			$aStimuli = Metamodel::EnumStimuli($sClass);
-			foreach($aTransitions as $sStimulusCode => $aTransitionDef)
-			{
+			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
 				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-				switch ($iActionAllowed)
-				{
+				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
-						$sButtons .= "<button type=\"submit\" name=\"next_action\" value=\"{$sStimulusCode}\" class=\"action\"><span>".$aStimuli[$sStimulusCode]->GetLabel()."</span></button>\n";
+						$oButton = ButtonFactory::MakeForValidationAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
+						$oButton->AddCSSClasses('action');
+						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
+						$oToolbarTop->AddSubBlock($oButton);
 						break;
 
 					default:
@@ -2622,7 +2624,6 @@ HTML
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
-		$oPage->add("<form action=\"$sFormAction\" id=\"form_{$this->m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$this->m_iFormId}');\">\n");
 		$sStatesSelection = '';
 		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
 		{
@@ -2672,70 +2673,54 @@ JAVASCRIPT
 EOF
 		);
 
-		if ($sButtonsPosition != 'bottom')
-		{
+		if ($sButtonsPosition != 'bottom') {
 			// top or both, display the buttons here
 			$oPage->p($sStatesSelection);
-			$oPage->add($sButtons);
+			$oForm->AddSubBlock($oToolbarTop);
 		}
 
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oForm);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
-		if (!is_array($aFieldsMap))
-		{
+		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
-		{
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
 		// Now display the relations, one tab per relation
-		if (!isset($aExtraParams['noRelations']))
-		{
+		if (!isset($aExtraParams['noRelations'])) {
 			$this->DisplayBareRelations($oPage, true); // Edit mode, will fill $this->aFieldsMap
 			$aFieldsMap = array_merge($aFieldsMap, $this->aFieldsMap);
 		}
 
 		$oPage->SetCurrentTab('');
-		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
-		foreach($aExtraParams as $sName => $value)
-		{
-			if (is_scalar($value))
-			{
-				$oPage->add("<input type=\"hidden\" name=\"$sName\" value=\"$value\">\n");
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+		foreach ($aExtraParams as $sName => $value) {
+			if (is_scalar($value)) {
+				$oForm->AddSubBlock(InputFactory::MakeForHidden($sName, $value));
 			}
 		}
-		if ($sOwnershipToken !== null)
-		{
-			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken,
-					ENT_QUOTES, 'UTF-8')."\">\n");
+		if ($sOwnershipToken !== null) {
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 		}
 		$oPage->add($oAppContext->GetForForm());
-		if ($sButtonsPosition != 'top')
-		{
+		if ($sButtonsPosition != 'top') {
 			// bottom or both: display the buttons here
 			$oPage->p($sStatesSelection);
-			$oPage->add($sButtons);
+			$oToolbarBottom = new Toolbar();
+			foreach ($oToolbarTop->GetSubBlocks() as $oButton) {
+				$oToolbarBottom->AddSubBlock($oButton);
+			}
+			$oForm->AddSubBlock($oToolbarBottom);
 		}
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
-		$oPage->add("</form>\n");
-
-		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
-		{
-			// Close wizContainer and object-details
-			$oPage->add(<<<HTML
-	</div><!-- End of wizContainer -->
-</div><!-- End of object-details -->
-HTML
-			);
-		}
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);

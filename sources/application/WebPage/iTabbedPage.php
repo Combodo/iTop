@@ -1,19 +1,22 @@
 <?php
+
+use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
+
 /**
  * @copyright   Copyright (C) 2010-2020 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-
 interface iTabbedPage
 {
 	/**
 	 * @param string $sTabContainer
 	 * @param string $sPrefix
 	 *
+	 * @param \Combodo\iTop\Application\UI\Layout\iUIContentBlock|null $oParentBlock
+	 *
 	 * @return mixed
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '');
+	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null);
 
 	/**
 	 * @param string $sTabContainer

@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 class AjaxPage extends WebPage implements iTabbedPage
@@ -46,7 +47,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '')
+	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
 		$this->AddUiBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}

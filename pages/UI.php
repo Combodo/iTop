@@ -1906,45 +1906,38 @@ EOF
 		$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
-			if ($sRelation == 'depends on')
-		{
-			$sRelation = 'impacts';
-			$sDirection = 'up';
-		}
-		if ($sDirection == 'up')
-		{
-			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-		}
-		else
-		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-		}
-		
+			if ($sRelation == 'depends on') {
+				$sRelation = 'impacts';
+				$sDirection = 'up';
+			}
+			if ($sDirection == 'up') {
+				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			} else {
+				$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			}
 
-		$aResults = $oRelGraph->GetObjectsByClass();
-		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));		
-		
-		$oP->AddTabContainer('Navigator');
-		$oP->SetCurrentTabContainer('Navigator');
-		
-		$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-		$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
-		
-		// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
-		$sClassForAttachment = null;
-		$iIdForAttachment = null;
-		if (class_exists('Attachment'))
-		{
-			$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
-			foreach($aAllowedClasses as $sAllowedClass)
-			{
-				if ($oObj instanceof $sAllowedClass)
-				{
-					$iIdForAttachment = $id;
-					$sClassForAttachment = $sClass;
+
+			$aResults = $oRelGraph->GetObjectsByClass();
+			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+
+			$oP->AddTabContainer('Navigator');
+			$oP->SetCurrentTabContainer('Navigator');
+
+			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
+
+			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
+			$sClassForAttachment = null;
+			$iIdForAttachment = null;
+			if (class_exists('Attachment')) {
+				$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+				foreach ($aAllowedClasses as $sAllowedClass) {
+					if ($oObj instanceof $sAllowedClass) {
+						$iIdForAttachment = $id;
+						$sClassForAttachment = $sClass;
+					}
 				}
 			}
-		}
 		
 		// Display the tabs
 		if ($sFirstTab == 'list')

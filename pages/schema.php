@@ -851,20 +851,15 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	$aDetails = array();
 
 	$aOrigins = array();
-	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-	{
-		if ($oAttDef->IsExternalKey())
-		{
+	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+		if ($oAttDef->IsExternalKey()) {
 			$sValue = Dict::Format('UI:Schema:ExternalKey_To', MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
-			if (array_key_exists($sAttCode, $aForwardChangeTracking))
-			{
+			if (array_key_exists($sAttCode, $aForwardChangeTracking)) {
 				$oLinkSet = $aForwardChangeTracking[$sAttCode];
 				$sRemoteClass = $oLinkSet->GetHostClass();
 				$sValue = $sValue."<span title=\"Forward changes to $sRemoteClass\">*</span>";
 			}
-		}
-		elseif ($oAttDef->IsLinkSet())
-		{
+		} elseif ($oAttDef->IsLinkSet()) {
 			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
 		}
 		else

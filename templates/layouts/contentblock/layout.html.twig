@@ -1,8 +1,15 @@
 {% apply spaceless %}
     {% block iboContentBlockContainer %}
 
-        {% if oUIBlock.GetCSSClasses() %}
-            <div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetCSSClasses() }}">
+        {% if oUIBlock.GetCSSClasses() or oUIBlock.GetDataAttributes() %}
+            <div id="{{ oUIBlock.GetId() }}"
+            {% if oUIBlock.GetCSSClasses() %}class="{{ oUIBlock.GetCSSClasses() }}"{% endif %}
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+            >
         {% endif %}
 
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}

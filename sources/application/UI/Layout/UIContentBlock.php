@@ -22,6 +22,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	protected $aCSSClasses;
 	/** @var array */
 	protected $aSubBlocks;
+	/** @var array */
+	protected $aDataAttributes;
 
 	/**
 	 * UIContentBlock constructor.
@@ -34,6 +36,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 		parent::__construct($sName);
 
 		$this->aSubBlocks = [];
+		$this->aDataAttributes = [];
 		$this->SetCSSClasses($sContainerClass);
 	}
 
@@ -147,6 +150,38 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 				$this->aCSSClasses[$sCSSClass] = $sCSSClass;
 			}
 		}
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetDataAttributes(): array
+	{
+		return $this->aDataAttributes;
+	}
+
+	/**
+	 * @param array $aDataAttributes
+	 *
+	 * @return UIContentBlock
+	 */
+	public function SetDataAttributes(array $aDataAttributes): UIContentBlock
+	{
+		$this->aDataAttributes = $aDataAttributes;
+		return $this;
+	}
+
+
+	/**
+	 * @param string $sName
+	 * @param string $sValue
+	 *
+	 * @return UIContentBlock
+	 */
+	public function AddDataAttributes(string $sName, string $sValue): UIContentBlock
+	{
+		$this->aDataAttributes[$sName] = $sValue;
 		return $this;
 	}
 

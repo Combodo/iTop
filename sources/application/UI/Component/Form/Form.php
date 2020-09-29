@@ -22,16 +22,20 @@ class Form extends UIContentBlock
 
 	/** @var string */
 	protected $sOnSubmitJsCode;
+	/** @var string */
+	protected $sAction;
 
 	public function __construct(string $sName = null)
 	{
 		parent::__construct($sName);
 		$this->sOnSubmitJsCode = null;
+		$this->sAction = null;
 	}
 
-	public function SetOnSubmitJsCode(string $sJsCode): void
+	public function SetOnSubmitJsCode(string $sJsCode): Form
 	{
 		$this->sOnSubmitJsCode = $sJsCode;
+		return $this;
 	}
 
 	/**
@@ -42,5 +46,23 @@ class Form extends UIContentBlock
 		return $this->sOnSubmitJsCode;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function GetAction(): string
+	{
+		return $this->sAction;
+	}
+
+	/**
+	 * @param string $sAction
+	 *
+	 * @return Form
+	 */
+	public function SetAction(string $sAction): Form
+	{
+		$this->sAction = $sAction;
+		return $this;
+	}
 
 }
