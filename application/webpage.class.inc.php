@@ -1549,7 +1549,7 @@ class TabManager
 					}
 
 					// N°3320: Do not display empty tabs
-					if (empty($aTabData['html']))
+					if (empty($aTabData['html']) && empty($aTabData['url']))
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
