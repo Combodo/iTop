@@ -1853,8 +1853,8 @@ EOF
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		case 'swf_navigate': /** @deprecated SWF was removed in iTop */
-		case 'view-relations': // Graphical display of the relations "impact" / "depends on"
+		case 'swf_navigator': /** @deprecated SWF was removed in iTop */
+		case 'view_relations': // Graphical display of the relations "impact" / "depends on"
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
