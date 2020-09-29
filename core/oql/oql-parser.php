@@ -1600,38 +1600,38 @@ static public $yy_action = array(
 	$this->_retvalue = new ListOqlExpression($this->yystack[$this->yyidx + -1]->minor);
     }
 #line 1606 "..\oql-parser.php"
-#line 132 "..\oql-parser.y"
+#line 131 "..\oql-parser.y"
     function yy_r43(){
 	$this->_retvalue = new NestedQueryOqlExpression($this->yystack[$this->yyidx + -1]->minor);
     }
 #line 1611 "..\oql-parser.php"
-#line 147 "..\oql-parser.y"
+#line 146 "..\oql-parser.y"
     function yy_r47(){
 	$this->_retvalue = array();
     }
 #line 1616 "..\oql-parser.php"
-#line 158 "..\oql-parser.y"
+#line 157 "..\oql-parser.y"
     function yy_r51(){ $this->_retvalue = new IntervalOqlExpression($this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1619 "..\oql-parser.php"
-#line 171 "..\oql-parser.y"
+#line 170 "..\oql-parser.y"
     function yy_r61(){ $this->_retvalue = new ScalarOqlExpression($this->yystack[$this->yyidx + 0]->minor);     }
 #line 1622 "..\oql-parser.php"
-#line 173 "..\oql-parser.y"
+#line 172 "..\oql-parser.y"
     function yy_r63(){ $this->_retvalue = new ScalarOqlExpression(null);     }
 #line 1625 "..\oql-parser.php"
-#line 175 "..\oql-parser.y"
+#line 174 "..\oql-parser.y"
     function yy_r64(){ $this->_retvalue = new FieldOqlExpression($this->yystack[$this->yyidx + 0]->minor);     }
 #line 1628 "..\oql-parser.php"
-#line 176 "..\oql-parser.y"
+#line 175 "..\oql-parser.y"
     function yy_r65(){ $this->_retvalue = new FieldOqlExpression($this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor);     }
 #line 1631 "..\oql-parser.php"
-#line 177 "..\oql-parser.y"
+#line 176 "..\oql-parser.y"
     function yy_r66(){ $this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;     }
 #line 1634 "..\oql-parser.php"
-#line 180 "..\oql-parser.y"
+#line 179 "..\oql-parser.y"
     function yy_r67(){ $this->_retvalue = new VariableOqlExpression(substr($this->yystack[$this->yyidx + 0]->minor, 1));     }
 #line 1637 "..\oql-parser.php"
-#line 182 "..\oql-parser.y"
+#line 181 "..\oql-parser.y"
     function yy_r68(){
 	if ($this->yystack[$this->yyidx + 0]->minor[0] == '`')
 	{
@@ -1644,19 +1644,19 @@ static public $yy_action = array(
 	$this->_retvalue = new OqlName($name, $this->m_iColPrev);
     }
 #line 1650 "..\oql-parser.php"
-#line 193 "..\oql-parser.y"
+#line 192 "..\oql-parser.y"
     function yy_r69(){$this->_retvalue=(int)$this->yystack[$this->yyidx + 0]->minor;    }
 #line 1653 "..\oql-parser.php"
-#line 194 "..\oql-parser.y"
+#line 193 "..\oql-parser.y"
     function yy_r70(){$this->_retvalue=(int)-$this->yystack[$this->yyidx + 0]->minor;    }
 #line 1656 "..\oql-parser.php"
-#line 195 "..\oql-parser.y"
+#line 194 "..\oql-parser.y"
     function yy_r71(){$this->_retvalue=new OqlHexValue($this->yystack[$this->yyidx + 0]->minor);    }
 #line 1659 "..\oql-parser.php"
-#line 196 "..\oql-parser.y"
+#line 195 "..\oql-parser.y"
     function yy_r72(){$this->_retvalue=stripslashes(substr($this->yystack[$this->yyidx + 0]->minor, 1, strlen($this->yystack[$this->yyidx + 0]->minor) - 2));    }
 #line 1662 "..\oql-parser.php"
-#line 199 "..\oql-parser.y"
+#line 198 "..\oql-parser.y"
     function yy_r73(){$this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;    }
 #line 1665 "..\oql-parser.php"
 
@@ -1940,7 +1940,7 @@ throw new OQLParserException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCo
         } while ($yymajor != self::YYNOCODE && $this->yyidx >= 0);
     }
 }
-#line 264 "..\oql-parser.y"
+#line 263 "..\oql-parser.y"
 
 
 class OQLParserException extends OQLException

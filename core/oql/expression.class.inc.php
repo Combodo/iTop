@@ -839,12 +839,15 @@ class MatchExpression extends BinaryExpression
 	 * MatchExpression constructor.
 	 *
 	 * @param \FieldExpression $oLeftExpr
-	 * @param \ScalarExpression $oRightExpr
+	 * @param \Expression $oRightExpr
 	 *
 	 * @throws \CoreException
 	 */
-	public function __construct(FieldExpression $oLeftExpr, ScalarExpression $oRightExpr)
+	public function __construct(FieldExpression $oLeftExpr, Expression $oRightExpr)
 	{
+		if (!$oRightExpr instanceof ScalarExpression && !$oRightExpr instanceof VariableExpression) {
+			throw new CoreException('Only instance of ScalarExpression or VariableExpression are allowed in MATCHES '.get_class( $oRightExpr).' found', $oRightExpr);
+		}
 		parent::__construct($oLeftExpr, 'MATCHES', $oRightExpr);
 	}
 
