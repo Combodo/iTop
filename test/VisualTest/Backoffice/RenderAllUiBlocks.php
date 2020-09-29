@@ -97,31 +97,31 @@ $oPanel = PanelFactory::MakeNeutral('Neutral alert');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForInformation('Alert for information');
+$oPanel = PanelFactory::MakeForInformation('Panel for information');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForSuccess('Alert for success');
+$oPanel = PanelFactory::MakeForSuccess('Panel for success');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForWarning('Alert for warning');
+$oPanel = PanelFactory::MakeForWarning('Panel for warning');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForDanger('Alert for danger');
+$oPanel = PanelFactory::MakeForDanger('Panel for danger');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForFailure('Alert for failure');
+$oPanel = PanelFactory::MakeForFailure('Panel for failure');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color');
+$oPanel = PanelFactory::MakeWithBrandingPrimaryColor('Panel with branding primary color');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color');
+$oPanel = PanelFactory::MakeWithBrandingSecondaryColor('Panel with branding secondary color');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
