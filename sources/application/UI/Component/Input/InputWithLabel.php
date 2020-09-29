@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Component\Input;
 
 class InputWithLabel extends Input
 {
-	public const HTML_TEMPLATE_REL_PATH = 'components/input/InputWithLabel';
+	public const HTML_TEMPLATE_REL_PATH = 'components/input/inputwithlabel';
 
 	/** @var string */
 	protected $sLabel;

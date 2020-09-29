@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Component\Input;
 
 class Select extends InputWithLabel
 {
-	public const HTML_TEMPLATE_REL_PATH = 'components/input/Select';
+	public const HTML_TEMPLATE_REL_PATH = 'components/input/select';
 
 	/** @var array */
 	protected $aOptions;
