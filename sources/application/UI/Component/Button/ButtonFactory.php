@@ -271,7 +271,8 @@ class ButtonFactory
 	 */
 	public static function MakeLinkNeutral(string $sURL, ?string $sLabel = null, ?string $sIconClass = null, ?string $sName = null, ?string $sTarget = null, ?string $sId = null): Button
 	{
-		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
+		$sType = empty($sIconClass) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
+		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, $sType, null, $sName, false, $sId);
 
 		if (!empty($sIconClass)) {
 			$oButton->SetIconClass($sIconClass);
