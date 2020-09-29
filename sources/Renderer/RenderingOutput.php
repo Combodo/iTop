@@ -116,10 +116,12 @@ class RenderingOutput
 	 *
 	 * @return \Combodo\iTop\Renderer\RenderingOutput
 	 */
-	public function AddHtml(string $sHtml, bool $bEncodeHtmlEntities = false)
+	public function AddHtml(?string $sHtml, bool $bEncodeHtmlEntities = false)
 	{
-		$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
-
+		if (!is_null($sHtml)) {
+			$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
+		}
+		
 		return $this;
 	}
 
