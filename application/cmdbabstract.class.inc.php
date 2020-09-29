@@ -396,7 +396,7 @@ EOF
 			$sTags = '';
 		}
 
-		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($sClassName, $sObjectName, $sObjectIcon));
+		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($this));
 	}
 
 	/**

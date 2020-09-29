@@ -3,25 +3,67 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-title--text-color: $ibo-color-grey-900 !default;
+
+$ibo-title--medallion--size: 90px !default;
+$ibo-title--medallion--background-color: $ibo-color-grey-100 !default;
+$ibo-title--medallion--border: 2px solid $ibo-color-blue-grey-300 !default;
+$ibo-title--medallion--border-radius: $ibo-border-radius-full !default;
+
+$ibo-title--icon--size: 66.67% !default;
+
+$ibo-title--status-dot--size: 10px !default;
+$ibo-title--status-dot--spacing: 8px !default;
+$ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
+
 .ibo-title {
+  @extend %ibo-baseline-centered-content;
 
-  color: $ibo-color-grey-900;
+  color: $ibo-title--text-color;
+}
 
-  .ibo-title--icon {
-    display: inline-block;
-    vertical-align: middle;
-  }
+.ibo-title--medallion {
+  @extend %ibo-fully-centered-content;
+  width: $ibo-title--medallion--size;
+  height: $ibo-title--medallion--size;
+  overflow: hidden;
 
-  .ibo-title--content {
-    display: inline-block;
-    vertical-align: middle;
-  }
+  background-color: $ibo-title--medallion--background-color;
+  border: $ibo-title--medallion--border;
+  border-radius: $ibo-title--medallion--border-radius;
+}
+.ibo-title--icon {
+  width: $ibo-title--icon--size;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
 
-  .ibo-title--emphasis {
+.ibo-title--emphasis {
 
-  }
+}
 
-  .ibo-title--for-object-details {
-    @extend %ibo-font-ral-nor-350;
-  }
+.ibo-title--for-object-details {
+  @extend %ibo-font-ral-nor-350;
+}
+
+.ibo-title--status {
+  @extend %ibo-baseline-centered-content;
+  @extend %ibo-font-ral-nor-100;
+}
+.ibo-title--status-dot {
+  @extend %ibo-fully-centered-content;
+
+  width: $ibo-title--status-dot--size;
+  height: $ibo-title--status-dot--size;
+  min-width: $ibo-title--status-dot--size;
+  min-height: $ibo-title--status-dot--size;
+
+  border-radius: $ibo-title--status-dot--border-radius;
+}
+.ibo-title--status-label {
+
+}
+.ibo-title--status-dot + .ibo-title--status-label {
+  margin-left: $ibo-title--status-dot--spacing;
 }

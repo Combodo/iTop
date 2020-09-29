@@ -8,6 +8,9 @@
 namespace Combodo\iTop\Application\UI\Component\Title;
 
 
+use DBObject;
+use MetaModel;
+
 class TitleFactory
 {
 
@@ -16,10 +19,26 @@ class TitleFactory
 		return new Title($sTitle, 1, $sId);
 	}
 
-	public static function MakeForObjectDetails(string $sClassName, string $sObjectName, string $sIconHtml, ?string $sId = null)
+	public static function MakeForObjectDetails(DBObject $oObject, ?string $sId = null)
 	{
-		$oTitle = new TitleForObjectDetails($sClassName, $sObjectName, $sId);
-		$oTitle->SetIcon($sIconHtml);
+		// TODO 2.8.0: Refactor all of this
+		$sObjIconUrl = $oObject->GetIcon(false);
+		$sObjClass = get_class($oObject);
+		$sObjClassName = MetaModel::GetName($sObjClass);
+		$sObjName = $oObject->GetName();
+
+		$oTitle = new TitleForObjectDetails($sObjClassName, $sObjName, $sId);
+		$oTitle->SetIcon($sObjIconUrl);
+
+		$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
+		if(!empty($sStatusAttCode))
+		{
+			$sStatusLabel = $oObject->GetStateLabel();
+			// TODO 2.8.0 : Dehardcode this
+			$sStatusColor = 'green';
+
+			$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
+		}
 
 		return $oTitle;
 	}

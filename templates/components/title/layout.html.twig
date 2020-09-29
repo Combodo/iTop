@@ -1,8 +1,8 @@
 {% apply spaceless %}
     <div class="ibo-title">
         {% if oUIBlock.HasIcon() %}
-            <div class="ibo-title--icon">
-                {{ oUIBlock.GetIcon()|raw }}
+            <div class="ibo-title--medallion">
+                <img class="ibo-title--icon" src="{{ oUIBlock.GetIcon() }}" />
             </div>
         {% endif %}
         <div class="ibo-title--content">
