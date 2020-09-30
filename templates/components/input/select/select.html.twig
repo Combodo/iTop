@@ -1,6 +1,6 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% extends "components/input/inputwithlabel.html.twig" %}
+{% extends "components/input/layout.html.twig" %}
 {% block iboInput %}
     <select id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}">
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}

@@ -21,6 +21,7 @@ use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
@@ -463,10 +464,12 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 		$aSortedLang[$aLang['description']] = $sCode;
 	}
 	ksort($aSortedLang);
-	$oUserLanguageBlockSelect = InputFactory::MakeForSelect('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	$oUserLanguageBlockSelect = InputFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	/** @var \Combodo\iTop\Application\UI\Component\Input\Select $oUserLanguageBlockSelectInput */
+	$oUserLanguageBlockSelectInput = $oUserLanguageBlockSelect->GetInput();
 	foreach ($aSortedLang as $sCode) {
 		$bSelected = ($sCode == Dict::GetUserLanguage());
-		$oUserLanguageBlockSelect->AddOption(InputFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
+		$oUserLanguageBlockSelectInput->AddOption(InputFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
 	}
 	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
 
@@ -478,6 +481,9 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	// - Submit button
 	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
+	
+	$oTestRichText = new RichText();
+	$oUserLanguageForm->AddSubBlock($oTestRichText);
 	return $oUserLanguageForm;
 }
 

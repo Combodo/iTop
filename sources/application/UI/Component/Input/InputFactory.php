@@ -8,6 +8,9 @@
 namespace Combodo\iTop\Application\UI\Component\Input;
 
 
+use Combodo\iTop\Application\UI\Component\Input\Select\Select;
+use Combodo\iTop\Application\UI\Component\Input\Select\SelectOption;
+
 class InputFactory
 {
 
@@ -22,13 +25,20 @@ class InputFactory
 		return $oInput;
 	}
 
-	public static function MakeForSelect(string $sName, string $sLabel, ?string $sId = null): Select
+	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
+	{
+		$oInput = new Select();
+		$oInput->SetName($sName);
+
+		$oInputWithLabel = new InputWithLabel($sLabel, $oInput, $sId);
+		
+		return $oInputWithLabel;
+	}	
+	public static function MakeForSelect(string $sName, ?string $sId = null): Select
 	{
 		$oInput = new Select($sId);
-
-		$oInput->SetName($sName)
-			->SetLabel($sLabel);
-
+		$oInput->SetName($sName);
+		
 		return $oInput;
 	}
 

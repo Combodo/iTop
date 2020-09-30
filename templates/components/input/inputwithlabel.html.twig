@@ -1,4 +1,4 @@
-{% extends "components/input/layout.html.twig" %}
 {% block iboInputLabel %}
     <label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() }}</label>
+	{{ render_block(oUIBlock.GetInput()) }}
 {% endblock %}

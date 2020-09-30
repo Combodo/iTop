@@ -5,14 +5,14 @@
  */
 
 
-namespace Combodo\iTop\Application\UI\Component\Input;
+namespace Combodo\iTop\Application\UI\Component\Input\Select;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
 
 class SelectOption extends UIBlock
 {
-	public const HTML_TEMPLATE_REL_PATH = 'components/input/selectoption';
+	public const HTML_TEMPLATE_REL_PATH = 'components/input/select/selectoption';
 
 	/** @var string */
 	protected $sValue;
