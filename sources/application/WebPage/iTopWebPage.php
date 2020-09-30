@@ -897,7 +897,7 @@ EOF;
 	public function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_script($oBlockRenderer->RenderJsInline());
+		$this->add_init_script($oBlockRenderer->RenderJsInline());
 		$this->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
