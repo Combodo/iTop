@@ -7,8 +7,8 @@ SetupWebPage::AddModule(
 	array(
 		// Identification
 		//
-		'label' => 'Structure de base iTop',
-		'category' => 'core',
+		'label' => 'Core iTop Structure',
+		'category' => 'business',
 
 		// Setup
 		//
@@ -16,7 +16,7 @@ SetupWebPage::AddModule(
 		),
 		'mandatory' => true,
 		'visible' => true,
-		'installer' => 'ConfigMgmtInstaller',
+		'installer' => 'StructureInstaller',
 
 		// Components
 		//
@@ -47,11 +47,11 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('ConfigMgmtInstaller'))
+if (!class_exists('StructureInstaller'))
 {
 	// Module installation handler
 	//
-	class ConfigMgmtInstaller extends ModuleInstallerAPI
+	class StructureInstaller extends ModuleInstallerAPI
 	{
 		public static function BeforeWritingConfig(Config $oConfiguration)
 		{
