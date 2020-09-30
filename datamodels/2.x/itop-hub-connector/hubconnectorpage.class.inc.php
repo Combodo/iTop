@@ -9,7 +9,8 @@ class HubConnectorPage extends NiceWebPage
 	    $this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 	    $this->add_header('Pragma: no-cache');
 	    $this->add_header('Expires: 0');
-        
+	    $this->add_header('X-Frame-Options: deny');
+
         $sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
         $sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
         
