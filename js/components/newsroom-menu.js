@@ -175,31 +175,28 @@ $(function()
 		},
 		_buildDismissAllSection: function()
 		{
-			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check ibo-navigation-menu--notifications-dismiss-all--icon"></i>'+this.options.labels.mark_all_as_read+'</a><hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
+			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check ibo-navigation-menu--notifications-dismiss-all--icon"></i>' + this.options.labels.mark_all_as_read + '</a><hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
 		},
-		_buildMessageSection: function()
-		{
+		_buildMessageSection: function () {
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
 		},
-		_buildShowAllMessagesSection: function()
-		{
+		_buildShowAllMessagesSection: function () {
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--show-all-messages" data-role="ibo-popover-menu--section">';
 		},
-		_buildMessageItems: function(sId, sText, sImage, sStartDate, sProvider, sUrl, oConverter)
-		{
+		_buildMessageItems: function (sId, sText, sImage, sStartDate, sProvider, sUrl, sTarget, oConverter) {
 			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
-			sImage = '<img class="ibo-navigation-menu--notifications--item--image" src="'+sImage+'"><i class="ibo-navigation-menu--notifications--item--image '+this.options.placeholder_image_icon+'"></i>';
+			sImage = '<img class="ibo-navigation-menu--notifications--item--image" src="' + sImage + '"><i class="ibo-navigation-menu--notifications--item--image ' + this.options.placeholder_image_icon + '"></i>';
 
 			var div = document.createElement("div");
 			div.textContent = sText;
 			var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
-			
-			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + oConverter.makeHtml(sDescription) +'</div>';
-			
-			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">'+ sImage + '<span>' + this.options.providers[sProvider].label+'</span> <span> ' + moment(sStartDate).fromNow()+'</span></span>';
-			
-			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-item" data-role="ibo-navigation-menu--notifications-item" data-msg-id="'+sId+'" data-provider-id="'+sProvider+'" href="'+sUrl+'" target="_blank" id="newsroom_menu_item_'+sId+'">' +
-				sNewMessageIndicator + sRichDescription + sBottomText +'</a>';
+
+			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + oConverter.makeHtml(sDescription) + '</div>';
+
+			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">' + sImage + '<span>' + this.options.providers[sProvider].label + '</span> <span> ' + moment(sStartDate).fromNow() + '</span></span>';
+
+			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-item" data-role="ibo-navigation-menu--notifications-item" data-msg-id="' + sId + '" data-provider-id="' + sProvider + '" href="' + sUrl + '" target="' + sTarget + '" id="newsroom_menu_item_' + sId + '">' +
+				sNewMessageIndicator + sRichDescription + sBottomText + '</a>';
 		},
 		_buildNoMessageItem: function()
 		{
@@ -208,21 +205,19 @@ $(function()
 		},
 		_buildSingleShowAllMessagesItem: function()
 		{
-			return '<a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-show-all" href="'+this.options.providers[0].view_all_url+'">' + this.options.labels.view_all + '</a>';
+			return '<a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-show-all" href="' + this.options.providers[0].view_all_url + '" target="' + this.options.providers[0].target + '">' + this.options.labels.view_all + '</a>';
 		},
 		_buildMultipleShowAllMessagesItem: function(aUnreadMessagesByProvider)
 		{
 			var sNewMessageIndicator = '<div class="ibo-navigation-menu--notifications--item--new-message-indicator"></div>';
 
 			var sUnreadMessages = ''
-			for(k in this.options.providers)
-			{
+			for(k in this.options.providers) {
 				var sExtraMessages = '';
-				if (aUnreadMessagesByProvider[k] > 0)
-				{
-					sExtraMessages = ' <span class="ibo-navigation-menu--notifications-show-all-multiple--counter">('+aUnreadMessagesByProvider[k]+')</span>'
+				if (aUnreadMessagesByProvider[k] > 0) {
+					sExtraMessages = ' <span class="ibo-navigation-menu--notifications-show-all-multiple--counter">(' + aUnreadMessagesByProvider[k] + ')</span>'
 				}
-				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="'+k+'" href="'+this.options.providers[k].view_all_url+'" target="_blank">'+ sNewMessageIndicator +this.options.providers[k].label+sExtraMessages+'</a>';
+				sUnreadMessages += '<a class="ibo-popover-menu--item" data-provider-id="' + k + '" href="' + this.options.providers[k].view_all_url + '" target="' + this.options.providers[k].target + '">' + sNewMessageIndicator + this.options.providers[k].label + sExtraMessages + '</a>';
 			}
 			return '<a class="ibo-popover-menu--item ibo-navigation-menu--notifications-show-all-multiple" data-role="ibo-navigation-menu--notifications-show-all-multiple" href="#">'+this.options.labels.view_all+'<i class="fas fas-caret-down"></i></a>' +
 				'<div class="ibo-popover-menu" data-role="ibo-popover-menu"><div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">'+sUnreadMessages+'</div></div>';
@@ -247,9 +242,8 @@ $(function()
 			{
 				var oMessage = aAllMessages[k];
 				aUnreadMessagesByProvider[oMessage.provider]++;
-				if (iCount < this.options.display_limit + 4)
-				{
-					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oConverter)
+				if (iCount < this.options.display_limit + 4) {
+					var sMessageItem = this._buildMessageItems(oMessage.id, oMessage.text, oMessage.image, oMessage.start_date, oMessage.provider, oMessage.url, oMessage.target, oConverter)
 					sMessageSection += sMessageItem;
 				}
 				iCount++;

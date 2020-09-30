@@ -138,7 +138,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 

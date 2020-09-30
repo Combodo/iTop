@@ -23,6 +23,7 @@ use appUserPreferences;
 use Dict;
 use MetaModel;
 use UserRights;
+use utils;
 
 /**
 * Class NewsroomMenuFactory
@@ -66,15 +67,15 @@ class NewsroomMenuFactory
 		 * @var \iNewsroomProvider[] $aProviders
 		 */
 		$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-		foreach($aProviders as $oProvider)
-		{
-			$oProvider->SetConfig(MetaModel::GetConfig());
-			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider),true);
-			if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
-			{
+		foreach($aProviders as $oProvider) {
+			$oConfig = MetaModel::GetConfig();
+			$oProvider->SetConfig($oConfig);
+			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
+			if ($bProviderEnabled && $oProvider->IsApplicable($oUser)) {
 				$aProviderParams[] = array(
 					'label' => $oProvider->GetLabel(),
 					'fetch_url' => $oProvider->GetFetchURL(),
+					'target' => utils::StartsWith($oProvider->GetFetchURL(), $oConfig->Get('app_root_url')) ? '_self' : 'blank',
 					'view_all_url' => $oProvider->GetViewAllURL(),
 					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
 					'placeholders' => $oProvider->GetPlaceholders(),
