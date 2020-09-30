@@ -304,7 +304,7 @@ class ButtonFactory
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
-	 * @interal
+	 * @internal
 	 */
 	protected static function MakeForAction(
 		string $sLabel,
