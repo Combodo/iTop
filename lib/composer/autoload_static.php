@@ -446,6 +446,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\UIBlock' => __DIR__ . '/../..' . '/sources/application/UI/UIBlock.php',
         'Combodo\\iTop\\Application\\UI\\UIException' => __DIR__ . '/../..' . '/sources/application/UI/UIException.php',
         'Combodo\\iTop\\Application\\UI\\iUIBlock' => __DIR__ . '/../..' . '/sources/application/UI/iUIBlock.php',
+        'Combodo\\iTop\\Application\\UI\\tUIContentAreas' => __DIR__ . '/../..' . '/sources/application/UI/tUIContentAreas.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',

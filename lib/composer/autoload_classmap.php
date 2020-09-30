@@ -216,6 +216,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\UIBlock' => $baseDir . '/sources/application/UI/UIBlock.php',
     'Combodo\\iTop\\Application\\UI\\UIException' => $baseDir . '/sources/application/UI/UIException.php',
     'Combodo\\iTop\\Application\\UI\\iUIBlock' => $baseDir . '/sources/application/UI/iUIBlock.php',
+    'Combodo\\iTop\\Application\\UI\\tUIContentAreas' => $baseDir . '/sources/application/UI/tUIContentAreas.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',

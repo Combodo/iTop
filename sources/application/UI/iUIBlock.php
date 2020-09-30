@@ -115,7 +115,7 @@ interface iUIBlock
 	 *
 	 * @return $this
 	 */
-	public function AddHtml(string $sHTML): iUIBlock;
+	public function AddHtml(string $sHTML);
 
 	/**
 	 * Return block specific parameters

@@ -257,7 +257,7 @@ abstract class UIBlock implements iUIBlock
 	}
 
 
-	public function AddHtml(string $sHTML): iUIBlock
+	public function AddHtml(string $sHTML)
 	{
 		// By default this does nothing
 		return $this;

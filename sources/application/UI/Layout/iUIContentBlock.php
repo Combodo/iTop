@@ -8,30 +8,25 @@ namespace Combodo\iTop\Application\UI\Layout;
 
 use Combodo\iTop\Application\UI\iUIBlock;
 
+/**
+ * Interface iUIContentBlock
+ *
+ * @package Combodo\iTop\Application\UI\Layout
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @internal
+ * @since 2.8.0
+ */
 interface iUIContentBlock
 {
-	public function AddHtml(string $sHtml): iUIBlock;
-
 	/**
-	 * @inheritDoc
-	 */
-	public function GetSubBlocks(): array;
-
-	/**
-	 * @param string $sId
+	 * Add raw HTML to the block
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock|null
-	 */
-	public function GetSubBlock(string $sId): ?iUIBlock;
-
-	/**
-	 * Set all sub blocks at once, replacing all existing ones
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
+	 * @param string $sHtml
 	 *
 	 * @return $this
 	 */
-	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock;
+	public function AddHtml(string $sHtml);
 
 	/**
 	 * Add $oSubBlock, replacing any block with the same ID
@@ -40,7 +35,7 @@ interface iUIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock): iUIContentBlock;
+	public function AddSubBlock(iUIBlock $oSubBlock);
 
 	/**
 	 * Remove the sub block identified by $sId.
@@ -50,7 +45,39 @@ interface iUIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveSubBlock(string $sId): iUIContentBlock;
+	public function RemoveSubBlock(string $sId);
 
+	/**
+	 * Return true if there is a sub block identified by $sId
+	 *
+	 * @param string $sId
+	 *
+	 * @return bool
+	 */
 	public function HasSubBlock(string $sId): bool;
+
+	/**
+	 * Return the sub block identified by $sId or null if not found
+	 *
+	 * @param string $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock|null
+	 */
+	public function GetSubBlock(string $sId): ?iUIBlock;
+
+	/**
+	 * Return an array of all the sub blocks
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
+	 */
+	public function GetSubBlocks(): array;
+
+	/**
+	 * Set all sub blocks at once, replacing all existing ones
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
+	 *
+	 * @return $this
+	 */
+	public function SetSubBlocks(array $aSubBlocks);
 }

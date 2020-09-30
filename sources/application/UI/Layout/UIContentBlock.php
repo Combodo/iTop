@@ -12,6 +12,15 @@ use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\UIBlock;
 
+/**
+ * Class UIContentBlock
+ *
+ * @package Combodo\iTop\Application\UI\Layout
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @internal
+ * @since 2.8.0
+ */
 class UIContentBlock extends UIBlock implements iUIContentBlock
 {
 	// Overloaded constants
@@ -40,12 +49,53 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 		$this->SetCSSClasses($sContainerClass);
 	}
 
-	public function AddHtml(string $sHtml): iUIBlock
+	/**
+	 * @inheritDoc
+	 */
+	public function AddHtml(string $sHtml)
 	{
 		$oBlock = new Html($sHtml);
 		$this->AddSubBlock($oBlock);
 
-		return $oBlock;
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddSubBlock(iUIBlock $oSubBlock)
+	{
+		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function RemoveSubBlock(string $sId)
+	{
+		if ($this->HasSubBlock($sId)) {
+			unset($this->aSubBlocks[$sId]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasSubBlock(string $sId): bool
+	{
+		return array_key_exists($sId, $this->aSubBlocks);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSubBlock(string $sId): ?iUIBlock
+	{
+		return isset($this->aSubBlocks[$sId]) ? $this->aSubBlocks[$sId] : null;
 	}
 
 	/**
@@ -57,65 +107,15 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	}
 
 	/**
-	 * @param string $sId
-	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock|null
+	 * @inheritDoc
 	 */
-	public function GetSubBlock(string $sId): ?iUIBlock
-	{
-		return isset($this->aSubBlocks[$sId]) ? $this->aSubBlocks[$sId] : null;
-	}
-
-	/**
-	 * Set all sub blocks at once, replacing all existing ones
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aSubBlocks
-	 *
-	 * @return iUIContentBlock
-	 */
-	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock
+	public function SetSubBlocks(array $aSubBlocks)
 	{
 		foreach ($aSubBlocks as $oSubBlock) {
 			$this->AddSubBlock($oSubBlock);
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Add $oSubBlock, replacing any block with the same ID
-	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oSubBlock
-	 *
-	 * @return iUIContentBlock
-	 */
-	public function AddSubBlock(iUIBlock $oSubBlock): iUIContentBlock
-	{
-		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
-
-		return $this;
-	}
-
-	/**
-	 * Remove the sub block identified by $sId.
-	 * Note that if no sub block matches the ID, it proceeds silently.
-	 *
-	 * @param string $sId ID of the sub block to remove
-	 *
-	 * @return iUIContentBlock
-	 */
-	public function RemoveSubBlock(string $sId): iUIContentBlock
-	{
-		if ($this->HasSubBlock($sId)) {
-			unset($this->aSubBlocks[$sId]);
-		}
-
-		return $this;
-	}
-
-	public function HasSubBlock(string $sId): bool
-	{
-		return array_key_exists($sId, $this->aSubBlocks);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return UIContentBlock
 	 */
-	public function SetCSSClasses(string $sCSSClasses): UIContentBlock
+	public function SetCSSClasses(string $sCSSClasses)
 	{
 		$this->aCSSClasses = [];
 		$this->AddCSSClasses($sCSSClasses);
@@ -143,7 +143,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddCSSClasses(string $sCSSClasses): UIContentBlock
+	public function AddCSSClasses(string $sCSSClasses)
 	{
 		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
 			if (!empty($sCSSClass)) {
