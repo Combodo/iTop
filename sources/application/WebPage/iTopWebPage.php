@@ -366,57 +366,6 @@ JS
 			SetUserPreference(parent_id+'_'+this.id+'_height', $(this).height(), true); // true => persistent
 		}
 	} );
-		
-
-	// refresh the hash when the tab is changed (from a JS script)
-	$('body').on( 'tabsactivate', '.ui-tabs', function(event, ui) {
-		var state = {};
-			
-		// Get the id of this tab widget.
-		var id = $(ui.newTab).closest( 'div[id^=tabbedContent]' ).attr( 'id' );
-		
-		// Get the index of this tab.
-		var idx = $(ui.newTab).prevAll().length;
-			
-		// Set the state!
-		state[ id ] = idx;
-		$.bbq.pushState( state );
-	});
-	
-	// Bind an event to window.onhashchange that, when the history state changes,
-	// iterates over all tab widgets, changing the current tab as necessary.
-	$(window).bind( 'hashchange', function(e)
-	{
-		// Iterate over all tab widgets.
-		tabs.each(function()
-		{  
-			// Get the index for this tab widget from the hash, based on the
-			// appropriate id property. In jQuery 1.4, you should use e.getState()
-			// instead of $.bbq.getState(). The second, 'true' argument coerces the
-			// string value to a number.
-			var idx = $.bbq.getState( this.id, true ) || 0;
-			  
-			// Select the appropriate tab for this tab widget by triggering the custom
-			// event specified in the .tabs() init above (you could keep track of what
-			// tab each widget is on using .data, and only select a tab if it has
-			// changed).
-			$(this).find( tab_a_selector ).eq( idx ).triggerHandler( 'change' );
-		});
-
-		// Iterate over all truncated lists to find whether they are expanded or not
-		$('a.truncated').each(function()
-		{
-			var state = $.bbq.getState( this.id, true ) || 'close';
-			if (state == 'open')
-			{
-				$(this).trigger('open');
-			}
-			else
-			{
-				$(this).trigger('close');	
-			}
-		});
-	});
 	
 	// Shortcut menu actions
 	$('.actions_button a').click( function() {

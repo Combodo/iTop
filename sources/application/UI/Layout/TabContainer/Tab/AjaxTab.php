@@ -21,7 +21,6 @@ namespace Combodo\iTop\Application\UI\Layout\TabContainer\Tab;
 
 
 use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\UIException;
 use Dict;
 use TabManager;
@@ -30,95 +29,99 @@ use TabManager;
  * Class AjaxTab
  *
  * @package Combodo\iTop\Application\UI\Layout\TabContainer\Tab
+ * @internal
+ * @since   2.8.0
  */
-class AjaxTab extends Tab
-{
+class AjaxTab extends Tab {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-ajaxtab';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/ajaxtab';
+	public const BLOCK_CODE = 'ibo-ajax-tab';
+	public const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
 
-	protected const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
-
-	/** @var string */
-	private $sURL;
-	/** @var bool */
+	/** @var string The target URL to be loaded asynchronously */
+	private $sUrl;
+	/** @var bool Whether the tab should should be cached by the browser or always refreshed */
 	private $bCache;
 
 	/**
-	 * @param string $sHtml
+	 * @param string $sUrl
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
-	 * @throws \Combodo\iTop\Application\UI\UIException
+	 * @return $this
 	 */
-	public function AddHtml(string $sHtml): iUIBlock
-	{
-		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
-	}
+	public function SetUrl(string $sUrl) {
+		$this->sUrl = $sUrl;
 
-	/**
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oSubBlock
-	 *
-	 * @return iUIContentBlock
-	 * @throws \Combodo\iTop\Application\UI\UIException
-	 */
-	public function AddSubBlock(iUIBlock $oSubBlock): iUIContentBlock
-	{
-		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
-	}
-
-	/**
-	 * @return array|\Combodo\iTop\Application\UI\iUIBlock[]
-	 */
-	public function GetSubBlocks(): array
-	{
-		return [];
-	}
-
-	/**
-	 * @param mixed $sURL
-	 *
-	 * @return AjaxTab
-	 */
-	public function SetURL(string $sURL): self
-	{
-		$this->sURL = $sURL;
 		return $this;
 	}
 
 	/**
+	 * @return string
+	 */
+	public function GetUrl(): string {
+		return $this->sUrl;
+	}
+
+	/**
+	 * Set whether the tab should should be cached by the browser or always refreshed
+	 *
 	 * @param bool $bCache
 	 *
-	 * @return AjaxTab
+	 * @return $this
 	 */
-	public function SetCache(bool $bCache): self
-	{
+	public function SetCache(bool $bCache) {
 		$this->bCache = $bCache;
+
 		return $this;
 	}
 
 	/**
+	 * Return whether the tab should should be cached by the browser or always refreshed
+	 *
 	 * @return string
 	 */
-	public function GetURL(): string
-	{
-		return $this->sURL;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetCache(): string
-	{
+	public function GetCache(): string {
 		return $this->bCache ? 'true' : 'false';
 	}
 
-	public function GetParameters(): array
-	{
+	//-------------------------------
+	// iUIBlock implementation
+	//-------------------------------
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetParameters(): array {
 		$aParams = parent::GetParameters();
 
-		$aParams['sURL'] = $this->GetURL();
+		$aParams['sURL'] = $this->GetUrl();
 		$aParams['sCache'] = $this->GetCache() ? 'true' : 'false';
 
 		return $aParams;
+	}
+
+	//-------------------------------
+	// iUIContentBlock implementation
+	//-------------------------------
+
+	/**
+	 * @inheritDoc
+	 * @throws \Combodo\iTop\Application\UI\UIException
+	 */
+	public function AddHtml(string $sHtml) {
+		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \Combodo\iTop\Application\UI\UIException
+	 */
+	public function AddSubBlock(iUIBlock $oSubBlock) {
+		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSubBlocks(): array {
+		return [];
 	}
 }

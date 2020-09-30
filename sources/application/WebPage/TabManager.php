@@ -209,7 +209,7 @@ class TabManager
 		// Set the content of the tab
 		/** @var \Combodo\iTop\Application\UI\Layout\TabContainer\Tab\AjaxTab $oTab */
 		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle);
-		$oTab->SetURL($sUrl)
+		$oTab->SetUrl($sUrl)
 			->SetCache($bCache);
 
 		return ''; // Nothing to add to the page for now

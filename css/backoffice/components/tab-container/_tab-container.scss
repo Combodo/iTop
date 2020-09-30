@@ -1,0 +1,55 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-tab-container--tabs-list--height: 36px !default;
+$ibo-tab-container--tabs-list--padding-x: 24px !default;
+$ibo-tab-container--tabs-list--background-color: $ibo-color-grey-100 !default;
+
+$ibo-tab-container--tab-header--max-width: 110px !default;
+$ibo-tab-container--tab-header--text-color: $ibo-color-grey-700 !default;
+$ibo-tab-container--tab-header--text-color--is-active: $ibo-color-blue-800 !default;
+$ibo-tab-container--tab-header--text-color--on-hover: $ibo-color-blue-800 !default;
+$ibo-tab-container--tab-header--background-color--on-hover: $ibo-color-grey-200 !default;
+
+$ibo-tab-container--tab-toggler--padding-x: 24px !default;
+
+/* Rules */
+.ibo-tab-container--tabs-list {
+	@extend %ibo-full-height-content;
+	justify-content: center;
+	height: $ibo-tab-container--tabs-list--height;
+
+	background-color: $ibo-tab-container--tabs-list--background-color;
+	@extend %ibo-font-ral-nor-150;
+}
+.ibo-tab-container--tab-header{
+	@extend %ibo-full-height-content;
+
+	color: $ibo-tab-container--tab-header--text-color;
+
+	&:hover{
+		color: $ibo-tab-container--tab-header--text-color--on-hover;
+		background-color: $ibo-tab-container--tab-header--background-color--on-hover;
+	}
+	&.ui-tabs-active{
+		@extend %ibo-font-ral-bol-150;
+		color: $ibo-tab-container--tab-header--text-color--is-active;
+	}
+}
+.ibo-tab-container--tab-toggler{
+	@extend %ibo-fully-centered-content;
+	padding-left: $ibo-tab-container--tab-toggler--padding-x;
+	padding-right: $ibo-tab-container--tab-toggler--padding-x;
+
+	@extend %ibo-text-truncated-with-ellipsis;
+	color: inherit; /* To get color from parent */
+
+	&:hover,
+	&:active{
+		color: inherit;
+	}
+}
+

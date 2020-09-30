@@ -1,0 +1,31 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+<div id="{{ oUIBlock.GetId() }}" class="ibo-tab-container" data-role="ibo-tab-container">
+    {% block iboTabContainer %}
+        <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
+            {% block iboTabContainerTabsList %}
+                {% for oTab in oUIBlock.GetSubBlocks() %}
+                    {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
+                        <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header" data-tab-id="tab_{{ loop.index }}" data-tab-type="{{ oTab.GetType() }}" data-cache="{{ oTab.GetCache() }}">
+                            <a href="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler"><span>{{ oTab.GetTitle() }}</span></a>
+                        </li>
+                    {% elseif oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
+                        <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header" data-tab-id="tab_{{ loop.index }}" data-tab-type="{{ oTab.GetType() }}">
+                            <a href="#tab_{{ loop.index }}" class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler"><span>{{ oTab.GetTitle() }}</span></a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% endblock %}
+        </ul>
+        {% block iboTabContainerTabsContainers %}
+            {% for oTab in oUIBlock.GetSubBlocks() %}
+                {% if oTab.GetType() == 'html' %}
+                    <div id="tab_{{ loop.index }}" class="ibo-tab-container--tab-container">
+                        {{ render_block(oTab, {aPage: aPage}) }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endblock %}
+    {% endblock %}
+</div>
+

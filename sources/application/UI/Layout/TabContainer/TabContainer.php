@@ -36,8 +36,9 @@ use Dict;
 class TabContainer extends UIContentBlock
 {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-tabcontainer';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/layout';
+	public const BLOCK_CODE = 'ibo-tab-container';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/tab-container/layout';
+	public const JS_TEMPLATE_REL_PATH = 'layouts/tab-container/layout';
 	public const JS_FILES_REL_PATH = [
 		'js/layouts/tab-container.js'
 	];

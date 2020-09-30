@@ -27,33 +27,56 @@ use TabManager;
  * Class Tab
  *
  * @package Combodo\iTop\Application\UI\Layout\TabContainer\Tab
+ * @internal
+ * @since 2.8.0
  */
 class Tab extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-tab';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/tabcontainer/tab/tab';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/tab-container/tab/layout';
 
-	protected const TAB_TYPE = TabManager::ENUM_TAB_TYPE_HTML;
+	/** @var string */
+	public const TAB_TYPE = TabManager::ENUM_TAB_TYPE_HTML;
 
+	/** @var string */
 	protected $sTitle;
 
+	/**
+	 * Tab constructor.
+	 *
+	 * @param string $sTabCode
+	 * @param string $sTitle
+	 */
 	public function __construct(string $sTabCode, string $sTitle)
 	{
 		parent::__construct($sTabCode);
 		$this->sTitle = $sTitle;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetType(): string
 	{
 		return static::TAB_TYPE;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetTitle(): string
 	{
 		return $this->sTitle;
 	}
 
+	//-------------------------------
+	// iUIBlock implementation
+	//-------------------------------
+
+	/**
+	 * @inheritDoc
+	 */
 	public function GetParameters(): array
 	{
 		return [
