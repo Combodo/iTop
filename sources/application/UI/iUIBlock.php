@@ -24,11 +24,11 @@ namespace Combodo\iTop\Application\UI;
  * Interface iUIBlock
  *
  * @package Combodo\iTop\Application\UI
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
- * @since 2.8.0
+ * @since   2.8.0
  */
-interface iUIBlock
-{
+interface iUIBlock {
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the global template (HTML, JS, CSS) to use or null if it's not provided. Should not be used to often as JS/CSS files would be duplicated making the browser parsing time way longer.
 	 *

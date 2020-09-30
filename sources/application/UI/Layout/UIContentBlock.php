@@ -16,13 +16,12 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class UIContentBlock
  *
  * @package Combodo\iTop\Application\UI\Layout
- * @author Eric Espie <eric.espie@combodo.com>
- * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @author  Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
  * @internal
- * @since 2.8.0
+ * @since   2.8.0
  */
-class UIContentBlock extends UIBlock implements iUIContentBlock
-{
+class UIContentBlock extends UIBlock implements iUIContentBlock {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-contentblock';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/contentblock/layout';
@@ -38,10 +37,9 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 * UIContentBlock constructor.
 	 *
 	 * @param string|null $sName
-	 * @param string $sContainerClass
+	 * @param string      $sContainerClass
 	 */
-	public function __construct(string $sName = null, string $sContainerClass = '')
-	{
+	public function __construct(string $sName = null, string $sContainerClass = '') {
 		parent::__construct($sName);
 
 		$this->aSubBlocks = [];
@@ -52,8 +50,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddHtml(string $sHtml)
-	{
+	public function AddHtml(string $sHtml) {
 		$oBlock = new Html($sHtml);
 		$this->AddSubBlock($oBlock);
 
@@ -63,8 +60,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock)
-	{
+	public function AddSubBlock(iUIBlock $oSubBlock) {
 		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
 
 		return $this;
@@ -73,8 +69,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function RemoveSubBlock(string $sId)
-	{
+	public function RemoveSubBlock(string $sId) {
 		if ($this->HasSubBlock($sId)) {
 			unset($this->aSubBlocks[$sId]);
 		}
@@ -85,32 +80,28 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function HasSubBlock(string $sId): bool
-	{
+	public function HasSubBlock(string $sId): bool {
 		return array_key_exists($sId, $this->aSubBlocks);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlock(string $sId): ?iUIBlock
-	{
+	public function GetSubBlock(string $sId): ?iUIBlock {
 		return isset($this->aSubBlocks[$sId]) ? $this->aSubBlocks[$sId] : null;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks(): array
-	{
+	public function GetSubBlocks(): array {
 		return $this->aSubBlocks;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function SetSubBlocks(array $aSubBlocks)
-	{
+	public function SetSubBlocks(array $aSubBlocks) {
 		foreach ($aSubBlocks as $oSubBlock) {
 			$this->AddSubBlock($oSubBlock);
 		}
@@ -121,8 +112,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetCSSClasses(): string
-	{
+	public function GetCSSClasses(): string {
 		return implode(' ', $this->aCSSClasses);
 	}
 
@@ -131,10 +121,10 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return UIContentBlock
 	 */
-	public function SetCSSClasses(string $sCSSClasses)
-	{
+	public function SetCSSClasses(string $sCSSClasses) {
 		$this->aCSSClasses = [];
 		$this->AddCSSClasses($sCSSClasses);
+
 		return $this;
 	}
 
@@ -143,13 +133,13 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddCSSClasses(string $sCSSClasses)
-	{
+	public function AddCSSClasses(string $sCSSClasses) {
 		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
 			if (!empty($sCSSClass)) {
 				$this->aCSSClasses[$sCSSClass] = $sCSSClass;
 			}
 		}
+
 		return $this;
 	}
 

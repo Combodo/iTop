@@ -12,13 +12,12 @@ use Combodo\iTop\Application\UI\iUIBlock;
  * Interface iUIContentBlock
  *
  * @package Combodo\iTop\Application\UI\Layout
- * @author Eric Espie <eric.espie@combodo.com>
- * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @author  Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
  * @internal
- * @since 2.8.0
+ * @since   2.8.0
  */
-interface iUIContentBlock
-{
+interface iUIContentBlock {
 	/**
 	 * Add raw HTML to the block
 	 *

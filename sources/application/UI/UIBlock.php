@@ -26,11 +26,11 @@ use utils;
  * Class UIBlock
  *
  * @package Combodo\iTop\Application\UI
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
- * @since 2.8.0
+ * @since   2.8.0
  */
-abstract class UIBlock implements iUIBlock
-{
+abstract class UIBlock implements iUIBlock {
 	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ...
 	 *
 	 * Should start "ibo-" for the iTop backoffice blocks, followed by the name of the block in lower case (eg. for a MyCustomBlock class,
@@ -60,56 +60,6 @@ abstract class UIBlock implements iUIBlock
 	/** @var string ENUM_BLOCK_FILES_TYPE_TEMPLATE */
 	public const ENUM_BLOCK_FILES_TYPE_TEMPLATE = 'template';
 
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetGlobalTemplateRelPath()
-	{
-		return static::GLOBAL_TEMPLATE_REL_PATH;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetHtmlTemplateRelPath()
-	{
-		return static::HTML_TEMPLATE_REL_PATH;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetJsTemplateRelPath()
-	{
-		return static::JS_TEMPLATE_REL_PATH;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetJsFilesRelPaths()
-	{
-		return static::JS_FILES_REL_PATH;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetCssTemplateRelPath()
-	{
-		return static::CSS_TEMPLATE_REL_PATH;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function GetCssFilesRelPaths()
-	{
-		return static::CSS_FILES_REL_PATH;
-	}
-
-
 	/** @var string $sId */
 	protected $sId;
 
@@ -118,37 +68,66 @@ abstract class UIBlock implements iUIBlock
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct(?string $sId = null)
-	{
+	public function __construct(?string $sId = null) {
 		$this->sId = ($sId !== null) ? $sId : $this->GenerateId();
 	}
 
 	/**
-	 * Return a unique ID for the block
-	 *
-	 * @return string
+	 * @inheritDoc
 	 */
-	protected function GenerateId()
-	{
-		return uniqid(static::BLOCK_CODE.'-');
+	public static function GetGlobalTemplateRelPath() {
+		return static::GLOBAL_TEMPLATE_REL_PATH;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetHtmlTemplateRelPath() {
+		return static::HTML_TEMPLATE_REL_PATH;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetJsTemplateRelPath() {
+		return static::JS_TEMPLATE_REL_PATH;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetJsFilesRelPaths() {
+		return static::JS_FILES_REL_PATH;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetCssTemplateRelPath() {
+		return static::CSS_TEMPLATE_REL_PATH;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function GetCssFilesRelPaths() {
+		return static::CSS_FILES_REL_PATH;
 	}
 
 	/**
 	 * Return the block code of the object instance
 	 *
-	 * @see static::BLOCK_CODE
 	 * @return string
+	 * @see static::BLOCK_CODE
 	 */
-	public function GetBlockCode()
-	{
+	public function GetBlockCode() {
 		return static::BLOCK_CODE;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetId()
-	{
+	public function GetId() {
 		return $this->sId;
 	}
 
@@ -156,8 +135,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 */
-	public function GetSubBlocks()
-	{
+	public function GetSubBlocks() {
 		return [];
 	}
 
@@ -165,8 +143,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false)
-	{
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false) {
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, $bAbsoluteUrl);
 	}
 
@@ -174,8 +151,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false)
-	{
+	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false) {
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, $bAbsoluteUrl);
 	}
 
@@ -183,8 +159,7 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetJsTemplateRelPathRecursively(): array
-	{
+	public function GetJsTemplateRelPathRecursively(): array {
 		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
 	}
 
@@ -192,9 +167,26 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetCssTemplateRelPathRecursively(): array
-	{
+	public function GetCssTemplateRelPathRecursively(): array {
 		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
+	}
+
+	public function AddHtml(string $sHTML) {
+		// By default this does nothing
+		return $this;
+	}
+
+	public function GetParameters(): array {
+		return [];
+	}
+
+	/**
+	 * Return a unique ID for the block
+	 *
+	 * @return string
+	 */
+	protected function GenerateId() {
+		return uniqid(static::BLOCK_CODE.'-');
 	}
 
 	/**
@@ -202,13 +194,12 @@ abstract class UIBlock implements iUIBlock
 	 * URL is relative unless the $bAbsoluteUrl is set to true.
 	 *
 	 * @param string $sFileType (see static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_CSS)
-	 * @param bool $bAbsoluteUrl
+	 * @param bool   $bAbsoluteUrl
 	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function GetFilesUrlRecursively(string $sFileType, bool $bAbsoluteUrl = false)
-	{
+	protected function GetFilesUrlRecursively(string $sFileType, bool $bAbsoluteUrl = false) {
 		$aFiles = [];
 		$sFilesRelPathMethodName = 'Get'.ucfirst($sFileType).'FilesRelPaths';
 
@@ -228,7 +219,6 @@ abstract class UIBlock implements iUIBlock
 		return $aFiles;
 	}
 
-
 	/**
 	 * Return an array of the URL of the block $sFilesType and its sub blocks.
 	 * URL is relative unless the $bAbsoluteUrl is set to true.
@@ -238,8 +228,7 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function GetTemplateRelPathRecursively(string $sExtensionFileType)
-	{
+	protected function GetTemplateRelPathRecursively(string $sExtensionFileType) {
 		$aFiles = [];
 
 		$sFilesRelPathMethodName = 'Get'.ucfirst($sExtensionFileType).'TemplateRelPath';
@@ -254,17 +243,5 @@ abstract class UIBlock implements iUIBlock
 		}
 
 		return $aFiles;
-	}
-
-
-	public function AddHtml(string $sHTML)
-	{
-		// By default this does nothing
-		return $this;
-	}
-
-	public function GetParameters(): array
-	{
-		return [];
 	}
 }
