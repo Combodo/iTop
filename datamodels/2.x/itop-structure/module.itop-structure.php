@@ -15,7 +15,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 		),
 		'mandatory' => true,
-		'visible' => true,
+		'visible' => false,
 		'installer' => 'StructureInstaller',
 
 		// Components
