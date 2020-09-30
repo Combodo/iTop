@@ -178,7 +178,7 @@ class NavigationMenu extends UIBlock
 	 */
 	public function GetSubBlocks()
 	{
-		return [$this->oUserMenu->GetId() => $this->oUserMenu];
+		return [$this->oUserMenu->GetId() => $this->oUserMenu, $this->GetNewsroomMenu()->GetId() => $this->GetNewsroomMenu()];
 	}
 
 	/**
