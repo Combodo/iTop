@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2020 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -23,8 +23,8 @@ use Combodo\iTop\Application\UI\UIBlock;
  */
 class UIContentBlock extends UIBlock implements iUIContentBlock {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-contentblock';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/contentblock/layout';
+	public const BLOCK_CODE = 'ibo-content-block';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/content-block/layout';
 
 	/** @var array */
 	protected $aCSSClasses;
