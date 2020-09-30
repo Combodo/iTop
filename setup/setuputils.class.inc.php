@@ -2137,7 +2137,7 @@ JS
 			'zlib',
 			'zip',
 			'fileinfo', // N°3123
-			'mbstring', 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891, N°2899
+			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];
 	}
