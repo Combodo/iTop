@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
-use Combodo\iTop\Application\UI\Layout\Column\Column;
+use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 

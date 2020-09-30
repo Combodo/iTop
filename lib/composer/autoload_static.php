@@ -429,7 +429,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\TransitionEntry' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/TransitionEntry.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityPanel' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityPanel.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityPanelFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/ActivityPanel/ActivityPanelFactory.php',
-        'Combodo\\iTop\\Application\\UI\\Layout\\Column\\Column' => __DIR__ . '/../..' . '/sources/application/UI/Layout/Column/Column.php',
+        'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\Column\\Column' => __DIR__ . '/../..' . '/sources/application/UI/Layout/MultiColumn/Column/Column.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\MultiColumn' => __DIR__ . '/../..' . '/sources/application/UI/Layout/MultiColumn/MultiColumn.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenu' => __DIR__ . '/../..' . '/sources/application/UI/Layout/NavigationMenu/NavigationMenu.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/NavigationMenu/NavigationMenuFactory.php',

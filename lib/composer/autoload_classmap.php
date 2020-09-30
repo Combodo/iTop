@@ -199,7 +199,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityEntry\\TransitionEntry' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityEntry/TransitionEntry.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityPanel' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityPanel.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\ActivityPanel\\ActivityPanelFactory' => $baseDir . '/sources/application/UI/Layout/ActivityPanel/ActivityPanelFactory.php',
-    'Combodo\\iTop\\Application\\UI\\Layout\\Column\\Column' => $baseDir . '/sources/application/UI/Layout/Column/Column.php',
+    'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\Column\\Column' => $baseDir . '/sources/application/UI/Layout/MultiColumn/Column/Column.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\MultiColumn' => $baseDir . '/sources/application/UI/Layout/MultiColumn/MultiColumn.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenu' => $baseDir . '/sources/application/UI/Layout/NavigationMenu/NavigationMenu.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenuFactory' => $baseDir . '/sources/application/UI/Layout/NavigationMenu/NavigationMenuFactory.php',
