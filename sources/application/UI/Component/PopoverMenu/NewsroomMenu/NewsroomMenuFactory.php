@@ -75,7 +75,7 @@ class NewsroomMenuFactory
 				$aProviderParams[] = array(
 					'label' => $oProvider->GetLabel(),
 					'fetch_url' => $oProvider->GetFetchURL(),
-					'target' => utils::StartsWith($oProvider->GetFetchURL(), $oConfig->Get('app_root_url')) ? '_self' : 'blank',
+					'target' => utils::StartsWith($oProvider->GetFetchURL(), $oConfig->Get('app_root_url')) ? '_self' : '_blank',
 					'view_all_url' => $oProvider->GetViewAllURL(),
 					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
 					'placeholders' => $oProvider->GetPlaceholders(),
