@@ -2154,7 +2154,7 @@ JS
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
 			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
-			'curl' => 'cURL for data collectors and API connectors',
+			'curl' => 'cURL might be needed for some extensions.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {
