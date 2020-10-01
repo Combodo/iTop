@@ -70,7 +70,9 @@ class ActivityPanelFactory
 		// Retrieve history changes (including case logs entries)
 		// - Prepare query to retrieve changes
 		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');
-		$oChangesSet = new DBObjectSet($oChangesSearch, ['date' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId]);
+		// Note: We can't order by date (only) as something multiple CMDBChangeOp rows are inserted at the same time (eg. Delivery model of the "Demo" Organization in the sample data).
+		// As the DB returns rows "chronologically", we get the older first and it messes with the processing. Ordering by the ID is way much simpler and less DB CPU consuming.
+		$oChangesSet = new DBObjectSet($oChangesSearch, ['id' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId]);
 		// Note: This limit will include case log changes which will be skipped, but still we count them as they are displayed anyway by the case log attributes themselves
 		$oChangesSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
 
@@ -91,8 +93,8 @@ class ActivityPanelFactory
 			$iChangeId = $oChangeOp->Get('change');
 			$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
 
-			// If same CMDBChange and mergeable edits entry, we merge them
-			if( ($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry))
+			// If same CMDBChange and mergeable edits entry from the same author, we merge them
+			if( ($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry) && ($oPreviousEditsEntry->GetAuthorLogin() === $oEntry->GetAuthorLogin()))
 			{
 				$oPreviousEditsEntry->Merge($oEntry);
 			}
