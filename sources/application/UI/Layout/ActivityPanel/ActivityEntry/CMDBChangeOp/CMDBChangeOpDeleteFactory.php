@@ -20,26 +20,12 @@
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp;
 
 
-use iCMDBChangeOp;
-
 /**
  * Class CMDBChangeOpDeleteFactory
  *
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp
  */
-class CMDBChangeOpDeleteFactory extends CMDBChangeOpFactory
-{
-	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-unlink';
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function MakeFromCmdbChangeOp(iCMDBChangeOp $oChangeOp)
-	{
-		$oEntry = parent::MakeFromCmdbChangeOp($oChangeOp);
-		$oEntry->SetDecorationClasses('fas fa-fw fa-trash');
-
-		return $oEntry;
-	}
+class CMDBChangeOpDeleteFactory extends CMDBChangeOpFactory {
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-trash';
 }
