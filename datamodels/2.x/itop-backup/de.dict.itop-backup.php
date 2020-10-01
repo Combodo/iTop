@@ -53,7 +53,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'bkp-next-backup' => 'Das nächste Backup wird am <b>%1$s</b> (%2$s) um %3$s durchgeführt',
 	'bkp-button-backup-now' => 'Starte Backup',
 	'bkp-button-restore-now' => 'Wiederherstellen!',
-	'bkp-confirm-backup' => 'Bitte bestätigen sie, dass sie jetzt ein Backup erstellen wollen now.',
+	'bkp-confirm-backup' => 'Bitte bestätigen sie, dass sie jetzt ein Backup erstellen wollen.',
 	'bkp-confirm-restore' => 'Bitte bestätigen sie, dass sie mit Backup %1$s eine Wiederherstellung durchführen wollen.',
 	'bkp-wait-backup' => 'Bitte warten, bis das Backup abgeschlossen ist ...',
 	'bkp-wait-restore' => 'Bitte warten, bis die Wiederherstellung abgeschlossen ist ...',
