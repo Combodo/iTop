@@ -1,0 +1,17 @@
+<div class="ibo-activity-new-entry-form">
+	<div class="ibo-activity-new-entry-form--text-input" data-role="ibo-activity-new-entry-form--text-input">
+		{{ render_block(oUIBlock.GetFormTextInput(), {aPage: aPage}) }}
+	</div>
+	<div class="ibo-activity-new-entry-form--actions">
+		<div class="ibo-activity-new-entry-form--action-buttons--left-actions">
+			{% for TextInputActionButton in oUIBlock.GetTextInputActionButtons() %}
+				{{ render_block(TextInputActionButton, {aPage: aPage}) }}
+			{% endfor %}
+		</div>
+		<div class="ibo-activity-new-entry-form--action-buttons--right-actions">
+			{% for FormActionButton in oUIBlock.GetFormActionButtons() %}
+				{{ render_block(FormActionButton, {aPage: aPage}) }}
+			{% endfor %}
+		</div>
+	</div>
+</div>

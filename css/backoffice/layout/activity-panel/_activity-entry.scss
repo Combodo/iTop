@@ -212,3 +212,25 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
 	@extend %ibo-font-ral-nor-50;
 }
+
+.ibo-activity-panel--body--add-caselog-entry--toggler{
+	@extend %ibo-baseline-centered-content;
+	border-radius: $ibo-border-radius-full;
+	width: 36px;
+	height: 36px;
+	background-color: $ibo-color-primary-600;
+	color: $ibo-color-white-100;
+	position: absolute;
+	right: 12px;
+	box-shadow: $ibo-elevation-100;
+	> i{
+		height: 100%;
+		width: 100%;
+		text-align: center;
+		font-size: 16px;
+		line-height: 33px;
+	}
+	&:hover {
+		color: $ibo-color-white-100;
+	}
+}

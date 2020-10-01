@@ -21,8 +21,12 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
 use CMDBChangeOpSetAttributeCaseLog;
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryFormFactory\ActivityNewEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -67,6 +71,10 @@ class ActivityPanelFactory
 			}
 		}
 
+		if($oActivityPanel->HasCaseLogTabs())
+		{
+			$oActivityPanel->SetNewEntryForm(ActivityNewEntryFormFactory::MakeForObjectDetailsActivityPanel());
+		}
 		// Retrieve history changes (including case logs entries)
 		// - Prepare query to retrieve changes
 		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');

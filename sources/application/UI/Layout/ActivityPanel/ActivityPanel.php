@@ -21,8 +21,11 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
 use AttributeDateTime;
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CaseLogEntry;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm;
 use Combodo\iTop\Application\UI\UIBlock;
 use DBObject;
 use MetaModel;
@@ -55,6 +58,8 @@ class ActivityPanel extends UIBlock
 	protected $bAreEntriesSorted;
 	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
 	protected $bHasLifecycle;
+	/** @var \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm $NewEntryForm */
+	protected $oNewEntryForm;
 
 	/**
 	 * ActivityPanel constructor.
@@ -416,5 +421,32 @@ class ActivityPanel extends UIBlock
 	{
 		$oDateTimeFormat = AttributeDateTime::GetFormat();
 		return $oDateTimeFormat->ToMomentJS();
+	}
+	
+	public function GetNewEntryForm()
+	{
+		return $this->oNewEntryForm;
+	}
+	
+	public function SetNewEntryForm($oNewEntryForm)
+	{
+		$this->oNewEntryForm = $oNewEntryForm;
+		return $this;
+	}
+	
+	public function HasNewEntryForm()
+	{
+		return $this->oNewEntryForm !== null;
+	}
+
+	public function GetSubBlocks()
+	{
+		$aSubBlocks = array();
+		if ($this->HasNewEntryForm())
+		{
+			$oNewEntryForm = $this->GetNewEntryForm();
+			$aSubBlocks[$oNewEntryForm->GetId()] = $oNewEntryForm;
+		}
+		return $aSubBlocks;
 	}
 }

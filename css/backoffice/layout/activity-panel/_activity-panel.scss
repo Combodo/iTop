@@ -106,6 +106,7 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 		}
 		.ibo-activity-panel--tab-toolbar{
 			display: flex;
+			flex-wrap: wrap;
 		}
 	}
 }

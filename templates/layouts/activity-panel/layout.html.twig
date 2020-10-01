@@ -71,6 +71,10 @@
 			</a>
 		</div>
 	</div>
+	{% if oUIBlock.HasNewEntryForm() %}
+		{{ render_block(oUIBlock.GetNewEntryForm()) }}
+		<a href="#" class="ibo-activity-panel--body--add-caselog-entry--toggler" data-role="ibo-activity-panel--body--add-caselog-entry--toggler"><i class="fas fa-feather"></i></a>
+	{% endif %}
 	<div class="ibo-activity-panel--body">
 		{% if oUIBlock.GetGroupedEntries()|length > 0 %}
 			{% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
