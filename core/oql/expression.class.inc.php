@@ -177,6 +177,9 @@ abstract class Expression {
 	// recursively list field parents ($aTable = array of sParent => dummy)
 	abstract public function CollectUsedParents(&$aTable);
 
+	/**
+	 * @return boolean evaluation of the expression value, false if no conversion possible
+	 */
 	abstract public function IsTrue();
 
 	// recursively builds an array of [classAlias][fieldName] => value
@@ -185,8 +188,7 @@ abstract class Expression {
 	// recursively builds an array of parameters to give to current request
 	abstract public function ListParameters();
 
-	public function RequiresField($sClass, $sFieldName)
-	{
+	public function RequiresField($sClass, $sFieldName) {
 		// #@# todo - optimize : this is called quite often when building a single query !
 		$aRequired = $this->ListRequiredFields();
 		if (!in_array($sClass.'.'.$sFieldName, $aRequired)) return false;
