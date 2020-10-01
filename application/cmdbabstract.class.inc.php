@@ -2532,7 +2532,7 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
 
-			$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails('', $sHeaderTitle, $this->GetIcon()));
+			$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
 
 //			$oPage->add(<<<HTML
 //<!-- Beginning of object-details -->
