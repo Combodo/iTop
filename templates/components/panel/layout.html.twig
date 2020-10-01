@@ -1,6 +1,25 @@
-<div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }}">
-    <div class="ibo-panel--title"> {{ oUIBlock.GetTitle() }}</div>
-    <div class="ibo-panel--body">
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    <div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }}">
+        <div class="ibo-panel--header">
+            {% block iboPanelHeader %}
+                <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle() }}{% endblock %}</div>
+                <div class="ibo-panel--toolbar">
+                    {% block iboPanelToolbar %}
+                        {% for oToolbarBlock in oUIBlock.GetToolbarBlocks() %}
+                            {{ render_block(oToolbarBlock, {aPage: aPage}) }}
+                        {% endfor %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+        <div class="ibo-panel--body">
+            {% block iboPanelBody %}
+                {% for oMainBlock in oUIBlock.GetMainBlocks() %}
+                    {{ render_block(oMainBlock, {aPage: aPage}) }}
+                {% endfor %}
+            {% endblock %}
+        </div>
     </div>
-</div>
+{% endapply %}

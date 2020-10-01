@@ -19,7 +19,7 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenuFactory;
@@ -1179,15 +1179,12 @@ EOF;
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
-		$oPanel = new Panel('');
-		// TODO 2.8.0 Change color according to object
-		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
-		$oPanel->AddSubBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
-		if (!is_null($oParentBlock)) {
-			$oParentBlock->AddSubBlock($oPanel);
-		} else {
-			$this->AddUiBlock($oPanel);
+		if(is_null($oParentBlock)) {
+			$oParentBlock = PanelFactory::MakeNeutral('');
+			$this->AddUiBlock($oParentBlock);
 		}
+
+		$oParentBlock->AddSubBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
 	/**

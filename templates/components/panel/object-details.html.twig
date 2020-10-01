@@ -1,0 +1,10 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'components/panel/layout.html.twig' %}
+
+{% block iboPanelHeader %}
+    <div class="ibo-panel--medallion">{% block iboPanelMedallion %}MED.{% endblock %}</div>
+    {{ parent() }}
+{% endblock %}
+
+{% block iboPanelTitle %}{{ oUIBlock.GetTitle() }}{% endblock %}

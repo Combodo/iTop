@@ -20,9 +20,9 @@
 $ibo-panel--spacing-top: 24px !default;
 
 $ibo-panel--highlight--width: 100% !default;
-$ibo-panel--highlight--height: 5px !default;
+$ibo-panel--highlight--height: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
-$ibo-panel--highlight--padding-bottom: 5px !default;
+$ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 
 $ibo-panel--title--color: $ibo-color-grey-900 !default;
 
