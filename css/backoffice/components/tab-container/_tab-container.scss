@@ -19,7 +19,6 @@ $ibo-tab-container--tab-toggler--padding-x: 24px !default;
 /* Rules */
 .ibo-tab-container--tabs-list {
 	@extend %ibo-full-height-content;
-	justify-content: center;
 	height: $ibo-tab-container--tabs-list--height;
 
 	background-color: $ibo-tab-container--tabs-list--background-color;
