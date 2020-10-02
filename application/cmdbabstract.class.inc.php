@@ -29,6 +29,7 @@ use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Layout\Object\ObjectFactory;
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -981,7 +982,49 @@ EOF
 		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
 		// Object's details
-		// template not found display the object using the *old style*
+		// TODO 2.8.0: Complete the factory
+		$oObjectDetails = ObjectFactory::MakeDetails($this);
+//		$oPage->AddUiBlock($oObjectDetails);
+
+
+		// TODO 2.8.0: Remove this when object details block completed, this is hardcoded for the demo
+		$oPage->add_style(<<<CSS
+.object-details {
+	position: relative;
+}
+.object-details .ibo-title {
+	z-index: 1;
+    align-items: start;
+	position: absolute;
+	top: 0;
+	left: 32px;
+}
+.object-details .ibo-title .ibo-title--medallion {
+	position: absolute;
+	margin-top: 16px;
+}
+.object-details .ibo-title .ibo-title--content {
+	margin-left: calc(90px + 32px);
+}
+.object-details .ibo-panel {
+	z-index: 0;
+	margin-top: 48px;
+}
+.object-details .ibo-panel > .ibo-panel--body {
+	padding-top: 8px;
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tabs-list{
+	margin-left: -16px;
+	margin-right: -16px;
+	padding-left: calc(32px + 90px + 32px - 24px);
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tab-container{
+	margin-left: -16px;
+	margin-right: -16px;
+}
+CSS
+		);
+
 		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
 <div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">

@@ -39,7 +39,8 @@ class PanelFactory
 	public static function MakeNeutral(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		$oPanel->SetColor(Panel::ENUM_COLOR_NEUTRAL);
+		// TODO 2.8.0: Set this back to neutral when object details are done
+		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;
 	}
@@ -145,6 +146,23 @@ class PanelFactory
 	{
 		$oPanel = new Panel($sTitle);
 		$oPanel->SetColor(Panel::ENUM_COLOR_SECONDARY);
+
+		return $oPanel;
+	}
+
+	/**
+	 * Make a Panel component with the specific $sClass color scheme
+	 *
+	 * @param string $sClass Class of the object the panel is for
+	 * @param string $sTitle
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
+	 */
+	public static function MakeForClass(string $sClass, string $sTitle)
+	{
+		$oPanel = new Panel($sTitle);
+		// TODO 2.8.0: Change this to clas color when done
+		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;
 	}

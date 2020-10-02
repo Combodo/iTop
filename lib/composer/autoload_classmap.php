@@ -206,6 +206,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\MultiColumn' => $baseDir . '/sources/application/UI/Layout/MultiColumn/MultiColumn.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenu' => $baseDir . '/sources/application/UI/Layout/NavigationMenu/NavigationMenu.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenuFactory' => $baseDir . '/sources/application/UI/Layout/NavigationMenu/NavigationMenuFactory.php',
+    'Combodo\\iTop\\Application\\UI\\Layout\\Object\\ObjectDetails' => $baseDir . '/sources/application/UI/Layout/Object/ObjectDetails.php',
+    'Combodo\\iTop\\Application\\UI\\Layout\\Object\\ObjectFactory' => $baseDir . '/sources/application/UI/Layout/Object/ObjectFactory.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContent' => $baseDir . '/sources/application/UI/Layout/PageContent/PageContent.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContentFactory' => $baseDir . '/sources/application/UI/Layout/PageContent/PageContentFactory.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContentWithSideContent' => $baseDir . '/sources/application/UI/Layout/PageContent/PageContentWithSideContent.php',

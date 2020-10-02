@@ -436,6 +436,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Layout\\MultiColumn\\MultiColumn' => __DIR__ . '/../..' . '/sources/application/UI/Layout/MultiColumn/MultiColumn.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenu' => __DIR__ . '/../..' . '/sources/application/UI/Layout/NavigationMenu/NavigationMenu.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\NavigationMenu\\NavigationMenuFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/NavigationMenu/NavigationMenuFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Layout\\Object\\ObjectDetails' => __DIR__ . '/../..' . '/sources/application/UI/Layout/Object/ObjectDetails.php',
+        'Combodo\\iTop\\Application\\UI\\Layout\\Object\\ObjectFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/Object/ObjectFactory.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContent' => __DIR__ . '/../..' . '/sources/application/UI/Layout/PageContent/PageContent.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContentFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/PageContent/PageContentFactory.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\PageContent\\PageContentWithSideContent' => __DIR__ . '/../..' . '/sources/application/UI/Layout/PageContent/PageContentWithSideContent.php',
