@@ -27,8 +27,9 @@ $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 $ibo-panel--title--color: $ibo-color-grey-900 !default;
 
 $ibo-panel--body--background-color: $ibo-color-white-100 !default;
-$ibo-panel--body--padding-y: 15px !default;
-$ibo-panel--body--padding-x: 10px !default;
+$ibo-panel--body--padding-bottom: 16px !default;
+$ibo-panel--body--padding-top: $ibo-panel--body--padding-bottom + $ibo-panel--highlight--height !default;
+$ibo-panel--body--padding-x: 16px !default;
 $ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
 $ibo-panel--body--border-size: 1px !default;
 $ibo-panel--body--border-color: $ibo-color-grey-400 !default;
@@ -80,9 +81,11 @@ $ibo-panel-colors: (
 
 .ibo-panel--body {
 	position: relative;
-	padding: $ibo-panel--body--padding-y $ibo-panel--body--padding-x;
+	padding: $ibo-panel--body--padding-top $ibo-panel--body--padding-x $ibo-panel--body--padding-bottom;
 	background-color: $ibo-panel--body--background-color;
 	border: solid $ibo-panel--body--border-size $ibo-panel--body--border-color;
 	border-radius: $ibo-panel--body--border-radius;
 	overflow: hidden; /* To force highlight color to be cropped by the border radius */
+
+	@extend %ibo-font-ral-nor-200;
 }
