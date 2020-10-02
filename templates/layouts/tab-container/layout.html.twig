@@ -19,7 +19,7 @@
         </ul>
         {% block iboTabContainerTabsContainers %}
             {% for oTab in oUIBlock.GetSubBlocks() %}
-                {% if oTab.GetType() == 'html' %}
+                {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                     <div id="tab_{{ loop.index }}" class="ibo-tab-container--tab-container">
                         {{ render_block(oTab, {aPage: aPage}) }}
                     </div>

@@ -16,6 +16,9 @@ $ibo-tab-container--tab-header--background-color--on-hover: $ibo-color-grey-200 
 
 $ibo-tab-container--tab-toggler--padding-x: 24px !default;
 
+$ibo-tab-container--tab-container--padding-x: 32px !default;
+$ibo-tab-container--tab-container--padding-y: 32px !default;
+
 /* Rules */
 .ibo-tab-container--tabs-list {
 	@extend %ibo-full-height-content;
@@ -52,3 +55,6 @@ $ibo-tab-container--tab-toggler--padding-x: 24px !default;
 	}
 }
 
+.ibo-tab-container--tab-container{
+	padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
+}
