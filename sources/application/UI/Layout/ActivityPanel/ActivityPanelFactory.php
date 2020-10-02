@@ -73,7 +73,13 @@ class ActivityPanelFactory
 
 		if($oActivityPanel->HasCaseLogTabs())
 		{
-			$oActivityPanel->SetNewEntryForm(ActivityNewEntryFormFactory::MakeForObjectDetailsActivityPanel());
+			//TODO 2.8.0 check write rights
+			$aCaseLogsForNewEntryForm = [];
+			foreach ($aCaseLogAttCodes as $sCaseLogAttCode){
+				$aCaseLogsForNewEntryForm[$sCaseLogAttCode] = MetaModel::GetLabel($sObjClass, $sCaseLogAttCode);
+			}
+			
+			$oActivityPanel->SetNewEntryForm(ActivityNewEntryFormFactory::MakeForObjectDetailsActivityPanel($aCaseLogsForNewEntryForm));
 		}
 		// Retrieve history changes (including case logs entries)
 		// - Prepare query to retrieve changes

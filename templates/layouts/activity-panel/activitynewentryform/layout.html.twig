@@ -1,4 +1,4 @@
-<div class="ibo-activity-new-entry-form">
+<div id="{{ oUIBlock.GetId() }}" class="ibo-activity-new-entry-form" data-role="ibo-activity-new-entry-form">
 	<div class="ibo-activity-new-entry-form--text-input" data-role="ibo-activity-new-entry-form--text-input">
 		{{ render_block(oUIBlock.GetFormTextInput(), {aPage: aPage}) }}
 	</div>
@@ -8,10 +8,11 @@
 				{{ render_block(TextInputActionButton, {aPage: aPage}) }}
 			{% endfor %}
 		</div>
-		<div class="ibo-activity-new-entry-form--action-buttons--right-actions">
+		<div class="ibo-activity-new-entry-form--action-buttons--right-actions" data-role="ibo-activity-new-entry-form--action-buttons--right-actions">
 			{% for FormActionButton in oUIBlock.GetFormActionButtons() %}
 				{{ render_block(FormActionButton, {aPage: aPage}) }}
 			{% endfor %}
+			{{ render_block(oUIBlock.GetCaseLogSelectionPopOverMenu(), {aPage: aPage}) }}
 		</div>
 	</div>
 </div>

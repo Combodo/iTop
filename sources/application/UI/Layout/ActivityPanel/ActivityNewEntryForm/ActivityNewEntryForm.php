@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm;
+use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\UIBlock;
 /**
@@ -17,9 +18,14 @@ class ActivityNewEntryForm extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-activitynewentryform';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activitynewentryform/layout';
 	public const JS_TEMPLATE_REL_PATH = 'layouts/activity-panel/activitynewentryform/layout';
+	public const JS_FILES_REL_PATH = [
+		'js/layouts/activity-new-entry-form.js',
+	];
 
 	/** @var \Combodo\iTop\Application\UI\Component\Input\RichText\RichText $oFormTextInput */
 	protected $oFormTextInput;
+	/** @var \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu */
+	protected $oCaseLogSelectionPopOverMenu;
 	/** @var array $aTextInputActionButtons */
 	protected $aTextInputActionButtons;
 	/** @var array $aFormActionButtons */
@@ -106,6 +112,24 @@ class ActivityNewEntryForm extends UIContentBlock
 	public function AddFormActionButtons(UIBlock $oFormActionButtons): void
 	{
 		$this->aFormActionButtons[] = $oFormActionButtons;
+	}
+
+	/**
+	 * @return PopoverMenu
+	 */
+	public function GetCaseLogSelectionPopOverMenu(): PopoverMenu
+	{
+		return $this->oCaseLogSelectionPopOverMenu;
+	}
+
+	/**
+	 * @param PopoverMenu $oCaseLogSelectionPopOverMenu
+	 * @return $this
+	 */
+	public function SetCaseLogSelectionPopOverMenu(PopoverMenu $oCaseLogSelectionPopOverMenu): ActivityNewEntryForm
+	{
+		$this->oCaseLogSelectionPopOverMenu = $oCaseLogSelectionPopOverMenu;
+		return $this;
 	}
 
 

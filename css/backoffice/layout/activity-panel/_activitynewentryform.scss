@@ -2,13 +2,60 @@
  * copyright   Copyright (C) 2010-2020 Combodo SARL
  * license     http://opensource.org/licenses/AGPL-3.0
  */
+
+$ibo-activity-new-entry-form--width: 100% !default;
+$ibo-activity-new-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
+$ibo-activity-new-entry-form--padding: $ibo-activity-panel--tab-toolbar--height 14px 14px 14px !default;
+
+$ibo-activity-new-entry-form--actions--margin-top: 5px !default;
+
+$ibo-activity-panel--body--add-caselog-entry--toggler--right: 4px !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--margin-top: calc(#{$ibo-activity-panel--tab-toolbar--height} + 4px) !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--diameter: 36px !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--color: $ibo-color-white-100 !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--box-shadow: $ibo-elevation-100 !default;
+
+$ibo-activity-panel--body--add-caselog-entry--toggler--icon--height: 100% !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--icon--width: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size: 16px !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !default;
 .ibo-activity-new-entry-form{
-	width: 100%;
-	background-color: $ibo-color-grey-200;
-	padding: 32px 14px 14px 32px;
+	display: none;
+	$ibo-activity-new-entry-form--width: 100%;
+	background-color: $ibo-activity-new-entry-form--background-color;
+	padding: $ibo-activity-new-entry-form--padding;
 }	
 .ibo-activity-new-entry-form--actions{
-	margin-top: 5px;
 	display: flex;
 	justify-content: space-between;
+	margin-top: $ibo-activity-new-entry-form--actions--margin-top;
+}
+
+
+.ibo-activity-panel--body--add-caselog-entry--toggler{
+	@extend %ibo-baseline-centered-content;
+	float: right;
+	right: $ibo-activity-panel--body--add-caselog-entry--toggler--right;
+	margin-top: $ibo-activity-panel--body--add-caselog-entry--toggler--margin-top;
+	
+	width: $ibo-activity-panel--body--add-caselog-entry--toggler--diameter;
+	height: $ibo-activity-panel--body--add-caselog-entry--toggler--diameter;
+	
+	background-color: $ibo-activity-panel--body--add-caselog-entry--toggler--background-color;
+	color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
+	
+	border-radius: $ibo-activity-panel--body--add-caselog-entry--toggler--border-radius;
+	box-shadow: $ibo-activity-panel--body--add-caselog-entry--toggler--box-shadow;
+	> i{
+		text-align: center;
+		height: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height;
+		width: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--width;
+		font-size: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size;
+		line-height: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height;
+	}
+	&:hover {
+		color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
+	}
 }

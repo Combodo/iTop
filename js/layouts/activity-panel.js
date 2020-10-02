@@ -198,6 +198,7 @@ $(function()
 				this._HideAllEntries();
 				this.element.find(this.js_selectors.entry+'[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_hidden);
 				this._UpdateEntryGroupsVisibility();
+				this.element.trigger('show-caselog-tab', ['caselog', sCaseLogAttCode]);
 			},
 			_ShowActivityTab: function()
 			{
@@ -205,6 +206,7 @@ $(function()
 				this._OpenAllMessages();
 				this._ShowAllEntries();
 				this._ApplyEntryFilters();
+				this.element.trigger('show-caselog-tab', 'activity');
 			},
 			// - Helpers on messages
 			_OpenMessage: function(oEntryElem)
