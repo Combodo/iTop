@@ -178,7 +178,7 @@ abstract class Expression {
 	abstract public function CollectUsedParents(&$aTable);
 
 	/**
-	 * @return boolean evaluation of the expression value, false if no conversion possible
+	 * @return boolean true if the expression's value is constant and evaluates to true, false otherwise
 	 */
 	abstract public function IsTrue();
 
