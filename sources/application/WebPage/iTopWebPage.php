@@ -982,7 +982,7 @@ EOF;
 		$sForm = $this->GetSiloSelectionForm();
 
 		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
+//		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 
 		// Put here the 'ready scripts' that must be executed after all others
 		$aMultiselectOptions = array(
@@ -1019,7 +1019,7 @@ EOF
 
 		if ($this->GetOutputFormat() == 'html')
 		{
-			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
+//			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
 
 //			if (!$this->IsPrintableVersion())
 //			{
@@ -1066,7 +1066,7 @@ EOF
 		{
 			$sBodyClass = 'printable-version';
 		}
-		$sHtml .= "<body class=\"$sBodyClass\" data-gui-type=\"backoffice\">\n";
+//		$sHtml .= "<body class=\"$sBodyClass\" data-gui-type=\"backoffice\">\n";
 		if ($this->IsPrintableVersion())
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";
@@ -1118,10 +1118,10 @@ EOF;
 			if (trim($s_captured_output) != "") {
 				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".utils::FilterXSS($s_captured_output)."</div></div>\n";
 			}
-			$sHtml .= "<div id=\"at_the_end\">".utils::FilterXSS($this->s_deferred_content)."</div>";
-			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
-			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
-			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
+//			$sHtml .= "<div id=\"at_the_end\">".utils::FilterXSS($this->s_deferred_content)."</div>";
+//			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
+//			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
+//			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
 		} else {
 			$sHtml .= utils::FilterXSS($this->s_content);
 		}

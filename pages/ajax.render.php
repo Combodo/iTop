@@ -1642,6 +1642,7 @@ JS
 			$oPage->add("</div>");
 			break;
 
+		// TODO 2.8.0: Handle the history pagination
 		case 'history':
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
@@ -1654,6 +1655,7 @@ JS
 			$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
+			// TODO 2.8.0: What to do with this?
 		case 'history_from_filter':
 			$oPage->SetContentType('text/html');
 			$oHistoryFilter = DBSearch::unserialize($sFilter);
