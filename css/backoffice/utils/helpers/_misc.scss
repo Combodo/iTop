@@ -39,6 +39,7 @@
 	display: flex;
 	align-items: stretch;
 }
+
 %ibo-text-truncated-with-ellipsis{
 	white-space: nowrap;
 	overflow-x: hidden;
@@ -60,5 +61,14 @@
 		background-position: center;
 		background-size: contain;
 		background-color: var(--ibo-color-grey-500);
+	}
+}
+
+%ibo-hyperlink-inherited-colors{
+	color: inherit;
+
+	&:hover,
+	&:active{
+		color: inherit;
 	}
 }
