@@ -703,6 +703,53 @@ function Format() {
 }
 
 /**
+ * Return true if oDOMElem is visible to the user
+ *
+ * @param oDOMElem DOM element to check
+ * @param bCompletely Should oDOMElem be completely visible for the function to return true?
+ * @param iThreshold Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
+ * @returns {boolean}
+ * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+ */
+function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0)
+{
+	const oRect = oDOMElem.getBoundingClientRect(),
+		fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
+		fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
+		efp = function (x, y)
+		{
+			return document.elementFromPoint(x, y)
+		};
+
+	// Return false if it's not in the viewport
+	if (oRect.right < 0 || oRect.bottom < 0
+		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight)
+	{
+		return false;
+	}
+
+	if (bCompletely === true)
+	{
+		// Return true if ALL of its four corners are visible
+		return (
+			oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
+			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
+			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
+			&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
+		);
+	} else
+	{
+		// Return true if ANY of its four corners are visible
+		return (
+			oDOMElem.contains(efp(oRect.left, oRect.top))
+			|| oDOMElem.contains(efp(oRect.right, oRect.top))
+			|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
+			|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
+		);
+	}
+}
+
+/**
  * Enable to access translation keys client side.
  * The called keys needs to be exported using \WebPage::add_dict_entry
  */
