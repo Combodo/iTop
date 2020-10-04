@@ -22,7 +22,7 @@
 
 	#ibo-main-content{
 		flex-grow: 1; /* To occupy maximum width, side content will handle its width */
-		overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part */
+		overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part. */
 	}
 }
 
