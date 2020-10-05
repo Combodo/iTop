@@ -49,7 +49,7 @@ class Form extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetAction(): string
+	public function GetAction(): ?string
 	{
 		return $this->sAction;
 	}
