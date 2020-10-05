@@ -100,7 +100,6 @@ ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 //$oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('config-edit-title'));
-$oP->add_header('X-Frame-Options: deny');
 $oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ace.js');
 $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/mode-php.js');

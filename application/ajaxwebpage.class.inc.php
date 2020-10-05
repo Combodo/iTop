@@ -42,21 +42,22 @@ class ajax_page extends WebPage implements iTabbedPage
      */	  
 	function __construct($s_title)
     {
-		$sPrintable = utils::ReadParam('printable', '0');
-		$bPrintable = ($sPrintable == '1');
+	    $sPrintable = utils::ReadParam('printable', '0');
+	    $bPrintable = ($sPrintable == '1');
 
-        parent::__construct($s_title, $bPrintable);
-        $this->m_sReadyScript = "";
-		//$this->add_header("Content-type: text/html; charset=utf-8");
-		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+	    parent::__construct($s_title, $bPrintable);
+	    $this->m_sReadyScript = "";
+	    //$this->add_header("Content-type: text/html; charset=utf-8");
+	    $this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 	    $this->add_header('Pragma: no-cache');
 	    $this->add_header('Expires: 0');
-		$this->m_oTabs = new TabManager();
-		$this->sContentType = 'text/html';
-		$this->sContentDisposition = 'inline';
-		$this->m_sMenu = "";
+	    $this->add_header('X-Frame-Options: deny');
+	    $this->m_oTabs = new TabManager();
+	    $this->sContentType = 'text/html';
+	    $this->sContentDisposition = 'inline';
+	    $this->m_sMenu = "";
 
-		utils::InitArchiveMode();
+	    utils::InitArchiveMode();
     }
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')

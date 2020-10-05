@@ -75,6 +75,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
 		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
