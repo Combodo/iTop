@@ -30,35 +30,35 @@ class ajax_page extends WebPage implements iTabbedPage
 {
     /**
      * Jquery style ready script
-     * @var Hash     
-     */	  
+     * @var Hash
+     */
 	protected $m_sReadyScript;
 	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
-	
-    /**
-     * constructor for the web page
-     * @param string $s_title Not used
-     */	  
-	function __construct($s_title)
-    {
-	    $sPrintable = utils::ReadParam('printable', '0');
-	    $bPrintable = ($sPrintable == '1');
 
-	    parent::__construct($s_title, $bPrintable);
-	    $this->m_sReadyScript = "";
-	    //$this->add_header("Content-type: text/html; charset=utf-8");
-	    $this->add_header('Cache-control: no-cache, no-store, must-revalidate');
-	    $this->add_header('Pragma: no-cache');
-	    $this->add_header('Expires: 0');
-	    $this->add_header('X-Frame-Options: deny');
-	    $this->m_oTabs = new TabManager();
-	    $this->sContentType = 'text/html';
-	    $this->sContentDisposition = 'inline';
-	    $this->m_sMenu = "";
+	/**
+	 * constructor for the web page
+	 *
+	 * @param string $s_title Not used
+	 */
+	function __construct($s_title) {
+		$sPrintable = utils::ReadParam('printable', '0');
+		$bPrintable = ($sPrintable == '1');
 
-	    utils::InitArchiveMode();
-    }
+		parent::__construct($s_title, $bPrintable);
+		$this->m_sReadyScript = "";
+		//$this->add_header("Content-type: text/html; charset=utf-8");
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
+		$this->m_oTabs = new TabManager();
+		$this->sContentType = 'text/html';
+		$this->sContentDisposition = 'inline';
+		$this->m_sMenu = "";
+
+		utils::InitArchiveMode();
+	}
 
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
