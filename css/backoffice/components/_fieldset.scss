@@ -3,19 +3,25 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
-.ibo-fieldset {
+$ibo-fieldset--sibling-spacing: 48px !default;
 
+$ibo-fieldset--legend--width: 100% !default;
+$ibo-fieldset--legend--margin-bottom: 16px !default;
+$ibo-fieldset--legend--padding-bottom: 4px !default;
+$ibo-fieldset--legend--border-bottom-size: 2px !default;
+$ibo-fieldset--legend--border-bottom-color: $ibo-color-grey-500 !default;
+$ibo-fieldset--legend--border-bottom-style: solid !default;
+
+.ibo-fieldset {
   & ~ .ibo-fieldset {
-    margin-top: 20px;
+    margin-top: $ibo-fieldset--sibling-spacing;
   }
 }
-
-
 .ibo-fieldset-legend {
-  @extend %ibo-font-ral-med-250;
-}
+  width: $ibo-fieldset--legend--width;
+  margin-bottom: $ibo-fieldset--legend--margin-bottom;
+  padding-bottom: $ibo-fieldset--legend--padding-bottom;
+  border-bottom: $ibo-fieldset--legend--border-bottom-size $ibo-fieldset--legend--border-bottom-style $ibo-fieldset--legend--border-bottom-color;
 
-.ibo-fieldset-legend-separator {
-  height: 2px;
-  background: $ibo-color-grey-500;
+  @extend %ibo-font-ral-med-250;
 }

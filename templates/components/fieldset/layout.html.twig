@@ -1,7 +1,6 @@
 {% if oUIBlock.GetSubBlocks() %}
 <fieldset class="ibo-fieldset">
     <legend class="ibo-fieldset-legend">{{ oUIBlock.GetLegend() }}</legend>
-    <hr class="ibo-fieldset-legend-separator">
     {% for oSubBlock in oUIBlock.GetSubBlocks() %}
         {{ render_block(oSubBlock, {aPage: aPage}) }}
     {% endfor %}

@@ -7,7 +7,7 @@ $ibo-column--min-width: 300px !default;
 $ibo-column--padding-x: abs($ibo-multi-column--margin-x) !default;
 $ibo-column--padding-y: 0 !default;
 
-$ibo-column--margin-bottom--is-last-element: 20px !default;
+$ibo-column--margin-bottom--is-last-element: 48px !default;
 
 .ibo-column {
   min-width: $ibo-column--min-width;
@@ -16,7 +16,7 @@ $ibo-column--margin-bottom--is-last-element: 20px !default;
   padding: $ibo-column--padding-y $ibo-column--padding-x;
   flex-basis: 10%;
 
-  :not(:last-child){
+  &:not(:last-child){
     margin-bottom: $ibo-column--margin-bottom--is-last-element;
   }
 }
