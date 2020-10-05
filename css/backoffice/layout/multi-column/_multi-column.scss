@@ -3,8 +3,11 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-multi-column--margin-x: -16px !default; /* This is to compensate columns padding and make the whole multicolumn align with the parent borders (cf. Bootstrap rows / cols) */
+$ibo-multi-column--margin-y: 0 !default;
+
 .ibo-multi-column {
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
+  margin: $ibo-multi-column--margin-y $ibo-multi-column--margin-x;
 }

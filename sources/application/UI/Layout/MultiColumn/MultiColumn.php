@@ -19,8 +19,8 @@ use Combodo\iTop\Application\UI\UIBlock;
  */
 class MultiColumn extends UIBlock {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-multicolumn';
-	public const HTML_TEMPLATE_REL_PATH = 'layouts/multicolumn/layout';
+	public const BLOCK_CODE = 'ibo-multi-column';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/multi-column/layout';
 
 	/** @var \Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column[] */
 	protected $aColumns;

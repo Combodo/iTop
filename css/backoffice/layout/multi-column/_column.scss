@@ -3,11 +3,20 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-column--min-width: 300px !default;
+$ibo-column--padding-x: abs($ibo-multi-column--margin-x) !default;
+$ibo-column--padding-y: 0 !default;
+
+$ibo-column--margin-bottom--is-last-element: 20px !default;
+
 .ibo-column {
-  min-width: 300px;
+  min-width: $ibo-column--min-width;
   flex-grow: 1;
   flex-shrink: 1;
-  padding: 0 20px;
+  padding: $ibo-column--padding-y $ibo-column--padding-x;
   flex-basis: 10%;
-  margin-bottom: 20px;
+
+  :not(:last-child){
+    margin-bottom: $ibo-column--margin-bottom--is-last-element;
+  }
 }
