@@ -44,25 +44,55 @@ class FileUploadException extends Exception
  */
 class utils
 {
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
-	/** @var string For XML / HTML node identifiers */
+	/**
+	 * @var string For XML / HTML node identifiers
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
-	/** @var string */
+	/**
+	 * @var string
+	 * @since 2.8.0
+	 */
 	public const DEFAULT_SANITIZATION_FILTER = self::ENUM_SANITIZATION_FILTER_RAW_DATA;
 
 	/**
