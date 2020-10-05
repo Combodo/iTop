@@ -218,7 +218,7 @@ class OQLTest extends ItopDataTestCase
      *
      * @param $sQuery
      *
-     * @expectedException \TypeError
+     * @expectedException \CoreException
      *
      * @throws \OQLException
      */
