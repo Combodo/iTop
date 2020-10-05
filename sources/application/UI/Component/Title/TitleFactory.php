@@ -33,9 +33,42 @@ class TitleFactory
 		$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
 		if(!empty($sStatusAttCode))
 		{
+			$sStateCode = $oObject->GetState();
 			$sStatusLabel = $oObject->GetStateLabel();
 			// TODO 2.8.0 : Dehardcode this
-			$sStatusColor = 'green';
+			switch ($sStateCode)
+			{
+				case 'new':
+					$sStatusColor = 'new';
+					break;
+
+				case 'waiting_for_approval':
+				case 'pending':
+					$sStatusColor = 'waiting';
+					break;
+
+				case 'escalated_tto':
+				case 'escalated_ttr':
+				case 'rejected':
+					$sStatusColor = 'failure';
+					break;
+
+				case 'resolved':
+					$sStatusColor = 'success';
+					break;
+
+				case 'closed':
+					$sStatusColor = 'frozen';
+					break;
+
+				case 'approved':
+				case 'assigned':
+				case 'dispatched':
+				case 'redispatched':
+				default:
+					$sStatusColor = 'neutral';
+					break;
+			}
 
 			$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
 		}

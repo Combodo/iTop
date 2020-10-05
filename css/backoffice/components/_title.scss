@@ -67,3 +67,10 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
 .ibo-title--status-dot + .ibo-title--status-label {
   margin-left: $ibo-title--status-dot--spacing;
 }
+
+@each $sType, $aColors in $ibo-lifecycle-states-colors {
+  .ibo-title--status-dot.ibo-is-state-#{$sType} {
+    color: map-get($aColors, 'secondary-color');
+    background-color: map-get($aColors, 'primary-color');
+  }
+}
