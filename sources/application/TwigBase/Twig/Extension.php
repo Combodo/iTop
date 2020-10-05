@@ -86,6 +86,13 @@ class Extension
 			})
 		);
 
+		// Filter to sanitize an XML / HTML identifier
+		// Usage in twig: {{ 'identifier:to-sanitize' }}
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize_identifier', function($sString) {
+				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			})
+		);
+
 		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
 		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
 		//

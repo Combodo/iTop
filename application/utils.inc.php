@@ -44,6 +44,27 @@ class FileUploadException extends Exception
  */
 class utils
 {
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
+	/** @var string For XML / HTML node identifiers */
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
+	/** @var string */
+	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/** @var string */
+	public const DEFAULT_SANITIZATION_FILTER = self::ENUM_SANITIZATION_FILTER_RAW_DATA;
+
 	/**
 	 * Cache when getting config from disk or set externally (using {@link SetConfig})
 	 * @internal
@@ -290,25 +311,25 @@ class utils
 	{
 		switch ($sSanitizationFilter)
 		{
-			case 'integer':
+			case static::ENUM_SANITIZATION_FILTER_INTEGER:
 				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				break;
 
-			case 'class':
+			case static::ENUM_SANITIZATION_FILTER_CLASS:
 				$retValue = $value;
 				if (($value != '') && !MetaModel::IsValidClass($value)) {
 					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
 
-			case 'string':
+			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
 				break;
 
-			case 'context_param':
-			case 'parameter':
-			case 'field_name':
-			case 'transaction_id':
+			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
+			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
+			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -326,7 +347,7 @@ class utils
 				{
 					switch ($sSanitizationFilter)
 					{
-						case 'transaction_id':
+						case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 							// same as parameter type but keep the dot character
 							// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
 							// it must be included at the regexp beginning otherwise you'll get an invalid character error
@@ -334,18 +355,18 @@ class utils
 								array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 							break;
 
-						case 'parameter':
+						case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
 							// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 							break;
 
-						case 'field_name':
+						case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 							break;
 
-						case 'context_param':
+						case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
 							break;
@@ -354,13 +375,12 @@ class utils
 				}
 				break;
 
-			// For XML / HTML node identifiers
-			case 'element_identifier':
-				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
 				break;
 
 			default:
-			case 'raw_data':
+			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
 			// Do nothing
 		}
