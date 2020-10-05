@@ -19,4 +19,5 @@ use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 class Column extends UIContentBlock {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-column';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/multicolumn/column/layout';
 }

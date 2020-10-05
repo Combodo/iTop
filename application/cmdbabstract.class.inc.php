@@ -989,15 +989,11 @@ EOF
 
 		// TODO 2.8.0: Remove this when object details block completed, this is hardcoded for the demo
 		$oPage->add_style(<<<CSS
-.object-details {
-	position: relative;
-}
 .object-details .ibo-title {
 	z-index: 1;
     align-items: start;
-	position: absolute;
-	top: 0;
-	left: 32px;
+	position: relative;
+	padding-left: 32px;
 }
 .object-details .ibo-title .ibo-title--medallion {
 	position: absolute;
@@ -1008,7 +1004,6 @@ EOF
 }
 .object-details .ibo-panel {
 	z-index: 0;
-	margin-top: 48px;
 }
 .object-details .ibo-panel > .ibo-panel--body {
 	padding-top: 8px;
