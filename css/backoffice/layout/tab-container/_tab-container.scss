@@ -82,6 +82,7 @@ $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-gr
 }
 .ibo-tab-container--extra-tabs-list{
 	position: absolute;
+	z-index: 1;
 	top: calc(100% + 6px);
 	right: 12px;
 	max-height: $ibo-tab-container--extra-tabs-list--max-height;
