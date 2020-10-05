@@ -458,7 +458,6 @@ try
 	$sPageId = 'db-tools';
 
 	$oP = new iTopWebPage($sPageTitle);
-	$this->m_oPage->add_header('X-Frame-Options: deny');
 	$oP->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-db-tools/default.scss');
 
 	$oP->add(

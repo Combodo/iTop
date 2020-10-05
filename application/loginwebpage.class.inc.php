@@ -78,16 +78,16 @@ class LoginWebPage extends NiceWebPage
 	
 	public function __construct($sTitle = null)
 	{
-	    if($sTitle === null)
-        {
-            $sTitle = Dict::S('UI:Login:Title');
-        }
+		if ($sTitle === null) {
+			$sTitle = Dict::S('UI:Login:Title');
+		}
 
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
 	}
 	
 	public function SetStyleSheet()

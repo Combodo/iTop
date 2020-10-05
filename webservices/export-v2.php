@@ -346,7 +346,6 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 	if ($sMode == 'dialog')
 	{
 		$oP = new ajax_page('');
-		$oP->add_header('X-Frame-Options: deny');
 		$oP->add('<div id="interactive_export_dlg">');
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
 		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
@@ -372,7 +371,6 @@ EOF
 	else
 	{
 		$oP = new iTopWebPage('iTop Export');
-		$oP->add_header('X-Frame-Options: deny');
 		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 	}
 	
@@ -749,7 +747,6 @@ try
 		else
 		{
 			$oP = new ajax_page('iTop export');
-			$oP->add_header('X-Frame-Options: deny');
 			$oP->SetContentType($oExporter->GetMimeType());
 		}
 		DoExport($oP, $oExporter, false);
@@ -759,7 +756,6 @@ try
 catch (BulkExportMissingParameterException $e)
 {
 	$oP = new ajax_page('iTop Export');
-	$oP->add_header('X-Frame-Options: deny');
 	$oP->add($e->getMessage());
 	Usage($oP);
 	$oP->output();
