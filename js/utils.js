@@ -703,7 +703,7 @@ function Format() {
 }
 
 /**
- * Return true if oDOMElem is visible to the user
+ * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
  *
  * @param oDOMElem DOM element to check
  * @param bCompletely Should oDOMElem be completely visible for the function to return true?
