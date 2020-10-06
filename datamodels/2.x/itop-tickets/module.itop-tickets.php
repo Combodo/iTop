@@ -55,9 +55,16 @@ class TicketsInstaller extends ModuleInstallerAPI
 		$oSet = new DBObjectSet($oSearch);
 		while($oTrigger = $oSet->Fetch())
 		{
-			if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+			try
 			{
-				$oTrigger->DBDelete();
+				if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+				{
+					$oTrigger->DBDelete();
+				}
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
 	}

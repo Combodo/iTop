@@ -43,9 +43,12 @@ class XMLPage extends WebPage
 		$this->m_bPassThrough = $bPassThrough;
 		$this->m_bHeaderSent = false;
 		$this->add_header("Content-type: text/xml; charset=".self::PAGES_CHARSET);
-		$this->add_header("Cache-control: no-cache");
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
 		$this->add_header("Content-location: export.xml");
-	}	
+	}
 
 	public function output()
 	{

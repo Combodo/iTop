@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-            "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc"
+            "reference": "aedd4b7b8cf7fcc24e617c405c9d3304150f4b94"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/abbfedb8ca59843dec11c97ca3f308742265c3fc",
-            "reference": "abbfedb8ca59843dec11c97ca3f308742265c3fc",
+            "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/aedd4b7b8cf7fcc24e617c405c9d3304150f4b94",
+            "reference": "aedd4b7b8cf7fcc24e617c405c9d3304150f4b94",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "replace": {
             "tecnickcom/tcpdf": "self.version"
         },
-        "time": "2020-06-05T13:06:44+00:00",
+        "time": "2020-09-28T12:19:09+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -45,22 +45,21 @@
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "LGPL-3.0"
+            "LGPL-3.0-only"
         ],
         "authors": [
+            {
+                "name": "Nicola Asuni",
+                "email": "info@tecnick.com",
+                "role": "lead"
+            },
             {
                 "name": "Combodo",
                 "email": "contact@combodo.com"
             }
         ],
         "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
-        "homepage": "https://github.com/combodo-itop-libs/TCPDF",
-        "funding": [
-            {
-                "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
-                "type": "custom"
-            }
-        ]
+        "homepage": "https://github.com/combodo-itop-libs/TCPDF"
     },
     {
         "name": "nikic/php-parser",
@@ -168,17 +167,17 @@
     },
     {
         "name": "pear/archive_tar",
-        "version": "1.4.9",
-        "version_normalized": "1.4.9.0",
+        "version": "1.4.10",
+        "version_normalized": "1.4.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/pear/Archive_Tar.git",
-            "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0"
+            "reference": "bbb4f10f71a1da2715ec6d9a683f4f23c507a49b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/c5b00053770e1d72128252c62c2c1a12c26639f0",
-            "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0",
+            "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/bbb4f10f71a1da2715ec6d9a683f4f23c507a49b",
+            "reference": "bbb4f10f71a1da2715ec6d9a683f4f23c507a49b",
             "shasum": ""
         },
         "require": {
@@ -193,7 +192,7 @@
             "ext-xz": "Lzma2 compression support.",
             "ext-zlib": "Gzip compression support."
         },
-        "time": "2019-12-04T10:17:28+00:00",
+        "time": "2020-09-15T14:13:23+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

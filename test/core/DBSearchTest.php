@@ -675,17 +675,49 @@ class DBSearchTest extends ItopDataTestCase
 		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
 		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)");
 		self::assertNotNull($oSearch);
-		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids'=> $TwoOrgIdsOnly));
+		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids' => $TwoOrgIdsOnly));
 		static::assertEquals(4, $oSet->Count());
 
-		$_SERVER['REQUEST_URI']='FAKE_REQUEST_URI' ;
-		$_SERVER['REQUEST_METHOD']='FAKE_REQUEST_METHOD';
+		$_SERVER['REQUEST_URI'] = 'FAKE_REQUEST_URI';
+		$_SERVER['REQUEST_METHOD'] = 'FAKE_REQUEST_METHOD';
 		$oP = new \iTopWebPage("test");
 		$oBlock = new \DisplayBlock($oSet->GetFilter(), 'list', false);
-		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array ('menu'=>true, 'display_limit'=>false));
+		$sHtml = $oBlock->GetDisplay($oP, 'package_table', array('menu' => true, 'display_limit' => false));
 
 		$iHtmlUserRequestLineCount = substr_count($sHtml, '<tr><td  data-object-class="UserRequest"');
-		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :" . $sHtml);
+		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :".$sHtml);
 		$oP->output();
+	}
+
+	/**
+	 * @since 2.7.2 2.8.0 N°3324
+	 */
+	public function testAllowAllData() {
+		$oSimpleSearch = \DBObjectSearch::FromOQL('SELECT FunctionalCI');
+		$oSimpleSearch->AllowAllData(false);
+		self::assertFalse($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+		$oSimpleSearch->AllowAllData(true);
+		self::assertTrue($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+
+		$sNestedQuery = 'SELECT FunctionalCI WHERE id IN (SELECT Server)';
+		$this->CheckNestedSearch($sNestedQuery, true);
+		$this->CheckNestedSearch($sNestedQuery, false);
+	}
+
+	private function CheckNestedSearch($sQuery, $bAllowAllData) {
+		$oNestedQuerySearch = \DBObjectSearch::FromOQL($sQuery);
+		$oNestedQuerySearch->AllowAllData($bAllowAllData);
+		self::assertEquals($bAllowAllData, $oNestedQuerySearch->IsAllDataAllowed(), 'root DBSearch AllowData value');
+		$oNestedSearchInExpression = null;
+		$oNestedQuerySearch->GetCriteria()->Browse(function ($oExpression) use (&$oNestedSearchInExpression) {
+			if ($oExpression instanceof \NestedQueryExpression) {
+				$oNestedSearchInExpression = $oExpression->GetNestedQuery();
+
+				return;
+			}
+		});
+		self::assertNotNull($oNestedSearchInExpression, 'We must have a DBSearch inside a NestedQueryExpression inside the root DBSearch');
+		/** @var \DBObjectSearch $oNestedSearchInExpression */
+		self::assertEquals($bAllowAllData, $oNestedSearchInExpression->IsAllDataAllowed(), 'Nested DBSearch AllowData value');
 	}
 }

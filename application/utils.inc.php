@@ -2319,4 +2319,26 @@ class utils
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
+
+	/**
+	 * @param \cmdbAbstractObject $oCmdbAbstract
+	 * @param \Exception $oException
+	 *
+	 * @throws \Exception
+	 * @since 2.7.2/ 2.8.0
+	 */
+	public static function EnrichRaisedException($oCmdbAbstract, $oException)
+	{
+		if (is_null($oCmdbAbstract) ||
+			! is_a($oCmdbAbstract, \cmdbAbstractObject::class))
+		{
+			throw $oException;
+		}
+
+		$sCmdbAbstractInfo = str_replace("\n", '', "" . $oCmdbAbstract);
+		$sMessage = $oException->getMessage() . " (" . $sCmdbAbstractInfo . ")";
+
+		$e = new CoreException($sMessage, null, '', $oException);
+		throw $e;
+	}
 }

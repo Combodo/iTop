@@ -32,10 +32,10 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
   <email>stig@php.net</email>
   <active>no</active>
  </helper>
- <date>2019-12-04</date>
- <time>09:25:16</time>
+ <date>2020-09-15</date>
+ <time>14:03:45</time>
  <version>
-  <release>1.4.9</release>
+  <release>1.4.10</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -44,7 +44,8 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Implement Feature #23861: Add option to disallow symlinks [mrook]
+* Fix block padding when the file buffer length is a multiple of 512 and smaller than Archive_Tar buffer length
+* Don't try to copy username/groupname in chroot jail
  </notes>
  <contents>
   <dir name="/">
@@ -74,6 +75,21 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.4.9</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-12-04</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Implement Feature #23861: Add option to disallow symlinks [mrook]
+   </notes>
+  </release>
   <release>
    <version>
     <release>1.4.8</release>

@@ -173,7 +173,7 @@ class MatchOqlExpression extends MatchExpression implements CheckableExpression
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oLeftExpr->RenderExpression(true), 0));
 		}
 		// Only field MATCHES scalar is allowed
-		if (!$this->m_oRightExpr instanceof ScalarExpression)
+		if (!$this->m_oRightExpr instanceof ScalarExpression && !$this->m_oRightExpr instanceof VariableOqlExpression)
 		{
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oRightExpr->RenderExpression(true), 0));
 		}

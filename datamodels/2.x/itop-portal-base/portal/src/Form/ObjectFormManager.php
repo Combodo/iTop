@@ -1139,7 +1139,14 @@ class ObjectFormManager extends FormManager
 						/** @var \Trigger $oTrigger */
 						while ($oTrigger = $oTriggerSet->Fetch())
 						{
-							$oTrigger->DoActivate($this->oObject->ToArgs('this'));
+							try
+							{
+								$oTrigger->DoActivate($this->oObject->ToArgs('this'));
+							}
+							catch(Exception $e)
+							{
+								utils::EnrichRaisedException($oTrigger, $e);
+							}
 						}
 					}
 				}

@@ -487,8 +487,10 @@ class WebPage implements Page
 	 */
 	public function no_cache()
 	{
-		$this->add_header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
-		$this->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
 	}
 
 	/**
@@ -1543,6 +1545,12 @@ class TabManager
 					// Sometimes people set an empty tab to force content NOT to be rendered in the previous one. We need to remove them.
 					// Note: Look for "->SetCurrentTab('');" for examples.
 					if ($sTabCode === '')
+					{
+						unset($aTabs['tabs'][$sTabCode]);
+					}
+
+					// N°3320: Do not display empty tabs
+					if (empty($aTabData['html']) && empty($aTabData['url']))
 					{
 						unset($aTabs['tabs'][$sTabCode]);
 					}
