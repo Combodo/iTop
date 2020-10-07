@@ -45,7 +45,7 @@ class ActivityPanel extends UIBlock
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
 	public const JS_TEMPLATE_REL_PATH = 'layouts/activity-panel/layout';
 	public const JS_FILES_REL_PATH = [
-		'js/layouts/activity-panel.js',
+		'js/layouts/activity-panel/activity-panel.js',
 	];
 
 	/** @var \DBObject $oObject The object for which the activity panel is for */

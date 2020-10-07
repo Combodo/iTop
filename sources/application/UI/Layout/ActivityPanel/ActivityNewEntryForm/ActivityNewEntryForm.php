@@ -19,7 +19,7 @@ class ActivityNewEntryForm extends UIContentBlock
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/activity-panel/activitynewentryform/layout';
 	public const JS_TEMPLATE_REL_PATH = 'layouts/activity-panel/activitynewentryform/layout';
 	public const JS_FILES_REL_PATH = [
-		'js/layouts/activity-new-entry-form.js',
+		'js/layouts/activity-panel/activity-new-entry-form.js',
 	];
 
 	/** @var \Combodo\iTop\Application\UI\Component\Input\RichText\RichText $oFormTextInput */
