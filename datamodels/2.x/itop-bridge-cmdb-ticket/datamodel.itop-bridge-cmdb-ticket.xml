@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
-	<constants>
-	</constants>
-	<classes>
-		<class id="lnkFunctionalCIToTicket" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<is_link>1</is_link>
-				<category>bizmodel</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
+  <constants></constants>
+  <classes>
+    <class id="lnkFunctionalCIToTicket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
 				<db_table>lnkfunctionalcitoticket</db_table>
 				<db_key_field>id</db_key_field>
 				<db_final_class_field/>
