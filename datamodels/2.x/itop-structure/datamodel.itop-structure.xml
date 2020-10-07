@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
-<classes>
+	<classes>
 		<class id="Organization" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
@@ -1647,7 +1647,8 @@
 				</list>
 			</presentation>
 		</class>
-</classes><menus>
+	</classes>
+	<menus>
 			<menu id="DataAdministration" xsi:type="MenuGroup" _delta="define">
 				<rank>70</rank>
 				<enable_class>Organization</enable_class>
