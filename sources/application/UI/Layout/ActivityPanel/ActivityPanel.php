@@ -118,6 +118,22 @@ class ActivityPanel extends UIBlock
 	{
 		return $this->oObject;
 	}
+	/**
+	 * Return the object id for which the activity panel is for
+	 *
+	 * @return int
+	 */
+	public function GetObjectId(): int {
+		return $this->oObject->GetKey();
+	}
+	/**
+	 * Return the object class for which the activity panel is for
+	 *
+	 * @return string
+	 */
+	public function GetObjectClass(): string {
+		return get_class($this->oObject);
+	}
 
 	/**
 	 * Set all entries at once.

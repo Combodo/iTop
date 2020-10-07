@@ -88,8 +88,8 @@ $(function() {
 				const me = this;
 				let oParams = {
 					'operation' : 'add_caselog_entry',
-					'class' : 'UserRequest',
-					'id' : '1',
+					'class' : $(me.js_selectors.panel).attr('data-object-class'),
+					'id' : $(me.js_selectors.panel).attr('data-object-id'),
 					'caselog_new_entry': sData,
 					'caselog_attcode' : sCaselog,
 					'caselog_rank' : $(me.js_selectors.panel).activity_panel('GetCaseLogRank', sCaselog),
