@@ -3741,16 +3741,14 @@ abstract class DBObject implements iDisplay
 
 		// save current object values in case of an action failure (in memory rollback)
 		$aBackupValues = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			$value = $this->m_aCurrValues[$sAttCode];
-			if (is_object($value))
-			{
-				$aBackupValues[$sAttCode] = clone $value;
-			}
-			else
-			{
-				$aBackupValues[$sAttCode] = $value;
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)	{
+			if (isset($this->m_aCurrValues[$sAttCode])) {
+				$value = $this->m_aCurrValues[$sAttCode];
+				if (is_object($value)) {
+					$aBackupValues[$sAttCode] = clone $value;
+				} else {
+					$aBackupValues[$sAttCode] = $value;
+				}
 			}
 		}
 
