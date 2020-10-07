@@ -213,31 +213,6 @@ class OQLTest extends ItopDataTestCase
     }
 
     /**
-     * @dataProvider TypeErrorQueryProvider
-     * @depends testOQLSetup
-     *
-     * @param $sQuery
-     *
-     * @expectedException \CoreException
-     *
-     * @throws \OQLException
-     */
-    public function testTypeErrorQueryParser($sQuery)
-    {
-        $this->debug($sQuery);
-        $oOql = new OqlInterpreter($sQuery);
-        $oOql->ParseQuery();
-    }
-
-    public function TypeErrorQueryProvider()
-    {
-        return array(
-            array('SELECT A WHERE A.a MATCHES toto'),
-        );
-    }
-
-
-    /**
      * Needs actual datamodel
      * @depends testOQLSetup
      *
