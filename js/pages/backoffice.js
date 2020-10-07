@@ -36,7 +36,6 @@ function ArchiveMode(bEnable)
 		window.location.search = sPrevUrl + '&with-archive=0';
 	}
 }
-
 function StripArchiveArgument(sUrl)
 {
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
@@ -46,46 +45,64 @@ function StripArchiveArgument(sUrl)
 function SwitchTabMode()
 {
 	let aTabContainer = $('[data-role="ibo-tab-container"]');
-	if(!aTabContainer.hasClass('is-vertical')){
+	if (!aTabContainer.hasClass('is-vertical'))
+	{
 		aTabContainer.removeClass('is-horizontal');
 		aTabContainer.addClass('is-vertical');
 		SetUserPreference('tab_layout', 'vertical', true);
-	}
-	else
+	} else
 	{
 		aTabContainer.removeClass('is-vertical');
 		aTabContainer.addClass('is-horizontal');
 		SetUserPreference('tab_layout', 'horizontal', true);
 	}
-
 }
-// Processing
-$(document).ready(function(){
-	// Enable tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
-	// - Existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
-	$('[data-tooltip-content]').each(function(){
+
+/**
+ * A toolbox for common JS operations in the backoffice. Meant to be used by Combodo developers and the community.
+ * @type {{InitTooltipFromMarkup: CombodoBackofficeToolbox.InitTooltipFromMarkup}}
+ * @api
+ * @since 2.8.0
+ */
+const CombodoBackofficeToolbox = {
+	// Instanciate tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
+	/**
+	 * Instanciate a tooltip on oElem from its data attributes
+	 * @param oElem
+	 * @constructor
+	 */
+	InitTooltipFromMarkup: function(oElem)
+	{
 		const oOptions = {};
 
-		oOptions['content'] = $(this).attr('data-tooltip-content');
-		oOptions['placement'] = $(this).attr('data-tooltip-placement') ?? 'top';
-		oOptions['trigger'] = $(this).attr('data-tooltip-trigger') ?? 'mouseenter focus';
+		oOptions['content'] = oElem.attr('data-tooltip-content');
+		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
+		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
 
-		const sShiftingOffset = $(this).attr('data-tooltip-shifting-offset');
-		const sDistanceOffset = $(this).attr('data-tooltip-distance-offset');
+		const sShiftingOffset = oElem.attr('data-tooltip-shifting-offset');
+		const sDistanceOffset = oElem.attr('data-tooltip-distance-offset');
 		oOptions['offset'] = [
 			(sShiftingOffset === undefined) ? 0 : parseInt(sShiftingOffset),
 			(sDistanceOffset === undefined) ? 10 : parseInt(sDistanceOffset),
 		];
 
-		oOptions['animation'] = $(this).attr('data-tooltip-animation') ?? 'shift-away-subtle';
+		oOptions['animation'] = oElem.attr('data-tooltip-animation') ?? 'shift-away-subtle';
 
-		const sShowDelay = $(this).attr('data-tooltip-show-delay');
-		const sHideDelay = $(this).attr('data-tooltip-hide-delay');
+		const sShowDelay = oElem.attr('data-tooltip-show-delay');
+		const sHideDelay = oElem.attr('data-tooltip-hide-delay');
 		oOptions['delay'] = [
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
 
-		tippy(this, oOptions);
+		tippy(oElem[0], oOptions);
+	}
+};
+
+// Processing
+$(document).ready(function(){
+	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
+	$('[data-tooltip-content]').each(function(){
+		CombodoBackofficeToolbox.InitTooltipFromMarkup($(this));
 	});
 });
