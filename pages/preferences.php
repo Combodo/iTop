@@ -481,9 +481,6 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	// - Submit button
 	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
-	
-	$oTestRichText = new RichText();
-	$oUserLanguageForm->AddSubBlock($oTestRichText);
 	return $oUserLanguageForm;
 }
 
