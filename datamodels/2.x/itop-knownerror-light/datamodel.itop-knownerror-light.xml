@@ -331,7 +331,6 @@
             <attribute id="link_type"/>
           </attributes>
         </naming>
-        <display_template>../business/templates/default.html</display_template>
         <icon/>
         <reconciliation>
           <attributes>

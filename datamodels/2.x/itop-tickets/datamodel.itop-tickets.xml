@@ -1272,10 +1272,6 @@
 				</action_rule>
 			</action_rules>
 			<navigation_rules>
-				<!-- Close form (either the modal or the whole page) -->
-				<navigation_rule id="close-form" xsi:type="close" _delta="define"/>
-				<!-- Go to the homepage -->
-				<navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" _delta="define"/>
 				<!-- Open a manage brick (simple method) -->
 				<navigation_rule id="go-to-open-requests" xsi:type="go-to-manage-brick" _delta="define">
 					<!-- Mandatory, ID of the ManageBrick to go to -->
@@ -1310,9 +1306,4 @@
 			</navigation_rules>
 		</module_design>
 	</module_designs>
-	<module_parameters>
-		<parameters id="itop-portal" _delta="define">
-			<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
-		</parameters>
-	</module_parameters>
 </itop_design>

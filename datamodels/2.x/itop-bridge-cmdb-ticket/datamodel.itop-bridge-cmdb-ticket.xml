@@ -19,7 +19,6 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -129,7 +128,6 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -210,7 +208,6 @@
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>

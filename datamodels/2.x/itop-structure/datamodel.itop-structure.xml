@@ -21,7 +21,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/building.png</icon>
 				<reconciliation>
 					<attributes>
@@ -182,7 +181,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/location.png</icon>
 				<reconciliation>
 					<attributes>
@@ -345,7 +343,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/team.png</icon>
 				<reconciliation>
 					<attributes>
@@ -513,7 +510,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/person.png</icon>
 				<reconciliation>
 					<attributes>
@@ -831,7 +827,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/team.png</icon>
 				<reconciliation>
 					<attributes>
@@ -941,7 +936,6 @@
 						<attribute id="person_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -1039,7 +1033,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -1099,7 +1092,6 @@
 				<naming>
 					<attributes/>
 				</naming>
-				<display_template/>
 				<icon>images/document.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1249,7 +1241,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/document.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1372,7 +1363,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/document.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1476,7 +1466,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon>images/document.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1578,7 +1567,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -1626,7 +1614,6 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -1788,4 +1775,36 @@
 				<enable_action>UR_ACTION_MODIFY</enable_action>
 			</menu>
 	</menus>
+  <branding>
+    <themes>
+      <theme id="light-grey" _delta="define">
+        <variables>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/light-grey/main.css</precompiled_stylesheet>
+      </theme>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="backoffice-environment-banner-background-color">#C53030</variable>
+          <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
+          <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
+        </stylesheets>
+        <precompiled_stylesheet>itop-config-mgmt/precompiled-themes/test-red/main.css</precompiled_stylesheet>
+      </theme>
+    </themes>
+  </branding>
 </itop_design>
