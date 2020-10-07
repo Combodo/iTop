@@ -145,6 +145,9 @@ class ActivityNewEntryForm extends UIContentBlock
 		{
 			$aSubBlocks[$oFormActionButton->GetId()] = $oFormActionButton;
 		}
+		$oCaseLogSelectionPopOverMenu = $this->GetCaseLogSelectionPopOverMenu();
+		$aSubBlocks[$oCaseLogSelectionPopOverMenu->GetId()] = $oCaseLogSelectionPopOverMenu;
+		
 		return $aSubBlocks;
 	}
 	

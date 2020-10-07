@@ -275,6 +275,56 @@ $(function()
 				this.element.find(this.js_selectors.entry+'[data-entry-type="'+sEntryType+'"]').addClass(this.css_classes.is_hidden);
 				this._UpdateEntryGroupsVisibility();
 			},
+			_GetNewEntryGroup: function()
+			{
+				let AjaxNewEntryGroupDeferred = jQuery.Deferred();
+				const me = this;
+				var oParams = {
+					'operation' : 'new_entry_group',
+					'caselog_new_entry': sData,
+					'caselog_attcode' : sCaselog,
+				}
+				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
+					AjaxNewEntryGroupDeferred.resolve(data);
+				});	
+				return AjaxNewEntryGroupDeferred.promise();
+			},
+			_AddEntry: function(sEntry, sOrigin)
+			{
+				let aEntryGroup = this.element.find(this.js_selectors.entry_group)
+				let sAuthorLogin = $(sEntry).attr('data-entry-author-login');
+				if (aEntryGroup.length > 0 && $(aEntryGroup[0]).attr('data-entry-group-author-login') === sAuthorLogin && $(aEntryGroup[0]).attr('data-entry-group-origin') === sOrigin)
+				{
+					$(aEntryGroup[0]).prepend(sEntry);
+					this._ReformatDateTimes();
+				}
+				else
+				{
+					// TODO 2.8.0 Create a new entry group
+					window.location.reload();
+				}
+			},
+			AddEntry: function(sEntry, sOrigin)
+			{
+				this._AddEntry(sEntry, sOrigin);
+			},
+			_GetCaseLogRank: function(sCaseLog)
+			{
+				let iIdx = 0;
+				let oCaselogTab = this.element.find(this.js_selectors.tab +
+					'[data-tab-type="caselog"]' +
+					'[data-caselog-attribute-code="'+ sCaseLog +'"]'
+				);
+				if(oCaselogTab.length > 0 && oCaselogTab.attr('data-caselog-rank'))
+				{
+					iIdx = parseInt(oCaselogTab.attr('data-caselog-rank'));
+				}
+				return iIdx;
+			},
+			GetCaseLogRank: function(sCaseLog)
+			{
+				return this._GetCaseLogRank(sCaseLog);	
+			},
 			_UpdateEntryGroupsVisibility: function()
 			{
 				const me = this;

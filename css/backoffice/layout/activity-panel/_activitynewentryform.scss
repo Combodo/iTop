@@ -36,7 +36,7 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !
 
 .ibo-activity-panel--body--add-caselog-entry--toggler{
 	@extend %ibo-baseline-centered-content;
-	float: right;
+	position: absolute;
 	right: $ibo-activity-panel--body--add-caselog-entry--toggler--right;
 	margin-top: $ibo-activity-panel--body--add-caselog-entry--toggler--margin-top;
 	
@@ -58,4 +58,7 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !
 	&:hover {
 		color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
 	}
+}
+.ibo-activity-new-entry-form--action-buttons--right-actions > .ibo-popover-menu{
+	z-index: 1;
 }

@@ -2,7 +2,7 @@
 	<div class="ibo-activity-panel--header">
 		<div class="ibo-activity-panel--tabs">
 			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-				<div class="ibo-activity-panel--tab ibo-activity-panel--tab-for-caselog ibo-activity-panel--tab-for-caselog-{{ loop.index }}" data-role="ibo-activity-panel--tab" data-tab-type="caselog" data-caselog-attribute-code="{{ sCaseLogAttCode }}">
+				<div class="ibo-activity-panel--tab ibo-activity-panel--tab-for-caselog ibo-activity-panel--tab-for-caselog-{{ loop.index }}" data-role="ibo-activity-panel--tab" data-tab-type="caselog" data-caselog-attribute-code="{{ sCaseLogAttCode }}" data-caselog-rank="{{ loop.index }}">
 					<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
 						<span class="ibo-activity-panel--tab-decoration"></span>
 						<span class="ibo-activity-panel--tab-text">{{ aCaseLogData.title }}</span>

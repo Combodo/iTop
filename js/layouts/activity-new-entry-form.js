@@ -43,11 +43,12 @@ $(function() {
 					right_actions: '[data-role="ibo-activity-new-entry-form--action-buttons--right-actions"]',
 					caselog_picker: '[data-role="ibo-popover-menu"]',
 				},
-
+			
 			// the constructor
 			_create: function () {
 				let me = this;
 				me._HideNewEntryForm();
+				$(this.element).find(this.js_selectors.caselog_picker).popover_menu({toggler: this.js_selectors.right_actions});
 				$(this.js_selectors.toggler).on('click', function(oEvent){
 					me._ShowNewEntryForm();
 				});
@@ -67,7 +68,7 @@ $(function() {
 					}
 					else
 					{
-						$(this).children(me.js_selectors.caselog_picker).show();
+						$(this).children(me.js_selectors.caselog_picker).popover_menu('openPopup');
 					}
 				});
 				$(this.js_selectors.right_actions).on('cancel', function(oEvent){
@@ -84,7 +85,20 @@ $(function() {
 			},
 			_SubmitNewEntryToCaselog: function(sData, sCaselog)
 			{
-				alert('Submited '+ sData +' to ' + sCaselog + ' caselog');
+				const me = this;
+				let oParams = {
+					'operation' : 'add_caselog_entry',
+					'class' : 'UserRequest',
+					'id' : '1',
+					'caselog_new_entry': sData,
+					'caselog_attcode' : sCaselog,
+					'caselog_rank' : $(me.js_selectors.panel).activity_panel('GetCaseLogRank', sCaselog),
+				}
+				//TODO 2.8.0 Handle errors
+				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(sNewEntry){
+					$(me.js_selectors.panel).activity_panel('AddEntry', sNewEntry, 'caselog:' + sCaselog)
+					me._HideNewEntryForm();
+				});
 			}
 		});
 });
