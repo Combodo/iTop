@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Layout\TabContainer;
 
 
+use appUserPreferences;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Layout\TabContainer\Tab\AjaxTab;
@@ -42,15 +43,23 @@ class TabContainer extends UIContentBlock
 	public const JS_FILES_REL_PATH = [
 		'js/layouts/tab-container.js'
 	];
-
+	
+	/** @var string $sName */
 	private $sName;
+	/** @var string $sPrefix */
 	private $sPrefix;
+	/** @var string $sLayout */
+	private $sLayout;
 
 	/**
 	 * TabContainer constructor.
 	 *
 	 * @param $sName
 	 * @param $sPrefix
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function __construct($sName, $sPrefix)
 	{
@@ -58,6 +67,7 @@ class TabContainer extends UIContentBlock
 
 		$this->sName = $sName;
 		$this->sPrefix = $sPrefix;
+		$this->sLayout = appUserPreferences::GetPref('tab_layout', 'horizontal');
 	}
 
 	/**
@@ -145,4 +155,12 @@ class TabContainer extends UIContentBlock
 			'aTabs' => $aTabs
 		];
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetLayout(): string {
+		return $this->sLayout;
+	}
+	
 }

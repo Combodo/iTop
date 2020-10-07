@@ -42,7 +42,23 @@ function StripArchiveArgument(sUrl)
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
 	return res;
 }
+//TODO 2.8.0 Is this the right place to put this method ?
+function SwitchTabMode()
+{
+	let aTabContainer = $('[data-role="ibo-tab-container"]');
+	if(!aTabContainer.hasClass('is-vertical')){
+		aTabContainer.removeClass('is-horizontal');
+		aTabContainer.addClass('is-vertical');
+		SetUserPreference('tab_layout', 'vertical', true);
+	}
+	else
+	{
+		aTabContainer.removeClass('is-vertical');
+		aTabContainer.addClass('is-horizontal');
+		SetUserPreference('tab_layout', 'horizontal', true);
+	}
 
+}
 // Processing
 $(document).ready(function(){
 	// Enable tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)

@@ -1234,6 +1234,7 @@ class utils
 				new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")"),
 				new SeparatorPopupMenuItem(),
 				new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $sUrl.'&printable=1', '_blank'),
+				new JSPopupMenuItem('UI:Menu:SwitchTabMode', Dict::S('UI:Menu:SwitchTabMode'), "SwitchTabMode()"),
 			);
 			break;
 

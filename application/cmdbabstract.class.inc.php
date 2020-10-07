@@ -1003,7 +1003,7 @@ EOF
 	z-index: 0;
 }
 .object-details .ibo-panel > .ibo-panel--body {
-	padding-top: 8px;
+	padding: 8px 16px 0px;
 }
 .object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tabs-list{
 	margin-left: -16px;
@@ -1013,6 +1013,26 @@ EOF
 .object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tab-container{
 	margin-left: -16px;
 	margin-right: -16px;
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical{
+	display: flex;
+	flex-direction: row;
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list{
+	padding-top: 50px;
+	flex-direction: column;
+	height: auto;
+	padding-left: unset;
+	margin-right: unset;
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header{
+	height: 50px;
+	width: 100%;
+	justify-content: left;
+}
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header > .ibo-tab-container--tab-toggler{
+	width: 100%;
+	justify-content: left;
 }
 CSS
 		);
