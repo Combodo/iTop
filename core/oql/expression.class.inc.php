@@ -1,24 +1,45 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/*
+ * Copyright (C) 2010-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
-class MissingQueryArgument extends CoreException
-{
+class MissingQueryArgument extends CoreException {
+}
+
+
+class ExpressionHelper {
+	/**
+	 * Callback to be used with {@link Expression::Browse}, to update the AllowAllData attribute in the NestedQueryExpression that are
+	 * present in the Expression tree
+	 *
+	 * @param \Expression $oExpression
+	 * @param boolean $bAllowAllData
+	 *
+	 * @uses \DBSearch::AllowAllData()
+	 *
+	 * @since 2.7.2 2.8.0 N°3324
+	 */
+	public static function ExpressionAllowAllDataCallback($oExpression, $bAllowAllData) {
+		if (!($oExpression instanceof NestedQueryExpression)) {
+			return;
+		}
+
+		$oExpression->AllowAllData($bAllowAllData);
+	}
 }
 
 class NotYetEvaluatedExpression extends CoreException
@@ -28,8 +49,7 @@ class NotYetEvaluatedExpression extends CoreException
 /**
  * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
  */
-abstract class Expression
-{
+abstract class Expression {
 	const OPERATOR_BINARY = 'binary';
 	const OPERATOR_BOOLEAN = 'boolean_binary';
 	const OPERATOR_FIELD = 'field';
@@ -183,9 +203,13 @@ abstract class Expression
 	}
 
 	/**
-	 * Recursively browse the expression tree
-	 * @param Closure $callback
-	 * @return mixed
+	 * Recursively browse the expression tree.
+	 *
+	 * To access variables, specify them using the `use` keyword and the `&` to pass by reference if necessary
+	 *
+	 * @see https://www.php.net/manual/fr/functions.anonymous.php
+	 *
+	 * @param Closure $callback with current expression as parameter
 	 */
 	abstract public function Browse(Closure $callback);
 
@@ -197,6 +221,9 @@ abstract class Expression
 	// recursively list field parents ($aTable = array of sParent => dummy)
 	abstract public function CollectUsedParents(&$aTable);
 
+	/**
+	 * @return boolean true if the expression's value is constant and evaluates to true, false otherwise
+	 */
 	abstract public function IsTrue();
 
 	// recursively builds an array of [classAlias][fieldName] => value
@@ -205,8 +232,7 @@ abstract class Expression
 	// recursively builds an array of parameters to give to current request
 	abstract public function ListParameters();
 
-	public function RequiresField($sClass, $sFieldName)
-	{
+	public function RequiresField($sClass, $sFieldName) {
 		// #@# todo - optimize : this is called quite often when building a single query !
 		$aRequired = $this->ListRequiredFields();
 		if (!in_array($sClass.'.'.$sFieldName, $aRequired)) return false;
@@ -1036,12 +1062,15 @@ class MatchExpression extends BinaryExpression
 	 * MatchExpression constructor.
 	 *
 	 * @param \FieldExpression $oLeftExpr
-	 * @param \ScalarExpression $oRightExpr
+	 * @param \Expression $oRightExpr
 	 *
 	 * @throws \CoreException
 	 */
-	public function __construct(FieldExpression $oLeftExpr, ScalarExpression $oRightExpr)
+	public function __construct(FieldExpression $oLeftExpr, Expression $oRightExpr)
 	{
+		if (!$oRightExpr instanceof ScalarExpression && !$oRightExpr instanceof VariableExpression) {
+			throw new CoreException('Only instance of ScalarExpression or VariableExpression are allowed in MATCHES '.get_class( $oRightExpr).' found', $oRightExpr);
+		}
 		parent::__construct($oLeftExpr, 'MATCHES', $oRightExpr);
 	}
 
@@ -2427,59 +2456,61 @@ class NestedQueryExpression extends Expression
 	}
 
 	/**/
-	public function ApplyParameters($aArgs)
-	{
+	public function ApplyParameters($aArgs) {
 		$this->m_oNestedQuery->ApplyParameters($aArgs);
 	}
 
 	/**/
-	public function GetUnresolvedFields($sAlias, &$aUnresolved)
-	{
+	public function GetUnresolvedFields($sAlias, &$aUnresolved) {
 	}
 
 	/**/
-	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
-	{
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true) {
 		// Check and prepare the select information
-		$this->m_oNestedQuery->TranslateConditions($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
+		$this->m_oNestedQuery->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+
 		return clone $this;
 	}
 
-	public function ListRequiredFields()
-	{
+	public function ListRequiredFields() {
 		return array();
 	}
 
-	public function CollectUsedParents(&$aTable)
-	{
+	public function CollectUsedParents(&$aTable) {
 	}
 
-	public function ListConstantFields()
-	{
+	public function ListConstantFields() {
 		return $this->m_oNestedQuery->ListConstantFields();
 	}
 
-	public function ListParameters()
-	{
+	public function ListParameters() {
 		return $this->m_oNestedQuery->ListParameters();
 	}
 
-	public function RenameParam($sOldName, $sNewName)
-	{
+	public function RenameParam($sOldName, $sNewName) {
 		$this->m_oNestedQuery->RenameParam($sOldName, $sNewName);
 	}
 
-	public function RenameAlias($sOldName, $sNewName)
-	{
+	public function RenameAlias($sOldName, $sNewName) {
 		$this->m_oNestedQuery->RenameAlias($sOldName, $sNewName);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
-	{
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false) {
 		return $this->m_oNestedQuery->ToJSON();
+	}
+
+	/**
+	 * Simple indirection to {@link \DBObjectSearch::AllowAllData()}
+	 *
+	 * @param bool $bAllowAllData
+	 *
+	 * @uses \DBSearch::AllowAllData()
+	 */
+	public function AllowAllData($bAllowAllData = true) {
+		$this->m_oNestedQuery->AllowAllData($bAllowAllData);
 	}
 }
 

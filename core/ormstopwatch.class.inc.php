@@ -607,14 +607,22 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							// Activate any existing trigger
 							// 
 							$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+
 							$oTriggerSet = new DBObjectSet(
-								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code=:stop_watch_code AND threshold_index = :threshold_index"),
+								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code MATCHES :stop_watch_code AND threshold_index = :threshold_index"),
 								array(), // order by
 								array('stop_watch_code' => $sAttCode, 'threshold_index' => $iThreshold)
 							);
 							while ($oTrigger = $oTriggerSet->Fetch())
 							{
-								$oTrigger->DoActivate($oObj->ToArgs('this'));
+								try
+								{
+									$oTrigger->DoActivate($oObj->ToArgs('this'));
+								}
+								catch(Exception $e)
+								{
+									utils::EnrichRaisedException($oTrigger, $e);
+								}
 							}
 						}
 					}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,16 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+/**
+ * Checks PHP version
+ *
+ * This is a hard-coded check that limits errors : we are stopping for anything < PHP 7.0.0
+ * The "real one" will be done in {@link \SetupUtils::CheckPhpVersion()}
+ *
+ * @since 2.8.0 N°2214
+ */
+$bIsValidPhpVersion = false;
+if (PHP_MAJOR_VERSION >= 7) {
+	$bIsValidPhpVersion = true;
+} else {
+	echo 'Your PHP version ('.PHP_VERSION.') isn\'t supported.';
+	exit(-1);
+}
+
+
 define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
-if (function_exists('microtime'))
-{
+if (function_exists('microtime')) {
 	$fItopStarted = microtime(true);
-}
-else
-{
+} else {
 	$fItopStarted = 1000 * time();
 }
 

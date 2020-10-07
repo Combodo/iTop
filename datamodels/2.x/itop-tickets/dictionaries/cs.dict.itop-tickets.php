@@ -114,32 +114,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:lnkFunctionalCIToTicket' => 'Spojení (Funkční konfigurační položka / Tiket)',
-	'Class:lnkFunctionalCIToTicket+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Tiket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'ID',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'Konfigurační položka',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Název konfigurační položky',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Dopad (text)',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Dopad',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Přidán manuálně',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Automaticky',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Není zasažen',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -195,7 +169,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'WorkOrder:Details' => 'Detaily',
 	'WorkOrder:Moreinfo' => 'Více informací',
 	'Tickets:ResolvedFrom' => 'Vyřešeno automaticky na základě %1$s',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field',
@@ -240,15 +213,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR',
-
-	'portal:itop-portal' => 'Standardní portál', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - Uživatelský portál',
-	'Brick:Portal:UserProfile:Title' => 'Můj profil',
-	'Brick:Portal:NewRequest:Title' => 'Nový požadavek',
-	'Brick:Portal:NewRequest:Title+' => '<p>Potřebujete pomoci?</p><p>Vyberte z katalogu služeb a vytvořte nový požadavek.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Otevřené požadavky',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Sledujte své otevřené požadavky.</p><p>Zkontrolujte stav, přidejte komentář, přiložte dokumenty, potvrďte řešení.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Probíhající',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Vyřešené',
-	'Brick:Portal:ClosedRequests:Title' => 'Uzavřené požadavky',
 ));
+
+//
+// Class: Document
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:Document/Attribute:contracts_list' => 'Smlouvy',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Služby',
+	'Class:Document/Attribute:services_list+' => '',
+));
+

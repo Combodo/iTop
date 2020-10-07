@@ -561,12 +561,6 @@ EOF
 			$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
 			$iCount = $oLinkSet->Count();
-			$sCount = '';
-			if ($iCount != 0)
-			{
-				$sCount = " ($iCount)";
-			}
-			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
 			if ($this->IsNew())
 			{
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -611,6 +605,9 @@ EOF
 			{
 				continue;
 			}
+
+			$sCount = ($iCount != 0) ? " ($iCount)" : "";
+			$oPage->SetCurrentTab('Class:'.$sClass.'/Attribute:'.$sAttCode, $oAttDef->GetLabel().$sCount);
 
 			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));

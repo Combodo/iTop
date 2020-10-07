@@ -212,6 +212,9 @@ JS
 			break;
 
 		case 'download':
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';

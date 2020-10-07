@@ -694,4 +694,36 @@ class DBSearchTest extends ItopDataTestCase
 		// Previously we were using a output() call but this is time consuming and could cause "risky test" error !
 		ob_get_clean();
 	}
+
+	/**
+	 * @since 2.7.2 2.8.0 N°3324
+	 */
+	public function testAllowAllData() {
+		$oSimpleSearch = \DBObjectSearch::FromOQL('SELECT FunctionalCI');
+		$oSimpleSearch->AllowAllData(false);
+		self::assertFalse($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+		$oSimpleSearch->AllowAllData(true);
+		self::assertTrue($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+
+		$sNestedQuery = 'SELECT FunctionalCI WHERE id IN (SELECT Server)';
+		$this->CheckNestedSearch($sNestedQuery, true);
+		$this->CheckNestedSearch($sNestedQuery, false);
+	}
+
+	private function CheckNestedSearch($sQuery, $bAllowAllData) {
+		$oNestedQuerySearch = \DBObjectSearch::FromOQL($sQuery);
+		$oNestedQuerySearch->AllowAllData($bAllowAllData);
+		self::assertEquals($bAllowAllData, $oNestedQuerySearch->IsAllDataAllowed(), 'root DBSearch AllowData value');
+		$oNestedSearchInExpression = null;
+		$oNestedQuerySearch->GetCriteria()->Browse(function ($oExpression) use (&$oNestedSearchInExpression) {
+			if ($oExpression instanceof \NestedQueryExpression) {
+				$oNestedSearchInExpression = $oExpression->GetNestedQuery();
+
+				return;
+			}
+		});
+		self::assertNotNull($oNestedSearchInExpression, 'We must have a DBSearch inside a NestedQueryExpression inside the root DBSearch');
+		/** @var \DBObjectSearch $oNestedSearchInExpression */
+		self::assertEquals($bAllowAllData, $oNestedSearchInExpression->IsAllDataAllowed(), 'Nested DBSearch AllowData value');
+	}
 }

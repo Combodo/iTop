@@ -1883,8 +1883,9 @@ EOF
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		
-		case 'swf_navigator': // Graphical display of the relations "impact" / "depends on"
+
+		case 'swf_navigator': /** @deprecated SWF was removed in iTop */
+		case 'view_relations': // Graphical display of the relations "impact" / "depends on"
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
@@ -2021,7 +2022,7 @@ catch(CoreException $e)
 				$oLog->Set('userinfo', '');
 				$oLog->Set('issue', $e->GetIssue());
 				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $e->getTrace());
+				$oLog->Set('callstack', $e->getFullStackTraceAsString());
 				$oLog->Set('data', $e->getContextData());
 				$oLog->DBInsertNoReload();
 			}
@@ -2031,7 +2032,7 @@ catch(CoreException $e)
 			}
 		}
 
-		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getTraceAsString());
+		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getFullStackTraceAsString());
 	}
 
 	// For debugging only

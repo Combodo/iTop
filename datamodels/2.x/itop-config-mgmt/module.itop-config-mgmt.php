@@ -13,8 +13,9 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
+			'itop-structure/2.7.1',
 		),
-		'mandatory' => true,
+		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'ConfigMgmtInstaller',
 
@@ -27,17 +28,11 @@ SetupWebPage::AddModule(
 		'data.struct' => array(
 		),
 		'data.sample' => array(
-			'data.sample.organizations.xml',
 			'data.sample.brand.xml',
 			'data.sample.model.xml',
 			'data.sample.osfamily.xml',
 			'data.sample.osversion.xml',
 			'data.sample.networkdevicetype.xml',
-			'data.sample.contacttype.xml',
-			'data.sample.locations.xml',
-			'data.sample.persons.xml',
-			'data.sample.teams.xml',
-			'data.sample.contactteam.xml',
 			'data.sample.servers.xml',
 			'data.sample.nw-devices.xml',
 			'data.sample.software.xml',

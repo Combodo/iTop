@@ -28,7 +28,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakt(er) efter Service Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakt(er), der udløber om mindre end 30 dage',
-
 	'Menu:ProviderContract' => 'Leverandør kontrakter',
 	'Menu:ProviderContract+' => 'Leverandør kontrakter',
 	'Menu:CustomerContract' => 'Kunde kontrakter',
@@ -187,23 +186,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Dokument navn',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Sammenhæng FunctionalCI/Leverandør Kontrakt',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverandør kontrakt',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Leverandør kontrakt navn',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI navn',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -455,23 +437,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Leverandør kontrakt navn',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:lnkFunctionalCIToService' => 'Sammenhæng FunctionalCI/Ydelse',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Ydelse',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Ydelses navn',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI navn',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

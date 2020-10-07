@@ -291,7 +291,7 @@ abstract class AttributeDefinition
 	 * @param \DBObject $oHostObject
 	 * @param $value Object error if any, null otherwise
 	 *
-	 * @return bool
+	 * @return bool|string true for no errors, false or error message otherwise
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
@@ -2269,22 +2269,17 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		/** @var \AttributeExternalKey $oExtKeyToRemote */
 		$oExtKeyToRemote = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
 		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
-		{
-			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect)
-			{
+		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass())
-			{
+			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote())
-			{
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe())
-			{
+			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe()) {
 				continue;
 			}
 			$oRet = $oRemoteAttDef;

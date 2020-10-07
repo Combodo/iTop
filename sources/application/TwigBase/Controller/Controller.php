@@ -557,6 +557,7 @@ abstract class Controller
 		{
 			case 'html':
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
+				$this->m_oPage->add_header('X-Frame-Options: deny');
 				break;
 
 			case 'ajax':

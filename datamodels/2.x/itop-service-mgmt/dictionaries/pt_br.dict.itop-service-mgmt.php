@@ -38,7 +38,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível serviço',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por estado',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
-
 	'Menu:ProviderContract' => 'Contratos Provedor(as)',
 	'Menu:ProviderContract+' => 'Contratos Provedor(as)',
 	'Menu:CustomerContract' => 'Contratos Clientes',
@@ -197,23 +196,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nome documento',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link CI / Contrato provedor(a)',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato provedor(a)',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nome contrato provedor(a)',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CIs',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Nome CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -465,23 +447,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Nome contrato provedor(a)',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToService' => 'Link CI / Serviço',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Serviço',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Nome serviço',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CIs',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Nome CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

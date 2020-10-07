@@ -57,7 +57,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1], "$sPhpFile file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
+		$this->assertRegExp("#$sExpectedVersion#", $matches[1], " $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
 
 	}
 

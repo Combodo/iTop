@@ -10,4 +10,137 @@
 			<deny />
 		</portal>
 	</portals>
+	<module_designs>
+		<module_design id="itop-portal" xsi:type="portal" _delta="define">
+			<properties>
+		<name>portal:itop-portal</name>
+		<!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
+		<!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
+		<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
+		<!--<logo>../images/itop-logo.png</logo>-->
+		<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
+		<!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
+		<themes/>
+		<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
+		<!-- Available templates are id="layout|home" -->
+		<templates/>
+		<!-- Class used for generating objects view/edit urls (eg. in linked sets). -->
+		<!-- Note: Notification placeholders are NOT using this but the "DBObject::RegisterURLMakerClass(<PORTAL_ID>, <CLASS_NAME>)" declarations. -->
+		<urlmaker_class>iTopPortalViewUrlMaker</urlmaker_class>
+		<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
+		<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
+		<triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>
+		<attachments>
+			<allow_delete>true</allow_delete>
+		</attachments>
+		<allowed_portals>
+			<!-- Defines how other portals -allowed for the current user- will be opened. "tab" for a new tab, "self" for the current window -->
+			<opening_mode>tab</opening_mode>
+		</allowed_portals>
+	</properties>
+			<classes>
+				<class id="User" _delta="define">
+					<!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
+					<!-- See example in UserRequest class -->
+					<!--<lifecycle/>-->
+					<scopes>
+						<!-- Note : Silos apply to those scope queries -->
+						<scope id="all">
+							<oql_view><![CDATA[SELECT User AS U JOIN Person AS P ON U.contactid=P.id WHERE P.id = :current_contact_id]]></oql_view>
+							<!-- No object of this class can be edited -->
+							<!--<oql_edit />-->
+							<!-- Everybody -->
+							<!--<allowed_profiles />-->
+						</scope>
+					</scopes>
+				</class>
+				<class id="Organization" _delta="define">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Location" _delta="define">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Location WHERE org_id = :current_contact->org_id]]></oql_view>
+						</scope>
+					</scopes>
+				</class>
+				<class id="Contact" _delta="define">
+					<scopes>
+						<scope id="all">
+							<oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
+						</scope>
+						<scope id="admin">
+							<oql_view><![CDATA[SELECT Contact]]></oql_view>
+							<allowed_profiles>
+								<allowed_profile id="Administrator"/>
+							</allowed_profiles>
+						</scope>
+					</scopes>
+					<lists>
+						<list id="default">
+							<items>
+								<item id="status">
+									<rank>10</rank>
+								</item>
+								<item id="org_id">
+									<rank>20</rank>
+								</item>
+								<item id="function">
+									<rank>50</rank>
+								</item>
+							</items>
+						</list>
+					</lists>
+				</class>
+			</classes>
+			<bricks>
+				<brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
+				<rank>
+				<!-- Can be either a <default> tag for both home page and navigation menu or distinct <home> or/and <navigation_menu> tags-->
+				<default>1</default>
+				</rank>
+			<title>
+				<!-- Can be either a <default> tag for both home page and navigation menu or distinct <home> or/and <navigation_menu> tags-->
+				<default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
+			</title>
+			<decoration_class>
+				<default>fas fa-user fa-2x</default>
+			</decoration_class>
+			<!-- Show / hide some of the user profile forms by setting the tag value to true|false -->
+			<!--<show_picture_form>true</show_picture_form>-->
+			<!--<show_preferences_form>true</show_preferences_form>-->
+			<!--<show_password_form>true</show_password_form>-->
+			<form>
+				<!-- Optional tag to list the fields. If empty only fields from <twig> tag will be displayed, if omitted fields from zlist details will. -->
+				<fields />
+				<!-- Optional tag to specify the form layout. Fields that are not positioned in the layout will be placed at the end of the form -->
+				<twig>
+					<!-- data-field-id attribute must be an attribute code of the class -->
+					<!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
+					<div class="form_field" data-field-id="first_name" data-field-flags="read_only">
+					</div>
+					<div class="form_field" data-field-id="name" data-field-flags="read_only">
+					</div>
+					<div class="form_field" data-field-id="org_id" data-field-flags="read_only">
+					</div>
+					<div class="form_field" data-field-id="email" data-field-flags="read_only">
+					</div>
+					<div class="form_field" data-field-id="phone">
+					</div>
+					<div class="form_field" data-field-id="location_id">
+					</div>
+					<div class="form_field" data-field-id="function">
+					</div>
+					<div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
+					</div>
+				</twig>
+			</form>
+		</brick>
+			</bricks>
+		</module_design>
+	</module_designs>
 </itop_design>

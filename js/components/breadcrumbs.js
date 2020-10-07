@@ -87,20 +87,23 @@ $(function()
                             sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'"/></span>';
                         }
 
-						var sTitle = oEntry['description'];
+						var sTitle = oEntry['description'],
+							sLabel = oEntry['label'];
 						if (sTitle.length == 0) {
-							sTitle = oEntry['label'];
+							sTitle = sLabel;
 						}
+						sTitle = SanitizeHtml(sTitle);
+						sLabel = SanitizeHtml(sLabel);
 
 						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
 						{
 							// Last entry is the current page
-							sBreadcrumbsItemHtml += '<span class="ibo-breadcrumbs--item--is-current" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+oEntry['label']+'</span></span>';
+							sBreadcrumbsItemHtml += '<span class="ibo-breadcrumbs--item--is-current" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></span>';
 						}
 						else
 						{
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
-							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+oEntry['label']+'</span></a>';
+							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></a>';
 						}
 					}
 					this.element.append(sBreadcrumbsItemHtml);

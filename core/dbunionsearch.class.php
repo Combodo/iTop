@@ -65,9 +65,7 @@ class DBUnionSearch extends DBSearch
 				{
 					$this->aSearches[] = $oSubSearch->DeepClone();
 				}
-			}
-			else
-			{
+			} else {
 				$this->aSearches[] = $oSearch->DeepClone();
 			}
 		}
@@ -75,17 +73,16 @@ class DBUnionSearch extends DBSearch
 		$this->ComputeSelectedClasses();
 	}
 
-	public function AllowAllData()
+	public function AllowAllData($bAllowAllData = true)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AllowAllData();
 		}
 	}
+
 	public function IsAllDataAllowed()
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			if ($oSearch->IsAllDataAllowed() === false) return false;
 		}
 		return true;

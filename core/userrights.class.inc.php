@@ -1820,9 +1820,8 @@ class UserRights
 			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
 			// fails we just silently ignore the error and keep the same session id...
 			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
-			session_regenerate_id();
-			if ($old_error_handler !== null)
-			{
+			session_regenerate_id(true);
+			if ($old_error_handler !== null) {
 				set_error_handler($old_error_handler);
 			}
 		}

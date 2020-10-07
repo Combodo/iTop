@@ -27,12 +27,12 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir=$this->tmpdir();
-		$aDirsToCleanup[] = $this->sTmpDir;
+		$this->sTmpDir = $this->tmpdir();
+		$this->aDirsToCleanup[] = $this->sTmpDir;
 
 		$this->recurseMkdir($this->sTmpDir."/branding/themes/basque-red");
-		$this->sCssPath = $this->sTmpDir . '/branding/themes/basque-red/main.css';
-		$this->sJsonThemeParamFile = $this->sTmpDir . '/branding/themes/basque-red/theme-parameters.json';
+		$this->sCssPath = $this->sTmpDir.'/branding/themes/basque-red/main.css';
+		$this->sJsonThemeParamFile = $this->sTmpDir.'/branding/themes/basque-red/theme-parameters.json';
 		$this->recurse_copy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
@@ -372,26 +372,24 @@ JSON;
 		$sAfterReplacementCssVariableMd5sum='';
 		if (is_file($this->sTmpDir.'/'.$sFileToTest))
 		{
-			$sFileToTest=$this->sTmpDir.'/'.$sFileToTest;
-		}
-		else
-		{
-			$sFileToTest=APPROOT.'/'.$sFileToTest;
+			$sFileToTest = $this->sTmpDir.'/'.$sFileToTest;
+		} else {
+			$sFileToTest = APPROOT.'/'.$sFileToTest;
 		}
 
 		//copy images in test dir
-		$sAbsoluteImagePath = APPROOT .'test/application/theme-handler/copied/testimages/';
+		$sAbsoluteImagePath = APPROOT.'test/application/theme-handler/copied/testimages/';
 		$this->recurseMkdir($sAbsoluteImagePath);
-		$aDirsToCleanup[] = dirname($sAbsoluteImagePath);
-		$this->recurse_copy(APPROOT .'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
+		$this->aDirsToCleanup[] = dirname($sAbsoluteImagePath);
+		$this->recurse_copy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
 
 		//change approot-relative in css-variable to use absolute path
 		$sCssVarPath = $this->sTmpDir."/branding/css/css-variables.scss";
 		$sBeforeReplacementCssVariableMd5sum = md5_file($sCssVarPath);
-		echo 'BEFORE :' . $sBeforeReplacementCssVariableMd5sum  .' ' . $sCssVarPath . ' ';
+		echo 'BEFORE :'.$sBeforeReplacementCssVariableMd5sum.' '.$sCssVarPath.' ';
 		$sCssVariableContent = file_get_contents($sCssVarPath);
 		$sLine = '$approot-relative: "'.$sAbsoluteImagePath.'" !default;';
-		$sCssVariableContent=preg_replace("/\\\$approot-relative: \"(.*)\"/", $sLine, $sCssVariableContent);
+		$sCssVariableContent = preg_replace("/\\\$approot-relative: \"(.*)\"/", $sLine, $sCssVariableContent);
 		file_put_contents($sCssVarPath, $sCssVariableContent);
 		if ($bMissingFile)
 		{
@@ -448,15 +446,16 @@ JSON;
 		if ($iCompileCSSFromSASSCount==1)
 		{
 			$sExpectedMainCssFile = APPROOT.$sExpectedMainCssPath;
-			if (!is_file($sExpectedMainCssFile))
-			{
+			if (!is_file($sExpectedMainCssFile)) {
 				$this->assertTrue(false, "Cannot find expected main css file $sExpectedMainCssFile");
 			}
 
 			$aPatterns = [static::PATTERN, '/'.$sBeforeReplacementCssVariableMd5sum.'/'];
 			$aPatterns[] = "/8100523d2e76a70266f3e7110e2fe5fb/";
+			$aPatterns[] = '/MD5SUM/';
 			$aReplacements = [$sReplacement, $sAfterReplacementCssVariableMd5sum];
 			$aReplacements[] = md5(json_encode($aThemeParameters['variables']));
+			$aReplacements[] = $sAfterReplacementCssVariableMd5sum;
 			var_dump($aReplacements);
 			$this->DoInnerJsonValidation($sExpectedMainCssFile, $cssPath, $aPatterns, $aReplacements);
 		}
@@ -596,7 +595,7 @@ SCSS;
 		$aExpectedImages = [];
 		foreach ($aExpectedUris as $sExpectedUri)
 		{
-			$aExpectedImages[] = APPROOT . $sExpectedUri;
+			$aExpectedImages[] = ThemeHandler::GetAppRootWithSlashes().$sExpectedUri;
 		}
 
 		$this->assertEquals($aExpectedImages, $aIncludedImages);

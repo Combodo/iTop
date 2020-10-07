@@ -31,6 +31,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
+
 	'Core:AttributeDashboard' => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
@@ -1104,3 +1106,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResourceSystemMenu' => 'Menu System',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
+

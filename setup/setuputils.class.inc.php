@@ -2137,7 +2137,7 @@ JS
 			'zlib',
 			'zip',
 			'fileinfo', // N°3123
-			'mbstring', // N°2899
+			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];
 	}
@@ -2153,7 +2153,6 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {

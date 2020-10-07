@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
+  <classes>
+    <class id="KnownError" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment>/**&#13;
+* Description of known error&#13;
+*/</comment>
+        <category>bizmodel,searchable,knownerrormgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>knownerror</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/known-error.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="org_id"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>cust_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="cust_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="problem_id" xsi:type="AttributeExternalKey">
+          <sql>problem_id</sql>
+          <target_class>Problem</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="problem_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>problem_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="symptom" xsi:type="AttributeText">
+          <sql>symptom</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="root_cause" xsi:type="AttributeText">
+          <sql>rootcause</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="workaround" xsi:type="AttributeText">
+          <sql>workaround</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="solution" xsi:type="AttributeText">
+          <sql>solution</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="error_code" xsi:type="AttributeString">
+          <sql>error_code</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="domain" xsi:type="AttributeEnum">
+          <values>
+            <value id="Network">Network</value>
+            <value id="Server">Server</value>
+            <value id="Application">Application</value>
+            <value id="Desktop">Desktop</value>
+          </values>
+          <sql>domain</sql>
+          <default_value>Application</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="vendor" xsi:type="AttributeString">
+          <sql>vendor</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="model" xsi:type="AttributeString">
+          <sql>model</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ci_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkErrorToFunctionalCI</linked_class>
+          <ext_key_to_me>error_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocumentToError</linked_class>
+          <ext_key_to_me>error_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="problem_id">
+              <rank>30</rank>
+            </item>
+            <item id="error_code">
+              <rank>40</rank>
+            </item>
+            <item id="domain">
+              <rank>50</rank>
+            </item>
+            <item id="vendor">
+              <rank>60</rank>
+            </item>
+            <item id="model">
+              <rank>70</rank>
+            </item>
+            <item id="version">
+              <rank>80</rank>
+            </item>
+            <item id="symptom">
+              <rank>90</rank>
+            </item>
+            <item id="root_cause">
+              <rank>100</rank>
+            </item>
+            <item id="workaround">
+              <rank>110</rank>
+            </item>
+            <item id="solution">
+              <rank>120</rank>
+            </item>
+            <item id="ci_list">
+              <rank>130</rank>
+            </item>
+            <item id="document_list">
+              <rank>140</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="problem_id">
+              <rank>30</rank>
+            </item>
+            <item id="error_code">
+              <rank>40</rank>
+            </item>
+            <item id="domain">
+              <rank>50</rank>
+            </item>
+            <item id="symptom">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="error_code">
+              <rank>20</rank>
+            </item>
+            <item id="symptom">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="problem_id">
+              <rank>20</rank>
+            </item>
+            <item id="error_code">
+              <rank>30</rank>
+            </item>
+            <item id="symptom">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkErrorToFunctionalCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment>/**&#13;
+* n-n link between any Infra and a Known Error&#13;
+*/</comment>
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkerrortofunctionalci</db_table>
+        <db_key_field>link_id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes/>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="functionalci_id"/>
+            <attribute id="error_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="error_id" xsi:type="AttributeExternalKey">
+          <sql>error_id</sql>
+          <target_class>KnownError</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="error_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>error_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="reason" xsi:type="AttributeString">
+          <sql>dummy</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_id">
+              <rank>20</rank>
+            </item>
+            <item id="reason">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkDocumentToError" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <comment>/**&#13;
+* n-n link between any Contract and a Document&#13;
+*/</comment>
+        <is_link>1</is_link>
+        <category>bizmodel,searchable,knownerrormgmt,lnkknownerror</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdocumenttoerror</db_table>
+        <db_key_field>link_id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="link_type"/>
+          </attributes>
+        </naming>
+        <display_template>../business/templates/default.html</display_template>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="document_id"/>
+            <attribute id="error_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="error_id" xsi:type="AttributeExternalKey">
+          <sql>error_id</sql>
+          <target_class>KnownError</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="error_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>error_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="link_type" xsi:type="AttributeString">
+          <sql>link_type</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_name">
+              <rank>20</rank>
+            </item>
+            <item id="link_type">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="error_name">
+              <rank>20</rank>
+            </item>
+            <item id="link_type">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
+      <rank>42</rank>
+	    <style>
+		    <decoration_classes>fas fa-question</decoration_classes>
+	    </style>
+    </menu>
+    <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
+      <rank>5</rank>
+      <parent>ProblemManagement</parent>
+      <template_file/>
+    </menu>
+    <menu id="NewError" xsi:type="NewObjectMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>ProblemManagement</parent>
+      <class>KnownError</class>
+    </menu>
+    <menu id="SearchError" xsi:type="SearchMenuNode" _delta="define">
+      <rank>4</rank>
+      <parent>ProblemManagement</parent>
+      <class>KnownError</class>
+    </menu>
+    <menu id="Problem:KnownErrors" xsi:type="OQLMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>Problem:Shortcuts</parent>
+      <oql>SELECT KnownError</oql>
+      <do_search>1</do_search>
+    </menu>
+  </menus>
+</itop_design>
