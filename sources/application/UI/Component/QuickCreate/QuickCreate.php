@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Component\QuickCreate;
 
 
 use Combodo\iTop\Application\UI\UIBlock;
+use MetaModel;
 use UserRights;
 
 /**
@@ -52,6 +53,8 @@ class QuickCreate extends UIBlock
 	protected $aAvailableClasses;
 	/** @var array $aLastClasses */
 	protected $aLastClasses;
+	/** @var int $iMaxAutocompleteResults Max. number of elements returned by the autocomplete */
+	protected $iMaxAutocompleteResults;
 
 	/**
 	 * QuickCreate constructor.
@@ -67,6 +70,7 @@ class QuickCreate extends UIBlock
 		parent::__construct($sId);
 		$this->aAvailableClasses = UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true);
 		$this->aLastClasses = $aLastClasses;
+		$this->iMaxAutocompleteResults = (int) MetaModel::GetConfig()->Get('quick_create.max_autocomplete_results');
 	}
 
 	/**
@@ -101,5 +105,14 @@ class QuickCreate extends UIBlock
 	public function GetLastClasses()
 	{
 		return $this->aLastClasses;
+	}
+
+	/**
+	 * @see $iMaxAutocompleteResults
+	 * @return int
+	 */
+	public function GetMaxAutocompleteResults(): int
+	{
+		return $this->iMaxAutocompleteResults;
 	}
 }

@@ -26,7 +26,7 @@ $(function()
 		// default options
 		options:
 		{
-
+			max_autocomplete_results: 10,
 		},
 		css_classes:
 		{
@@ -58,7 +58,6 @@ $(function()
 		{
 			const me = this;
 
-			// TODO 2.8.0 Use config parameter for maxOptions value
 			// Instantiate selectize.js on input
 			this.element.find(this.js_selectors.input).selectize({
 				dropdownParent: this.js_selectors.select_dropdown_parent,
@@ -66,7 +65,7 @@ $(function()
 				dropdownContentClass: 'ibo-quick-create--compartment-results--element',
 				openOnFocus: false,
 				maxItems: 1,
-				maxOptions: 10,
+				maxOptions: this.options.max_autocomplete_results,
 			});
 
 			// Remove some inline styling from the widget
