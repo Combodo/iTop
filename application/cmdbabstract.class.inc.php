@@ -1024,6 +1024,7 @@ EOF
 	height: auto;
 	padding-left: unset;
 	margin-right: unset;
+	min-width: calc(32px + 90px + 32px);
 }
 .object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header{
 	height: 50px;
