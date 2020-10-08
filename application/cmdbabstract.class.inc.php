@@ -1034,6 +1034,9 @@ EOF
 	width: 100%;
 	justify-content: left;
 }
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tab-container {
+	flex-grow: 1;
+}
 CSS
 		);
 
