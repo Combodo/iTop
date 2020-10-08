@@ -50,6 +50,8 @@ $ibo-quick-create--compartment-content--text-color: $ibo-color-grey-900 !default
 
 $ibo-quick-create--compartment-element--margin-bottom: 8px !default;
 
+$ibo-quick-create--compartment-results--element--option: $ibo-quick-create--compartment-element--margin-bottom !default;
+
 $ibo-quick-create--compartment-element-image--margin-right: 8px !default;
 $ibo-quick-create--compartment-element-image--width: 20px !default;
 
@@ -138,6 +140,12 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 					color: $ibo-quick-create--input--placeholder-color;
 				}
 			}
+			> .item{
+				color: $ibo-quick-create--input--text-color;
+				@extend %ibo-font-ral-nor-300;
+				
+				line-height: 200%;
+			}
 		}
 		.selectize-dropdown{
 			background-color: $ibo-quick-create--input-options--background-color;
@@ -206,6 +214,17 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	margin-right: $ibo-quick-create--compartment-element-image--margin-right;
 	width: $ibo-quick-create--compartment-element-image--width;
 }
+
+.ibo-quick-create--compartment-results--element > .option{
+	margin-bottom: $ibo-quick-create--compartment-element--margin-bottom;
+	color: inherit;
+	
+	&:hover{
+		cursor: pointer;
+		@extend a:hover;
+	}
+}
+
 .ibo-quick-create--compartment--placeholder{
 	align-items: center;
 	display: flex;

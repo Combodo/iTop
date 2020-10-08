@@ -38,6 +38,7 @@ $(function()
 			form: '[data-role="ibo-quick-create--head"]',
 			input: '[data-role="ibo-quick-create--input"]',
 			compartment_element: '[data-role="ibo-quick-create--compartment-element"]',
+			select_dropdown_parent: '[data-role="ibo-quick-create--compartment-results"]'
 		},
    
 		// the constructor
@@ -57,10 +58,15 @@ $(function()
 		{
 			const me = this;
 
+			// TODO 2.8.0 Use config parameter for maxOptions value
 			// Instantiate selectize.js on input
 			this.element.find(this.js_selectors.input).selectize({
+				dropdownParent: this.js_selectors.select_dropdown_parent,
+				dropdownClass: 'ibo-quick-create--compartment-results--container',
+				dropdownContentClass: 'ibo-quick-create--compartment-results--element',
 				openOnFocus: false,
-				maxItems: 1
+				maxItems: 1,
+				maxOptions: 10,
 			});
 
 			// Remove some inline styling from the widget
