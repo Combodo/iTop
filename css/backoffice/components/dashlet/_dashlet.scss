@@ -1,0 +1,21 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet--width: 100% !default;
+$ibo-dashlet--width--is-inline: auto !default;
+$ibo-dashlet--margin-bottom--is-last: 16px !default;
+
+/* Rules */
+.ibo-dashlet{
+	width: $ibo-dashlet--width;
+
+	&:not(:last-of-type){
+		margin-bottom: $ibo-dashlet--margin-bottom--is-last;
+	}
+}
+.ibo-dashlet--is-inline{
+	width: $ibo-dashlet--width--is-inline;
+}

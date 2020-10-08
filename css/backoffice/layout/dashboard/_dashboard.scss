@@ -1,0 +1,41 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashboard--grid--width: 100% !default;
+$ibo-dashboard--grid--elements-spacing: 16px !default;
+$ibo-dashboard--grid-row--elements-spacing: 16px !default;
+
+/* Rules */
+.ibo-dashboard--content{
+	display: flex;
+	flex-direction: column;
+}
+.ibo-dashboard--grid{
+	width: $ibo-dashboard--grid--width;
+}
+.ibo-dashboard--grid-row{
+	display: flex;
+	flex-direction: row;
+
+	&:not(:first-child){
+		padding-top: calc(#{$ibo-dashboard--grid--elements-spacing} / 2);
+	}
+	&:not(:last-child){
+		padding-bottom: calc(#{$ibo-dashboard--grid--elements-spacing} / 2);
+	}
+}
+.ibo-dashboard--grid-column{
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+
+	&:not(:last-child) {
+		padding-right: calc(#{$ibo-dashboard--grid-row--elements-spacing} / 2);
+	}
+	&:not(:first-child) {
+		padding-left: calc(#{$ibo-dashboard--grid-row--elements-spacing} / 2);
+	}
+}

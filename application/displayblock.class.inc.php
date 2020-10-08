@@ -729,19 +729,37 @@ class DisplayBlock
 				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			$iCount = $this->m_oSet->Count();
+			$sClassLabel = MetaModel::GetName($sClass);
+			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
-			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
-			// Note: border set to 0 due to various browser interpretations (IE9 adding a 2px border)
-			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;border:0;');
-			$sHtml .= MetaModel::GetName($sClass).': '.$iCount.'</a></p>';
-			$sParams = $oAppContext->GetForLink();
-			$sHtml .= '<p>';
+
+			$sCreateActionHtml = '';
 			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY))
 			{
-				$sHtml .= "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class={$sClass}&$sParams\">".Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($sClass))."</a><br/>\n";
+				$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&'.$oAppContext->GetForLink();
+				$sCreateActionLabel = Dict::Format('UI:Button:Create');
+				$sCreateActionHtml .= <<<HTML
+		<a class="ibo-dashlet-badge--action-create" href="$sCreateActionUrl">
+			<span class="ibo-dashlet-badge--action-create-icon fas fa-plus"></span>
+			<span class="ibo-dashlet-badge--action-create-label">$sCreateActionLabel</span>
+		</a>
+HTML;
 			}
-			$sHtml .= "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search_form&do_search=0&class={$sClass}&$sParams\">".Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass))."</a>\n";
-			$sHtml .= '</p>';
+
+			$sHtml .= <<<HTML
+<div class="ibo-dashlet-badge--body">
+	<div class="ibo-dashlet-badge--icon-container">
+		<img class="ibo-dashlet-badge--icon" src="$sClassIconUrl" />
+	</div>
+	<div class="ibo-dashlet-badge--actions">
+		<a class="ibo-dashlet-badge--action-list" href="$sHyperlink">
+			<span class="ibo-dashlet-badge--action-list-count">$iCount</span>
+			<span class="ibo-dashlet-badge--action-list-label">$sClassLabel</span>
+		</a>
+		$sCreateActionHtml
+	</div>
+</div>
+HTML;
 			break;
 
 			case 'summary':

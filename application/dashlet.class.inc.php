@@ -50,7 +50,7 @@ abstract class Dashlet
 		$this->bRedrawNeeded = true; // By default: redraw each time a property changes
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 		$this->aProperties = array(); // By default: there is no property
-		$this->aCSSClasses = array('dashlet');
+		$this->aCSSClasses = array('ibo-dashlet');
 		$this->sDashletType = get_class($this);
 	}
 
@@ -2306,8 +2306,8 @@ class DashletBadge extends Dashlet
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['class'] = 'Contact';
-		$this->aCSSClasses[] = 'dashlet-inline';
-		$this->aCSSClasses[] = 'dashlet-badge';
+		$this->aCSSClasses[] = 'ibo-dashlet--is-inline';
+		$this->aCSSClasses[] = 'ibo-dashlet-badge';
 	}
 
 	/**
@@ -2348,8 +2348,6 @@ class DashletBadge extends Dashlet
 		$oPage->add('</p>');
 		$oPage->add('<p>');
 		$oPage->add('   <a>'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
-		$oPage->add('   <br/>');
-		$oPage->add('   <a>'.Dict::Format('UI:SearchFor_Class', $sClassLabel).'</a>');
 		$oPage->add('</p>');
 		$oPage->add('</div>');
 

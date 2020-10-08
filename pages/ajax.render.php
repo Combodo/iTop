@@ -1115,7 +1115,7 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'reload_dashboard':
@@ -1134,7 +1134,7 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'save_dashboard':
@@ -1156,12 +1156,12 @@ try
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
-			$('.dashboard_contents#$sDivId').block();
+			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.dashboard_contents#$sDivId').html(data);
-				 $('.dashboard_contents#$sDivId').unblock();
+				 $('.ibo-dashboard#$sDivId').html(data);
+				 $('.ibo-dashboard#$sDivId').unblock();
 				}
 			 );
 EOF
@@ -1179,12 +1179,12 @@ EOF
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
-			$('.dashboard_contents#$sDivId').block();
+			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.dashboard_contents#$sDivId').html(data);
-				 $('.dashboard_contents#$sDivId').unblock();
+				 $('.ibo-dashboard#$sDivId').html(data);
+				 $('.ibo-dashboard#$sDivId').unblock();
 				}
 			 );
 EOF

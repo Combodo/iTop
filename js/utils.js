@@ -211,7 +211,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 }
 
 function SaveGroupBySortOrder(sTableId, aValues) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	if (aValues.length != 0) {
 		$sValue = JSON.stringify(aValues);
@@ -222,7 +222,7 @@ function SaveGroupBySortOrder(sTableId, aValues) {
 }
 
 function LoadGroupBySortOrder(sTableId) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	var sValues = GetUserPreference(sPrefKey, null);
 	if (sValues != null) {

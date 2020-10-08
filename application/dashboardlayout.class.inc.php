@@ -114,7 +114,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
-		$oPage->add('<table style="width:100%;table-layout:fixed;"><tbody>');
+		$oPage->add('<table class="ibo-dashboard--grid"><tbody>');
 		$iCellIdx = 0;
 		$fColSize = 100 / $this->iNbCols;
 		$sStyle = $bEditMode ? 'border: 1px #ccc dashed; width:'.$fColSize.'%;' : 'width: '.$fColSize.'%;';
@@ -123,11 +123,11 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
-			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
+			$oPage->add("<tr class=\"ibo-dashboard--grid-row\" data-dashboard-grid-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
-				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-column-index=\"$iCols\" data-dashboard-cell-index=\"$iCellIdx\">");
+				$oPage->add("<td class=\"ibo-dashboard--grid-column ibo-dashboard--grid-cell $sCellClass\" style=\"$sStyle\" data-dashboard-grid-column-index=\"$iCols\" data-dashboard-grid-cell-index=\"$iCellIdx\">");
 				if (array_key_exists($iCellIdx, $aCells))
 				{
 					$aDashlets = $aCells[$iCellIdx];
@@ -158,11 +158,11 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		}
 		if ($bEditMode) // Add one row for extensibility
 		{
-			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-cell-index="'.$iCellIdx.'"';
-			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
+			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-grid-cell-index="'.$iCellIdx.'"';
+			$oPage->add("<tr class=\"ibo-dashboard--grid-row\" data-dashboard-grid-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
-				$oPage->add("<td $sStyle data-dashboard-column-index=\"$iCols\">");
+				$oPage->add("<td $sStyle data-dashboard-grid-column-index=\"$iCols\">");
 				$oPage->add('&nbsp;');
 				$oPage->add('</td>');
 			}

@@ -1,0 +1,72 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet-badge--padding-x: 16px !default;
+$ibo-dashlet-badge--padding-y: 16px !default;
+$ibo-dashlet-badge--min-width: 200px !default;
+$ibo-dashlet-badge--background-color: $ibo-color-white-100 !default;
+$ibo-dashlet-badge--border: 1px solid $ibo-color-grey-400 !default;
+$ibo-dashlet-badge--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-dashlet-badge--action-list--text-color: inherit !default;
+$ibo-dashlet-badge--action-list-count--margin-right: 8px !default;
+$ibo-dashlet-badge--action-list-label--max-width: 150px !default;
+
+$ibo-dashlet-badge--icon-container--margin-right: 16px !default;
+$ibo-dashlet-badge--icon--size: 48px !default;
+
+$ibo-dashlet-badge--action-icon--margin-right: 6px !default;
+
+/* Rules */
+.ibo-dashlet-badge{
+	min-width: $ibo-dashlet-badge--min-width;
+	padding: $ibo-dashlet-badge--padding-y $ibo-dashlet-badge--padding-x;
+	background-color: $ibo-dashlet-badge--background-color;
+	border: $ibo-dashlet-badge--border;
+	border-radius: $ibo-dashlet-badge--border-radius;
+}
+.ibo-dashlet-badge--body{
+	display: flex;
+	justify-items: left;
+	align-items: center;
+}
+.ibo-dashlet-badge--icon-container{
+	margin-right: $ibo-dashlet-badge--icon-container--margin-right;
+}
+.ibo-dashlet-badge--icon{
+	width: $ibo-dashlet-badge--icon--size;
+	max-height: $ibo-dashlet-badge--icon--size;
+}
+
+.ibo-dashlet-badge--actions{
+
+}
+.ibo-dashlet-badge--action-list{
+	@extend %ibo-vertically-centered-content;
+	color: $ibo-dashlet-badge--action-list--text-color;
+	@extend %ibo-font-ral-med-250;
+
+	&:hover,
+	&:active{
+		@extend %ibo-hyperlink-inherited-colors;
+	}
+}
+.ibo-dashlet-badge--action-list-count{
+	margin-right: $ibo-dashlet-badge--action-list-count--margin-right;
+	@extend %ibo-font-ral-bol-450;
+}
+.ibo-dashlet-badge--action-list-label{
+	display: inline-block;
+	max-width: $ibo-dashlet-badge--action-list-label--max-width;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+.ibo-dashlet-badge--action-create{
+	@extend %ibo-baseline-centered-content;
+	@extend %ibo-font-ral-med-150;
+}
+.ibo-dashlet-badge--action-create-icon{
+	margin-right: $ibo-dashlet-badge--action-icon--margin-right;
+}

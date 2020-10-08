@@ -534,7 +534,13 @@ EOF
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
 		}
 
-		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
+		$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
+		$oPage->add(<<<HTML
+<div class="dashboard-title-line">
+	<div class="dashboard-title">{$sTitleForHTML}</div>
+</div>
+HTML
+		);
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();
@@ -944,14 +950,14 @@ class RuntimeDashboard extends Dashboard
 				function ReloadDashboard$sDivId()
 				{
 					// Do not reload when a dialog box is active
-					if (!($('.ui-dialog:visible').length > 0) && $('.dashboard_contents#$sDivId').is(':visible'))
+					if (!($('.ui-dialog:visible').length > 0) && $('.ibo-dashboard#$sDivId').is(':visible'))
 					{
-						$('.dashboard_contents#$sDivId').block();
+						$('.ibo-dashboard#$sDivId').block();
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, c: $sContext, reload_url: '$sReloadURL'},
 						   function(data){
-							 $('.dashboard_contents#$sDivId').html(data);
-							 $('.dashboard_contents#$sDivId').unblock();
+							 $('.ibo-dashboard#$sDivId').html(data);
+							 $('.ibo-dashboard#$sDivId').unblock();
 							}
 						 );
 					}
@@ -1016,12 +1022,12 @@ EOF
 <<<EOF
 			function ToggleDashboardSelector$sDivId()
 			{
-				$('.dashboard_contents#$sDivId').block();
+				$('.ibo-dashboard#$sDivId').block();
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
 				   function(data) {
-					 $('.dashboard_contents#$sDivId').html(data);
-					 $('.dashboard_contents#$sDivId').unblock();
+					 $('.ibo-dashboard#$sDivId').html(data);
+					 $('.ibo-dashboard#$sDivId').unblock();
 					}
 				 );
 			}

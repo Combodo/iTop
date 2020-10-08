@@ -32,7 +32,7 @@
 /* Typically to align icons and text */
 %ibo-baseline-centered-content{
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 }
 /* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
 %ibo-full-height-content{
