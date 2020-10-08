@@ -1,0 +1,55 @@
+$ibo-modal--ui-dialog--padding: 16px 16px 16px !default;
+$ibo-modal--ui-dialog--border-radius: $ibo-border-radius-500 !default;
+$ibo-modal--ui-dialog--background-color: $ibo-color-white-100 !default;
+
+$ibo-modal--ui-widget-overlay--background-color: $ibo-color-blue-grey-900 !default;
+
+.ui-dialog{
+	padding: $ibo-modal--ui-dialog--padding;
+	background-color: $ibo-modal--ui-dialog--background-color;
+	border-radius: $ibo-modal--ui-dialog--border-radius;
+	overflow: hidden;
+	&::before{
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		background-color: #2c5382;
+		content: "";
+		width: 100%;
+		height: 8px;
+		padding-bottom: 8px;
+	}
+	.ui-button {
+		@extend .ibo-button;
+		@extend .ibo-is-regular;
+		@extend .ibo-is-secondary;
+		> .ui-icon {
+			background-image: none;
+			float: unset;
+			margin: auto;
+			top: 4px;
+			left: 2px;
+			
+			&.ui-icon-closethick::before{
+				content: '\f00d';
+				font-family: 'Font Awesome 5 Free';
+				font-weight: 600;
+				text-indent: 0;
+				position: absolute;
+				left: 0px;
+				width: 100%;
+			}
+		}
+		&.ui-dialog-titlebar-close{
+			@extend .ibo-is-alternative;
+			@extend .ibo-is-red;
+		}
+	}
+}
+.ui-dialog-title{
+	@extend %ibo-font-ral-nor-250;
+}
+.ui-widget-overlay.ui-front{
+	background-color: $ibo-modal--ui-widget-overlay--background-color;
+}
