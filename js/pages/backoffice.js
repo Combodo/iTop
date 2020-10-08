@@ -45,15 +45,15 @@ function StripArchiveArgument(sUrl)
 function SwitchTabMode()
 {
 	let aTabContainer = $('[data-role="ibo-tab-container"]');
-	if (!aTabContainer.hasClass('is-vertical'))
+	if (!aTabContainer.hasClass('ibo-is-vertical'))
 	{
-		aTabContainer.removeClass('is-horizontal');
-		aTabContainer.addClass('is-vertical');
+		aTabContainer.removeClass('ibo-is-horizontal');
+		aTabContainer.addClass('ibo-is-vertical');
 		SetUserPreference('tab_layout', 'vertical', true);
 	} else
 	{
-		aTabContainer.removeClass('is-vertical');
-		aTabContainer.addClass('is-horizontal');
+		aTabContainer.removeClass('ibo-is-vertical');
+		aTabContainer.addClass('ibo-is-horizontal');
 		SetUserPreference('tab_layout', 'horizontal', true);
 	}
 }

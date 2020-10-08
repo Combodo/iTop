@@ -43,19 +43,27 @@ class TabContainer extends UIContentBlock
 	public const JS_FILES_REL_PATH = [
 		'js/layouts/tab-container.js'
 	];
-	
+
+	// Specific constants
+	/** @var string */
+	public const ENUM_LAYOUT_HORIZONTAL = 'horizontal';
+	/** @var string */
+	public const ENUM_LAYOUT_VERTICAL = 'vertical';
+	/** @var string */
+	public const DEFAULT_LAYOUT = self::ENUM_LAYOUT_HORIZONTAL;
+
 	/** @var string $sName */
 	private $sName;
 	/** @var string $sPrefix */
 	private $sPrefix;
-	/** @var string $sLayout */
+	/** @var string $sLayout Layout of the tabs (horizontal, vertical, ...), see static::ENUM_LAYOUT_XXX */
 	private $sLayout;
 
 	/**
 	 * TabContainer constructor.
 	 *
-	 * @param $sName
-	 * @param $sPrefix
+	 * @param string $sName
+	 * @param string $sPrefix
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -67,7 +75,7 @@ class TabContainer extends UIContentBlock
 
 		$this->sName = $sName;
 		$this->sPrefix = $sPrefix;
-		$this->sLayout = appUserPreferences::GetPref('tab_layout', 'horizontal');
+		$this->sLayout = appUserPreferences::GetPref('tab_layout', static::DEFAULT_LAYOUT);
 	}
 
 	/**
@@ -100,7 +108,6 @@ class TabContainer extends UIContentBlock
 		$this->AddSubBlock($oTab);
 		return $oTab;
 	}
-
 
 	/**
 	 * @param string $sTabCode
@@ -136,7 +143,6 @@ class TabContainer extends UIContentBlock
 		return parent::AddSubBlock($oSubBlock);
 	}
 
-
 	/**
 	 * Return tab list
 	 *
@@ -157,10 +163,20 @@ class TabContainer extends UIContentBlock
 	}
 
 	/**
+	 * @param string $sLayout
+	 *
+	 * @return $this
+	 */
+	public function SetLayout($sLayout) {
+		$this->sLayout = $sLayout;
+
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetLayout(): string {
 		return $this->sLayout;
 	}
-	
 }

@@ -1014,27 +1014,27 @@ EOF
 	margin-left: -16px;
 	margin-right: -16px;
 }
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical{
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical{
 	display: flex;
 	flex-direction: row;
 }
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list{
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list{
 	padding-top: 50px;
 	flex-direction: column;
 	height: auto;
 	padding-left: unset;
 	margin-right: unset;
 }
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header{
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header{
 	height: 50px;
 	width: 100%;
 	justify-content: left;
 }
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header > .ibo-tab-container--tab-toggler{
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header > .ibo-tab-container--tab-toggler{
 	width: 100%;
 	justify-content: left;
 }
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.is-vertical > .ibo-tab-container--tab-container {
+.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tab-container {
 	flex-grow: 1;
 }
 CSS
