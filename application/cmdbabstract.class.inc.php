@@ -1036,6 +1036,7 @@ EOF
 }
 .object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tab-container {
 	flex-grow: 1;
+	margin-left: unset;
 }
 CSS
 		);
