@@ -22,7 +22,10 @@ $ibo-dashlet-badge--action-icon--margin-right: 6px !default;
 
 /* Rules */
 .ibo-dashlet-badge{
-	min-width: $ibo-dashlet-badge--min-width;
+	//min-width: $ibo-dashlet-badge--min-width;
+	flex-basis: $ibo-dashlet-badge--min-width;
+	flex-grow: 1;
+	flex-shrink: 1;
 	padding: $ibo-dashlet-badge--padding-y $ibo-dashlet-badge--padding-x;
 	background-color: $ibo-dashlet-badge--background-color;
 	border: $ibo-dashlet-badge--border;
@@ -38,6 +41,7 @@ $ibo-dashlet-badge--action-icon--margin-right: 6px !default;
 }
 .ibo-dashlet-badge--icon{
 	width: $ibo-dashlet-badge--icon--size;
+	min-width: $ibo-dashlet-badge--icon--size; /* To avoid image being shrinked when container is too small */
 	max-height: $ibo-dashlet-badge--icon--size;
 }
 

@@ -2895,7 +2895,7 @@
 	}
 
 	td.layout_cell {
-		height: 50px; /* min-height does not work */
+		min-height: 50px; /* min-height seems to work now since we dropped IE support */
 		vertical-align: top;
 	}
 

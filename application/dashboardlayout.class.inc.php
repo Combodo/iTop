@@ -116,10 +116,22 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 
 		$oPage->add('<table class="ibo-dashboard--grid"><tbody>');
 		$iCellIdx = 0;
-		$fColSize = 100 / $this->iNbCols;
-		$sStyle = $bEditMode ? 'border: 1px #ccc dashed; width:'.$fColSize.'%;' : 'width: '.$fColSize.'%;';
-		$sClass = $bEditMode ? 'layout_cell edit_mode' : 'dashboard';
+		$fColSize = ceil(100 / $this->iNbCols); // Note: ceil() is necessary otherwise the table will be too short since the new flex layout (N°2847)
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
+
+		$aStyleProperties = [];
+		// - Explicit full width when single column
+		if($this->iNbCols > 1)
+		{
+			$aStyleProperties[] = 'width: '.$fColSize.'%;';
+		}
+		// - Visible borders in editor
+		if($bEditMode)
+		{
+			$aStyleProperties[] = 'border: 1px #ccc dashed;';
+
+		}
+		$sClass = $bEditMode ? 'layout_cell edit_mode' : 'dashboard';
 
 		for($iRows = 0; $iRows < $iNbRows; $iRows++)
 		{
@@ -127,7 +139,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
 				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
-				$oPage->add("<td class=\"ibo-dashboard--grid-column ibo-dashboard--grid-cell $sCellClass\" style=\"$sStyle\" data-dashboard-grid-column-index=\"$iCols\" data-dashboard-grid-cell-index=\"$iCellIdx\">");
+				$oPage->add("<td class=\"ibo-dashboard--grid-column ibo-dashboard--grid-cell $sCellClass\" style=\"".implode(' ', $aStyleProperties)."\" data-dashboard-grid-column-index=\"$iCols\" data-dashboard-grid-cell-index=\"$iCellIdx\">");
 				if (array_key_exists($iCellIdx, $aCells))
 				{
 					$aDashlets = $aCells[$iCellIdx];
@@ -158,11 +170,10 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		}
 		if ($bEditMode) // Add one row for extensibility
 		{
-			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-grid-cell-index="'.$iCellIdx.'"';
 			$oPage->add("<tr class=\"ibo-dashboard--grid-row\" data-dashboard-grid-row-index=\"$iRows\">");
 			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
 			{
-				$oPage->add("<td $sStyle data-dashboard-grid-column-index=\"$iCols\">");
+				$oPage->add("<td class=\"ibo-dashboard--grid-column ibo-dashboard--grid-cell layout_cell edit_mode layout_extension\" style=\"".implode(' ', $aStyleProperties)."\" data-dashboard-grid-column-index=\"$iCols\" data-dashboard-grid-cell-index=\"$iCellIdx\">");
 				$oPage->add('&nbsp;');
 				$oPage->add('</td>');
 			}

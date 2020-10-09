@@ -5,8 +5,8 @@
 
 /* SCSS variables */
 $ibo-dashboard--grid--width: 100% !default;
-$ibo-dashboard--grid--elements-spacing: 16px !default;
-$ibo-dashboard--grid-row--elements-spacing: 16px !default;
+$ibo-dashboard--grid--elements-spacing-x: $ibo-dashlet--elements-spacing-x !default;
+$ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !default;
 
 /* Rules */
 .ibo-dashboard--content{
@@ -19,23 +19,29 @@ $ibo-dashboard--grid-row--elements-spacing: 16px !default;
 .ibo-dashboard--grid-row{
 	display: flex;
 	flex-direction: row;
+	overflow: hidden; /* Because of the column negative margin (which is for the dashlets spacing) */
 
-	&:not(:first-child){
-		padding-top: calc(#{$ibo-dashboard--grid--elements-spacing} / 2);
-	}
+	/* Compensate negative margin on inner borders to simulate egal dashlets spacing between rows */
 	&:not(:last-child){
-		padding-bottom: calc(#{$ibo-dashboard--grid--elements-spacing} / 2);
+		padding-bottom: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
+	}
+	&:not(:first-child){
+		padding-top: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
 	}
 }
 .ibo-dashboard--grid-column{
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: space-between;
+	align-items: flex-start;
+	width: calc(100% + (2 * #{$ibo-dashboard--grid--elements-spacing-x}));
+	margin: calc(-1 * #{$ibo-dashboard--grid--elements-spacing-y} / 2) calc(-1 * #{$ibo-dashboard--grid--elements-spacing-x} / 2); /* Because of the margin all around the dashlets, we need to compensate it */
 
+	/* Compensate negative margin on inner borders to simulate egal dashlets spacing between columns */
 	&:not(:last-child) {
-		padding-right: calc(#{$ibo-dashboard--grid-row--elements-spacing} / 2);
+		margin-right: 0;
 	}
 	&:not(:first-child) {
-		padding-left: calc(#{$ibo-dashboard--grid-row--elements-spacing} / 2);
+		margin-left: 0;
 	}
 }
