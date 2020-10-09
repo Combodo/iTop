@@ -71,11 +71,7 @@ class QuickCreateHelper
 		array_unshift($aHistoryEntries, $aNewEntry);
 
 		// Truncate history
-		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
-		if(count($aHistoryEntries) > $iMaxHistoryResults)
-		{
-			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
-		}
+		static::TruncateHistory($aHistoryEntries);
 
 		appUserPreferences::SetPref(static::USER_PREF_CODE, $aHistoryEntries);
 	}
@@ -90,11 +86,11 @@ class QuickCreateHelper
 	 */
 	public static function GetLastClasses()
 	{
-		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
+		static::TruncateHistory($aHistoryEntries);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries) && $iIdx < $iMaxHistoryResults; $iIdx++)
+		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
 			$sClass = $aHistoryEntries[$iIdx]['class'];
 
@@ -123,5 +119,19 @@ class QuickCreateHelper
 		}
 
 		return $aHistoryEntries;
+	}
+
+	/**
+	 * Truncate $aHistoryEntries to 'global_search.max_history_results' entries
+	 *
+	 * @param array $aHistoryEntries
+	 */
+	protected static function TruncateHistory(array &$aHistoryEntries): void
+	{
+		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		if(count($aHistoryEntries) > $iMaxHistoryResults)
+		{
+			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
+		}
 	}
 }
