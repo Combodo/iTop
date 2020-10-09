@@ -55,6 +55,8 @@ class QuickCreate extends UIBlock
 	protected $aLastClasses;
 	/** @var int $iMaxAutocompleteResults Max. number of elements returned by the autocomplete */
 	protected $iMaxAutocompleteResults;
+	/** @var int $iMaxHistoryResults Max. number of elements in the history */
+	protected $iMaxHistoryResults;
 
 	/**
 	 * QuickCreate constructor.
@@ -71,6 +73,7 @@ class QuickCreate extends UIBlock
 		$this->aAvailableClasses = UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true);
 		$this->aLastClasses = $aLastClasses;
 		$this->iMaxAutocompleteResults = (int) MetaModel::GetConfig()->Get('quick_create.max_autocomplete_results');
+		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
 	}
 
 	/**
@@ -114,5 +117,14 @@ class QuickCreate extends UIBlock
 	public function GetMaxAutocompleteResults(): int
 	{
 		return $this->iMaxAutocompleteResults;
+	}
+
+	/**
+	 * @see $iMaxHistoryResults
+	 * @return int
+	 */
+	public function GetMaxHistoryResults(): int
+	{
+		return $this->iMaxHistoryResults;
 	}
 }

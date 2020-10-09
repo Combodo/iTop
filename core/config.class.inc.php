@@ -1144,6 +1144,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'quick_create.max_history_results' => array(
+			'type' => 'integer',
+			'description' => 'Max. number of elements in the history.',
+			'default' => 10,
+			'value' => 10,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'global_search.enabled' => array(
 			'type' => 'bool',
 			'description' => 'Whether or not the global search is enabled',

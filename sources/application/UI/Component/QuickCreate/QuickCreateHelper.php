@@ -35,7 +35,7 @@ use utils;
  */
 class QuickCreateHelper
 {
-	public const MAX_HISTORY_SIZE = 10;
+	/** @var string */
 	public const USER_PREF_CODE = 'quick_create_history';
 
 	/**
@@ -49,7 +49,7 @@ class QuickCreateHelper
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public static function AddClassToHistory($sClass)
+	public static function AddClassToHistory(string $sClass)
 	{
 		$aNewEntry = [
 			'class' => $sClass,
@@ -71,9 +71,10 @@ class QuickCreateHelper
 		array_unshift($aHistoryEntries, $aNewEntry);
 
 		// Truncate history
-		if(count($aHistoryEntries) > static::MAX_HISTORY_SIZE)
+		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		if(count($aHistoryEntries) > $iMaxHistoryResults)
 		{
-			$aHistoryEntries = array_slice($aHistoryEntries, 0, static::MAX_HISTORY_SIZE);
+			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
 		}
 
 		appUserPreferences::SetPref(static::USER_PREF_CODE, $aHistoryEntries);
@@ -89,9 +90,11 @@ class QuickCreateHelper
 	 */
 	public static function GetLastClasses()
 	{
+		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
+		for($iIdx = 0; $iIdx < count($aHistoryEntries) && $iIdx < $iMaxHistoryResults; $iIdx++)
 		{
 			$sClass = $aHistoryEntries[$iIdx]['class'];
 
