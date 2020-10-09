@@ -92,8 +92,6 @@ $(function()
 						if (sTitle.length == 0) {
 							sTitle = sLabel;
 						}
-						sTitle = SanitizeHtml(sTitle);
-						sLabel = SanitizeHtml(sLabel);
 
 						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
 						{
