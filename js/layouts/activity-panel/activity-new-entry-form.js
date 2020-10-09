@@ -29,10 +29,8 @@ $(function() {
 				},
 			css_classes:
 				{
-					is_expanded: 'ibo-is-expanded',
 					is_opened: 'ibo-is-opened',
 					is_closed: 'ibo-is-closed',
-					is_active: 'ibo-is-active',
 					is_hidden: 'ibo-is-hidden',
 				},
 			js_selectors:
@@ -76,12 +74,13 @@ $(function() {
 				});
 			},
 			_ShowNewEntryForm: function () {
-				$(this.js_selectors.form).show();
-				$(this.js_selectors.toggler).hide();
+				$(this.js_selectors.form).addClass(this.css_classes.is_opened).removeClass(this.css_classes.is_closed);
+				$(this.js_selectors.toggler).addClass(this.css_classes.is_hidden);
 			},
 			_HideNewEntryForm: function () {
-				$(this.js_selectors.form).hide();
-				$(this.js_selectors.toggler).show();
+				$(this.js_selectors.form).addClass(this.css_classes.is_closed).removeClass(this.css_classes.is_opened);
+				$(this.js_selectors.toggler).removeClass(this.css_classes.is_hidden);
+				//$(this).children(this.js_selectors.caselog_picker).popover_menu('closePopup');
 			},
 			_SubmitNewEntryToCaselog: function(sData, sCaselog)
 			{

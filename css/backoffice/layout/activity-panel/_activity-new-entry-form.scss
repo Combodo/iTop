@@ -22,10 +22,15 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--width: $ibo-activit
 $ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size: 16px !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !default;
 .ibo-activity-new-entry-form{
-	display: none;
 	$ibo-activity-new-entry-form--width: 100%;
 	background-color: $ibo-activity-new-entry-form--background-color;
 	padding: $ibo-activity-new-entry-form--padding;
+	&.ibo-is-opened{
+		display: block;
+	}
+	&.ibo-is-closed{
+		display: none;
+	}
 }	
 .ibo-activity-new-entry-form--actions{
 	display: flex;
@@ -57,6 +62,9 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !
 	}
 	&:hover {
 		color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
+	}
+	&.ibo-is-hidden{
+		display: none;
 	}
 }
 .ibo-activity-new-entry-form--action-buttons--right-actions > .ibo-popover-menu{
