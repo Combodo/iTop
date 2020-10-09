@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Component\GlobalSearch;
 
 
 use appUserPreferences;
+use MetaModel;
 use utils;
 
 /**
@@ -33,7 +34,7 @@ use utils;
  */
 class GlobalSearchHelper
 {
-	public const MAX_HISTORY_SIZE = 10;
+	/** @var string */
 	public const USER_PREF_CODE = 'global_search_history';
 
 	/**
@@ -86,10 +87,7 @@ class GlobalSearchHelper
 		array_unshift($aHistoryEntries, $aNewEntry);
 
 		// Truncate history
-		if(count($aHistoryEntries) > static::MAX_HISTORY_SIZE)
-		{
-			$aHistoryEntries = array_slice($aHistoryEntries, 0, static::MAX_HISTORY_SIZE);
-		}
+		static::TruncateHistory($aHistoryEntries);
 
 		appUserPreferences::SetPref(static::USER_PREF_CODE, $aHistoryEntries);
 	}
@@ -107,6 +105,7 @@ class GlobalSearchHelper
 	{
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
+		static::TruncateHistory($aHistoryEntries);
 
 		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
 		{
@@ -124,5 +123,19 @@ class GlobalSearchHelper
 		}
 
 		return $aHistoryEntries;
+	}
+
+	/**
+	 * Truncate $aHistoryEntries to 'global_search.max_history_results' entries
+	 *
+	 * @param array $aHistoryEntries
+	 */
+	protected static function TruncateHistory(array &$aHistoryEntries): void
+	{
+		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
+		if(count($aHistoryEntries) > $iMaxHistoryResults)
+		{
+			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
+		}
 	}
 }

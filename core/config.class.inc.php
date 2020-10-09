@@ -1160,6 +1160,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'global_search.max_history_results' => array(
+			'type' => 'integer',
+			'description' => 'Max. number of elements in the history.',
+			'default' => 10,
+			'value' => 10,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'breadcrumb.enabled' => array(
 			'type' => 'bool',
 			'description' => 'Whether or not the breadcrumbs is enabled',
