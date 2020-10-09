@@ -257,7 +257,6 @@ class PopoverMenuFactory
 					$sCaseLogAttCode,
 					$sCaseLogLabel,
 					<<<JS
-$('#$sMenuId').hide();
 $(this).parents('[data-role="ibo-activity-new-entry-form--action-buttons--right-actions"]').trigger('submit', ['caselog', '$sCaseLogAttCode']);
 JS
 				));
