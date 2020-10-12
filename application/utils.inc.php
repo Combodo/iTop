@@ -1017,16 +1017,11 @@ class utils
 
 	/**
 	 * Get the _SESSION variable for logging purpose
-	 * @return false|string
+	 * @return string
 	 */
 	public static function GetSessionLog()
 	{
-		ob_start();
-		print_r($_SESSION);
-		$sSessionLog = ob_get_contents();
-		ob_end_clean();
-
-		return $sSessionLog;
+		return print_r($_SESSION, true);
 	}
 
 	 static function DebugBacktrace($iLimit = 5)

@@ -92,14 +92,13 @@ $(function()
 						if (sTitle.length == 0) {
 							sTitle = sLabel;
 						}
+						sTitle = SanitizeHtml(sTitle, false);
+						sLabel = SanitizeHtml(sLabel, false);
 
-						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1))
-						{
+						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length - 1)) {
 							// Last entry is the current page
 							sBreadcrumbsItemHtml += '<span class="ibo-breadcrumbs--item--is-current" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></span>';
-						}
-						else
-						{
+						} else {
 							var sSanitizedUrl = StripArchiveArgument(oEntry['url']);
 							sBreadcrumbsItemHtml += '<a class="ibo-breadcrumbs--item" data-breadcrumb-entry-number="'+iEntry+'" href="'+sSanitizedUrl+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></a>';
 						}
