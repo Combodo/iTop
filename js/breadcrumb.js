@@ -69,8 +69,8 @@ $(function()
 						if (sTitle.length == 0) {
 							sTitle = oEntry['label'];
 						}
-						sTitle = SanitizeHtml(sTitle);
-						sLabel = SanitizeHtml(sLabel);
+						sTitle = SanitizeHtml(sTitle, false);
+						sLabel = SanitizeHtml(sLabel, false);
 
 						if ((this.options.new_entry !== null) && (iEntry == aBreadCrumb.length-1)) {
 							// Last entry is the current page
