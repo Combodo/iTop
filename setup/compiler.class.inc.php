@@ -2779,6 +2779,7 @@ EOF;
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'favicon', 'favicon');
 
 			// Cleanup the images directory (eventually made by CompileFiles)
 			if (file_exists($sTempTargetDir.'/branding/images'))

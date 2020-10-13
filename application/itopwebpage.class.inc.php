@@ -1135,7 +1135,13 @@ EOF
 			$sHtml .= "</style>\n";
 		}
 		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
+
+		$sFavicon = utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp();
+		if (file_exists(MODULESROOT.'branding/favicon.png'))
+		{
+			$sFavicon = utils::GetAbsoluteUrlModulesRoot()."branding/favicon.png?t=".utils::GetCacheBusterTimestamp();
+		}
+		$sHtml .= "<link rel=\"shortcut icon\" href=\"".$sFavicon."\" />\n";
 
 		$sHtml .= "</head>\n";
 		$sBodyClass = "";
