@@ -50,7 +50,7 @@ class appUserPreferences extends DBObject
 			self::Load();
 		}
 		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if (array_key_exists($sCode, $aPrefs))
+		if (array_key_exists($sCode, $aPrefs) && $aPrefs[$sCode])
 		{
 			return $aPrefs[$sCode];
 		}

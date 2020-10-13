@@ -1249,6 +1249,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'favorite_orgs' => array(
+			'type' => 'array',
+			'description' => 'Default favorite organizations, array of Organization id',
+			'default' => null,
+			'value' => null,
+			'source_of_value' => null,
+			'show_in_conf_sample' => false,
+		),
 	);
 
 
