@@ -52,23 +52,23 @@ Here are the branches we use and their meaning :
 
 For example, if no version is currently prepared for shipping we could have:
 
-- `develop` containing future 2.8.0 version
+- `develop` containing future 3.0.0 version
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version
 
-In this example, when 2.8.0-beta is shipped that will become:
+In this example, when 3.0.0-beta is shipped that will become:
 
-- `develop`: future 2.9.0 version
-- `release/2.8.0`: 2.8.0-beta
+- `develop`: future 3.1.0 version
+- `release/3.0.0`: 3.0.0-beta
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version
 
-And when 2.8.0 final will be out:
+And when 3.0.0 final will be out:
 
-- `develop`: future 2.9.0 version
-- `support/2.8`: 2.8.x maintenance version (will host developments for 2.8.1)
+- `develop`: future 3.1.0 version
+- `support/2.8`: 2.8.x maintenance version (will host developments for 3.0.1)
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version

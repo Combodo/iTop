@@ -41,7 +41,7 @@ class CheckResult {
 
 	/**
 	 * @return string
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public function __toString(): string {
 		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
@@ -55,7 +55,7 @@ class CheckResult {
 	 *
 	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array {
 		return array_filter($aResults,
@@ -75,7 +75,7 @@ class CheckResult {
 	 * @return string[]
 	 * @uses \CheckResult::__toString
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public static function FromObjectsToStrings(array $aResults): array {
 		return array_map(static function ($value) {
@@ -129,8 +129,8 @@ class SetupUtils
 	 *            <li>php.ini option : session.save_handler
 	 *         </ul>
 	 *
-	 * @since 2.8.0 N°2214 disable some checks when in CLI mode
-	 * @since 2.8.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 disable some checks when in CLI mode
+	 * @since 3.0.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
 	public static function CheckPhpAndExtensions() {
 		$aResult = array();
@@ -409,7 +409,7 @@ class SetupUtils
 	 * @uses \IssueLog::Error()
 	 * @uses \exit()
 	 *
-	 * @since 2.8.0 N°2214 Add PHP version checks in CLI scripts
+	 * @since 3.0.0 N°2214 Add PHP version checks in CLI scripts
 	 */
 	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1) {
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
@@ -436,7 +436,7 @@ class SetupUtils
 	/**
 	 * @param CheckResult[] $aResult checks log
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	private static function CheckPhpVersion(array &$aResult) {
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
@@ -482,7 +482,7 @@ class SetupUtils
 	 *
 	 * @return array
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules) {
 		$aResult = array();
@@ -510,7 +510,7 @@ class SetupUtils
 	 *
 	 * @return \CheckResult[] An array of CheckResults objects
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null) {
 		$aResult = array();
@@ -595,7 +595,7 @@ class SetupUtils
 	 * @return CheckResult[] The result of the check AS CheckResult::INFO or CheckResult::WARNING, plus debug traces as some
 	 *     CheckResult::TRACE
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckGraphviz($sGraphvizPath) {
 		$aResult = [];
@@ -653,7 +653,7 @@ class SetupUtils
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string {
 		return (json_encode($sValue) !== false)
@@ -2109,7 +2109,7 @@ JS
 	 * @param string $sText
 	 *
 	 * @since 2.7.0 N°2240 Maintenance mode
-	 * @since 2.8.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
+	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
 	 */
 	private static function Log($sText) {
 		if (class_exists('SetupPage')) {

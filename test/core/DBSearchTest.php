@@ -690,7 +690,7 @@ class DBSearchTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @since 2.7.2 2.8.0 N°3324
+	 * @since 2.7.2 3.0.0 N°3324
 	 */
 	public function testAllowAllData() {
 		$oSimpleSearch = \DBObjectSearch::FromOQL('SELECT FunctionalCI');

@@ -25,7 +25,7 @@
  * This is a hard-coded check that limits errors : we are stopping for anything < PHP 7.0.0
  * The "real one" will be done in {@link \SetupUtils::CheckPhpVersion()}
  *
- * @since 2.8.0 N°2214
+ * @since 3.0.0 N°2214
  */
 $bIsValidPhpVersion = false;
 if (PHP_MAJOR_VERSION >= 7) {

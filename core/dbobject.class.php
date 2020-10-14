@@ -2121,7 +2121,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @uses m_aCheckWarnings to log to user duplicates found
 	 *
-	 * @since 2.8.0 N°3198 check duplicates if necessary :<br>
+	 * @since 3.0.0 N°3198 check duplicates if necessary :<br>
 	 *     Before we could only add or remove lnk using the uilinks widget. This widget has a filter based on existing values, and so
 	 *     forbids to add duplicates.<br>
 	 *     Now we can modify existing entries using the extkey widget, and the widget doesn't have (yet !) such

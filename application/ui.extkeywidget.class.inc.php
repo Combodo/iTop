@@ -121,7 +121,7 @@ class UIExtKeyWidget
 	}
 
 	/**
-	 * @since 2.8.0 N°2508 - Include Obsolescence icon within list and autocomplete
+	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 * @param WebPage $oP The web page used for all the output
 	 * @param array $aArgs Extra context arguments
@@ -323,7 +323,7 @@ JS
 	}
 
 	/**
-	 * @since 2.8.0 N°2508 - Include Obsolescence icon within list and autocomplete
+	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 * @param WebPage $oP The web page used for all the output
 	 * @param array $aArgs Extra context arguments
