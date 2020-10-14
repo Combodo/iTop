@@ -81,7 +81,7 @@ class CMDBChange extends DBObject
 	 *
 	 * @return string|null
 	 * @throws \OQLException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetCurrentUserId()
 	{

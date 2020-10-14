@@ -155,7 +155,7 @@ abstract class CMDBObject extends DBObject
 	 *
 	 * @param string $sId ID of the user doing the change, null if not done by a user (eg. background task)
 	 *
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function SetTrackUserId($sId)
 	{
@@ -196,7 +196,7 @@ abstract class CMDBObject extends DBObject
 	 *
 	 * @return string|null
 	 * @throws \OQLException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected static function GetTrackUserId()
 	{

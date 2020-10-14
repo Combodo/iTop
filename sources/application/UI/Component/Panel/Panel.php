@@ -31,7 +31,7 @@ use Combodo\iTop\Application\UI\tUIContentAreas;
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Panel
- * @since 2.8.0
+ * @since 3.0.0
  */
 class Panel extends UIContentBlock
 {

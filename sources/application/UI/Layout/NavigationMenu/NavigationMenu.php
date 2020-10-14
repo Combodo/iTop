@@ -38,7 +38,7 @@ use utils;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\NavigationMenu
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class NavigationMenu extends UIBlock
 {

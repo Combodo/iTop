@@ -31,7 +31,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\TopBar
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class TopBar extends UIBlock
 {

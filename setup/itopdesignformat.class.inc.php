@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.8'); // iTop >= 2.8.0
+define('ITOP_DESIGN_LATEST_VERSION', '1.8'); // iTop >= 3.0.0
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version

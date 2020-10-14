@@ -25,7 +25,7 @@ namespace Combodo\iTop\Application\UI\Component\Panel;
  * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Panel
- * @since 2.8.0
+ * @since 3.0.0
  */
 class PanelFactory
 {
@@ -39,7 +39,7 @@ class PanelFactory
 	public static function MakeNeutral(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		// TODO 2.8.0: Set this back to neutral when object details are done
+		// TODO 3.0.0: Set this back to neutral when object details are done
 		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;
@@ -161,7 +161,7 @@ class PanelFactory
 	public static function MakeForClass(string $sClass, string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		// TODO 2.8.0: Change this to clas color when done
+		// TODO 3.0.0: Change this to clas color when done
 		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;

@@ -77,7 +77,7 @@ class TabManager
 
 	/**
 	 * @return int
-	 * @deprecated 2.8.0
+	 * @deprecated 3.0.0
 	 */
 	public function GetCurrentTabLength()
 	{
@@ -92,7 +92,7 @@ class TabManager
 	 * @param integer $iLength The length/offset at which to truncate the tab
 	 *
 	 * @return string The truncated part
-	 * @deprecated 2.8.0
+	 * @deprecated 3.0.0
 	 */
 	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
 	{
@@ -287,7 +287,7 @@ class TabManager
 	 * @param string $sTabCode
 	 *
 	 * @return string
-	 * @deprecated 2.8.0
+	 * @deprecated 3.0.0
 	 */
 	public function SelectTab(string $sTabContainer, string $sTabCode)
 	{
@@ -299,7 +299,7 @@ class TabManager
 	 * @param \WebPage $oPage
 	 *
 	 * @return mixed
-	 * @deprecated 2.8.0
+	 * @deprecated 3.0.0
 	 */
 	public function RenderIntoContent(string $sContent, WebPage $oPage)
 	{

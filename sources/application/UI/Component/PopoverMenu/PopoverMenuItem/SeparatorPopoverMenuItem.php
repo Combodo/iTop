@@ -26,7 +26,7 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
  * @property \SeparatorPopupMenuItem $oPopupMenuItem
- * @since 2.8.0
+ * @since 3.0.0
  */
 class SeparatorPopoverMenuItem extends PopoverMenuItem
 {

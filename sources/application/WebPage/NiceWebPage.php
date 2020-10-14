@@ -257,8 +257,8 @@ EOF
 	 */
 	protected function LoadTheme()
 	{
-		// TODO 2.8.0: Remove light-grey when development of Full Moon is done.
-		// TODO 2.8.0: Reuse theming mechanism for Full Moon
+		// TODO 3.0.0: Remove light-grey when development of Full Moon is done.
+		// TODO 3.0.0: Reuse theming mechanism for Full Moon
 		$sCssThemeUrl = ThemeHandler::GetCurrentThemeUrl();
 		$this->add_linked_stylesheet($sCssThemeUrl);
 

@@ -26,7 +26,7 @@ namespace Combodo\iTop\Application\UI\Component\GlobalSearch;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\GlobalSearch
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class GlobalSearchFactory
 {

@@ -26,7 +26,7 @@ namespace Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
  * @property \URLPopupMenuItem $oPopupMenuItem
- * @since 2.8.0
+ * @since 3.0.0
  */
 class UrlPopoverMenuItem extends PopoverMenuItem
 {

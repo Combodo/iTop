@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Layout\UIContentBlock;
  *
  * @package Combodo\iTop\Application\UI\Layout\MultiColumn\Column
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class Column extends UIContentBlock {
 	// Overloaded constants

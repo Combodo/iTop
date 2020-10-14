@@ -21,7 +21,7 @@ class TitleFactory
 
 	public static function MakeForObjectDetails(DBObject $oObject, ?string $sId = null)
 	{
-		// TODO 2.8.0: Refactor all of this
+		// TODO 3.0.0: Refactor all of this
 		$sObjIconUrl = $oObject->GetIcon(false);
 		$sObjClass = get_class($oObject);
 		$sObjClassName = MetaModel::GetName($sObjClass);
@@ -35,7 +35,7 @@ class TitleFactory
 		{
 			$sStateCode = $oObject->GetState();
 			$sStatusLabel = $oObject->GetStateLabel();
-			// TODO 2.8.0 : Dehardcode this
+			// TODO 3.0.0 : Dehardcode this
 			switch ($sStateCode)
 			{
 				case 'new':

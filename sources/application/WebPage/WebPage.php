@@ -313,7 +313,7 @@ class WebPage implements Page
 	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
 	 *
 	 * @return \Combodo\iTop\Application\UI\iUIBlock block added
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
 	{
@@ -429,7 +429,7 @@ class WebPage implements Page
 
 	/**
 	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
-	 * Handles duplicates since 2.8.0 : calling twig with the same stylesheet will add the stylesheet only once
+	 * Handles duplicates since 3.0.0 : calling twig with the same stylesheet will add the stylesheet only once
 	 *
 	 * @param string $s_linked_stylesheet
 	 * @param string $s_condition
@@ -769,7 +769,7 @@ class WebPage implements Page
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
-			// TODO 2.8.0: TEMP, used while developing, remove it.
+			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
 			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
 		];
@@ -1157,7 +1157,7 @@ EOD
 	 * Return the language for the page metadata based on the current user
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetLanguageForMetadata()
 	{
@@ -1171,12 +1171,12 @@ EOD
 	 *
 	 * @return string
 	 * @throws \Exception
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		// TODO 2.8.0: Make it a property so it can be changed programmatically
-		// TODO 2.8.0: How to set both dark/light mode favicons
+		// TODO 3.0.0: Make it a property so it can be changed programmatically
+		// TODO 3.0.0: How to set both dark/light mode favicons
 		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
 	}
 
@@ -1186,7 +1186,7 @@ EOD
 	 * @param string $sTemplateRelPath Relative path (from <ITOP>/templates/) to the template path
 	 *
 	 * @return $this
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function SetTemplateRelPath($sTemplateRelPath)
 	{
@@ -1198,7 +1198,7 @@ EOD
 	 * Return the relative path (from <ITOP>/templates/) to the page template
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function GetTemplateRelPath()
 	{

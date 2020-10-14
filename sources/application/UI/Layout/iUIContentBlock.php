@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\iUIBlock;
  * @author  Eric Espie <eric.espie@combodo.com>
  * @author  Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 interface iUIContentBlock {
 	/**

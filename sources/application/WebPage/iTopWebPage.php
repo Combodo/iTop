@@ -97,7 +97,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
 		$this->add_header('X-Frame-Options: deny');
-		// TODO 2.8.0: Add only what's necessary
+		// TODO 3.0.0: Add only what's necessary
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.multiselect.css');
@@ -110,7 +110,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 
-		// TODO 2.8.0: Add only what's necessary
+		// TODO 3.0.0: Add only what's necessary
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
@@ -272,8 +272,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 JS
 		);
 
-		// TODO 2.8.0: This is for tag sets, refactor the attribute markup so it contains the necessary
-		// TODO 2.8.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
+		// TODO 3.0.0: This is for tag sets, refactor the attribute markup so it contains the necessary
+		// TODO 3.0.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
 		// Attribute set tooltip on items
 		$this->add_ready_script(
 			<<<JS
@@ -306,7 +306,7 @@ JS
 JS
 		);
 
-		// TODO 2.8.0: Change CSS class and extract this in backoffice.js
+		// TODO 3.0.0: Change CSS class and extract this in backoffice.js
 		// Make image attributes zoomable
 		$this->add_ready_script(
 			<<<JS
@@ -317,7 +317,7 @@ JS
 JS
 		);
 
-		// TODO 2.8.0: Change CSS class and extract this in backoffice.js
+		// TODO 3.0.0: Change CSS class and extract this in backoffice.js
 		// Highlight code content created with CKEditor
 		$this->add_ready_script(
 			<<<JS
@@ -332,7 +332,7 @@ JS
 JS
 		);
 
-		// TODO 2.8.0: What is this for?
+		// TODO 3.0.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
 	
@@ -425,7 +425,7 @@ JS
 JS
 		);
 
-		// TODO 2.8.0: To preserve
+		// TODO 3.0.0: To preserve
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 
 		/*
@@ -434,7 +434,7 @@ JS
 		AttributeDate::InitTableSorter($this, 'custom_date');
 		*/
 
-		// TODO 2.8.0: What is this for?
+		// TODO 3.0.0: What is this for?
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 			<<<JS
@@ -624,7 +624,7 @@ JS
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetNavigationMenuLayout()
 	{
@@ -638,7 +638,7 @@ JS
 	 * @return \Combodo\iTop\Application\UI\Layout\TopBar\TopBar
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetTopBarLayout()
 	{
@@ -654,7 +654,7 @@ JS
 	 * @param \Combodo\iTop\Application\UI\Layout\PageContent\PageContent $oLayout
 	 *
 	 * @return $this
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function SetContentLayout(PageContent $oLayout)
 	{
@@ -668,7 +668,7 @@ JS
 	 *
 	 * @internal
 	 * @return \Combodo\iTop\Application\UI\Layout\PageContent\PageContent
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetContentLayout()
 	{
@@ -682,7 +682,7 @@ JS
 	 *
 	 * @internal
 	 * @return array|null
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function GetBreadCrumbsNewEntry()
 	{
@@ -721,7 +721,7 @@ JS
 	 * @internal
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function RenderBannerHtml()
 	{
@@ -743,7 +743,7 @@ JS
 	 * @internal
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function RenderHeaderHtml()
 	{
@@ -753,18 +753,18 @@ JS
 
 		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
 		{
-			// TODO 2.8.0: Don't forget this dude!
+			// TODO 3.0.0: Don't forget this dude!
 			$sHeaderHtml .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
 		}
 
-		// TODO 2.8.0: Don't forget this!
+		// TODO 3.0.0: Don't forget this!
 		if (utils::IsArchiveMode())
 		{
 			$sIcon = '<span class="fas fa-lock fa-1x"></span>';
 			$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
 		}
 
-		// TODO 2.8.0: Move this in the Header method
+		// TODO 3.0.0: Move this in the Header method
 		$sRestrictions = '';
 		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 		{
@@ -795,7 +795,7 @@ EOF;
 			$this->AddApplicationMessage($sRestrictions, $sIcon);
 		}
 
-		// TODO 2.8.0: Move this in the header method
+		// TODO 3.0.0: Move this in the header method
 		$sApplicationMessages = '';
 		foreach ($this->m_aMessages as $aMessage)
 		{
@@ -821,7 +821,7 @@ EOF;
 	 * @internal
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	protected function RenderFooterHtml()
 	{
@@ -873,10 +873,10 @@ EOF;
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
 		$this->output_dict_entries();
-		// TODO 2.8.0 not displayed ?
+		// TODO 3.0.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
-		// TODO 2.8.0 : to be removed
+		// TODO 3.0.0 : to be removed
 		$this->outputCollapsibleSectionInit();
 
 		// Base structure of data to pass to the TWIG template
@@ -945,7 +945,7 @@ EOF;
 				'aJsInlineOnInit' => $this->m_aInitScript,
 				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 				'aJsInlineLive' => $this->a_scripts,
-				// TODO 2.8.0: TEMP, used while developping, remove it.
+				// TODO 3.0.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
 				'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
 				'sCapturedOutput' => utils::FilterXSS($s_captured_output),
@@ -1010,11 +1010,11 @@ EOF
 
 		$this->outputCollapsibleSectionInit();
 
-		// TODO 2.8.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
+		// TODO 3.0.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
 		$s_captured_output = $this->ob_get_clean_safe();
 
-		// TODO 2.8.0: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
-		// TODO 2.8.0: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
+		// TODO 3.0.0: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
+		// TODO 3.0.0: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
 		// special stylesheet for printing, hides the navigation gadgets
 		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 
@@ -1028,7 +1028,7 @@ EOF
 //			}
 
 
-			// TODO 2.8.0: Should we still do this init vs ready separation?
+			// TODO 3.0.0: Should we still do this init vs ready separation?
 //			$this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
 			if ($this->IsPrintableVersion())
 			{
@@ -1103,7 +1103,7 @@ EOF;
 			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
-		// TODO 2.8.0
+		// TODO 3.0.0
 //		// Render the text of the global search form
 //		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
 //		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
@@ -1141,7 +1141,7 @@ EOF;
 		}
 		else
 		{
-			// TODO 2.8.0: Check with ITOMIG if we can remove this
+			// TODO 3.0.0: Check with ITOMIG if we can remove this
 			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
 			{
 				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
@@ -1256,7 +1256,7 @@ EOF;
 	 * @param string $sTabContainer
 	 * @param string $sTabCode
 	 *
-	 * @deprecated 2.8.0
+	 * @deprecated 3.0.0
 	 */
 	public function SelectTab($sTabContainer, $sTabCode)
 	{

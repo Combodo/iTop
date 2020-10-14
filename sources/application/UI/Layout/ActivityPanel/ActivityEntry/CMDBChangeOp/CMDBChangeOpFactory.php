@@ -79,7 +79,7 @@ class CMDBChangeOpFactory
 		$iAuthorId = $oChangeOp->Get('user_id');
 		// - Set login in the friendlyname as a fallback
 		$sAuthorLogin = $oChangeOp->Get('userinfo');
-		// - Try to find user login from its ID if present (since iTop 2.8.0)
+		// - Try to find user login from its ID if present (since iTop 3.0.0)
 		if(empty($iAuthorId) === false)
 		{
 			$oAuthor = MetaModel::GetObject('User', $iAuthorId, false, true);

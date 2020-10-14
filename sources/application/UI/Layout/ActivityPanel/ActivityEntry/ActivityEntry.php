@@ -31,7 +31,7 @@ use UserRights;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class ActivityEntry extends UIBlock
 {
@@ -215,7 +215,7 @@ class ActivityEntry extends UIBlock
 		}
 		else
 		{
-			// TODO 2.8.0: Check that this does not return '' when author is the CRON or an extension.
+			// TODO 3.0.0: Check that this does not return '' when author is the CRON or an extension.
 			$this->sAuthorFriendlyname = UserRights::GetUserFriendlyName($this->sAuthorLogin);
 		}
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);

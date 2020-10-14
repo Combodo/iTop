@@ -93,7 +93,7 @@ $(function() {
 					'caselog_attcode' : sCaselog,
 					'caselog_rank' : $(me.js_selectors.panel).activity_panel('GetCaseLogRank', sCaselog),
 				}
-				//TODO 2.8.0 Handle errors
+				//TODO 3.0.0 Handle errors
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(sNewEntry){
 					$(me.js_selectors.panel).activity_panel('AddEntry', sNewEntry, 'caselog:' + sCaselog)
 					me._HideNewEntryForm();

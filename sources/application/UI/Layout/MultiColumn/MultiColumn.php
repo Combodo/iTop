@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  *
  * @package Combodo\iTop\Application\UI\Layout\MultiColumn
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 class MultiColumn extends UIBlock {
 	// Overloaded constants

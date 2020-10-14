@@ -29,7 +29,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class PopoverMenuItem extends UIBlock
 {

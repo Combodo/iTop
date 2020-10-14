@@ -38,7 +38,7 @@ use MetaModel;
  * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel
- * @since 2.8.0
+ * @since 3.0.0
  */
 class ActivityPanelFactory
 {
@@ -73,7 +73,7 @@ class ActivityPanelFactory
 
 		if($oActivityPanel->HasCaseLogTabs())
 		{
-			//TODO 2.8.0 check write rights
+			//TODO 3.0.0 check write rights
 			$aCaseLogsForNewEntryForm = [];
 			foreach ($aCaseLogAttCodes as $sCaseLogAttCode){
 				$aCaseLogsForNewEntryForm[$sCaseLogAttCode] = MetaModel::GetLabel($sObjClass, $sCaseLogAttCode);

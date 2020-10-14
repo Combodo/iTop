@@ -30,7 +30,7 @@ use TabManager;
  *
  * @package Combodo\iTop\Application\UI\Layout\TabContainer\Tab
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 class AjaxTab extends Tab {
 	// Overloaded constants

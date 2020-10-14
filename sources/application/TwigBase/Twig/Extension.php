@@ -142,21 +142,21 @@ class Extension
 
 		// Function to get iTop's app root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/)
 		// Usage in twig: {{ get_absolute_url_app_root() }}
-		/** @since 2.8.0 */
+		/** @since 3.0.0 */
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_app_root', function () {
 			return utils::GetAbsoluteUrlAppRoot();
 		}));
 
 		// Function to get iTop's modules root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/env-zzz/)
 		// Usage in twig: {{ get_absolute_url_modules_root() }}
-		/** @since 2.8.0 */
+		/** @since 3.0.0 */
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_modules_root', function () {
 			return utils::GetAbsoluteUrlModulesRoot();
 		}));
 
 		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
 		// Usage in twig: {{ render_block(oBlock) }}
-		/** @since 2.8.0 */
+		/** @since 3.0.0 */
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock, $aContextParams = []){
 			return BlockRenderer::RenderBlockTemplates($oBlock, $aContextParams);
 		}, ['is_safe' => ['html']]));

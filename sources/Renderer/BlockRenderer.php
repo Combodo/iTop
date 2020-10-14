@@ -29,7 +29,7 @@ use Combodo\iTop\Application\UI\iUIBlock;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Renderer\Component
- * @since 2.8.0
+ * @since 3.0.0
  */
 class BlockRenderer
 {

@@ -28,7 +28,7 @@ use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\NewsroomMenu
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class NewsroomMenu extends PopoverMenu
 {

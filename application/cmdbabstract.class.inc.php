@@ -979,7 +979,7 @@ EOF
 		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
 		// Object's details
-		// TODO 2.8.0: Complete the factory
+		// TODO 3.0.0: Complete the factory
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 //		$oPage->AddUiBlock($oObjectDetails);
 
@@ -1056,7 +1056,7 @@ HTML
 		$this->DisplayBareRelations($oPage, $bEditMode);
 		//$oPage->SetCurrentTab('UI:HistoryTab');
 		//$this->DisplayBareHistory($oPage, $bEditMode);
-		// TODO 2.8.0: What to do with this?
+		// TODO 3.0.0: What to do with this?
 		//$oPage->AddAjaxTab('UI:HistoryTab', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
 		$oPage->add(<<<HTML
 </div><!-- End of object-details -->

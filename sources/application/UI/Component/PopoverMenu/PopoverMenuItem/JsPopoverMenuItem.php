@@ -28,7 +28,7 @@ use JSPopupMenuItem;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuItem
  * @property \JSPopupMenuItem $oPopupMenuItem 
- * @since 2.8.0
+ * @since 3.0.0
  */
 class JsPopoverMenuItem extends PopoverMenuItem
 {

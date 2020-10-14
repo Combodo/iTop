@@ -19,7 +19,7 @@ use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\Activi
  * @internal
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryFormFactory
- * @since 2.8.0
+ * @since 3.0.0
  */
 class ActivityNewEntryFormFactory
 {

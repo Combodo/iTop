@@ -28,7 +28,7 @@ use utils;
  * @package Combodo\iTop\Application\UI
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 abstract class UIBlock implements iUIBlock {
 	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ...

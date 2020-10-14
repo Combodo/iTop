@@ -178,7 +178,7 @@ class RenderingOutput
 	 * @param array $aFiles Array of absolute URLs
 	 *
 	 * @return $this
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function SetJsFiles(array $aFiles)
 	{
@@ -238,7 +238,7 @@ class RenderingOutput
 	 * @param array $aFiles Array of absolute URLs
 	 *
 	 * @return $this
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function SetCssFiles(array $aFiles)
 	{

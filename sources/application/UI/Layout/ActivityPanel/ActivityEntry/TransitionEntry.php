@@ -29,7 +29,7 @@ use MetaModel;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 class TransitionEntry extends ActivityEntry
 {

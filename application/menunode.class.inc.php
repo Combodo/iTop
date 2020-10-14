@@ -207,7 +207,7 @@ class ApplicationMenu
 	 *
 	 * @return array
 	 * @throws \DictExceptionMissingString
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetMenuGroups($aExtraParams = array())
 	{
@@ -248,7 +248,7 @@ class ApplicationMenu
 	 * @return array
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = array())
 	{
@@ -291,7 +291,7 @@ class ApplicationMenu
 	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
 	 *
-	 * @deprecated Will be removed in 2.8.0, use static::GetMenuGroups() instead
+	 * @deprecated Will be removed in 3.0.0, use static::GetMenuGroups() instead
 	 */
 	public static function DisplayMenu($oPage, $aExtraParams)
 	{
@@ -367,7 +367,7 @@ EOF
 	 * @return bool True if the currently selected menu is one of the submenus
 	 * @throws DictExceptionMissingString
 	 * @throws \Exception
-	 * @deprecated Will be removed in 2.8.0, use static::GetSubMenuNodes() instead
+	 * @deprecated Will be removed in 3.0.0, use static::GetSubMenuNodes() instead
 	 */
 	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
@@ -853,7 +853,7 @@ class MenuGroup extends MenuNode
 	 * Return the CSS classes used for decorating the menu group (typically the icon in the navigation menu)
 	 *
 	 * @return string
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public function GetDecorationClasses()
 	{

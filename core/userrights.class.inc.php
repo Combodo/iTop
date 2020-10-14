@@ -313,7 +313,7 @@ abstract class User extends cmdbAbstractObject
 	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	*/
 	public function GetInitials()
 	{
@@ -1118,7 +1118,7 @@ class UserRights
 	 * @return null|string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetContactPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
 	{
@@ -1173,7 +1173,7 @@ class UserRights
 	 *
 	 * @return string|null
 	 * @throws \Exception
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetContactOrganizationFriendlyname()
 	{
@@ -1194,7 +1194,7 @@ class UserRights
 	 *
 	 * @return string|null
 	 * @throws \Exception
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetContactFirstname()
 	{
@@ -1215,7 +1215,7 @@ class UserRights
 	 *
 	 * @return string|null
 	 * @throws \Exception
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetContactFriendlyname()
 	{
@@ -1277,7 +1277,7 @@ class UserRights
 	 *
 	 * @return string
 	 * @throws \OQLException
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetUserInitials($sLogin = '')
 	{

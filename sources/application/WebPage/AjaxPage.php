@@ -127,7 +127,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	/**
 	 * @param string $sHtml
 	 *
-	 * @deprecated Will be removed in 2.8.0
+	 * @deprecated Will be removed in 3.0.0
 	 */
 	public function AddToMenu($sHtml)
 	{
@@ -155,7 +155,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		// Additional UI widgets to be activated inside the ajax fragment
 		// Important: Testing the content type is not enough because some ajax handlers have not correctly positionned the flag (e.g json response corrupted by the script)
 
-		// TODO 2.8.0 à revoir
+		// TODO 3.0.0 à revoir
 		if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content))) {
 			$this->add_ready_script(
 				<<<EOF
@@ -184,7 +184,7 @@ EOF
 			'aJsInlineLive' => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
 			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
-			// TODO 2.8.0: TEMP, used while developping, remove it.
+			// TODO 3.0.0: TEMP, used while developping, remove it.
 			'sSanitizedContent' => utils::FilterXSS($this->s_content),
 			'sDeferredContent' => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
 			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
@@ -216,7 +216,7 @@ EOF
 			echo $this->s_content;
 		}
 
-		// TODO 2.8.0 Only for designer ?
+		// TODO 3.0.0 Only for designer ?
 		if (!empty($this->m_sMenu)) {
 			$uid = time();
 			echo "<div id=\"accordion_temp_$uid\">\n";

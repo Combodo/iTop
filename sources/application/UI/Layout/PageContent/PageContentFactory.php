@@ -29,7 +29,7 @@ use DBObject;
  * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Layout\PageContent
- * @since 2.8.0
+ * @since 3.0.0
  */
 class PageContentFactory
 {
@@ -56,7 +56,7 @@ class PageContentFactory
 		$oLayout = new PageContentWithSideContent();
 
 		// Add object details layout
-		// TODO 2.8.0
+		// TODO 3.0.0
 
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject);

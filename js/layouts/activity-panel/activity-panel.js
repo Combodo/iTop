@@ -300,7 +300,7 @@ $(function()
 				}
 				else
 				{
-					// TODO 2.8.0 Create a new entry group
+					// TODO 3.0.0 Create a new entry group
 					window.location.reload();
 				}
 			},

@@ -19,7 +19,7 @@ use Dict;
  * @package Combodo\iTop\Application\UI
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
- * @since 2.8.0
+ * @since 3.0.0
  */
 trait tUIContentAreas {
 	/** @var iUIContentBlock[] Blocks for the different content parts of the block */

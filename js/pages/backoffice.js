@@ -41,7 +41,7 @@ function StripArchiveArgument(sUrl)
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
 	return res;
 }
-//TODO 2.8.0 Is this the right place to put this method ?
+//TODO 3.0.0 Is this the right place to put this method ?
 function SwitchTabMode()
 {
 	let aTabContainer = $('[data-role="ibo-tab-container"]');
@@ -62,7 +62,7 @@ function SwitchTabMode()
  * A toolbox for common JS operations in the backoffice. Meant to be used by Combodo developers and the community.
  * @type {{InitTooltipFromMarkup: CombodoBackofficeToolbox.InitTooltipFromMarkup}}
  * @api
- * @since 2.8.0
+ * @since 3.0.0
  */
 const CombodoBackofficeToolbox = {
 	// Instanciate tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)

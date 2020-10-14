@@ -26,7 +26,7 @@ namespace Combodo\iTop\Application\UI;
  * @package Combodo\iTop\Application\UI
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 interface iUIBlock {
 	/**

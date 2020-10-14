@@ -21,7 +21,7 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 /**
  * This class manages the special template format used internally to build the iTop web pages
  *
- * @deprecated Since 2.8.0
+ * @deprecated Since 3.0.0
  */
 class DisplayTemplate
 {

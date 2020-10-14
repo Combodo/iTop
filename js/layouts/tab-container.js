@@ -209,7 +209,7 @@ $(function()
                 // Prevent anchor default behaviour
                 oEvent.preventDefault();
 
-                // TODO 2.8.0: Should/could we use a popover menu instead here?
+                // TODO 3.0.0: Should/could we use a popover menu instead here?
                 this.element.find(this.js_selectors.extra_tabs_list).toggleClass(this.css_classes.is_hidden);
             },
             _onBodyClick: function(oEvent)

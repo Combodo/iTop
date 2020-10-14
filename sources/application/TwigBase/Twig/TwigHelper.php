@@ -26,28 +26,28 @@ class TwigHelper
 {
 	/**
 	 * @var string ENUM_FILE_TYPE_HTML
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public const ENUM_FILE_TYPE_HTML = 'html';
 	/**
 	 * @var string ENUM_FILE_TYPE_JS
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public const ENUM_FILE_TYPE_JS = 'js';
 	/**
 	 * @var string ENUM_FILE_TYPE_CSS
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public const ENUM_FILE_TYPE_CSS = 'css';
 	/**
 	 * @var string ENUM_FILE_TYPE_SVG
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public const ENUM_FILE_TYPE_SVG = 'svg';
 
 	/**
 	 * @var string DEFAULT_FILE_TYPE
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
 

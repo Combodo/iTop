@@ -19,7 +19,7 @@ use Combodo\iTop\Application\UI\UIBlock;
  * @author  Eric Espie <eric.espie@combodo.com>
  * @author  Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
  * @internal
- * @since   2.8.0
+ * @since   3.0.0
  */
 class UIContentBlock extends UIBlock implements iUIContentBlock {
 	// Overloaded constants
