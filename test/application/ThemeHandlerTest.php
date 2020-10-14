@@ -621,29 +621,4 @@ SCSS;
 			[ '/var/www/html/iTop/css/ui-lightness/images/ui-icons_222222_256x240.png', '/var/www/html/iTop/env-production//branding/themes/light-grey//../../../../css/ui-lightness/images/ui-icons_222222_256x240.png' ]
 		];
 	}
-
-	/**
-	 * @param $sConfig
-	 * @dataProvider configProvider
-	 */
-	public function testConfig($sExcludeGroupConfig, $sExpectedCmd) {
-		$sGroupCommand = "";
-		if (! empty($sExcludeGroupConfig)) {
-			foreach (explode(",", $sExcludeGroupConfig) as $sExcludedGroup){
-				$sGroupCommand .= "--exclude-group " . trim($sExcludedGroup) . " ";
-			}
-		}
-
-		$this->assertEquals($sExpectedCmd, trim($sGroupCommand));
-	}
-
-	public function configProvider(){
-		return [
-			[ "", ""],
-			[ "skipPostBuild", "--exclude-group skipPostBuild"],
-			[ "skipPostBuild,beforeSetup", "--exclude-group skipPostBuild --exclude-group beforeSetup"],
-		];
-	}
-
-
 }
