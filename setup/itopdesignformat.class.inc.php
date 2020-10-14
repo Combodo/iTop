@@ -789,6 +789,10 @@ class iTopDesignFormat
 		// -- 3185 - Remove main_logo_compact node from branding
 		$sPath = "/itop_design/branding/main_logo_compact";
 		$this->RemoveNodeFromXPath($sPath);
+
+		// -- 2982 - Speed up SCSS themes compilation during setup
+		$sPath = "/itop_design/branding/themes/theme/precompiled_stylesheet";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	/**
