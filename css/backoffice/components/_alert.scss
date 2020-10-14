@@ -17,7 +17,8 @@
  */
 
 /* SCSS variables */
-$ibo-alert--spacing-top: 6px !default;
+$ibo-alert--spacing-top--with-same-block: 6px !default;
+$ibo-alert--spacing-top--with-other-blocks: 16px !default;
 $ibo-alert--padding-y: 18px !default;
 $ibo-alert--padding-x: 20px !default;
 $ibo-alert--border-radius: $ibo-border-radius-300 !default;
@@ -87,6 +88,11 @@ $ibo-alert-colors: (
 	}
 }
 
+/* Spacing between alert blocks */
 .ibo-alert + .ibo-alert {
-	margin-top: $ibo-alert--spacing-top;
+	margin-top: $ibo-alert--spacing-top--with-same-block;
+}
+/* Spacing between an alert block and something else */
+.ibo-alert + :not(.ibo-alert) {
+	margin-top: $ibo-alert--spacing-top--with-other-blocks;
 }
