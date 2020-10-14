@@ -2409,7 +2409,7 @@ class utils
 	 * @param \Exception $oException
 	 *
 	 * @throws \Exception
-	 * @since 2.7.2/ 2.8.0
+	 * @since 2.7.2/ 3.0.0
 	 */
 	public static function EnrichRaisedException($oCmdbAbstract, $oException)
 	{

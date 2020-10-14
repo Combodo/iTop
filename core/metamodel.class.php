@@ -1933,7 +1933,7 @@ abstract class MetaModel
 	 *
 	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
 	 *
-	 * @since 2.8.0 N°2334
+	 * @since 3.0.0 N°2334
 	 */
 	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
 	{
@@ -1961,7 +1961,7 @@ abstract class MetaModel
 	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
 	 *
 	 * @throws \CoreException
-	 * @since 2.8.0 N°2334
+	 * @since 3.0.0 N°2334
 	 */
 	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
 	{

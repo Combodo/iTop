@@ -553,7 +553,7 @@ abstract class CMDBObject extends DBObject
 	 * @param $iActionCode
 	 *
 	 * @throws \SecurityException
-	 * @deprecated in 2.8.0 will be removed in 2.9
+	 * @deprecated in 3.0.0 will be removed in 2.9
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{

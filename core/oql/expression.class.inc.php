@@ -31,7 +31,7 @@ class ExpressionHelper {
 	 *
 	 * @uses \DBSearch::AllowAllData()
 	 *
-	 * @since 2.7.2 2.8.0 N°3324
+	 * @since 2.7.2 3.0.0 N°3324
 	 */
 	public static function ExpressionAllowAllDataCallback($oExpression, $bAllowAllData) {
 		if (!($oExpression instanceof NestedQueryExpression)) {
