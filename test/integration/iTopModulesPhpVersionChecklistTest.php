@@ -16,7 +16,6 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
 use iTopDesignFormat;
 
 
@@ -30,9 +29,30 @@ use iTopDesignFormat;
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
-class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
-{
+class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
+	/**
+	 * We had a problem when version was switched from 2.8.0 to 3.0.0, so this test aims to detect such problems
+	 *
+	 * @param string $sVersion
+	 * @param string $sExpectedMinVersion if null the test will expects an exception to occur
+	 *
+	 * @throws \Exception
+	 * @since 3.0.0
+	 * @dataProvider GetItopMinorVersionProvider
+	 */
+	public function testGetItopMinorVersion($sVersion, $sExpectedMinVersion) {
+		if (is_null($sExpectedMinVersion)) {
+			$this->expectException(\Exception::class);
+		}
+		$sActualMinVersion = \utils::GetItopMinorVersion($sVersion);
+		if (!is_null($sExpectedMinVersion)) {
+			$this->assertEquals($sExpectedMinVersion, $sActualMinVersion);
+		}
+	}
 
+	public function GetItopMinorVersionProvider() {
+		return [['2.8.0', '2.8'], ['3.0.0', '3.0'], ['3.', null], ['3', null]];
+	}
 
 	/**
 	 * Verify if the datamodel.*.xml files refer to the current itop version
@@ -44,6 +64,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 	 */
 	public function testiTopModulesPhpVersion($sExpectedVersion, $sPhpFile)
 	{
+		$this->assertNotNull($sExpectedVersion, 'Expected version is null, something went wrong in the dataprovider !');
 
 		$sModulePath = realpath($sPhpFile);
 		$sModuleFileName = basename($sModulePath);
@@ -57,38 +78,43 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1], " $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
-
+		$this->assertRegExp("#$sExpectedVersion#", $matches[1],
+			" $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
 	}
 
-	public function iTopModulesPhpVersionProvider()
-	{
+	/**
+	 * @return array
+	 * @throws \Exception
+	 * @uses utils::GetItopMinorVersion()
+	 */
+	public function iTopModulesPhpVersionProvider() {
 		parent::setUp();
 
 		require_once APPROOT.'core/config.class.inc.php';
 		require_once APPROOT.'application/utils.inc.php';
 
-		if (is_dir(APPROOT.'datamodels/2.x'))
-		{
+		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
 		}
 		elseif (is_dir(APPROOT.'datamodels/1.x'))
 		{
 			$DatamodelsPath = APPROOT.'datamodels/1.x';
-		}
-		else
-		{
+		} else {
 			throw new \Exception('Cannot local the datamodels directory');
 		}
 
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+'; // ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
+		try {
+			$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+';// ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
+		}
+		catch (\Exception $e) {
+			$sExpectedVersion = null;
+		}
 
 		$aTestCases = array();
-		foreach ($aPhpFiles as $sPhpFile)
-		{
+		foreach ($aPhpFiles as $sPhpFile) {
 			$aTestCases[$sPhpFile] = array(
 				'sExpectedVersion' => $sExpectedVersion,
 				'sPhpFile' => $sPhpFile,
@@ -97,5 +123,4 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 
 		return $aTestCases;
 	}
-
 }

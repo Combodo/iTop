@@ -2081,33 +2081,38 @@ class utils
 	 */
 	public static function GetCacheBusterTimestamp()
 	{
-		if(!defined('COMPILATION_TIMESTAMP'))
-		{
+		if (!defined('COMPILATION_TIMESTAMP')) {
 			return ITOP_VERSION;
 		}
+
 		return COMPILATION_TIMESTAMP;
 	}
 
 	/**
 	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
 	 */
-	public static function GetItopVersionWikiSyntax()
-	{
+	public static function GetItopVersionWikiSyntax() {
 		$sMinorVersion = self::GetItopMinorVersion();
+
 		return str_replace('.', '_', $sMinorVersion).'_0';
 	}
 
 	/**
+	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
+	 *
 	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
 	 * @throws \Exception
 	 */
-	public static function GetItopMinorVersion()
-	{
-		$sPatchVersion = self::GetItopPatchVersion();
+	public static function GetItopMinorVersion($sPatchVersion = null) {
+		if (is_null($sPatchVersion)) {
+			$sPatchVersion = self::GetItopPatchVersion();
+		}
 		$aExplodedVersion = explode('.', $sPatchVersion);
 
-		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
-		{
+		if (count($aExplodedVersion) < 2) {
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
 			throw new Exception('iTop version is wrongfully configured!');
 		}
 
@@ -2117,9 +2122,9 @@ class utils
 	/**
 	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
 	 */
-	public static function GetItopPatchVersion()
-	{
+	public static function GetItopPatchVersion() {
 		$aExplodedVersion = explode('-', ITOP_VERSION);
+
 		return $aExplodedVersion[0];
 	}
 
