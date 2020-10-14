@@ -100,6 +100,8 @@ class ThemeHandlerTest extends ItopTestCase
 	 * @param $sPrecompiledStylesheet
 	 * @param $oTheme
 	 *
+	 * @group beforeSetup
+	 *
 	 * @throws \Exception
 	 */
 	public function testValidatePrecompiledStyles()
