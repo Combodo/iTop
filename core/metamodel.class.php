@@ -4223,6 +4223,7 @@ abstract class MetaModel
 			if (count($aCurrentUser) > 0)
 			{
 				$oSearch = DBObjectSearch::FromOQL("SELECT User WHERE id = :id");
+				$oSearch->AllowAllData();
 				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetUserId()));
 				$oSet->OptimizeColumnLoad($aCurrentUser);
 				$oUser = $oSet->fetch();
