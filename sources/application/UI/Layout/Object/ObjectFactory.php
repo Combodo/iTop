@@ -25,6 +25,6 @@ class ObjectFactory {
 	 * @return \Combodo\iTop\Application\UI\Layout\Object\ObjectDetails
 	 */
 	public static function MakeDetails(DBObject $oObject) {
-		return new ObjectDetails();
+		return new ObjectDetails($oObject);
 	}
 }

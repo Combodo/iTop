@@ -317,6 +317,7 @@ class WebPage implements Page
 	 */
 	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
 	{
+		// TODO 3.0.0: Why make this parameter nullable?!
 		if (is_null($oBlock)) {
 			return null;
 		}

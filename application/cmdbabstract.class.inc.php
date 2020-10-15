@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Layout\Object\ObjectFactory;
+use Combodo\iTop\Application\UI\Component\Panel\Panel;
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -388,9 +389,6 @@ EOF
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 
-		$sObjectIcon = $this->GetIcon();
-		$sClassName = MetaModel::GetName(get_class($this));
-		$sObjectName = $this->GetName();
 		if (count($aIcons) > 0) {
 			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
 		} else {
@@ -450,7 +448,7 @@ EOF
 
 		// Special case to display the case log, if any...
 		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
-		// TODO 2.8.0: Remove when sure everything has been migrated
+		// TODO 3.0.0: Remove when sure everything has been migrated (CHECK THE WARNING ABOVE!)
 //		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 //		{
 //			if ($oAttDef instanceof AttributeCaseLog)
@@ -978,86 +976,26 @@ EOF
 		$iKey = $this->GetKey();
 		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
-		// Object's details
-		// TODO 3.0.0: Complete the factory
-		$oObjectDetails = ObjectFactory::MakeDetails($this);
-//		$oPage->AddUiBlock($oObjectDetails);
-
-
-		// TODO 2.8.0: Remove this when object details block completed, this is hardcoded for the demo
-		$oPage->add_style(<<<CSS
-.object-details .ibo-title {
-	z-index: 1;
-    align-items: start;
-	position: relative;
-	padding-left: 32px;
-}
-.object-details .ibo-title .ibo-title--medallion {
-	position: absolute;
-	margin-top: 16px;
-}
-.object-details .ibo-title .ibo-title--content {
-	margin-left: calc(90px + 32px);
-}
-.object-details .ibo-panel {
-	z-index: 0;
-}
-.object-details .ibo-panel > .ibo-panel--body {
-	padding: 8px 16px 0px;
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tabs-list{
-	margin-left: -16px;
-	margin-right: -16px;
-	padding-left: calc(32px + 90px + 32px - 24px);
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container > .ibo-tab-container--tab-container{
-	margin-left: -16px;
-	margin-right: -16px;
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical{
-	display: flex;
-	flex-direction: row;
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list{
-	padding-top: 50px;
-	flex-direction: column;
-	height: auto;
-	padding-left: unset;
-	margin-right: unset;
-	min-width: calc(32px + 90px + 32px);
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header{
-	height: 50px;
-	width: 100%;
-	justify-content: left;
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tabs-list > .ibo-tab-container--tab-header > .ibo-tab-container--tab-toggler{
-	width: 100%;
-	justify-content: left;
-}
-.object-details .ibo-panel > .ibo-panel--body > .ibo-tab-container.ibo-is-vertical > .ibo-tab-container--tab-container {
-	flex-grow: 1;
-	margin-left: unset;
-}
-CSS
-		);
-
 		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
 <div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
 HTML
 		);
-		$this->DisplayBareHeader($oPage, $bEditMode);
+
 		/** @var \iTopWebPage $oPage */
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
+		$this->DisplayBareHeader($oPage, $bEditMode);
+		// Object's details
+		// TODO 3.0.0: Complete the factory
+		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		$oPage->AddUiBlock($oObjectDetails);
+
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
-		//$oPage->SetCurrentTab('UI:HistoryTab');
-		//$this->DisplayBareHistory($oPage, $bEditMode);
 		// TODO 3.0.0: What to do with this?
-		//$oPage->AddAjaxTab('UI:HistoryTab', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
+		//$this->DisplayBareHistory($oPage, $bEditMode);
 		$oPage->add(<<<HTML
 </div><!-- End of object-details -->
 HTML
@@ -2645,13 +2583,26 @@ JS
 			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
 		$oContentBlock->AddSubBlock($oForm);
 
+		// TODO 3.0.0: Dehardcode this after object details are refactored
+		$oPage->add_style(<<<CSS
+.ibo-toolbar{
+    margin: 6px 0;
+}
+.ibo-toolbar-top{
+	padding-left: calc(90px + 64px);
+}
+CSS
+		);
 		$oToolbarTop = new Toolbar();
+		$oToolbarTop->SetCSSClasses('ibo-toolbar ibo-toolbar-top');
+
 
 		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
 		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
+
 		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
 		$oToolbarTop->AddSubBlock($oCancelButton);
@@ -2739,7 +2690,11 @@ EOF
 			$oForm->AddSubBlock($oToolbarTop);
 		}
 
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oForm);
+
+		// TODO 3.0.0: Use ObjectDetails block when ready.
+		$oPanel = new Panel;
+		$oForm->AddSubBlock($oPanel);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oPanel);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
@@ -2772,6 +2727,7 @@ EOF
 			// bottom or both: display the buttons here
 			$oPage->p($sStatesSelection);
 			$oToolbarBottom = new Toolbar();
+			$oToolbarBottom->SetCSSClasses('ibo-toolbar');
 			foreach ($oToolbarTop->GetSubBlocks() as $oButton) {
 				$oToolbarBottom->AddSubBlock($oButton);
 			}
