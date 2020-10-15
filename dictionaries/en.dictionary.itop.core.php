@@ -239,7 +239,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp' => 'Change Operation',
-	'Class:CMDBChangeOp+' => 'Change operations tracking',
+	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
 	'Class:CMDBChangeOp/Attribute:change+' => 'change',
 	'Class:CMDBChangeOp/Attribute:date' => 'date',
@@ -247,11 +247,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'user',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'who made this change',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'object class',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'object id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'object id',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Name of the final class',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed',
 ));
 
 //
@@ -347,7 +347,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
 	'Class:Event/Attribute:finalclass' => 'Event sub-class',
-	'Class:Event/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occured',
 ));
 
 //
@@ -476,7 +476,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:description' => 'Description',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'In production or ?',
+	'Class:Action/Attribute:status+' => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test' => 'Being tested',
 	'Class:Action/Attribute:status/Value:test+' => 'Being tested',
 	'Class:Action/Attribute:status/Value:enabled' => 'In production',
@@ -505,8 +505,12 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionEmail' => 'Email notification',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination in case status is set to "Test"',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email used when notification is being tested',
 	'Class:ActionEmail/Attribute:from' => 'From (email)',
 	'Class:ActionEmail/Attribute:from+' => 'Sender email address will be sent into the email header',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)',
