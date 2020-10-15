@@ -1150,10 +1150,16 @@ HTML
 	 *
 	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 *
-	 * @param CMDBObjectSet The set of objects to display
-	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
-	 *
 	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
+	 * @param CMDBObjectSet $oSet The set of objects to display
+	 * @param array $aExtraParams key used :
+	 *      <ul>
+	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
+	 *          <li>menu : if true prints DisplayBlock menu, default true
+	 *          <li>display_aliases : list of query aliases that will be printed, defaults to [] (displays all)
+	 *          <li>zlist : name of the zlist to use, false to disable zlist lookup, default to 'list'
+	 *          <li>extra_fields : list of <alias>.<attcode> to add to the result, separator ',', defaults to empty string
+	 *      </ul>
 	 *
 	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
 	 *     pagination or table sorting !
