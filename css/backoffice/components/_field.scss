@@ -6,6 +6,10 @@
 $ibo-field--sibling-spacing: 16px !default;
 $ibo-field--value--color: $ibo-color-grey-700 !default;
 
+$ibo-field--label--description--content: "?" !default;
+$ibo-field--label--description--padding-left: 2px !default;
+$ibo-field--label--description--color: $ibo-color-grey-700 !default;
+
 .ibo-field {
   @extend %ibo-font-ral-nor-150;
 
@@ -37,6 +41,18 @@ $ibo-field--value--color: $ibo-color-grey-700 !default;
   max-width: 145px;
   width: 30%;
   padding-right: 10px;
+
+  > .ibo-has-description {
+    &::after {
+      content: $ibo-field--label--description--content;
+      padding-left: $ibo-field--label--description--padding-left;
+      vertical-align: top;
+
+      cursor: pointer;
+      color: $ibo-field--label--description--color;
+      @extend %ibo-font-ral-bol-100;
+    }
+  }
 }
 
 .ibo-field--value {

@@ -882,8 +882,14 @@ EOF
 													$aArgs).'';
 										}
 										$aFieldsMap[$sAttCode] = $sInputId;
+
+										// Attribute description
+										$sDescription = $oAttDef->GetDescription();
+										$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
+										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+
 										$val = array(
-											'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
@@ -892,8 +898,13 @@ EOF
 								}
 								else
 								{
+									// Attribute description
+									$sDescription = $oAttDef->GetDescription();
+									$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
+									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+
 									$val = array(
-										'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+										'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
 										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
 										'comments' => $sComments,
 										'infos' => $sInfos,
@@ -3240,9 +3251,14 @@ EOF
 					$sDisplayValue = $this->GetAsHTML($sAttCode);
 				}
 			}
+
+			// Attribute description
+			$sDescription = $oAttDef->GetDescription();
+			$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
+			$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+
 			$retVal = array(
-				'label' => '<span title="'.MetaModel::GetDescription($sClass,
-						$sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
+				'label' => '<span '.$sDescriptionHTMLTag.' >'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
 				'value' => $sDisplayValue,
 			);
 		}
