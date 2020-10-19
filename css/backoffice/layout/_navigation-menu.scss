@@ -436,7 +436,8 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 
 .ibo-navigation-menu--menu-group-icon{
 	width: $ibo-navigation-menu--action-icon--width;
-	text-align: center;
+	min-width: $ibo-navigation-menu--action-icon--width; /* Necessary with flex, otherwise it will shrink */
+	justify-content: center;
 	font-size: $ibo-navigation-menu--menu-group-icon--font-size;
 
 	&::before{
@@ -445,7 +446,7 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 }
 .ibo-navigation-menu--menu-group-title{
 	margin-left: $ibo-navigation-menu--menu-group-title--margin-left;
-	text-align: left;
+	justify-content: left;
 	@extend %ibo-text-truncated-with-ellipsis;
 }
 

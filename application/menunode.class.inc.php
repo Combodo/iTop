@@ -231,6 +231,7 @@ class ApplicationMenu
 			$aMenuGroups[] = [
 				'sId' => $oMenuNode->GetMenuID(),
 				'sIconCssClasses' => $oMenuNode->GetDecorationClasses(),
+				'sInitials' => $oMenuNode->GetInitials(),
 				'sTitle' => $oMenuNode->GetTitle(),
 				'aSubMenuNodes' => static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams),
 			];
@@ -822,8 +823,8 @@ abstract class MenuNode
  */
 class MenuGroup extends MenuNode
 {
-	/** @var string DEFAULT_DECORATION_CLASSES */
-	const DEFAULT_DECORATION_CLASSES = 'fas fa-ellipsis-v';
+	/** @var string DEFAULT_DECORATION_CLASSES Set to null by default so it is replaced by initials when none is specified */
+	const DEFAULT_DECORATION_CLASSES = null;
 
 	/** @var string The CSS classes used to display the menu group's icon */
 	protected $sDecorationClasses = self::DEFAULT_DECORATION_CLASSES;
@@ -850,6 +851,17 @@ class MenuGroup extends MenuNode
 	}
 
 	/**
+	 * Return true if the menu group has some decoration classes
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public function HasDecorationClasses()
+	{
+		return (empty($this->GetDecorationClasses()) === false);
+	}
+
+	/**
 	 * Return the CSS classes used for decorating the menu group (typically the icon in the navigation menu)
 	 *
 	 * @return string
@@ -858,6 +870,17 @@ class MenuGroup extends MenuNode
 	public function GetDecorationClasses()
 	{
 		return $this->sDecorationClasses;
+	}
+
+	/**
+	 * Returns the initials of the menu group, used by the rendering in case there is no decoration classes
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetInitials()
+	{
+		return mb_substr($this->GetTitle(), 0, 1);
 	}
 
 	/**
