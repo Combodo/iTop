@@ -1069,7 +1069,7 @@ class MatchExpression extends BinaryExpression
 	public function __construct(FieldExpression $oLeftExpr, Expression $oRightExpr)
 	{
 		if (!$oRightExpr instanceof ScalarExpression && !$oRightExpr instanceof VariableExpression) {
-			throw new CoreException('Only instance of ScalarExpression or VariableExpression are allowed in MATCHES '.get_class( $oRightExpr).' found', $oRightExpr);
+			throw new CoreException('Only instance of ScalarExpression or VariableExpression are allowed in MATCHES '.get_class($oRightExpr).' found');
 		}
 		parent::__construct($oLeftExpr, 'MATCHES', $oRightExpr);
 	}

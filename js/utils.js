@@ -681,16 +681,16 @@ function DisplayHistory(sSelector, sFilter, iCount, iStart) {
 
 /**
  * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when dealing with html entities)
- * @returns {string} sanitized value, ready to insert in the DOM without XSS risk
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contrains html entities we want to keep)
+ * @returns {string} escaped value, ready to insert in the DOM without XSS risk
  *
  * @since 2.6.5, 2.7.2, 3.0.0 N°3332
  * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
  * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
  *        example the text() JQuery way) isn't safe
  */
-function SanitizeHtml(sValue, bReplaceAmp) {
-	var sSanitizedValue = (sValue+'')
+function EncodeHtml(sValue, bReplaceAmp) {
+	var sEncodedValue = (sValue+'')
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;')
 		.replace(/"/g, '&quot;')
@@ -698,10 +698,10 @@ function SanitizeHtml(sValue, bReplaceAmp) {
 		.replace(/\//g, '&#x2F;');
 
 	if (bReplaceAmp) {
-		sSanitizedValue = sSanitizedValue.replace(/&/g, '&amp;');
+		sEncodedValue = sEncodedValue.replace(/&/g, '&amp;');
 	}
 
-	return sSanitizedValue;
+	return sEncodedValue;
 }
 
 // Very simple equivalent to format: placeholders are %1$s %2$d ...
