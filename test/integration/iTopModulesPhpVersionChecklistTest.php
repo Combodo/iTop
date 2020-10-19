@@ -54,18 +54,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		return [['2.8.0', '2.8'], ['3.0.0', '3.0'], ['3.', null], ['3', null]];
 	}
 
-	/**
-	 * Verify if the datamodel.*.xml files refer to the current itop version
-	 * This is an integration test
-	 *
-	 * @group skipPostBuild
-	 *
-	 * @dataProvider iTopModulesPhpVersionProvider
-	 */
-	public function testiTopModulesPhpVersion($sExpectedVersion, $sPhpFile)
-	{
-		$this->assertNotNull($sExpectedVersion, 'Expected version is null, something went wrong in the dataprovider !');
-
+	private function CheckItopModulePhpVersion($sExpectedVersion, $sPhpFile) {
 		$sModulePath = realpath($sPhpFile);
 		$sModuleFileName = basename($sModulePath);
 		$sModuleName = preg_replace('/[^.]+\.([^.]+)\.php/', '$1', $sModuleFileName);
@@ -83,21 +72,16 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	}
 
 	/**
-	 * @return array
-	 * @throws \Exception
+	 * Verify if the datamodel.*.xml files refer to the current itop version
+	 * This is an integration test
+	 *
+	 * @group skipPostBuild
 	 * @uses utils::GetItopMinorVersion()
 	 */
-	public function iTopModulesPhpVersionProvider() {
-		parent::setUp();
-
-		require_once APPROOT.'core/config.class.inc.php';
-		require_once APPROOT.'application/utils.inc.php';
-
+	public function testITopModulesPhpVersion() {
 		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
-		}
-		elseif (is_dir(APPROOT.'datamodels/1.x'))
-		{
+		} elseif (is_dir(APPROOT.'datamodels/1.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/1.x';
 		} else {
 			throw new \Exception('Cannot local the datamodels directory');
@@ -106,21 +90,10 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		try {
-			$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+';// ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
-		}
-		catch (\Exception $e) {
-			$sExpectedVersion = null;
-		}
+		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+';// ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
 
-		$aTestCases = array();
 		foreach ($aPhpFiles as $sPhpFile) {
-			$aTestCases[$sPhpFile] = array(
-				'sExpectedVersion' => $sExpectedVersion,
-				'sPhpFile' => $sPhpFile,
-			);
+			$this->CheckItopModulePhpVersion($sExpectedVersion, $sPhpFile);
 		}
-
-		return $aTestCases;
 	}
 }
