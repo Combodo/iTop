@@ -4808,8 +4808,6 @@
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if (!$bEditMode)
-		{
 			$oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
 
 			$bit_ip = ip2long($this->Get('ip'));
@@ -4852,7 +4850,6 @@
 				}
 				$iAnIP++;
 			}
-		}
 	}]]></code>
 				</method>
 			</methods>

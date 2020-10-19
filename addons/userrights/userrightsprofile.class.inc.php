@@ -169,11 +169,9 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
-			$this->DoShowGrantSumary($oPage);
-		}
+
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage);
 	}
 
 	public static function GetReadOnlyAttributes()

@@ -512,25 +512,23 @@ abstract class User extends cmdbAbstractObject
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
-			$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
 
-			// debug
-			if (false)
-			{
-				$oPage->SetCurrentTab('More on user rigths (dev only)');
-				$oPage->add("<h3>User rights</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'addon/userrights');
-				$oPage->add("<h3>Change log</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'core/cmdb');
-				$oPage->add("<h3>Application</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'application');
-				$oPage->add("<h3>GUI</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'gui');
-				
-			}					
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
+
+		// debug
+		if (false)
+		{
+			$oPage->SetCurrentTab('More on user rigths (dev only)');
+			$oPage->add("<h3>User rights</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'addon/userrights');
+			$oPage->add("<h3>Change log</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'core/cmdb');
+			$oPage->add("<h3>Application</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'application');
+			$oPage->add("<h3>GUI</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'gui');
+
 		}
 	}
 	

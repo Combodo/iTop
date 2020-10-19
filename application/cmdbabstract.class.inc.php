@@ -738,45 +738,41 @@ EOF
 			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
 
-		// Display Notifications after the other tabs since this tab disappears in edition
-		if (!$bEditMode)
+		// Look for any trigger that considers this object as "In Scope"
+		// If any trigger has been found then display a tab with notifications
+		//
+		$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
+		$aTriggers = array();
+		while ($oTrigger = $oTriggerSet->Fetch())
 		{
-			// Look for any trigger that considers this object as "In Scope"
-			// If any trigger has been found then display a tab with notifications
-			//			
-			$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
-			$aTriggers = array();
-			while ($oTrigger = $oTriggerSet->Fetch())
+			if ($oTrigger->IsInScope($this))
 			{
-				if ($oTrigger->IsInScope($this))
-				{
-					$aTriggers[] = $oTrigger->GetKey();
-				}
+				$aTriggers[] = $oTrigger->GetKey();
 			}
-			if (count($aTriggers) > 0)
+		}
+		if (count($aTriggers) > 0)
+		{
+			$iId = $this->GetKey();
+			$aParams = array('triggers' => $aTriggers, 'id' => $iId);
+			$aNotifSearches = array();
+			$iNotifsCount = 0;
+			$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
+			foreach($aNotificationClasses as $sNotifClass)
 			{
-				$iId = $this->GetKey();
-				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
-				$aNotifSearches = array();
-				$iNotifsCount = 0;
-				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
-				foreach($aNotificationClasses as $sNotifClass)
-				{
-					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
-					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
-					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
-					$iNotifsCount += $oNotifSet->Count();
-				}
-				// Display notifications regarding the object: on block per subclass to have the interesting columns
-				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
-				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
+				$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+				$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+				$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
+				$iNotifsCount += $oNotifSet->Count();
+			}
+			// Display notifications regarding the object: on block per subclass to have the interesting columns
+			$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
+			$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
-				foreach($aNotificationClasses as $sNotifClass)
-				{
-					$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
-					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
-					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
-				}
+			foreach($aNotificationClasses as $sNotifClass)
+			{
+				$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
+				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
+				$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
 			}
 		}
 	}
