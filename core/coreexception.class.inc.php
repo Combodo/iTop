@@ -28,31 +28,39 @@
 
 class CoreException extends Exception
 {
+	/**
+	 * CoreException constructor.
+	 *
+	 * @param string $sIssue error message
+	 * @param array|null $aContextData key/value array, value MUST implements _toString
+	 * @param string $sImpact
+	 * @param Exception|null $oPrevious
+	 */
 	public function __construct($sIssue, $aContextData = null, $sImpact = '', $oPrevious = null)
 	{
 		$this->m_sIssue = $sIssue;
 		$this->m_sImpact = $sImpact;
-		$this->m_aContextData = $aContextData ? $aContextData : array();
-		
+
+		if (is_array($aContextData)) {
+			$this->m_aContextData = $aContextData;
+		} else {
+			$this->m_aContextData = [];
+		}
+
 		$sMessage = $sIssue;
-		if (!empty($sImpact)) $sMessage .= "($sImpact)";
-		if (count($this->m_aContextData) > 0)
-		{
+		if (!empty($sImpact)) {
+			$sMessage .= "($sImpact)";
+		}
+		if (count($this->m_aContextData) > 0) {
 			$sMessage .= ": ";
 			$aContextItems = array();
-			foreach($this->m_aContextData as $sKey => $value)
-			{
-				if (is_array($value))
-				{
+			foreach ($this->m_aContextData as $sKey => $value) {
+				if (is_array($value)) {
 					$aPairs = array();
-					foreach($value as $key => $val)
-					{
-						if (is_array($val))
-						{
+					foreach ($value as $key => $val) {
+						if (is_array($val)) {
 							$aPairs[] = $key.'=>('.implode(', ', $val).')';
-						}
-						else
-						{
+						} else {
 							$aPairs[] = $key.'=>'.$val;
 						}
 					}
