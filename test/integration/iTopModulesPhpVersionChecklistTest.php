@@ -54,7 +54,12 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		return [['2.8.0', '2.8'], ['3.0.0', '3.0'], ['3.', null], ['3', null]];
 	}
 
-	private function CheckItopModulePhpVersion($sExpectedVersion, $sPhpFile) {
+	/**
+	 * @param string $sPhpFile iTop module file
+	 *
+	 * @return string module version
+	 */
+	private function GetItopModuleVersion(string $sPhpFile): ?string {
 		$sModulePath = realpath($sPhpFile);
 		$sModuleFileName = basename($sModulePath);
 		$sModuleName = preg_replace('/[^.]+\.([^.]+)\.php/', '$1', $sModuleFileName);
@@ -67,8 +72,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1],
-			" $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
+		return $matches[1] ?? '';
 	}
 
 	/**
@@ -78,7 +82,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	 * @group skipPostBuild
 	 * @uses utils::GetItopMinorVersion()
 	 */
-	public function testITopModulesPhpVersion() {
+	public function testITopModulesPhpVersion(): void {
 		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
 		} elseif (is_dir(APPROOT.'datamodels/1.x')) {
@@ -91,10 +95,18 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+';// ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
+		$sMinorVersion = \utils::GetItopMinorVersion();
+		$sExpectedVersion = '/^'.str_replace('.', '\.', $sMinorVersion).'\.\d+$/';
 
+		$aModuleWithError = [];
 		foreach ($aPhpFiles as $sPhpFile) {
-			$this->CheckItopModulePhpVersion($sExpectedVersion, $sPhpFile);
+			$sActualVersion = $this->GetItopModuleVersion($sPhpFile);
+
+			if (!preg_match($sExpectedVersion, $sActualVersion)) {
+				$aModuleWithError[$sPhpFile] = $sActualVersion;
+			}
 		}
+
+		self::assertEquals([], $aModuleWithError, 'Some modules have wrong versions ! They should match '.$sExpectedVersion);
 	}
 }
