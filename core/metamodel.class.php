@@ -919,7 +919,8 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 *
@@ -1261,7 +1262,8 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 *
 	 * @return array
@@ -1373,7 +1375,8 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1659,27 +1662,25 @@ abstract class MetaModel
 		return "";
 	}
 
-	// Filters of a given class may contain filters defined in a parent class
-	// - Some filters are a copy of the definition
-	// - Some filters correspond to the upper class table definition (compound objects)
-	// (see also attributes definition)
 	/**
-	 * array of ("classname" => array filterdef)
+	 * Filters of a given class may contain filters defined in a parent class
+	 * - Some filters are a copy of the definition
+	 * - Some filters correspond to the upper class table definition (compound objects)
+	 * (see also attributes definition)
 	 *
-	 * @deprecated
-	 * @var array
+	 * @deprecated do not use : dead code, will be removed in the future
+	 * @var array array of ("classname" => array filterdef)
 	 */
 	private static $m_aFilterDefs = array();
 	/**
-	 * array of ("classname" => array of ("attcode"=>"sourceclass"))
-	 *
-	 * @deprecated
-	 * @var array
+	 * @deprecated do not use : dead code, will be removed in the future
+	 * @var array array of ("classname" => array of ("attcode"=>"sourceclass"))
 	 */
 	private static $m_aFilterOrigins = array();
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 *
 	 * @return mixed
@@ -1692,7 +1693,8 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1710,7 +1712,8 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
+	 *
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1729,7 +1732,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1747,7 +1750,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1765,7 +1768,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1784,7 +1787,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 * @param string $sOpCode
@@ -1804,7 +1807,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @param string $sFilterCode
 	 *
 	 * @return string
@@ -1814,12 +1817,8 @@ abstract class MetaModel
 		return "<INPUT name=\"$sFilterCode\">";
 	}
 
-	// Lists of attributes/search filters
-	//
 	/**
-	 * array of ("listcode" => various info on the list, common to every classes)
-	 *
-	 * @var array
+	 * @var array array of ("listcode" => various info on the list, common to every classes)
 	 */
 	private static $m_aListInfos = array();
 	/**
@@ -7086,14 +7085,15 @@ abstract class MetaModel
 	 *  - if the class has a hierarchical key (need to rebuild the indexes)
 	 *  - if the class overload DBDelete !
 	 *
-	 * @todo: protect it against forbidden usages (in such a case, delete objects one by one)
+	 * @deprecated do not use : dead code, will be removed in the future
+	 * @experimental
 	 *
 	 * @param \DBObjectSearch $oFilter
-	 * @deprecated
-	 * @experimental
 	 *
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @todo: protect it against forbidden usages (in such a case, delete objects one by one)
+	 *
 	 */
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
@@ -7108,7 +7108,7 @@ abstract class MetaModel
 	 * @param DBObjectSearch $oFilter
 	 * @param array $aValues array of attcode => value
 	 *
-	 * @deprecated
+	 * @deprecated do not use : dead code, will be removed in the future
 	 * @experimental
 	 * @return int Modified objects
 	 * @throws \MySQLException
