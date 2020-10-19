@@ -309,7 +309,7 @@ class BulkChange
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
 			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+			$aResults[$iCol] = new CellStatus_Void(htmlentities($aRowData[$iCol]));
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
@@ -363,6 +363,7 @@ class BulkChange
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
 					// Default reporting
+					// $aRowData[$iCol] is always null
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				if ($oExtKey->IsNullAllowed())
@@ -395,7 +396,7 @@ class BulkChange
 					}
 					$aCacheKeys[] = $value;
 					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResults[$iCol] = new CellStatus_Void(htmlentities($aRowData[$iCol]));
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
@@ -465,7 +466,7 @@ class BulkChange
 						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
-							$aResults[$iCol] = new CellStatus_Modify($aRowData[$iCol]);
+							$aResults[$iCol] = new CellStatus_Modify(htmlentities($aRowData[$iCol]));
 						}
 					}
 				}
@@ -538,7 +539,7 @@ class BulkChange
 		{
 			if ($sAttCode == 'id')
 			{
-				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+				$aResults[$iCol]= new CellStatus_Void(htmlentities($aRowData[$iCol]));
 			}
 			else
 			{
@@ -554,7 +555,7 @@ class BulkChange
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
-					$aResults[$iCol]= new CellStatus_Issue($aRowData[$iCol], $sOrigValue, $aErrors[$sAttCode]);
+					$aResults[$iCol]= new CellStatus_Issue(htmlentities($aRowData[$iCol]), $sOrigValue, $aErrors[$sAttCode]);
 				}
 				elseif (array_key_exists($sAttCode, $aChangedFields))
 				{
@@ -577,7 +578,7 @@ class BulkChange
 					}
 					else
 					{
-						$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+						$aResults[$iCol]= new CellStatus_Void(htmlentities($aRowData[$iCol]));
 					}
 				}
 			}
@@ -924,7 +925,7 @@ class BulkChange
 								{
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, htmlentities($this->m_aData[$iRow][$iCol]), Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 								}
 							}
 						}
@@ -1082,7 +1083,7 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResult[$iRow][$iCol] = new CellStatus_Void(htmlentities($aRowData[$iCol]));
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
@@ -1096,7 +1097,7 @@ class BulkChange
 					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+						$aResult[$iRow][$iCol] = new CellStatus_Void(htmlentities($aRowData[$iCol]));
 					}
 				}
 			}
