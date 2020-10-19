@@ -87,6 +87,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 			throw new \Exception('Cannot local the datamodels directory');
 		}
 
+		require_once APPROOT.'core/config.class.inc.php';
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
