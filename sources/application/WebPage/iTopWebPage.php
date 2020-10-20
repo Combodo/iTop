@@ -319,7 +319,7 @@ JS
 JS
 		);
 
-		// TODO 3.0.0: Change CSS class and extract this in backoffice.js
+		// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
 		// Highlight code content created with CKEditor
 		$this->add_ready_script(
 			<<<JS
