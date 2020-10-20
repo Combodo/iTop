@@ -1029,7 +1029,7 @@ abstract class AttributeDefinition
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
-		$oFormField->AddMetadata('attribute-label', utils::HtmlEntities($this->GetLabel()));
+		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
@@ -1046,7 +1046,7 @@ abstract class AttributeDefinition
 		// - Value raw
 		if ($this::IsScalar())
 		{
-			$oFormField->AddMetadata('value-raw', utils::HtmlEntities($oObject->Get($this->GetCode())));
+			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;

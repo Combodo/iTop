@@ -398,6 +398,7 @@ abstract class Field
 
 	/**
 	 * Add a metadata to the field. If the metadata $sName already exists, it will be overwritten.
+	 * Note: $sValue should NOT be HTML (or something else) encoded, only the renderer should take care of it.
 	 *
 	 * @param string $sName
 	 * @param string $sValue
