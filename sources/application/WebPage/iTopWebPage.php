@@ -140,7 +140,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -275,7 +275,7 @@ JS
 		);
 
 		// TODO 3.0.0: This is for tag sets, refactor the attribute markup so it contains the necessary
-		// TODO 3.0.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice.js)
+		// TODO 3.0.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice/toolbox.js)
 		// Attribute set tooltip on items
 		$this->add_ready_script(
 			<<<JS
@@ -308,7 +308,7 @@ JS
 JS
 		);
 
-		// TODO 3.0.0: Change CSS class and extract this in backoffice.js
+		// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
 		// Make image attributes zoomable
 		$this->add_ready_script(
 			<<<JS
