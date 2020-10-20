@@ -55,17 +55,11 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	}
 
 	/**
-	 * Verify if the datamodel.*.xml files refer to the current itop version
-	 * This is an integration test
+	 * @param string $sPhpFile iTop module file
 	 *
-	 * @group skipPostBuild
-	 *
-	 * @dataProvider iTopModulesPhpVersionProvider
+	 * @return string module version
 	 */
-	public function testiTopModulesPhpVersion($sExpectedVersion, $sPhpFile)
-	{
-		$this->assertNotNull($sExpectedVersion, 'Expected version is null, something went wrong in the dataprovider !');
-
+	private function GetItopModuleVersion(string $sPhpFile): ?string {
 		$sModulePath = realpath($sPhpFile);
 		$sModuleFileName = basename($sModulePath);
 		$sModuleName = preg_replace('/[^.]+\.([^.]+)\.php/', '$1', $sModuleFileName);
@@ -78,49 +72,41 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1],
-			" $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
+		return $matches[1] ?? '';
 	}
 
 	/**
-	 * @return array
-	 * @throws \Exception
+	 * Verify if the datamodel.*.xml files refer to the current itop version
+	 * This is an integration test
+	 *
+	 * @group skipPostBuild
 	 * @uses utils::GetItopMinorVersion()
 	 */
-	public function iTopModulesPhpVersionProvider() {
-		parent::setUp();
-
-		require_once APPROOT.'core/config.class.inc.php';
-		require_once APPROOT.'application/utils.inc.php';
-
+	public function testITopModulesPhpVersion(): void {
 		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
-		}
-		elseif (is_dir(APPROOT.'datamodels/1.x'))
-		{
+		} elseif (is_dir(APPROOT.'datamodels/1.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/1.x';
 		} else {
 			throw new \Exception('Cannot local the datamodels directory');
 		}
 
+		require_once APPROOT.'core/config.class.inc.php';
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		try {
-			$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+';// ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
-		}
-		catch (\Exception $e) {
-			$sExpectedVersion = null;
-		}
+		$sMinorVersion = \utils::GetItopMinorVersion();
+		$sExpectedVersion = '/^'.str_replace('.', '\.', $sMinorVersion).'\.\d+$/';
 
-		$aTestCases = array();
+		$aModuleWithError = [];
 		foreach ($aPhpFiles as $sPhpFile) {
-			$aTestCases[$sPhpFile] = array(
-				'sExpectedVersion' => $sExpectedVersion,
-				'sPhpFile' => $sPhpFile,
-			);
+			$sActualVersion = $this->GetItopModuleVersion($sPhpFile);
+
+			if (!preg_match($sExpectedVersion, $sActualVersion)) {
+				$aModuleWithError[$sPhpFile] = $sActualVersion;
+			}
 		}
 
-		return $aTestCases;
+		self::assertEquals([], $aModuleWithError, 'Some modules have wrong versions ! They should match '.$sExpectedVersion);
 	}
 }
