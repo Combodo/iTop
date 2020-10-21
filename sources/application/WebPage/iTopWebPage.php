@@ -124,7 +124,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
-		/* @deprecated qTip will be removed in 2.9.0, use Tippy.js instead */
+		/** @deprecated qTip will be removed in 3.1.0, use Tippy.js instead */
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.qtip-1.0.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
