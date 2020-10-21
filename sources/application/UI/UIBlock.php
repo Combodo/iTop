@@ -30,7 +30,8 @@ use utils;
  * @internal
  * @since   3.0.0
  */
-abstract class UIBlock implements iUIBlock {
+abstract class UIBlock implements iUIBlock
+{
 	/** @var string BLOCK_CODE The block code to use to generate the identifier, the CSS/JS prefixes, ...
 	 *
 	 * Should start "ibo-" for the iTop backoffice blocks, followed by the name of the block in lower case (eg. for a MyCustomBlock class,
@@ -38,7 +39,7 @@ abstract class UIBlock implements iUIBlock {
 	 */
 	public const BLOCK_CODE = 'ibo-block';
 
-	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used to often as JS/CSS files would be duplicated making browser parsing time way longer. */
+	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used too often as JS/CSS files would be duplicated making browser parsing time way longer. */
 	public const GLOBAL_TEMPLATE_REL_PATH = null;
 	/** @var string|null HTML_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the HTML template */
 	public const HTML_TEMPLATE_REL_PATH = null;
@@ -68,14 +69,16 @@ abstract class UIBlock implements iUIBlock {
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct(?string $sId = null) {
-		$this->sId = ($sId !== null) ? $sId : $this->GenerateId();
+	public function __construct(?string $sId = null)
+	{
+		$this->sId = $sId ?? $this->GenerateId();
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetGlobalTemplateRelPath() {
+	public static function GetGlobalTemplateRelPath()
+	{
 		return static::GLOBAL_TEMPLATE_REL_PATH;
 	}
 
@@ -185,8 +188,9 @@ abstract class UIBlock implements iUIBlock {
 	 *
 	 * @return string
 	 */
-	protected function GenerateId() {
-		return uniqid(static::BLOCK_CODE.'-');
+	protected function GenerateId()
+	{
+		return uniqid(static::BLOCK_CODE.'-', true);
 	}
 
 	/**
@@ -210,6 +214,7 @@ abstract class UIBlock implements iUIBlock {
 
 		// Files from its sub blocks
 		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
+			/** @noinspection SlowArrayOperationsInLoopInspection */
 			$aFiles = array_merge(
 				$aFiles,
 				$oSubBlock->GetFilesUrlRecursively($sFileType, $bAbsoluteUrl)
@@ -236,6 +241,7 @@ abstract class UIBlock implements iUIBlock {
 
 		// Files from its sub blocks
 		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
+			/** @noinspection SlowArrayOperationsInLoopInspection */
 			$aFiles = array_merge(
 				$aFiles,
 				$oSubBlock->GetTemplateRelPathRecursively($sExtensionFileType)
