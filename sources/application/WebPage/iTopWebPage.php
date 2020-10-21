@@ -111,6 +111,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 
 		// TODO 3.0.0: Add only what's necessary
+		// jquery.layout : not used anymore in the whole console but only in some pages (datamodel viewer, dashboard edit, ...)
+		// TODO : remove adding jquery.layout in iTopWebPage, and only add it when necessary (component level)
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
