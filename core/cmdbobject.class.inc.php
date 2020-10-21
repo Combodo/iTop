@@ -505,11 +505,13 @@ abstract class CMDBObject extends DBObject
 	 * The check should never fail, because the UI should prevent from such a usage
 	 * Anyhow, if the user has found a workaround... the security gets enforced here
 	 *
-	 * @param $bSkipStrongSecurity
+	 * @deprecated in 3.0.0 will be removed in 3.1.0
+	 *
 	 * @param $iActionCode
 	 *
+	 * @param $bSkipStrongSecurity
+	 *
 	 * @throws \SecurityException
-	 * @deprecated in 3.0.0 will be removed in 2.9
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{
