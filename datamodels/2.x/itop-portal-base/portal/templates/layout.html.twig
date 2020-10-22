@@ -421,12 +421,14 @@
 					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
 				};
 				// Helper to add a parameter to an url
+				// TODO 3.0.0: Move to CombodoGlobalToolbox and deprecate this one
 				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
 				{
 					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
 					return sUrl;
 				};
 				// Test is sString is a valid JSON string
+				// TODO 3.0.0: Move to CombodoGlobalToolbox and deprecate this one
 				var IsJSONString = function(sString)
 				{
 					try {
@@ -436,10 +438,12 @@
 					}
 					return true;
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var GetContentLoaderTemplate = function()
 				{
 					return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var ShowLoginDialog = function()
 				{
                     var oModalElem = $('#modal-for-alert').clone();
@@ -452,6 +456,7 @@
                     oModalElem.appendTo('body');
                     oModalElem.modal('show');
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var ShowErrorDialog = function(sBody, sTitle)
 				{
 				    if(sTitle === undefined)

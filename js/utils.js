@@ -798,6 +798,8 @@ Dict.Format = function () {
 	return Format(args);
 }
 
+// TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
+
 /**
  * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.
  *
