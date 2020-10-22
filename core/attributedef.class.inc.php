@@ -1053,7 +1053,7 @@ abstract class AttributeDefinition
 		// - Value raw
 		if ($this::IsScalar())
 		{
-			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
+			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
