@@ -813,14 +813,21 @@ const CombodoGlobalToolbox = {
 	 *
 	 * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
 	 *
-	 * @param oElem
+	 * @param {Object} oElem The jQuery object representing the element
+	 * @param {boolean} bForce When set to true, tooltip will be instanciate even if one already exists, overwritting it.
 	 * @constructor
 	 */
-	InitTooltipFromMarkup: function(oElem)
+	InitTooltipFromMarkup: function(oElem, bForce = false)
 	{
 		const oOptions = {
 			allowHTML: true, // Always true so line breaks can work. Don't worry content will be sanitized.
 		};
+
+		// First, check if the tooltip isn't already instanciated
+		if((oElem.attr('data-tooltip-instanciated') === 'true') && (bForce === false))
+		{
+			return false;
+		}
 
 		// Content must be reworked before getting into the tooltip
 		// - Should we enable HTML content or keep text as is
@@ -870,5 +877,8 @@ const CombodoGlobalToolbox = {
 		];
 
 		tippy(oElem[0], oOptions);
+
+		// Mark tooltip as instanciated
+		oElem.attr('data-tooltip-instanciated', 'true');
 	}
 };

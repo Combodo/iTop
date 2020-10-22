@@ -70,7 +70,7 @@ const CombodoBackofficeToolbox = {
 // Processing
 $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
-	$('[data-tooltip-content]').each(function(){
+	$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
 		CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
 	});
 });
