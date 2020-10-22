@@ -509,9 +509,18 @@
                         }
 					});
 
-					// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
-					$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
-						CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+					// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...) ...
+					CombodoGlobalToolbox.InitAllNonInstantiatedTooltips();
+					// ... except for object form which are handled with the following ...
+					$('body').on('form_built', function(oEvent){
+						CombodoGlobalToolbox.InitAllNonInstantiatedTooltips($(oEvent.target));
+					});
+					// ... and BS modals which are handle with the following
+					$('body').on('loaded.bs.modal', function (oEvent){
+						// Little timeout for stuff that need a moment to get ready but don't have a proper event.
+						setTimeout(function(){
+							//CombodoGlobalToolbox.InitAllNonInstantiatedTooltips($(oEvent.target));
+						}, 500);
 					});
 					
 					// Initialize confirmation message handler when a form with touched fields is closed

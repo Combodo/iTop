@@ -882,5 +882,23 @@ const CombodoGlobalToolbox = {
 
 		// Mark tooltip as instanciated
 		oElem.attr('data-tooltip-instanciated', 'true');
+	},
+	/**
+	 * Instantiate all tooltips that are not already.
+	 * Useful after AJAX calls or dynamic content modification for examples.
+	 *
+	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
+	 * @constructor
+	 */
+	InitAllNonInstantiatedTooltips: function(oContainerElem = null)
+	{
+		if(oContainerElem === null)
+		{
+			oContainerElem = $('body');
+		}
+
+		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
+			CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+		});
 	}
 };
