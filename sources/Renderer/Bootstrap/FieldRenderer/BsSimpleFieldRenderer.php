@@ -47,7 +47,8 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
 
 		$sFieldClass = get_class($this->oField);
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
-		
+		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
+
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
@@ -69,7 +70,7 @@ class BsSimpleFieldRenderer extends BsFieldRenderer
                     $oOutput->AddHtml('<div class="form_field_label">');
                     if ($this->oField->GetLabel() !== '')
                     {
-                        $oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+                    	$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
                     }
                     $oOutput->AddHtml('</div>');
 
@@ -134,7 +135,7 @@ EOF
                     $oOutput->AddHtml('<div class="form_field_label">');
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+						$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 					}
 					$oOutput->AddHtml('</div>');
 
@@ -194,7 +195,7 @@ EOF
 					$oOutput->AddHtml('<div class="form_field_label">');
 					if ($this->oField->GetLabel() !== '')
 					{
-						$oOutput->AddHtml('<div><label class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label></div>');
+						$oOutput->AddHtml('<div><label class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label></div>');
 					}
 					$oOutput->AddHtml('</div>');
 
@@ -316,7 +317,7 @@ EOF
                             $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
                             $oOutput->AddHtml('</div>');
 
@@ -349,7 +350,7 @@ EOF
                             $oOutput->AddHtml('<div class="form_field_label">');
                             if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 							$oOutput->AddHtml('</div>');
 
@@ -382,7 +383,7 @@ JS
                         $oOutput->AddHtml('<div class="form_field_label">');
                         if ($this->oField->GetLabel() !== '')
 						{
-							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+							$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 						}
                         $oOutput->AddHtml('</div>');
 
@@ -416,7 +417,7 @@ JS
                             $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
 							$oOutput->AddHtml('</div>');
 
@@ -456,7 +457,7 @@ JS
                             $oOutput->AddHtml('<div class="form_field_label">');
 							if ($this->oField->GetLabel() !== '')
 							{
-								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+								$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 							}
                             $oOutput->AddHtml('</div>');
 

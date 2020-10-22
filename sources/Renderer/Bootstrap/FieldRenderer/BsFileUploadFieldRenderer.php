@@ -77,6 +77,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sCollapseTogglerClass = 'form_linkedset_toggler';
 		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
 		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
+		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
 		// If collapsed
 		$sCollapseTogglerClass .= ' collapsed';
@@ -90,7 +91,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		{
 			$iAttachmentsCount = $this->oAttachmentsSet->Count();
 			$oOutput
-				->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label">')
+				->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')
 				->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
 				->AddHtml($this->oField->GetLabel(),true)
 				->AddHtml(' (<span class="attachments-count">'.$iAttachmentsCount.'</span>)')

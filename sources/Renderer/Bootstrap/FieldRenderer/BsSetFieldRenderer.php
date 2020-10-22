@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use MetaModel;
+use utils;
 
 /**
  * Description of BsSetFieldRenderer
@@ -37,6 +38,7 @@ class BsSetFieldRenderer extends BsFieldRenderer
 	    $oOutput = parent::Render();
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
+		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 		// Vars to build the table
 //		$sAttributesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay());
 //		$sAttCodesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay(true));
@@ -59,7 +61,7 @@ class BsSetFieldRenderer extends BsFieldRenderer
 			$oOutput->AddHtml('<div class="form_field_label">');
 			if ($this->oField->GetLabel() !== '')
 			{
-				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')
+				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')
 						->AddHtml($this->oField->GetLabel(), true)
 						->AddHtml('</label>');
 			}

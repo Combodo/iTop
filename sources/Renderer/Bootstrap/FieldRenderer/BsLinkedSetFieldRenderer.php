@@ -26,6 +26,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use utils;
 
 /**
  * Description of BsLinkedSetFieldRenderer
@@ -45,6 +46,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 	    $oOutput = parent::Render();
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
+		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay());
 		$sAttCodesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay(true));
@@ -82,7 +84,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 			$oOutput->AddHtml('<div class="form-group ' . $sFieldMandatoryClass . '">');
 			if ($this->oField->GetLabel() !== '')
 			{
-				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')
+				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')
 					->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
 					->AddHtml($this->oField->GetLabel(), true)
 					->AddHtml('<span class="text">' . count($aItemIds) . '</span>')

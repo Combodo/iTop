@@ -1026,6 +1026,13 @@ abstract class AttributeDefinition
 			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
+		// Description
+		$sAttDescription = $this->GetDescription();
+		if(!empty($sAttDescription))
+		{
+			$oFormField->SetDescription($this->GetDescription());
+		}
+
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));

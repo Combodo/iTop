@@ -1113,6 +1113,17 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /*********/
 /* Forms */
 /*********/
+.form_field_label > .control-label[data-tooltip-instanciated="true"] {
+	&::after {
+		content: "?";
+		padding-left: 3px;
+		vertical-align: top;
+
+		cursor: pointer;
+		color: $gray;
+		font-size: 0.85em;
+	}
+}
 .form_field .form_mandatory .control-label:after{
 	content: "\002a";
 	position: relative;

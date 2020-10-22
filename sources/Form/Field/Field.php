@@ -37,6 +37,7 @@ abstract class Field
     const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
 
 	const DEFAULT_LABEL = '';
+	const DEFAULT_DESCRIPTION = '';
 	const DEFAULT_METADATA = array();
 	const DEFAULT_HIDDEN = false;
 	const DEFAULT_READ_ONLY = false;
@@ -48,6 +49,13 @@ abstract class Field
 	protected $sGlobalId;
 	protected $sFormPath;
 	protected $sLabel;
+	/**
+	 * Description text of the field, typically to bring more information to the user on the field purpose
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected $sDescription;
 	protected $aMetadata;
 	protected $bHidden;
 	protected $bReadOnly;
@@ -71,6 +79,7 @@ abstract class Field
 		// No space in such an id, that could be used as a DOM node id
 		$this->sGlobalId = 'field_' . str_replace(' ', '_', $sId) . '_' . uniqid();
 		$this->sLabel = static::DEFAULT_LABEL;
+		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->aMetadata = static::DEFAULT_METADATA;
 		$this->bHidden = static::DEFAULT_HIDDEN;
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;
@@ -119,6 +128,28 @@ abstract class Field
 	public function GetLabel()
 	{
 		return $this->sLabel;
+	}
+
+	/**
+	 * Return true if the field has a description. Note that an empty string is equivalent to no description.
+	 *
+	 * @see static::$sDescription
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public function HasDescription(): bool
+	{
+		return empty($this->sDescription) === false;
+	}
+
+	/**
+	 * @see static::$sDescription
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetDescription(): string
+	{
+		return $this->sDescription;
 	}
 
 	/**
@@ -245,6 +276,19 @@ abstract class Field
 	public function SetLabel($sLabel)
 	{
 		$this->sLabel = $sLabel;
+		return $this;
+	}
+
+	/**
+	 * @param string $sDescription
+	 * @see static::$sDescription
+	 *
+	 * @return $this
+	 * @since 3.0.0
+	 */
+	public function SetDescription(string $sDescription)
+	{
+		$this->sDescription = $sDescription;
 		return $this;
 	}
 

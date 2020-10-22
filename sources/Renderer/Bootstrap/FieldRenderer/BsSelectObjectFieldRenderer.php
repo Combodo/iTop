@@ -29,6 +29,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use utils;
 
 /**
  * Description of BsSelectObjectFieldRenderer
@@ -50,6 +51,7 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		$iFieldControlType = $this->oField->GetControlType();
+		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
 		// TODO : Remove this when hierarchical search supported
 		$this->oField->SetHierarchical(false);
@@ -71,7 +73,7 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
 			$oOutput->AddHtml('<div class="form_field_label">');
 			if ($this->oField->GetLabel() !== '')
 			{
-				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 			}
 			$oOutput->AddHtml('</div>');
 
@@ -341,7 +343,7 @@ EOF
 				$oOutput->AddHtml('<div class="form_field_label">');
 				if ($this->oField->GetLabel() !== '')
 				{
-					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 				}
 				$oOutput->AddHtml('</div>');
 
