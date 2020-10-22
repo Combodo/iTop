@@ -53,6 +53,9 @@
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		{# Tippy for tooltips and Popper for their placement #}
+		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/animations/shift-away-subtle.css'|add_itop_version }}" rel="stylesheet">
 		{# UI Extensions CSS, in an undefined order #}
         {% if app['ui_extensions_helper'].css_files is defined %}
             {% for css_file in app['ui_extensions_helper'].css_files %}
@@ -99,6 +102,9 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-portal-modal.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
+		{# Tippy for tooltips and Popper for their placement #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/@popperjs/core/dist/umd/popper.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy-bundle.umd.js'|add_itop_version }}"></script>
 		{# Visible.js to check if an element is visible on screen #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
         {# Base64.js #}
@@ -496,6 +502,11 @@
                         {
                             ShowErrorDialog();
                         }
+					});
+
+					// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
+					$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
+						CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
 					});
 					
 					// Initialize confirmation message handler when a form with touched fields is closed
