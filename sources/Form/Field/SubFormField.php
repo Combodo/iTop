@@ -32,12 +32,9 @@ class SubFormField extends Field
 	protected $oForm;
 
     /**
-     * Default constructor
-     *
-     * @param string $sId
-     * @param \Closure $onFinalizeCallback
+     * @inheritDoc
      */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		$this->oForm = new Form('subform_' . $sId);
 		parent::__construct($sId, $onFinalizeCallback);
@@ -126,7 +123,7 @@ class SubFormField extends Field
 	 *
 	 * @param boolean $bMandatory
 	 */
-	public function SetMandatory($bMandatory)
+	public function SetMandatory(bool $bMandatory)
 	{
 		foreach ($this->oForm->GetFields() as $oField)
 		{
@@ -140,7 +137,7 @@ class SubFormField extends Field
 	 *
 	 * @param boolean $bReadOnly
 	 */
-	public function SetReadOnly($bReadOnly)
+	public function SetReadOnly(bool $bReadOnly)
 	{
 		foreach ($this->oForm->GetFields() as $oField)
 		{
@@ -155,7 +152,7 @@ class SubFormField extends Field
 	 *
 	 * @param boolean $bHidden
 	 */
-	public function SetHidden($bHidden)
+	public function SetHidden(bool $bHidden)
 	{
 		foreach ($this->oForm->GetFields() as $oField)
 		{
@@ -168,7 +165,7 @@ class SubFormField extends Field
 	 * @param $sFormPath
 	 * @return Form|null
 	 */
-	public function FindSubForm($sFormPath)
+	public function FindSubForm(string $sFormPath)
 	{
 		return $this->oForm->FindSubForm($sFormPath);
 	}

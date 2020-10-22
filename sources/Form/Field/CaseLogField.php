@@ -27,13 +27,13 @@ namespace Combodo\iTop\Form\Field;
  */
 class CaseLogField extends TextAreaField
 {
+	/** @var array */
 	protected $aEntries;
 
 	/**
-	 * @param bool $bMustChange
-	 * @return $this
+	 * @inheritDoc
 	 */
-	public function SetMustChange($bMustChange)
+	public function SetMustChange(bool $bMustChange)
 	{
 		$this->SetMandatory($bMustChange);
 		return $this;
@@ -53,7 +53,7 @@ class CaseLogField extends TextAreaField
 	 * @param array $aEntries
 	 * @return \Combodo\iTop\Form\Field\TextAreaField
 	 */
-	public function SetEntries($aEntries)
+	public function SetEntries(array $aEntries)
 	{
 		$this->aEntries = $aEntries;
 		return $this;

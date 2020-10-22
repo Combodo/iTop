@@ -26,6 +26,7 @@ namespace Combodo\iTop\Form\Field;
  */
 class RadioField extends MultipleChoicesField
 {
+	/** @inheritDoc */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
 }

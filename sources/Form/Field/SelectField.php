@@ -31,6 +31,7 @@ use Dict;
 class SelectField extends MultipleChoicesField
 {
 	// Overloaded constants
+	/** @inheritDoc  */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
 	/** @var string DEFAULT_NULL_CHOICE_LABEL */
@@ -44,7 +45,7 @@ class SelectField extends MultipleChoicesField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->bStartsWithNullChoice = static::DEFAULT_STARTS_WITH_NULL_CHOICE;
@@ -62,11 +63,11 @@ class SelectField extends MultipleChoicesField
 	}
 
     /**
-     * @param $bStartsWithNullChoice
+     * @param bool $bStartsWithNullChoice
      *
      * @return $this
      */
-	public function SetStartsWithNullChoice($bStartsWithNullChoice)
+	public function SetStartsWithNullChoice(bool $bStartsWithNullChoice)
 	{
 		$this->bStartsWithNullChoice = $bStartsWithNullChoice;
 
@@ -95,7 +96,7 @@ class SelectField extends MultipleChoicesField
 	 * @param boolean $bMultipleValuesEnabled
 	 * @return $this
 	 */
-	public function SetMultipleValuesEnabled($bMultipleValuesEnabled)
+	public function SetMultipleValuesEnabled(bool $bMultipleValuesEnabled)
 	{
 		// We don't allow changing this value
 		return $this;

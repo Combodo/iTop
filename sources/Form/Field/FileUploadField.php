@@ -45,7 +45,7 @@ class FileUploadField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		$this->sTransactionId = null;
 		$this->oObject = null;
@@ -71,7 +71,7 @@ class FileUploadField extends Field
 	 * @param string $sTransactionId
 	 * @return $this
 	 */
-	public function SetTransactionId($sTransactionId)
+	public function SetTransactionId(string $sTransactionId)
 	{
 		$this->sTransactionId = $sTransactionId;
 		return $this;
@@ -109,7 +109,7 @@ class FileUploadField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetUploadEndpoint($sUploadEndpoint)
+	public function SetUploadEndpoint(string $sUploadEndpoint)
 	{
 		$this->sUploadEndpoint = $sUploadEndpoint;
 		return $this;
@@ -128,7 +128,7 @@ class FileUploadField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetDownloadEndpoint($sDownloadEndpoint)
+	public function SetDownloadEndpoint(string $sDownloadEndpoint)
 	{
 		$this->sDownloadEndpoint = $sDownloadEndpoint;
 		return $this;
@@ -143,11 +143,11 @@ class FileUploadField extends Field
 	}
 
 	/**
-	 * @param $bAllowDelete
+	 * @param bool $bAllowDelete
 	 *
 	 * @return $this
 	 */
-	public function SetAllowDelete($bAllowDelete)
+	public function SetAllowDelete(bool $bAllowDelete)
 	{
 		$this->bAllowDelete = (boolean) $bAllowDelete;
 		return $this;

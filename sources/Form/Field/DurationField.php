@@ -31,7 +31,7 @@ class DurationField extends Field
 	/**
 	 * Note: This is inspired by AttributeDuration::GetAsHTML()
 	 *
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetDisplayValue()
 	{

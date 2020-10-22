@@ -31,7 +31,7 @@ use utils;
 class BsSetFieldRenderer extends BsFieldRenderer
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
 	public function Render()
 	{

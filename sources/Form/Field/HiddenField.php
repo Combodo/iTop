@@ -26,5 +26,6 @@ namespace Combodo\iTop\Form\Field;
  */
 class HiddenField extends TextField
 {
+	/** @inheritDoc */
 	const DEFAULT_HIDDEN = true;
 }

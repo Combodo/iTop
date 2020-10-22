@@ -29,7 +29,9 @@ use Dict;
  */
 class BlobField extends Field
 {
+	/** @var string */
 	protected $sDownloadUrl;
+	/** @var string */
 	protected $sDisplayUrl;
 
 	public function GetDownloadUrl()
@@ -42,13 +44,13 @@ class BlobField extends Field
 		return $this->sDisplayUrl;
 	}
 
-	public function SetDownloadUrl($sDownloadUrl)
+	public function SetDownloadUrl(string $sDownloadUrl)
 	{
 		$this->sDownloadUrl = $sDownloadUrl;
 		return $this;
 	}
 
-	public function SetDisplayUrl($sDisplayUrl)
+	public function SetDisplayUrl(string $sDisplayUrl)
 	{
 		$this->sDisplayUrl = $sDisplayUrl;
 		return $this;

@@ -57,7 +57,7 @@ class SelectObjectField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->oSearch = null;
@@ -85,7 +85,7 @@ class SelectObjectField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetMaximumComboLength($iMaximumComboLength)
+	public function SetMaximumComboLength(int $iMaximumComboLength)
 	{
 		$this->iMaximumComboLength = $iMaximumComboLength;
 
@@ -97,7 +97,7 @@ class SelectObjectField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetMinAutoCompleteChars($iMinAutoCompleteChars)
+	public function SetMinAutoCompleteChars(int $iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
 
@@ -109,7 +109,7 @@ class SelectObjectField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetHierarchical($bHierarchical)
+	public function SetHierarchical(bool $bHierarchical)
 	{
 		$this->bHierarchical = $bHierarchical;
 
@@ -119,7 +119,7 @@ class SelectObjectField extends Field
 	/**
 	 * @param int $iControlType
 	 */
-	public function SetControlType($iControlType)
+	public function SetControlType(int $iControlType)
 	{
 		$this->iControlType = $iControlType;
 	}
@@ -129,7 +129,7 @@ class SelectObjectField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetSearchEndpoint($sSearchEndpoint)
+	public function SetSearchEndpoint(string $sSearchEndpoint)
 	{
 		$this->sSearchEndpoint = $sSearchEndpoint;
 
@@ -139,7 +139,7 @@ class SelectObjectField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function SetMandatory($bMandatory)
+	public function SetMandatory(bool $bMandatory)
 	{
 		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
 		if ($bMandatory && !$this->bMandatory)
@@ -219,7 +219,7 @@ class SelectObjectField extends Field
 	 *
 	 * @throws \CoreException
 	 */
-	public function VerifyCurrentValue($bAlways = false)
+	public function VerifyCurrentValue(bool $bAlways = false)
 	{
 		if (!$this->GetReadOnly() || $bAlways)
 		{

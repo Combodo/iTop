@@ -29,17 +29,16 @@ use Closure;
  */
 class UrlField extends StringField
 {
-    const DEFAULT_TARGET = '_blank';
+    /** @var string */
+	const DEFAULT_TARGET = '_blank';
 
-    protected $sTarget;
+    /** @var string */
+	protected $sTarget;
 
     /**
-     * Default constructor
-     *
-     * @param string $sId
-     * @param \Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+     * @inheritDoc
      */
-    public function __construct($sId, Closure $onFinalizeCallback = null)
+    public function __construct(string $sId, Closure $onFinalizeCallback = null)
     {
         parent::__construct($sId, $onFinalizeCallback);
 
@@ -53,6 +52,9 @@ class UrlField extends StringField
         return $this;
     }
 
+	/**
+	 * @inheritDoc
+	 */
     public function GetDisplayValue()
     {
         $sLabel = Str::pure2html($this->currentValue);

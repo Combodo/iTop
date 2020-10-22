@@ -32,22 +32,37 @@ use Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 abstract class Field
 {
-    const ENUM_DISPLAY_MODE_COSY = 'cosy';          // Label above value
-    const ENUM_DISPLAY_MODE_COMPACT = 'compact';    // Label and value side by side
-    const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
+    /** @var string */
+	const ENUM_DISPLAY_MODE_COSY = 'cosy';          // Label above value
+    /** @var string */
+	const ENUM_DISPLAY_MODE_COMPACT = 'compact';    // Label and value side by side
+    /** @var string */
+	const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
 
+	/** @var string */
 	const DEFAULT_LABEL = '';
+	/** @var string */
 	const DEFAULT_DESCRIPTION = '';
+	/** @var array */
 	const DEFAULT_METADATA = array();
+	/** @var bool */
 	const DEFAULT_HIDDEN = false;
+	/** @var bool */
 	const DEFAULT_READ_ONLY = false;
+	/** @var bool */
 	const DEFAULT_MANDATORY = false;
-    const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_COSY;
+    /** @var string */
+	const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_COSY;
+	/** @var bool */
 	const DEFAULT_VALID = true;
 
+	/** @var string */
 	protected $sId;
+	/** @var string */
 	protected $sGlobalId;
+	/** @var string */
 	protected $sFormPath;
+	/** @var string */
 	protected $sLabel;
 	/**
 	 * Description text of the field, typically to bring more information to the user on the field purpose
@@ -56,13 +71,21 @@ abstract class Field
 	 * @since 3.0.0
 	 */
 	protected $sDescription;
+	/** @var array */
 	protected $aMetadata;
+	/** @var bool */
 	protected $bHidden;
+	/** @var bool */
 	protected $bReadOnly;
+	/** @var bool */
 	protected $bMandatory;
+	/** @var string */
 	protected $sDisplayMode;
+	/** @var array */
 	protected $aValidators;
+	/** @var bool */
 	protected $bValid;
+	/** @var array */
 	protected $aErrorMessages;
 	protected $currentValue;
 	protected $onFinalizeCallback;
@@ -70,10 +93,10 @@ abstract class Field
 	/**
 	 * Default constructor
 	 *
-	 * @param string $sId
-	 * @param Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+	 * @param string        $sId
+	 * @param \Closure|null $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		$this->sId = $sId;
 		// No space in such an id, that could be used as a DOM node id
@@ -249,7 +272,9 @@ abstract class Field
 		return $this->currentValue;
 	}
 
-
+	/**
+	 * @return mixed
+	 */
 	public function GetDisplayValue()
 	{
 		return $this->currentValue;
@@ -262,7 +287,7 @@ abstract class Field
 	 * @param string $sFormPath
 	 * @return $this
 	 */
-	public function SetFormPath($sFormPath)
+	public function SetFormPath(string $sFormPath)
 	{
 		$this->sFormPath = $sFormPath;
 		return $this;
@@ -273,7 +298,7 @@ abstract class Field
 	 * @param string $sLabel
 	 * @return $this
 	 */
-	public function SetLabel($sLabel)
+	public function SetLabel(string $sLabel)
 	{
 		$this->sLabel = $sLabel;
 		return $this;
@@ -300,7 +325,7 @@ abstract class Field
 	 * @return $this
 	 * @since 2.7.0
 	 */
-	public function SetMetadata($aMetadata)
+	public function SetMetadata(array $aMetadata)
 	{
 		$this->aMetadata = $aMetadata;
 		return $this;
@@ -311,7 +336,7 @@ abstract class Field
 	 * @param boolean $bHidden
 	 * @return $this
 	 */
-	public function SetHidden($bHidden)
+	public function SetHidden(bool $bHidden)
 	{
 		$this->bHidden = $bHidden;
 		return $this;
@@ -322,7 +347,7 @@ abstract class Field
 	 * @param boolean $bReadOnly
 	 * @return $this
 	 */
-	public function SetReadOnly($bReadOnly)
+	public function SetReadOnly(bool $bReadOnly)
 	{
 		$this->bReadOnly = $bReadOnly;
 		return $this;
@@ -335,7 +360,7 @@ abstract class Field
 	 * @param boolean $bMandatory
 	 * @return $this
 	 */
-	public function SetMandatory($bMandatory)
+	public function SetMandatory(bool $bMandatory)
 	{
 		// Before changing the property, we check if it was already mandatory. If not, we had the mandatory validator
 		if ($bMandatory && !$this->bMandatory)
@@ -366,7 +391,7 @@ abstract class Field
 	 * @param boolean $bMustChange
 	 * @return $this
 	 */
-	public function SetMustChange($bMustChange)
+	public function SetMustChange(bool $bMustChange)
 	{
 		// TODO.
 		return $this;
@@ -377,7 +402,7 @@ abstract class Field
      * @param string $sDisplayMode
      * @return $this
      */
-	public function SetDisplayMode($sDisplayMode)
+	public function SetDisplayMode(string $sDisplayMode)
     {
         $this->sDisplayMode = $sDisplayMode;
         return $this;
@@ -388,7 +413,7 @@ abstract class Field
 	 * @param array $aValidators
 	 * @return $this
 	 */
-	public function SetValidators($aValidators)
+	public function SetValidators(array $aValidators)
 	{
 		$this->aValidators = $aValidators;
 		return $this;
@@ -400,7 +425,7 @@ abstract class Field
 	 * @param boolean $bValid
 	 * @return $this
 	 */
-	protected function SetValid($bValid)
+	protected function SetValid(bool $bValid)
 	{
 		$this->bValid = $bValid;
 		return $this;
@@ -412,7 +437,7 @@ abstract class Field
 	 * @param array $aErrorMessages
 	 * @return $this
 	 */
-	protected function SetErrorMessages($aErrorMessages)
+	protected function SetErrorMessages(array $aErrorMessages)
 	{
 		$this->aErrorMessages = $aErrorMessages;
 		return $this;
@@ -450,7 +475,7 @@ abstract class Field
 	 * @return $this;
 	 * @since 2.7.0
 	 */
-	public function AddMetadata($sName, $sValue)
+	public function AddMetadata(string $sName, string $sValue)
 	{
 		$this->aMetadata[$sName] = $sValue;
 		return $this;
@@ -490,7 +515,7 @@ abstract class Field
 	 * @param string $sErrorMessage
 	 * @return $this
 	 */
-	protected function AddErrorMessage($sErrorMessage)
+	protected function AddErrorMessage(string $sErrorMessage)
 	{
 		$this->aErrorMessages[] = $sErrorMessage;
 		return $this;

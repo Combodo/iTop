@@ -29,6 +29,11 @@ use utils;
  */
 class EmailField extends StringField
 {
+	/**
+	 * @inheritDoc
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
     public function GetDisplayValue()
     {
         $sLabel = Str::pure2html($this->currentValue);

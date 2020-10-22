@@ -33,15 +33,27 @@ use AttributeText;
  */
 class TextAreaField extends TextField
 {
+	/** @var string */
 	const ENUM_FORMAT_TEXT = 'text';
+	/** @var string */
 	const ENUM_FORMAT_HTML = 'html';
+	/** @var string */
 	const DEFAULT_FORMAT = 'html';
 
+	/** @var string */
 	protected $sFormat;
 	protected $oObject;
+	/** @var string|null */
 	protected $sTransactionId;
 
-	public function __construct($sId, Closure $onFinalizeCallback = null, DBObject $oObject = null)
+	/**
+	 * TextAreaField constructor.
+	 *
+	 * @param string         $sId
+	 * @param \Closure|null  $onFinalizeCallback
+	 * @param \DBObject|null $oObject
+	 */
+	public function __construct(string $sId, Closure $onFinalizeCallback = null, DBObject $oObject = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->sFormat = static::DEFAULT_FORMAT;
@@ -63,7 +75,7 @@ class TextAreaField extends TextField
 	 * @param string $sFormat
 	 * @return \Combodo\iTop\Form\Field\TextAreaField
 	 */
-	public function SetFormat($sFormat)
+	public function SetFormat(string $sFormat)
 	{
 		$this->sFormat = $sFormat;
 		return $this;
@@ -104,7 +116,7 @@ class TextAreaField extends TextField
 	 * @param string $sTransactionId
 	 * @return \Combodo\iTop\Form\Field\TextAreaField
 	 */
-	public function SetTransactionId($sTransactionId)
+	public function SetTransactionId(string $sTransactionId)
 	{
 		$this->sTransactionId = $sTransactionId;
 		return $this;

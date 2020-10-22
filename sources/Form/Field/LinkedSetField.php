@@ -59,7 +59,7 @@ class LinkedSetField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		$this->sTargetClass = null;
 		$this->sExtKeyToRemote = null;
@@ -89,7 +89,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetTargetClass($sTargetClass)
+	public function SetTargetClass(string $sTargetClass)
 	{
 		$this->sTargetClass = $sTargetClass;
 
@@ -111,7 +111,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetExtKeyToRemote($sExtKeyToRemote)
+	public function SetExtKeyToRemote(string $sExtKeyToRemote)
 	{
 		$this->sExtKeyToRemote = $sExtKeyToRemote;
 
@@ -133,7 +133,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetIndirect($bIndirect)
+	public function SetIndirect(bool $bIndirect)
 	{
 		$this->bIndirect = $bIndirect;
 
@@ -157,7 +157,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetDisplayOpened($bDisplayOpened)
+	public function SetDisplayOpened(bool $bDisplayOpened)
 	{
 		$this->bDisplayOpened = $bDisplayOpened;
 
@@ -181,7 +181,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetDisplayLimitedAccessItems($bDisplayLimitedAccessItems)
+	public function SetDisplayLimitedAccessItems(bool $bDisplayLimitedAccessItems)
 	{
 		$this->bDisplayLimitedAccessItems = $bDisplayLimitedAccessItems;
 
@@ -205,7 +205,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetLimitedAccessItemIDs($aLimitedAccessItemIDs)
+	public function SetLimitedAccessItemIDs(array $aLimitedAccessItemIDs)
 	{
 		$this->aLimitedAccessItemIDs = $aLimitedAccessItemIDs;
 
@@ -219,7 +219,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return array
 	 */
-	public function GetAttributesToDisplay($bAttCodesOnly = false)
+	public function GetAttributesToDisplay(bool $bAttCodesOnly = false)
 	{
 		return ($bAttCodesOnly) ? array_keys($this->aAttributesToDisplay) : $this->aAttributesToDisplay;
 	}
@@ -250,7 +250,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetSearchEndpoint($sSearchEndpoint)
+	public function SetSearchEndpoint(string $sSearchEndpoint)
 	{
 		$this->sSearchEndpoint = $sSearchEndpoint;
 
@@ -270,7 +270,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetInformationEndpoint($sInformationEndpoint)
+	public function SetInformationEndpoint(string $sInformationEndpoint)
 	{
 		$this->sInformationEndpoint = $sInformationEndpoint;
 
@@ -284,7 +284,7 @@ class LinkedSetField extends Field
 	 *
 	 * @return bool
 	 */
-	public function IsLimitedAccessItem($iItemID)
+	public function IsLimitedAccessItem(int $iItemID)
 	{
 		return in_array($iItemID, $this->aLimitedAccessItemIDs, false);
 	}

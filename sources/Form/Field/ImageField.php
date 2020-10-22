@@ -29,6 +29,9 @@ use Dict;
  */
 class ImageField extends BlobField
 {
+	/**
+	 * @inheritDoc
+	 */
 	public function GetDisplayValue()
 	{
 		if ($this->currentValue->IsEmpty())

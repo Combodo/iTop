@@ -26,6 +26,6 @@ namespace Combodo\iTop\Form\Field;
  */
 class CheckboxField extends MultipleChoicesField
 {
+	/** @inheritDoc  */
 	const DEFAULT_MULTIPLE_VALUES_ENABLED = true;
-
 }

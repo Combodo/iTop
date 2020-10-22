@@ -43,7 +43,7 @@ abstract class MultipleChoicesField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->bMultipleValuesEnabled = static::DEFAULT_MULTIPLE_VALUES_ENABLED;
@@ -109,7 +109,7 @@ abstract class MultipleChoicesField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetMultipleValuesEnabled($bMultipleValuesEnabled)
+	public function SetMultipleValuesEnabled(bool $bMultipleValuesEnabled)
 	{
 		$this->bMultipleValuesEnabled = $bMultipleValuesEnabled;
 		return $this;
@@ -120,7 +120,7 @@ abstract class MultipleChoicesField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetValues($aValues)
+	public function SetValues(array $aValues)
 	{
 		$this->currentValue = $aValues;
 		return $this;
@@ -174,7 +174,7 @@ abstract class MultipleChoicesField extends Field
 	 *
 	 * @return $this
 	 */
-	public function SetChoices($aChoices)
+	public function SetChoices(array $aChoices)
 	{
 		$this->aChoices = $aChoices;
 		return $this;
@@ -186,7 +186,7 @@ abstract class MultipleChoicesField extends Field
 	 *
 	 * @return $this
 	 */
-	public function AddChoice($sId, $choice = null)
+	public function AddChoice(string $sId, $choice = null)
 	{
 		if ($choice === null)
 		{
@@ -201,7 +201,7 @@ abstract class MultipleChoicesField extends Field
 	 *
 	 * @return $this
 	 */
-	public function RemoveChoice($sId)
+	public function RemoveChoice(string $sId)
 	{
 		if (in_array($sId, $this->aChoices))
 		{

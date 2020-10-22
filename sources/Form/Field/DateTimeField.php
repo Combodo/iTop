@@ -26,17 +26,17 @@ use Closure;
  */
 class DateTimeField extends StringField
 {
+	/** @var string */
 	protected $sJSDateTimeFormat;
+	/** @var string */
 	protected $sPHPDateTimeFormat;
+	/** @var bool */
 	protected $bDateOnly;
 
 	/**
-	 * Overloaded constructor
-	 *
-	 * @param string $sId
-	 * @param \Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+	 * @inheritDoc
 	 */
-	public function __construct($sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->bDateOnly = false;
@@ -58,7 +58,7 @@ class DateTimeField extends StringField
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetPHPDateTimeFormat($sPHPDateTimeFormat)
+	public function SetPHPDateTimeFormat(string $sPHPDateTimeFormat)
 	{
 		$this->sPHPDateTimeFormat = $sPHPDateTimeFormat;
 
@@ -79,7 +79,7 @@ class DateTimeField extends StringField
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetJSDateTimeFormat($sJSDateTimeFormat)
+	public function SetJSDateTimeFormat(string $sJSDateTimeFormat)
 	{
 		$this->sJSDateTimeFormat = $sJSDateTimeFormat;
 
@@ -93,7 +93,7 @@ class DateTimeField extends StringField
      *
      * @return \Combodo\iTop\Form\Field\DateTimeField
      */
-	public function SetDateOnly($bDateOnly)
+	public function SetDateOnly(bool $bDateOnly)
 	{
 		$this->bDateOnly = $bDateOnly;
 		return $this;
