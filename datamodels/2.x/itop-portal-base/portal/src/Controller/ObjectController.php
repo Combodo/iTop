@@ -1025,6 +1025,7 @@ class ObjectController extends BrickController
 		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
 		$sObjectId = $oRequestManipulator->ReadParam('sObjectId', '');
 		$sObjectField = $oRequestManipulator->ReadParam('sObjectField', '');
+		$bCheckSecurity = true;
 
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
 		if ($sObjectClass === 'Attachment')
@@ -1037,11 +1038,17 @@ class ObjectController extends BrickController
 		{
 			$sHostClass = $sObjectClass;
 			$sHostId = $sObjectId;
+
+			// Security bypass for the image attribute of a class
+			// Note: This will be changed with a proper DM check when corresponding bug is being worked on
+			if(is_a($sObjectClass, 'Contact', true) && ($sObjectField === 'picture')){
+				$bCheckSecurity = false;
+			}
 		}
 
 		// Checking security layers
 		// Note: Checking if host object already exists as we can try to download document from an object that is being created
-		if (($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
+		if (($bCheckSecurity === true) && ($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
 		{
 			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to retrieve document from attribute '.$sObjectField.' as it not allowed to read '.$sHostClass.'::'.$sHostId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));

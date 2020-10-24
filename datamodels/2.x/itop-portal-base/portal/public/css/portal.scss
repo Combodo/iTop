@@ -1146,39 +1146,349 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	cursor: zoom-in;
 }
 /* CaseLog field */
-.caselog_field_entry{
+.caselog-thread {
+	position: relative;
 	border: 1px solid $gray-lighter;
 	border-top: none;
 }
-.caselog_field_entry_header{
-	padding: 6px;
-	font-size: 0.9em;
-	border-bottom: 1px solid $white;
-	background-color: #F2F2F2;
+.caselog-thread--header{
+	padding: 8px;
+	font-size: 11px;
+	background-color: rgba(242, 242, 242, 0.38);
+	border-bottom: 1px solid $gray-lighter;
+
+	span{
+		color: $gray; /* body: color */
+	}
 }
-.caselog_field_entry_button{
-	display: block;
-	width: 15px;
-	height: 15px;
-	text-align: center;
-	line-height: 15px;
-	font-size: 16px;
-	border: 1px solid #a6a6a6;
-	border-bottom-color: #979797;
+.caselog-thread--header-toggler{
 	cursor: pointer;
+	color: inherit;
+	text-decoration: none;
+
+	&:hover,
+	&:active,
+	&:focus{
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&:not(:first-child){
+		&::before{
+			content: "-";
+			margin: 0 0.4em 0 0.2em; /* Note: Difference between left and right margin is due to a left space being output because the line break in the HTML isn't tidy */
+		}
+	}
 }
-.caselog_field_entry_button:hover{
-	background-color: #cccccc;
+.caselog-thread--header-info{
+	> span{
+		margin-left: 0.5em;
+
+		> span{
+			margin-left: 0.5em;
+		}
+
+		&:first-child{
+			margin-left: 0;
+		}
+	}
 }
-.caselog_field_entry_button:before{
-	content: "▴";
+.caselog-thread--content{
+	padding: 5px;
+	/*max-height: 400px;
+	overflow: auto;*/
+	background-color: #f2f2f2;
 }
-.caselog_field_entry_button.collapsed:before{
-	content: "▾";
+.caselog-thread--date{
+	margin-bottom: 10px;
+	text-align: center;
+	color: $gray-light;
+
+	&:first-child{
+		display: none;
+	}
 }
-.caselog_field_entry_content{
-	margin: 10px;
+.caselog-thread--block{
+	position: relative;
+	min-height: 40px; /* .caselog-thread--block-medallion height */
+	margin-bottom: 15px;
+
+	&:last-child{
+		margin-bottom: 0px;
+	}
+}
+.caselog-thread--block-medallion,
+.caselog-thread--block-entries{
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.caselog-thread--block-medallion{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	font-size: 18px;
+	color: $messaging-self-secondary-color; /* .caselog-thread--block-entries color */
+
+	background-size: 85%;
+	background-position: center center;
+	background-color: $messaging-self-primary-color; /* .caselog-thread--block-entries background-color */
+	background-repeat: no-repeat;
+	border-radius: 100%;
+}
+.caselog-thread--block-user{
+	display: none;
+	margin-left: 54px;
+	font-size: 12px;
+	font-weight: bold;
+	color: $messaging-self-secondary-color; /* .caselog-thread--block-entries background-color */
+}
+.caselog-thread--block-entries{
+	position: relative;
+	display: inline-block;
+	margin-left: 60px;
+	background-color: $messaging-self-primary-color;
+	color: $messaging-self-secondary-color;
+}
+.caselog-thread--block-entry{
+	position: relative;
+	padding: 8px 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+	img{
+		max-width: 100%;
+	}
+
+
+	&.closed{
+		cursor: pointer;
+
+		.caselog-thread--block-entry-content{
+			height: 0px;
+			overflow-y: hidden;
+
+			&:after{
+				content: "...";
+				position: absolute;
+				top: 10px;
+				left: 9px;
+			}
+		}
+	}
+	&:first-child{
+		.caselog-thread--block-entry-content:before{
+			content: "";
+			position: absolute;
+			top: 0px;
+			left: -15px;
+			width: 15px;
+			height: 15px;
+			border: 8px solid transparent;
+			border-top-color: $messaging-self-primary-color; /* .caselog-thread--block-entries background-color */
+			border-right-color: $messaging-self-primary-color; /* .caselog-thread--block-entries background-color */
+		}
+	}
+	&:last-child{
+		border-bottom: none;
+	}
+	&:hover{
+		.caselog-thread--block-entry-date{
+			opacity: 1;
+		}
+
+		&:not(.closed){
+			.caselog-thread--block-entry-toggler{
+				opacity: 1;
+			}
+		}
+	}
+}
+.caselog-thread--block-entry-content{
+	display: block;
 	overflow-x: auto;
+
+	> p:last-of-type{
+		margin-bottom: 0px;
+	}
+}
+.caselog-thread--block-entry-date{
+	margin-top: 5px;
+	opacity: 0.6;
+	font-size: 10px;
+	text-align: right;
+	transition: all 0.2s linear;
+}
+.caselog-thread--block-entry-toggler{
+	position: absolute;
+	top: 2px;
+	right: 5px;
+	padding: 2px 5px;
+	opacity: 0;
+	cursor: pointer;
+	background-color: $messaging-self-primary-color; /* .caselog-thread--block-entries background-color */
+	transition: all 0.2s linear;
+}
+.caselog-thread--block-me{
+	text-align: right;
+
+	.caselog-thread--block-medallion{
+		left: initial;
+		right: 0px;
+	}
+	.caselog-thread--block-user{
+		display: none;
+		margin-left: initial;
+		margin-right: 54px;
+	}
+	.caselog-thread--block-entries{
+		margin-left: initial;
+		margin-right: 60px;
+		text-align: right;
+
+		.caselog-thread--block-entry{
+			text-align: left;
+
+			.caselog-thread--block-entry-toggler{
+				right: initial;
+				left: 5px;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				left: initial;
+				right: -15px;
+				border-right-color: transparent;
+				border-left-color: $messaging-self-primary-color; /* .caselog-thread--block-entries background-color */
+			}
+		}
+	}
+}
+.caselog-thread--block-color-1{
+	.caselog-thread--block-medallion{
+		color: $messaging-1st-peer-secondary-color;
+		background-color: $messaging-1st-peer-primary-color;
+	}
+	.caselog-thread--block-user{
+		color: $messaging-1st-peer-primary-color;
+	}
+	.caselog-thread--block-entries{
+		color: $messaging-1st-peer-secondary-color;
+		background-color: $messaging-1st-peer-primary-color;
+
+		.caselog-thread--block-entry{
+			.caselog-thread--block-entry-toggler{
+				background-color: $messaging-1st-peer-primary-color;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				border-top-color: $messaging-1st-peer-primary-color;
+				border-right-color: $messaging-1st-peer-primary-color;
+			}
+		}
+	}
+}
+.caselog-thread--block-color-2{
+	.caselog-thread--block-medallion{
+		color: $messaging-2nd-peer-secondary-color;
+		background-color: $messaging-2nd-peer-primary-color;
+	}
+	.caselog-thread--block-user{
+		color: $messaging-2nd-peer-primary-color;
+	}
+	.caselog-thread--block-entries{
+		color: $messaging-2nd-peer-secondary-color;
+		background-color: $messaging-2nd-peer-primary-color;
+
+		.caselog-thread--block-entry{
+			.caselog-thread--block-entry-toggler{
+				background-color: $messaging-2nd-peer-primary-color;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				border-top-color: $messaging-2nd-peer-primary-color;
+				border-right-color: $messaging-2nd-peer-primary-color;
+			}
+		}
+	}
+}
+.caselog-thread--block-color-3{
+	.caselog-thread--block-medallion{
+		color: $messaging-3rd-peer-secondary-color;
+		background-color: $messaging-3rd-peer-primary-color;
+	}
+	.caselog-thread--block-user{
+		color: $messaging-3rd-peer-primary-color;
+	}
+	.caselog-thread--block-entries{
+		color: $messaging-3rd-peer-secondary-color;
+		background-color: $messaging-3rd-peer-primary-color;
+
+		.caselog-thread--block-entry{
+			.caselog-thread--block-entry-toggler{
+				background-color: $messaging-3rd-peer-primary-color;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				border-top-color: $messaging-3rd-peer-primary-color;
+				border-right-color: $messaging-3rd-peer-primary-color;
+			}
+		}
+	}
+}
+.caselog-thread--block-color-4{
+	.caselog-thread--block-medallion{
+		color: $messaging-4th-peer-secondary-color;
+		background-color: $messaging-4th-peer-primary-color;
+	}
+	.caselog-thread--block-user{
+		color: $messaging-4th-peer-primary-color;
+	}
+	.caselog-thread--block-entries{
+		color: $messaging-4th-peer-secondary-color;
+		background-color: $messaging-4th-peer-primary-color;
+
+		.caselog-thread--block-entry{
+			.caselog-thread--block-entry-toggler{
+				background-color: $messaging-4th-peer-primary-color;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				border-top-color: $messaging-4th-peer-primary-color;
+				border-right-color: $messaging-4th-peer-primary-color;
+			}
+		}
+	}
+}
+.caselog-thread--block-color-5{
+	.caselog-thread--block-medallion{
+		color: $messaging-5th-peer-secondary-color;
+		background-color: $messaging-5th-peer-primary-color;
+	}
+	.caselog-thread--block-user{
+		color: $messaging-5th-peer-primary-color;
+	}
+	.caselog-thread--block-entries{
+		color: $messaging-5th-peer-secondary-color;
+		background-color: $messaging-5th-peer-primary-color;
+
+		.caselog-thread--block-entry{
+			.caselog-thread--block-entry-toggler{
+				background-color: $messaging-5th-peer-primary-color;
+			}
+		}
+		.caselog-thread--block-entry:first-child{
+			.caselog-thread--block-entry-content:before{
+				border-top-color: $messaging-5th-peer-primary-color;
+				border-right-color: $messaging-5th-peer-primary-color;
+			}
+		}
+	}
 }
 /* collapsable sections*/
 .form_linkedset_toggler, .form_upload_toggler {

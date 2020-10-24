@@ -937,3 +937,21 @@ $dl-horizontal-offset:        $component-offset-horizontal !default;
 $dl-horizontal-breakpoint:    $grid-float-breakpoint !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
+
+
+//== Messaging
+//
+//##
+
+$messaging-self-primary-color: $white !default;
+$messaging-self-secondary-color: $gray-dark !default;
+$messaging-1st-peer-primary-color: $combodo-orange !default;
+$messaging-1st-peer-secondary-color: $white !default;
+$messaging-2nd-peer-primary-color: #e9a537 !default;
+$messaging-2nd-peer-secondary-color: $white !default;
+$messaging-3rd-peer-primary-color: darken($combodo-orange, 7%) !default;
+$messaging-3rd-peer-secondary-color: $white !default;
+$messaging-4th-peer-primary-color: #e3952c !default;
+$messaging-4th-peer-secondary-color: $white !default;
+$messaging-5th-peer-primary-color: darken($combodo-orange, 14%) !default;
+$messaging-5th-peer-secondary-color: $white !default;
