@@ -1134,7 +1134,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child {
   font-size: 18px;
   color: #444;
   /* .caselog-thread--block-entries color */
-  background-size: 85%;
+  background-size: 100%;
+  /* Full size is necessary for images with filled background to fit nicely in the medallion, even if this means that images with a transparent background might appear cropped */
   background-position: center center;
   background-color: #FFFFFF;
   /* .caselog-thread--block-entries background-color */
