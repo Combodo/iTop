@@ -277,6 +277,7 @@ class ApplicationMenu
 			$aSubMenuNodes[] = [
 				'sId' => $oSubMenuNode->GetMenuId(),
 				'sTitle' => $oSubMenuNode->GetTitle(),
+				'sEntriesCount' => $oSubMenuNode->GetEntriesCount(),
 				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
 				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
@@ -666,21 +667,22 @@ abstract class MenuNode
 		return Dict::S("Menu:$this->sMenuId", str_replace('_', ' ', $this->sMenuId));
 	}
 
+	public function GetEntriesCount()
+	{
+		return -1;
+	}
+
 	/**
 	 * @return string
 	 */
 	public function GetLabel()
 	{
 		$sRet = Dict::S("Menu:$this->sMenuId+", "");
-		if ($sRet === '')
-		{
-			if ($this->iParentIndex != -1)
-			{
+		if ($sRet === '') {
+			if ($this->iParentIndex != -1) {
 				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
 				$sRet = $oParentMenu->GetTitle().' / '.$this->GetTitle();
-			}
-			else
-			{
+			} else {
 				$sRet = $this->GetTitle();
 			}
 			//$sRet = $this->GetTitle();
@@ -1065,21 +1067,33 @@ class OQLMenuNode extends MenuNode
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
-		
+
 		$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
-		
+
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, $sUsageId);
 
-		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage))
-		{
+		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage)) {
 			// Breadcrumb
 			//$iCount = $oBlock->GetDisplayedCount();
 			$sPageId = "ui-search-".$oSearch->GetClass();
 			$sLabel = MetaModel::GetName($oSearch->GetClass());
 			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', 'fas fa-list', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
+	}
+
+	public function GetEntriesCount()
+	{
+		// Count the entries up to 99
+
+		$oSet = new DBObjectSet(DBSearch::FromOQL($this->sOQL));
+		$iCount = $oSet->CountWithLimit(99);
+		if ($iCount > 99) {
+			$iCount = "99+";
+		}
+
+		return $iCount;
 	}
 }
 
