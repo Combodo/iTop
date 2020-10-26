@@ -45,11 +45,10 @@ use TrueExpression;
 use utils;
 use WebPage;
 use UserRights;
+use ValueSetObjects;
 
 class SearchForm
 {
-	private $sClass;
-
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -65,7 +64,6 @@ class SearchForm
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
-		$this->sClass = $sClassName;
 		$aListParams = array();
 
 		foreach($aExtraParams as $key => $value)
@@ -440,7 +438,7 @@ class SearchForm
      * @throws \MySQLException
      * @throws \MySQLHasGoneAwayException
      */
-	public static function GetFieldAllowedValues($oAttrDef, $sClass = '')
+	public static function GetFieldAllowedValues($oAttrDef)
 	{
 		$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
@@ -453,6 +451,19 @@ class SearchForm
 			{
 				/** @var \AttributeExternalKey $oAttrDef */
 				$sTargetClass = $oAttrDef->GetTargetClass();
+				$sClass = $oAttrDef->GetHostClass();
+				$sAttCode = $oAttrDef->GetKeyAttCode();
+				$sFilter = 'SELECT ' . $sTargetClass . ' AS t JOIN ' . $sClass . ' AS c ON c.' . $sAttCode . '=t.id';
+				$oValSetDef = new ValueSetObjects($sFilter);
+				$aAllowedValues = $oValSetDef->GetValues([]);
+				if (count($aAllowedValues) > $iMaxComboLength)
+				{
+					return array('autocomplete' => true);
+				}
+				else
+				{
+					return array('values' => $aAllowedValues);
+				}
 			}
 			try
 			{
@@ -512,11 +523,7 @@ class SearchForm
 			}
 		}
 
-		$aArgs = array(
-			"this->finalclass" => $sClass
-		);
-
-		$aAllowedValues = $oAttrDef->GetAllowedValues($aArgs);
+		$aAllowedValues = $oAttrDef->GetAllowedValues();
 
 		return array('values' => $aAllowedValues);
 	}
@@ -726,7 +733,7 @@ class SearchForm
 			$aField['target_class'] = $sTargetClass;
 			$aField['label'] = $sLabel;
 			$aField['widget'] = $oAttDef->GetSearchType();
-			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef, $this->sClass);
+			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
 			$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
 			$aField['has_index'] = $bHasIndex;
 			$aFields[$sClassAlias.'.'.$sAttCode] = $aField;
