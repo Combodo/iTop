@@ -1,0 +1,56 @@
+/*!
+ * copyright   Copyright (C) 2010-2020 Combodo SARL
+ * license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input--height: 30px !default;
+$ibo-input--width: 100% !default;
+
+$ibo-input--background-color: $ibo-color-white-100 !default;
+$ibo-input--color: $ibo-color-grey-900 !default;
+$ibo-input--background-color: $ibo-color-white-100 !default;
+$ibo-input--border-color: $ibo-color-white-100 !default;
+
+$ibo-input--padding-x: 0px !default;
+$ibo-input--padding-y: 5px !default;
+
+$ibo-input--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-input--focus--border-color: $ibo-color-primary-600 !default;
+
+$ibo-input--placeholder--color: $ibo-color-grey-600 !default;
+
+$ibo-input--disabled--background-color: $ibo-color-grey-300 !default;
+$ibo-input--placeholder--color: $ibo-color-grey-700 !default;
+
+$ibo-input-wrapper--is-error--background-color: $ibo-color-grey-300 !default;
+$ibo-input-wrapper--is-error--border-color: $ibo-color-red-600 !default;
+$ibo-field-validation: $ibo-color-red-700 !default;
+.ibo-input{
+	height: $ibo-input--height;
+	width: $ibo-input--width;
+	background-color: $ibo-input--background-color;
+	color: $ibo-input--color;
+	padding: $ibo-input--padding-x $ibo-input--padding-y;
+	border: 1px solid $ibo-input--border-color;
+	border-radius: $ibo-input--border-radius;
+	&:focus{
+		border: 1px solid $ibo-input--focus--border-color;
+	}
+	&::placeholder{
+		color: $ibo-input--placeholder--color;
+	}
+	&:disabled{
+		background-color: $ibo-input--disabled--background-color;
+		color: $ibo-input--placeholder--color;
+	}
+}
+.ibo-input-wrapper.is-error {
+	.ibo-input{
+		background-color: $ibo-input-wrapper--is-error--background-color;
+		border: 1px solid $ibo-input-wrapper--is-error--border-color;
+	}
+}
+.ibo-field-validation{
+	color: $ibo-field-validation;
+}

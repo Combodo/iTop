@@ -1,0 +1,37 @@
+$ibo-input-datetime--width: $ibo-input-date--width !default;
+$ibo-input-datetime--action-button--margin--left: $ibo-input-date--button--margin--left !default;
+$ibo-input-datetime--action-button--margin--top: $ibo-input-date--button--margin--top !default;
+$ibo-input-datetime--action-button--padding: $ibo-input-date--button--padding !default;
+$ibo-input-datetime--action-button--color: $ibo-input-date--button--color !default;
+
+$ibo-input-datetime--ui-tpicker-slider--width: auto !default;
+$ibo-input-datetime--ui-tpicker-slider--padding-right: 18px !default;
+
+.ibo-input-datetime{
+	display: inline-block;
+	width: $ibo-input-datetime--width;
+}
+.ibo-input-datetime--action-button{
+	position: absolute;
+	display: inline-block;
+	margin-left: $ibo-input-datetime--action-button--margin--left;
+	margin-top: $ibo-input-datetime--action-button--margin--top;
+	padding: $ibo-input-datetime--action-button--padding;
+
+	color: $ibo-input-datetime--action-button--color;
+}
+.ui-datepicker-current, .ui-datepicker-close{
+	@extend .ibo-button;
+	@extend .ibo-is-regular;
+	@extend .ibo-is-secondary;
+}
+.ui_tpicker_hour_slider, .ui_tpicker_minute_slider, .ui_tpicker_second_slider{
+	@extend .ibo-input-wrapper;
+	@extend .ibo-input-select-wrapper;
+	&> select {
+		@extend .ibo-input;
+		@extend .ibo-input-select;
+		width: $ibo-input-datetime--ui-tpicker-slider--width;
+		padding-right: $ibo-input-datetime--ui-tpicker-slider--padding-right;
+	}
+}

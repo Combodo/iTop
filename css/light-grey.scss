@@ -3991,13 +3991,13 @@
 	.selectize-control,
 	.selectize-control.multi {
 		> .selectize-input {
-			&.has-items:after {
-				content: "+";
-				display: inline-block;
-				font-size: 17px;
-				font-weight: bold;
-				color: $gray-darker;
-			}
+			//&.has-items:after {
+			//	content: "+";
+			//	display: inline-block;
+			//	font-size: 17px;
+			//	font-weight: bold;
+			//	color: $gray-darker;
+			//}
 
 			> .item[data-value] {
 				@extend %attribute-set-item-edition;
@@ -4009,10 +4009,10 @@
 					@extend %attribute-set-item-edition;
 				}
 
-				> .remove {
-					padding-top: 0.3em;
-					border: none;
-				}
+				//> .remove {
+				//	padding-top: 0.3em;
+				//	border: none;
+				//}
 			}
 		}
 	}
@@ -4384,14 +4384,14 @@
 		}
 	}
 
-	.field_autocomplete {
-		background: #fff url($approot-relative + "images/ac-background.gif?v=" + $version) no-repeat right;
-		border: 1px solid black;
-
-		&:focus {
-			border: 2px solid black;
-		}
-	}
+	//.field_autocomplete {
+	//	background: #fff url($approot-relative + "images/ac-background.gif?v=" + $version) no-repeat right;
+	//	border: 1px solid black;
+	//
+	//	&:focus {
+	//		border: 2px solid black;
+	//	}
+	//}
 }
 
 

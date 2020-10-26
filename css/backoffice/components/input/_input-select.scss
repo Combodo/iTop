@@ -1,0 +1,81 @@
+$ibo-input-select-wrapper--width: 100% !default;
+
+$ibo-input-select-wrapper--after--height: 28px !default;
+$ibo-input-select-wrapper--after--margin-left: -16px !default;
+$ibo-input-select-wrapper--after--margin-top: 1px !default;
+$ibo-input-select-wrapper--after--padding-top: 3px !default;
+$ibo-input-select-wrapper--after--background-color: inherit !default;
+$ibo-input-select-wrapper--after--color: $ibo-color-grey-900 !default;
+
+$ibo-input-select--action-button--height: 28px !default;
+$ibo-input-select--action-button--width: 23px !default;
+$ibo-input-select--action-button--margin-top: 1px !default;
+$ibo-input-select--action-button--background-color: inherit !default;
+$ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
+$ibo-input-select--action-button--padding-x: 4px !default;
+$ibo-input-select--action-button--padding-y: 5px !default;
+
+$ibo-input-select--action-button--hierarchy--margin-left: -60px !default;
+$ibo-input-select--action-button--create--margin-left: -38px !default;
+$ibo-input-select--action-button--search--margin-left: -60px !default;
+
+$ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -82px !default;
+
+.ibo-input-select{
+	appearance: none;
+	&.ibo-input-selectize{
+		input{
+			display: none;
+		}
+	}
+}
+.ibo-input-select-wrapper .selectize-control
+{
+	display: inline-block;
+	width: $ibo-input-select-wrapper--width;
+}
+.ibo-input-select-wrapper::after{
+	position: absolute;
+	content: "\f0d7";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 600;
+	
+	height: $ibo-input-select-wrapper--after--height;
+	margin-left: $ibo-input-select-wrapper--after--margin-left;
+	margin-top: $ibo-input-select-wrapper--after--margin-top;
+	padding-top: $ibo-input-select-wrapper--after--padding-top;
+	
+	background-color: $ibo-input-select-wrapper--after--background-color;
+	color: $ibo-input-select-wrapper--after--color;
+	pointer-events: none;
+}
+.ibo-input-select--action-button{
+	position: absolute;
+	display: inline-block;
+	height: $ibo-input-select--action-button--height;
+	width: $ibo-input-select--action-button--width;
+	margin-top: $ibo-input-select--action-button--margin-top;
+	
+	font-size: $ibo-font-size-100;
+	background-color: $ibo-input-select--action-button--background-color;
+	color: $ibo-input-select--action-button--color;
+	padding: $ibo-input-select--action-button--padding-y $ibo-input-select--action-button--padding-x;
+	
+	&.ibo-input-select--action-button--hierarchy{
+		margin-left: $ibo-input-select--action-button--hierarchy--margin-left;
+	}
+	&.ibo-input-select--action-button--create{
+		margin-left: $ibo-input-select--action-button--create--margin-left;
+	}
+	&.ibo-input-select--action-button--search{
+		margin-left: $ibo-input-select--action-button--search--margin-left;
+	}
+}
+.ibo-input-select-autocomplete ~ .ibo-input-select--action-button--hierarchy{
+	margin-left: $ibo-input-select-autocomplete-action-button--hierarchy--margin-left;
+}
+.selectize-dropdown.ui-menu .ui-state-active {
+	margin: unset;
+	background-color: #f5fafd;
+	color: #495c68;
+}

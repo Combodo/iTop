@@ -75,6 +75,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				searchField: ['value'],
 				options:JSON.parse(options),
 				maxItems: 1,
+				copyClassesToDropdown: false,
+				inputClass: 'ibo-input ibo-input-select ibo-input-selectize'
 			});
 	}
 	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
@@ -143,6 +145,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 		})
 		.autocomplete("instance")._renderItem = function (ul, item) {
+			$(ul).addClass('selectize-dropdown');
 			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
 			var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 			if (item.obsolescence_flag == '1')
@@ -155,7 +158,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 
 			return $("<li>")
-				.append("<div>"+val+"</div>")
+				.append("<div data-selectable=\"\">"+val+"</div>")
 				.appendTo(ul);
 		};
 

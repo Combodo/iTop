@@ -1,0 +1,46 @@
+$ibo-input-date--width: 100% !default;
+
+$ibo-input-date--button--margin--left: -20px !default;
+$ibo-input-date--button--margin--top: 5px !default;
+$ibo-input-date--button--padding: 0 !default;
+
+$ibo-input-date--button--background-color: transparent !default;
+$ibo-input-date--button--color: $ibo-color-grey-800 !default;
+
+$ibo-input-date--ui-datepicker--padding-top: 34px !default;
+$ibo-input-date--ui-datepicker--background-color: $ibo-color-white-100 !default;
+$ibo-input-date--ui-datepicker--border-color: $ibo-color-grey-400 !default;
+$ibo-input-date--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-input-date--ui-datepicker-header--padding: $ibo-border-radius-500 $ibo-border-radius-500 0 0 !default;
+$ibo-input-date--ui-datepicker-header--border-radius: 4px !default;
+
+.ibo-input-date{
+	display: inline-block;
+	width: $ibo-input-date--width;
+}
+.ibo-input-date + button{
+	position: absolute;
+	display: inline-block;
+	margin-left: $ibo-input-date--button--margin--left;
+	margin-top: $ibo-input-date--button--margin--top;
+	padding: $ibo-input-date--button--padding;
+	
+	background-color: $ibo-input-date--button--background-color;
+	color: $ibo-input-date--button--color;
+	border: none;
+}
+
+.ui-datepicker{
+	padding-top: 34px;
+	background-color: $ibo-input-date--ui-datepicker--background-color;
+	border: solid 1px $ibo-input-date--ui-datepicker--border-color;
+	border-radius: $ibo-input-date--ui-datepicker--border-radius;
+}
+.ui-datepicker-header{
+	@extend .ui-dialog::before;
+	position: absolute;
+	height: unset;
+	padding: $ibo-input-date--ui-datepicker-header--border-radius;
+	border-radius: $ibo-input-date--ui-datepicker-header--border-radius;
+}

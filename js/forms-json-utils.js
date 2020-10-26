@@ -202,7 +202,8 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	if (bValid)
 	{
 		// Visual feedback - none when it's Ok
-		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		$('#field_'+sFieldId+' .ibo-input-wrapper').removeClass('is-error')
+		$('#v_'+sFieldId).html('');
 		$('#'+sFieldId+'[data-validate*="dependencies"]').trigger('change.dependencies').removeAttr('data-validate');
 	}
 	else
@@ -214,10 +215,11 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 			// Let's remember the first input with an error, so that we can put back the focus on it later
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
-
-		if ($('#v_'+sFieldId+' img').length == 0)
+		// TODO 3.0 Maybe use data role ?
+		$('#field_'+sFieldId+' .ibo-input-wrapper').addClass('is-error')
+		if ($('#v_'+sFieldId).text() == '')
 		{
-			$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
+			$('#v_'+sFieldId).html(sExplain);
 		}
 		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
 		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)

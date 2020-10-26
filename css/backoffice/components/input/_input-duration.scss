@@ -1,0 +1,7 @@
+$ibo-input-duration--width: unset !default;
+$ibo-input-duration--text-align: right !default;
+
+.ibo-input-duration{
+	width: $ibo-input-duration--width;
+	text-align: $ibo-input-duration--text-align;
+}

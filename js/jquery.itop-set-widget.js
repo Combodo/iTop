@@ -150,6 +150,7 @@ $.widget('itop.set_widget',
 				options: this.possibleValues,
 				create: false,
 				placeholder: Dict.S("Core:AttributeSet:placeholder"),
+				inputClass: 'selectize-input ibo-input ibo-input-tagset ibo-input-selectize',
 				onInitialize: function () {
 					var selectizeWidget = this;
 					setWidget._onInitialize(selectizeWidget);

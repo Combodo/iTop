@@ -1899,7 +1899,7 @@ HTML
 			{
 				$bMandatory = 'true';
 			}
-			$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
+			$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$iId}\"></span>";
 			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
 			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
 
@@ -1922,7 +1922,7 @@ HTML
 					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(),
 							ENT_QUOTES, 'UTF-8').'"';
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_date\"><input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+					$sHTMLValue = "<div class=\"field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper\"><input title=\"$sHelpText\" class=\"date-pick ibo-input ibo-input-date\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
 							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
@@ -1933,7 +1933,7 @@ HTML
 
 					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(),
 							ENT_QUOTES, 'UTF-8').'"';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime\"><input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper\"><input title=\"$sHelpText\" class=\"datetime-pick ibo-input ibo-input-datetime\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
 							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
@@ -1945,10 +1945,10 @@ HTML
 					$oPage->add_ready_script("$('#{$iId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
 					$oPage->add_ready_script("$('#{$iId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
 					$aVal = AttributeDuration::SplitDuration($value);
-					$sDays = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
-					$sHours = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
-					$sMinutes = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
-					$sSeconds = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
+					$sDays = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
+					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
+					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
+					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES,
 							'UTF-8')."\"/>";
 					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
@@ -2329,7 +2329,7 @@ JS
 
 					// generate form HTML output
 					$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$sFieldToValidateId}\"></span>";
-					$sHTMLValue = '<div class="field_input_zone field_input_set"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+					$sHTMLValue = '<div class="field_input_zone field_input_set ibo-input-wrapper ibo-input-tagset-wrapper is-error"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
 					$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
 					$oPage->add_ready_script($sScript);
 
@@ -2361,7 +2361,7 @@ JS
 							case 'select':
 							default:
 								$aEventsList[] = 'change';
-								$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+								$sHTMLValue = "<div class=\"field_input_zone field_input_string ibo-input-wrapper ibo-input-select-wrapper\"><select class=\"ibo-input ibo-input-select\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 								$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 								foreach($aAllowedValues as $key => $display_value)
 								{
@@ -2390,7 +2390,7 @@ EOF
 					}
 					else
 					{
-						$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+						$sHTMLValue = "<div class=\"field_input_zone ibo-input-wrapper ibo-input-string-wrapper\"><input class=\"ibo-input ibo-input-string\" title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
 								ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 						$aEventsList[] = 'keyup';
 						$aEventsList[] = 'change';

@@ -195,8 +195,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Date picker options
 		$aPickerOptions = array(
 			'showOn' => 'button',
-			'buttonImage' => '../images/calendar.png',
-			'buttonImageOnly' => true,
+			'buttonText' => '<i class="fas fa-calendar-alt"></i>',
 			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
 			'constrainInput' => false,
 			'changeMonth' => true,
@@ -256,7 +255,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$(".datetime-pick:not(.is-widget-ready)").each(function(){
 			var oInput = this;
 			$(oInput).addClass('is-widget-ready');
-			$('<span><img class="datetime-pick-button" src="../images/calendar.png"></span>')
+			$('<div class="ibo-input-datetime--action-button"><i class="fas fa-calendar-alt"></i></i>')
 				.insertAfter($(this))
 				.on('click', function(){
 					$(oInput)

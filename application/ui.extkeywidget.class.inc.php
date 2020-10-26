@@ -137,7 +137,7 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper\">";
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if($this->bSearchMode)
 		{
@@ -269,8 +269,8 @@ EOF
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span>";
+			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
 
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -291,7 +291,7 @@ EOF
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
+			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -305,7 +305,7 @@ JS
 		{
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
+			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -316,7 +316,7 @@ JS
 			);
 		}
 		$sHTMLValue .= "</div>";
-		$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 
 		return $sHTMLValue;
 	}
@@ -365,6 +365,7 @@ JS
 		{
 			$sHTMLValue .= "unable to display. Too much values";
 		}
+		$sHTMLValue .= '<div class="ibo-input-select--action-buttons">';
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
@@ -392,11 +393,12 @@ JS
 			);
 		}
 		$sHTMLValue .= "</div>";
+		$sHTMLValue .= "</div>";
 
 		// Note: This test is no longer necessary as we changed the markup to extract validation decoration in the standard .field_input_xxx container
 		//if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
 		//{
-		$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 		//}
 
 		return $sHTMLValue;
@@ -577,7 +579,7 @@ EOF
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input-select\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span>";
 
 			// another hidden input to store & pass the object's Id
@@ -599,7 +601,7 @@ EOF
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
+			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
 			$oPage->add_ready_script(
 <<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -613,7 +615,7 @@ JS
 		{
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
+			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
 			$oPage->add_ready_script(
 <<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -624,7 +626,7 @@ JS
 );
 		}
         $sHTMLValue .= "</div>";
-		$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 
 		return $sHTMLValue;
 	}
