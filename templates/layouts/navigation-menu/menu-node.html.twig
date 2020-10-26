@@ -2,7 +2,7 @@
 	{% if aMenuNode.sUrl is not empty %}
 		{% set sTarget = (aMenuNode.bOpenInNewWindow == true) ? 'target="_blank"' : '' %}
 		{% if aMenuNode.sEntriesCount != "-1" %}
-			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }} ({{ aMenuNode.sEntriesCount }})</a>
+			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}<span class="ibo-navigation-menu--menu-counter">{{ aMenuNode.sEntriesCount }}</span></a>
 		{% else %}
 			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}</a>
 		{% endif %}

@@ -161,6 +161,9 @@ $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color: $i
 
 $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 
+$ibo-popover-menu--menu-counter-color: $ibo-color-grey-200 !default;
+
+
 /* CSS variables (can be changed directly from the browser) */
 :root {
 	/* TODO: Introduce variables once SCSS variables are set */
@@ -624,43 +627,64 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100%;
 			max-height: $ibo-navigation-menu--user-picture--size--is-collapsed;
 		}
 	}
+
 	.ibo-navigation-menu--user-welcome-message,
 	.ibo-navigation-menu--user-organization,
-	.ibo-navigation-menu--user-notifications{
+	.ibo-navigation-menu--user-notifications {
 		display: none;
 		text-align: center;
 		color: $ibo-navigation-menu--user--text-color;
 	}
-	.ibo-navigation-menu--user-welcome-message{
+
+	.ibo-navigation-menu--user-welcome-message {
 		@extend %ibo-font-ral-nor-250;
 
 		.ibo-navigation-menu--user-welcome-message--text,
-		.ibo-navigation-menu--user-welcome-message--toggler{
+		.ibo-navigation-menu--user-welcome-message--toggler {
 			color: $ibo-navigation-menu--user--text-color;
 		}
 	}
-	.ibo-navigation-menu--user-welcome-message--toggler{
+
+	.ibo-navigation-menu--user-welcome-message--toggler {
 		padding-left: $ibo-navigation-menu--user-welcome-message--toggler--padding-left;
 	}
-	.ibo-navigation-menu--user-notifications{
+
+	.ibo-navigation-menu--user-notifications {
 		@extend %ibo-font-ral-nor-150;
 
-		.ibo-navigation-menu--user-notifications--text{
+		.ibo-navigation-menu--user-notifications--text {
 			color: $ibo-navigation-menu--user--text-color;
 		}
-		.ibo-navigation-menu--user-notifications--toggler--icon{
+
+		.ibo-navigation-menu--user-notifications--toggler--icon {
 			padding-left: $ibo-navigation-menu--user-notifications--toggler--icon--padding-left;
 		}
 	}
-	.ibo-navigation-menu--user-organization{
+
+	.ibo-navigation-menu--user-organization {
 		@extend %ibo-font-ral-nor-100;
 		color: $ibo-navigation-menu--user-organization--text-color;
 	}
-	.ibo-navigation-menu--user-menu-container{
+
+	.ibo-navigation-menu--user-menu-container {
 		position: absolute;
 		bottom: 10px;
-		.ibo-popover-menu > .ibo-popover-menu--section:nth-child(odd){
+
+		.ibo-popover-menu > .ibo-popover-menu--section:nth-child(odd) {
 			background-color: $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color;
 		}
 	}
+}
+
+.ibo-navigation-menu--menu-counter {
+	padding: 2px 6px;
+	position: absolute;
+	right: 10px;
+	width: 34px;
+	text-align: center;
+	@extend %ibo-font-ral-bol-100;
+
+	/* Grey 200 */
+	background: $ibo-popover-menu--menu-counter-color;
+	border-radius: 5px;
 }
