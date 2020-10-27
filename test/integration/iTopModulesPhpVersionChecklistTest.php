@@ -24,6 +24,7 @@ use iTopDesignFormat;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ * @group itop-community
  *
  * @covers iTopDesignFormat
  *

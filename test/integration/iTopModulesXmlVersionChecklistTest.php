@@ -25,6 +25,7 @@ use iTopDesignFormat;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ * @group itop-community
  *
  * @covers iTopDesignFormat
  *
@@ -57,14 +58,12 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 		$oTransformedXml->load($sXmlFile);
 		$oFormat = new iTopDesignFormat($oTransformedXml);
 
-		if ($oFormat->Convert())
-		{
+		if ($oFormat->Convert()) {
 			// Compare the original and new format
 			$sExpectedXmlVersion = ITOP_DESIGN_LATEST_VERSION;
-			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(), "Datamodel file $sXmlFile:2 not in the latest format ($sExpectedXmlVersion)");
-		}
-		else
-		{
+			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(),
+				"Datamodel file $sXmlFile:2 not in the latest format ($sExpectedXmlVersion)");
+		} else {
 			$this->fail("Failed to convert $sXmlFile into the latest format");
 		}
 	}
@@ -80,8 +79,7 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 		$aXmlFiles[] = APPROOT.'application/datamodel.application.xml';
 
 		$aTestCases = array();
-		foreach ($aXmlFiles as $sXmlFile)
-		{
+		foreach ($aXmlFiles as $sXmlFile) {
 			$aTestCases[$sXmlFile] = array(
 				'sXmlFile' => $sXmlFile,
 			);
