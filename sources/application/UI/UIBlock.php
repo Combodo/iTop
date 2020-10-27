@@ -190,7 +190,8 @@ abstract class UIBlock implements iUIBlock
 	 */
 	protected function GenerateId()
 	{
-		return uniqid(static::BLOCK_CODE.'-', true);
+		/** @noinspection NonSecureUniqidUsageInspection see https://github.com/Combodo/iTop/commit/0119f6c395f314452b74c79182f4426ecff1c36d#r43596531 */
+		return uniqid(static::BLOCK_CODE.'-');
 	}
 
 	/**
