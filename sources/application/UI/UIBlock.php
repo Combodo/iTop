@@ -184,14 +184,16 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * Return a unique ID for the block
+	 * **Warning**, this shouldn't generate any dot as this will be used in CSS and JQuery selectors !
 	 *
-	 * @return string
+	 * @return string a unique ID for the block
 	 */
 	protected function GenerateId()
 	{
-		/** @noinspection NonSecureUniqidUsageInspection see https://github.com/Combodo/iTop/commit/0119f6c395f314452b74c79182f4426ecff1c36d#r43596531 */
-		return uniqid(static::BLOCK_CODE.'-');
+		$sUniqId = uniqid(static::BLOCK_CODE.'-', true);
+		$sUniqId = str_replace('.', '-', $sUniqId);
+
+		return $sUniqId;
 	}
 
 	/**
