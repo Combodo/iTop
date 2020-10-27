@@ -16,7 +16,6 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
 use iTopDesignFormat;
 
 
@@ -57,7 +56,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1], " $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
+		$this->assertRegExp("#$sExpectedVersion#", $matches[1],
+			" $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
 
 	}
 
@@ -68,16 +68,11 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 		require_once APPROOT.'core/config.class.inc.php';
 		require_once APPROOT.'application/utils.inc.php';
 
-		if (is_dir(APPROOT.'datamodels/2.x'))
-		{
+		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
-		}
-		elseif (is_dir(APPROOT.'datamodels/1.x'))
-		{
+		} elseif (is_dir(APPROOT.'datamodels/1.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/1.x';
-		}
-		else
-		{
+		} else {
 			throw new \Exception('Cannot local the datamodels directory');
 		}
 
@@ -87,8 +82,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+'; // ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
 
 		$aTestCases = array();
-		foreach ($aPhpFiles as $sPhpFile)
-		{
+		foreach ($aPhpFiles as $sPhpFile) {
 			$aTestCases[$sPhpFile] = array(
 				'sExpectedVersion' => $sExpectedVersion,
 				'sPhpFile' => $sPhpFile,
