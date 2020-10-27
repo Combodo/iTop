@@ -201,6 +201,49 @@ class ApplicationMenu
 	}
 
 	/**
+	 * Get entries count for all the menus
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @since 3.0.0
+	 */
+	public static function GetMenusCount($aExtraParams = array())
+	{
+		$aMenuGroups = static::GetMenuGroups($aExtraParams);
+
+		$aMenusCount = [];
+		foreach ($aMenuGroups as $aMenuGroup) {
+			$aSubMenuNodes = $aMenuGroup['aSubMenuNodes'];
+			$aMenusCount = array_merge($aMenusCount, static::GetSubMenusCount($aSubMenuNodes));
+		}
+
+		return $aMenusCount;
+	}
+
+	/**
+	 * Recurse sub menus for counts
+	 *
+	 * @param array $aSubMenuNodes
+	 *
+	 * @return array
+	 * @since 3.0.0
+	 */
+	private static function GetSubMenusCount(array $aSubMenuNodes)
+	{
+		$aSubMenusCount = [];
+		foreach ($aSubMenuNodes as $aSubMenuNode) {
+			if ($aSubMenuNode['bHasCount']) {
+				$oMenuNode = static::GetMenuNode(static::GetMenuIndexById($aSubMenuNode['sId']));
+				$aSubMenusCount[$aSubMenuNode['sId']] = $oMenuNode->GetEntriesCount();
+			}
+			$aSubMenusCount = array_merge($aSubMenusCount, static::GetSubMenusCount($aSubMenuNode['aSubMenuNodes']));
+		}
+		return $aSubMenusCount;
+	}
+
+	/**
 	 * Return an array of menu groups
 	 *
 	 * @param array $aExtraParams
@@ -277,7 +320,7 @@ class ApplicationMenu
 			$aSubMenuNodes[] = [
 				'sId' => $oSubMenuNode->GetMenuId(),
 				'sTitle' => $oSubMenuNode->GetTitle(),
-				'sEntriesCount' => $oSubMenuNode->GetEntriesCount(),
+				'bHasCount' => $oSubMenuNode->HasCount(),
 				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
 				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
 				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
@@ -667,9 +710,26 @@ abstract class MenuNode
 		return Dict::S("Menu:$this->sMenuId", str_replace('_', ' ', $this->sMenuId));
 	}
 
+	/**
+	 * Indicates if the page corresponding to this menu node is countable
+	 *
+	 * @return bool true if corresponding page is countable
+	 * @since 3.0.0
+	 */
+	public function HasCount()
+	{
+		return false;
+	}
+
+	/**
+	 * Get the number of entries of the page corresponding to this menu item.
+	 *
+	 * @return int the number of entries
+	 * @since 3.0.0
+	 */
 	public function GetEntriesCount()
 	{
-		return -1;
+		return 0;
 	}
 
 	/**
@@ -1081,6 +1141,11 @@ class OQLMenuNode extends MenuNode
 			$sLabel = MetaModel::GetName($oSearch->GetClass());
 			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', 'fas fa-list', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
+	}
+
+	public function HasCount()
+	{
+		return true;
 	}
 
 	public function GetEntriesCount()

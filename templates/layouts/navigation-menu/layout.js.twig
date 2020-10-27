@@ -1,1 +1,5 @@
-$('#{{ oUIBlock.GetId() }}').navigation_menu();
+$('#{{ oUIBlock.GetId() }}').navigation_menu({
+    display_counts: {% if get_config_parameter('display_menus_count') %} true {% else %} false {% endif %}
+});
+
+$('#{{ oUIBlock.GetId() }}').navigation_menu('refreshCounts', null);

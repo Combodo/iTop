@@ -77,8 +77,7 @@ try
 
 	// N°2780 Fix ContextTag for console
 	// some operations are also used in the portal though
-	switch ($operation)
-	{
+	switch ($operation) {
 		case 'export_build_portal':
 		case 'export_download':
 			// do nothing : used in portal (export.js in portal-base)
@@ -88,25 +87,21 @@ try
 			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
 	}
 
-	switch ($operation)
-	{
+	$oAjaxRenderController = new AjaxRenderController();
+
+	switch ($operation) {
 		case 'datatable':
 		case 'pagination':
 			$oPage->SetContentType('text/html');
 			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
 			$aExtraParams = array();
-			if (is_array($extraParams))
-			{
+			if (is_array($extraParams)) {
 				$aExtraParams = $extraParams;
-			}
-			else
-			{
+			} else {
 				$sExtraParams = stripslashes($extraParams);
-				if (!empty($sExtraParams))
-				{
+				if (!empty($sExtraParams)) {
 					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
-					if ($val !== null)
-					{
+					if ($val !== null) {
 						$aExtraParams = $val;
 					}
 				}
@@ -2448,11 +2443,11 @@ EOF
 			break;
 
 		case 'export_build':
-			AjaxRenderController::ExportBuild($oPage, false);
+			$oAjaxRenderController->ExportBuild($oPage, false);
 			break;
 
 		case 'export_build_portal':
-			AjaxRenderController::ExportBuild($oPage, true);
+			$oAjaxRenderController->ExportBuild($oPage, true);
 			break;
 
 		case 'export_download':
@@ -2804,6 +2799,10 @@ EOF
 			$oPage->AddUiBlock($oNewEntry);
 			break;
 		case 'new_entry_group':
+			break;
+
+		case 'get_menus_count':
+			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
 		default:

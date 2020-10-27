@@ -23,78 +23,76 @@ $(function()
 		{
 			// default options
 			options:
-			{
-				active_menu_group: null,
-				filter_keyup_throttle: 200,             // In milliseconds
-			},
+				{
+					active_menu_group: null,
+					display_counts: false,
+					filter_keyup_throttle: 200,             // In milliseconds
+				},
 			css_classes:
-			{
-				menu_expanded: 'ibo-is-expanded',
-				menu_active: 'ibo-is-active',
-				menu_filtered: 'ibo-is-filtered',
-				menu_group_active: 'ibo-is-active',
-				menu_nodes_active: 'ibo-is-active'
-			},
+				{
+					menu_expanded: 'ibo-is-expanded',
+					menu_active: 'ibo-is-active',
+					menu_filtered: 'ibo-is-filtered',
+					menu_group_active: 'ibo-is-active',
+					menu_nodes_active: 'ibo-is-active'
+				},
 			js_selectors:
-			{
-				menu_toggler: '[data-role="ibo-navigation-menu--toggler"]',
-				menu_group: '[data-role="ibo-navigation-menu--menu-group"]',
-				menu_drawer: '[data-role="ibo-navigation-menu--drawer"]',
-				menu_filter_input: '[data-role="ibo-navigation-menu--menu-filter-input"]',
-				menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
-				user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
-				user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
-				user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
-			},
+				{
+					menu_toggler: '[data-role="ibo-navigation-menu--toggler"]',
+					menu_group: '[data-role="ibo-navigation-menu--menu-group"]',
+					menu_drawer: '[data-role="ibo-navigation-menu--drawer"]',
+					menu_filter_input: '[data-role="ibo-navigation-menu--menu-filter-input"]',
+					menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
+					user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
+					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
+					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
+				},
 			filter_throttle_timeout: null,
 
 			// the constructor
-			_create: function()
-			{
+			_create: function () {
 				this.element.addClass('ibo-navigation-menu');
 				$(this.js_selectors.user_menu).popover_menu({'toggler': this.js_selectors.user_menu_toggler});
 				this._bindEvents();
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
-			_destroy: function()
-			{
+			_destroy: function () {
 				this.element.removeClass('ibo-navigation-menu');
 			},
-			_bindEvents: function()
-			{
+			_bindEvents: function () {
 				const me = this;
 				const oBodyElem = $('body');
 
 				// Click on collapse/expand toggler
-				this.element.find(this.js_selectors.menu_toggler).on('click', function(oEvent){
+				this.element.find(this.js_selectors.menu_toggler).on('click', function (oEvent) {
 					me._onTogglerClick(oEvent);
 				});
 				// Click on menu group
-				this.element.find(this.js_selectors.menu_group).on('click', function(oEvent){
+				this.element.find(this.js_selectors.menu_group).on('click', function (oEvent) {
 					me._onMenuGroupClick(oEvent, $(this))
 				});
 				// Mostly for outside clicks that should close elements
-				oBodyElem.on('click', function(oEvent){
+				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
 				});
 				// Mostly for hotkeys
-				oBodyElem.on('keyup', function(oEvent){
+				oBodyElem.on('keyup', function (oEvent) {
 					me._onBodyKeyUp(oEvent);
 				});
 
 				// Menus filter
 				// - Input itself
-				this.element.find(this.js_selectors.menu_filter_input).on('keyup', function(oEvent){
+				this.element.find(this.js_selectors.menu_filter_input).on('keyup', function (oEvent) {
 					me._onFilterKeyUp(oEvent);
 				});
 				// - Clear icon
-				this.element.find(this.js_selectors.menu_filter_clear).on('click', function(oEvent){
+				this.element.find(this.js_selectors.menu_filter_clear).on('click', function (oEvent) {
 					me._onFilterClearClick(oEvent);
 				})
-				
+
 				// User info
-				this.element.find(this.js_selectors.user_menu_toggler).on('click', function(oEvent){
+				this.element.find(this.js_selectors.user_menu_toggler).on('click', function (oEvent) {
 					me._onUserMenuTogglerClick(oEvent);
 				});
 			},
@@ -133,8 +131,6 @@ $(function()
 				// on every single key up in the application, which might not be what we want... (time consuming)
 				if((oEvent.altKey === true) && (oEvent.key === 'm' || oEvent.key === 'M'))
 				{
-					const me = this;
-
 					if(this._getActiveMenuGroupId() === null)
 					{
 						const sFirstMenuGroupId = this.element.find(this.js_selectors.menu_group+':first').attr('data-menu-group-id');
@@ -159,12 +155,12 @@ $(function()
 				{
 					this._clearFiltering();
 				}
-				else
-				{
+				else {
 					// Reset throttle timeout on key stroke
 					clearTimeout(this.filter_throttle_timeout);
-					this.filter_throttle_timeout = setTimeout(function(){
+					this.filter_throttle_timeout = setTimeout(function () {
 						me._doFiltering(sValue);
+						me.refreshCounts();
 					}, this.options.filter_keyup_throttle);
 				}
 			},
@@ -184,7 +180,7 @@ $(function()
 				oEvent.preventDefault();
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
-				
+
 				$(this.js_selectors.user_menu_container).css({
 					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(this.js_selectors.user_menu).height()) + 'px',
 					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
@@ -235,15 +231,15 @@ $(function()
 			 * @param sMenuGroupId string
 			 * @private
 			 */
-			_openDrawer: function(sMenuGroupId)
-			{
+			_openDrawer: function (sMenuGroupId) {
+				this.refreshCounts();
 				this._clearActiveMenuGroup();
 				// Note: This causes the filter to be cleared event when using the hotkey to reopen a previously filled filter
 				this._clearFiltering();
 
 				// Set new active group
-				this.element.find('[data-role="ibo-navigation-menu--menu-group"][data-menu-group-id="'+sMenuGroupId+'"]').addClass(this.css_classes.menu_group_active);
-				this.element.find('[data-role="ibo-navigation-menu--menu-nodes"][data-menu-group-id="'+sMenuGroupId+'"]').addClass(this.css_classes.menu_nodes_active);
+				this.element.find('[data-role="ibo-navigation-menu--menu-group"][data-menu-group-id="' + sMenuGroupId + '"]').addClass(this.css_classes.menu_group_active);
+				this.element.find('[data-role="ibo-navigation-menu--menu-nodes"][data-menu-group-id="' + sMenuGroupId + '"]').addClass(this.css_classes.menu_nodes_active);
 
 				// Set menu as active
 				this.element.addClass(this.css_classes.menu_active);
@@ -252,8 +248,7 @@ $(function()
 			 * Close the drawer after clearing the active menu group
 			 * @private
 			 */
-			_closeDrawer: function()
-			{
+			_closeDrawer: function () {
 				this._clearActiveMenuGroup();
 
 				// Set menu as non active
@@ -261,8 +256,7 @@ $(function()
 			},
 
 			// Menus filter methods
-			_focusFilter: function()
-			{
+			_focusFilter: function () {
 				this.element.find(this.js_selectors.menu_filter_input)
 					.trigger('click')
 					.trigger('focus');
@@ -271,8 +265,7 @@ $(function()
 			 * Remove the current filter value and reset the menu nodes display
 			 * @private
 			 */
-			_clearFiltering: function()
-			{
+			_clearFiltering: function () {
 				this.element.find(this.js_selectors.menu_filter_input).val('');
 
 				// Reset display of everything
@@ -301,22 +294,19 @@ $(function()
 				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').hide();
 
 				// Show matching menu node
-				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').each(function(){
+				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').each(function () {
 					const sNodeValue = me._formatValueForFilterComparison($(this).children('[data-role="ibo-navigation-menu--menu-node-title"]:first').text());
 					let bMatches = true;
 
 					// On first non matching part, we consider that the menu node is not a match
-					for(let iIdx in aFilterValueParts)
-					{
-						if(sNodeValue.indexOf(aFilterValueParts[iIdx]) === -1)
-						{
+					for (let iIdx in aFilterValueParts) {
+						if (sNodeValue.indexOf(aFilterValueParts[iIdx]) === -1) {
 							bMatches = false;
 							break;
 						}
 					}
 
-					if(bMatches)
-					{
+					if (bMatches) {
 						// Note: Selector must be recursive
 						$(this).parents('[data-role="ibo-navigation-menu--menu-nodes"], [data-role="ibo-navigation-menu--menu-node"]').show();
 						$(this).show();
@@ -330,9 +320,33 @@ $(function()
 			 * @returns string
 			 * @private
 			 */
-			_formatValueForFilterComparison: function(sOriginalValue)
-			{
+			_formatValueForFilterComparison: function (sOriginalValue) {
 				return sOriginalValue.toLowerCase().latinise();
+			},
+			/**
+			 * Refresh count badges for OQL menus
+			 */
+			refreshCounts: function () {
+				const me = this;
+				if (this.options.display_counts) {
+					$.ajax({
+						method: "POST",
+						url: GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php',
+						data: {
+							operation: "get_menus_count"
+						},
+						dataType: "json"
+					})
+						.done(function (data) {
+							if (data.code === "done") {
+								for (const [key, value] of Object.entries(data.counts)) {
+									let menuEntry = me.element.find('[data-menu-id="' + key + '"]');
+									menuEntry.html(value);
+									menuEntry.show();
+								}
+							}
+						});
+				}
 			}
 		});
 });

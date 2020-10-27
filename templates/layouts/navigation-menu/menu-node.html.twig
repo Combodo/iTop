@@ -1,8 +1,8 @@
 <li class="ibo-navigation-menu--menu-node" data-role="ibo-navigation-menu--menu-node" data-menu-node-id="{{ aMenuNode.sId }}">
 	{% if aMenuNode.sUrl is not empty %}
 		{% set sTarget = (aMenuNode.bOpenInNewWindow == true) ? 'target="_blank"' : '' %}
-		{% if aMenuNode.sEntriesCount != "-1" %}
-			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}<span class="ibo-navigation-menu--menu-counter">{{ aMenuNode.sEntriesCount }}</span></a>
+		{% if aMenuNode.bHasCount %}
+			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}<span class="ibo-navigation-menu--menu-counter" data-menu-id="{{ aMenuNode.sId }}" style="display: none;"></span></a>
 		{% else %}
 			<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>{{ aMenuNode.sTitle }}</a>
 		{% endif %}
