@@ -136,9 +136,9 @@ $ibo-navigation-menu--notifications-toggler--new-messages--width: 16px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--height: 16px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--top: -2px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--right: -7px !default;
-$ibo-navigation-menu--notifications-toggler--new-messages--background-color: $ibo-color-red-600;
-$ibo-navigation-menu--notifications-toggler--new-messages--border: solid 2px $ibo-navigation-menu--bottom-part--background-color;
-$ibo-navigation-menu--notifications-toggler--new-messages--border-radius: $ibo-border-radius-full;
+$ibo-navigation-menu--notifications-toggler--new-messages--background-color: $ibo-color-red-600 !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border: solid 2px $ibo-navigation-menu--bottom-part--background-color !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border-radius: $ibo-border-radius-full !default;
 
 $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--width: 10px !default;
 $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--height: 10px !default;
@@ -146,9 +146,9 @@ $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--t
 $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--right: -5px !default;
 
 $ibo-navigation-menu--user--text-color: $ibo-color-white-100 !default;
-$ibo-navigation-menu--user-welcome-message--toggler--padding-left : 6px !default;
+$ibo-navigation-menu--user-welcome-message--toggler--padding-left: 6px !default;
 $ibo-navigation-menu--user-picture--border-radius: $ibo-border-radius-full !default;
-$ibo-navigation-menu--user-picture--background-color: $ibo-color-grey-300;
+$ibo-navigation-menu--user-picture--background-color: $ibo-color-grey-300 !default;
 $ibo-navigation-menu--user-notifications--toggler--icon--padding-left: 5px !default;
 $ibo-navigation-menu--user-organization--text-color: $ibo-color-blue-100 !default;
 
@@ -159,9 +159,9 @@ $ibo-navigation-menu--user-picture--border--is-expanded: solid 3px $ibo-color-bl
 
 $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color: $ibo-color-grey-100 !default;
 
-$ibo-navigation-menu--user-info--height--is-expanded: 100%;
+$ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 
-$ibo-popover-menu--menu-counter-color: $ibo-color-grey-200 !default;
+$ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--background-color !default;
 
 
 /* CSS variables (can be changed directly from the browser) */
@@ -685,6 +685,6 @@ $ibo-popover-menu--menu-counter-color: $ibo-color-grey-200 !default;
 	@extend %ibo-font-ral-bol-100;
 
 	/* Grey 200 */
-	background: $ibo-popover-menu--menu-counter-color;
+	background: $ibo-navigation-menu--menu-counter-color;
 	border-radius: 5px;
 }
