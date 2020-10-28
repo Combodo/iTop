@@ -103,7 +103,7 @@ class FilesIntegrity
 				$sChecksum = md5($sContent);
 				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
 				{
-					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', basename($sFile)));
+					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
 				}
 			}
 			// Packed with missing files...
