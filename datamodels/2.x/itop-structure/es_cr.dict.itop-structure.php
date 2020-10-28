@@ -323,6 +323,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:Organization+' => 'Organizaciones',
 	'Menu:ConfigManagement' => 'Administración de la Configuración',
 	'Menu:ConfigManagement+' => 'Administración de la Configuración',
+	'Menu:ConfigManagementCI' => 'Elementos de Configuración',
+	'Menu:ConfigManagementCI+' => 'Elementos de Confirguración',
 	'Menu:ConfigManagementOverview' => 'Resumen de Infraestructura',
 	'Menu:ConfigManagementOverview+' => 'Resumen de Infraestructura',
 	'Menu:Contact' => 'Contactos',

@@ -1536,8 +1536,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:Application+' => '全アプリケーション',
 	'Menu:DBServer' => 'DBサーバ',
 	'Menu:DBServer+' => 'DBサーバ',
-	'Menu:ConfigManagementCI' => '構成管理項目',
-	'Menu:ConfigManagementCI+' => '構成管理項目',
 	'Menu:BusinessProcess' => 'ビジネスプロセス',
 	'Menu:BusinessProcess+' => '全ビジネスプロセス',
 	'Menu:ApplicationSolution' => 'アプリケーションソリューション',

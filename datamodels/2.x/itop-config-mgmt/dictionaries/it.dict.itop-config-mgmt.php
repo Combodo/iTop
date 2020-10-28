@@ -1306,8 +1306,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPInterface+' => '~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address~~',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
-
-
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address~~',
 	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Comment~~',
@@ -1536,8 +1534,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Application+' => 'Tutte le applicazioni',
 	'Menu:DBServer' => 'Database Servers',
 	'Menu:DBServer+' => 'Database Servers',
-	'Menu:ConfigManagementCI' => 'Elementi di Configurazione (CI)',
-	'Menu:ConfigManagementCI+' => 'Elementi di Configurazione (CI)',
 	'Menu:BusinessProcess' => 'Processi di business',
 	'Menu:BusinessProcess+' => 'Tutti i processi di business',
 	'Menu:ApplicationSolution' => 'Soluzioni applicative',

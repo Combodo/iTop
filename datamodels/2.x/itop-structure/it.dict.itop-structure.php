@@ -320,6 +320,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Organization+' => 'Tutte le organizzazioni',
 	'Menu:ConfigManagement' => 'Gestione delle Configurazioni',
 	'Menu:ConfigManagement+' => 'Gestione delle Configurazioni',
+	'Menu:ConfigManagementCI' => 'Elementi di Configurazione (CI)',
+	'Menu:ConfigManagementCI+' => 'Elementi di Configurazione (CI)',
 	'Menu:ConfigManagementOverview' => 'Panoramica',
 	'Menu:ConfigManagementOverview+' => 'Panoramica',
 	'Menu:Contact' => 'Contatti',

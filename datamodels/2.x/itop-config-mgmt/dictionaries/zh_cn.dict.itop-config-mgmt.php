@@ -1537,8 +1537,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Application+' => '所有应用',
 	'Menu:DBServer' => '数据库服务器',
 	'Menu:DBServer+' => '数据库服务器',
-	'Menu:ConfigManagementCI' => '配置项',
-	'Menu:ConfigManagementCI+' => '配置项',
 	'Menu:BusinessProcess' => '业务流程',
 	'Menu:BusinessProcess+' => '所有业务流程',
 	'Menu:ApplicationSolution' => '应用方案',

@@ -1540,8 +1540,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Application+' => 'Všechny aplikace',
 	'Menu:DBServer' => 'Databázové servery',
 	'Menu:DBServer+' => 'Databázové servery',
-	'Menu:ConfigManagementCI' => 'Konfigurační položky',
-	'Menu:ConfigManagementCI+' => 'Konfigurační položky',
 	'Menu:BusinessProcess' => 'Obchodní procesy',
 	'Menu:BusinessProcess+' => 'Všechny obchodní procesy',
 	'Menu:ApplicationSolution' => 'Aplikační řešení',

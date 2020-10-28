@@ -1540,8 +1540,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:Application+' => '',
 	'Menu:DBServer' => 'Databázové servery',
 	'Menu:DBServer+' => '',
-	'Menu:ConfigManagementCI' => 'Konfiguračné položky',
-	'Menu:ConfigManagementCI+' => '',
 	'Menu:BusinessProcess' => 'Biznisové procesy',
 	'Menu:BusinessProcess+' => '',
 	'Menu:ApplicationSolution' => 'Aplikačné riešenia',

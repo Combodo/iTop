@@ -1526,8 +1526,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Application+' => 'Все приложения',
 	'Menu:DBServer' => 'Серверы баз данных',
 	'Menu:DBServer+' => 'Серверы баз данных',
-	'Menu:ConfigManagementCI' => 'Конфигурационные единицы',
-	'Menu:ConfigManagementCI+' => 'Конфигурационные единицы',
 	'Menu:BusinessProcess' => 'Бизнес-процессы',
 	'Menu:BusinessProcess+' => 'Все бизнес-процессы',
 	'Menu:ApplicationSolution' => 'Прикладные решения',

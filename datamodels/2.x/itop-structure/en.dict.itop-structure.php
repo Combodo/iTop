@@ -352,6 +352,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Organization+' => 'All organizations',
 	'Menu:ConfigManagement' => 'Configuration Management',
 	'Menu:ConfigManagement+' => 'Configuration Management',
+	'Menu:ConfigManagementCI' => 'Configuration items',
+	'Menu:ConfigManagementCI+' => 'Configuration items',
 	'Menu:ConfigManagementOverview' => 'Overview',
 	'Menu:ConfigManagementOverview+' => 'Overview',
 	'Menu:Contact' => 'Contacts',

@@ -321,6 +321,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:Organization+' => '全組織',
 	'Menu:ConfigManagement' => '構成管理',
 	'Menu:ConfigManagement+' => '構成管理',
+	'Menu:ConfigManagementCI' => '構成管理項目',
+	'Menu:ConfigManagementCI+' => '構成管理項目',
 	'Menu:ConfigManagementOverview' => '概要',
 	'Menu:ConfigManagementOverview+' => '概要',
 	'Menu:Contact' => '連絡先',

@@ -1533,8 +1533,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Application+' => '',
 	'Menu:DBServer' => 'Adatbázis szerverek',
 	'Menu:DBServer+' => '',
-	'Menu:ConfigManagementCI' => 'Konfigurációs elemek (CI)',
-	'Menu:ConfigManagementCI+' => '',
 	'Menu:BusinessProcess' => 'Üzleti folyamatok',
 	'Menu:BusinessProcess+' => '',
 	'Menu:ApplicationSolution' => 'Egyedi alkalmazások',

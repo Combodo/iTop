@@ -1542,8 +1542,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Application+' => 'Tüm Uygulamalar',
 	'Menu:DBServer' => 'Veritabanı sunucuları',
 	'Menu:DBServer+' => 'Veritabanı sunucuları',
-	'Menu:ConfigManagementCI' => 'Konfigürasyon Kalemleri',
-	'Menu:ConfigManagementCI+' => 'Konfigürasyon Kalemleri',
 	'Menu:BusinessProcess' => 'İş süreçleri',
 	'Menu:BusinessProcess+' => 'Tüm İş süreçleri',
 	'Menu:ApplicationSolution' => 'Uygulama çözümleri',

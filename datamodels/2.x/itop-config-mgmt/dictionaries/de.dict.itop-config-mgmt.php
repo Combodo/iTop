@@ -1539,8 +1539,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Application+' => 'Alle Anwendungen',
 	'Menu:DBServer' => 'Datenbank-Server',
 	'Menu:DBServer+' => 'Datenbank-Server',
-	'Menu:ConfigManagementCI' => 'Configuration Items',
-	'Menu:ConfigManagementCI+' => 'Configuration Items',
 	'Menu:BusinessProcess' => 'Business-Prozesse',
 	'Menu:BusinessProcess+' => 'Alle Business-Prozesse',
 	'Menu:ApplicationSolution' => 'Anwendungslösungen',

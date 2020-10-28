@@ -306,6 +306,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Organization+' => 'Все организации',
 	'Menu:ConfigManagement' => 'Управление конфигурациями',
 	'Menu:ConfigManagement+' => 'Управление конфигурациями',
+	'Menu:ConfigManagementCI' => 'Конфигурационные единицы',
+	'Menu:ConfigManagementCI+' => 'Конфигурационные единицы',
 	'Menu:ConfigManagementOverview' => 'Обзор',
 	'Menu:ConfigManagementOverview+' => 'Обзор',
 	'Menu:Contact' => 'Контакты',

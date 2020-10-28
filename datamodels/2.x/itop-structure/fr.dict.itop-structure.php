@@ -355,6 +355,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Organization+' => 'Toutes les organisations',
 	'Menu:ConfigManagement' => 'Gestion des configurations',
 	'Menu:ConfigManagement+' => 'Gestion des configurations',
+	'Menu:ConfigManagementCI' => 'CIs',
+	'Menu:ConfigManagementCI+' => 'CIs',
 	'Menu:ConfigManagementOverview' => 'Tableaux de bord',
 	'Menu:ConfigManagementOverview+' => 'Tableaux de bord',
 	'Menu:Contact' => 'Contacts',

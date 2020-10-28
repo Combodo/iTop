@@ -326,6 +326,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Organization+' => 'Alle organisaties',
 	'Menu:ConfigManagement' => 'Configuratiebeheer',
 	'Menu:ConfigManagement+' => 'Configuratiebeheer',
+	'Menu:ConfigManagementCI' => 'Configuratie-items',
+	'Menu:ConfigManagementCI+' => 'Configuratie-items',
 	'Menu:ConfigManagementOverview' => 'Overzicht',
 	'Menu:ConfigManagementOverview+' => 'Overzicht',
 	'Menu:Contact' => 'Contacten',

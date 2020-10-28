@@ -319,6 +319,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Organization+' => '所有组织',
 	'Menu:ConfigManagement' => '配置管理',
 	'Menu:ConfigManagement+' => '配置管理',
+	'Menu:ConfigManagementCI' => '配置项',
+	'Menu:ConfigManagementCI+' => '配置项',
 	'Menu:ConfigManagementOverview' => '概览',
 	'Menu:ConfigManagementOverview+' => '概览',
 	'Menu:Contact' => '联系人',

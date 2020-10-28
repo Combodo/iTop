@@ -318,6 +318,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Organization+' => 'Alle Organisationer',
 	'Menu:ConfigManagement' => 'Configuration Management',
 	'Menu:ConfigManagement+' => 'Configuration Management',
+	'Menu:ConfigManagementCI' => 'Configuration Items',
+	'Menu:ConfigManagementCI+' => 'Configuration Items',
 	'Menu:ConfigManagementOverview' => 'Oversigt',
 	'Menu:ConfigManagementOverview+' => 'Oversigt',
 	'Menu:Contact' => 'Kontakt',

@@ -320,6 +320,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Organization+' => 'Todas organizações',
 	'Menu:ConfigManagement' => 'Gerenciamento Configurações',
 	'Menu:ConfigManagement+' => 'Gerenciamento Configurações',
+	'Menu:ConfigManagementCI' => 'Itens de configuração',
+	'Menu:ConfigManagementCI+' => 'Itens de configuração',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
 	'Menu:ConfigManagementOverview+' => 'Visão geral',
 	'Menu:Contact' => 'Contatos',

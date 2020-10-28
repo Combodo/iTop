@@ -1548,8 +1548,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Application+' => 'Alle applicaties',
 	'Menu:DBServer' => 'Databaseservers',
 	'Menu:DBServer+' => 'Databaseservers',
-	'Menu:ConfigManagementCI' => 'Configuratie-items',
-	'Menu:ConfigManagementCI+' => 'Configuratie-items',
 	'Menu:BusinessProcess' => 'Bedrijfsprocessen',
 	'Menu:BusinessProcess+' => 'Alle bedrijfsprocessen',
 	'Menu:ApplicationSolution' => 'Applicatie-oplossing',

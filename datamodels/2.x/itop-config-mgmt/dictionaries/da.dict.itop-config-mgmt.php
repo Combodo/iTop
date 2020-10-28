@@ -1536,8 +1536,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Application+' => 'Alle Anvendelser',
 	'Menu:DBServer' => 'Database server',
 	'Menu:DBServer+' => 'Database server',
-	'Menu:ConfigManagementCI' => 'Configuration Items',
-	'Menu:ConfigManagementCI+' => 'Configuration Items',
 	'Menu:BusinessProcess' => 'Forretnings proces',
 	'Menu:BusinessProcess+' => 'Alle forretnings processer',
 	'Menu:ApplicationSolution' => 'Applikations løsning',

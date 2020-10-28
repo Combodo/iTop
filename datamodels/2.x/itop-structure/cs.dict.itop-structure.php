@@ -330,6 +330,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Organization+' => 'Všechny organizace',
 	'Menu:ConfigManagement' => 'Správa konfigurací',
 	'Menu:ConfigManagement+' => 'Správa konfigurací',
+	'Menu:ConfigManagementCI' => 'Konfigurační položky',
+	'Menu:ConfigManagementCI+' => 'Konfigurační položky',
 	'Menu:ConfigManagementOverview' => 'Přehled',
 	'Menu:ConfigManagementOverview+' => 'Přehled',
 	'Menu:Contact' => 'Kontakty',

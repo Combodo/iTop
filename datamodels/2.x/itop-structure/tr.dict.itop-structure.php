@@ -321,6 +321,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Organization+' => 'Tüm Kurumlar',
 	'Menu:ConfigManagement' => 'Konfigürasyon Yönetimi',
 	'Menu:ConfigManagement+' => 'Konfigürasyon Yönetimi',
+	'Menu:ConfigManagementCI' => 'Konfigürasyon Kalemleri',
+	'Menu:ConfigManagementCI+' => 'Konfigürasyon Kalemleri',
 	'Menu:ConfigManagementOverview' => 'Özet',
 	'Menu:ConfigManagementOverview+' => 'Özet',
 	'Menu:Contact' => 'İrtibatlar',

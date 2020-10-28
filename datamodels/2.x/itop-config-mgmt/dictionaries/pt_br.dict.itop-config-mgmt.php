@@ -1541,8 +1541,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Application+' => 'Todas aplicações',
 	'Menu:DBServer' => 'Serviços Banco de Dados',
 	'Menu:DBServer+' => 'Serviços Banco de Dados',
-	'Menu:ConfigManagementCI' => 'Itens de configuração',
-	'Menu:ConfigManagementCI+' => 'Itens de configuração',
 	'Menu:BusinessProcess' => 'Processos de negócios',
 	'Menu:BusinessProcess+' => 'Todos processos de negócios',
 	'Menu:ApplicationSolution' => 'Solução aplicação',

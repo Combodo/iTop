@@ -1541,8 +1541,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:Application+' => 'Aplicaciones/Programas',
 	'Menu:DBServer' => 'Servidores de Base de Datos',
 	'Menu:DBServer+' => 'Servidores de Base de Datos',
-	'Menu:ConfigManagementCI' => 'Elementos de Configuración',
-	'Menu:ConfigManagementCI+' => 'Elementos de Confirguración',
 	'Menu:BusinessProcess' => 'Proceso de Negocio',
 	'Menu:BusinessProcess+' => 'Proceso de Negocios',
 	'Menu:ApplicationSolution' => 'Solución Aplicativa',

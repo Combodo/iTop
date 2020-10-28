@@ -319,6 +319,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:Organization+' => '',
 	'Menu:ConfigManagement' => 'Manažment konfigurácie',
 	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagementCI' => 'Konfiguračné položky',
+	'Menu:ConfigManagementCI+' => '',
 	'Menu:ConfigManagementOverview' => 'Prehľad',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Kontakty',

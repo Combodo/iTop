@@ -1547,8 +1547,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Application+' => 'Tous les logiciels',
 	'Menu:DBServer' => 'Serveur de base de données',
 	'Menu:DBServer+' => '',
-	'Menu:ConfigManagementCI' => 'CIs',
-	'Menu:ConfigManagementCI+' => 'CIs',
 	'Menu:BusinessProcess' => 'Processus métier',
 	'Menu:BusinessProcess+' => 'Tous les processus métiers',
 	'Menu:ApplicationSolution' => 'Solutions applicatives',

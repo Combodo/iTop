@@ -321,6 +321,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Organization+' => '',
 	'Menu:ConfigManagement' => 'Konfiguráció menedzsment',
 	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagementCI' => 'Konfigurációs elemek (CI)',
+	'Menu:ConfigManagementCI+' => '',
 	'Menu:ConfigManagementOverview' => 'Áttekintő',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Kapcsolattartók',
