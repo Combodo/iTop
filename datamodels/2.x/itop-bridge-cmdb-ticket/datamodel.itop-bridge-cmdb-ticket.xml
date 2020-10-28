@@ -469,6 +469,39 @@
 				</details>
 			</presentation>
 		</class>
+    <class id="DocumentFile" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="cis_list" _delta="define">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentWeb" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="cis_list" _delta="define">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentNote" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="cis_list" _delta="define">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
 	</classes>
 	<menus>
 	</menus>

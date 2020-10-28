@@ -1317,9 +1317,6 @@
 						<item id="file">
 							<rank>60</rank>
 						</item>
-						<item id="cis_list">
-							<rank>70</rank>
-						</item>
 						<item id="contracts_list">
 							<rank>80</rank>
 						</item>
@@ -1421,9 +1418,6 @@
 						<item id="text">
 							<rank>60</rank>
 						</item>
-						<item id="cis_list">
-							<rank>70</rank>
-						</item>
 						<item id="contracts_list">
 							<rank>80</rank>
 						</item>
@@ -1522,9 +1516,6 @@
 						</item>
 						<item id="url">
 							<rank>50</rank>
-						</item>
-						<item id="cis_list">
-							<rank>60</rank>
 						</item>
 						<item id="contracts_list">
 							<rank>70</rank>
