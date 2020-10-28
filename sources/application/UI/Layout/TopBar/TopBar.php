@@ -23,6 +23,7 @@ namespace Combodo\iTop\Application\UI\Layout\TopBar;
 use Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearch;
 use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreate;
+use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\UIBlock;
 
 /**
@@ -45,6 +46,8 @@ class TopBar extends UIBlock
 	protected $oGlobalSearch;
 	/** @var Breadcrumbs|null $oBreadcrumbs */
 	protected $oBreadcrumbs;
+	/** @var Toolbar|null */
+	protected $oToolbar;
 
 	/**
 	 * TopBar constructor.
@@ -164,18 +167,45 @@ class TopBar extends UIBlock
 	}
 
 	/**
+	 * @return Toolbar|null
+	 */
+	public function GetToolbar(): ?Toolbar
+	{
+		return $this->oToolbar;
+	}
+
+	/**
+	 * @param Toolbar|null $oToolbar
+	 *
+	 * @return TopBar
+	 */
+	public function SetToolbar(?Toolbar $oToolbar): TopBar
+	{
+		$this->oToolbar = $oToolbar;
+		return $this;
+	}
+
+	/**
+	 * Return true if the breadcrumb has been set
+	 *
+	 * @return bool
+	 */
+	public function HasToolbar()
+	{
+		return ($this->oToolbar !== null);
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function GetSubBlocks()
 	{
 		$aSubBlocks = [];
 
-		$aSubBlocksNames = ['QuickCreate', 'GlobalSearch', 'Breadcrumbs'];
-		foreach($aSubBlocksNames as $sSubBlockName)
-		{
+		$aSubBlocksNames = ['QuickCreate', 'GlobalSearch', 'Breadcrumbs', 'Toolbar'];
+		foreach ($aSubBlocksNames as $sSubBlockName) {
 			$sHasMethodName = 'Has'.$sSubBlockName;
-			if(true === call_user_func_array([$this, $sHasMethodName], []))
-			{
+			if (true === call_user_func_array([$this, $sHasMethodName], [])) {
 				$sPropertyName = 'o'.$sSubBlockName;
 				$aSubBlocks[$this->$sPropertyName->GetId()] = $this->$sPropertyName;
 			}

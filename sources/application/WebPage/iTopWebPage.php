@@ -19,12 +19,14 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenuFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContent;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Layout\TopBar\TopBar;
 use Combodo\iTop\Application\UI\Layout\TopBar\TopBarFactory;
 use Combodo\iTop\Application\UI\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -49,6 +51,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	/** @var \TabManager */
 	protected $m_oTabs;
+	protected $oTopBarLayout;
 	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
 	protected $sBreadCrumbEntryLabel;
@@ -78,15 +81,14 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
-		if ((count($_POST) == 0) || (array_key_exists('loginop', $_POST)))
-		{
+		if ((count($_POST) == 0) || (array_key_exists('loginop', $_POST))) {
 			// Create a breadcrumb entry for the current page, but get its title as late as possible (page title could be changed later)
 			$this->bBreadCrumbEnabled = true;
-		}
-		else
-		{
+		} else {
 			$this->bBreadCrumbEnabled = false;
 		}
+
+		$this->SetTopBarLayout(TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry()));
 
 		utils::InitArchiveMode();
 
@@ -535,6 +537,8 @@ JS
 		$this->sBreadCrumbEntryUrl = $sUrl;
 		$this->sBreadCrumbEntryIcon = $sIcon;
 		$this->sBreadCrumbEntryIconType = $sIconType;
+
+		$this->GetTopBarLayout()->SetBreadcrumbs(new Breadcrumbs($this->GetBreadCrumbsNewEntry(), Breadcrumbs::BLOCK_CODE));
 	}
 
 	/**
@@ -630,20 +634,6 @@ JS
 	protected function GetNavigationMenuLayout()
 	{
 		return NavigationMenuFactory::MakeStandard();
-	}
-
-	/**
-	 * Return the top bar layout (global search, breadcrumbs, ...)
-	 *
-	 * @internal
-	 * @return \Combodo\iTop\Application\UI\Layout\TopBar\TopBar
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @since 3.0.0
-	 */
-	protected function GetTopBarLayout()
-	{
-		return TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry());
 	}
 
 	/**
@@ -1393,4 +1383,25 @@ EOF
 			$this->m_aInitScript[] = $sScript;
 		}
 	}
+
+	/**
+	 * @return TopBar
+	 */
+	public function GetTopBarLayout(): TopBar
+	{
+		return $this->oTopBarLayout;
+	}
+
+	/**
+	 * @param TopBar $oTopBarLayout
+	 *
+	 * @return iTopWebPage
+	 */
+	public function SetTopBarLayout(TopBar $oTopBarLayout): iTopWebPage
+	{
+		$this->oTopBarLayout = $oTopBarLayout;
+		return $this;
+	}
+
+
 }

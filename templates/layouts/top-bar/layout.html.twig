@@ -10,4 +10,9 @@
 	{% if oUIBlock.HasBreadcrumbs() %}
 		{{ render_block(oUIBlock.GetBreadcrumbs(), {aPage: aPage}) }}
 	{% endif %}
+	{% if oUIBlock.HasToolBar() %}
+		<div class="ibo-top-bar--toolbar">
+			{{ render_block(oUIBlock.GetToolBar(), {aPage: aPage}) }}
+		</div>
+	{% endif %}
 </nav>

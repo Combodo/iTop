@@ -44,16 +44,106 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 	background-color: var(--ibo-top-bar--background-color);
 	@extend %ibo-elevation-100;
 
-	.ibo-breadcrumbs{
+	.ibo-breadcrumbs {
 		flex-grow: 1; /* Occupy as much width as possible */
 		overflow-x: hidden; /* Avoid glitches when too many items */
 	}
 }
-.ibo-top-bar--quick-actions{
+
+.ibo-top-bar--quick-actions {
 	@extend %ibo-full-height-content;
 	margin-right: var(--ibo-top-bar--quick-actions--margin-right);
 
-	.ibo-global-search{
+	.ibo-global-search {
 
 	}
+}
+
+.ibo-top-bar--toolbar {
+	@extend %ibo-full-height-content;
+}
+
+.ibo-top-bar--toolbar-dashboard-title {
+	@extend %ibo-full-height-content;
+	@extend %ibo-font-ral-med-250;
+	display: flex;
+	align-items: center;
+}
+
+.ibo-top-bar--toolbar-dashboard-menu-toggler {
+	@extend %ibo-full-height-content;
+	display: flex;
+	align-items: center;
+}
+
+.ibo-top-bar--toolbar-dashboard-selector {
+	@extend %ibo-full-height-content;
+	display: flex;
+	align-items: center;
+
+	.selector-label {
+		display: inline-block;
+		margin-left: 10px;
+		margin-right: 10px;
+		vertical-align: super;
+	}
+}
+
+// Round Toggle
+/* The switch - the box around the slider */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	height: 20px;
+	vertical-align: baseline;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	display: none;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: $ibo-color-secondary-600;
+	transition: .4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 15px;
+	width: 15px;
+	left: 3px;
+	bottom: 3px;
+	background-color: $ibo-color-secondary-300;
+	transition: .4s;
+}
+
+input:checked + .slider {
+	background-color: $ibo-color-primary-600;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px $ibo-color-primary-600;
+}
+
+input:checked + .slider:before {
+	transform: translateX(14.5px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 20px;
+}
+
+.slider.round:before {
+	border-radius: 7px;
 }

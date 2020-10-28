@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
+
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
 require_once(APPROOT.'core/modelreflection.class.inc.php');
@@ -529,34 +532,37 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!array_key_exists('dashboard_div_id', $aExtraParams))
-		{
+		if (!array_key_exists('dashboard_div_id', $aExtraParams)) {
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
 		}
 
 		$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
-		$oPage->add(<<<HTML
-<div class="dashboard-title-line">
-	<div class="dashboard-title">{$sTitleForHTML}</div>
-</div>
-HTML
-		);
+
+		$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
+		if ($oPage instanceof iTopWebPage) {
+			$oTopBar = $oPage->GetTopBarLayout();
+			$oToolbar = new Toolbar();
+			$oTopBar->SetToolbar($oToolbar);
+			$oToolbar->AddHtml($sHtml);
+		} else {
+			$oPage->add_script(<<<JS
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML");
+JS
+			);
+		}
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();
 
-		foreach($this->aCells as $iCellIdx => $aDashlets)
-		{
-			foreach($aDashlets as $oDashlet)
-			{
+		foreach ($this->aCells as $iCellIdx => $aDashlets) {
+			foreach ($aDashlets as $oDashlet) {
 				$aDashletCoordinates = $oLayout->GetDashletCoordinates($iCellIdx);
 				$this->PrepareDashletForRendering($oDashlet, $aDashletCoordinates, $aExtraParams);
 			}
 		}
 
 		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
-		if (!$bEditMode)
-		{
+		if (!$bEditMode) {
 			$oPage->add_linked_script('../js/dashlet.js');
 			$oPage->add_linked_script('../js/dashboard.js');
 		}
@@ -987,39 +993,38 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param WebPage $oPage
 	 * @param array $aAjaxParams
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	protected function RenderSelector($oPage, $aAjaxParams = array())
+	protected function RenderSelector(WebPage $oPage, $aAjaxParams = array())
 	{
 		$sId = $this->GetId();
 		$sDivId = utils::Sanitize($sId, '', 'element_identifier');
 		$sExtraParams = json_encode($aAjaxParams);
 
-		$sSelectorHtml = '<div class="dashboard-selector">';
-		if ($this->HasCustomDashboard())
-		{
+		$sSelectorHtml = '<div class="ibo-top-bar--toolbar-dashboard-selector">';
+		if ($this->HasCustomDashboard()) {
 			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
 			$sStandard = Dict::S('UI:Toggle:StandardDashboard');
 			$sSelectorHtml .= '<div class="selector-label">'.$sStandard.'</div>';
 			$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider round"></span></label></input></label>';
 			$sCustom = Dict::S('UI:Toggle:CustomDashboard');
 			$sSelectorHtml .= '<div class="selector-label">'.$sCustom.'</div>';
-
 		}
 		$sSelectorHtml .= '</div>';
-		$sSelectorHtml = addslashes($sSelectorHtml);
 		$sFile = addslashes($this->GetDefinitionFile());
 		$sReloadURL = $this->GetReloadURL();
 
-		$oPage->add_ready_script(
-<<<EOF
-	$('.dashboard-title').after('$sSelectorHtml');
-EOF
-		);
+		if ($oPage instanceof iTopWebPage) {
+			$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+			$oToolbar->AddHtml($sSelectorHtml);
 
-		$oPage->add_script(
-<<<EOF
+			$oPage->add_script(
+				<<<EOF
 			function ToggleDashboardSelector$sDivId()
 			{
 				$('.ibo-dashboard#$sDivId').block();
@@ -1032,7 +1037,14 @@ EOF
 				 );
 			}
 EOF
-		);
+			);
+		} else {
+			$sSelectorHtml = addslashes($sSelectorHtml);
+			$oPage->add_script(<<<JS
+$(".ibo-top-bar--toolbar-dashboard-selector").replaceWith("$sSelectorHtml");
+JS
+			);
+		}
 	}
 
 	/**
@@ -1064,43 +1076,67 @@ EOF
 	 */
 	protected function RenderEditionTools(WebPage $oPage, $aExtraParams)
 	{
+		if (!($oPage instanceof iTopWebPage)) {
+			return;
+		}
+
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-pencil-alt\"></i><ul>";
-	
+		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
+
+		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
+		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
+		$sName = 'UI:Dashboard:Actions';
+		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+		$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+		$oActionButton->AddCSSClasses("ibo-top-bar--toolbar-dashboard-menu-toggler");
+
+		$oToolbar->AddSubBlock($oActionButton);
+
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
 		$sJSExtraParams = json_encode($aExtraParams);
 		$bCanEdit = true;
-		if ($this->HasCustomDashboard())
-		{
+		if ($this->HasCustomDashboard()) {
 			$bCanEdit = !appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false);
 		}
-		if ($bCanEdit)
-		{
+		if ($bCanEdit) {
 			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
 			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 		}
 
-		if ($this->bCustomized)
-		{
+		if ($this->bCustomized) {
 			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
-											"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
+				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
 			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
 		}
+
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
-		$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
-		$sEditMenu = addslashes($sEditMenu);
-		$sReloadURL = $this->GetReloadURL();
-		$oPage->add_ready_script(
-<<<EOF
-	$('.dashboard-title').after('$sEditMenu');
-	$('#DashboardMenu>ul').popupmenu();
+
+		$oToolbar->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
+		$oActionButton->AddCSSClasses('ibo-action-button')
+			->SetJsCode(<<<JS
+$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
+$('#{$sMenuTogglerId}').on('click', function(oEvent) {
+	var oEventTarget = $('#{$sMenuTogglerId}');
+	var aEventTargetPos = oEventTarget.position();
+	var popover = $("#{$sPopoverMenuId}");
 	
-EOF
-		);
+	popover.css({
+		// 'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) + oEventTarget.height()) + 'px',
+		// 'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width() - popover.width()) + 'px',
+		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
+		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
+		'z-index': 10060
+	});
+	popover.popover_menu("togglePopup");
+});
+JS
+			);
+
+		$sReloadURL = $this->GetReloadURL();
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
 {
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId, file: sDashboardFile, extra_params: aExtraParams, reload_url: '$sReloadURL'},
@@ -1584,12 +1620,10 @@ JS
 	{
 		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
 		$aClassAliases = array();
-		try{
+		try {
 			$oFilter = $oDashlet->GetDBSearch($aExtraParams);
 			$aClassAliases = $oFilter->GetSelectedClasses();
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			//on error, return default value
 			return null;
 		}
