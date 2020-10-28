@@ -1317,12 +1317,6 @@
 						<item id="file">
 							<rank>60</rank>
 						</item>
-						<item id="contracts_list">
-							<rank>80</rank>
-						</item>
-						<item id="services_list">
-							<rank>90</rank>
-						</item>
 					</items>
 				</details>
 				<search>
@@ -1418,12 +1412,6 @@
 						<item id="text">
 							<rank>60</rank>
 						</item>
-						<item id="contracts_list">
-							<rank>80</rank>
-						</item>
-						<item id="services_list">
-							<rank>90</rank>
-						</item>
 					</items>
 				</details>
 				<search>
@@ -1516,12 +1504,6 @@
 						</item>
 						<item id="url">
 							<rank>50</rank>
-						</item>
-						<item id="contracts_list">
-							<rank>70</rank>
-						</item>
-						<item id="services_list">
-							<rank>80</rank>
 						</item>
 					</items>
 				</details>

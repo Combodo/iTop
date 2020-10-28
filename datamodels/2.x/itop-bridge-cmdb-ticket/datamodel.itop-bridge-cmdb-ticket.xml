@@ -476,6 +476,12 @@
             <item id="cis_list" _delta="define">
               <rank>70</rank>
             </item>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
       </presentation>
@@ -487,6 +493,12 @@
             <item id="cis_list" _delta="define">
               <rank>60</rank>
             </item>
+            <item id="contracts_list" _delta="define">
+              <rank>70</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>80</rank>
+            </item>
           </items>
         </details>
       </presentation>
@@ -497,6 +509,12 @@
           <items>
             <item id="cis_list" _delta="define">
               <rank>70</rank>
+            </item>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
             </item>
           </items>
         </details>
