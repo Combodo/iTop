@@ -382,3 +382,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
 ));
 
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Person:info' => 'Informations générales',
+	'UserLocal:info' => 'Informations générales',
+	'Person:personal_info' => 'Informations personnelles',
+	'Person:notifiy' => 'Notification',
+));

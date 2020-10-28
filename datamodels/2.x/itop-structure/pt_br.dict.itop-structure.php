@@ -346,3 +346,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
 	'Menu:ConfigManagement:Typology' => 'Configuração tipologia',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Person:info' => 'Informações gerais',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Informação pessoal',
+	'Person:notifiy' => 'Notificação',
+));

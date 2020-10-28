@@ -347,3 +347,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Person:info' => 'General information~~',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Notification~~',
+));

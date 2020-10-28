@@ -356,4 +356,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
 ));
 
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Person:info' => 'Allgemeine Informationen',
+	'UserLocal:info' => 'Allgemeine Informationen',
+	'Person:personal_info' => 'Persönliche Informationen',
+	'Person:notifiy' => 'Benachrichtigungen',
+));
+
 ?>

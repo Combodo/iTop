@@ -346,3 +346,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
 ));
+
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Person:info' => 'General information~~',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Notification~~',
+));

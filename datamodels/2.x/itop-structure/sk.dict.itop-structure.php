@@ -345,3 +345,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Zhrnutie',
 	'Menu:ConfigManagement:Typology' => 'Konfiguračná typológia',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Person:info' => 'Všeobecné informácie',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Upozornenie',
+));

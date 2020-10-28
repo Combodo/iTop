@@ -332,3 +332,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Все конфигурационные единицы',
 	'Menu:ConfigManagement:Typology' => 'Настройка типологии',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Person:info' => 'Основная информация',
+	'UserLocal:info' => 'Основная информация',
+	'Person:personal_info' => 'Личная информация',
+	'Person:notifiy' => 'Уведомления',
+));

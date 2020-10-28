@@ -347,3 +347,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'サマリー',
 	'Menu:ConfigManagement:Typology' => '分類構成',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Person:info' => '情報',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => '通知',
+));

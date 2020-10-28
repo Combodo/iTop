@@ -344,4 +344,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Sammenfatning',
 	'Menu:ConfigManagement:Typology' => 'Typologi Konfiguration',
 ));
+
+// Add translation for Fieldsets
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Person:info' => 'Almindelig Information',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Underretning',
+));
+
 ?>

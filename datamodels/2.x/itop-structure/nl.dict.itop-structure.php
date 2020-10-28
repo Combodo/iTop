@@ -352,3 +352,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
 	'Menu:ConfigManagement:Typology' => 'Configuratie typologie',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Person:info' => 'Globale informatie',
+	'UserLocal:info' => 'Globale informatie',
+	'Person:personal_info' => 'Persoonlijke informatie',
+	'Person:notifiy' => 'Notificeer',
+));

@@ -345,3 +345,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI_WelcomeMenu_AllConfigItems' => '摘要',
 	'Menu:ConfigManagement:Typology' => '类型配置',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Person:info' => '基本信息',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => '个人信息',
+	'Person:notifiy' => '通知',
+));

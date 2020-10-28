@@ -379,3 +379,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ConfigManagement:Typology' => 'Typology configuration',
 ));
 
+// Add translation for Fieldsets
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Person:info' => 'General information',
+	'UserLocal:info' => 'General information',
+	'Person:personal_info' => 'Personal information',
+	'Person:notifiy' => 'Notification',
+));

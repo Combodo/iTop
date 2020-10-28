@@ -351,3 +351,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 ));
 
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Person:info' => 'Información General',
+	'UserLocal:info' => 'Información General',
+	'Person:personal_info' => 'Información Personal',
+	'Person:notifiy' => 'Notificación',
+));
