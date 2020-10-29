@@ -19,6 +19,7 @@
 
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
@@ -712,65 +713,13 @@ class DisplayBlock
 				$sHtml .= $oObj->GetDetails($oPage); // Still used ???
 			}
 			break;
-			
+
 			case 'actions':
-			$sClass = $this->m_oFilter->GetClass();
-			$oAppContext = new ApplicationContext();
-			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
-			if ($bContextFilter && is_null($this->m_oSet))
-			{
-				foreach($oAppContext->GetNames() as $sFilterCode)
-				{
-					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
-					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
-					{
-						$this->AddCondition($sFilterCode, $sContextParamValue);
-					}
-				}
-				$aQueryParams = array();
-				if (isset($aExtraParams['query_params']))
-				{
-					$aQueryParams = $aExtraParams['query_params'];
-				}
-				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
-				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
-			}
-			$iCount = $this->m_oSet->Count();
-			$sClassLabel = MetaModel::GetName($sClass);
-			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
-
-			$sCreateActionHtml = '';
-			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY))
-			{
-				$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&'.$oAppContext->GetForLink();
-				$sCreateActionLabel = Dict::Format('UI:Button:Create');
-				$sCreateActionHtml .= <<<HTML
-		<a class="ibo-dashlet-badge--action-create" href="$sCreateActionUrl">
-			<span class="ibo-dashlet-badge--action-create-icon fas fa-plus"></span>
-			<span class="ibo-dashlet-badge--action-create-label">$sCreateActionLabel</span>
-		</a>
-HTML;
-			}
-
-			$sHtml .= <<<HTML
-<div class="ibo-dashlet-badge--body">
-	<div class="ibo-dashlet-badge--icon-container">
-		<img class="ibo-dashlet-badge--icon" src="$sClassIconUrl" />
-	</div>
-	<div class="ibo-dashlet-badge--actions">
-		<a class="ibo-dashlet-badge--action-list" href="$sHyperlink">
-			<span class="ibo-dashlet-badge--action-list-count">$iCount</span>
-			<span class="ibo-dashlet-badge--action-list-label">$sClassLabel</span>
-		</a>
-		$sCreateActionHtml
-	</div>
-</div>
-HTML;
-			break;
+				$oBlock = $this->RenderActions($aExtraParams);
+				break;
 
 			case 'summary':
-				$oBlock = $this->RenderSummary($aExtraParams, $sHtml);
+				$oBlock = $this->RenderSummary($aExtraParams);
 				break;
 			
 			case 'csv':
@@ -1279,7 +1228,6 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param string $sHtml
 	 *
 	 * @return iUIBlock
 	 *
@@ -1291,7 +1239,7 @@ JS
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	protected function RenderSummary(array $aExtraParams, string $sHtml): iUIBlock
+	protected function RenderSummary(array $aExtraParams): iUIBlock
 	{
 		$sClass = $this->m_oFilter->GetClass();
 		$oAppContext = new ApplicationContext();
@@ -1370,6 +1318,53 @@ JS
 			$oBlock->AddSubBlock($oBadge);
 		}
 
+
+		return $oBlock;
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 *
+	 * @return iUIBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	protected function RenderActions(array $aExtraParams): iUIBlock
+	{
+		$sClass = $this->m_oFilter->GetClass();
+		$oAppContext = new ApplicationContext();
+		$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
+		if ($bContextFilter && is_null($this->m_oSet)) {
+			foreach ($oAppContext->GetNames() as $sFilterCode) {
+				$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
+				if (!is_null($sContextParamValue) && !empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode)) {
+					$this->AddCondition($sFilterCode, $sContextParamValue);
+				}
+			}
+			$aQueryParams = array();
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+			$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
+		}
+		$iCount = $this->m_oSet->Count();
+		$sClassLabel = MetaModel::GetName($sClass);
+		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
+
+		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
+			$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&'.$oAppContext->GetForLink();
+			$sCreateActionLabel = Dict::Format('UI:Button:Create');
+			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel);
+		} else {
+			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel);
+		}
 
 		return $oBlock;
 	}
