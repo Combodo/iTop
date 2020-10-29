@@ -844,32 +844,29 @@ HTML;
 			
 			case 'chart':
 			static $iChartCounter = 0;
-			$iChartCounter++;
-	
-			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
-			$sTitle = isset($aExtraParams['chart_title']) ? '<div class="main_header"><h1>&#160;'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1></div>' : '';
-			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
-			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
-			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
-			$sFilter = $this->m_oFilter->serialize(false, $aQueryParams);
-			$oContext = new ApplicationContext();
-			$sContextParam = $oContext->GetForLink();
-			$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
-			$sAggregationAttr = isset($aExtraParams['aggregation_attribute']) ? $aExtraParams['aggregation_attribute'] : '';
-			$sLimit = isset($aExtraParams['limit']) ? $aExtraParams['limit'] : '';
-			$sOrderBy = isset($aExtraParams['order_by']) ? $aExtraParams['order_by'] : '';
-			$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
+				$iChartCounter++;
 
-			if (isset($aExtraParams['group_by_label']))
-			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
-			}
-			else
-			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
-			}
+				$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
+				//$sTitle = isset($aExtraParams['chart_title']) ? '<div class="main_header"><h1>&#160;'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1></div>' : '';
+				$sHtml = "<div style=\"height:250px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
+				$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
+				$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
+				$sFilter = $this->m_oFilter->serialize(false, $aQueryParams);
+				$oContext = new ApplicationContext();
+				$sContextParam = $oContext->GetForLink();
+				$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
+				$sAggregationAttr = isset($aExtraParams['aggregation_attribute']) ? $aExtraParams['aggregation_attribute'] : '';
+				$sLimit = isset($aExtraParams['limit']) ? $aExtraParams['limit'] : '';
+				$sOrderBy = isset($aExtraParams['order_by']) ? $aExtraParams['order_by'] : '';
+				$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
 
-			$oPage->add_ready_script(
+				if (isset($aExtraParams['group_by_label'])) {
+					$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
+				} else {
+					$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
+				}
+
+				$oPage->add_ready_script(
 <<<EOF
 $.post($sUrl, {}, function(data) {
 	$('body').append(data);

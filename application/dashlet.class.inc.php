@@ -920,12 +920,9 @@ class DashletObjectList extends Dashlet
 		$sTitle = $this->aProperties['title'];
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 
-		$oPage->add('<div class="dashlet-content">');
-		$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
-		if ($sHtmlTitle != '')
-		{
-			$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
-		}
+		$oPanel = PanelFactory::MakeNeutral(Dict::S($sTitle));
+		$oPage->AddUiBlock($oPanel);
+
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
@@ -933,8 +930,7 @@ class DashletObjectList extends Dashlet
 			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
-		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-		$oPage->add('</div>');
+		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 	}
 
 	public function GetDBSearch($aExtraParams = array())
@@ -1274,19 +1270,22 @@ abstract class DashletGroupBy extends Dashlet
 					break;
 			}
 
-			$oPage->add('<div class="dashlet-content">');
-			if ($sHtmlTitle != '')
-			{
-				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
-			}
-			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+			$oPanel = PanelFactory::MakeNeutral(Dict::S($sTitle));
+			$oPage->AddUiBlock($oPanel);
+
+
+//			$oPage->add('<div class="dashlet-content">');
+//			if ($sHtmlTitle != '')
+//			{
+//				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
+//			}
+			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 			$oBlock = new DisplayBlock($oFilter, $sType);
-			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-			if($bEditMode)
-			{
-				$oPage->add('<div class="dashlet-blocker"></div>');
+			$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+			if ($bEditMode) {
+				$oPanel->AddHtml('<div class="dashlet-blocker"></div>');
 			}
-			$oPage->add('</div>');
+//			$oPage->add('</div>');
 		}
 	}
 
@@ -1924,14 +1923,18 @@ class DashletHeaderStatic extends Dashlet
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
 
-		$oPage->add('<div class="dashlet-content">');
-		$oPage->add('<div class="main_header">');
+//		$oPage->add('<div class="dashlet-content">');
+//		$oPage->add('<div class="main_header">');
+//
+//		$oPage->add('<img src="'.$sIconPath.'">');
+//		$oPage->add('<div class="main_header"><h1>&nbsp;'.$this->oModelReflection->DictString($sTitle).'</h1></div>');
+//
+//		$oPage->add('</div>');
+//		$oPage->add('</div>');
 
-		$oPage->add('<img src="'.$sIconPath.'">');
-		$oPage->add('<div class="main_header"><h1>&nbsp;'.$this->oModelReflection->DictString($sTitle).'</h1></div>');
+		$oPanel = PanelFactory::MakeEnhancedNeutral($this->oModelReflection->DictString($sTitle), $sIconPath);
+		$oPage->AddUiBlock($oPanel);
 
-		$oPage->add('</div>');
-		$oPage->add('</div>');
 	}
 
 	/**
