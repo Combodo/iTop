@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 
 require_once(APPROOT.'application/forms.class.inc.php');
@@ -868,8 +869,10 @@ class DashletPlainText extends Dashlet
 		$sText = utils::HtmlEntities($this->aProperties['text']);
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
-		$sId = 'plaintext_'.($bEditMode? 'edit_' : '').$this->sId;
-		$oPage->add('<div id="'.$sId.'" class="dashlet-content">'.$sText.'</div>');
+		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;
+
+		$oBlock = DashletFactory::MakeForDashletText($sId, $sText);
+		$oPage->AddUiBlock($oBlock);
 	}
 
 	/**
@@ -1923,18 +1926,8 @@ class DashletHeaderStatic extends Dashlet
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
 
-//		$oPage->add('<div class="dashlet-content">');
-//		$oPage->add('<div class="main_header">');
-//
-//		$oPage->add('<img src="'.$sIconPath.'">');
-//		$oPage->add('<div class="main_header"><h1>&nbsp;'.$this->oModelReflection->DictString($sTitle).'</h1></div>');
-//
-//		$oPage->add('</div>');
-//		$oPage->add('</div>');
-
-		$oPanel = PanelFactory::MakeEnhancedNeutral($this->oModelReflection->DictString($sTitle), $sIconPath);
-		$oPage->AddUiBlock($oPanel);
-
+		$oBlock = DashletFactory::MakeForDashletHeaderStatic($this->oModelReflection->DictString($sTitle), $sIconPath);
+		$oPage->AddUiBlock($oBlock);
 	}
 
 	/**

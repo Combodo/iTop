@@ -15,4 +15,14 @@ class DashletFactory
 		return new DashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel);
 	}
 
+	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl)
+	{
+		return new DashletHeaderStatic(null, $sTitle, $sIconUrl);
+	}
+
+	public static function MakeForDashletText(string $sId, string $sText)
+	{
+		return new DashletHeaderStatic($sId, '', '', $sText);
+	}
+
 }

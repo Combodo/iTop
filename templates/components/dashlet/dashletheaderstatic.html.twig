@@ -1,0 +1,17 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    <div class="ibo-dashlet-header-static">
+        <div class="ibo-dashlet-header-static--body">
+            {% if oUIBlock.GetIconUrl() is not empty %}
+                <div class="ibo-dashlet-header-static--icon-container">
+                    <img class="ibo-dashlet-header-static--icon" src="{{ oUIBlock.GetIconUrl() }}" alt="{{ oUIBlock.GetTitle() }}"/>
+                </div>
+            {% endif %}
+            {% if oUIBlock.GetTitle() is not empty %}
+                <div class="ibo-dashlet-header-static--title">{{ oUIBlock.GetTitle() }}</div>
+            {% endif %}
+            <div class="ibo-dashlet-header-static--text">{{ oUIBlock.GetText() }}</div>
+        </div>
+    </div>
+{% endapply %}

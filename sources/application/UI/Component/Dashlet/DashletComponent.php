@@ -10,9 +10,13 @@ namespace Combodo\iTop\Application\UI\Component\Dashlet;
 
 use Combodo\iTop\Application\UI\UIBlock;
 
-class Dashlet extends UIBlock
+class DashletComponent extends UIBlock
 {
 	public const BLOCK_CODE = 'ibo-dashlet';
 	public const HTML_TEMPLATE_REL_PATH = 'components/dashlet/layout';
 
+	public function __construct(?string $sId = null)
+	{
+		parent::__construct($sId);
+	}
 }
