@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
+
 require_once(APPROOT.'application/forms.class.inc.php');
 
 /**
@@ -2056,8 +2058,7 @@ class DashletHeaderDynamic extends Dashlet
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
 
 		$aValues = $this->GetValues();
-		if (count($aValues) > 0)
-		{
+		if (count($aValues) > 0) {
 			// Stats grouped by <group_by>
 			$sCSV = implode(',', $aValues);
 			$aParams = array(
@@ -2067,9 +2068,7 @@ class DashletHeaderDynamic extends Dashlet
 				'status_codes[block]' => $sCSV,
 				'context_filter' => 1,
 			);
-		}
-		else
-		{
+		} else {
 			// Simple stats
 			$aParams = array(
 				'title[block]' => $sTitle,
@@ -2078,31 +2077,31 @@ class DashletHeaderDynamic extends Dashlet
 			);
 		}
 
-		$oPage->add('<div class="dashlet-content">');
-		$oPage->add('<div class="main_header">');
+		$oPanel = PanelFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
+		$oPage->AddUiBlock($oPanel);
 
-		$oPage->add('<img src="'.$sIconPath.'">');
-
-		if (isset($aExtraParams['query_params']))
-		{
+		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
-		}
-		elseif (isset($aExtraParams['this->class']))
-		{
+		} elseif (isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
-		}
-		else
-		{
+		} else {
 			$aQueryParams = array();
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 
-		$oPage->add('</div>');
-		$oPage->add('</div>');
+		$oSubTitle = $oPanel->GetSubTitle();
+		$oSet = new DBObjectSet($oFilter);
+		$iCount = $oSet->Count();
+		$oAppContext = new ApplicationContext();
+		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($oFilter->serialize());
+		$oSubTitle->AddHtml('<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sSubtitle), $iCount).'</a>');
+
+//		$oPage->add('</div>');
+//		$oPage->add('</div>');
 	}
 
 	/**

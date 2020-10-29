@@ -1,0 +1,17 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'components/panel/layout.html.twig' %}
+
+{% block iboPanelTitle %}
+    <div class="ibo-panel--title-icon">
+        <img src="{{ oUIBlock.GetIconUrl() }}" alt="{{ oUIBlock.GetTitle() }}"/>
+    </div>
+    <div class="ibo-panel--title-title">
+        <div class="ibo-panel--title-title-title">{{ oUIBlock.GetTitle() }}</div>
+        <div class="ibo-panel--title-title-subtitle">
+            {% for oSubBlock in oUIBlock.GetSubTitle().GetSubBlocks() %}
+                {{ render_block(oSubBlock, {aPage: aPage}) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

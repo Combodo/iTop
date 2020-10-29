@@ -1,0 +1,99 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-badge--margin: 0px 8px !default;
+$ibo-badge--padding: 6px 10px !default;
+$ibo-badge--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-badge-new-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-badge-new-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-badge-neutral-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-badge-neutral-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-badge-waiting-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-badge-waiting-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-badge-success-state-primary-color: $ibo-color-green-100 !default;
+$ibo-badge-success-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-badge-failure-state-primary-color: $ibo-color-red-100 !default;
+$ibo-badge-failure-state-secondary-color: $ibo-color-red-800 !default;
+
+$ibo-badge-frozen-state-primary-color: $ibo-color-grey-100 !default;
+$ibo-badge-frozen-state-secondary-color: $ibo-color-grey-700 !default;
+
+/* - For basic badge */
+$ibo-badge-active-state-primary-color: $ibo-color-green-100 !default;
+$ibo-badge-active-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-badge-inactive-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-badge-inactive-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-badge-states-colors: (
+        'new': (
+                'primary-color': $ibo-badge-new-state-primary-color,
+                'secondary-color': $ibo-badge-new-state-secondary-color,
+        ),
+        'neutral': (
+                'primary-color': $ibo-badge-neutral-state-primary-color,
+                'secondary-color': $ibo-badge-neutral-state-secondary-color,
+        ),
+        'waiting': (
+                'primary-color': $ibo-badge-waiting-state-primary-color,
+                'secondary-color': $ibo-badge-waiting-state-secondary-color,
+        ),
+        'success': (
+                'primary-color': $ibo-badge-success-state-primary-color,
+                'secondary-color': $ibo-badge-success-state-secondary-color,
+        ),
+        'failure': (
+                'primary-color': $ibo-badge-failure-state-primary-color,
+                'secondary-color': $ibo-badge-failure-state-secondary-color,
+        ),
+        'frozen': (
+                'primary-color': $ibo-badge-frozen-state-primary-color,
+                'secondary-color': $ibo-badge-frozen-state-secondary-color,
+        ),
+        'active': (
+                'primary-color': $ibo-badge-active-state-primary-color,
+                'secondary-color': $ibo-badge-active-state-secondary-color,
+        ),
+        'inactive': (
+                'primary-color': $ibo-badge-inactive-state-primary-color,
+                'secondary-color': $ibo-badge-inactive-state-secondary-color,
+        ),
+);
+
+@each $sType, $aColors in $ibo-badge-states-colors {
+  .ibo-badge-is-#{$sType} {
+    color: map-get($aColors, 'secondary-color');
+    background-color: map-get($aColors, 'primary-color');
+  }
+}
+
+/* Rules */
+.ibo-badge {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: $ibo-badge--margin;
+  padding: $ibo-badge--padding;
+  border-radius: $ibo-badge--border-radius;
+}

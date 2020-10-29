@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
@@ -203,6 +204,11 @@ class DisplayBlock
 		return new $sBlockClass($oFilter, $sBlockType, $bAsynchronous, $aParams);
 	}
 
+	public function DisplayIntoContentBlock(UIContentBlock $oContentBlock, WebPage $oPage, $sId, $aExtraParams = array())
+	{
+		$oContentBlock->AddSubBlock($this->GetDisplay($oPage, $sId, $aExtraParams));
+	}
+
 	public function Display(WebPage $oPage, $sId, $aExtraParams = array())
 	{
 		$oPage->AddUiBlock($this->GetDisplay($oPage, $sId, $aExtraParams));
@@ -304,6 +310,7 @@ class DisplayBlock
 	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
 	{
 		$sHtml = '';
+		$oBlock = null;
 		// Add the extra params into the filter if they make sense for such a filter
 		$bDoSearch = utils::ReadParam('dosearch', false);
 		$aQueryParams = array();
@@ -763,94 +770,8 @@ HTML;
 			break;
 
 			case 'summary':
-			$sClass = $this->m_oFilter->GetClass();
-			$oAppContext = new ApplicationContext();
-			$sTitle = isset($aExtraParams['title[block]']) ? $aExtraParams['title[block]'] : '';
-			$sLabel = isset($aExtraParams['label[block]']) ? $aExtraParams['label[block]'] : '';
-			$sStateAttrCode = isset($aExtraParams['status[block]']) ? $aExtraParams['status[block]'] : 'status';
-			$sStatesList = isset($aExtraParams['status_codes[block]']) ? $aExtraParams['status_codes[block]'] : '';
-			
-			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
-			if ($bContextFilter)
-			{
-				foreach($oAppContext->GetNames() as $sFilterCode)
-				{
-					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
-					if (!is_null($sContextParamValue) && ! empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode))
-					{
-						$this->AddCondition($sFilterCode, $sContextParamValue);
-					}
-				}
-				$aQueryParams = array();
-				if (isset($aExtraParams['query_params']))
-				{
-					$aQueryParams = $aExtraParams['query_params'];
-				}
-				$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
-				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
-			}
-			// Summary details
-			$aCounts = array();
-			$aStateLabels = array();
-			if (!empty($sStateAttrCode) && !empty($sStatesList))
-			{
-				$aStates = explode(',', $sStatesList);
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
-
-				// Generate one count + group by query [#1330]
-				$sClassAlias = $this->m_oFilter->GetClassAlias();
-				$oGroupByExpr = Expression::FromOQL($sClassAlias.'.'.$sStateAttrCode);
-				$aGroupBy = array('group1' => $oGroupByExpr);
-				$oGroupBySearch = $this->m_oFilter->DeepClone();
-				if (isset($this->m_bShowObsoleteData))
-				{
-					$oGroupBySearch->SetShowObsoleteData($this->m_bShowObsoleteData);
-				}
-				$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery(array(), $aGroupBy, false);
-				$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
-				$aCountsQueryResults = array();
-				foreach ($aCountGroupByResults as $aCountGroupBySingleResult)
-				{
-					$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
-				}
-
-				foreach($aStates as $sStateValue)
-				{
-					$sHtmlValue=$aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
-					$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
-
-					$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
-						? $aCountsQueryResults[$sStateValue]
-						: 0;
-
-					if ($aCounts[$sStateValue] == 0)
-					{
-						$aCounts[$sStateValue] = '-';
-					}
-					else
-					{
-						$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
-						$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
-						if (isset($this->m_bShowObsoleteData))
-						{
-							$oSingleGroupByValueFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
-						}
-						$sHyperlink = utils::GetAbsoluteUrlAppRoot()
-							.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
-							.'&filter='.rawurlencode($oSingleGroupByValueFilter->serialize());
-						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
-					}
-				}
-			}
-			$sHtml .= '<div class="summary-details"><table><tr><th>'.implode('</th><th>', $aStateLabels).'</th></tr>';
-			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
-			// Title & summary
-			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
-			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
-			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
-			$sHtml .= '<div style="clear:both;"></div>';
-			break;
+				$oBlock = $this->RenderSummary($aExtraParams, $sHtml);
+				break;
 			
 			case 'csv':
 			$bAdvancedMode = utils::ReadParam('advanced', false);
@@ -1171,6 +1092,10 @@ JS
 			);
 		}
 
+		if (!empty($oBlock)) {
+			return $oBlock;
+		}
+
 		return new Html($sHtml);
 	}
 
@@ -1353,6 +1278,103 @@ JS
 		}
 
 		$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param string $sHtml
+	 *
+	 * @return iUIBlock
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected function RenderSummary(array $aExtraParams, string $sHtml): iUIBlock
+	{
+		$sClass = $this->m_oFilter->GetClass();
+		$oAppContext = new ApplicationContext();
+		$sStateAttrCode = isset($aExtraParams['status[block]']) ? $aExtraParams['status[block]'] : 'status';
+		$sStatesList = isset($aExtraParams['status_codes[block]']) ? $aExtraParams['status_codes[block]'] : '';
+
+		$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
+		if ($bContextFilter) {
+			foreach ($oAppContext->GetNames() as $sFilterCode) {
+				$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
+				if (!is_null($sContextParamValue) && !empty($sContextParamValue) && MetaModel::IsValidFilterCode($sClass, $sFilterCode)) {
+					$this->AddCondition($sFilterCode, $sContextParamValue);
+				}
+			}
+			$aQueryParams = array();
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+			$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
+		}
+		// Summary details
+		$aCounts = array();
+		$aStateLabels = array();
+		if (!empty($sStateAttrCode) && !empty($sStatesList)) {
+			$aStates = explode(',', $sStatesList);
+
+			// Generate one count + group by query [#1330]
+			$sClassAlias = $this->m_oFilter->GetClassAlias();
+			$oGroupByExpr = Expression::FromOQL($sClassAlias.'.'.$sStateAttrCode);
+			$aGroupBy = array('group1' => $oGroupByExpr);
+			$oGroupBySearch = $this->m_oFilter->DeepClone();
+			if (isset($this->m_bShowObsoleteData)) {
+				$oGroupBySearch->SetShowObsoleteData($this->m_bShowObsoleteData);
+			}
+			$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery(array(), $aGroupBy, false);
+			$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
+			$aCountsQueryResults = array();
+			foreach ($aCountGroupByResults as $aCountGroupBySingleResult) {
+				$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
+			}
+
+			foreach ($aStates as $sStateValue) {
+				$sHtmlValue = $aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
+				$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
+
+				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
+					? $aCountsQueryResults[$sStateValue]
+					: 0;
+
+				if ($aCounts[$sStateValue] == 0) {
+					$aCounts[$sStateValue] = '-';
+				} else {
+					$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
+					$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
+					if (isset($this->m_bShowObsoleteData)) {
+						$oSingleGroupByValueFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
+					}
+					$sHyperlink = utils::GetAbsoluteUrlAppRoot()
+						.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
+						.'&filter='.rawurlencode($oSingleGroupByValueFilter->serialize());
+					$aCounts[$sStateValue] = ['link' => $sHyperlink, 'label' => $aCounts[$sStateValue]];
+				}
+			}
+		}
+
+		$oBlock = new UIContentBlock(null, "ibo-dashlet-header-dynamic--container");
+		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
+			$aCount = $aCounts[$sStateValue];
+			$oBadge = BadgeFactory::MakeForState($sClass, $sStateValue);
+			$sHyperlink = $aCount['link'];
+			$sCountLabel = $aCount['label'];
+			$sColor = $oBadge->GetColor();
+			$oBadge->AddHtml("<a class=\"ibo-dashlet-header-dynamic--count ibo-badge-is-{$sColor}\" href=\"$sHyperlink\">$sCountLabel</a>");
+			$oBadge->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-badge-is-{$sColor}\">$sStateLabel</span>");
+			$oBlock->AddSubBlock($oBadge);
+		}
+
+
+		return $oBlock;
 	}
 }
 

@@ -161,7 +161,24 @@ class PanelFactory
 	public static function MakeForClass(string $sClass, string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		// TODO 3.0.0: Change this to clas color when done
+		// TODO 3.0.0: Change this to class color when done
+		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
+
+		return $oPanel;
+	}
+
+	/**
+	 * Make a basis Panel component
+	 *
+	 * @param string $sTitle
+	 * @param String $sIconUrl
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
+	 */
+	public static function MakeEnhancedNeutral(string $sTitle, string $sIconUrl)
+	{
+		$oPanel = new PanelEnhanced($sTitle, $sIconUrl);
+		// TODO 3.0.0: Change this to class color when done
 		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;

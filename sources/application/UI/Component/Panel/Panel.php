@@ -87,8 +87,6 @@ class Panel extends UIContentBlock
 
 	/** @var string $sTitle */
 	protected $sTitle;
-	/** @var array $aSubBlocks */
-	protected $aSubBlocks;
 	/** @var string $sColor */
 	protected $sColor;
 

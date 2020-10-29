@@ -1,0 +1,22 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet-header-dynamic--count--margin-right: 10px !default;
+
+/* Rules */
+.ibo-dashlet-header-dynamic--container {
+  display: flex;
+  padding-top: 12px;
+}
+
+.ibo-dashlet-header-dynamic--count {
+  @extend %ibo-font-ral-bol-200;
+  margin-right: $ibo-dashlet-header-dynamic--count--margin-right;
+}
+
+.ibo-dashlet-header-dynamic--label {
+  @extend %ibo-font-ral-med-100;
+}

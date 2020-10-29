@@ -21,7 +21,8 @@ use Combodo\iTop\Application\UI\UIBlock;
  * @internal
  * @since   3.0.0
  */
-class UIContentBlock extends UIBlock implements iUIContentBlock {
+class UIContentBlock extends UIBlock implements iUIContentBlock
+{
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-content-block';
 	public const HTML_TEMPLATE_REL_PATH = 'layouts/content-block/layout';
@@ -29,17 +30,18 @@ class UIContentBlock extends UIBlock implements iUIContentBlock {
 	/** @var array */
 	protected $aCSSClasses;
 	/** @var array */
-	protected $aSubBlocks;
-	/** @var array */
 	protected $aDataAttributes;
+	/** @var array */
+	protected $aSubBlocks;
 
 	/**
 	 * UIContentBlock constructor.
 	 *
 	 * @param string|null $sName
-	 * @param string      $sContainerClass
+	 * @param string $sContainerClass
 	 */
-	public function __construct(string $sName = null, string $sContainerClass = '') {
+	public function __construct(string $sName = null, string $sContainerClass = '')
+	{
 		parent::__construct($sName);
 
 		$this->aSubBlocks = [];

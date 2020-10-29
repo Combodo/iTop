@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\UI\Layout\Object;
 
 
 use Combodo\iTop\Application\UI\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use MetaModel;
 
@@ -51,39 +52,7 @@ class ObjectDetails extends Panel
 		if(!empty($sStatusAttCode)) {
 			$this->sStatusCode = $oObject->GetState();
 			$this->sStatusLabel = $oObject->GetStateLabel();
-			// TODO 3.0.0 : Dehardcode this
-			switch ($this->sStatusCode) {
-				case 'new':
-					$this->sStatusColor = 'new';
-					break;
-
-				case 'waiting_for_approval':
-				case 'pending':
-					$this->sStatusColor = 'waiting';
-					break;
-
-				case 'escalated_tto':
-				case 'escalated_ttr':
-				case 'rejected':
-					$this->sStatusColor = 'failure';
-					break;
-
-				case 'resolved':
-					$this->sStatusColor = 'success';
-					break;
-
-				case 'closed':
-					$this->sStatusColor = 'frozen';
-					break;
-
-				case 'approved':
-				case 'assigned':
-				case 'dispatched':
-				case 'redispatched':
-				default:
-					$this->sStatusColor = 'neutral';
-					break;
-			}
+			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
 		}
 
 		parent::__construct('', [], static::DEFAULT_COLOR, $sId);

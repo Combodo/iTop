@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Application\UI\Component\Title;
 
 
+use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use MetaModel;
 
@@ -31,45 +32,10 @@ class TitleFactory
 		$oTitle->SetIcon($sObjIconUrl);
 
 		$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
-		if(!empty($sStatusAttCode))
-		{
+		if (!empty($sStatusAttCode)) {
 			$sStateCode = $oObject->GetState();
 			$sStatusLabel = $oObject->GetStateLabel();
-			// TODO 3.0.0 : Dehardcode this
-			switch ($sStateCode)
-			{
-				case 'new':
-					$sStatusColor = 'new';
-					break;
-
-				case 'waiting_for_approval':
-				case 'pending':
-					$sStatusColor = 'waiting';
-					break;
-
-				case 'escalated_tto':
-				case 'escalated_ttr':
-				case 'rejected':
-					$sStatusColor = 'failure';
-					break;
-
-				case 'resolved':
-					$sStatusColor = 'success';
-					break;
-
-				case 'closed':
-					$sStatusColor = 'frozen';
-					break;
-
-				case 'approved':
-				case 'assigned':
-				case 'dispatched':
-				case 'redispatched':
-				default:
-					$sStatusColor = 'neutral';
-					break;
-			}
-
+			$sStatusColor = UIHelper::GetColorFromStatus(get_class($oObject), $sStateCode);
 			$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
 		}
 
