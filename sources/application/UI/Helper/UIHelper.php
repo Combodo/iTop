@@ -52,6 +52,18 @@ class UIHelper
 						break;
 				}
 				break;
+			default:
+				switch ($sStateCode) {
+					case 'active':
+						$sStatusColor = 'active';
+						break;
+					case 'inactive':
+						$sStatusColor = 'inactive';
+						break;
+					default:
+						$sStatusColor = 'neutral';
+						break;
+				}
 		}
 		return $sStatusColor;
 	}

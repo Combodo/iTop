@@ -1291,7 +1291,7 @@ JS
 					: 0;
 
 				if ($aCounts[$sStateValue] == 0) {
-					$aCounts[$sStateValue] = '-';
+					$aCounts[$sStateValue] = ['link' => '-', 'label' => $aCounts[$sStateValue]];;
 				} else {
 					$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
 					$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
