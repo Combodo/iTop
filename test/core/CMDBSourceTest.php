@@ -102,10 +102,16 @@ class CMDBSourceTest extends ItopTestCase
 				"enum('1','2','3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1'",
 			),
 			'ENUM with values containing parenthesis' => array(
-				true,
+				true, // see N°3065 : if having distinct values having parenthesis in enum values will cause comparison to be inexact
 				"ENUM('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 				"enum('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			),
+//FIXME N°3065 before the fix this returns true :(
+//			'ENUM with different values, containing parenthesis' => array(
+//				false,
+//				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+//				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+//			),
 		);
 	}
 }
