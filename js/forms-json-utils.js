@@ -215,8 +215,14 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 			// Let's remember the first input with an error, so that we can put back the focus on it later
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
-		// TODO 3.0 Maybe use data role ?
-		$('#field_'+sFieldId+' .ibo-input-wrapper').addClass('is-error')
+
+		if($('#field_'+sFieldId+' .ibo-input-wrapper').attr('data-validation') === 'untouched') {
+			$('#field_'+sFieldId+' .ibo-input-wrapper').removeAttr('data-validation');
+		}
+		else{
+			$('#field_'+sFieldId+' .ibo-input-wrapper').addClass('is-error');
+		}
+		
 		if ($('#v_'+sFieldId).text() == '')
 		{
 			$('#v_'+sFieldId).html(sExplain);
