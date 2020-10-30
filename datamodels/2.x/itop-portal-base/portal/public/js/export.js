@@ -18,7 +18,7 @@
 
 function ExportStartExport() {
     var oParams = {};
-    oParams.operation = 'export_build';
+    oParams.operation = 'export_build_portal';
     oParams.format = sFormat;
     oParams.token = sToken;
     oParams.start = 1;
@@ -56,7 +56,7 @@ function ExportRun(data) {
                 $('#export-close').show();
             }
             else {
-                oParams.operation = 'export_build';
+                oParams.operation = 'export_build_portal';
             }
 
             $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {
