@@ -102,8 +102,12 @@ abstract class CMDBObject extends DBObject
 	 * @see SetTrackInfo if CurrentChange is null, then a new one will be create using trackinfo
 	 *
 	 * @param CMDBChange|null $oChange use null so that the API will recreate a new CMDBChange using TrackInfo & TrackOrigin
+	 *     If providing a CMDBChange, you should persist it first ! Indeed the API will automatically create CMDBChangeOp (see
+	 *     \CMDBObject::RecordObjCreation / RecordAttChange / RecordObjDeletion for example) and link them to the current change : in
+	 *     consequence this CMDBChange must have a key set !
 	 *
 	 * @since 2.7.2 N°3219 can now reset CMDBChange by passing null
+	 * @since 2.7.2 N°3218 PHPDoc about persisting the $oChange parameter first
 	 */
 	public static function SetCurrentChange($oChange)
 	{
@@ -118,7 +122,11 @@ abstract class CMDBObject extends DBObject
 	//			GetCurrentChange to create a default change if not already done in the current context
 	//
 	/**
-	 * Get a change record (create it if not existing)	 
+	 * @param bool $bAutoCreate if true calls {@link CreateChange} to get a new persisted object
+	 *
+	 * @return \CMDBChange
+	 *
+	 * @uses CreateChange
 	 */
 	public static function GetCurrentChange($bAutoCreate = true)
 	{
@@ -189,10 +197,12 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sOrigin;
 		}
 	}
-	
+
 	/**
-	 * Create a standard change record (done here 99% of the time, and nearly once per page)
-	 */	 	
+	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
+	 *
+	 * The CMDBChange is persisted so that it has a key > 0, and any new CMDBChangeOp can link to it
+	 */
 	protected static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
