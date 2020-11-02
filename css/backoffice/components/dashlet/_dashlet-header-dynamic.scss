@@ -9,6 +9,7 @@ $ibo-dashlet-header-dynamic--count--margin-right: 10px !default;
 /* Rules */
 .ibo-dashlet-header-dynamic--container {
   display: flex;
+  flex-wrap: wrap;
   padding-top: 12px;
 }
 

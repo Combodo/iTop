@@ -1,0 +1,10 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{# Dashboard Row #}
+{% apply spaceless %}
+    <div class="ibo-dashboard--grid-row" data-dashboard-grid-row-index="{{ oUIBlock.GetRowIndex() }}">
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </div>
+{% endapply %}
