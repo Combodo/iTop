@@ -784,7 +784,8 @@ JS
 		if (MetaModel::IsValidClass('Organization'))
 		{
 			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
-			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', MetaModel::GetConfig()->Get('favorite_orgs'));
+			if(!$aFavoriteOrgs) $aFavoriteOrgs = MetaModel::GetConfig()->Get('favorite_orgs');
 			$oSearchFilter = new DBObjectSearch('Organization');
 			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new CMDBObjectSet($oSearchFilter);
