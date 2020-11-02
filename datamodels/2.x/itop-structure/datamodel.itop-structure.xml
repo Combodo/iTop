@@ -514,6 +514,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+		<semantic>
+			<image_attribute>picture</image_attribute>
+		</semantic>
         <icon>images/person.png</icon>
         <reconciliation>
           <attributes>

@@ -17,22 +17,37 @@ use Combodo\iTop\Application\UI\UIBlock;
 class Title extends UIBlock
 {
 	// Overloaded constants
+	/** @inheritDoc */
 	public const BLOCK_CODE = 'ibo-title';
+	/** @inheritDoc */
 	public const HTML_TEMPLATE_REL_PATH = 'components/title/layout';
+
+	/** @var string Icon should cover all the space, best for icons with filled background */
+	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';
+	/** @var string Icon should be a litte zoomed out to cover almost all space, best for icons with transparent background and no margin around (eg. class icons) */
+	public const ENUM_ICON_COVER_METHOD_ZOOMOUT = 'zoomout';
+	/** @var string */
+	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_COVER;
 
 	/** @var string */
 	protected $sTitle;
 	/** @var int */
 	protected $iLevel;
 	/** @var string */
-	protected $sIconHtml;
+	protected $sIconUrl;
+	/** @var string How the icon should cover the medallion, see static::ENUM_ICON_COVER_METHOD_COVER, static::ENUM_ICON_COVER_METHOD_ZOOMOUT */
+	protected $sIconCoverMethod;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct(string $sTitle = '', int $iLevel = 1, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sTitle = $sTitle;
 		$this->iLevel = $iLevel;
-		$this->sIconHtml = null;
+		$this->sIconUrl = null;
+		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
 	}
 
 	/**
@@ -51,20 +66,26 @@ class Title extends UIBlock
 		return $this->iLevel;
 	}
 
-	public function SetIcon(string $sIconHtml): self
+	public function SetIcon(string $sIconUrl, string $sIconCoverMethod = self::DEFAULT_ICON_COVER_METHOD)
 	{
-		$this->sIconHtml = $sIconHtml;
+		$this->sIconUrl = $sIconUrl;
+		$this->sIconCoverMethod = $sIconCoverMethod;
 		return $this;
 	}
 
-	public function GetIcon(): string
+	public function GetIconUrl(): string
 	{
-		return $this->sIconHtml;
+		return $this->sIconUrl;
+	}
+
+	public function GetIconCoverMethod(): string
+	{
+		return $this->sIconCoverMethod;
 	}
 
 	public function HasIcon(): string
 	{
-		return !is_null($this->sIconHtml);
+		return !is_null($this->sIconUrl);
 	}
 
 }

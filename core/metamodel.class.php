@@ -853,12 +853,28 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return true if the $sClass has a state attribute defined
+	 *
+	 * @param string $sClass Datamodel class to check
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function HasStateAttributeCode(string $sClass)
+	{
+		return !empty(self::GetStateAttributeCode($sClass));
+	}
+
+	/**
+	 * Return the code of the attribute carrying the state of the instance of the class
+	 *
 	 * @param string $sClass
 	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
-	final public static function GetStateAttributeCode($sClass)
+	final public static function GetStateAttributeCode(string $sClass)
 	{
 		self::_check_subclass($sClass);
 
@@ -872,7 +888,7 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	final public static function GetDefaultState($sClass)
+	final public static function GetDefaultState(string $sClass)
 	{
 		$sDefaultState = '';
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
@@ -882,6 +898,36 @@ abstract class MetaModel
 		}
 
 		return $sDefaultState;
+	}
+
+	/**
+	 * Return true if the $sClass has an image attribute defined
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function HasImageAttributeCode(string $sClass)
+	{
+		return !empty(self::GetImageAttributeCode($sClass));
+	}
+
+	/**
+	 * Return the code of the attribute carrying the image representing an instance of the class
+	 *
+	 * @param string $sClass Datamodel class to get the image attribute code for
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetImageAttributeCode(string $sClass)
+	{
+		self::_check_subclass($sClass);
+
+		return self::$m_aClassParams[$sClass]["image_attcode"];
 	}
 
 	/**
@@ -3245,11 +3291,12 @@ abstract class MetaModel
 	public static function Init_Params($aParams)
 	{
 		// Check mandatory params
+		// Warning: Do not put image_attcode as a mandatory attribute or it will break all PHP datamodel classes
 		$aMandatParams = array(
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
-			"name_attcode" => "define wich attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
-			"state_attcode" => "define wich attribute is representing the state (object lifecycle)",
+			"name_attcode" => "define which attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
+			"state_attcode" => "define which attribute is representing the state (object lifecycle)",
 			"reconc_keys" => "define the attributes that will 'almost uniquely' identify an object in batch processes",
 			"db_table" => "database table",
 			"db_key_field" => "database field which is the key",

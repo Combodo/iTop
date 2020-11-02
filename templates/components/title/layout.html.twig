@@ -2,7 +2,7 @@
     <div class="ibo-title">
         {% if oUIBlock.HasIcon() %}
             <div class="ibo-title--medallion">
-                <img class="ibo-title--icon" src="{{ oUIBlock.GetIcon() }}" />
+                <img class="ibo-title--icon ibo-title--icon--must-{{ oUIBlock.GetIconCoverMethod() }}" src="{{ oUIBlock.GetIconUrl() }}" />
             </div>
         {% endif %}
         <div class="ibo-title--content">

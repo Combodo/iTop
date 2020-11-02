@@ -1040,8 +1040,7 @@ class ObjectController extends BrickController
 			$sHostId = $sObjectId;
 
 			// Security bypass for the image attribute of a class
-			// Note: This will be changed with a proper DM check when corresponding bug is being worked on
-			if(is_a($sObjectClass, 'Contact', true) && ($sObjectField === 'picture')){
+			if(MetaModel::GetImageAttributeCode($sObjectClass) === $sObjectField) {
 				$bCheckSecurity = false;
 			}
 		}

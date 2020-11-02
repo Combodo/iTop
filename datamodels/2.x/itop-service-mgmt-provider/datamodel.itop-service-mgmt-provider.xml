@@ -984,6 +984,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
+        <semantic>
+            <image_attribute>icon</image_attribute>
+        </semantic>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -1066,6 +1069,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
+        <semantic>
+            <image_attribute>icon</image_attribute>
+        </semantic>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>

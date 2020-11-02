@@ -10,7 +10,8 @@ $ibo-title--medallion--background-color: $ibo-color-grey-100 !default;
 $ibo-title--medallion--border: 2px solid $ibo-color-blue-grey-300 !default;
 $ibo-title--medallion--border-radius: $ibo-border-radius-full !default;
 
-$ibo-title--icon--size: 66.67% !default;
+$ibo-title--icon--size--must-cover: 100% !default;
+$ibo-title--icon--size--must-zoomout: 66.67% !default;
 
 $ibo-title--status-dot--size: 10px !default;
 $ibo-title--status-dot--spacing: 8px !default;
@@ -26,6 +27,8 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
   @extend %ibo-fully-centered-content;
   width: $ibo-title--medallion--size;
   height: $ibo-title--medallion--size;
+  min-width: $ibo-title--medallion--size;
+  min-height: $ibo-title--medallion--size;
   overflow: hidden;
 
   background-color: $ibo-title--medallion--background-color;
@@ -33,10 +36,13 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
   border-radius: $ibo-title--medallion--border-radius;
 }
 .ibo-title--icon {
-  width: $ibo-title--icon--size;
+  width: $ibo-title--icon--size--must-cover;
   height: auto;
   max-width: 100%;
   max-height: 100%;
+}
+.ibo-title--icon--must-zoomout {
+  width: $ibo-title--icon--size--must-zoomout;
 }
 
 .ibo-title--emphasis {

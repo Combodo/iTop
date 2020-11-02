@@ -997,6 +997,7 @@ EOF
 			$aClassParams['is_link'] = 'true';
 		}
 
+		// Naming
 		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
@@ -1023,18 +1024,37 @@ EOF
 			$sNameAttCode = "''";
 		}
 		$aClassParams['name_attcode'] = $sNameAttCode;
-	
-		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
-		if ($oLifecycle)
-		{
-			$sStateAttCode = $oLifecycle->GetChildText('attribute');
+
+		// Semantic
+		// - Default attributes code
+		$sImageAttCode = "";
+		$sStateAttCode = "";
+		// - Parse optional semantic node
+		$oSemantic = $oProperties->GetOptionalElement('semantic');
+		if ($oSemantic) {
+			// Image attribute
+			$oImageAttribute = $oSemantic->GetOptionalElement('image_attribute');
+			if ($oImageAttribute) {
+				$sImageAttCode = $oImageAttribute->GetText();
+			}
+
+			// State attribute, only if not already found from lifecycle
+//			$oStateAttribute = $oSemantic->GetOptionalElement('state_attribute');
+//			if(empty($sStateAttCode) && $oStateAttribute) {
+//				$sStateAttCode = $oStateAttribute->GetText();
+//			}
 		}
-		else
-		{
-			$sStateAttCode = "";
-		}
+		$aClassParams['image_attcode'] = "'$sImageAttCode'";
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
-	
+
+		// Lifecycle (overload any state attribute defined in the semantic node)
+		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
+		if ($oLifecycle) {
+			$sStateAttCode = $oLifecycle->GetChildText('attribute');
+			$aClassParams['state_attcode'] = "'$sStateAttCode'";
+		}
+
+		// Reconcialiation
 		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation'))
 		{
 			$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
