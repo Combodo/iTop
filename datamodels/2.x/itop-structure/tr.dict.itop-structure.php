@@ -321,6 +321,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Organization+' => 'Tüm Kurumlar',
 	'Menu:ConfigManagement' => 'Konfigürasyon Yönetimi',
 	'Menu:ConfigManagement+' => 'Konfigürasyon Yönetimi',
+	'Menu:ConfigManagementCI' => 'Konfigürasyon Kalemleri',
+	'Menu:ConfigManagementCI+' => 'Konfigürasyon Kalemleri',
 	'Menu:ConfigManagementOverview' => 'Özet',
 	'Menu:ConfigManagementOverview+' => 'Özet',
 	'Menu:Contact' => 'İrtibatlar',
@@ -344,4 +346,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
+));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Person:info' => 'General information~~',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Notification~~',
 ));

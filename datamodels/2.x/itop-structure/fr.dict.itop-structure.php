@@ -355,6 +355,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Organization+' => 'Toutes les organisations',
 	'Menu:ConfigManagement' => 'Gestion des configurations',
 	'Menu:ConfigManagement+' => 'Gestion des configurations',
+	'Menu:ConfigManagementCI' => 'CIs',
+	'Menu:ConfigManagementCI+' => 'CIs',
 	'Menu:ConfigManagementOverview' => 'Tableaux de bord',
 	'Menu:ConfigManagementOverview+' => 'Tableaux de bord',
 	'Menu:Contact' => 'Contacts',
@@ -380,3 +382,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
 ));
 
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Person:info' => 'Informations générales',
+	'UserLocal:info' => 'Informations générales',
+	'Person:personal_info' => 'Informations personnelles',
+	'Person:notifiy' => 'Notification',
+));

@@ -323,6 +323,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:Organization+' => 'Organizaciones',
 	'Menu:ConfigManagement' => 'Administración de la Configuración',
 	'Menu:ConfigManagement+' => 'Administración de la Configuración',
+	'Menu:ConfigManagementCI' => 'Elementos de Configuración',
+	'Menu:ConfigManagementCI+' => 'Elementos de Confirguración',
 	'Menu:ConfigManagementOverview' => 'Resumen de Infraestructura',
 	'Menu:ConfigManagementOverview+' => 'Resumen de Infraestructura',
 	'Menu:Contact' => 'Contactos',
@@ -349,3 +351,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 ));
 
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Person:info' => 'Información General',
+	'UserLocal:info' => 'Información General',
+	'Person:personal_info' => 'Información Personal',
+	'Person:notifiy' => 'Notificación',
+));

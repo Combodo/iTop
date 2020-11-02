@@ -10,604 +10,608 @@
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-				<category>bizmodel,searchable,structure</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>organization</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/building.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="code"/>
-					</attributes>
-				</reconciliation>
-				<obsolescence>
-					<condition><![CDATA[status = 'inactive']]></condition>
-				</obsolescence>
-			</properties>
-			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="code" xsi:type="AttributeString">
-					<sql>code</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="status" xsi:type="AttributeEnum">
-					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
-					</values>
-					<sql>status</sql>
-					<default_value>active</default_value>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-				<field id="parent_id" xsi:type="AttributeHierarchicalKey">
-					<sql>parent_id</sql>
-					<is_null_allowed>true</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="parent_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>parent_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="overview" xsi:type="AttributeDashboard">
-					<is_user_editable>true</is_user_editable>
-					<definition>
-						<layout>DashboardLayoutTwoCols</layout>
-						<auto_reload>
-							<enabled>false</enabled>
-							<interval>300</interval>
-						</auto_reload>
-						<cells>
-							<cell id="0">
-								<rank>0</rank>
-								<dashlets>
-									<dashlet id="11" xsi:type="DashletHeaderDynamic">
-										<rank>0</rank>
-										<title>Organization:Overview:FunctionalCIs</title>
-										<icon>itop-config-mgmt/images/server.png</icon>
-										<subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
-										<query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
-										<group_by>finalclass</group_by>
-										<values>NetworkDevice,Server,ApplicationSolution</values>
-									</dashlet>
-								</dashlets>
-							</cell>
-							<cell id="2">
-								<rank>20</rank>
-								<dashlets>
-									<dashlet id="12" xsi:type="DashletObjectList">
-										<rank>0</rank>
-										<title>Organization:Overview:Users</title>
-										<query>SELECT Person AS p JOIN User AS u ON u.contactid=p.id WHERE p.org_id=:this-&gt;id</query>
-										<menu>true</menu>
-									</dashlet>
-								</dashlets>
-							</cell>
-							<cell id="9000">
-								<rank>5</rank>
-								<dashlets>
-									<dashlet id="0" xsi:type="DashletEmptyCell">
-										<rank>0</rank>
-									</dashlet>
-								</dashlets>
-							</cell>
-						</cells>
-					</definition>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="code">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="parent_id">
-							<rank>40</rank>
-						</item>
-						<item id="overview">
-							<rank>50</rank>
-						</item>
-					</items>
-				</details>
-				<default_search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</default_search>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="code">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="parent_id">
-							<rank>40</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="code">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="parent_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Location" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<category>bizmodel,searchable,structure</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>location</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/location.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-					</attributes>
-				</reconciliation>
-				<obsolescence>
-					<condition><![CDATA[status = 'inactive']]></condition>
-				</obsolescence>
-			</properties>
-			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="status" xsi:type="AttributeEnum">
-					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
-					</values>
-					<sql>status</sql>
-					<default_value>active</default_value>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-				<field id="org_id" xsi:type="AttributeExternalKey">
-					<sql>org_id</sql>
-					<target_class>Organization</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="org_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>org_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="address" xsi:type="AttributeText">
-					<sql>address</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="postal_code" xsi:type="AttributeString">
-					<sql>postal_code</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="city" xsi:type="AttributeString">
-					<sql>city</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="country" xsi:type="AttributeString">
-					<sql>country</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="address">
-							<rank>40</rank>
-						</item>
-						<item id="postal_code">
-							<rank>50</rank>
-						</item>
-						<item id="city">
-							<rank>60</rank>
-						</item>
-						<item id="country">
-							<rank>70</rank>
-						</item>
-						<item id="person_list">
-							<rank>80</rank>
-						</item>
-						<item id="physicaldevice_list">
-							<rank>90</rank>
-						</item>
-					</items>
-				</details>
-				<default_search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="country">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</default_search>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="address">
-							<rank>40</rank>
-						</item>
-						<item id="postal_code">
-							<rank>50</rank>
-						</item>
-						<item id="city">
-							<rank>60</rank>
-						</item>
-						<item id="country">
-							<rank>70</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="status">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="city">
-							<rank>30</rank>
-						</item>
-						<item id="country">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Contact" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<category>bizmodel,searchable,structure</category>
-				<abstract>true</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>contact</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field>finalclass</db_final_class_field>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/team.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-						<attribute id="email"/>
-						<attribute id="finalclass"/>
-					</attributes>
-				</reconciliation>
-				<obsolescence>
-					<condition>status='inactive'</condition>
-				</obsolescence>
-			</properties>
-			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="status" xsi:type="AttributeEnum">
-					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
-					</values>
-					<sql>status</sql>
-					<default_value>active</default_value>
-					<is_null_allowed>false</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-				<field id="org_id" xsi:type="AttributeExternalKey">
-					<sql>org_id</sql>
-					<target_class>Organization</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="org_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>org_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="email" xsi:type="AttributeEmailAddress">
-					<sql>email</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="phone" xsi:type="AttributePhoneNumber">
-					<sql>phone</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="notify" xsi:type="AttributeEnum">
-					<values>
-						<value id="yes">yes</value>
-						<value id="no">no</value>
-					</values>
-					<sql>notify</sql>
-					<default_value>yes</default_value>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>radio_horizontal</display_style>
-				</field>
-				<field id="function" xsi:type="AttributeString">
-					<sql>function</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="email">
-							<rank>40</rank>
-						</item>
-						<item id="phone">
-							<rank>50</rank>
-						</item>
-						<item id="notify">
-							<rank>60</rank>
-						</item>
-						<item id="function">
-							<rank>70</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="email">
-							<rank>40</rank>
-						</item>
-						<item id="phone">
-							<rank>50</rank>
-						</item>
-						<item id="notify">
-							<rank>60</rank>
-						</item>
-						<item id="function">
-							<rank>70</rank>
-						</item>
-					</items>
-				</search>
-				<default_search>
-					<items>
-						<item id="friendlyname">
-							<rank>10</rank>
-						</item>
-						<item id="email">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</default_search>
-				<list>
-					<items>
-						<item id="status">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="email">
-							<rank>30</rank>
-						</item>
-						<item id="phone">
-							<rank>40</rank>
-						</item>
-						<item id="function">
-							<rank>50</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Person" _delta="define">
-			<parent>Contact</parent>
-			<properties>
-				<category>bizmodel,searchable,structure</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>person</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="first_name"/>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/person.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="first_name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-						<attribute id="email"/>
-						<attribute id="employee_number"/>
-					</attributes>
-				</reconciliation>
-				<uniqueness_rules>
-					<rule id="employee_number">
-						<attributes>
-							<attribute id="org_id"/>
-							<attribute id="employee_number"/>
-						</attributes>
-						<filter><![CDATA[employee_number != '']]></filter>
-						<disabled>false</disabled>
-						<is_blocking>true</is_blocking>
-					</rule>
-					<rule id="name">
-						<attributes>
-							<attribute id="org_id"/>
-							<attribute id="name"/>
-							<attribute id="first_name"/>
-						</attributes>
-						<filter/>
-						<disabled>false</disabled>
-						<is_blocking>false</is_blocking>
-					</rule>
-				</uniqueness_rules>
-			</properties>
-			<fields>
-				<field id="picture" xsi:type="AttributeImage">
-					<display_max_width>96</display_max_width>
-					<display_max_height>96</display_max_height>
-					<storage_max_width>128</storage_max_width>
-					<storage_max_height>128</storage_max_height>
-					<default_image>images/silhouette.png</default_image>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="first_name" xsi:type="AttributeString">
-					<sql>first_name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="employee_number" xsi:type="AttributeString">
-					<sql>employee_number</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="mobile_phone" xsi:type="AttributePhoneNumber">
-					<sql>mobile_phone</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="location_id" xsi:type="AttributeExternalKey">
-					<filter><![CDATA[SELECT l FROM Location AS l JOIN Organization AS root ON l.org_id=root.id JOIN Organization AS child ON child.parent_id BELOW root.id WHERE child.id= :this->org_id]]></filter>
-					<dependencies>
-						<attribute id="org_id"/>
-					</dependencies>
-					<sql>location_id</sql>
-					<target_class>Location</target_class>
-					<is_null_allowed>true</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-					<allow_target_creation>false</allow_target_creation>
-				</field>
-				<field id="location_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>location_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="manager_id" xsi:type="AttributeExternalKey">
-					<filter><![CDATA[SELECT Person]]></filter>
-					<sql>manager_id</sql>
-					<target_class>Person</target_class>
-					<is_null_allowed>true</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="manager_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>manager_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="team_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkPersonToTeam</linked_class>
-					<ext_key_to_me>person_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>team_id</ext_key_to_remote>
-					<duplicates/>
-				</field>
-			</fields>
-			<methods>
-				<method id="CheckToDelete">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[  	public function CheckToDelete(&$oDeletionPlan)
+        <category>bizmodel,searchable,structure</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>organization</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/building.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="code"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status = 'inactive']]></condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="code" xsi:type="AttributeString">
+          <sql>code</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="overview" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="11" xsi:type="DashletHeaderDynamic">
+                    <rank>0</rank>
+                    <title>Organization:Overview:FunctionalCIs</title>
+                    <icon>itop-config-mgmt/images/server.png</icon>
+                    <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
+                    <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
+                    <group_by>finalclass</group_by>
+                    <values>NetworkDevice,Server,ApplicationSolution</values>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="2">
+                <rank>20</rank>
+                <dashlets>
+                  <dashlet id="12" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>Organization:Overview:Users</title>
+                    <query>SELECT Person AS p JOIN User AS u ON u.contactid=p.id WHERE p.org_id=:this-&gt;id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="9000">
+                <rank>5</rank>
+                <dashlets>
+                  <dashlet id="0" xsi:type="DashletEmptyCell">
+                    <rank>0</rank>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="code">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
+            <item id="overview">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="code">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="parent_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="parent_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Location" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,structure</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>location</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/location.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status = 'inactive']]></condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="address" xsi:type="AttributeText">
+          <sql>address</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="postal_code" xsi:type="AttributeString">
+          <sql>postal_code</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="city" xsi:type="AttributeString">
+          <sql>city</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="country" xsi:type="AttributeString">
+          <sql>country</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="person_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Person</linked_class>
+          <ext_key_to_me>location_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="address">
+              <rank>40</rank>
+            </item>
+            <item id="postal_code">
+              <rank>50</rank>
+            </item>
+            <item id="city">
+              <rank>60</rank>
+            </item>
+            <item id="country">
+              <rank>70</rank>
+            </item>
+            <item id="person_list">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="country">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="address">
+              <rank>40</rank>
+            </item>
+            <item id="postal_code">
+              <rank>50</rank>
+            </item>
+            <item id="city">
+              <rank>60</rank>
+            </item>
+            <item id="country">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="city">
+              <rank>30</rank>
+            </item>
+            <item id="country">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Contact" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,structure</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/team.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="email"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="email" xsi:type="AttributeEmailAddress">
+          <sql>email</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="phone" xsi:type="AttributePhoneNumber">
+          <sql>phone</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="notify" xsi:type="AttributeEnum">
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <sql>notify</sql>
+          <default_value>yes</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="function" xsi:type="AttributeString">
+          <sql>function</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="notify">
+              <rank>60</rank>
+            </item>
+            <item id="function">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="notify">
+              <rank>60</rank>
+            </item>
+            <item id="function">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="email">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="phone">
+              <rank>40</rank>
+            </item>
+            <item id="function">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Person" _delta="define">
+      <parent>Contact</parent>
+      <properties>
+        <category>bizmodel,searchable,structure</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>person</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="first_name"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/person.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="first_name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="email"/>
+            <attribute id="employee_number"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="employee_number">
+            <attributes>
+              <attribute id="org_id"/>
+              <attribute id="employee_number"/>
+            </attributes>
+            <filter><![CDATA[employee_number != '']]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+          <rule id="name">
+            <attributes>
+              <attribute id="org_id"/>
+              <attribute id="name"/>
+              <attribute id="first_name"/>
+            </attributes>
+            <filter/>
+            <disabled>false</disabled>
+            <is_blocking>false</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="picture" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <default_image>images/silhouette.png</default_image>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="first_name" xsi:type="AttributeString">
+          <sql>first_name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="employee_number" xsi:type="AttributeString">
+          <sql>employee_number</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="mobile_phone" xsi:type="AttributePhoneNumber">
+          <sql>mobile_phone</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT l FROM Location AS l JOIN Organization AS root ON l.org_id=root.id JOIN Organization AS child ON child.parent_id BELOW root.id WHERE child.id= :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <allow_target_creation>false</allow_target_creation>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="manager_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person]]></filter>
+          <sql>manager_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="manager_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>manager_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="team_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkPersonToTeam</linked_class>
+          <ext_key_to_me>person_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>team_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods>
+        <method id="CheckToDelete">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  	public function CheckToDelete(&$oDeletionPlan)
   	{
   		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
@@ -623,12 +627,12 @@
 		return parent::CheckToDelete($oDeletionPlan);
   	}
 ]]></code>
-				</method>
-				<method id="DBDeleteSingleObject">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[  	public function DBDeleteSingleObject()
+        </method>
+        <method id="DBDeleteSingleObject">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  	public function DBDeleteSingleObject()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
@@ -641,12 +645,12 @@
 		parent::DBDeleteSingleObject();
 	}
 ]]></code>
-				</method>
-				<method id="GetAttributeFlags">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		if ( ($sAttCode == 'org_id') && (!$this->IsNew()) )
 		{
@@ -662,12 +666,12 @@
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 ]]></code>
-				</method>
-				<method id="HasUserAccount">
-					<static>false</static>
-					<access>public</access>
-					<type>Helper</type>
-					<code><![CDATA[  	public function HasUserAccount()
+        </method>
+        <method id="HasUserAccount">
+          <static>false</static>
+          <access>public</access>
+          <type>Helper</type>
+          <code><![CDATA[  	public function HasUserAccount()
   	{
 		static $bHasUserAccount = null;
 		if (is_null($bHasUserAccount))
@@ -678,592 +682,592 @@
 		return $bHasUserAccount;
   	}
 ]]></code>
-				</method>
-			</methods>
-			<presentation>
-				<details>
-					<items>
-						<item id="team_list">
-							<rank>10</rank>
-						</item>
-						<item id="col:col1">
-							<rank>40</rank>
-							<items>
-								<item id="fieldset:Person:info">
-									<rank>10</rank>
-									<items>
-										<item id="name">
-											<rank>10</rank>
-										</item>
-										<item id="first_name">
-											<rank>20</rank>
-										</item>
-										<item id="org_id">
-											<rank>30</rank>
-										</item>
-										<item id="status">
-											<rank>40</rank>
-										</item>
-										<item id="location_id">
-											<rank>50</rank>
-										</item>
-										<item id="function">
-											<rank>60</rank>
-										</item>
-										<item id="manager_id">
-											<rank>70</rank>
-										</item>
-										<item id="employee_number">
-											<rank>80</rank>
-										</item>
-									</items>
-								</item>
-							</items>
-						</item>
-						<item id="col:col2">
-							<rank>50</rank>
-							<items>
-								<item id="fieldset:Person:personal_info">
-									<rank>5</rank>
-									<items>
-										<item id="picture">
-											<rank>10</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Person:notifiy">
-									<rank>10</rank>
-									<items>
-										<item id="email">
-											<rank>10</rank>
-										</item>
-										<item id="notify">
-											<rank>20</rank>
-										</item>
-										<item id="phone">
-											<rank>30</rank>
-										</item>
-										<item id="mobile_phone">
-											<rank>40</rank>
-										</item>
-									</items>
-								</item>
-							</items>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="first_name">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="status">
-							<rank>40</rank>
-						</item>
-						<item id="location_id">
-							<rank>50</rank>
-						</item>
-						<item id="email">
-							<rank>60</rank>
-						</item>
-						<item id="phone">
-							<rank>70</rank>
-						</item>
-						<item id="employee_number">
-							<rank>80</rank>
-						</item>
-						<item id="manager_id">
-							<rank>90</rank>
-						</item>
-						<item id="mobile_phone">
-							<rank>100</rank>
-						</item>
-						<item id="notify">
-							<rank>110</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="location_id">
-							<rank>40</rank>
-						</item>
-						<item id="email">
-							<rank>50</rank>
-						</item>
-						<item id="phone">
-							<rank>60</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Team" _delta="define">
-			<parent>Contact</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>team</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/team.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-						<attribute id="email"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="persons_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkPersonToTeam</linked_class>
-					<ext_key_to_me>team_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>person_id</ext_key_to_remote>
-					<duplicates/>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="email">
-							<rank>40</rank>
-						</item>
-						<item id="phone">
-							<rank>50</rank>
-						</item>
-						<item id="notify">
-							<rank>60</rank>
-						</item>
-						<item id="function">
-							<rank>70</rank>
-						</item>
-						<item id="persons_list">
-							<rank>80</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-						<item id="email">
-							<rank>40</rank>
-						</item>
-						<item id="phone">
-							<rank>50</rank>
-						</item>
-						<item id="notify">
-							<rank>60</rank>
-						</item>
-						<item id="function">
-							<rank>70</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="status">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="email">
-							<rank>30</rank>
-						</item>
-						<item id="phone">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="lnkPersonToTeam" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<is_link>1</is_link>
-				<category>bizmodel</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>lnkpersontoteam</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="team_id"/>
-						<attribute id="person_id"/>
-					</attributes>
-				</naming>
-				<icon/>
-				<reconciliation>
-					<attributes>
-						<attribute id="team_id"/>
-						<attribute id="person_id"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="team_id" xsi:type="AttributeExternalKey">
-					<sql>team_id</sql>
-					<target_class>Team</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-				<field id="team_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>team_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="person_id" xsi:type="AttributeExternalKey">
-					<sql>person_id</sql>
-					<target_class>Person</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-				<field id="person_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>person_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="role_id" xsi:type="AttributeExternalKey">
-					<sql>role_id</sql>
-					<target_class>ContactType</target_class>
-					<is_null_allowed>true</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="role_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>role_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="team_id">
-							<rank>10</rank>
-						</item>
-						<item id="person_id">
-							<rank>20</rank>
-						</item>
-						<item id="role_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="team_id">
-							<rank>10</rank>
-						</item>
-						<item id="person_id">
-							<rank>20</rank>
-						</item>
-						<item id="role_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="team_id">
-							<rank>10</rank>
-						</item>
-						<item id="person_id">
-							<rank>20</rank>
-						</item>
-						<item id="role_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Typology" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>true</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>typology</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field>finalclass</db_final_class_field>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon/>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="finalclass"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</details>
-				<default_search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</default_search>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="finalclass">
-							<rank>10</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="Document" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>true</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>document</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field>finalclass</db_final_class_field>
-				<naming>
-					<attributes/>
-				</naming>
-				<icon>images/document.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-						<attribute id="finalclass"/>
-					</attributes>
-				</reconciliation>
-				<obsolescence>
-					<condition><![CDATA[status = 'obsolete']]></condition>
-				</obsolescence>
-			</properties>
-			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="org_id" xsi:type="AttributeExternalKey">
-					<sql>org_id</sql>
-					<target_class>Organization</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="org_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>org_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="documenttype_id" xsi:type="AttributeExternalKey">
-					<sql>documenttype_id</sql>
-					<target_class>DocumentType</target_class>
-					<is_null_allowed>true</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="documenttype_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>documenttype_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="version" xsi:type="AttributeString">
-					<sql>version</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="description" xsi:type="AttributeText">
-					<sql>description</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="status" xsi:type="AttributeEnum">
-					<values>
-						<value id="draft">draft</value>
-						<value id="published">published</value>
-						<value id="obsolete">obsolete</value>
-					</values>
-					<sql>status</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="version">
-							<rank>35</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-					</items>
-				</details>
-				<default_search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="description">
-							<rank>20</rank>
-						</item>
-						<item id="org_id">
-							<rank>30</rank>
-						</item>
-					</items>
-				</default_search>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="org_id">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>30</rank>
-						</item>
-						<item id="description">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="DocumentFile" _delta="define">
-			<parent>Document</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>documentfile</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/document.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="file" xsi:type="AttributeBlob"/>
-			</fields>
-			<methods>
-				<method id="DisplayBareRelations">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-cmdbAbstractObject</type>
-					<comment><![CDATA[/**
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="team_list">
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Person:info">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="first_name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="status">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="function">
+                      <rank>60</rank>
+                    </item>
+                    <item id="manager_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="employee_number">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>50</rank>
+              <items>
+                <item id="fieldset:Person:personal_info">
+                  <rank>5</rank>
+                  <items>
+                    <item id="picture">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Person:notifiy">
+                  <rank>10</rank>
+                  <items>
+                    <item id="email">
+                      <rank>10</rank>
+                    </item>
+                    <item id="notify">
+                      <rank>20</rank>
+                    </item>
+                    <item id="phone">
+                      <rank>30</rank>
+                    </item>
+                    <item id="mobile_phone">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="first_name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="email">
+              <rank>60</rank>
+            </item>
+            <item id="phone">
+              <rank>70</rank>
+            </item>
+            <item id="employee_number">
+              <rank>80</rank>
+            </item>
+            <item id="manager_id">
+              <rank>90</rank>
+            </item>
+            <item id="mobile_phone">
+              <rank>100</rank>
+            </item>
+            <item id="notify">
+              <rank>110</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="email">
+              <rank>50</rank>
+            </item>
+            <item id="phone">
+              <rank>60</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Team" _delta="define">
+      <parent>Contact</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>team</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/team.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="email"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="persons_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkPersonToTeam</linked_class>
+          <ext_key_to_me>team_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>person_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="notify">
+              <rank>60</rank>
+            </item>
+            <item id="function">
+              <rank>70</rank>
+            </item>
+            <item id="persons_list">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="email">
+              <rank>40</rank>
+            </item>
+            <item id="phone">
+              <rank>50</rank>
+            </item>
+            <item id="notify">
+              <rank>60</rank>
+            </item>
+            <item id="function">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="email">
+              <rank>30</rank>
+            </item>
+            <item id="phone">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkPersonToTeam" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkpersontoteam</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="team_id"/>
+            <attribute id="person_id"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="team_id"/>
+            <attribute id="person_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <sql>team_id</sql>
+          <target_class>Team</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="team_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>team_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="person_id" xsi:type="AttributeExternalKey">
+          <sql>person_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="person_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>person_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="role_id" xsi:type="AttributeExternalKey">
+          <sql>role_id</sql>
+          <target_class>ContactType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="role_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>role_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="person_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="person_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="team_id">
+              <rank>10</rank>
+            </item>
+            <item id="person_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Typology" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>typology</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="Document" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>document</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <attributes/>
+        </naming>
+        <icon>images/document.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status = 'obsolete']]></condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="documenttype_id" xsi:type="AttributeExternalKey">
+          <sql>documenttype_id</sql>
+          <target_class>DocumentType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="documenttype_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>documenttype_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="draft">draft</value>
+            <value id="published">published</value>
+            <value id="obsolete">obsolete</value>
+          </values>
+          <sql>status</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DocumentFile" _delta="define">
+      <parent>Document</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>documentfile</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/document.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="file" xsi:type="AttributeBlob"/>
+      </fields>
+      <methods>
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <comment><![CDATA[/**
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
 	 */
 	]]></comment>
-					<code><![CDATA[public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+          <code><![CDATA[public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 		if (!$bEditMode)
@@ -1275,507 +1279,480 @@
 		}
 		return $aFieldsMap;
 	}]]></code>
-				</method>
-			</methods>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="version">
-							<rank>35</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-						<item id="file">
-							<rank>60</rank>
-						</item>
-						<item id="cis_list">
-							<rank>70</rank>
-						</item>
-						<item id="contracts_list">
-							<rank>80</rank>
-						</item>
-						<item id="services_list">
-							<rank>90</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="org_id">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>30</rank>
-						</item>
-						<item id="file">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="DocumentNote" _delta="define">
-			<parent>Document</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>documentnote</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/document.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="text" xsi:type="AttributeHTML">
-					<sql>text</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="version">
-							<rank>35</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-						<item id="text">
-							<rank>60</rank>
-						</item>
-						<item id="cis_list">
-							<rank>70</rank>
-						</item>
-						<item id="contracts_list">
-							<rank>80</rank>
-						</item>
-						<item id="services_list">
-							<rank>90</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>40</rank>
-						</item>
-						<item id="description">
-							<rank>50</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="org_id">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="documenttype_id">
-							<rank>30</rank>
-						</item>
-						<item id="description">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="DocumentWeb" _delta="define">
-			<parent>Document</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>documentweb</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon>images/document.png</icon>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-						<attribute id="org_id"/>
-						<attribute id="org_name"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="url" xsi:type="AttributeURL">
-					<sql>url</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-					<target>_blank</target>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="version">
-							<rank>35</rank>
-						</item>
-						<item id="description">
-							<rank>40</rank>
-						</item>
-						<item id="url">
-							<rank>50</rank>
-						</item>
-						<item id="cis_list">
-							<rank>60</rank>
-						</item>
-						<item id="contracts_list">
-							<rank>70</rank>
-						</item>
-						<item id="services_list">
-							<rank>80</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="status">
-							<rank>30</rank>
-						</item>
-						<item id="description">
-							<rank>40</rank>
-						</item>
-						<item id="url">
-							<rank>50</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="org_id">
-							<rank>10</rank>
-						</item>
-						<item id="status">
-							<rank>20</rank>
-						</item>
-						<item id="description">
-							<rank>30</rank>
-						</item>
-						<item id="url">
-							<rank>40</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="DocumentType" _delta="define">
-			<parent>Typology</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>documenttype</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon/>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields/>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="ContactType" _delta="define">
-			<parent>Typology</parent>
-			<properties>
-				<category>bizmodel,searchable</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>contacttype</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</naming>
-				<icon/>
-				<reconciliation>
-					<attributes>
-						<attribute id="name"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields/>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-	</classes>
-	<menus>
-			<menu id="DataAdministration" xsi:type="MenuGroup" _delta="define">
-				<rank>70</rank>
-				<enable_class>Organization</enable_class>
-				<enable_action>UR_ACTION_MODIFY</enable_action>
-				<enable_permission>UR_ALLOWED_YES</enable_permission>
-				<enable_stimulus/>
-				<style>
-					<decoration_classes>fas fa-folder</decoration_classes>
-				</style>
-			</menu>
-			<menu id="CSVImport" xsi:type="WebPageMenuNode" _delta="define">
-				<rank>10</rank>
-				<parent>DataAdministration</parent>
-				<url>$pages/csvimport.php</url>
-			</menu>
-			<menu id="Audit" xsi:type="WebPageMenuNode" _delta="define">
-				<rank>33</rank>
-				<parent>DataAdministration</parent>
-				<url>$pages/audit.php</url>
-			</menu>
-			<menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
-				<rank>50</rank>
-				<parent>DataAdministration</parent>
-				<template_file/>
-			</menu>
-			<menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
-				<rank>10</rank>
-				<parent>Catalogs</parent>
-				<oql>SELECT Organization</oql>
-				<do_search>1</do_search>
-			</menu>
-			<menu id="ConfigManagement" xsi:type="MenuGroup" _delta="define">
-				<rank>20</rank>
-				<style>
-					<decoration_classes>fas fa-database</decoration_classes>
-				</style>
-			</menu>
-			<menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
-				<rank>2</rank>
-				<parent>ConfigManagement</parent>
-				<definition>
-					<layout>DashboardLayoutOneCol</layout>
-					<title/>
-					<cells>
-						<cell id="0">
-							<rank>0</rank>
-							<dashlets>
-								<dashlet id="1" xsi:type="DashletHeaderDynamic">
-									<rank>1</rank>
-									<title>Menu:Contact</title>
-									<icon>itop-structure/images/team.png</icon>
-									<subtitle>Menu:Contact:Count</subtitle>
-									<query>SELECT Contact</query>
-									<group_by>status</group_by>
-									<values>active,inactive</values>
-								</dashlet>
-								<dashlet id="2" xsi:type="DashletBadge">
-									<rank>2</rank>
-									<class>Team</class>
-								</dashlet>
-								<dashlet id="3" xsi:type="DashletBadge">
-									<rank>3</rank>
-									<class>Person</class>
-								</dashlet>
-							</dashlets>
-						</cell>
-					</cells>
-				</definition>
-			</menu>
-			<menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
-				<rank>3</rank>
-				<parent>Contact</parent>
-				<class>Contact</class>
-			</menu>
-			<menu id="SearchContacts" xsi:type="SearchMenuNode" _delta="define">
-				<rank>4</rank>
-				<parent>Contact</parent>
-				<class>Contact</class>
-			</menu>
-			<menu id="Location" xsi:type="OQLMenuNode" _delta="define">
-				<rank>3</rank>
-				<parent>ConfigManagement</parent>
-				<oql>SELECT Location</oql>
-				<do_search>1</do_search>
-			</menu>
-			<menu id="Document" xsi:type="OQLMenuNode" _delta="define">
-				<rank>6</rank>
-				<parent>ConfigManagement</parent>
-				<oql>SELECT Document</oql>
-				<do_search>1</do_search>
-			</menu>
-			<menu id="Typology" xsi:type="DashboardMenuNode" _delta="define">
-				<rank>80</rank>
-				<parent>Catalogs</parent>
-				<definition>
-					<layout>DashboardLayoutOneCol</layout>
-					<title>Menu:ConfigManagement:Typology</title>
-					<cells>
-						<cell id="0">
-							<rank>0</rank>
-							<dashlets>
-								<dashlet id="1" xsi:type="DashletHeaderStatic">
-									<rank>0</rank>
-									<title>Menu:ConfigManagement:Typology</title>
-									<icon>itop-structure/images/typology.png</icon>
-								</dashlet>
-								<dashlet id="9" xsi:type="DashletBadge">
-									<rank>8</rank>
-									<class>ContactType</class>
-								</dashlet>
-								<dashlet id="10" xsi:type="DashletBadge">
-									<rank>9</rank>
-									<class>DocumentType</class>
-								</dashlet>
-							</dashlets>
-						</cell>
-					</cells>
-				</definition>
-			</menu>
-			<menu id="TagAdminMenu" xsi:type="WebPageMenuNode" _delta="define">
-				<rank>100</rank>
-				<parent>Catalogs</parent>
-				<url>$pages/tagadmin.php</url>
-				<enable_class>TagSetFieldData</enable_class>
-				<enable_action>UR_ACTION_MODIFY</enable_action>
-			</menu>
-	</menus>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="file">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>30</rank>
+            </item>
+            <item id="file">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DocumentNote" _delta="define">
+      <parent>Document</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>documentnote</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/document.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="text" xsi:type="AttributeHTML">
+          <sql>text</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+            <item id="text">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>40</rank>
+            </item>
+            <item id="description">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="documenttype_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DocumentWeb" _delta="define">
+      <parent>Document</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>documentweb</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon>images/document.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="url" xsi:type="AttributeURL">
+          <sql>url</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <target>_blank</target>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="version">
+              <rank>35</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="url">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="url">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="url">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DocumentType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>documenttype</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ContactType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>contacttype</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="DataAdministration" xsi:type="MenuGroup" _delta="define">
+      <rank>70</rank>
+      <enable_class>Organization</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_permission>UR_ALLOWED_YES</enable_permission>
+      <enable_stimulus/>
+      <style>
+        <decoration_classes>fas fa-folder</decoration_classes>
+      </style>
+    </menu>
+    <menu id="CSVImport" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>DataAdministration</parent>
+      <url>$pages/csvimport.php</url>
+    </menu>
+    <menu id="Audit" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>33</rank>
+      <parent>DataAdministration</parent>
+      <url>$pages/audit.php</url>
+    </menu>
+    <menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>50</rank>
+      <parent>DataAdministration</parent>
+      <template_file/>
+    </menu>
+    <menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>Catalogs</parent>
+      <oql>SELECT Organization</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="ConfigManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>20</rank>
+      <style>
+        <decoration_classes>fas fa-database</decoration_classes>
+      </style>
+    </menu>
+    <menu id="Contact" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>2</rank>
+      <parent>ConfigManagement</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderDynamic">
+                <rank>1</rank>
+                <title>Menu:Contact</title>
+                <icon>itop-structure/images/team.png</icon>
+                <subtitle>Menu:Contact:Count</subtitle>
+                <query>SELECT Contact</query>
+                <group_by>status</group_by>
+                <values>active,inactive</values>
+              </dashlet>
+              <dashlet id="2" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Team</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>Person</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="NewContact" xsi:type="NewObjectMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>Contact</parent>
+      <class>Contact</class>
+    </menu>
+    <menu id="SearchContacts" xsi:type="SearchMenuNode" _delta="define">
+      <rank>4</rank>
+      <parent>Contact</parent>
+      <class>Contact</class>
+    </menu>
+    <menu id="Location" xsi:type="OQLMenuNode" _delta="define">
+      <rank>3</rank>
+      <parent>ConfigManagement</parent>
+      <oql>SELECT Location</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="Document" xsi:type="OQLMenuNode" _delta="define">
+      <rank>6</rank>
+      <parent>ConfigManagement</parent>
+      <oql>SELECT Document</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>80</rank>
+      <parent>Catalogs</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:ConfigManagement:Typology</title>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="1" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:Typology</title>
+                <icon>itop-structure/images/typology.png</icon>
+              </dashlet>
+              <dashlet id="9" xsi:type="DashletBadge">
+                <rank>8</rank>
+                <class>ContactType</class>
+              </dashlet>
+              <dashlet id="10" xsi:type="DashletBadge">
+                <rank>9</rank>
+                <class>DocumentType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="TagAdminMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>Catalogs</parent>
+      <url>$pages/tagadmin.php</url>
+      <enable_class>TagSetFieldData</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+  </menus>
   <branding>
     <themes>
       <theme id="light-grey" _delta="define">
@@ -1808,4 +1785,10 @@
       </theme>
     </themes>
   </branding>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
 </itop_design>

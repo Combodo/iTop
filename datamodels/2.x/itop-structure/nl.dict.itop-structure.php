@@ -326,6 +326,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Organization+' => 'Alle organisaties',
 	'Menu:ConfigManagement' => 'Configuratiebeheer',
 	'Menu:ConfigManagement+' => 'Configuratiebeheer',
+	'Menu:ConfigManagementCI' => 'Configuratie-items',
+	'Menu:ConfigManagementCI+' => 'Configuratie-items',
 	'Menu:ConfigManagementOverview' => 'Overzicht',
 	'Menu:ConfigManagementOverview+' => 'Overzicht',
 	'Menu:Contact' => 'Contacten',
@@ -349,4 +351,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Typology+' => 'Configuratie van de typologie',
 	'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
 	'Menu:ConfigManagement:Typology' => 'Configuratie typologie',
+));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Person:info' => 'Globale informatie',
+	'UserLocal:info' => 'Globale informatie',
+	'Person:personal_info' => 'Persoonlijke informatie',
+	'Person:notifiy' => 'Notificeer',
 ));

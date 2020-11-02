@@ -329,6 +329,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Organization+' => 'Alle Organisationen',
 	'Menu:ConfigManagement' => 'Configuration Management',
 	'Menu:ConfigManagement+' => 'Configuration Management',
+	'Menu:ConfigManagementCI' => 'Configuration Items',
+	'Menu:ConfigManagementCI+' => 'Configuration Items',
 	'Menu:ConfigManagementOverview' => 'Übersicht',
 	'Menu:ConfigManagementOverview+' => 'Übersicht',
 	'Menu:Contact' => 'Kontakte',
@@ -352,6 +354,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Typology+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
+));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Person:info' => 'Allgemeine Informationen',
+	'UserLocal:info' => 'Allgemeine Informationen',
+	'Person:personal_info' => 'Persönliche Informationen',
+	'Person:notifiy' => 'Benachrichtigungen',
 ));
 
 ?>

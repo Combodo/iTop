@@ -330,6 +330,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Organization+' => 'Všechny organizace',
 	'Menu:ConfigManagement' => 'Správa konfigurací',
 	'Menu:ConfigManagement+' => 'Správa konfigurací',
+	'Menu:ConfigManagementCI' => 'Konfigurační položky',
+	'Menu:ConfigManagementCI+' => 'Konfigurační položky',
 	'Menu:ConfigManagementOverview' => 'Přehled',
 	'Menu:ConfigManagementOverview+' => 'Přehled',
 	'Menu:Contact' => 'Kontakty',
@@ -355,4 +357,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:ConfigManagement:Typology' => 'Konfigurace typologie',
 ));
 
+// Add translation for Fieldsets
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Person:info' => 'Obecné informace',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Upozornění',
+));
 ?>

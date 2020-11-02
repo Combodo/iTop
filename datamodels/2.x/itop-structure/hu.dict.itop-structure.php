@@ -321,6 +321,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Organization+' => '',
 	'Menu:ConfigManagement' => 'Konfiguráció menedzsment',
 	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagementCI' => 'Konfigurációs elemek (CI)',
+	'Menu:ConfigManagementCI+' => '',
 	'Menu:ConfigManagementOverview' => 'Áttekintő',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Kapcsolattartók',
@@ -345,4 +347,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
 ));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Person:info' => 'General information~~',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Personal information~~',
+	'Person:notifiy' => 'Notification~~',
+));
+
 ?>

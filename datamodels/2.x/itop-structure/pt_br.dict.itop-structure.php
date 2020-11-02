@@ -320,6 +320,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Organization+' => 'Todas organizações',
 	'Menu:ConfigManagement' => 'Gerenciamento Configurações',
 	'Menu:ConfigManagement+' => 'Gerenciamento Configurações',
+	'Menu:ConfigManagementCI' => 'Itens de configuração',
+	'Menu:ConfigManagementCI+' => 'Itens de configuração',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
 	'Menu:ConfigManagementOverview+' => 'Visão geral',
 	'Menu:Contact' => 'Contatos',
@@ -343,4 +345,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Typology+' => 'Configuração tipologia',
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
 	'Menu:ConfigManagement:Typology' => 'Configuração tipologia',
+));
+
+//
+// Add translation for Fieldsets
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Person:info' => 'Informações gerais',
+	'UserLocal:info' => 'General information~~',
+	'Person:personal_info' => 'Informação pessoal',
+	'Person:notifiy' => 'Notificação',
 ));
