@@ -3,16 +3,16 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-panel-with-tab-container--body--padding-top: $ibo-panel--highlight--height !default;
+$ibo-panel-with-tab-container--body--padding-top: -1 * ($ibo-panel--body--padding-top - $ibo-panel--highlight--height) !default;
 $ibo-panel-with-tab-container--tabs-list--margin-x: -1 * $ibo-panel--body--padding-x !default;
 
 $ibo-panel-with-tab-container--tab-container--margin-x: -1 * $ibo-panel--body--padding-x !default;
 
 .ibo-panel {
 	> .ibo-panel--body {
-		padding-top: $ibo-panel-with-tab-container--body--padding-top;
-
 		> .ibo-tab-container {
+			margin-top: $ibo-panel-with-tab-container--body--padding-top;
+
 			> .ibo-tab-container--tabs-list{
 				margin-left: $ibo-panel-with-tab-container--tabs-list--margin-x;
 				margin-right: $ibo-panel-with-tab-container--tabs-list--margin-x;
