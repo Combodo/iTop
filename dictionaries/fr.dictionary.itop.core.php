@@ -633,6 +633,24 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: TriggerOnDocumentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnDocumentDownload' => 'Déclencheur sur le téléchargement d\'un document d\'un objet',
+	'Class:TriggerOnDocumentDownload+' => '',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDownload+' => '',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 

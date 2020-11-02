@@ -1,28 +1,20 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * ormDocument
- * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 
@@ -32,21 +24,30 @@
  *
  * @package     itopORM
  */
-
 class ormDocument
 {
+	const DEFAULT_DOWNLOADS_COUNT = 0;
+
 	protected $m_data;
 	protected $m_sMimeType;
 	protected $m_sFileName;
-	
+	/** @var int $m_iDownloadsCount */
+	private $m_iDownloadsCount;
+
 	/**
 	 * Constructor
+	 *
+	 * @param null $data
+	 * @param string $sMimeType
+	 * @param string $sFileName
+	 * @param int $iDownloadsCount
 	 */
-	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '')
+	public function __construct($data = null, $sMimeType = 'text/plain', $sFileName = '', $iDownloadsCount = self::DEFAULT_DOWNLOADS_COUNT)
 	{
 		$this->m_data = $data;
 		$this->m_sMimeType = $sMimeType;
 		$this->m_sFileName = $sFileName;
+		$this->m_iDownloadsCount = $iDownloadsCount;
 	}
 
 	public function __toString()
@@ -104,6 +105,30 @@ class ormDocument
 	public function GetFileName()
 	{
 		return $this->m_sFileName;
+	}
+
+	/**
+	 * Return the number of times the document has been downloaded (through the standard API!)
+	 *
+	 * @see static::DownloadDocument()
+	 * @return int
+	 * @since XXX
+	 */
+	public function GetDownloadsCount()
+	{
+		// Force cast to get 0 instead of null on fields prior to the features that have never been downloaded.
+		return (int) $this->m_iDownloadsCount;
+	}
+
+	/**
+	 * Increase the number of downloads of the document by $iNumber
+	 *
+	 * @param int $iNumber
+	 * @since XXX
+	 */
+	public function IncreaseDownloadsCount($iNumber = 1)
+	{
+		$this->m_iDownloadsCount += $iNumber;
 	}
 
 	public function GetAsHTML()
@@ -188,7 +213,8 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
-	 * @return none
+	 *
+	 * @return void
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
@@ -204,6 +230,7 @@ class ormDocument
 				usleep(200);
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
+			/** @var \ormDocument $oDocument */
 			$oDocument = $oObj->Get($sAttCode);
 			if (is_object($oDocument))
 			{
@@ -211,6 +238,40 @@ class ormDocument
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
+
+				// Update downloads count only when content disposition is set to "attachment" as other disposition are to display the document within the page
+				if($sContentDisposition === 'attachment')
+				{
+					$oDocument->IncreaseDownloadsCount();
+					$oObj->Set($sAttCode, $oDocument);
+					$oObj->DBUpdate();
+
+					// Activate any existing trigger
+					if ($sClass === 'Attachment')
+					{
+						$oHostObj = MetaModel::GetObject($oObj->Get('item_class'), $oObj->Get('item_id'), false /* false to avoid exception during trigger */, true);
+						$sTriggerClass = 'TriggerOnAttachmentDownload';
+						$aTriggerContextArgs = array(
+							'this->object()' => $oHostObj,
+							'attachment->object()' => $oObj,
+						);
+						$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($oObj->Get('item_class'), ENUM_PARENT_CLASSES_ALL));
+					}
+					else
+					{
+						$sTriggerClass = 'TriggerOnDocumentDownload';
+						$aTriggerContextArgs = array(
+							'this->object()' => $oObj,
+						);
+						$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+					}
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerParams);
+					while ($oTrigger = $oTriggerSet->Fetch())
+					{
+						/** @var \Trigger $oTrigger */
+						$oTrigger->DoActivate($aTriggerContextArgs);
+					}
+				}
 			}
 		}
 		catch(Exception $e)

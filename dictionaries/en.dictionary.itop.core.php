@@ -639,6 +639,24 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnDocumentDownload
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnDocumentDownload' => 'Trigger (on object\'s document download)',
+	'Class:TriggerOnDocumentDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class',
+));
+
+//
+// Class: TriggerOnAttachmentDownload
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)',
+	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 

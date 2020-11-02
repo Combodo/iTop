@@ -24,6 +24,7 @@
  */
 
 
+define('ATTACHMENT_DISPLAY_URL', 'pages/ajax.render.php?operation=display_document&class=Attachment&field=contents&id=');
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
 define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 
@@ -420,7 +421,7 @@ $(document).tooltip({
 	content: function () {
 		if ($(this).hasClass("preview"))
 		{
-			return ('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');
+			return ('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('data-preview-url')+'\"></img>');
 		}
 		else
 		{
@@ -501,6 +502,7 @@ JS
 		/** @var \ormDocument $oDoc */
 		$oDoc = $oAttachment->Get('contents');
 
+		$sDocDisplayUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DISPLAY_URL.$iAttachmentId;
 		$sDocDownloadUrl = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttachmentId;
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
@@ -528,13 +530,15 @@ JS
 		$sFileType = $oDoc->GetMimeType();
 
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+		$sAttachmentPreviewUrl = '';
 		$sIconClass = '';
 		if ($oDoc->IsPreviewAvailable())
 		{
 			$sIconClass = ' preview';
+			$sAttachmentPreviewUrl = $sDocDisplayUrl;
 			if ($oDoc->GetSize() <= self::MAX_SIZE_FOR_PREVIEW)
 			{
-				$sAttachmentThumbUrl = $sDocDownloadUrl;
+				$sAttachmentThumbUrl = $sDocDisplayUrl;
 			}
 		}
 
@@ -547,7 +551,7 @@ JS
 
 		$this->oPage->add(<<<HTML
 	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$iFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
-	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass" data-preview-url="$sAttachmentPreviewUrl"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
 	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
 	  <td role="formatted-size" data-order="$iFileSize">$sFileFormattedSize</td>
 	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDateFormatted</td>
