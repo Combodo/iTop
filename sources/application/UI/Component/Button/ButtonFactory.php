@@ -94,8 +94,7 @@ class ButtonFactory
 	}
 
 	/**
-	 * Make a Button component for a validation action, should be used to tell the user he/she going to save / validate / confirm his/her
-	 * choices
+	 * Make a Button component for a success action, should be used to tell the user he/she going to make a positive action/choice
 	 *
 	 * @param string $sLabel
 	 * @param string|null $sName See Button::$sName
@@ -105,7 +104,7 @@ class ButtonFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeForValidationAction(
+	public static function MakeForPositiveAction(
 		string $sLabel,
 		string $sName = null,
 		string $sValue = null,

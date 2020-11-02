@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-/* Color palettes */
+/* base color palettes */
 $ibo-color-white-100: hsla(0, 0%, 100%, 1) !default;
 $ibo-color-white-200: hsla(0, 0%, 94.9%, 1) !default;
 $ibo-color-transparent: hsla(0, 0%, 100%, 0) !default;
@@ -105,6 +105,7 @@ $ibo-color-pink-900: hsla(318, 51%, 29%, 1) !default;
 
 $ibo-colors: ('grey', 'blue-grey', 'blue', 'cyan', 'green', 'orange', 'red', 'pink', 'primary', 'secondary', 'information', 'success', 'warning', 'danger');
 
+/* CSS variables */
 :root{
 	--ibo-color-white-100: #{$ibo-color-white-100};
 	--ibo-color-white-200: #{$ibo-color-white-200};

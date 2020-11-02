@@ -56,9 +56,9 @@ class Button extends UIBlock
 	/** @var string ENUM_COLOR_NEUTRAL */
 	public const ENUM_COLOR_NEUTRAL = 'neutral';
 	/** @var string ENUM_COLOR_VALIDATION */
-	public const ENUM_COLOR_VALIDATION = 'green';
+	public const ENUM_COLOR_VALIDATION = 'success';
 	/** @var string ENUM_COLOR_DESTRUCTIVE */
-	public const ENUM_COLOR_DESTRUCTIVE = 'red';
+	public const ENUM_COLOR_DESTRUCTIVE = 'danger';
 	/** @var string ENUM_COLOR_PRIMARY */
 	public const ENUM_COLOR_PRIMARY = 'primary';
 	/** @var string ENUM_COLOR_SECONDARY */

@@ -2619,7 +2619,7 @@ CSS
 		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
 		$oToolbarTop->AddSubBlock($oCancelButton);
-		$oApplyButton = ButtonFactory::MakeForValidationAction($sApplyButton, null, null, true);
+		$oApplyButton = ButtonFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
 		$oApplyButton->AddCSSClasses('action');
 		$oToolbarTop->AddSubBlock($oApplyButton);
 
@@ -2633,7 +2633,7 @@ CSS
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
-						$oButton = ButtonFactory::MakeForValidationAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
+						$oButton = ButtonFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClasses('action');
 						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
 						$oToolbarTop->AddSubBlock($oButton);

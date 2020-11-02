@@ -29,7 +29,7 @@ class ActivityNewEntryFormFactory
 		$oActivityNewEntryForm->SetFormTextInput(new RichText());
 		$oActivityNewEntryForm->AddFormActionButtons(ButtonFactory::MakeForSecondaryAction('Cancel')
 			->SetOnClickJsCode("$(this).parents('[data-role=\"ibo-activity-new-entry-form--action-buttons--right-actions\"]').trigger('cancel');"));
-		$oActivityNewEntryForm->AddFormActionButtons(ButtonFactory::MakeForValidationAction('Send')
+		$oActivityNewEntryForm->AddFormActionButtons(ButtonFactory::MakeForPrimaryAction('Send')
 			->SetColor('cyan')
 			->SetIconClass('fas fa-paper-plane')
 			->SetOnClickJsCode("$(this).parents('[data-role=\"ibo-activity-new-entry-form--action-buttons--right-actions\"]').trigger('submit');"));

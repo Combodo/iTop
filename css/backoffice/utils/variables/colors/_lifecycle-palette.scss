@@ -17,31 +17,12 @@ $ibo-lifecycle-failure-state-primary-color: $ibo-color-pink-700 !default;
 $ibo-lifecycle-failure-state-secondary-color: $ibo-color-white-100 !default;
 $ibo-lifecycle-frozen-state-primary-color: $ibo-color-grey-200 !default;
 $ibo-lifecycle-frozen-state-secondary-color: $ibo-color-grey-700 !default;
+
 /* - For basic lifecycle */
 $ibo-lifecycle-active-state-primary-color: $ibo-color-green-700 !default;
 $ibo-lifecycle-active-state-secondary-color: $ibo-color-white-100 !default;
 $ibo-lifecycle-inactive-state-primary-color: $ibo-color-orange-400 !default;
 $ibo-lifecycle-inactive-state-secondary-color: $ibo-color-white-100 !default;
-
-:root{
-	--ibo-lifecycle-new-state-primary-color: #{$ibo-lifecycle-new-state-primary-color};
-	--ibo-lifecycle-new-state-secondary-color: #{$ibo-lifecycle-new-state-secondary-color};
-	--ibo-lifecycle-neutral-state-primary-color: #{$ibo-lifecycle-neutral-state-primary-color};
-	--ibo-lifecycle-neutral-state-secondary-color: #{$ibo-lifecycle-neutral-state-secondary-color};
-	--ibo-lifecycle-waiting-state-primary-color: #{$ibo-lifecycle-waiting-state-primary-color};
-	--ibo-lifecycle-waiting-state-secondary-color: #{$ibo-lifecycle-waiting-state-secondary-color};
-	--ibo-lifecycle-success-state-primary-color: #{$ibo-lifecycle-success-state-primary-color};
-	--ibo-lifecycle-success-state-secondary-color: #{$ibo-lifecycle-success-state-secondary-color};
-	--ibo-lifecycle-failure-state-primary-color: #{$ibo-lifecycle-failure-state-primary-color};
-	--ibo-lifecycle-failure-state-secondary-color: #{$ibo-lifecycle-failure-state-secondary-color};
-	--ibo-lifecycle-frozen-state-primary-color: #{$ibo-lifecycle-frozen-state-primary-color};
-	--ibo-lifecycle-frozen-state-secondary-color: #{$ibo-lifecycle-frozen-state-secondary-color};
-
-	--ibo-lifecycle-active-state-primary-color: #{$ibo-lifecycle-active-state-primary-color};
-	--ibo-lifecycle-active-state-secondary-color: #{$ibo-lifecycle-active-state-secondary-color};
-	--ibo-lifecycle-inactive-state-primary-color: #{$ibo-lifecycle-inactive-state-primary-color};
-	--ibo-lifecycle-inactive-state-secondary-color: #{$ibo-lifecycle-inactive-state-secondary-color};
-}
 
 $ibo-lifecycle-states-colors: (
 		'new': (
@@ -78,3 +59,24 @@ $ibo-lifecycle-states-colors: (
 				'secondary-color': $ibo-lifecycle-inactive-state-secondary-color,
 		),
 );
+
+/* CSS varibales */
+:root{
+	--ibo-lifecycle-new-state-primary-color: #{$ibo-lifecycle-new-state-primary-color};
+	--ibo-lifecycle-new-state-secondary-color: #{$ibo-lifecycle-new-state-secondary-color};
+	--ibo-lifecycle-neutral-state-primary-color: #{$ibo-lifecycle-neutral-state-primary-color};
+	--ibo-lifecycle-neutral-state-secondary-color: #{$ibo-lifecycle-neutral-state-secondary-color};
+	--ibo-lifecycle-waiting-state-primary-color: #{$ibo-lifecycle-waiting-state-primary-color};
+	--ibo-lifecycle-waiting-state-secondary-color: #{$ibo-lifecycle-waiting-state-secondary-color};
+	--ibo-lifecycle-success-state-primary-color: #{$ibo-lifecycle-success-state-primary-color};
+	--ibo-lifecycle-success-state-secondary-color: #{$ibo-lifecycle-success-state-secondary-color};
+	--ibo-lifecycle-failure-state-primary-color: #{$ibo-lifecycle-failure-state-primary-color};
+	--ibo-lifecycle-failure-state-secondary-color: #{$ibo-lifecycle-failure-state-secondary-color};
+	--ibo-lifecycle-frozen-state-primary-color: #{$ibo-lifecycle-frozen-state-primary-color};
+	--ibo-lifecycle-frozen-state-secondary-color: #{$ibo-lifecycle-frozen-state-secondary-color};
+
+	--ibo-lifecycle-active-state-primary-color: #{$ibo-lifecycle-active-state-primary-color};
+	--ibo-lifecycle-active-state-secondary-color: #{$ibo-lifecycle-active-state-secondary-color};
+	--ibo-lifecycle-inactive-state-primary-color: #{$ibo-lifecycle-inactive-state-primary-color};
+	--ibo-lifecycle-inactive-state-secondary-color: #{$ibo-lifecycle-inactive-state-secondary-color};
+}

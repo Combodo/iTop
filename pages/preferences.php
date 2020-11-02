@@ -82,7 +82,7 @@ function DisplayPreferences($oP)
 	$oMiscSettingsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oMiscSettingsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
-	$oMiscSettingsSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
+	$oMiscSettingsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
 
 	$oMiscSettingsEndHtmlBlock = new Html('</form>');
 
@@ -143,7 +143,7 @@ EOF
 	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
-	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
+	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
 
 	$sFavoriteOrganizationsEndHtml = '</form>';
 	$oFavoriteOrganizationsEndHtmlBlock = new Html($sFavoriteOrganizationsEndHtml);
@@ -367,7 +367,7 @@ EOF
 		$oNewsroomCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 		// - Submit button
-		$oNewsroomSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), 'operation',
+		$oNewsroomSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
 			'apply_newsroom_preferences', true);
 
 
@@ -479,7 +479,7 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	$oUserLanguageForm->AddSubBlock($oUserLanguageCancelButton);
 	// - Submit button
-	$oUserLanguageSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oUserLanguageSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
 	return $oUserLanguageForm;
 }

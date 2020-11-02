@@ -66,8 +66,8 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary')
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForValidationAction('Validation dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPositiveAction('Validation'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPositiveAction('Validation dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
@@ -81,7 +81,7 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAct
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

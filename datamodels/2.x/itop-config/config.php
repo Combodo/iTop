@@ -179,7 +179,7 @@ try {
 			$oForm->AddSubBlock($oCancelButton);
 
 			// - Submit button
-			$oSubmitButton = ButtonFactory::MakeForValidationAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
+			$oSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
 			$oForm->AddSubBlock($oSubmitButton);
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('new_config', $sConfigEscaped));
