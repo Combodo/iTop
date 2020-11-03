@@ -748,17 +748,15 @@ class iTopDesignFormat
 	 */
 	protected function From17To16($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
-		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		// N°1283 - remove "in_new_window" option for WebPageMenuNode
 		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 2314 : remove "themes" nodes
+		// N°2314 - remove "themes" nodes
 		$sPath = "/itop_design/branding/themes";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 2746 - remove attributes Enum Set
+		// N°2746 - remove attributes Enum Set
 		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
 		$this->RemoveNodeFromXPath($sPath);
 	}
@@ -770,7 +768,7 @@ class iTopDesignFormat
 	 */
 	protected function From17To18($oFactory)
 	{
-		// -- 3233 - Remove "display template" feature from MetaModel
+		// N°3233 - Remove "display template" feature from MetaModel
 		$sPath = "/itop_design//class/properties/display_template";
 		$this->RemoveNodeFromXPath($sPath);
 	}
@@ -782,15 +780,15 @@ class iTopDesignFormat
 	 */
 	protected function From18To17($oFactory)
 	{
-		// -- 3182 - Remove style node from MenuGroup
+		// N°3182 - Remove style node from MenuGroup
 		$sPath = "/itop_design/menus/menu[@xsi:type='MenuGroup']/style";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 3185 - Remove main_logo_compact node from branding
+		// N°3185 - Remove main_logo_compact node from branding
 		$sPath = "/itop_design/branding/main_logo_compact";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 2982 - Speed up SCSS themes compilation during setup
+		// N°2982 - Speed up SCSS themes compilation during setup
 		$sPath = "/itop_design/branding/themes/theme/precompiled_stylesheet";
 		$this->RemoveNodeFromXPath($sPath);
 	}
