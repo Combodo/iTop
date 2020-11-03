@@ -13,14 +13,19 @@ use Combodo\iTop\Application\UI\UIBlock;
  * Class Field
  *
  * @package Combodo\iTop\Application\UI\Component\Field
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @author Anne-Catherine Cognet <annecatherine.cognet@combodo.com>
+ * @since 3.0.0
  */
 class Field extends UIBlock
 {
 	// Overloaded constants
+	/** @inheritdoc  */
 	public const BLOCK_CODE = 'ibo-field';
+	/** @inheritdoc  */
 	public const HTML_TEMPLATE_REL_PATH = 'components/field/layout';
 
-	/** @var array */
+	/** @var array Array of various parameters of the field. This should be exploded in dedicated properties instead of a grey array. */
 	protected $aParams;
 
 	public function __construct(array $aParams, ?string $sId = null)
@@ -31,6 +36,7 @@ class Field extends UIBlock
 
 	/**
 	 * @return array
+	 * @internal
 	 */
 	public function GetParams(): array
 	{

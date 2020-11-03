@@ -1,5 +1,19 @@
 {% set aParams = oUIBlock.GetParams() %}
-<div class="ibo-field ibo-field-{{ aParams.layout }}">
+<div id="{{ oUIBlock.GetId() }}" class="ibo-field ibo-field-{{ aParams.layout }}"
+    data-attribute-code="{{ aParams.attcode }}"
+    data-attribute-type="{{ aParams.atttype }}"
+    data-attribute-label="{{ aParams.attlabel }}"
+    {# Note: This might not the best way to this, we might rather have some properties for this flags in te Field class. #}
+    {# For the moment this just aims at restoring the metadata introduced in iTop 2.7. Refactoring the Field class with specialization for each type must be designed by all the team #}
+    {# as we might want to re-use / adapt the Field classes introduced with the end-user portal #}
+    data-attribute-flag-hidden="{% if (aParams.attflags b-and constant('OPT_ATT_HIDDEN')) == constant('OPT_ATT_HIDDEN') %}true{% else %}false{% endif %}"
+    data-attribute-flag-read-only="{% if (aParams.attflags b-and constant('OPT_ATT_READONLY')) == constant('OPT_ATT_READONLY') %}true{% else %}false{% endif %}"
+     data-attribute-flag-mandatory="{% if (aParams.attflags b-and constant('OPT_ATT_MANDATORY')) == constant('OPT_ATT_MANDATORY') %}true{% else %}false{% endif %}"
+    data-attribute-flag-must-change="{% if (aParams.attflags b-and constant('OPT_ATT_MUSTCHANGE')) == constant('OPT_ATT_MUSTCHANGE') %}true{% else %}false{% endif %}"
+    data-attribute-flag-must-prompt="{% if (aParams.attflags b-and constant('OPT_ATT_MUSTPROMPT')) == constant('OPT_ATT_MUSTPROMPT') %}true{% else %}false{% endif %}"
+    data-attribute-flag-slave="{% if (aParams.attflags b-and constant('OPT_ATT_SLAVE')) == constant('OPT_ATT_SLAVE') %}true{% else %}false{% endif %}"
+     data-value-raw="{{ aParams.value_raw }}"
+    >
     <div class="ibo-field--label">{{ aParams.label|raw }}</div>
     <div class="ibo-field--value">{{ aParams.value|raw }}</div>
 </div>
