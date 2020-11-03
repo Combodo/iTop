@@ -48,8 +48,11 @@ $ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !defa
   &:not(:first-child) {
     margin-left: 0;
   }
-}
 
-.ibo-dashboard--grid-column.edit-mode {
-  border: 1px #ccc dashed;
+  &.edit_mode {
+    margin: 1px;
+    border: 2px #ccc dashed;
+    width: 100%;
+    min-height: 40px;
+  }
 }

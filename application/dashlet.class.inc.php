@@ -21,6 +21,7 @@ use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\UIBlock;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
@@ -72,13 +73,16 @@ abstract class Dashlet
 	{
 		$refValue = $this->aProperties[$sProperty];
 		$sRefType = gettype($refValue);
+
 		if (gettype($sValue) == $sRefType) {
 			// Do not change anything in that case!
 			$ret = $sValue;
 		} elseif ($sRefType == 'boolean') {
 			$ret = ($sValue == 'true');
-		} elseif (($sRefType == 'array') || (is_array($sValue))) {
+		} elseif ($sRefType == 'array') {
 			$ret = explode(',', $sValue);
+		} elseif (is_array($sValue)) {
+			$ret = $sValue;
 		} else {
 			$ret = $sValue;
 			settype($ret, $sRefType);
@@ -190,10 +194,8 @@ abstract class Dashlet
 	 */
 	public function FromParams($aParams)
 	{
-		foreach ($this->aProperties as $sProperty => $value)
-		{
-			if (array_key_exists($sProperty, $aParams))
-			{
+		foreach ($this->aProperties as $sProperty => $value) {
+			if (array_key_exists($sProperty, $aParams)) {
 				$this->aProperties[$sProperty] = $aParams[$sProperty];
 			}
 		}
@@ -206,7 +208,7 @@ abstract class Dashlet
 	 * @param bool $bEnclosingDiv
 	 * @param array $aExtraParams
 	 */
-	public function DoRender($oPage, $bEditMode = false, $bEnclosingDiv = true, $aExtraParams = array())
+	public function DoRender($oPage, $bEditMode = false, $bEnclosingDiv = true, $aExtraParams = array()): UIBlock
 	{
 		$sId = $this->GetID();
 
@@ -2279,7 +2281,7 @@ class DashletBadge extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer($this->sId, 'dashlet-content');
 
 		$sClass = $this->aProperties['class'];
 		$oFilter = new DBObjectSearch($sClass);
@@ -2296,7 +2298,7 @@ class DashletBadge extends Dashlet
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer($this->sId, 'dashlet-content');
 
 		$sClass = $this->aProperties['class'];
 		$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);

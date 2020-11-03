@@ -46,55 +46,50 @@ $(function()
 			this._make_draggable();
 			
 			// Make sure we don't click on something we'll regret
-			$('.itop-dashboard').on('click', 'a', function(e) { e.preventDefault(); });
+			$('.itop-dashboard').on('click', 'a', function (e) {
+				e.preventDefault();
+			});
 
 		},
-	
+
 		// called when created, and later when changing options
-		_refresh: function()
-		{
+		_refresh: function () {
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
-		_destroy: function()
-		{
+		_destroy: function () {
 			this.element
-			.removeClass('itop-dashboard');
+				.removeClass('itop-dashboard');
 
 			this.ajax_div.remove();
-			$(document).unbind('keyup.dashboard_editor');			
+			$(document).unbind('keyup.dashboard_editor');
 		},
 		// _setOptions is called with a hash of all options that are changing
-		_setOptions: function()
-		{
+		_setOptions: function () {
 			// in 1.9 would use _superApply
 			this._superApply(arguments);
 		},
 		// _setOption is called for each individual option that is changing
-		_setOption: function( key, value )
-		{
+		_setOption: function (key, value) {
 			// in 1.9 would use _super
 			this._superApply(arguments);
 		},
-		_get_state: function(oMergeInto)
-		{
+		_get_state: function (oMergeInto) {
 			var oState = oMergeInto;
 			oState.cells = [];
-			this.element.find('.layout_cell').each(function() {
+			this.element.find('.layout_cell').each(function () {
 				var aList = [];
-				$(this).find(':itop-dashlet').each(function() {
+				$(this).find('.itop-dashlet').each(function () {
 					var oDashlet = $(this).data('itopDashlet');
-					if(oDashlet)
-					{
+					if (oDashlet) {
 						var oDashletParams = oDashlet.get_params();
 						var sId = oDashletParams.dashlet_id;
-						oState[sId] = oDashletParams;				
-						aList.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class, dashlet_type: oDashletParams.dashlet_type} );
+						oState[sId] = oDashletParams;
+						aList.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class, dashlet_type: oDashletParams.dashlet_type});
 					}
 				});
-				
-				if (aList.length == 0)
-				{
+
+				if (aList.length == 0) {
 					oState[0] = {dashlet_id: 0, dashlet_class: 'DashletEmptyCell', dashlet_type: 'DashletEmptyCell'};
 					aList.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell', dashlet_type: 'DashletEmptyCell'});
 				}
@@ -105,28 +100,26 @@ $(function()
 			oState.title = this.options.title;
 			oState.auto_reload = this.options.auto_reload;
 			oState.auto_reload_sec = this.options.auto_reload_sec;
-			
+
 			return oState;
 		},
-		_make_draggable: function()
-		{
+		_make_draggable: function () {
 			var me = this;
-			this.element.find('.dashlet').draggable({
+			this.element.find('.ibo-dashlet').draggable({
 				revert: 'invalid', appendTo: 'body', zIndex: 9999, distance: 10,
-				helper: function() {
+				helper: function () {
 					var oDragItem = $(this).dashlet('get_drag_icon');
 					return oDragItem;
 				},
-				cursorAt: { top: 16, left: 16 }
+				cursorAt: {top: 16, left: 16}
 			});
-			this.element.find('table td').droppable({
-				accept: '.dashlet,.dashlet_icon',
-				drop: function(event, ui) {
-					$( this ).find( ".placeholder" ).remove();
-					var bRefresh = $(this).hasClass('layout_extension');
+			this.element.find('.ibo-dashboard--grid-column').droppable({
+				accept: '.ibo-dashlet,.dashlet_icon',
+				drop: function (event, ui) {
+					$(this).find(".placeholder").remove();
+					var bRefresh = true;
 					var oDropped = ui.draggable;
-					if (oDropped.hasClass('dashlet'))
-					{
+					if (oDropped.hasClass('ibo-dashlet')) {
 						// moving around a dashlet
 						oDropped.detach();
 						oDropped.css({top: 0, left: 0});
@@ -134,20 +127,17 @@ $(function()
 
 						var oDashlet = ui.draggable.data('itopDashlet');
 						me.on_dashlet_moved(oDashlet, $(this), bRefresh);
-					}
-					else
-					{
+					} else {
 						// inserting a new dashlet
 						var sDashletClass = ui.draggable.attr('dashlet_class');
-						$('.itop-dashboard').trigger('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh });
+						$('.itop-dashboard').trigger('add_dashlet', {dashlet_class: sDashletClass, container: $(this), refresh: bRefresh});
 					}
 				}
-			});	
+			});
 		},
-		add_dashlet: function(options)
-		{
+		add_dashlet: function (options) {
 			var $container = options.container;
-			var aDashletsIds = $container.closest("table").find("div.dashlet").map(function(){
+			var aDashletsIds = $container.closest(".ibo-dashboard--grid-row").find("div.ibo-dashlet").map(function () {
 				// Note:
 				// - At runtime a unique dashlet ID is generated (see \Dashboard::GetDashletUniqueId) to avoid JS widget collisions
 				// - At design time, the dashlet ID is not touched (same as in the XML datamodel)
@@ -164,17 +154,15 @@ $(function()
 			this._get_dashletid_ajax(options, iHighestDashletOrigId + 1);
 		},
 		// Get the real dashlet ID from the temporary ID
-		_get_dashletid_ajax: function(options, sTempDashletId)
-		{
+		_get_dashletid_ajax: function (options, sTempDashletId) {
 			// Do nothing, meant for overloading
 		},
-		add_dashlet_prepare: function(options, sFinalDashletId)
-		{
+		add_dashlet_prepare: function (options, sFinalDashletId) {
 			// 1) Create empty divs for the dashlet and its properties
 			//
-			var oDashlet = $('<div class="dashlet" id="dashlet_'+sFinalDashletId+'"/>');
+			var oDashlet = $('<div class="dashlet" id="dashlet_' + sFinalDashletId + '"/>');
 			oDashlet.appendTo(options.container);
-			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_'+sFinalDashletId+'"/>');
+			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_' + sFinalDashletId + '"/>');
 			oDashletProperties.appendTo($('#dashlet_properties'));
 
 			// 2) Ajax call to fill the divs with default values
@@ -295,76 +283,63 @@ $(function()
 			});
 		},
 		// Modified means: at least one change has been applied
-		mark_as_modified: function()
-		{
+		mark_as_modified: function () {
 			this.bModified = true;
 		},
-		is_modified: function()
-		{
+		is_modified: function () {
 			return this.bModified;
 		},
 		// Dirty means: at least one change has not been committed yet
-		is_dirty: function()
-		{
-			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').size() > 0)
-			{
+		is_dirty: function () {
+			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').size() > 0) {
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		},
 		// Force the changes of all the properties being "dirty"
-		apply_changes: function()
-		{
+		apply_changes: function () {
 			$('#dashboard_editor .ui-layout-east .itop-property-field-modified').trigger('apply_changes');
 		},
-		save: function(dialog)
-		{
+		save: function (dialog) {
 			var oParams = this._get_state(this.options.submit_parameters);
 			var me = this;
-			$.post(this.options.submit_to, oParams, function(data){
+			$.post(this.options.submit_to, oParams, function (data) {
 				me.ajax_div.html(data);
-				if(dialog)
-				{
-                    dialog.dialog( "close" );
-                    dialog.remove();
-                }
+				if (dialog) {
+					dialog.dialog("close");
+					dialog.remove();
+				}
 			});
 		},
 		// We need a unique dashlet id, we will get it using an ajax query
-		_get_dashletid_ajax: function(options, sTempDashletId)
-		{
+		_get_dashletid_ajax: function (options, sTempDashletId) {
 			var me = this;
 			var $container = options.container;
 			var oParams = this.options.new_dashletid_parameters;
 			oParams.dashboardid = me.options.dashboard_id;
-			oParams.iRow = $container.closest("tr").data("dashboard-row-index");
-			oParams.iCol = $container.data("dashboard-column-index");
+			oParams.iRow = $container.closest(".ibo-dashboard--grid-row").data("dashboard-grid-row-index");
+			oParams.iCol = $container.data("dashboard-grid-column-index");
 			oParams.dashletid = sTempDashletId;
 
-			$.post(this.options.new_dashletid_endpoint, oParams, function(data) {
-				var sFinalDashletId = data;
-				me.add_dashlet_prepare(options, sFinalDashletId);
+			$.post(this.options.new_dashletid_endpoint, oParams, function (data) {
+				me.add_dashlet_prepare(options, data);
 			});
 		},
-		add_dashlet_ajax: function(options, sDashletId)
-		{
+		add_dashlet_ajax: function (options, sDashletId) {
 			var oParams = this.options.new_dashlet_parameters;
 			var sDashletClass = options.dashlet_class;
 			oParams.dashlet_class = sDashletClass;
 			oParams.dashlet_id = sDashletId;
 			oParams.dashlet_type = options.dashlet_type;
 			var me = this;
-			$.post(this.options.render_to, oParams, function(data){
+			$.post(this.options.render_to, oParams, function (data) {
 				me.ajax_div.html(data);
 				me.add_dashlet_finalize(options, sDashletId, sDashletClass);
 				me.mark_as_modified();
 			});
 		},
-		on_dashlet_moved: function(oDashlet, oReceiver, bRefresh)
-		{
+		on_dashlet_moved: function (oDashlet, oReceiver, bRefresh) {
 			this._superApply(arguments);
 			this.mark_as_modified();
 		}

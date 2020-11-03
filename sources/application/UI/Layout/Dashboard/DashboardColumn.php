@@ -110,5 +110,22 @@ class DashboardColumn extends UIBlock
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function IsLastRow(): bool
+	{
+		return $this->bLastRow;
+	}
 
+	/**
+	 * @param bool $bLastRow
+	 *
+	 * @return DashboardColumn
+	 */
+	public function SetLastRow(bool $bLastRow): DashboardColumn
+	{
+		$this->bLastRow = $bLastRow;
+		return $this;
+	}
 }

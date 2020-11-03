@@ -19,6 +19,7 @@
 
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
@@ -1268,8 +1269,7 @@ EOF
 			$sDashletId = $aParams['attr_dashlet_id'];
 			$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
 			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
-			if (is_subclass_of($sDashletClass, 'Dashlet'))
-			{
+			if (is_subclass_of($sDashletClass, 'Dashlet')) {
 				/** @var \Dashlet $oDashlet */
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 				$oDashlet->SetDashletType($sDashletType);
@@ -1278,8 +1278,7 @@ EOF
 
 				$aCurrentValues = $aValues;
 				$aUpdatedDecoded = array();
-				foreach($aUpdatedProperties as $sProp)
-				{
+				foreach ($aUpdatedProperties as $sProp) {
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
 					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
 					$aUpdatedDecoded[] = $sDecodedProp;
@@ -1289,30 +1288,21 @@ EOF
 				$sPrevClass = get_class($oDashlet);
 				$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
 				$sNewClass = get_class($oDashlet);
-				if ($sNewClass != $sPrevClass)
-				{
+				if ($sNewClass != $sPrevClass) {
 					$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
 				}
-				if ($oDashlet->IsRedrawNeeded())
-				{
-					$offset = $oPage->start_capture();
-					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */, $aExtraParams);
-					$sHtml = addslashes($oPage->end_capture($offset));
-					$sHtml = str_replace("\n", '', $sHtml);
-					$sHtml = str_replace("\r", '', $sHtml);
-
-					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');"); // in ajax web page add_script has the same effect as add_ready_script
-					// but is executed BEFORE all 'ready_scripts'
+				if ($oDashlet->IsRedrawNeeded()) {
+					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
+					$sHtml = BlockRenderer::RenderBlockTemplates($oBlock);
+					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
-				if ($oDashlet->IsFormRedrawNeeded())
-				{
+				if ($oDashlet->IsFormRedrawNeeded()) {
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
-					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
+					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
-					$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
-					// but is executed BEFORE all 'ready_scripts'
+					$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')");
 				}
 			}
 			break;

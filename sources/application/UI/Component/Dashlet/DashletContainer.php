@@ -13,4 +13,5 @@ use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 class DashletContainer extends UIContentBlock
 {
 	public const BLOCK_CODE = 'ibo-dashlet';
+	public const HTML_TEMPLATE_REL_PATH = 'layouts/content-block/layout';
 }

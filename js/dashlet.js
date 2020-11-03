@@ -72,46 +72,38 @@ $(function()
 			// in 1.9 would use _super
 			this._superApply(arguments);
 		},
-		select: function()
-		{
+		select: function() {
 			this.element.addClass('dashlet-selected');
 			this.closeBox.fadeIn(500);
 			$('#event_bus').trigger('dashlet-selected', {'dashlet_id': this.options.dashlet_id, 'dashlet_class': this.options.dashlet_class, 'dashlet_type': this.options.dashlet_type});
 		},
-		deselect: function()
-		{
+		deselect: function () {
 			this.element.removeClass('dashlet-selected');
 			this.closeBox.hide();
 		},
-		deselect_all: function()
-		{
-			$(':itop-dashlet').each(function(){
-				var sId = $(this).attr('id');
+		deselect_all: function () {
+			$('.itop-dashlet').each(function () {
 				var oWidget = $(this).data('itopDashlet');
-				if (oWidget)
-				{
+				if (oWidget) {
 					oWidget.deselect();
 				}
 			});
 		},
-		_on_click: function(event)
-		{
+		_on_click: function () {
 			this.deselect_all();
 			this.select();
 		},
-		get_params: function()
-		{
+		get_params: function () {
 			var oParams = {};
-			var oProperties = $('#dashlet_properties_'+this.options.dashlet_id);
-            oProperties.find('.itop-property-field').each(function(){
-                var oWidget = $(this).data('itopProperty_field');
-                if (oWidget == undefined)
-                {
-                    oWidget = $(this).data('itopSelector_property_field');
-                }
+			var oProperties = $('#dashlet_properties_' + this.options.dashlet_id);
+			oProperties.find('.itop-property-field').each(function () {
+				var oWidget = $(this).data('itopProperty_field');
+				if (oWidget === undefined) {
+					oWidget = $(this).data('itopSelector_property_field');
+				}
 				var oVal = oWidget._get_committed_value();
 				oParams[oVal.name] = oVal.value;
-            });
+			});
 
 			oParams.dashlet_id = this.options.dashlet_id;
 			oParams.dashlet_class = this.options.dashlet_class;
