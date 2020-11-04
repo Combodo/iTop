@@ -26,19 +26,3 @@ $ibo-fieldset--legend--border-bottom-style: solid !default;
 
   @extend %ibo-font-ral-med-250;
 }
-
-/* For compatibility with extensions before 3.0.0 */
-fieldset {
-  &:not(.ibo-fieldset) {
-    margin: 10px;
-
-    & legend {
-      width: $ibo-fieldset--legend--width;
-      margin-bottom: $ibo-fieldset--legend--margin-bottom;
-      padding-bottom: $ibo-fieldset--legend--padding-bottom;
-      border-bottom: $ibo-fieldset--legend--border-bottom-size $ibo-fieldset--legend--border-bottom-style $ibo-fieldset--legend--border-bottom-color;
-
-      @extend %ibo-font-ral-med-250;
-    }
-  }
-}

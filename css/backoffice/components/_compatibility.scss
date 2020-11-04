@@ -1,0 +1,31 @@
+/*!
+ * copyright   Copyright (C) 2010-2020 Combodo SARL
+ * license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/*
+ * For compatibility with extensions before 3.0.0
+ */
+
+fieldset {
+  &:not(.ibo-fieldset) {
+    margin: 10px;
+
+    & legend {
+      width: $ibo-fieldset--legend--width;
+      margin-bottom: $ibo-fieldset--legend--margin-bottom;
+      padding-bottom: $ibo-fieldset--legend--padding-bottom;
+      border-bottom: $ibo-fieldset--legend--border-bottom-size $ibo-fieldset--legend--border-bottom-style $ibo-fieldset--legend--border-bottom-color;
+
+      @extend %ibo-font-ral-med-250;
+    }
+  }
+}
+
+.field_label.label {
+  @extend %ibo-font-ral-nor-150;
+}
+
+.field_data {
+  @extend %ibo-font-ral-nor-150;
+}
