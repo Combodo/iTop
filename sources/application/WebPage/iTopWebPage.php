@@ -324,12 +324,12 @@ JS
 		// Highlight code content created with CKEditor
 		$this->add_ready_script(
 			<<<JS
-		// Highlight code content for HTML AttributeText
-        $("[data-attribute-type='AttributeText'] .HTML pre").each(function(i, block) {
+		// Highlight code content for AttributeHTML and HTML AttributeText
+        $('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre').each(function(i, block) {
             hljs.highlightBlock(block);
         });        
 		// Highlight code content for CaseLogs
-		$("[data-attribute-type='AttributeCaseLog'] .caselog_entry_html pre").each(function(i, block) {
+		$('[data-role="ibo-activity-entry--main-information-content"] pre').each(function(i, block) {
             hljs.highlightBlock(block);
         });
 JS

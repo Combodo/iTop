@@ -145,14 +145,6 @@ EOF
 					// Then the previous entries if necessary
 					if ($sFieldClass === 'Combodo\\iTop\\Form\\Field\\CaseLogField') {
 						$this->PreparingCaseLogEntries($oOutput);
-						// Trigger highlighter for all code blocks in this caselog
-						$oOutput->AddJs(
-							<<<JS
-   $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .caselog_field_entry_content > pre").each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-JS
-						);
 					}
 					$oOutput->AddHtml('</div>');
 
@@ -338,14 +330,6 @@ EOF
 							$oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), false)->AddHtml('</div>');
 							$oOutput->AddHtml('</div>');
-							// Trigger highlighter for all code blocks in this html text field
-							$oOutput->AddJs(
-								<<<JS
-$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .HTML pre").each(function(i, block) {
-    hljs.highlightBlock(block);
-});
-JS
-							);
 						}
 
 						// Adding hidden input
@@ -374,14 +358,6 @@ JS
 
 						// Closing container
 						$oOutput->AddHtml('</div>');
-						// Trigger highlighter for all code blocks in this caselog
-						$oOutput->AddJs(
-							<<<JS
-   $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] .caselog_field_entry_content pre").each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-JS
-						);
 						break;
 
 					case 'Combodo\\iTop\\Form\\Field\\BlobField':
@@ -522,6 +498,13 @@ EOF
 				if($bRichEditor) {
 					// MagnificPopup on images
 					$oOutput->AddJs(InlineImage::FixImagesWidth());
+					// Trigger highlighter for all code blocks in this caselog
+					$oOutput->AddJs(<<<JS
+$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}'] pre").each(function(i, block) {
+    hljs.highlightBlock(block);
+});
+JS
+					);
 				}
 				break;
 		}
