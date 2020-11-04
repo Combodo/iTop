@@ -80,3 +80,29 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
     background-color: map-get($aColors, 'primary-color');
   }
 }
+
+
+
+.ibo-title-for-dashlet {
+	padding-top: 2em;
+}
+.ibo-title-for-dashlet--title {
+	@extend %ibo-font-ral-nor-350;
+}
+
+.ibo-title-for-dashlet--content{
+	background-color: $ibo-color-white-100;
+	border-radius: 5px;
+	border: 1px solid ;
+	border-color:$ibo-color-grey-400;
+	padding-bottom:1em;
+}
+.ibo-title-separator{
+	border-radius: 5px 5px 0px 0px;
+	border-color:$ibo-color-blue-600;
+	color:$ibo-color-blue-600;
+	background-color:$ibo-color-blue-600;
+	border: 3px solid ;
+	margin:0;
+	padding:0;
+}

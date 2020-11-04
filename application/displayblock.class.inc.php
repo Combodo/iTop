@@ -20,6 +20,7 @@
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
@@ -238,18 +239,15 @@ class DisplayBlock
 		$sFilter = addslashes($this->m_oFilter->serialize(false, $aQueryParams)); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous) {
 			// render now
-			$oHtml->AddHtml("<div id=\"$sId\" class=\"display_block\" >\n");
 			try {
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
 				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
 			}
-			$oHtml->AddHtml("</div>\n");
 		} else {
 			// render it as an Ajax (asynchronous) call
-			$oHtml->AddHtml("<div id=\"$sId\" class=\"display_block loading\">\n");
+			$oHtml->AddCSSClasses("display_block loading");
 			$oHtml->AddHtml($oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading')));
-			$oHtml->AddHtml("</div>\n");
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
@@ -573,7 +571,16 @@ class DisplayBlock
 								$index++;
 							}
 							$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
-							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplayExtendedSet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
+							if (empty($aExtraParams['currentId']))
+							{
+								$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+							}
+							else
+							{
+								$iListId = $aExtraParams['currentId'];
+							}
+							$oBlock = DataTableFactory::MakeForRendering( $iListId, $this->m_oSet, $aExtraParams);
+							$sHtml .= "<tr><td>".render_block($oBlock)."</td></tr>\n";
 						}
 					}				
 					$sHtml .= "</table>\n";
@@ -599,7 +606,15 @@ class DisplayBlock
 				{
 					if($this->m_oSet->CountWithLimit(1) > 0)
 					{
-						$sHtml .= cmdbAbstractObject::GetDisplayExtendedSet($oPage, $this->m_oSet, $aExtraParams);
+						if (empty($aExtraParams['currentId']))
+						{
+							$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+						}
+						else
+						{
+							$iListId = $aExtraParams['currentId'];
+						}
+						$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
 					}
 					else
 					{
@@ -618,7 +633,7 @@ class DisplayBlock
 				// The list is made of only 1 class of objects, actions on the list are possible
 				if ( ($this->m_oSet->CountWithLimit(1)> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 				{
-					$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
+					$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
 				}
 				else
 				{
@@ -784,10 +799,9 @@ class DisplayBlock
 			case 'search':
 			if (!$oPage->IsPrintableVersion())
 			{
-				$sHtml .= "<div id=\"ds_$sId\" class=\"search_box\">\n";
 				$aExtraParams['currentId'] = $sId;
-				$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
-		 		$sHtml .= "</div>\n";
+				$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
+				$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage,  $this->m_oSet, $aExtraParams);
 		 	}
 			break;
 			
@@ -1800,7 +1814,7 @@ class MenuBlock extends DisplayBlock
 				}
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
-					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_{$sId}').dialog('open');"];
+					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open');"];
 					utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aActions);
 				}
 				break;

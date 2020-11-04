@@ -1,4 +1,4 @@
-# Deprecated in 2.8.0
+# Deprecated in 3.0.0
 
  * TabManager::GetCurrentTabLength()
  * TabManager::TruncateTab()
@@ -6,8 +6,9 @@
  * TabManager::RenderIntoContent()
  
  * iTopWebPage::SelectTab()
+*cmdbabstract->GetDisplaySet
+*cmdbabstract->GetDisplayExtendedSet
 
-
-# Modified in 2.8.0
+# Modified in 3.0.0
 
  * iTabbedPage::AddTabContainer -> one optional parameter added

@@ -368,7 +368,8 @@ JS
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
 		$sHtml = "<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\">";
-		$sHtml .= "<table class=\"listResults\">\n";
+		$sHtml .= "<table class=\"listResults\" id='dt_{$this->m_sAttCode}{$this->m_sNameSuffix}' width='100%'>\n";
+		$oP->add_ready_script("$('#dt_{$this->m_sAttCode}{$this->m_sNameSuffix}').DataTable({\"language\": {\"emptyTable\": \"".str_replace("\"","\\\"",Dict::S('UI:Message:EmptyList:UseAdd'))."\"},search:false});");
 		// Header
 		$sHtml .= "<thead>\n";
 		$sHtml .= "<tr>\n";
@@ -391,11 +392,11 @@ JS
 		{
 			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
 		}
-		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
+		//$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
 		$sHtml .= "</tbody>\n";
 
 		// Footer
-		$sHtml .= "</table>\n";
+		$sHtml .= "</table></br>\n";
 
 		return $sHtml;
 	}
@@ -463,6 +464,7 @@ JS
             $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
+		// To prevent adding forms inside the main form
 
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
@@ -513,7 +515,7 @@ JS
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
+		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
@@ -555,14 +557,13 @@ JS
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->m_sAttCode}{$this->m_sNameSuffix}" value="0"/>
-    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;<input id="btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
+    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;
+    <input id="btn_ok_add_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
 </form>
-</div>
 HTML
 		);
 
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."' , autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
 	}

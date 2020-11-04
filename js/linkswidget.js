@@ -193,7 +193,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			theMap['selectionMode'] = sMode;
 			$('#fs_SearchFormToAdd_'+me.id+' :input').each(
 				function (i) {
-					theMap[this.name] = this.value;
+					if(this.name !="")
+					{
+						theMap[this.name] = this.value;
+					}
 				}
 			);
 			theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
@@ -206,10 +209,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				theMap[this.name].push(this.value);
 				$(this).remove(); // Remove the selection for the next time the dialog re-opens
 			});
+			theMap["storedSelection[]"]=eval("oSelectedItemsadd_"+me.id);
+
 			// Retrieve the 'filter' definition
-			var table = $('#ResultsToAdd_'+me.id).find('table.listResults')[0];
-			theMap['filter'] = table.config.filter;
-			theMap['extra_params'] = table.config.extra_params;
+			theMap['filter'] = $(':input[name=filter]', context).val();
+			theMap['extra_params'] = $(':input[name=extra_params]', context).val();
 		}
 //		else
 //		{

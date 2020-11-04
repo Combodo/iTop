@@ -262,11 +262,11 @@ function UpdateFileName(id, sNewFileName) {
  * Reload a search form for the specified class
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sExtraParams) {
-	var oDiv = $('#ds_'+divId);
+	var oDiv = $('#'+divId);
 	oDiv.block();
 	// deprecated in jQuery 1.8 
 	//var oFormEvents = $('#ds_'+divId+' form').data('events');
-	var oForm = $('#ds_'+divId+' form');
+	var oForm = $('#'+divId+' form');
 	var oFormEvents = $._data(oForm[0], "events");
 
 	// Save the submit handlers
@@ -276,11 +276,11 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			aSubmit [index] = {data: oFormEvents.submit[index].data, namespace: oFormEvents.submit[index].namespace, handler: oFormEvents.submit[index].handler};
 		}
 	}
-	sAction = $('#ds_'+divId+' form').attr('action');
+	sAction = $('#'+divId+' form').attr('action');
 
 	// Save the current values in the form
 	var oMap = {};
-	$('#ds_'+divId+" form :input[name!='']").each(function () {
+	$('#'+divId+" form :input[name!='']").each(function () {
 		oMap[this.name] = this.value;
 	});
 	oMap.operation = 'search_form';

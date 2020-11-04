@@ -40,13 +40,31 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
+		//TODO deprecated in 3.0.0
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
 		// table sorting
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
+	    //TODO end deprecated in 3.0.0
+	    // Datatables added in 3.0.0
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/jquery.dataTables.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.bootstrap.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.fixedHeader.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.responsive.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.scroller.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.select.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/dataTables.settings.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/dataTables.pipeline.js');
+		/*$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/dataTables.bootstrap.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/fixedHeader.bootstrap.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/responsive.bootstrap.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/scroller.bootstrap.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/select.bootstrap.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/select.dataTables.min.css');*/
+
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
@@ -69,52 +87,7 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
 
 	    $this->add_dict_entries('UI:Combo');
-
-	    $this->add_ready_script(
-<<< EOF
-	//add new widget called TruncatedList to properly display truncated lists when they are sorted
-	$.tablesorter.addWidget({ 
-		// give the widget a id 
-		id: "truncatedList", 
-		// format is called when the on init and when a sorting has finished 
-		format: function(table)
-		{ 
-			// Check if there is a "truncated" line
-			this.truncatedList = false;  
-			if ($("tr td.truncated",table).length > 0)
-			{
-				this.truncatedList = true;
-			}
-			if (this.truncatedList)
-			{
-				$("tr td",table).removeClass('truncated');
-				$("tr:last td",table).addClass('truncated');
-			}
-		} 
-	});
-	
-	$.tablesorter.addWidget({ 
-		// give the widget a id 
-		id: "myZebra", 
-		// format is called when the on init and when a sorting has finished 
-		format: function(table)
-		{
-			// Replace the 'red even' lines by 'red_even' since most browser do not support 2 classes selector in CSS, etc..
-			$("tbody tr:even",table).addClass('even');
-			$("tbody tr.red:even",table).removeClass('red').removeClass('even').addClass('red_even');
-			$("tbody tr.orange:even",table).removeClass('orange').removeClass('even').addClass('orange_even');
-			$("tbody tr.green:even",table).removeClass('green').removeClass('even').addClass('green_even');
-			// In case we sort again the table, we need to remove the added 'even' classes on odd rows
-			$("tbody tr:odd",table).removeClass('even');
-			$("tbody tr.red_even:odd",table).removeClass('even').removeClass('red_even').addClass('red');
-			$("tbody tr.orange_even:odd",table).removeClass('even').removeClass('orange_even').addClass('orange');
-			$("tbody tr.green_even:odd",table).removeClass('even').removeClass('green_even').addClass('green');
-		} 
-	});
-	$("table.listResults").tableHover(); // hover tables
-EOF
-	    );
-		$this->LoadTheme();
+	    $this->LoadTheme();
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
 		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);

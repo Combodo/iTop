@@ -93,66 +93,66 @@
 		text-decoration: none;
 	}
 
-	table.datatable {
-		width: 100%;
-		border: 0;
-		padding: 0;
-	}
+	//table.datatable {
+	//	width: 100%;
+	//	border: 0;
+	//	padding: 0;
+	//}
 
 	td.menucontainer {
 		text-align: right;
 	}
 
-	table.listResults {
-		padding: 0px;
-		border-top: 3px solid $frame-background-color;
-		border-left: 3px solid $frame-background-color;
-		border-bottom: 3px solid #e6e6e1;
-		border-right: 3px solid #e6e6e1;
-		width: 100%;
-		background-color: $white;
-	}
+	//table.listResults {
+	//	padding: 0px;
+	//	border-top: 3px solid $frame-background-color;
+	//	border-left: 3px solid $frame-background-color;
+	//	border-bottom: 3px solid #e6e6e1;
+	//	border-right: 3px solid #e6e6e1;
+	//	width: 100%;
+	//	background-color: $white;
+	//}
 
-	table.listResults td {
-		padding: 2px;
-	}
+	//table.listResults td {
+	//	padding: 2px;
+	//}
 
-	table.listResults td .view-image {
+	//table.listResults td .view-image {
 		// Counteract the forced dimensions (usefull for displaying in the details view)
-		width: inherit !important;
-		height: inherit !important;
+	//	width: inherit !important;
+	//	height: inherit !important;
 
-		img {
-			max-width: 48px !important;
-			max-height: 48px !important;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-		}
-	}
+	//	img {
+	//		max-width: 48px !important;
+	//		max-height: 48px !important;
+	//		display: block;
+	//		margin-left: auto;
+	//		margin-right: auto;
+	//	}
+	//}
 
-	table.listResults > tbody > tr.selected > * {
-	}
+	//table.listResults > tbody > tr.selected > * {
+	//}
 
-	table.listResults > tbody > tr > * {
-		transition: background-color 400ms linear;
-	}
+	//table.listResults > tbody > tr > * {
+	//	transition: background-color 400ms linear;
+	//}
 
-	table.listResults > tbody > tr:hover > * {
-		cursor: pointer;
-	}
+	//table.listResults > tbody > tr:hover > * {
+	//	cursor: pointer;
+	//}
 
-	table.listResults > tbody > tr.selected:hover > * {
+	//table.listResults > tbody > tr.selected:hover > * {
 		/* hover on lines is currently done toggling td.hover, and having a rule for links */
-		background-color: $brand-primary-lightest;
-		color: $text-color;
-	}
+	//	background-color: $brand-primary-lightest;
+	//	color: $text-color;
+	//}
 
-	table.listResults > tbody > tr:hover > * {
+	//table.listResults > tbody > tr:hover > * {
 		/* hover on lines is currently done toggling td.hover, and having a rule for links */
-		background-color: $table-hover-background;
-		color: $text-color;
-	}
+	//	background-color: $table-hover-background;
+	//	color: $text-color;
+	//}
 
 	.edit-image {
 		.view-image {
@@ -278,13 +278,13 @@
 		color: $text-color;
 	}
 
-	th {
-		font-family: Tahoma, Verdana, Arial, Helvetica;
-		font-size: 8pt;
-		color: $complement-color;
-		height: 20px;
-		background: $frame-background-color bottom repeat-x;
-	}
+	//th {
+	//	font-family: Tahoma, Verdana, Arial, Helvetica;
+	//	font-size: 8pt;
+	//	color: $complement-color;
+	//	height: 20px;
+	//	background: $frame-background-color bottom repeat-x;
+	//}
 
 	th.header {
 		cursor: pointer;
@@ -986,14 +986,14 @@
 	}
 
 	.search_form_handler {
-		position: relative;
-		z-index: 10;
-		width: 100%;
-		margin-left: auto;
-		margin-right: auto;
-		font-size: 12px;
-		text-align: left; /* To compensate .search_box:text-align */
-		border: 1px solid $search-form-container-bg-color;
+	//	position: relative;
+	//	z-index: 10;
+	//	width: 100%;
+	//	margin-left: auto;
+	//	margin-right: auto;
+	//	font-size: 12px;
+	//	text-align: left; /* To compensate .search_box:text-align */
+	//	border: 1px solid $search-form-container-bg-color;
 		//transition: width 0.3s ease-in-out;
 
 		/* Sizing reset */
@@ -1137,7 +1137,6 @@
 			background-color: $white;
 
 			.sf_criterion_row {
-				position: relative;;
 
 				&:not(:first-child) {
 					margin-top: 20px;
@@ -1165,6 +1164,11 @@
 
 				.sf_criterion_group {
 					display: inline;
+					.sfc_fg_button,
+					.sfc_header {
+						border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+						border-radius: 3px;
+					}
 				}
 			}
 
@@ -1197,7 +1201,6 @@
 					box-shadow: $box-shadow-regular;
 				}
 
-				.sfc_form_group,
 				.sfm_content {
 					position: absolute;
 					z-index: -1;

@@ -17,10 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
@@ -67,7 +69,7 @@ try
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 
 
@@ -227,6 +229,190 @@ try
 				$sHtml = $oDataTable->GetAsHTMLTableRows($oPage, $iEnd - $iStart, $aColumns, $sSelectMode, $bDisplayKey, $aExtraParams);
 			}
 			$oPage->add($sHtml);
+			$oKPI->ComputeAndReport('Data fetch and format');
+			break;
+
+		case 'search_and_refresh':
+			$oPage->SetContentType('application/json');
+			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+			$aExtraParams = array();
+			if (is_array($extraParams))
+			{
+				$aExtraParams = $extraParams;
+			}
+			else
+			{
+				$sExtraParams = stripslashes($extraParams);
+				if (!empty($sExtraParams))
+				{
+					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+					if ($val !== null)
+					{
+						$aExtraParams = $val;
+					}
+				}
+			}
+			$iLength = utils::ReadParam('end', 10);
+			$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+			$sSelectMode = utils::ReadParam('select_mode', '');
+			$aResult = DataTableFactory::GetOptionsForRendering( $aColumns,  $sSelectMode, $sFilter, $iLength, $aExtraParams);
+			$oPage->add(json_encode($aResult));
+		break;
+
+		case 'search':
+			$oPage->SetContentType('application/json');
+			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+			$aExtraParams = array();
+			if (is_array($extraParams))
+			{
+				$aExtraParams = $extraParams;
+			}
+			else
+			{
+				$sExtraParams = stripslashes($extraParams);
+				if (!empty($sExtraParams))
+				{
+					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+					if ($val !== null)
+					{
+						$aExtraParams = $val;
+					}
+				}
+			}
+			if ($sEncoding == 'oql')
+			{
+				$oFilter = DBSearch::FromOQL($sFilter);
+			}
+			else
+			{
+				$oFilter = DBSearch::unserialize($sFilter);
+			}
+			$iStart = utils::ReadParam('start', 0);
+			$iEnd = utils::ReadParam('end', 1);
+			$iDrawNumber= utils::ReadParam('draw', 1);
+
+			$iSortCol = utils::ReadParam('sort_col', 'null');
+			$sSelectMode = utils::ReadParam('select_mode', '');
+			if (!empty($sSelectMode) && ($sSelectMode != 'none'))
+			{
+				// The first column is used for the selection (radio / checkbox) and is not sortable
+				$iSortCol--;
+			}
+			$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
+			$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+			$aClassAliases = utils::ReadParam('class_aliases', array());
+			$iListId = utils::ReadParam('list_id', 0);
+
+			// Filter the list to removed linked set since we are not able to display them here
+			$sIdName ="";
+			$aOrderBy = array();
+			$iSortIndex = 0;
+
+			$aColumnsLoad = array();
+			foreach($aClassAliases as $sAlias => $sClassName)
+			{
+				$aColumnsLoad[$sAlias] = array();
+				foreach($aColumns[$sAlias] as $sAttCode => $aData)
+				{
+					if ($aData['checked'] == 'true')
+					{
+						$aColumns[$sAlias][$sAttCode]['checked'] = true;
+						if ($sAttCode == '_key_')
+						{
+							if($sIdName == ""){
+								$sIdName = $sAlias."/_key_";
+							}
+							if ($iSortCol == $iSortIndex)
+							{
+								if (!MetaModel::HasChildrenClasses($oFilter->GetClass()))
+								{
+									$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+									if ($aNameSpec[0] == '%1$s')
+									{
+										// The name is made of a single column, let's sort according to the sort algorithm for this column
+										$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+									}
+									else
+									{
+										$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+									}
+								}
+								else
+								{
+									$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								}
+							}
+						}
+						else
+						{
+							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+							if ($oAttDef instanceof AttributeLinkedSet)
+							{
+								// Removed from the display list
+								unset($aColumns[$sAlias][$sAttCode]);
+							}
+							else
+							{
+								$aColumnsLoad[$sAlias][] = $sAttCode;
+							}
+							if ($iSortCol == $iSortIndex)
+							{
+								if ($oAttDef->IsExternalKey())
+								{
+									$sSortCol = $sAttCode.'_friendlyname';
+								}
+								else
+								{
+									$sSortCol = $sAttCode;
+								}
+								$aOrderBy[$sAlias.'.'.$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+							}
+						}
+						$iSortIndex++;
+					}
+					else
+					{
+						$aColumns[$sAlias][$sAttCode]['checked'] = false;
+					}
+				}
+
+			}
+
+			// Load only the requested columns
+			$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd - $iStart, $iStart);
+			$oSet->OptimizeColumnLoad($aColumnsLoad);
+
+			if (isset($aExtraParams['show_obsolete_data']))	{
+				$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
+			}
+			else {
+				$bShowObsoleteData = utils::ShowObsoleteData();
+			}
+			$oSet->SetShowObsoleteData($bShowObsoleteData);
+			$oKPI = new ExecutionKPI();
+			$aResult["draw"] = $iDrawNumber;
+			$aResult["recordsTotal"] = $oSet->Count() ;
+			$aResult["recordsFiltered"] = $oSet->Count() ;
+			$aResult["data"] = [];
+			while ($aObject = $oSet->FetchAssoc()) {
+				foreach($aClassAliases as $sAlias=>$sClass)	{
+					foreach($aColumns[$sAlias] as $sAttCode => $oAttDef) {
+						if($sAttCode=="_key_") {
+							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetKey();
+						}
+						else {
+							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->Get($sAttCode);
+						}
+					}
+				}
+				if($sIdName!="")
+				{
+					$aObj["id" ] = $aObj[$sIdName];
+				}
+				array_push($aResult["data"], $aObj);
+			}
+
+			$oPage->add(json_encode($aResult));
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 

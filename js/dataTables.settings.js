@@ -1,23 +1,18 @@
 // jQuery UI style "widget" for selecting and sorting "fields"
-//@deprecated
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,
 	// "datatable" the widget name
-	$.widget( "itop.datatable",
-	{
+	$.widget( "itop.DataTableSettings",
+{
 		// default options
 		options:
 		{
-			sPersistentId: '',
-			sFilter: '',
+			sListId: '',
 			oColumns: {},
 			sSelectMode: '',
 			sViewLink: 'true',
-			iNbObjects: 0,
-			iDefaultPageSize: -1,
 			iPageSize: -1,
-			iPageIndex: 0,
 			oClassAliases: {},
 			sTableId : null,
 			oExtraParams: {},
@@ -28,20 +23,17 @@ $(function()
 		},
 	
 		// the constructor
-		_create: function()
+		_create: function(mydatatable, options)
 		{
 			this.aDlgStateParams = ['iDefaultPageSize', 'oColumns'];
-
-			this.element
-			.addClass('itop-datatable');
+		console.warn('datatablesettings');
+			this.element.addClass('itop-datatable');
 			
 			var me = this;
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
 			var bViewLink = (this.options.sViewLink == 'true');
-			$('#sfl_'+sListId).fieldsorter({hasKeyColumn: bViewLink, labels: this.options.oLabels, fields: this.options.oColumns, onChange: function() { me._onSpecificSettings(); } });
-			$('#datatable_dlg_'+sListId).find('input[name=page_size]').click(function() { me._onSpecificSettings(); });
-			$('#datatable_dlg_'+sListId).find('input[name=save_settings]').click(function() { me._updateSaveScope(); });
+			$('#sfl_'+me.options.sListId).fieldsorter({hasKeyColumn: bViewLink, labels: this.options.oLabels, fields: this.options.oColumns, onChange: function() { me._onSpecificSettings(); } });
+			$('#datatable_dlg_'+me.options.sListId).find('input[name=page_size]').click(function() { me._onSpecificSettings(); });
+			$('#datatable_dlg_'+me.options.sListId).find('input[name=save_settings]').click(function() { me._updateSaveScope(); });
 			this.element.find('.itop_popup > ul li').popupmenu();
 			this._updateSaveScope();
 			this._saveDlgState();
@@ -50,11 +42,9 @@ $(function()
 		// called when created, and later when changing options
 		_refresh: function()
 		{
-			oParams = this.options.oRenderParameters;
-			oParams.operation = 'datatable';
+			oParams = this.options.oData;
+			oParams.operation = 'search_and_refresh';
 			
-			oParams.filter = this.options.sFilter;
-			oParams.extra_param = JSON.stringify(this.options.oExtraParams);
 			oParams.start = 0;
 			oParams.end = this.options.iPageSize;
 			oParams.select_mode = this.options.sSelectMode;
@@ -78,25 +68,55 @@ $(function()
 				}
 				break; //TODO: DBObjectSet supports only sorting on the first alias of the set
 			}			
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			oParams.list_id = sListId;
+			oParams.list_id = this.options.sListId;
 			var me = this;
 			this.element.block();
+
+			$('#'+me.options.sListId).DataTable().ajax.reload();
 			$.post(this.options.sRenderUrl, oParams, function(data) {
 				// Nasty workaround to clear the pager's state for paginated lists !!!
 				// See jquery.tablesorter.pager.js / saveParams / restoreParams
 				if (window.pager_params)
 				{
-					window.pager_params['pager'+sListId] = undefined;
+					window.pager_params['pager'+me.options.sListId] = undefined;
 				}
 				// End of workaround
+				console.warn("update:");
+				console.warn(data);
 
-				try {
-					me.element.find('.datacontents').html(data);
+			//	try {
+				var toto = $('#'+me.options.sListId).parent().parent();
+				$('#'+me.options.sListId).DataTable().destroy(true);
+				var entete="";
+				var aOptions = JSON.parse(data);
+				$.each(aOptions[0]['allColumns'], function(i, item) {
+					$.each(item, function(j, champs) {
+						if(champs.checked == 'true') {
+							entete += "<th>"+champs.label+"</th>";
+						}
+					});
+				});
+				$.each(aOptions[0]['columns'], function(i, item) {
+					aOptions[0]["columns"][i]["render"]["display"] = new Function ( "data, type, row" , aOptions[0]["columns"][i]["render"]["display"]);
+				});
+
+				toto.append( "<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">" +
+					"<thead><tr>"+entete+"</tr></thead></table>" );
+					//$('#'+me.options.sListId).DataTable().clear();
+					//$('#'+me.options.sListId).empty();
+					aOptions[0]["lengthMenu"]= [[oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, -1], [oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, aOptions[0]["lengthMenu"]]];
+					aOptions[0]["ajax"]=eval(aOptions[0]["ajax"]);
+					$('#'+me.options.sListId).DataTable(aOptions[0]);
+					//me.element.find('.datacontents').html(data);
 					// restore the sort order on columns
-					me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
-				} catch (e) {
+					//me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
+
+
+
+
+
+
+				/*} catch (e) {
 					// ugly hacks for IE 8/9 first...
 					if (!window.console) console.error = {};
 					if (!window.console.error) {
@@ -104,16 +124,17 @@ $(function()
 						};
 					}
 					console.error("Can not inject data : "+data);
-				}
+				}*/
 				me.element.unblock();
+
 			}, 'html' );
 			
 		},
 		_useDefaultSettings: function(bResetAll)
 		{
-			var oParams = this.options.oRenderParameters;
+			var oParams = this.options.oData;
 			oParams.operation = 'datatable_reset_settings';
-			
+
 			oParams.table_id = this.options.sTableId;
 			oParams.defaults = bResetAll;
 			oParams.class_aliases = this.options.oClassAliases;
@@ -125,13 +146,11 @@ $(function()
 		},
 		_saveSettings: function(bSaveAsDefaults)
 		{
-			var oParams = this.options.oRenderParameters;
+			var oParams = this.options.oData ;
 			oParams.operation = 'datatable_save_settings';
-			
 			oParams.page_size = this.options.iPageSize;
 			oParams.table_id = this.options.sTableId;
 			oParams.defaults = bSaveAsDefaults;
-			oParams.class_aliases = this.options.oClassAliases;
 			oParams.columns = this.options.oColumns;
 			var iSortCol = 0;
 			var sSortOrder = '';
@@ -149,10 +168,11 @@ $(function()
 					}
 				}
 			}
+			/*A voir, je ne sais pas à quoi ça sert
 			if ((this.options.sSelectMode != '') && (this.options.sSelectMode != 'none'))
 			{
 				iSortCol++;
-			}
+			}*/
 			oParams.sort_col = iSortCol;
 			oParams.sort_order = sSortOrder;
 			var me = this;
@@ -163,9 +183,7 @@ $(function()
 		onDlgOk: function()
 		{
 			var oOptions = {};
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			oSettings = $('#datatable_dlg_'+sListId).find('input[name=settings]:checked');
+			oSettings = $('#datatable_dlg_'+this.options.sListId).find('input[name=settings]:checked');
 			if (oSettings.val() == 'defaults')
 			{
 				oOptions = { iPageSize: this.options.oDefaultSettings.iDefaultPageSize, 
@@ -178,16 +196,16 @@ $(function()
 				var iColIdx = 0;
 				var iSortIdx = 0;
 				var sSortDirection = 'asc';
-				var oColumns = $('#datatable_dlg_'+sListId).find(':itop-fieldsorter').fieldsorter('get_params');
-				var iPageSize = parseInt($('#datatable_dlg_'+sListId+' input[name=page_size]').val(), 10);
+				var oColumns = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
+				var iPageSize = parseInt($('#datatable_dlg_'+this.options.sListId+' input[name=page_size]').val(), 10);
 				
 				oOptions = {oColumns: oColumns, iPageSize: iPageSize, iDefaultPageSize: iPageSize };
 			}
 			this._setOptions(oOptions);
 
 			// Check if we need to save the settings or not...
-			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
-			var oSaveScope = $('#datatable_dlg_'+sListId).find('input[name=scope]:checked');
+			var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name=save_settings]');
+			var oSaveScope = $('#datatable_dlg_'+this.options.sListId).find('input[name=scope]:checked');
 			if (oSaveCheck.prop('checked'))
 			{
 				if (oSettings.val() == 'defaults')
@@ -208,18 +226,14 @@ $(function()
 		},
 		_onSpecificSettings: function()
 		{
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			$('#datatable_dlg_'+sListId).find('input.specific_settings').prop('checked', true);
+			$('#datatable_dlg_'+this.options.sListId).find('input.specific_settings').prop('checked', true);
 		},
 		_updateSaveScope: function()
 		{
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
+			var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name=save_settings]');
 			if (oSaveCheck.prop('checked'))
 			{
-				$('#datatable_dlg_'+sListId).find('input[name=scope]').each(function() {
+				$('#datatable_dlg_'+this.options.sListId).find('input[name=scope]').each(function() {
 					if ($(this).attr('stay-disabled') != 'true')
 					{
 						$(this).prop('disabled', false);
@@ -228,20 +242,17 @@ $(function()
 			}
 			else
 			{
-				$('#datatable_dlg_'+sListId).find('input[name=scope]').prop('disabled', true);
+				$('#datatable_dlg_'+this.options.sListId).find('input[name=scope]').prop('disabled', true);
 			}
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('itop-datatable');
+			this.element.removeClass('itop-datatable');
 			
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			$('#sfl_'+sListId).remove();
-			$('#datatable_dlg_'+sListId).remove();			
+			$('#sfl_'+this.options.sListId).remove();
+			$('#datatable_dlg_'+this.options.sListId).remove();
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
@@ -258,6 +269,7 @@ $(function()
 		},
 		UpdateState: function( config )
 		{
+			console.warn('datatablesettings:UpdateState');
 			var iPageSize = config.page_size;
 			if (iPageSize == -1)
 			{
@@ -282,9 +294,7 @@ $(function()
 				}
 			}
 
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			var dlgElement = $('#datatable_dlg_'+sListId);
+			var dlgElement = $('#datatable_dlg_'+this.options.sListId);
 			dlgElement.find('input[name=page_size]').val(iPageSize);
 			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.options.oColumns });
 		},
@@ -295,15 +305,11 @@ $(function()
 			{
 				this.originalState[this.aDlgStateParams[k]] = this.options[this.aDlgStateParams[k]];
 			}
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			this.originalState.oFields = $('#datatable_dlg_'+sListId).find(':itop-fieldsorter').fieldsorter('get_params');
+			this.originalState.oFields = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 		},
 		_restoreDlgState: function()
 		{
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			var dlgElement = $('#datatable_dlg_'+sListId);
+			var dlgElement = $('#datatable_dlg_'+this.options.sListId);
 
 			for(k in this.aDlgStateParams)
 			{
@@ -313,12 +319,13 @@ $(function()
 			dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
 			
 			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.originalState.oFields });
+
+			$('#datatable_dlg_'+this.options.sListId).unblock();
+
 		},
 		IsDialogOpen: function()
 		{
-			var sId = new String(this.element.attr('id'));
-			var sListId = sId.replace('datatable_', '');
-			var oDlgOpen = $('#datatable_dlg_'+sListId+' :visible');
+			var oDlgOpen = $('#datatable_dlg_'+this.options.sListId+' :visible');
 			
 			return (oDlgOpen.length > 0);
 		},

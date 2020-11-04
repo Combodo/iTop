@@ -47,7 +47,7 @@ try
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
 	}
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 	$oPage->SetContentType('text/html');
 

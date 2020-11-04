@@ -40,7 +40,6 @@ class UISearchFormForeignKeys
 	 */
 	public function ShowModalSearchForeignKeys($oPage, $sTitle)
 	{
-		$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
@@ -65,9 +64,9 @@ class UISearchFormForeignKeys
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->m_iInputId}" value="0"/>
-    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_iInputId}').dialog('close');">&nbsp;&nbsp;<input id="btn_ok_{$this->m_iInputId}" disabled="disabled" type="button" onclick="return oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
+    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_iInputId}').dialog('close');">&nbsp;&nbsp;
+    <input id="btn_ok_add_{$this->m_iInputId}" disabled="disabled" type="button" onclick="return oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
 </form>
-</div>
 HTML
 		);
 

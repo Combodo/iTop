@@ -184,7 +184,7 @@ class UILinksWidgetDirect
 		// For security reasons: check that the "proposed" class is actually a subclass of the linked class
 		// and that the current user is allowed to create objects of this class
 		$sRealClass = '';
-		$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div>');
+		//$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div>');
 		$aSubClasses = MetaModel::EnumChildClasses($this->sLinkedClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 		$aPossibleClasses = array();
 		foreach($aSubClasses as $sCandidateClass)
@@ -294,7 +294,7 @@ class UILinksWidgetDirect
 	 */
 	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = array())
 	{
-		$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
+		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oHiddenFilter = new DBObjectSearch($this->sLinkedClass);
 		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass)) {
@@ -355,7 +355,6 @@ class UILinksWidgetDirect
     <input type="hidden" id="count_{$this->sInputid}" value="0"/>
     <button type="button" class="cancel">{$sCancel}</button>&nbsp;&nbsp;<button type="button" class="ok" disabled="disabled">{$sAdd}</button>
 </form>
-</div>
 HTML
 		);
 	}

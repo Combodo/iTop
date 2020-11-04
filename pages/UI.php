@@ -208,6 +208,7 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  */
 function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
 {
+	$oBlockForm=null;
 	if ($bSearchForm)
 	{
 		$aParams = array('open' => $bSearchFormOpen, 'table_id' => '1');
@@ -215,28 +216,46 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 		{
 			$aParams['baseClass'] = $sBaseClass;
 		}
-		$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
-		$oBlock->Display($oP, 0);
+		$oBlockForm = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
+
+		if (!$bDoSearch)
+		{
+			$oBlockForm->Display($oP, 0);
+		}
 	}
 	if ($bDoSearch)
 	{
 		if (strtolower($sFormat) == 'csv')
 		{
 			$oBlock = new DisplayBlock($oFilter, 'csv', false);
-			$oBlock->Display($oP, 1);
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
 			$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
 		}
 		else
 		{
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oP, 1);
 
 			// Breadcrumb
 			//$iCount = $oBlock->GetDisplayedCount();
 			$sPageId = "ui-search-".$oFilter->GetClass();
 			$sLabel = MetaModel::GetName($oFilter->GetClass());
 			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		}
+		if ($bSearchForm) {
+			$oUIBlockForm=$oBlockForm->GetDisplay($oP,'0');
+			$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+			if($sTableId=='')
+			{
+				$sTableId = '1';
+			}
+			$oUIBlock=$oBlock->GetDisplay($oP, $sTableId);
+			$oUIBlock->AddCSSClasses("display_block sf_results_area");
+			//$oUIBlockForm->AddSubBlock($oUIBlock);
+			$oP->AddUiBlock($oUIBlockForm);
+			$oP->AddUiBlock($oUIBlock);
+		}
+		else {
+			$oBlock->Display($oP, 1);
 		}
 	}
 }

@@ -1,0 +1,61 @@
+{% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
+{% if oUIBlock.GetOptions()["select"] is defined %}
+	<input type="hidden" name="selectionMode" value="positive"/>
+	<input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData()["extra_params"]}}"/>
+	<input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData()["filter"]}}"/>
+{% endif %}
+
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="ibo-datatable">
+    <thead>
+   {% if oUIBlock.GetOptions()["select"] is defined %}
+	   <th></th>
+   {% endif %}
+   {% for aColumn in oUIBlock.GetDisplayColumns() %}
+	   <th class="ibo-datatable-header" title="{{ aColumn["description"] }}\">{{ aColumn["attribute_label"] }} </th>
+   {% endfor %}
+    </thead>
+</table>
+
+<div id="datatable_dlg_{{ oUIBlock.GetId() }}" style="display: none; background : white;" class="">
+	<form id="form_{{ oUIBlock.GetId() }}" onsubmit="return false">
+		<p>
+			<input id="dtbl_dlg_settings_{{ oUIBlock.GetId() }}" type="radio" name="settings"  {% if (oUIBlock.GetOptions()['bUseCustomSettings'] == false) %} checked {% endif %} value="defaults">
+			<label for="dtbl_dlg_settings_{{ oUIBlock.GetId() }}">&nbsp;{{ 'UI:UseDefaultSettings'|dict_s }}</label>
+		</p>
+		<fieldset>
+			<legend class="transparent">
+				<input id="dtbl_dlg_specific_{{ oUIBlock.GetId() }}" type="radio" class="specific_settings" name="settings" {% if oUIBlock.GetOptions()["bUseCustomSettings"] %} checked {% endif %} value="specific">
+				<label for="dtbl_dlg_specific_{{ oUIBlock.GetId() }}">&nbsp;&nbsp;{{ 'UI:UseSpecificSettings'|dict_s }}</label>
+			</legend>
+			{{'UI:ColumnsAndSortOrder'|dict_s}}<br/>
+			<ul class="sortable_field_list" id="sfl_{{ oUIBlock.GetId() }}">
+
+			</ul>
+
+			<p> {{ 'UI:Display_X_ItemsPerPage_prefix'|dict_s }}<input type="text" size="4" name="page_size" value="{{ oUIBlock.GetOptions()["iPageSize"]}}">{{ 'UI:Display_X_ItemsPerPage_suffix'|dict_s }}</p>
+
+		</fieldset>
+		<fieldset>
+			<legend class="transparent">
+				<input id="dtbl_dlg_save_{{ oUIBlock.GetId() }}" type="checkbox" {% if oUIBlock.GetOptions()["sTableId"] != null %}checked{% endif %} name="save_settings">
+				<label for="dtbl_dlg_save_{{ oUIBlock.GetId() }}">&nbsp;&nbsp;{{ 'UI:UseSavetheSettings'|dict_s }}</label>
+			</legend>
+			<p>
+				<input id="dtbl_dlg_this_list_{{ oUIBlock.GetId() }}" type="radio" name="scope" {% if oUIBlock.GetOptions()["sTableId"] != null %} checked {% else %} disabled="disabled" stay-disabled="true"{% endif %} value="this_list">
+				<label for="dtbl_dlg_this_list_{{ oUIBlock.GetId() }}">&nbsp;&nbsp;{{ 'UI:OnlyForThisList'|dict_s }}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+				<input id="dtbl_dlg_all_{{ oUIBlock.GetId() }}" type="radio" name="scope"  {% if oUIBlock.GetOptions()["sTableId"] == null %} checked {% endif %} value="defaults">
+				<label for="dtbl_dlg_all_{{ oUIBlock.GetId() }}">&nbsp;&nbsp;{{ 'UI:ForAllLists'|dict_s }}</label>
+			</p>
+		</fieldset>
+		<table style="width:100%">
+			<tr>
+				<td style="text-align:center;">
+					<button type="button" onclick="$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel'); $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
+				</td>
+				<td style="text-align:center;">
+					<button type="submit" onclick="$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgOk'); $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog('close');">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

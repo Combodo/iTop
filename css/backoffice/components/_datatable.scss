@@ -1,0 +1,85 @@
+.ibo-datatable {
+	padding-bottom: 2em;
+	padding-top: 2em;
+
+	thead tr th, tbody tr td {
+		line-height: 30px;
+		padding-right: 1em;
+		padding-left: 1em;
+		@extend %ibo-font-ral-nor-100;
+
+		a {
+			color: $ibo-color-primary-600;
+		}
+	}
+
+	tbody tr:nth-child(odd) {
+		background-color: $ibo-color-secondary-500;
+	}
+}
+	.dataTables_length
+	{
+		position: relative;
+		float: right;
+		padding-top: 0.755em;
+		padding-right: 0.5em;
+	}
+	.dataTables_info
+	{
+		position: relative;
+		float: right;
+		padding-top: 0.755em;
+		padding-right: 2em;
+		padding-left: 0em;
+	}
+	.select-info{
+		padding-left: 2em;
+	}
+
+	.pagination
+	{
+		left: 1.21%;
+		right: 1.21%;
+		top: 91.58%;
+		bottom: 4.85%;
+		.paginate_button {
+			margin-left: 1em;
+			margin-right: 1em;
+		}
+	}
+	.dataTables_paginate
+	{
+		/*	position: relative;*/
+		float: left;
+		padding-top: 0.755em;
+		padding-left: 2em;
+	}
+	.paginate_button {
+		box-sizing: border-box;
+		display: inline-block;
+	}
+	.paginate_button a{
+		color: $ibo-color-grey-800;
+		@extend %ibo-font-ral-nor-100;
+	}
+	.paginate_button a:hover {
+		color: $ibo-color-blue-grey-200;
+	}
+	.paginate_button.active a {
+		color: $ibo-color-grey-900;
+		border: 2px solid var(--ibo-color-grey-300);
+		background-color: $ibo-color-grey-200;
+	}
+.ibo-datatable-toolbar {
+	/*position: relative;*/
+	height: 30px;
+}
+.ibo-criterion-area{
+	font-size: $ibo-font-size-50 ;
+}
+.ibo-search-form{
+	padding-top: $ibo-panel--spacing-top ;
+}
+.ibo-form-group{
+	position: fixed;
+}

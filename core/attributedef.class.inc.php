@@ -1273,6 +1273,15 @@ abstract class AttributeDefinition
 	{
 		return (string)$value;
 	}
+
+	/*
+	 * return string
+	 */
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return data;";
+		return $sRenderFunction;
+	}
 }
 
 class AttributeDashboard extends AttributeDefinition
@@ -4906,6 +4915,11 @@ class AttributeEmailAddress extends AttributeString
 
 		return '<a class="mailto" href="mailto:'.$sValue.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return '<a class=\'mailto\' href=  \'mailto:'+data+'\'><span class=\'fas fa-envelope\'></span> '+data+'</a>' ;";
+		return $sRenderFunction;
+	}
 }
 
 /**
@@ -4991,6 +5005,12 @@ class AttributePhoneNumber extends AttributeString
 		$sUrl = sprintf($sUrlPattern, $sValue);
 
 		return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
+	}
+
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return '<a class=\'tel\' href=  \'tel:'+data+'\'><span class=\'fas fa-phone\'></span> '+data+'</a>' ;";
+		return $sRenderFunction;
 	}
 }
 
@@ -6780,6 +6800,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 
 		return DBObject::MakeHyperLink($this->GetTargetClass(), $sValue);
+	}
+
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$this->m_aParams['targetclass']."&id='+data+'\'>'+row['".$sClassAlias."/".$this->m_sCode."_friendlyname']+'</a>' ;";
+		return $sRenderFunction;
 	}
 }
 
