@@ -71,7 +71,11 @@ class TabContainer extends UIContentBlock
 	 */
 	public function __construct($sName, $sPrefix)
 	{
-		parent::__construct("{$sName}".((!empty($sPrefix)) ? "-{$sPrefix}" : ""));
+		$sId = null;
+		if (!empty($sName) || !empty($sPrefix)) {
+			$sId = "{$sName}".((!empty($sPrefix)) ? "-{$sPrefix}" : "");
+		}
+		parent::__construct($sId);
 
 		$this->sName = $sName;
 		$this->sPrefix = $sPrefix;
