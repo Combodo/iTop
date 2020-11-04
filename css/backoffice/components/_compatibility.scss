@@ -9,6 +9,7 @@
 
 fieldset {
   &:not(.ibo-fieldset) {
+    @extend %ibo-font-ral-nor-150;
     margin: 10px;
 
     & legend {
