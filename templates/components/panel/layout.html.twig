@@ -4,6 +4,7 @@
     <div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetCSSClasses() }}">
         <div class="ibo-panel--header">
             {% block iboPanelHeader %}
+                <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
                 <div class="ibo-panel--toolbar">
                     {% block iboPanelToolbar %}
                         {% for oToolbarBlock in oUIBlock.GetToolbarBlocks() %}
@@ -11,7 +12,6 @@
                         {% endfor %}
                     {% endblock %}
                 </div>
-	            <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
             {% endblock %}
         </div>
         <div class="ibo-panel--body">
