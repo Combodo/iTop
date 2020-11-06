@@ -1074,14 +1074,14 @@ EOF
 		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))
 		{
 			$sDisplayTemplate = $sModuleRelativeDir.'/'.$sDisplayTemplate;
-			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
+			$aClassParams['display_template'] = "'$sDisplayTemplate'";
 		}
 	
 		$this->CompileFiles($oProperties, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
 		{
 			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+			$aClassParams['icon'] = "'$sIcon'";
 		}
 
 		$oOrder = $oProperties->GetOptionalElement('order');
@@ -1402,7 +1402,7 @@ EOF
 
 					if (($sDefault = $oField->GetChildText('default_image')) && (strlen($sDefault) > 0))
 					{
-						$aParameters['default_image'] = "utils::GetAbsoluteUrlModulesRoot().'$sModuleRelativeDir/$sDefault'";
+						$aParameters['default_image'] = "'$sModuleRelativeDir/$sDefault'";
 					}
 					else
 					{
@@ -1656,7 +1656,7 @@ EOF
 					if (($sIcon = $oItem->GetChildText('icon')) && (strlen($sIcon) > 0))
 					{
 						$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-						$sIcon = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+						$sIcon = "'$sIcon'";
 					}
 					else
 					{

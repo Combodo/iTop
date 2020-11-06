@@ -463,7 +463,10 @@ abstract class MetaModel
 				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
 			}
 		}
-		$sIcon = str_replace('/modules/', '/env-'.self::$m_sEnvironment.'/', $sIcon); // Support of pre-2.0 modules
+		//Dyanmic url
+		if (!empty($sIcon)) {
+			$sIcon = utils::GetAbsoluteUrlModulesRoot().$sIcon;
+		}
 		if ($bImgTag && ($sIcon != '')) {
 			$sIcon = "<img src=\"$sIcon\" style=\"vertical-align:middle;$sMoreStyles\"/>";
 		}
@@ -908,7 +911,7 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		return array_key_exists("display_template",
-			self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["display_template"] : '';
+			self::$m_aClassParams[$sClass]) ? utils::GetAbsoluteUrlModulesRoot().self::$m_aClassParams[$sClass]["display_template"] : '';
 	}
 
 	/**
@@ -3271,6 +3274,28 @@ abstract class MetaModel
 		self::$m_aParentClasses[$sClass] = array();
 		self::$m_aChildClasses[$sClass] = array();
 
+		//Update icon & display_templates
+		//Remove AbsoluteUrlModulesRoot hardcoded to the icon && disply_template, when using PHP class instead of XML one
+		if (!empty($aParams)) 
+		{
+			$sAbsoluteUrlModulesRoot = utils::GetAbsoluteUrlModulesRoot();
+			if (array_key_exists('icon', $aParams) && !empty($aParams['icon'])) 
+			{
+				$aParams['icon'] = str_replace('/modules/', '/env-'.self::$m_sEnvironment.'/', $aParams['icon']); // Support of pre-2.0 modules
+				if (strpos($aParams['icon'], $sAbsoluteUrlModulesRoot) !== false) 
+				{
+					$aParams['icon'] = str_replace($sAbsoluteUrlModulesRoot, '', $aParams['icon']);
+				}
+			}
+			if (array_key_exists('display_template', $aParams) && !empty($aParams['display_template'])) 
+			{
+				if (strpos($aParams['display_template'], $sAbsoluteUrlModulesRoot) !== false) 
+				{
+					$aParams['display_template'] = str_replace($sAbsoluteUrlModulesRoot, '', $aParams['display_template']);
+				}
+			}
+		}
+
 		self::$m_aClassParams[$sClass] = $aParams;
 
 		self::$m_aAttribDefs[$sClass] = array();
@@ -3567,6 +3592,22 @@ abstract class MetaModel
 	public static function Init_DefineHighlightScale($aHighlightScale)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
+		 //Update icon
+		//Remove AbsoluteUrlModulesRoot hardcoded to the icon, when using PHP class instead of XML one
+		if (!empty($aHighlightScale)) 
+		{
+			$sAbsoluteUrlModulesRoot = utils::GetAbsoluteUrlModulesRoot();
+			foreach ($aHighlightScale as $sItemKey => $aItemArray) 
+			{
+				if (array_key_exists('icon', $aItemArray) && !empty($aItemArray['icon'])) 
+				{
+					if (strpos($aParams['icon'], $sAbsoluteUrlModulesRoot) !== false) 
+					{
+						$aHighlightScale[$sItemKey]['icon'] = str_replace($sAbsoluteUrlModulesRoot, '', $aItemArray['icon']);
+					}
+				}
+			}
+		}
 		self::$m_aHighlightScales[$sTargetClass] = $aHighlightScale;
 	}
 
