@@ -7966,7 +7966,35 @@ class AttributeImage extends AttributeBlob
 	 */
 	public function __construct($sCode, $aParams)
 	{
+		//Remove AbsoluteUrlModulesRoot hardcoded to the default_image
+		if (!empty($aParams) && array_key_exists('default_image', $aParams) && !empty($aParams['default_image'])) 
+		{
+			$sAbsoluteUrlModulesRoot = utils::GetAbsoluteUrlModulesRoot();
+			if (strpos($aParams['default_image'], $sAbsoluteUrlModulesRoot) !== false) 
+			{
+				$aParams['default_image'] = str_replace($sAbsoluteUrlModulesRoot, '', $aParams['default_image']);
+			}
+		}
 		parent::__construct($sCode, $aParams);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @param string $sParamName
+	 * @return type
+	 */
+	public function Get($sParamName) {
+		$oParamValue = parent::Get($sParamName);
+		
+		if ($sParamName == 'default_image') 
+		{
+			if (!empty($oParamValue)) // check if not null
+			{
+				return utils::GetAbsoluteUrlModulesRoot().$oParamValue;
+			}
+		}
+		
+		return $oParamValue;
 	}
 
 	public function GetEditClass()

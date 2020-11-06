@@ -1484,6 +1484,10 @@ abstract class DBObject implements iDisplay
 			if (array_key_exists($sCode, $aHighlightScale))
 			{
 				$sIconUrl = $aHighlightScale[$sCode]['icon'];
+				if (!empty($sIconUrl)) 
+				{
+						$sIconUrl = utils::GetAbsoluteUrlModulesRoot().$sIconUrl;
+				}
 				if($bImgTag)
 				{
 					return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
