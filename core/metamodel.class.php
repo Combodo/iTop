@@ -927,7 +927,8 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		return self::$m_aClassParams[$sClass]["image_attcode"];
+		// image_attcode isn't a mandatory class parameter, so it might not be in the $m_aClassParam array
+		return isset(self::$m_aClassParams[$sClass]["image_attcode"]) ? self::$m_aClassParams[$sClass]["image_attcode"] : '';
 	}
 
 	/**

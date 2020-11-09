@@ -21,15 +21,13 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
 use CMDBChangeOpSetAttributeCaseLog;
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
-use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryFormFactory\ActivityNewEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
+use Exception;
 use MetaModel;
 
 /**
@@ -95,25 +93,23 @@ class ActivityPanelFactory
 		$oPreviousEditsEntry = null;
 
 		/** @var \CMDBChangeOp $oChangeOp */
-		while($oChangeOp = $oChangesSet->Fetch())
-		{
+		while($oChangeOp = $oChangesSet->Fetch()) {
 			// Skip case log changes as they are handled directly from the attributes themselves
-			if($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog)
-			{
+			if ($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog) {
 				continue;
 			}
 
 			// Make entry from CMDBChangeOp
 			$iChangeId = $oChangeOp->Get('change');
-			$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
-
-			// If same CMDBChange and mergeable edits entry from the same author, we merge them
-			if( ($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry) && ($oPreviousEditsEntry->GetAuthorLogin() === $oEntry->GetAuthorLogin()))
-			{
-				$oPreviousEditsEntry->Merge($oEntry);
+			try {
+				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
+			} catch (Exception $e) {
+				continue;
 			}
-			else
-			{
+			// If same CMDBChange and mergeable edits entry from the same author, we merge them
+			if (($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry) && ($oPreviousEditsEntry->GetAuthorLogin() === $oEntry->GetAuthorLogin())) {
+				$oPreviousEditsEntry->Merge($oEntry);
+			} else {
 				$oActivityPanel->AddEntry($oEntry);
 
 				// Set previous edits entry

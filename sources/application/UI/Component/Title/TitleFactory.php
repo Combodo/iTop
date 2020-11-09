@@ -32,8 +32,8 @@ class TitleFactory
 		$sObjIconUrl = $oObject->GetIcon(false);
 		// Note: Class icons are a square image with no margin around, so they need to be zoomed out in the medallion
 		$sIconCoverMethod = Title::ENUM_ICON_COVER_METHOD_ZOOMOUT;
-		// - Use object image from seantic attribute only if it's not the default image
-		if(!$oObject->IsNew()){
+		// - Use object image from semantic attribute only if it's not the default image
+		if(!$oObject->IsNew() && MetaModel::HasImageAttributeCode($sObjClass)){
 			$sImageAttCode = MetaModel::GetImageAttributeCode($sObjClass);
 			if(!empty($sImageAttCode)){
 				/** @var \ormDocument $oImage */
@@ -47,7 +47,10 @@ class TitleFactory
 		}
 
 		$oTitle = new TitleForObjectDetails($sObjClassName, $sObjName, $sId);
-		$oTitle->SetIcon($sObjIconUrl, $sIconCoverMethod);
+
+		if(!empty($sObjIconUrl)) {
+			$oTitle->SetIcon($sObjIconUrl, $sIconCoverMethod);
+		}
 
 		$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
 		if (!empty($sStatusAttCode)) {
