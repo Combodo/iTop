@@ -6,9 +6,10 @@
 
 namespace Combodo\iTop\Application\UI\Component\DataTable;
 
+use ApplicationException;
+use AttributeLinkedSet;
 use CMDBObjectSet;
 use cmdbAbstractObject;
-use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use MetaModel;
 use appUserPreferences;
@@ -27,10 +28,28 @@ use Dict;
  */
 class DataTableFactory
 {
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sListId
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
 	public static function MakeForResult(WebPage $oPage, string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPanel = PanelFactory::MakeForClass( $oSet->GetClass(), "Result");
-		$oDataTable = DataTableFactory::MakeForRendering( $sListId,  $oSet, $aExtraParams );
+		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result");
+		$oDataTable = DataTableFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
 		$oPanel->AddMainBlock($oDataTable);
 
 		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
@@ -41,10 +60,28 @@ class DataTableFactory
 
 		return $oPanel;
 	}
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sListId
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
 	public static function MakeForObject(WebPage $oPage, string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPanel = PanelFactory::MakeForClass( $oSet->GetClass(), "Result");
-		$oDataTable = DataTableFactory::MakeForRenderingObject( $sListId,  $oSet, $aExtraParams );
+		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result");
+		$oDataTable = DataTableFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
 		$oPanel->AddMainBlock($oDataTable);
 
 		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
@@ -55,12 +92,21 @@ class DataTableFactory
 
 		return $oPanel;
 	}
+
 	/**
 	 * Make a basis Panel component
 	 *
-	 * @param string $sTitle
+	 * @param string $sListId
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
 	 *
 	 * @return DataTableBlock
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
 	 */
 	public static function MakeForRendering(string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -246,15 +292,16 @@ class DataTableFactory
 		}
 
 		$aOptions = [];
-		if($oDefaultSettings != null)
-		{
+		if ($oDefaultSettings != null) {
 			$aOptions['oDefaultSettings'] = json_encode(array('iDefaultPageSize' => $oDefaultSettings->iDefaultPageSize, 'oColumns' => $oDefaultSettings->aColumns));
 		}
 
 		if ($sSelectMode == 'multiple') {
 			$aOptions['select'] = "multi";
-		} else if ($sSelectMode == 'single') {
-			$aOptions['select'] = "single";
+		} else {
+			if ($sSelectMode == 'single') {
+				$aOptions['select'] = "single";
+			}
 		}
 
 		$aOptions['iPageSize'] = 10;
@@ -262,9 +309,9 @@ class DataTableFactory
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
 		}
 
-		$aOptions['sTableId'] =$sTableId;
-		$aOptions['bUseCustomSettings'] =$bUseCustomSettings;
-		$aOptions['bViewLink'] =$bViewLink;
+		$aOptions['sTableId'] = $sTableId;
+		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
+		$aOptions['bViewLink'] = $bViewLink;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
@@ -280,6 +327,19 @@ class DataTableFactory
 
 		return $oDataTable;
 	}
+
+	/**
+	 * @param string $sListId
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\DataTable\DataTableBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 */
 	public static function MakeForRenderingObject(string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = new DataTableBlock('datatable_'.$sListId);
@@ -296,64 +356,48 @@ class DataTableFactory
 			trim($aExtraParams['extra_fields'])) : array();
 		$aExtraFields = array();
 		$sAttCode = '';
-		foreach($aExtraFieldsRaw as $sFieldName)
-		{
+		foreach ($aExtraFieldsRaw as $sFieldName) {
 			// Ignore attributes not of the main queried class
-			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
-			{
+			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches)) {
 				$sClassAlias = $aMatches[1];
 				$sAttCode = $aMatches[2];
-				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses()))
-				{
+				if (array_key_exists($sClassAlias, $oSet->GetSelectedClasses())) {
 					$aExtraFields[$sClassAlias][] = $sAttCode;
 				}
-			}
-			else
-			{
+			} else {
 				$aExtraFields['*'] = $sAttCode;
 			}
 		}
 
 		$aClassAliases = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
-		foreach($aClassAliases as $sAlias => $sClassName)
-		{
+		foreach ($aClassAliases as $sAlias => $sClassName) {
 			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
-				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))))
-			{
+				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases)))) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		foreach($aAuthorizedClasses as $sAlias => $sClassName)
-		{
-			if (array_key_exists($sAlias, $aExtraFields))
-			{
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			if (array_key_exists($sAlias, $aExtraFields)) {
 				$aList[$sAlias] = $aExtraFields[$sAlias];
-			}
-			else
-			{
+			} else {
 				$aList[$sAlias] = array();
 			}
-			if ($sZListName !== false)
-			{
-				$aDefaultList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-
+			if ($sZListName !== false) {
+				$aDefaultList = MetaModel::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
 				$aList[$sAlias] = array_merge($aDefaultList, $aList[$sAlias]);
 			}
 
 			// Filter the list to removed linked set since we are not able to display them here
-			foreach ($aList[$sAlias] as $index => $sAttCode)
-			{
+			foreach ($aList[$sAlias] as $index => $sAttCode) {
 				$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-				if ($oAttDef instanceof AttributeLinkedSet)
-				{
+				if ($oAttDef instanceof AttributeLinkedSet) {
 					// Removed from the display list
 					unset($aList[$sAlias][$index]);
 				}
 			}
 
-			if (empty($aList[$sAlias]))
-			{
+			if (empty($aList[$sAlias])) {
 				unset($aList[$sAlias], $aAuthorizedClasses[$sAlias]);
 			}
 		}
@@ -363,8 +407,7 @@ class DataTableFactory
 		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
 
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		if ($bDisplayLimit)
-		{
+		if ($bDisplayLimit) {
 			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
 				MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oDefaultSettings->iDefaultPageSize = $iDefaultPageSize;
@@ -445,15 +488,16 @@ class DataTableFactory
 		}
 
 		$aOptions = [];
-		if($oDefaultSettings != null)
-		{
+		if ($oDefaultSettings != null) {
 			$aOptions['oDefaultSettings'] = json_encode(array('iDefaultPageSize' => $oDefaultSettings->iDefaultPageSize, 'oColumns' => $oDefaultSettings->aColumns));
 		}
 
 		if ($sSelectMode == 'multiple') {
 			$aOptions['select'] = "multi";
-		} else if ($sSelectMode == 'single') {
-			$aOptions['select'] = "single";
+		} else {
+			if ($sSelectMode == 'single') {
+				$aOptions['select'] = "single";
+			}
 		}
 
 		$aOptions['iPageSize'] = 10;
@@ -461,9 +505,9 @@ class DataTableFactory
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
 		}
 
-		$aOptions['sTableId'] =$sTableId;
-		$aOptions['bUseCustomSettings'] =$bUseCustomSettings;
-		$aOptions['bViewLink'] =$bViewLink;
+		$aOptions['sTableId'] = $sTableId;
+		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
+		$aOptions['bViewLink'] = $bViewLink;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
@@ -479,7 +523,18 @@ class DataTableFactory
 
 		return $oDataTable;
 	}
-	public static function GetOptionsForRendering(array $aColumns,string $sSelectMode, string $sFilter, int $iLength, array $aExtraParams)
+
+	/**
+	 * @param array $aColumns
+	 * @param string $sSelectMode
+	 * @param string $sFilter
+	 * @param int $iLength
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aExtraParams)
 	{
 		$aOptions = [];
 
@@ -488,56 +543,56 @@ class DataTableFactory
 		$aClassAliases = [];
 
 		foreach ($aColumns as $sClassName => $aClassColumns) {
-			$aClassAliases[$sClassName]=$sClassName;
+			$aClassAliases[$sClassName] = $sClassName;
 			foreach ($aClassColumns as $sAttCode => $aData) {
 				if ($aData['checked'] == "true") {
 					$aColumnDefinition["width"] = "auto";
-					$aColumnDefinition["searchable"]= false;
-					$aColumnDefinition["sortable"]= true;
-					$aColumnDefinition["defaultContent"]= "";
-					$aColumnDefinition["type"]= "html";
+					$aColumnDefinition["searchable"] = false;
+					$aColumnDefinition["sortable"] = true;
+					$aColumnDefinition["defaultContent"] = "";
+					$aColumnDefinition["type"] = "html";
 
 					if ($sAttCode == '_key_') {
-						$aColumnDefinition["title"] =$aData['alias'];
-						$aColumnDefinition['metadata'] =[
-								'object_class'=> $sClassName,
-								'attribute_code'=> $sAttCode,
-								'attribute_type'=> '_key_',
-								'attribute_label'=> $aData['alias'],
-							];
+						$aColumnDefinition["title"] = $aData['alias'];
+						$aColumnDefinition['metadata'] = [
+							'object_class' => $sClassName,
+							'attribute_code' => $sAttCode,
+							'attribute_type' => '_key_',
+							'attribute_label' => $aData['alias'],
+						];
 						$aColumnDefinition["data"] = $sClassName."/".$sAttCode;
-						$aColumnDefinition["render"] =[
-							"display"=> "return '<a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassName."/friendlyname']+'</a>' ;",
-							"_"=>$sClassName."/".$sAttCode,
+						$aColumnDefinition["render"] = [
+							"display" => "return '<a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassName."/friendlyname']+'</a>' ;",
+							"_" => $sClassName."/".$sAttCode,
 						];
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
 
-						$aColumnDefinition["title"] =$sAttLabel;
-						$aColumnDefinition['metadata'] =[
-								'object_class'=> $sClassName,
-								'attribute_code'=> $sAttCode,
-								'attribute_type'=> $sAttDefClass,
-								'attribute_label'=> $sAttLabel,
-							];
+						$aColumnDefinition["title"] = $sAttLabel;
+						$aColumnDefinition['metadata'] = [
+							'object_class' => $sClassName,
+							'attribute_code' => $sAttCode,
+							'attribute_type' => $sAttDefClass,
+							'attribute_label' => $sAttLabel,
+						];
 						$aColumnDefinition["data"] = $sClassName."/".$sAttCode;
-						$aColumnDefinition["render"] =[
-							"display"=> $oAttDef->GetRenderForDataTable($sClassName),
-							"_"=>$sClassName."/".$sAttCode,
+						$aColumnDefinition["render"] = [
+							"display" => $oAttDef->GetRenderForDataTable($sClassName),
+							"_" => $sClassName."/".$sAttCode,
 						];
 					}
-					array_push($aColumnsDefinitions,$aColumnDefinition);
+					array_push($aColumnsDefinitions, $aColumnDefinition);
 				}
 			}
 		}
 
-		$aOptions['select'] =$sSelectMode;
+		$aOptions['select'] = $sSelectMode;
 
 		$aOptions['pageLength'] = $iLength;
 
-		$sAjaxData=json_encode([
+		$sAjaxData = json_encode([
 			"operation" => 'search',
 			"filter" => $sFilter,
 			"columns" => $aColumns,
@@ -547,41 +602,42 @@ class DataTableFactory
 
 
 		$aOptions[] = [
-				"language" =>
-					["processing"=> 	 Dict::Format('UI:Datatables:Language:Processing'),
-						"search"=> 		  Dict::Format('UI:Datatables:Language:Search'),
-						"lengthMenu"=> 	Dict::Format('UI:Datatables:Language:LengthMenu'),
-						"zeroRecords"=> 	 Dict::Format('UI:Datatables:Language:ZeroRecords'),
-						"info"=>           Dict::Format('UI:Datatables:Language:Info'),
-						"infoEmpty"=> 	   Dict::Format('UI:Datatables:Language:InfoEmpty'),
-						"infoFiltered"=> 	Dict::Format('UI:Datatables:Language:InfoFiltered'),
-						"emptyTable"=> 	  Dict::Format('UI:Datatables:Language:EmptyTable'),
-						"paginate"=>  [
-							"first"=> 	  "<<",
-							"previous"=>    "<",
-							"next"=> 	   ">",
-							"last"=> 	   ">>"
-						],
-						"aria"=>  [
-							"sortAscending"=>  Dict::Format( 'UI:Datatables:Language:Sort:Ascending'),
-							"sortDescending"=> Dict::Format('UI:Datatables:Language:Sort:Descending')
-						],
+			"language" =>
+				[
+					"processing" => Dict::Format('UI:Datatables:Language:Processing'),
+					"search" => Dict::Format('UI:Datatables:Language:Search'),
+					"lengthMenu" => Dict::Format('UI:Datatables:Language:LengthMenu'),
+					"zeroRecords" => Dict::Format('UI:Datatables:Language:ZeroRecords'),
+					"info" => Dict::Format('UI:Datatables:Language:Info'),
+					"infoEmpty" => Dict::Format('UI:Datatables:Language:InfoEmpty'),
+					"infoFiltered" => Dict::Format('UI:Datatables:Language:InfoFiltered'),
+					"emptyTable" => Dict::Format('UI:Datatables:Language:EmptyTable'),
+					"paginate" => [
+						"first" => "<<",
+						"previous" => "<",
+						"next" => ">",
+						"last" => ">>"
 					],
-				"lengthMenu" => Dict::Format( 'Portal:Datatables:Language:DisplayLength:All'),
-				"dom"=>  "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
-				"order"=>  [],
-				"filter"=> false,
-				"processing"=>  true,
-				"serverSide"=>  true,
-				"columns"=> $aColumnsDefinitions,
-				"allColumns"=> $aColumns,
-				'ajax' => '$.fn.dataTable.pipeline( {
+					"aria" => [
+						"sortAscending" => Dict::Format('UI:Datatables:Language:Sort:Ascending'),
+						"sortDescending" => Dict::Format('UI:Datatables:Language:Sort:Descending')
+					],
+				],
+			"lengthMenu" => Dict::Format('Portal:Datatables:Language:DisplayLength:All'),
+			"dom" => "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+			"order" => [],
+			"filter" => false,
+			"processing" => true,
+			"serverSide" => true,
+			"columns" => $aColumnsDefinitions,
+			"allColumns" => $aColumns,
+			'ajax' => '$.fn.dataTable.pipeline( {
 					"url": "ajax.render.php",
 					"data": '.$sAjaxData.',
 					"method":	"post",
 					"pages": 5 // number of pages to cache
 				} )'
-			];
+		];
 
 
 		return $aOptions;
