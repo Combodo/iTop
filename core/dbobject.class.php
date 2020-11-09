@@ -1673,6 +1673,7 @@ abstract class DBObject implements iDisplay
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
+		$sClass = get_class($this);
 
 		$aReadOnlyAtts = $this->GetReadOnlyAttributes();
 		if (($aReadOnlyAtts != null) && (in_array($sAttCode, $aReadOnlyAtts)))
@@ -1680,16 +1681,16 @@ abstract class DBObject implements iDisplay
 			return OPT_ATT_READONLY;
 		}
 
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (!empty($sStateAttCode))
+		if (MetaModel::HasLifecycle($sClass))
 		{
 			if ($sTargetState != '')
 			{
-				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $sTargetState, $sAttCode);			
+				$iFlags = MetaModel::GetAttributeFlags($sClass, $sTargetState, $sAttCode);
 			}
 			else
 			{
-				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+				$iFlags = MetaModel::GetAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 			}
 		}
 		$aReasons = array();
@@ -1742,10 +1743,10 @@ abstract class DBObject implements iDisplay
     public function GetTransitionFlags($sAttCode, $sStimulus, &$aReasons = array(), $sOriginState = '')
     {
         $iFlags = 0; // By default (if no lifecycle) no flag at all
+	    $sClass = get_class($this);
 
-        $sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
         // If no state attribute, there is no lifecycle
-        if (empty($sStateAttCode))
+        if (!MetaModel::HasLifecycle($sClass))
         {
             return $iFlags;
         }
@@ -1753,6 +1754,7 @@ abstract class DBObject implements iDisplay
         // Retrieving current state if necessary
         if ($sOriginState === '')
         {
+	        $sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
             $sOriginState = $this->Get($sStateAttCode);
         }
 
@@ -1760,7 +1762,7 @@ abstract class DBObject implements iDisplay
         $iAttributeFlags = $this->GetAttributeFlags($sAttCode, $aReasons, $sOriginState);
 
         // Retrieving transition flags
-        $iTransitionFlags = MetaModel::GetTransitionFlags(get_class($this), $sOriginState, $sStimulus, $sAttCode);
+        $iTransitionFlags = MetaModel::GetTransitionFlags($sClass, $sOriginState, $sStimulus, $sAttCode);
 
         // Merging transition flags with attribute flags
         $iFlags = $iTransitionFlags | $iAttributeFlags;
@@ -1811,10 +1813,12 @@ abstract class DBObject implements iDisplay
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		$iFlags = 0;
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (!empty($sStateAttCode))
+		$sClass = get_class($this);
+
+		if (MetaModel::HasLifecycle($sClass))
 		{
-			$iFlags = MetaModel::GetInitialStateAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			$iFlags = MetaModel::GetInitialStateAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 		}
 		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
 	}
@@ -3631,11 +3635,12 @@ abstract class DBObject implements iDisplay
      */
 	public function EnumTransitions()
 	{
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (empty($sStateAttCode)) return array();
+		$sClass = get_class($this);
+		if (!MetaModel::HasLifecycle($sClass)) return array();
 
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
-		return MetaModel::EnumTransitions(get_class($this), $sState);
+		return MetaModel::EnumTransitions($sClass, $sState);
 	}
 
     /**
@@ -3681,14 +3686,14 @@ abstract class DBObject implements iDisplay
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
 		$sClass = get_class($this);
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		if (empty($sStateAttCode))
+		if (!MetaModel::HasLifecycle($sClass))
 		{
 			throw new CoreException('No lifecycle for the class '.$sClass);
 		}
 
 		MyHelpers::CheckKeyInArray('object lifecycle stimulus', $sStimulusCode, MetaModel::EnumStimuli($sClass));
 
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$aStateTransitions = $this->EnumTransitions();
 		if (!array_key_exists($sStimulusCode, $aStateTransitions))
 		{
@@ -5338,10 +5343,10 @@ abstract class DBObject implements iDisplay
      */
 	public static function MakeDefaultInstance($sClass)
 	{
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$oObj = MetaModel::NewObject($sClass);
-		if (!empty($sStateAttCode))
+		if (MetaModel::HasLifecycle($sClass))
 		{
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$sTargetState = MetaModel::GetDefaultState($sClass);
 			$oObj->Set($sStateAttCode, $sTargetState);
 		}

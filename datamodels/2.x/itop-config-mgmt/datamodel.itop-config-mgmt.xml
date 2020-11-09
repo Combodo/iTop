@@ -256,6 +256,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/server.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1516,6 +1519,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/solution.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1657,6 +1663,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/business-process.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1768,6 +1777,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/application.png</icon>
 				<reconciliation>
 					<attributes>
@@ -5972,6 +5984,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/group.png</icon>
 				<reconciliation>
 					<attributes>

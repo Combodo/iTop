@@ -1029,30 +1029,23 @@ EOF
 		// - Default attributes code
 		$sImageAttCode = "";
 		$sStateAttCode = "";
-		// - Parse optional semantic node
-		$oSemantic = $oProperties->GetOptionalElement('semantic');
-		if ($oSemantic) {
+		// - Parse optional fields semantic node
+		$oFieldsSemantic = $oProperties->GetOptionalElement('fields_semantic');
+		if ($oFieldsSemantic) {
 			// Image attribute
-			$oImageAttribute = $oSemantic->GetOptionalElement('image_attribute');
+			$oImageAttribute = $oFieldsSemantic->GetOptionalElement('image_attribute');
 			if ($oImageAttribute) {
 				$sImageAttCode = $oImageAttribute->GetText();
 			}
 
-			// State attribute, only if not already found from lifecycle
-//			$oStateAttribute = $oSemantic->GetOptionalElement('state_attribute');
-//			if(empty($sStateAttCode) && $oStateAttribute) {
-//				$sStateAttCode = $oStateAttribute->GetText();
-//			}
+			// State attribute (for XML v1.7- the lifecycle/attribute node should have been migrated in this one)
+			$oStateAttribute = $oFieldsSemantic->GetOptionalElement('state_attribute');
+			if($oStateAttribute) {
+				$sStateAttCode = $oStateAttribute->GetText();
+			}
 		}
 		$aClassParams['image_attcode'] = "'$sImageAttCode'";
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
-
-		// Lifecycle (overload any state attribute defined in the semantic node)
-		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
-		if ($oLifecycle) {
-			$sStateAttCode = $oLifecycle->GetChildText('attribute');
-			$aClassParams['state_attcode'] = "'$sStateAttCode'";
-		}
 
 		// Reconcialiation
 		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation'))
@@ -1641,8 +1634,8 @@ EOF
 		//
 		$sLifecycle = '';
 		$sHighlightScale = '';
-		if ($oLifecycle)
-		{
+		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
+		if ($oLifecycle) {
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
 			$sLifecycle .= "\t\t//\n";
 	
@@ -1867,6 +1860,26 @@ EOF
                     $sLifecycle .= "            )\n";
                     $sLifecycle .= "        ));\n";
 				}
+			}
+		}
+		// No "real" lifecycle with stimuli and such but still a state attribute, we need to define states from the enum. values
+		elseif ($oFieldsSemantic && $oStateAttribute) {
+			$sLifecycle .= "\t\t// States but no lifecycle declared in XML (status attribute: $sStateAttCode)\n";
+			$sLifecycle .= "\t\t//\n";
+
+			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
+			$oValues = $oField->GetUniqueElement('values');
+			$oValueNodes = $oValues->getElementsByTagName('value');
+			foreach($oValueNodes as $oValue)
+			{
+				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
+				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
+				$sLifecycle .= "			array(\n";
+				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
+				$sLifecycle .= "				\"attribute_list\" => array()\n";
+				$sLifecycle .= "			)\n";
+				$sLifecycle .= "		);\n";
 			}
 		}
 		

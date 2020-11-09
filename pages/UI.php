@@ -1225,9 +1225,9 @@ HTML
 		{
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::NewObject($sClass);
-			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-			if (!empty($sStateAttCode))
+			if (MetaModel::HasLifecycle($sClass))
 			{
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
 				if ($sTargetState != '')
 				{

@@ -853,8 +853,13 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Return true if the $sClass has a state attribute defined
+	 * Return true if the $sClass has a state attribute defined.
 	 *
+	 * Note that having a state attribute does NOT mean having a lifecycle!
+	 * - A Person with active/inactive state won't have transitions and therefore no lifecycle
+	 * - A UserRequest will have transitions between its states and so a lifecycle
+	 *
+	 * @see self::HasLifecycle($sClass)
 	 * @param string $sClass Datamodel class to check
 	 *
 	 * @return bool
@@ -2372,6 +2377,22 @@ abstract class MetaModel
 		{
 			return self::$m_aStates[$sClass];
 		}
+		elseif (self::HasStateAttributeCode($sClass))
+		{
+			$sStateAttCode = self::GetStateAttributeCode($sClass);
+			$oAttDef = self::GetAttributeDef($sClass, $sStateAttCode);
+
+			$aStates = [];
+			foreach($oAttDef->GetAllowedValues() as $sStateCode => $sStateLabel)
+			{
+				$aStates[$sStateCode] = [
+					'attribute_inherit' => '',
+					'attribute_list' => [],
+				];
+			}
+
+			return $aStates;
+		}
 		else
 		{
 			return array();
@@ -2427,6 +2448,21 @@ abstract class MetaModel
 		{
 			return array();
 		}
+	}
+
+	/**
+	 * Return true if $sClass has a lifecycle, which means that it has a state attribute AND stimuli
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 * @see   self::HasStateAttributeCode($sClass)
+	 */
+	public static function HasLifecycle(string $sClass)
+	{
+		return self::HasStateAttributeCode($sClass) && !empty(self::EnumStimuli($sClass));
 	}
 
 	/**
@@ -2517,17 +2553,13 @@ abstract class MetaModel
 	public static function GetAttributeFlags($sClass, $sState, $sAttCode)
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aStates = MetaModel::EnumStates($sClass);
-			if (!array_key_exists($sState, $aStates))
-			{
+			if (!array_key_exists($sState, $aStates)) {
 				throw new CoreException("Invalid state '$sState' for class '$sClass', expecting a value in {".implode(', ', array_keys($aStates))."}");
 			}
 			$aCurrentState = $aStates[$sState];
-			if ((array_key_exists('attribute_list', $aCurrentState)) && (array_key_exists($sAttCode, $aCurrentState['attribute_list'])))
-			{
+			if ((array_key_exists('attribute_list', $aCurrentState)) && (array_key_exists($sAttCode, $aCurrentState['attribute_list']))) {
 				$iFlags = $aCurrentState['attribute_list'][$sAttCode];
 			}
 		}
@@ -2547,18 +2579,14 @@ abstract class MetaModel
 	public static function GetTransitionFlags($sClass, $sState, $sStimulus, $sAttCode)
 	{
 		$iFlags = 0; // By default (if no lifecycle) no flag at all
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aTransitions = MetaModel::EnumTransitions($sClass, $sState);
-			if (!array_key_exists($sStimulus, $aTransitions))
-			{
+			if (!array_key_exists($sStimulus, $aTransitions)) {
 				throw new CoreException("Invalid transition '$sStimulus' for class '$sClass', expecting a value in {".implode(', ', array_keys($aTransitions))."}");
 			}
 
 			$aCurrentTransition = $aTransitions[$sStimulus];
-			if ((array_key_exists('attribute_list', $aCurrentTransition)) && (array_key_exists($sAttCode, $aCurrentTransition['attribute_list'])))
-			{
+			if ((array_key_exists('attribute_list', $aCurrentTransition)) && (array_key_exists($sAttCode, $aCurrentTransition['attribute_list']))) {
 				$iFlags = $aCurrentTransition['attribute_list'][$sAttCode];
 			}
 		}
@@ -2637,37 +2665,30 @@ abstract class MetaModel
 	public static function GetInitialStateAttributeFlags($sClass, $sState, $sAttCode)
 	{
 		$iFlags = self::GetAttributeFlags($sClass, $sState, $sAttCode); // Be default set the same flags as the 'target' state
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aStates = MetaModel::EnumInitialStates($sClass);
-			if (array_key_exists($sState, $aStates))
-			{
+			if (array_key_exists($sState, $aStates)) {
 				$bReadOnly = (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY);
 				$bHidden = (($iFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN);
-				foreach($aStates[$sState] as $sPrevState)
-				{
+				foreach($aStates[$sState] as $sPrevState) {
 					$iPrevFlags = self::GetAttributeFlags($sClass, $sPrevState, $sAttCode);
-					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN)
-					{
+					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN) {
 						$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
 					}
 					$bHidden = $bHidden && (($iPrevFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN); // if it is/was not hidden => then it's not
 				}
-				if ($bReadOnly)
-				{
+
+				if ($bReadOnly) {
 					$iFlags = $iFlags | OPT_ATT_READONLY;
 				}
-				else
-				{
+				else {
 					$iFlags = $iFlags & ~OPT_ATT_READONLY;
 				}
-				if ($bHidden)
-				{
+
+				if ($bHidden) {
 					$iFlags = $iFlags | OPT_ATT_HIDDEN;
 				}
-				else
-				{
+				else {
 					$iFlags = $iFlags & ~OPT_ATT_HIDDEN;
 				}
 			}
@@ -2876,6 +2897,25 @@ abstract class MetaModel
 							$sObsolescence = self::$m_aClassParams[$sParent]['obsolescence_expression'];
 						}
 						self::$m_aClassParams[$sPHPClass]['obsolescence_expression'] = $sObsolescence;
+
+						// Inherit fields semantic
+						// - State attribute
+						$bParentHasStateAttribute = (isset(self::$m_aClassParams[$sParent]['state_attcode']) && !empty(self::$m_aClassParams[$sParent]['state_attcode']));
+						$bHasStateAttribute = (isset(self::$m_aClassParams[$sPHPClass]['state_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['state_attcode']));
+						if($bParentHasStateAttribute && !$bHasStateAttribute) {
+							// Set attribute code
+							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
+
+							// Set states
+							self::$m_aStates[$sPHPClass] = self::$m_aStates[$sParent];
+						}
+						// - Image attribute
+						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
+						$bHasImageAttribute = (isset(self::$m_aClassParams[$sPHPClass]['image_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['image_attcode']));
+						if($bParentHasImageAttribute && !$bHasImageAttribute) {
+							// Set attribute code
+							self::$m_aClassParams[$sPHPClass]['image_attcode'] = self::$m_aClassParams[$sParent]['image_attcode'];
+						}
 
 						foreach(MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
 						{

@@ -475,6 +475,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
 				<icon>images/workorder.png</icon>
 				<reconciliation>
 					<attributes>
@@ -557,7 +560,6 @@
 				</field>
 			</fields>
 			<lifecycle>
-				<attribute>status</attribute>
 				<stimuli>
 					<stimulus id="ev_close" xsi:type="StimulusUserAction"/>
 				</stimuli>

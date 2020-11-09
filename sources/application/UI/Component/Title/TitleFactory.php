@@ -52,8 +52,8 @@ class TitleFactory
 			$oTitle->SetIcon($sObjIconUrl, $sIconCoverMethod);
 		}
 
-		$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
-		if (!empty($sStatusAttCode)) {
+		if (MetaModel::HasStateAttributeCode($sObjClass)) {
+			$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
 			$sStateCode = $oObject->GetState();
 			$sStatusLabel = $oObject->GetStateLabel();
 			$sStatusColor = UIHelper::GetColorFromStatus(get_class($oObject), $sStateCode);

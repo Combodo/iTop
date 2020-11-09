@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="ClassWithStateButNoLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+      </properties>
+    </class>
+    <class id="ClassWithStateAndLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+      </properties>
+      <lifecycle>
+        <attribute>foo</attribute>
+      </lifecycle>
+    </class>
+    <class id="ClassWithStateAndImage">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+      </properties>
+    </class>
+    <class id="ClassWithImageOnly">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+      </properties>
+    </class>
+  </classes>
   <menus>
     <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
       <rank>100</rank>

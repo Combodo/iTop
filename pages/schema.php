@@ -84,8 +84,7 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
  */
 function DisplayLifecycle($oPage, $sClass)
 {
-	$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-	if (empty($sStateAttCode))
+	if (!MetaModel::HasLifecycle($sClass))
 	{
 		$oPage->p(Dict::S('UI:Schema:NoLifeCyle'));
 	}

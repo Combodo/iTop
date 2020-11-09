@@ -1,22 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
-	<menus>
-		<menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
-			<rank>100</rank>
-			<parent>WelcomeMenu</parent>
-			<url>$$http://fr.wikipedia.org/</url>
-			<in_new_window>true</in_new_window>
-		</menu>
-		<menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
-			<rank>30</rank>
-			<enable_stimulus/>
-	    <style>
-		    <decoration_classes>fas fa-comment-alt</decoration_classes>
-	    </style>
-		</menu>
-	</menus>
-	<branding>
-		<main_logo _delta="define">images/itop-logo.png</main_logo>
-		<main_logo_compact _delta="define">images/itop-logo-square.png</main_logo_compact>
-	</branding>
+  <classes>
+    <class id="ClassWithStateButNoLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithStateAndLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+      <lifecycle/>
+    </class>
+    <class id="ClassWithStateAndImage">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+          <image_attribute>bar</image_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithImageOnly">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+        <fields_semantic>
+          <image_attribute>bar</image_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+  </classes>
+  <menus>
+    <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>WelcomeMenu</parent>
+      <url>$$http://fr.wikipedia.org/</url>
+      <in_new_window>true</in_new_window>
+    </menu>
+    <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>30</rank>
+      <enable_stimulus/>
+      <style>
+        <decoration_classes>fas fa-comment-alt</decoration_classes>
+      </style>
+    </menu>
+  </menus>
+  <branding>
+    <main_logo _delta="define">images/itop-logo.png</main_logo>
+    <main_logo_compact _delta="define">images/itop-logo-square.png</main_logo_compact>
+  </branding>
 </itop_design>

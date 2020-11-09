@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8">
+  <classes>
+    <class id="ClassWithLifecycle">
+      <properties>
+        <icon>images/class-with-lifecycle.png</icon>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+      <lifecycle/>
+    </class>
+  </classes>
+</itop_design>

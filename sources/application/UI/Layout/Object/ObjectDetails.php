@@ -48,8 +48,7 @@ class ObjectDetails extends Panel
 		$this->sName = $oObject->GetRawName();
 		$this->sIconUrl = $oObject->GetIcon(false);
 
-		$sStatusAttCode = MetaModel::GetStateAttributeCode($this->sClassName);
-		if(!empty($sStatusAttCode)) {
+		if(MetaModel::HasStateAttributeCode($this->sClassName)) {
 			$this->sStatusCode = $oObject->GetState();
 			$this->sStatusLabel = $oObject->GetStateLabel();
 			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);

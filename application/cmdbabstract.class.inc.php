@@ -834,7 +834,7 @@ EOF
 							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard)) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable()) {
-									if ($sStateAttCode == $sAttCode) {
+									if (($sStateAttCode === $sAttCode) && (MetaModel::HasLifecycle($sClass))) {
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetStateLabel();
 										$val = array(
@@ -4565,7 +4565,7 @@ HTML
 							//echo "<p>current value for $sAttCode : $currValue</p>";
 							$oDummyObj->Set($sAttCode, $currValue);
 							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
 							{
 								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
@@ -4625,7 +4625,7 @@ HTML
 								$oDummyObj->Set($sAttCode, null);
 							}
 							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
 							{
 								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
@@ -4636,11 +4636,11 @@ HTML
 				}
 			}
 
-			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-			if (($sStateAttCode != '') && ($oDummyObj->GetState() == ''))
+			if (MetaModel::HasLifecycle($sClass) && ($oDummyObj->GetState() == ''))
 			{
 				// Hmmm, it's not gonna work like this ! Set a default value for the "state"
 				// Maybe we should use the "state" that is the most common among the objects...
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$aMultiValues = $aValues[$sStateAttCode];
 				uasort($aMultiValues, 'MyComparison');
 				foreach($aMultiValues as $sCurrValue => $aVal)

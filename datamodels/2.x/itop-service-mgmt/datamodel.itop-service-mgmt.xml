@@ -60,6 +60,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
 				<icon>images/contract.png</icon>
 				<reconciliation>
 					<attributes>
@@ -876,9 +879,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<semantic>
+				<fields_semantic>
 					<image_attribute>icon</image_attribute>
-				</semantic>
+				</fields_semantic>
 				<icon>images/service.png</icon>
 				<reconciliation>
 					<attributes>
@@ -961,9 +964,10 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<semantic>
+				<fields_semantic>
 					<image_attribute>icon</image_attribute>
-				</semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
 				<icon>images/service.png</icon>
 				<reconciliation>
 					<attributes>
@@ -1335,6 +1339,9 @@ public function PrefillSearchForm(&$aContextParam)
 						<attribute id="name"/>
 					</attributes>
 				</naming>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
 				<icon>images/service.png</icon>
 				<reconciliation>
 					<attributes>

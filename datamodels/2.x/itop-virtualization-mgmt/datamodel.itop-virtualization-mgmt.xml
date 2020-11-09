@@ -15,6 +15,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon/>
         <reconciliation>
           <attributes>

@@ -21,6 +21,9 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
 				<icon>images/user-request.png</icon>
 				<reconciliation>
 					<attributes>
@@ -408,7 +411,6 @@
 						<icon>images/user-request-closed.png</icon>
 					</item>
 				</highlight_scale>
-				<attribute>status</attribute>
 				<stimuli>
 					<stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
 					<stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
