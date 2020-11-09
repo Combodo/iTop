@@ -233,7 +233,7 @@ class NavigationMenu extends UIBlock
 			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
 		}
 
-		//Todo : what do we show if no contact is linked to the user ?
+		// TODO 3.0.0 : what do we show if no contact is linked to the user ?
 		$aData = [
 			'sOrganization' => UserRights::GetContactOrganizationFriendlyname(),
 			'sFirstname' => UserRights::GetContactFirstname(),
