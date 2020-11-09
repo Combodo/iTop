@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.8'); // iTop >= 3.0.0
+define('ITOP_DESIGN_LATEST_VERSION', '3.0');
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -87,12 +87,12 @@ class iTopDesignFormat
 		'1.7' => array(
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
-			'next' => '1.8',
-			'go_to_next' => 'From17To18',
+			'next' => '3.0',
+			'go_to_next' => 'From17To30',
 		),
-		'1.8' => array(
+		'3.0' => array(
 			'previous' => '1.7',
-			'go_to_previous' => 'From18To17',
+			'go_to_previous' => 'From30To17',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -762,11 +762,11 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * Upgrade the format from version 1.7 to 1.8
+	 * Upgrade the format from version 1.7 to 3.0
 	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
-	protected function From17To18($oFactory)
+	protected function From17To30($oFactory)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
 
@@ -800,11 +800,11 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * Downgrade the format from version 1.8 to 1.7
+	 * Downgrade the format from version 3.0 to 1.7
 	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
-	protected function From18To17($oFactory)
+	protected function From30To17($oFactory)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
 

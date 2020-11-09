@@ -68,8 +68,8 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	{
 		return array(
 			'1.7 to 1.6' => array('1.6', '1.7_to_1.6.input', '1.7_to_1.6.expected'),
-			'1.7 to 1.8' => array('1.8', '1.7_to_1.8.input', '1.7_to_1.8.expected'),
-			'1.8 to 1.7' => array('1.7', '1.8_to_1.7.input', '1.8_to_1.7.expected'),
+			'1.7 to 3.0' => array('3.0', '1.7_to_3.0.input', '1.7_to_3.0.expected'),
+			'3.0 to 1.7' => array('1.7', '3.0_to_1.7.input', '3.0_to_1.7.expected'),
 		);
 	}
 }
