@@ -62,4 +62,9 @@ class TitleFactory
 
 		return $oTitle;
 	}
+
+	public static function MakeNeutral(string $sTitle, int $iLevel = 1, ?string $sId = null)
+	{
+		return new Title($sTitle, $iLevel, $sId);
+	}
 }

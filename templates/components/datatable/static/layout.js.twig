@@ -1,0 +1,47 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% if oUIBlock.GetOptions() is not empty %}
+{% set iPageSize = oUIBlock.GetOptions()["iPageSize"] %}
+{% else %}
+{% set iPageSize = 10 %}
+{% endif %}
+
+$('#{{ oUIBlock.GetId() }}').DataTable({
+    language: {
+        processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
+        search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
+        lengthMenu: "{{ 'UI:Datatables:Language:LengthMenu'|dict_s }}",
+        zeroRecords: "{{ 'UI:Datatables:Language:ZeroRecords'|dict_s }}",
+        info: "{{ 'UI:Datatables:Language:Info'|dict_s }}",
+        infoEmpty: "",
+        infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
+        emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
+        paginate: {
+            first: "<<",
+            previous: "<",
+            next: ">",
+            last: ">>"
+        },
+        aria: {
+            sortAscending: ": {{ 'UI:Datatables:Language:Sort:Ascending'|dict_s }}",
+            sortDescending: ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
+        }
+    },
+    order: [],
+    rowId: "id",
+    filter: false,
+    {% if oUIBlock.GetData()|length <= iPageSize %}
+    paging: false,
+    {% endif %}
+    dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+    lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+    columns: [
+        {% for column in oUIBlock.GetColumns() %}
+        {
+            width: "auto",
+            sortable: true
+        },
+        {% endfor %}
+    ]
+});

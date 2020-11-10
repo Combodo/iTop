@@ -10,7 +10,9 @@ use ApplicationException;
 use AttributeLinkedSet;
 use CMDBObjectSet;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use MetaModel;
 use appUserPreferences;
 use UserRights;
@@ -639,7 +641,19 @@ class DataTableFactory
 				} )'
 		];
 
-
 		return $aOptions;
+	}
+
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null)
+	{
+		$oBlock = new UIContentBlock();
+		$oTitle = TitleFactory::MakeNeutral($sTitle, 3);
+		$oBlock->AddSubBlock($oTitle);
+		$oTable = new StaticTable($sId);
+		$oTable->SetColumns($aColumns);
+		$oTable->SetData($aData);
+		$oBlock->AddSubBlock($oTable);
+
+		return $oBlock;
 	}
 }

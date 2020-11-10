@@ -415,75 +415,8 @@ class DisplayBlock
 		switch($this->m_sStyle)
 		{
 			case 'count':
-			if (isset($aExtraParams['group_by']))
-			{
-				$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
-
-				$aRes = CMDBSource::QueryToArray($sSql);
-
-				$aGroupBy = array();
-				$aLabels = array();
-				$aValues = array();
-				$iTotalCount = 0;
-				foreach ($aRes as $iRow => $aRow)
-				{
-					$sValue = $aRow['grouped_by_1'];
-					$aValues[$iRow] = $sValue;
-					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aLabels[$iRow] = $sHtmlValue;
-					$aGroupBy[$iRow] = (int) $aRow[$sFctVar];
-					$iTotalCount += $aRow['_itop_count_'];
-				}
-
-
-				$aData = array();
-				$oAppContext = new ApplicationContext();
-				$sParams = $oAppContext->GetForLink();
-				foreach($aGroupBy as $iRow => $iCount)
-				{
-					// Build the search for this subset
-					$oSubsetSearch = $this->m_oFilter->DeepClone();
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
-					$oSubsetSearch->AddConditionExpression($oCondition);
-					if (isset($aExtraParams['query_params']))
-					{
-						$aQueryParams = $aExtraParams['query_params'];
-					}
-					else
-					{
-						$aQueryParams = array();
-					}
-					$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
-
-					$aData[] = array ('group' => $aLabels[$iRow],
-									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
-				}
-				$aAttribs =array(
-					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array(
-						'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
-						'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
-					),
-				);
-				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
-				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
-				$sHtml .= $oPage->GetTable($aAttribs, $aData);
-				
-				$oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
-			}
-			else
-			{
-				// Simply count the number of elements in the set
-				$iCount = $this->m_oSet->Count();
-				$sFormat = 'UI:CountOfObjects';
-				if (isset($aExtraParams['format']))
-				{
-					$sFormat = $aExtraParams['format'];
-				}
-				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iCount));
-			}
-			
-			break;
+				$oBlock = $this->RenderCount($aExtraParams, $oPage, $sId);
+				break;
 			
 			case 'join':
 			$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']): array();
@@ -1382,6 +1315,83 @@ JS
 
 		return $oBlock;
 	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
+	protected function RenderCount(array $aExtraParams, WebPage $oPage, ?string $sId): iUIBlock
+	{
+		if (isset($aExtraParams['group_by'])) {
+			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
+
+			$aRes = CMDBSource::QueryToArray($sSql);
+
+			$aGroupBy = array();
+			$aLabels = array();
+			$aValues = array();
+			$iTotalCount = 0;
+			foreach ($aRes as $iRow => $aRow) {
+				$sValue = $aRow['grouped_by_1'];
+				$aValues[$iRow] = $sValue;
+				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+				$aLabels[$iRow] = $sHtmlValue;
+				$aGroupBy[$iRow] = (int)$aRow[$sFctVar];
+				$iTotalCount += $aRow['_itop_count_'];
+			}
+
+			$aData = array();
+			$oAppContext = new ApplicationContext();
+			$sParams = $oAppContext->GetForLink();
+			foreach ($aGroupBy as $iRow => $iCount) {
+				// Build the search for this subset
+				$oSubsetSearch = $this->m_oFilter->DeepClone();
+				$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				if (isset($aExtraParams['query_params'])) {
+					$aQueryParams = $aExtraParams['query_params'];
+				} else {
+					$aQueryParams = array();
+				}
+				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
+
+				$aData[] = array(
+					'group' => $aLabels[$iRow],
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
+				); // TO DO: add the context information
+			}
+			$aAttribs = array(
+				'group' => array('label' => $sGroupByLabel, 'description' => ''),
+				'value' => array(
+					'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
+					'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
+				),
+			);
+			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
+			$sTitle = Dict::Format($sFormat, $iTotalCount);
+			$oBlock = DataTableFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
+
+			// $oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
+		} else {
+			// Simply count the number of elements in the set
+			$iCount = $this->m_oSet->Count();
+			$sFormat = 'UI:CountOfObjects';
+			if (isset($aExtraParams['format'])) {
+				$sFormat = $aExtraParams['format'];
+			}
+			$oBlock = new Html($oPage->GetP(Dict::Format($sFormat, $iCount)));
+		}
+		return $oBlock;
+}
 }
 
 /**

@@ -21,9 +21,9 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Datatables:Language:Processing' => 'Please wait...',
 	'UI:Datatables:Language:Search' => 'Filter:',
-	'UI:Datatables:Language:LengthMenu' => 'Showing _MENU_ out',
+	'UI:Datatables:Language:LengthMenu' => 'Showing _MENU_ out of',
 	'UI:Datatables:Language:ZeroRecords' => 'No result',
-	'UI:Datatables:Language:Info' => 'of _TOTAL_ items',
+	'UI:Datatables:Language:Info' => '_TOTAL_ items',
 	'UI:Datatables:Language:InfoEmpty' => 'No information',
 	'UI:Datatables:Language:InfoFiltered' => 'filtered out of _MAX_ items',
 	'UI:Datatables:Language:EmptyTable' => 'No data available in this table',

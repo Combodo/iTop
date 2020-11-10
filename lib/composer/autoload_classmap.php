@@ -164,6 +164,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableBlock' => $baseDir . '/sources/application/UI/Component/DataTable/DataTable.php',
     'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableFactory' => $baseDir . '/sources/application/UI/Component/DataTable/DataTableFactory.php',
     'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableSettings' => $baseDir . '/sources/application/UI/Component/DataTable/DataTableSettings.php',
+    'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\StaticTable\\StaticTable' => $baseDir . '/sources/application/UI/Component/DataTable/StaticTable/StaticTable.php',
     'Combodo\\iTop\\Application\\UI\\Component\\FieldSet\\FieldSet' => $baseDir . '/sources/application/UI/Component/FieldSet/FieldSet.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Field\\Field' => $baseDir . '/sources/application/UI/Component/Field/Field.php',
     'Combodo\\iTop\\Application\\UI\\Component\\Form\\Form' => $baseDir . '/sources/application/UI/Component/Form/Form.php',
