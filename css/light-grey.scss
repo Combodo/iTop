@@ -866,9 +866,10 @@
 	}
 
 	.wizContainer {
-		border: 5px solid $complement-color;
+		border-left: 3px solid $complement-color;
 		background: $complement-light;
-		padding: 5px;
+		padding: 10px 16px;
+		border-radius: 3px;
 	}
 
 	.wizContainer table tr td {

@@ -4277,6 +4277,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 * @throws \Exception
+	 * @deprecated 3.0.0, will be removed in 3.1.0
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{

@@ -714,8 +714,9 @@ EOF
 				{
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
-				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the blue borders and the title above the form
+				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
 		break;
 	
@@ -847,22 +848,8 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sRealClass" data-object-id="$sObjectTmpKey" data-object-mode="create">
-	<div class="page_header">
-		<h1>$sClassIcon $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-				);
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
-				$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-</div><!-- End of object-details -->
-HTML
-				);
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone));
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
 			else
 			{
