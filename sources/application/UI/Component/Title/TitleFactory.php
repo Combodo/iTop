@@ -53,11 +53,15 @@ class TitleFactory
 		}
 
 		if (MetaModel::HasStateAttributeCode($sObjClass)) {
-			$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
 			$sStateCode = $oObject->GetState();
-			$sStatusLabel = $oObject->GetStateLabel();
-			$sStatusColor = UIHelper::GetColorFromStatus(get_class($oObject), $sStateCode);
-			$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
+
+			// Protection against classes with no default state (in which case we don't display the status)
+			if(!empty($sStateCode)) {
+				$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
+				$sStatusLabel = $oObject->GetStateLabel();
+				$sStatusColor = UIHelper::GetColorFromStatus(get_class($oObject), $sStateCode);
+				$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
+			}
 		}
 
 		return $oTitle;

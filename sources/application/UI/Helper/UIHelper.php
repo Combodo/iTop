@@ -10,11 +10,11 @@ namespace Combodo\iTop\Application\UI\Helper;
 
 use MetaModel;
 
+// TODO 3.0.0: Delete this class as it is only a temporary helper while code is being reworked.
 class UIHelper
 {
-	public static function GetColorFromStatus(string $sClass, string $sStateCode)
+	public static function GetColorFromStatus(string $sClass, ?string $sStateCode): string
 	{
-		$sStatusColor = 'neutral';
 		$sRootClass = MetaModel::GetRootClass($sClass);
 		switch ($sRootClass) {
 			case 'Ticket':
