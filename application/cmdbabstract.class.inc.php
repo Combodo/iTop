@@ -4623,7 +4623,7 @@ EOF
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($aSelectedObj as $iId)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
@@ -4655,7 +4655,7 @@ EOF
 				$oObj->DBUpdate();
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		$oP->Table($aHeaders, $aRows);
 		if ($bPreview)
 		{

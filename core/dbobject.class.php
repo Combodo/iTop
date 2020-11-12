@@ -3595,7 +3595,7 @@ abstract class DBObject implements iDisplay
 				// As a temporary fix: delete only the objects that are still to be deleted...
 				if ($oToDelete->m_bIsInDB)
 				{
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$oToDelete->DBDeleteSingleObject();
 				}
 			}
@@ -3610,13 +3610,13 @@ abstract class DBObject implements iDisplay
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 				{
 					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$oToUpdate->DBUpdate();
 				}
 			}
 		}
 
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		return $oDeletionPlan;
 	}
@@ -4560,7 +4560,7 @@ abstract class DBObject implements iDisplay
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 
 				/** @var \AttributeExternalKey $oAttDef */
 				$oAttDef = $aData['attribute'];
@@ -4592,7 +4592,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 	}
 
 	/**

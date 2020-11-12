@@ -3466,7 +3466,7 @@ class SynchroExecution
 			/** @var SynchroReplica $oReplica */
 			while($oReplica = $oSetToProcess->Fetch())
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 				$iLastReplicaProcessed = $oReplica->GetKey();
 				switch ($sDeletePolicy)
 				{
@@ -3595,7 +3595,7 @@ class SynchroExecution
 		/** @var \SynchroReplica $oReplica */
 		while ($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
@@ -3697,7 +3697,7 @@ class SynchroExecution
 		/** @var SynchroReplica $oReplica */
 		while($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace('Destination object to be DELETED', $oReplica);
 			$oReplica->DeleteDestObject($this->m_oChange, $this->m_oStatLog);

@@ -144,7 +144,7 @@ class XMLBulkExport extends BulkExport
 		
 		while ($aObjects = $oSet->FetchAssoc())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			if (count($aAuthorizedClasses) > 1)
 			{
 				$sData .= "<Row>\n";
@@ -182,7 +182,7 @@ class XMLBulkExport extends BulkExport
 			$iCount++;
 		}
 		
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
 		if ($this->aStatusInfo['total'] == 0)
 		{

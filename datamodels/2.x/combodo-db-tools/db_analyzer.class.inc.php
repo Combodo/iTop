@@ -40,7 +40,7 @@ class DatabaseAnalyzer
 	{
 		if (!is_null($this->iTimeLimitPerOperation))
 		{
-			set_time_limit($this->iTimeLimitPerOperation);
+			set_time_limit(intval($this->iTimeLimitPerOperation));
 		}
 
 		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
