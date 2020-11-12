@@ -1,0 +1,35 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<input type="hidden" name="attr_{{ oUIBlock.GetRef() }}" value="">
+
+{% set columns = oUIBlock.GetColumns() %}
+<table id="{{ oUIBlock.GetId() }}" class="ibo-datatable listResults" style="width:100%;">
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th class="ibo-datatable-header" title="{{ column.description }}">{{ column.label|raw }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for rowId,data in oUIBlock.GetData() %}
+        <tr role="row" id="{{ oUIBlock.GetRef() }}_row_{{ rowId }}">
+            {% for name,column in columns %}
+                <td>
+                    {% set cellValueHtml = '' %}
+                    {% for cellName,cellValue in data %}
+                        {% if cellName == name %}
+                            {% set cellValueHtml = cellValue %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if cellValueHtml is empty %}
+                        {% set cellValueHtml = '&nbsp;' %}
+                    {% endif %}
+                    {{ cellValueHtml|raw }}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

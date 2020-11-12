@@ -394,6 +394,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableBlock' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/DataTable.php',
         'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableFactory' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/DataTableFactory.php',
         'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\DataTableSettings' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/DataTableSettings.php',
+        'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\StaticTable\\FormTable\\FormTable' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/StaticTable/FormTable/FormTable.php',
         'Combodo\\iTop\\Application\\UI\\Component\\DataTable\\StaticTable\\StaticTable' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/StaticTable/StaticTable.php',
         'Combodo\\iTop\\Application\\UI\\Component\\FieldSet\\FieldSet' => __DIR__ . '/../..' . '/sources/application/UI/Component/FieldSet/FieldSet.php',
         'Combodo\\iTop\\Application\\UI\\Component\\Field\\Field' => __DIR__ . '/../..' . '/sources/application/UI/Component/Field/Field.php',

@@ -10,6 +10,7 @@ use ApplicationException;
 use AttributeLinkedSet;
 use CMDBObjectSet;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
@@ -655,5 +656,14 @@ class DataTableFactory
 		$oBlock->AddSubBlock($oTable);
 
 		return $oBlock;
+	}
+
+	public Static function MakeForForm(string $sRef, array $aColumns, array $aData)
+	{
+		$oTable = new FormTable($sRef);
+		$oTable->SetColumns($aColumns);
+		$oTable->SetData($aData);
+
+		return $oTable;
 	}
 }

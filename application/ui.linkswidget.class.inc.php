@@ -24,6 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
 class UILinksWidget 
@@ -336,67 +339,23 @@ JS
 	}
 
 	/**
-	 * Display one row of the whole form
-	 *
-	 * @param WebPage $oP
-	 * @param array $aConfig
-	 * @param array $aRow
-	 * @param int $iRowId
-	 *
-	 * @return string
-	 */
-	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
-	{
-		$sHtml = '';
-		$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_row_$iRowId\">\n";
-		foreach($aConfig as $sName=>$void)
-		{
-			$sHtml .= "<td>".$aRow[$sName]."</td>\n";
-		}
-		$sHtml .= "</tr>\n";
-		
-		return $sHtml;
-	}
-	
-	/**
 	 * Display the table with the form for editing all the links at once
+	 *
 	 * @param WebPage $oP The web page used for the output
 	 * @param array $aConfig The table's header configuration
 	 * @param array $aData The tabular data to be displayed
+	 *
 	 * @return string Html fragment representing the form table
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
-		$sHtml = "<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\">";
-		$sHtml .= "<table class=\"listResults\" id='dt_{$this->m_sAttCode}{$this->m_sNameSuffix}' width='100%'>\n";
-		$oP->add_ready_script("$('#dt_{$this->m_sAttCode}{$this->m_sNameSuffix}').DataTable({\"language\": {\"emptyTable\": \"".str_replace("\"","\\\"",Dict::S('UI:Message:EmptyList:UseAdd'))."\"},search:false});");
-		// Header
-		$sHtml .= "<thead>\n";
-		$sHtml .= "<tr>\n";
-		foreach($aConfig as $sName=>$aDef)
-		{
-			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
-		}
-		$sHtml .= "</tr>\n";
-		$sHtml .= "</thead>\n";
+		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
 
-		// Content
-		$sHtml .= "</tbody>\n";
-		$sEmptyRowStyle = '';
-		if (count($aData) != 0)
-		{
-			$sEmptyRowStyle = 'style="display:none;"';
-		}
-
-		foreach ($aData as $iRowId => $aRow)
-		{
-			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
-		}
-		//$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
-		$sHtml .= "</tbody>\n";
-
-		// Footer
-		$sHtml .= "</table></br>\n";
+		$sHtml = BlockRenderer::RenderBlockTemplates($oTable);
 
 		return $sHtml;
 	}
