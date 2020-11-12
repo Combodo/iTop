@@ -2493,6 +2493,7 @@ CSS
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
 		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
 
 		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
@@ -2526,6 +2527,7 @@ CSS
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
 		$sStatesSelection = '';
 		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
 		{
