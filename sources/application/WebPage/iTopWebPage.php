@@ -553,71 +553,7 @@ JS
 		$this->sBreadCrumbEntryUrl = null;
 		$this->sBreadCrumbEntryIcon = null;
 	}
-
-	/**
-	 * @return string
-	 * @throws \CoreException
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	public function GetSiloSelectionForm()
-	{
-		// List of visible Organizations
-		$iCount = 0;
-		$oSet = null;
-		if (MetaModel::IsValidClass('Organization'))
-		{
-			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
-			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
-			$oSearchFilter = new DBObjectSearch('Organization');
-			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-			$oSet = new CMDBObjectSet($oSearchFilter);
-			$iCount = $oSet->Count(); // total number of existing Orgs
-
-			// Now get the list of Orgs to be displayed in the menu
-			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
-			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-			if (!empty($aFavoriteOrgs))
-			{
-				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
-			}
-			$oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
-		}
-		switch ($iCount)
-		{
-			case 0:
-			case 1:
-				// No such dimension/silo or only one possible choice => nothing to select
-				$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
-				break;
-
-			default:
-				$oAppContext = new ApplicationContext();
-				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-				$sHtml = '<div id="SiloSelection">';
-				$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
-
-				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
-				$sHtml .= $oWidget->DisplaySelect($this, 50, false, '', $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
-					array(
-						'iFieldSize' => 20,
-						'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-						'sDefaultValue' => Dict::S('UI:AllOrganizations'),
-					));
-				$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
-				$this->add_ready_script("$('#label_org_id').click( function() { if ($('#org_id').val() == '') { $(this).val(''); } } );\n");
-				// Add other dimensions/context information to this form
-				$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
-				$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
-				$sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
-				$sHtml .= '</form>';
-				$sHtml .= '</div>';
-		}
-
-		return $sHtml;
-	}
+	
 
 
 	/**
@@ -970,9 +906,7 @@ EOF;
 		/////////////////////////////////////////////////////////
 		////////////////// ☢ DANGER ZONE ☢ /////////////////////
 		/////////////////////////////////////////////////////////
-
-		$sForm = $this->GetSiloSelectionForm();
-
+		
 		// Render the tabs in the page (if any)
 //		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
 

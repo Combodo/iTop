@@ -23,12 +23,15 @@ namespace Combodo\iTop\Application\UI\Layout\NavigationMenu;
 use ApplicationContext;
 use ApplicationMenu;
 use appUserPreferences;
+use CMDBObjectSet;
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\NewsroomMenu\NewsroomMenu;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\UIBlock;
+use DBObjectSearch;
 use Dict;
 use MetaModel;
+use UIExtKeyWidget;
 use UserRights;
 use utils;
 
@@ -48,6 +51,8 @@ class NavigationMenu extends UIBlock
 	public const JS_TEMPLATE_REL_PATH = 'layouts/navigation-menu/layout';
 	public const JS_FILES_REL_PATH = [
 		'js/layouts/navigation-menu.js',
+		'js/extkeywidget.js',
+		'js/forms-json-utils.js',
 	];
 
 	/** @var string $sAppRevisionNumber */
@@ -58,6 +63,8 @@ class NavigationMenu extends UIBlock
 	protected $sAppFullIconUrl;
 	/** @var string $sAppIconLink */
 	protected $sAppIconLink;
+	/** @var array $aSiloSelection */
+	protected $aSiloSelection;
 	/** @var array $aMenuGroups */
 	protected $aMenuGroups;
 	/** @var array $aUserData */
@@ -92,12 +99,14 @@ class NavigationMenu extends UIBlock
 		$this->sAppSquareIconUrl = Branding::GetCompactMainLogoAbsoluteUrl();
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
 		$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+		$this->aSiloSelection = array();
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
 		$this->oNewsroomMenu = $oNewsroomMenu;
 
 		$this->ComputeExpandedState();
 		$this->ComputeUserData();
+		$this->ComputeSiloSelection();
 	}
 
 	/**
@@ -132,6 +141,14 @@ class NavigationMenu extends UIBlock
 		return $this->sAppIconLink;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function GetSiloSelection()
+	{
+		return $this->aSiloSelection;
+	}
+	
 	/**
 	 * @return array
 	 */
@@ -189,6 +206,77 @@ class NavigationMenu extends UIBlock
 		return MetaModel::GetConfig()->Get('newsroom_enabled');
 	}
 
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function ComputeSiloSelection()
+	{
+		//TODO 3.0 Use components if we have the time to build select/autocomplete components before release
+		// List of visible Organizations
+		$iCount = 0;
+		$oSet = null;
+		if (MetaModel::IsValidClass('Organization'))
+		{
+			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
+			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+			$oSearchFilter = new DBObjectSearch('Organization');
+			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+			$oSet = new CMDBObjectSet($oSearchFilter);
+			$iCount = $oSet->Count(); // total number of existing Orgs
+
+			// Now get the list of Orgs to be displayed in the menu
+			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
+			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+			if (!empty($aFavoriteOrgs))
+			{
+				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
+			}
+			$oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
+		}
+		switch ($iCount)
+		{
+			case 0:
+			case 1:
+				// No such dimension/silo or only one possible choice => nothing to select
+				break;
+
+			default:
+				$oAppContext = new ApplicationContext();
+				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+				$this->aSiloSelection['html'] = '<form data-role="ibo-navigation-menu--silo-selection--form" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+
+				$oPage = new \CaptureWebPage();
+				
+				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
+				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
+				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, '', $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
+					array(
+						'iFieldSize' => 20,
+						'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+						'sDefaultValue' => Dict::S('UI:AllOrganizations'),
+					));
+				$this->aSiloSelection['html'] .= $oPage->GetHtml();
+				// Add other dimensions/context information to this form
+				$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
+				$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
+				$this->aSiloSelection['html'] .= $oAppContext->GetForForm(); // Pass what remains, if anything...
+				$this->aSiloSelection['html'] .= '</form>';
+
+				$sPageJS = $oPage->GetJS();
+				$sPageReadyJS = $oPage->GetReadyJS();
+				$this->aSiloSelection['js'] =
+					<<<JS
+$sPageJS
+$sPageReadyJS
+$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').bind('extkeychange', function() { $('[data-role="ibo-navigation-menu--silo-selection--form"]').submit(); } )
+$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').click( function() { if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { $(this).val(''); } } );
+JS;
+		}
+	}
+	
 	/**
 	 * Compute if the menu is expanded or collapsed
 	 *

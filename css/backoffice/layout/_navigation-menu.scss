@@ -31,7 +31,17 @@ $ibo-navigation-menu--top-part--padding-y: $ibo-navigation-menu--body--padding-y
 $ibo-navigation-menu--top-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
 $ibo-navigation-menu--top-part--elements-spacing: 20px !default;
 
-$ibo-navigation-menu--middle-part--padding-top: 40px !default;
+$ibo-navigation-menu--silo-selection--width: 70% !default;
+$ibo-navigation-menu--silo-selection--margin-left: 15px !default;
+$ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right: -42px !default;
+$ibo-navigation-menu--silo-selection--input--padding-right: 38px !default;
+$ibo-navigation-menu--silo-selection--input--data-value--padding: 5px !default;
+$ibo-navigation-menu--silo-selection--input-select--action-button--hierarchy--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left: 60px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left: -60px !default;
+
+$ibo-navigation-menu--middle-part--padding-top: 24px !default;
 $ibo-navigation-menu--middle-part--padding-bottom: 16px !default;
 $ibo-navigation-menu--middle-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
 $ibo-navigation-menu--middle-part--elements-spacing: 20px !default;
@@ -183,6 +193,9 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 		.ibo-navigation-menu--full-company-logo{
 			display: flex;
 		}
+		.ibo-navigation-menu--silo-selection{
+			display: inline-block;
+		}
 		.ibo-navigation-menu--body{
 			width: $ibo-navigation-menu--body--width-expanded;
 
@@ -276,8 +289,8 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 }
 /* - Top part */
 .ibo-navigation-menu--top-part{
-	z-index: 1;
-	height: $ibo-navigation-menu--top-part--height;
+	z-index: 2;
+	min-height: $ibo-navigation-menu--top-part--height;
 	padding: $ibo-navigation-menu--top-part--padding-y $ibo-navigation-menu--top-part--padding-x;
 	overflow: hidden;
 }
@@ -348,7 +361,7 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 }
 /* - Toggler */
 .ibo-navigation-menu--toggler{
-	display: flex;
+	display: inline-flex;
 	/* Width is define here in addition of the icon so we can fix its width whether the menu is collapsed or expanded */
 	width: $ibo-navigation-menu--toggler--width;
 
@@ -386,6 +399,37 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 		top: 16px;
 	}
 }
+.ibo-navigation-menu--silo-selection {
+	position: absolute;
+	display: none;
+	width: $ibo-navigation-menu--silo-selection--width;
+	margin-left: $ibo-navigation-menu--silo-selection--margin-left;
+	.ibo-input-wrapper
+	{
+		.ibo-input{
+			padding-right: $ibo-navigation-menu--silo-selection--input--padding-right;
+			overflow: hidden;
+			>[data-value]
+			{
+				padding: $ibo-navigation-menu--silo-selection--input--data-value--padding;
+			}
+		}
+		.ibo-input-select--action-button--hierarchy{
+			margin-left: $ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right;
+		}
+		
+		.ibo-input-select-autocomplete{
+			padding-right: $ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left;
+			~ .ibo-input-select--action-button--search{
+				margin-left: $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left;
+			}
+			~ .ibo-input-select--action-button--hierarchy{
+				margin-left: $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left;
+			}
+		}
+	}
+}
+
 
 /* - Menu groups */
 .ibo-navigation-menu--menu-group{
