@@ -512,7 +512,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail/Attribute:reply_to' => 'Répondre à (mél)',
 	'Class:ActionEmail/Attribute:reply_to+' => '~~',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Répondre à (libellé)',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Le nom du destinataire en cas de réponse sera inclus dans l\'entête du él.',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Le nom du destinataire en cas de réponse sera inclus dans l\'entête du mél.',
 	'Class:ActionEmail/Attribute:to' => 'A',
 	'Class:ActionEmail/Attribute:to+' => '',
 	'Class:ActionEmail/Attribute:cc' => 'Copie',
