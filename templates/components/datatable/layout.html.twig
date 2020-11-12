@@ -1,5 +1,5 @@
 {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
-{% if oUIBlock.GetOptions()["select"] is defined %}
+{% if oUIBlock.GetOptions()["select_mode"] is defined %}
 	<input type="hidden" name="selectionMode" value="positive"/>
 	<input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData()["extra_params"]}}"/>
 	<input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData()["filter"]}}"/>
@@ -7,7 +7,7 @@
 
 <table id="{{ oUIBlock.GetId() }}" width="100%" class="ibo-datatable">
     <thead>
-   {% if oUIBlock.GetOptions()["select"] is defined %}
+   {% if oUIBlock.GetOptions()["select_mode"] is defined %}
 	   <th></th>
    {% endif %}
    {% for aColumn in oUIBlock.GetDisplayColumns() %}

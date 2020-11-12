@@ -20,22 +20,18 @@ function checkAllDataTable(table, value) {
     // Reset the list of saved selection...
     $(':input[name^=storedSelection]').remove();
     $(table).parent().find(':checkbox[name^=selectObj]').trigger("change");
-    //updateCounter(table);
     return true;
 }
 
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
-    console.warn("destroy on close");
-    $('#{{ oUIBlock.GetId() }}').DataTable().clear();
-//	$('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
+     $('#{{ oUIBlock.GetId() }}').DataTable().clear();
 });
 
-{% if oUIBlock.GetOptions()["select"] is defined %}
+{% if oUIBlock.GetOptions()["select_mode"] is defined %}
 var oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }} = [];
 {% endif %}
 
 if ($.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
-    console.warn("destroy on load");
     $('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
 }
 
@@ -62,7 +58,12 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     "lengthMenu": [[ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, -1], [ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     "dom": "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
-    "order": [],
+	{% if( oUIBlock.GetOptions()["sort"][0] is defined ) %}
+	"order": [[{{ oUIBlock.GetOptions()["sort"][0]}},'{{ oUIBlock.GetOptions()["sort"][1]}}']],
+	{% else %}
+	"order":[],
+	{% endif %}
+	"ordering": true,
     {% if oUIBlock.GetOptions()["select"] is defined %}
     "select": {
         "style": "{{ oUIBlock.GetOptions()["select"] }}"
@@ -74,7 +75,6 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
-            //$(table).DataTable().rows({ page: 'current' }).select();
         } else {
             if (oData.id in oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}) {
                 $(oRow).select();
@@ -99,7 +99,7 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     "processing": true,
     "serverSide": true,
     "columns": [
-        {% if oUIBlock.GetOptions()["select"] is defined %}
+        {% if oUIBlock.GetOptions()["select_mode"] is defined %}
         {
             "width": "auto",
             "searchable": false,
@@ -230,12 +230,12 @@ $aOptions = {
     'iPageSize': '{{ oUIBlock.GetOptions()["iPageSize"] }}',
     'sTableId': '{{ oUIBlock.GetOptions()["sTableId"] }}',
     "sRenderUrl": "{{ oUIBlock.GetAjaxUrl() }}",
-    "sSelectMode": "{{ oUIBlock.GetOptions()["select"] }}",
+    "sSelectMode": "{{ oUIBlock.GetOptions()["select_mode"] }}",
     "oData": {{ oUIBlock.GetAjaxData() |raw }},
     'oLabels': {"moveup": "{{ 'UI:Button:MoveUp'|dict_s }}", "movedown": "{{ 'UI:Button:MoveDown'|dict_s }}"},
     'oDefaultSettings': {{ oUIBlock.GetOptions()["oDefaultSettings"]|raw }}
 };
-console.warn($aOptions);
+
 //if (!typeof $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings() !== "undefined")
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings()) {
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings("destroy");

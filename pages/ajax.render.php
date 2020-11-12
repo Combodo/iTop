@@ -291,7 +291,15 @@ try
 			$iEnd = utils::ReadParam('end', 1);
 			$iDrawNumber= utils::ReadParam('draw', 1);
 
-			$iSortCol = utils::ReadParam('sort_col', 'null');
+			$aSort = utils::ReadParam('order', [], false, 'array');
+			if(count($aSort)>0){
+				$iSortCol = $aSort[0]["column"];
+				$sSortOrder = $aSort[0]["dir"];
+			}
+			else{
+				$iSortCol = 0;
+				$sSortOrder = "asc";
+			}
 			$sSelectMode = utils::ReadParam('select_mode', '');
 			if (!empty($sSelectMode) && ($sSelectMode != 'none'))
 			{
@@ -330,16 +338,16 @@ try
 									if ($aNameSpec[0] == '%1$s')
 									{
 										// The name is made of a single column, let's sort according to the sort algorithm for this column
-										$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+										$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = ($sSortOrder == 'asc');
 									}
 									else
 									{
-										$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+										$aOrderBy[$sAlias.'.'.'friendlyname'] = ($sSortOrder == 'asc');
 									}
 								}
 								else
 								{
-									$aOrderBy[$sAlias.'.'.'friendlyname'] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+									$aOrderBy[$sAlias.'.'.'friendlyname'] = ($sSortOrder == 'asc');
 								}
 							}
 						}
@@ -365,7 +373,7 @@ try
 								{
 									$sSortCol = $sAttCode;
 								}
-								$aOrderBy[$sAlias.'.'.$sSortCol] = (utils::ReadParam('sort_order', 'asc') == 'asc');
+								$aOrderBy[$sAlias.'.'.$sSortCol] = ($sSortOrder == 'asc');
 							}
 						}
 						$iSortIndex++;

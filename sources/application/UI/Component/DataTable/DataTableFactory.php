@@ -240,7 +240,6 @@ class DataTableFactory
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
-		$oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 
 		// Load only the requested columns
 		$aColumnsToLoad = array();
@@ -261,10 +260,20 @@ class DataTableFactory
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
-
+		$aSortOrder=[];
+		$aSortDatable=[];
 		$aColumnDefinition = [];
+		$iIndexColumn=0;
+		if($sSelectMode!="") {
+			$iIndexColumn++;
+		}
 		foreach ($aClassAliases as $sClassAlias => $sClassName) {
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
+				if ($aData['sort'] != 'none') {
+					$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
+					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
+					$aSortDatable=[$iIndexColumn,$aData['sort']];
+				}
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						$aColumnDefinition[] = [
@@ -290,20 +299,22 @@ class DataTableFactory
 							"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
 						];
 					}
+					$iIndexColumn++;
 				}
 			}
 		}
+		$oSet->SetOrderBy($aSortOrder);
 
 		$aOptions = [];
 		if ($oDefaultSettings != null) {
 			$aOptions['oDefaultSettings'] = json_encode(array('iDefaultPageSize' => $oDefaultSettings->iDefaultPageSize, 'oColumns' => $oDefaultSettings->aColumns));
 		}
-
+		$aOptions['sort'] = $aSortDatable;
 		if ($sSelectMode == 'multiple') {
-			$aOptions['select'] = "multi";
+			$aOptions['select_mode'] = "multiple";
 		} else {
 			if ($sSelectMode == 'single') {
-				$aOptions['select'] = "single";
+				$aOptions['select_mode'] = "single";
 			}
 		}
 
@@ -324,6 +335,7 @@ class DataTableFactory
 			"columns" => $oCustomSettings->aColumns,
 			"extra_params" => $aExtraParams,
 			"class_aliases" => $aClassAliases,
+			"select_mode" => $sSelectMode,
 		]));
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
@@ -436,7 +448,6 @@ class DataTableFactory
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
-		$oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 
 		// Load only the requested columns
 		$aColumnsToLoad = array();
@@ -459,8 +470,17 @@ class DataTableFactory
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
+		$iIndexColumn=0;
+		if($sSelectMode!="") {
+			$iIndexColumn++;
+		}
 		foreach ($aClassAliases as $sClassAlias => $sClassName) {
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
+				if ($aData['sort'] != 'none') {
+					$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
+					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
+					$aSortDatable=[$iIndexColumn,$aData['sort']];
+				}
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						$aColumnDefinition[] = [
@@ -486,9 +506,11 @@ class DataTableFactory
 							"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
 						];
 					}
+					$iIndexColumn++;
 				}
 			}
 		}
+		$oSet->SetOrderBy($oCustomSettings->GetSortOrder());
 
 		$aOptions = [];
 		if ($oDefaultSettings != null) {
@@ -496,12 +518,14 @@ class DataTableFactory
 		}
 
 		if ($sSelectMode == 'multiple') {
-			$aOptions['select'] = "multi";
+			$aOptions['select_mode'] = "multiple";
 		} else {
 			if ($sSelectMode == 'single') {
-				$aOptions['select'] = "single";
+				$aOptions['select_mode'] = "single";
 			}
 		}
+
+		$aOptions['sort'] = $aSortDatable;
 
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
@@ -520,6 +544,7 @@ class DataTableFactory
 			"columns" => $oCustomSettings->aColumns,
 			"extra_params" => $aExtraParams,
 			"class_aliases" => $aClassAliases,
+			"select_mode" => $sSelectMode,
 		]));
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
@@ -544,6 +569,25 @@ class DataTableFactory
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
 		$aClassAliases = [];
+
+		if ($sSelectMode!=""){
+			$aColumnDefinition["width"] = "auto";
+			$aColumnDefinition["searchable"] = false;
+			$aColumnDefinition["sortable"] = false;
+			$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);\" class=\"checkAll\" id=\"field_{{ oUIBlock.GetId() }}_check_all\" name=\"field_{{ oUIBlock.GetId() }}_check_all\" title=\"{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}\" /></span>";
+			$aColumnDefinition["type"] = "html";
+			$aColumnDefinition["data"] = "";
+			$aColumnDefinition["render"] = "function (data, type, row) {
+				var oCheckboxElem = $('<span class=\"row_input\"><input type=\"checkbox\" class=\"selectList{{ oUIBlock.GetId() }}\" name=\"selectObject\" /></span>');
+				if (row.limited_access) {
+					oCheckboxElem.html('-');
+				} else {
+					oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id);
+				}
+				return oCheckboxElem.prop('outerHTML');
+			}";
+			array_push($aColumnsDefinitions, $aColumnDefinition);
+		}
 
 		foreach ($aColumns as $sClassName => $aClassColumns) {
 			$aClassAliases[$sClassName] = $sClassName;
@@ -591,7 +635,7 @@ class DataTableFactory
 			}
 		}
 
-		$aOptions['select'] = $sSelectMode;
+		$aOptions['select'] = ["style"=>$sSelectMode];
 
 		$aOptions['pageLength'] = $iLength;
 
@@ -601,10 +645,11 @@ class DataTableFactory
 			"columns" => $aColumns,
 			"extra_params" => $aExtraParams,
 			"class_aliases" => $aClassAliases,
+			"select_mode" => $sSelectMode,
 		]);
 
 
-		$aOptions[] = [
+		$aOptions =array_merge ($aOptions, [
 			"language" =>
 				[
 					"processing" => Dict::Format('UI:Datatables:Language:Processing'),
@@ -628,6 +673,7 @@ class DataTableFactory
 				],
 			"lengthMenu" => Dict::Format('Portal:Datatables:Language:DisplayLength:All'),
 			"dom" => "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+			"ordering"=>true,
 			"order" => [],
 			"filter" => false,
 			"processing" => true,
@@ -640,7 +686,7 @@ class DataTableFactory
 					"method":	"post",
 					"pages": 5 // number of pages to cache
 				} )'
-		];
+		]);
 
 		return $aOptions;
 	}

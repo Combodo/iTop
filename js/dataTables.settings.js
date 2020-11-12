@@ -2,7 +2,7 @@
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,
-	// "datatable" the widget name
+	// "DataTableSettings" the widget name
 	$.widget( "itop.DataTableSettings",
 {
 		// default options
@@ -26,7 +26,6 @@ $(function()
 		_create: function(mydatatable, options)
 		{
 			this.aDlgStateParams = ['iDefaultPageSize', 'oColumns'];
-		console.warn('datatablesettings');
 			this.element.addClass('itop-datatable');
 			
 			var me = this;
@@ -80,51 +79,32 @@ $(function()
 				{
 					window.pager_params['pager'+me.options.sListId] = undefined;
 				}
-				// End of workaround
-				console.warn("update:");
-				console.warn(data);
 
 			//	try {
-				var toto = $('#'+me.options.sListId).parent().parent();
+				var parentElt = $('#'+me.options.sListId).parent().parent();
 				$('#'+me.options.sListId).DataTable().destroy(true);
-				var entete="";
+				var sThead="";
+				if(me.options.sSelectMode !=""){
+					sThead += "<th></th>";
+				}
 				var aOptions = JSON.parse(data);
-				$.each(aOptions[0]['allColumns'], function(i, item) {
+				$.each(aOptions['allColumns'], function(i, item) {
 					$.each(item, function(j, champs) {
 						if(champs.checked == 'true') {
-							entete += "<th>"+champs.label+"</th>";
+							sThead += "<th>"+champs.label+"</th>";
 						}
 					});
 				});
-				$.each(aOptions[0]['columns'], function(i, item) {
-					aOptions[0]["columns"][i]["render"]["display"] = new Function ( "data, type, row" , aOptions[0]["columns"][i]["render"]["display"]);
+				$.each(aOptions['columns'], function(i, item) {
+					aOptions["columns"][i]["render"]["display"] = new Function ( "data, type, row" , aOptions["columns"][i]["render"]["display"]);
 				});
 
-				toto.append( "<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">" +
-					"<thead><tr>"+entete+"</tr></thead></table>" );
-					//$('#'+me.options.sListId).DataTable().clear();
-					//$('#'+me.options.sListId).empty();
-					aOptions[0]["lengthMenu"]= [[oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, -1], [oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, aOptions[0]["lengthMenu"]]];
-					aOptions[0]["ajax"]=eval(aOptions[0]["ajax"]);
-					$('#'+me.options.sListId).DataTable(aOptions[0]);
-					//me.element.find('.datacontents').html(data);
-					// restore the sort order on columns
-					//me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
+				parentElt.append( "<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">" +
+					"<thead><tr>"+sThead+"</tr></thead></table>" );
+				aOptions["lengthMenu"]= [[oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, -1], [oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, aOptions["lengthMenu"]]];
+				aOptions["ajax"]=eval(aOptions["ajax"]);
+				$('#'+me.options.sListId).DataTable(aOptions);
 
-
-
-
-
-
-				/*} catch (e) {
-					// ugly hacks for IE 8/9 first...
-					if (!window.console) console.error = {};
-					if (!window.console.error) {
-						console.error = function () {
-						};
-					}
-					console.error("Can not inject data : "+data);
-				}*/
 				me.element.unblock();
 
 			}, 'html' );
@@ -168,11 +148,6 @@ $(function()
 					}
 				}
 			}
-			/*A voir, je ne sais pas à quoi ça sert
-			if ((this.options.sSelectMode != '') && (this.options.sSelectMode != 'none'))
-			{
-				iSortCol++;
-			}*/
 			oParams.sort_col = iSortCol;
 			oParams.sort_order = sSortOrder;
 			var me = this;
@@ -202,6 +177,7 @@ $(function()
 				oOptions = {oColumns: oColumns, iPageSize: iPageSize, iDefaultPageSize: iPageSize };
 			}
 			this._setOptions(oOptions);
+			this._refresh();
 
 			// Check if we need to save the settings or not...
 			var oSaveCheck = $('#datatable_dlg_'+this.options.sListId).find('input[name=save_settings]');
@@ -259,7 +235,6 @@ $(function()
 		{
 			// in 1.9 would use _superApply
 			this._superApply(arguments);
-			this._refresh();
 		},
 		// _setOption is called for each individual option that is changing
 		_setOption: function( key, value )
@@ -269,7 +244,6 @@ $(function()
 		},
 		UpdateState: function( config )
 		{
-			console.warn('datatablesettings:UpdateState');
 			var iPageSize = config.page_size;
 			if (iPageSize == -1)
 			{
@@ -314,6 +288,7 @@ $(function()
 			for(k in this.aDlgStateParams)
 			{
 				this._setOption(this.aDlgStateParams[k], this.originalState[this.aDlgStateParams[k]]);
+				this._refresh();
 			}
 			
 			dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
