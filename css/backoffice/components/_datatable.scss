@@ -19,6 +19,9 @@
 }
 	.dataTables_length
 	{
+		@extend %ibo-font-ral-med-100;
+		color: $ibo-color-grey-700;
+
 		position: relative;
 		float: right;
 		padding-top: 0.755em;
@@ -26,6 +29,9 @@
 	}
 	.dataTables_info
 	{
+		@extend %ibo-font-ral-med-100;
+		color: $ibo-color-grey-700;
+
 		position: relative;
 		float: right;
 		padding-top: 0.755em;
@@ -38,6 +44,8 @@
 
 	.pagination
 	{
+		color: $ibo-color-grey-800;
+
 		left: 1.21%;
 		right: 1.21%;
 		top: 91.58%;
