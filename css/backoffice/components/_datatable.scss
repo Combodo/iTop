@@ -78,6 +78,25 @@
 		border: 2px solid var(--ibo-color-grey-300);
 		background-color: $ibo-color-grey-200;
 	}
+.ibo-datatable thead tr th{
+	position: relative;
+}
+.ibo-datatable thead tr th.sorting::after{
+	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dc";
+	opacity: 0.3;
+	right: 1em;
+	position: absolute;
+}
+.ibo-datatable thead tr th.sorting_desc:after{
+	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0d7";
+	right: 1em;
+	position: absolute;
+}
+.ibo-datatable thead tr th.sorting_asc:after{
+	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0d8";
+	right: 1em;
+	position: absolute;
+}
 .ibo-datatable-toolbar {
 	/*position: relative;*/
 	//height: 30px;
@@ -88,6 +107,12 @@
 .ibo-search-form{
 	padding-top: $ibo-panel--spacing-top ;
 }
+
 .ibo-form-group{
 	position: fixed;
+}
+
+.sf_more_criterion.opened > .sfm_content{
+	position: fixed !important;
+	left: auto !important;
 }
