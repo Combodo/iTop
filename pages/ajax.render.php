@@ -261,7 +261,7 @@ try
 
 		case 'search':
 			$oPage->SetContentType('application/json');
-			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+			$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 			$aExtraParams = array();
 			if (is_array($extraParams))
 			{
@@ -385,9 +385,10 @@ try
 				}
 
 			}
+			$aQueryParams = isset($aExtraParams['query_params']) ? $aExtraParams['query_params'] : [];
 
 			// Load only the requested columns
-			$oSet = new DBObjectSet($oFilter, $aOrderBy, $aExtraParams, null, $iEnd - $iStart, $iStart);
+			$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
 			$oSet->OptimizeColumnLoad($aColumnsLoad);
 
 			if (isset($aExtraParams['show_obsolete_data']))	{

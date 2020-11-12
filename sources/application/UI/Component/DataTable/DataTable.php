@@ -106,6 +106,15 @@ class DataTableBlock extends UIContentBlock
 	{
 		$this->aResultColumns = $aColumns;
 	}
+
+	public function GetOption(string $sOption)
+	{
+		if (isset($this->aOptions[$sOption])) {
+			return $this->aOptions[$sOption];
+		}
+		return null;
+	}
+
 	/**
 	 * @return mixed
 	 */

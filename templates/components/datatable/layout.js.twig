@@ -99,16 +99,26 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     "processing": true,
     "serverSide": true,
     "columns": [
-        {% if oUIBlock.GetOptions()["select_mode"] is defined %}
+        {% if oUIBlock.GetOption("select") is not empty %}
         {
             "width": "auto",
             "searchable": false,
             "sortable": false,
-            "title": '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>',
+            title:
+                    {% if oUIBlock.GetOption("select") == "multi" %}
+                        '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
+                    {% else %}
+                        '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
+                    {% endif %},
             "type": "html",
             "data": "",
             "render": function (data, type, row) {
-                var oCheckboxElem = $('<span class="row_input"><input type="checkbox" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
+                var oCheckboxElem =
+                        {% if oUIBlock.GetOption("select") == "multi" %}
+                            $('<span class="row_input"><input type="checkbox" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
+                        {% else %}
+                            $('<span class="row_input"><input type="radio" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
+                        {% endif %}
                 if (row.limited_access) {
                     oCheckboxElem.html('-');
                 } else {

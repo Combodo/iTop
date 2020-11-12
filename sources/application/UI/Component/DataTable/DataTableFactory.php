@@ -706,11 +706,10 @@ class DataTableFactory
 		return $oBlock;
 	}
 
-	public Static function MakeForForm(string $sRef, array $aColumns, array $aData)
+	public Static function MakeForForm(string $sRef, array $aColumns): FormTable
 	{
 		$oTable = new FormTable($sRef);
 		$oTable->SetColumns($aColumns);
-		$oTable->SetData($aData);
 
 		return $oTable;
 	}

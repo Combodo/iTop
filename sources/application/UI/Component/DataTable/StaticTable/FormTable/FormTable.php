@@ -7,7 +7,9 @@
 namespace Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTable;
 
 
+use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\StaticTable;
+use Combodo\iTop\Application\UI\iUIBlock;
 
 /**
  * Class FormTable
@@ -24,10 +26,14 @@ class FormTable extends StaticTable
 	/** @var string */
 	private $sRef;
 
+	/** @var iUIBlock[] */
+	private $aRows;
+
 	public function __construct(string $sRef, string $sContainerCSSClass = '')
 	{
 		parent::__construct("dt_{$sRef}", $sContainerCSSClass);
 		$this->SetRef($sRef);
+		$this->aRows = [];
 	}
 
 	/**
@@ -44,5 +50,16 @@ class FormTable extends StaticTable
 	public function SetRef(string $sRef): void
 	{
 		$this->sRef = $sRef;
+	}
+
+	public function GetRows(): array
+	{
+		return $this->aRows;
+	}
+
+	public function AddRow(FormTableRow $oRow): self
+	{
+		$this->aRows[] = $oRow;
+		return $this;
 	}
 }

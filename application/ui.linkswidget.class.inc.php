@@ -25,6 +25,7 @@
  */
 
 use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');
@@ -353,7 +354,13 @@ JS
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
-		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
+		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
+
+		foreach ($aData as $iRowId => $aRow)
+		{
+			$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aRow, $iRowId);
+			$oTable->AddRow($oRow);
+		}
 
 		$sHtml = BlockRenderer::RenderBlockTemplates($oTable);
 
@@ -600,7 +607,9 @@ HTML
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
-				$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
+				//$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
+				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
+				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
 			}
 			else

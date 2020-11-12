@@ -13,23 +13,8 @@
     </tr>
     </thead>
     <tbody>
-    {% for rowId,data in oUIBlock.GetData() %}
-        <tr role="row" id="{{ oUIBlock.GetRef() }}_row_{{ rowId }}">
-            {% for name,column in columns %}
-                <td>
-                    {% set cellValueHtml = '' %}
-                    {% for cellName,cellValue in data %}
-                        {% if cellName == name %}
-                            {% set cellValueHtml = cellValue %}
-                        {% endif %}
-                    {% endfor %}
-                    {% if cellValueHtml is empty %}
-                        {% set cellValueHtml = '&nbsp;' %}
-                    {% endif %}
-                    {{ cellValueHtml|raw }}
-                </td>
-            {% endfor %}
-        </tr>
+    {% for oSubBlock in oUIBlock.GetRows() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
     {% endfor %}
     </tbody>
 </table>
