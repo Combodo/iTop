@@ -77,6 +77,15 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 
 	&.ibo-is-expanded{
 		width: $ibo-activity-panel--is-expanded--width;
+
+		.ibo-activity-panel--expand-icon{
+			display: none;
+		}
+	}
+	&:not(.ibo-is-expanded){
+		.ibo-activity-panel--collapse-icon{
+			display: none;
+		}
 	}
 }
 
@@ -215,9 +224,6 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 	&:hover{
 		color: $ibo-activity-panel--size-toggler--on-hover--color;
 	}
-}
-.ibo-activity-panel--collapse-icon{
-	display: none;
 }
 
 /* Body */
