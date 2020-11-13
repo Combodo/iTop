@@ -32,13 +32,10 @@ use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Application\UI\Component\Form\Form;
-use Combodo\iTop\Application\UI\Component\DataContainer\DataContainer;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Renderer\BlockRenderer;
 use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
@@ -49,11 +46,10 @@ use FieldExpression;
 use IssueLog;
 use MetaModel;
 use MissingQueryArgument;
-use ScssPhp\ScssPhp\Block;
 use TrueExpression;
+use UserRights;
 use utils;
 use WebPage;
-use UserRights;
 
 class SearchForm
 {
@@ -63,9 +59,6 @@ class SearchForm
 	 * @param array $aExtraParams
 	 *
 	 * @return string
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
 	 */
 	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{

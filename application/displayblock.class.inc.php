@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
@@ -25,6 +26,7 @@ use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -513,7 +515,7 @@ class DisplayBlock
 								$iListId = $aExtraParams['currentId'];
 							}
 							$oBlock = DataTableFactory::MakeForRendering( $iListId, $this->m_oSet, $aExtraParams);
-							$sHtml .= "<tr><td>".render_block($oBlock)."</td></tr>\n";
+							$sHtml .= "<tr><td>".BlockRenderer::RenderBlockTemplates($oBlock)."</td></tr>\n";
 						}
 					}				
 					$sHtml .= "</table>\n";
@@ -733,7 +735,7 @@ class DisplayBlock
 			if (!$oPage->IsPrintableVersion())
 			{
 				$aExtraParams['currentId'] = $sId;
-				$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
+				$oSearchForm = new SearchForm();
 				$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage,  $this->m_oSet, $aExtraParams);
 		 	}
 			break;

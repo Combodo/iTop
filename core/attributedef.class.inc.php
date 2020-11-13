@@ -6804,7 +6804,9 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetRenderForDataTable(string $sClassAlias) :string
 	{
-		$sRenderFunction = "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$this->m_aParams['targetclass']."&id='+data+'\'>'+row['".$sClassAlias."/".$this->m_sCode."_friendlyname']+'</a>' ;";
+		$oRemoteAtt = $this->GetFinalAttDef();
+		$sTargetClass = $oRemoteAtt->GetTargetClass();
+		$sRenderFunction = "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sTargetClass."&id='+data+'\'>'+row['".$sClassAlias."/".$this->GetCode()."_friendlyname']+'</a>' ;";
 		return $sRenderFunction;
 	}
 }

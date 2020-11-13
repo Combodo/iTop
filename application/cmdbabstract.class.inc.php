@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\Button;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\DataContainer\DataContainerFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Component\Field\Field;
 use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Component\Form\Form;
@@ -58,6 +59,8 @@ require_once(APPROOT.'sources/application/search/criterionconversion/criterionto
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
 use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+
 /**
  * Class cmdbAbstractObject
  */
@@ -390,11 +393,11 @@ EOF
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 
-		if (count($aIcons) > 0) {
-			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
-		} else {
-			$sTags = '';
-		}
+//		if (count($aIcons) > 0) {
+//			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
+//		} else {
+//			$sTags = '';
+//		}
 
 		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($this));
 	}
@@ -1105,7 +1108,7 @@ HTML
 	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPage->AddUiBlock(GetDisplaySetBlock( $oPage, $oSet, $aExtraParams ));
+		$oPage->AddUiBlock(static::GetDisplaySetBlock( $oPage, $oSet, $aExtraParams ));
 		return "";
 		}
 
@@ -1120,9 +1123,7 @@ HTML
 			$iListId = $aExtraParams['currentId'];
 		}
 
-		$oDataTable = DataTableFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
-
-		return $oDataTable;
+		return DataTableFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
 	/**
 	 * @param \WebPage $oPage
@@ -1722,7 +1723,7 @@ HTML
 	 */
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
+		$oSearchForm = new SearchForm();
 
 		return $oSearchForm->GetSearchForm($oPage, $oSet, $aExtraParams);
 	}
@@ -2144,7 +2145,7 @@ EOF
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
 					$oForm = $value->GetForm($sFormPrefix);
-					$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oForm);
+					$oRenderer = new ConsoleFormRenderer($oForm);
 					$aRenderRes = $oRenderer->Render();
 
 					$aFieldSetOptions = array(
@@ -2415,8 +2416,7 @@ JS
 
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-				$this->GetName());
+			//$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName());
 
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
@@ -4194,12 +4194,9 @@ EOF
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)))
 			{
 				// Check if the attribute is not read-only because of a synchro...
-				$sSynchroIcon = '';
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					$aReasons = array();
-					$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-					$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 					$sTip = '';
 					foreach($aReasons as $aRow)
 					{
@@ -4218,7 +4215,6 @@ EOF
 				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
 						ENT_QUOTES, 'UTF-8').'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
-				$sComment .= $sSynchroIcon;
 			}
 			else
 			{
@@ -4267,7 +4263,6 @@ HTML
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
 		$aTransitions = $this->EnumTransitions();
-		$aStimuli = MetaModel::EnumStimuli(get_class($this));
 		if (!isset($aTransitions[$sStimulus]))
 		{
 			// Invalid stimulus
@@ -4588,6 +4583,7 @@ EOF
 	 */
 	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
 	{
+		/** @var string[] $aHeaders */
 		$aHeaders = array(
 			'form::select' => array(
 				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
@@ -4663,7 +4659,6 @@ EOF
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
 			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
-			$aDefaults = utils::ReadParam('default', array());
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
 			foreach($aContextData as $sKey => $value)
@@ -4879,7 +4874,6 @@ EOF
 				if (count($aObjects) == 1)
 				{
 					$oObj = $aObjects[0];
-					$id = $oObj->GetKey();
 					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
 				}
 				else
