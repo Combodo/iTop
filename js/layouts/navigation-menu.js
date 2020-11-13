@@ -41,6 +41,7 @@ $(function()
 					menu_toggler: '[data-role="ibo-navigation-menu--toggler"]',
 					menu_group: '[data-role="ibo-navigation-menu--menu-group"]',
 					menu_drawer: '[data-role="ibo-navigation-menu--drawer"]',
+					menu_filter_placeholder: '[data-role="ibo-navigation-menu--menu--placeholder"]',
 					menu_filter_input: '[data-role="ibo-navigation-menu--menu-filter-input"]',
 					menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
 					user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
@@ -272,6 +273,8 @@ $(function()
 				// Note: We work on the 'display' property directly as there is a CSS rule managing the visibility of the active menu group
 				this.element.find('[data-role="ibo-navigation-menu--menu-nodes"]').css('display', '');
 				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').css('display', '');
+				
+				this.element.find(this.js_selectors.menu_filter_placeholder).css('display', 'none');
 
 				// Mark menu as unfiltered
 				this.element.removeClass(this.css_classes.menu_filtered);
@@ -285,6 +288,7 @@ $(function()
 			{
 				const me = this;
 				const aFilterValueParts = this._formatValueForFilterComparison(sRawFilterValue).split(' ');
+				let bHasAnyMatch = false;
 
 				// Mark menu as filtered
 				this.element.addClass(this.css_classes.menu_filtered);
@@ -307,11 +311,16 @@ $(function()
 					}
 
 					if (bMatches) {
+						bHasAnyMatch = true;
 						// Note: Selector must be recursive
 						$(this).parents('[data-role="ibo-navigation-menu--menu-nodes"], [data-role="ibo-navigation-menu--menu-node"]').show();
 						$(this).show();
 					}
 				});
+				if(!bHasAnyMatch)
+				{
+					this.element.find(this.js_selectors.menu_filter_placeholder).css('display', '');
+				}
 			},
 			/**
 			 * Format sOriginalValue for an easier comparison (change accents, capitalized letters, ...)

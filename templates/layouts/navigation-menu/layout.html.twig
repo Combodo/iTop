@@ -89,6 +89,13 @@
 			<a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"></a>
 			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
 		</div>
+		<div class="ibo-navigation-menu--menu--placeholder" data-role="ibo-navigation-menu--menu--placeholder">
+			<div class="ibo-navigation-menu--menu--placeholder-image ibo-svg-illustration--container">
+				{{ source("illustrations/undraw_empty.svg") }}
+			</div>
+			<div class="ibo-navigation-menu--menu--placeholder-hint">{{ 'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint'|dict_s }}</div>
+		</div>
+
 		<div class="ibo-navigation-menu--menu-groups">
 			{% for aMenuGroup in oUIBlock.GetMenuGroups() %}
 				{{ include('layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }) }}

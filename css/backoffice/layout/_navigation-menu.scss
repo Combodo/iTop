@@ -122,6 +122,12 @@ $ibo-navigation-menu--menu-filter-input--border-radius: $ibo-border-radius-300 !
 
 $ibo-navigation-menu--menu-groups--margin-top: $ibo-navigation-menu--drawer--padding-y + $ibo-navigation-menu--menu-filter--margin-bottom !default;
 
+$ibo-navigation-menu--menu--placeholder--width: 100% !default;
+$ibo-navigation-menu--menu--placeholder--margin-top: $ibo-navigation-menu--menu-groups--margin-top !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--width: 90% !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--height: auto !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--margin: auto !default;
+
 $ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered: 48px !default;
 
 $ibo-navigation-menu--menu-nodes-title--margin-top: 0 !default;
@@ -550,6 +556,22 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 	padding: 2px 4px;
 	@extend %ibo-font-ral-nor-50;
 }
+
+.ibo-navigation-menu--menu--placeholder{
+	width: $ibo-navigation-menu--menu--placeholder--width;
+	margin-top: $ibo-navigation-menu--menu--placeholder--margin-top;
+}
+
+.ibo-navigation-menu--menu--placeholder-image > svg{
+	display: block;
+	width: $ibo-navigation-menu--menu--placeholder-image--svg--width;
+	height: $ibo-navigation-menu--menu--placeholder-image--svg--height;
+	margin: $ibo-navigation-menu--menu--placeholder-image--svg--margin;
+}
+.ibo-navigation-menu--menu--placeholder-hint{
+	text-align: center;
+}
+
 /* - Menu groups */
 .ibo-navigation-menu--menu-groups{
 	margin-top: $ibo-navigation-menu--menu-groups--margin-top;
