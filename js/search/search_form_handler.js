@@ -348,14 +348,14 @@ $(function()
 				me._submit();
 			});
 			// - Toggle icon
-			this.element.find('.sf_title').on('click', function(oEvent){
+			this.element.find('.ibo-panel--header').on('click', function(oEvent){
 				// Prevent anchors
 				oEvent.preventDefault();
 
 				// Prevent toggle on <select>
 				if(oEvent.target.nodeName.toLowerCase() !== 'select' && oEvent.target.nodeName.toLowerCase() !== 'option')
 				{
-					me.element.toggleClass('closed');
+					me.element.find('ibo-panel--body').toggle();
 				}
 			});
 		},

@@ -559,7 +559,27 @@ HTML
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode)); // Don't display the 'Actions' menu on the results
 	}
+	/**
+	 * Display one row of the whole form
+	 * @param WebPage $oP
+	 * @param array $aConfig
+	 * @param array $aRow
+	 * @param int $iRowId
+	 * @return string
+	 * @deprecated in 3.0
+	 */
+	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
+	{
+		$sHtml = '';
+		$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_row_$iRowId\">\n";
+		foreach($aConfig as $sName=>$void)
+		{
+			$sHtml .= "<td>".$aRow[$sName]."</td>\n";
+		}
+		$sHtml .= "</tr>\n";
 
+		return $sHtml;
+	}
 	/**
 	 * @param WebPage $oP
 	 * @param int $iMaxAddedId

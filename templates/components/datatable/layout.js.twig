@@ -64,9 +64,9 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 	"order":[],
 	{% endif %}
 	"ordering": true,
-    {% if oUIBlock.GetOptions()["select"] is defined %}
+    {% if oUIBlock.GetOptions()["select_mode"] is defined %}
     "select": {
-        "style": "{{ oUIBlock.GetOptions()["select"] }}"
+        "style": "{{ oUIBlock.GetOptions()["select_mode"] }}"
     },
     "rowCallback": function (oRow, oData) {
         // Hiding pagination if only one page
@@ -156,8 +156,7 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 
 oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
     var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
-
-    // Checking input
+   // Checking input
     $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
     // Saving values in temp array
     for (var i in aData) {

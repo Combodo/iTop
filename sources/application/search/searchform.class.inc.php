@@ -182,6 +182,8 @@ class SearchForm
 				}
 			}
 		}
+		$bShowObsoleteData = \appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));// ? What to do when true == utils::IsArchiveMode()
+
 
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		$sStyle = "ibo-search-form";
@@ -191,13 +193,17 @@ class SearchForm
 		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [],Panel::DEFAULT_COLOR, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses("display_block");
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
-
 		$sHtml = "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
-		$sHtml .= "<span class=\"pull-right\">";
-		$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
-		$sHtml .= "<br class='clearboth' />";
-		$sHtml .= "<span class=\"sft_hint pull-right\">" . Dict::S('UI:Search:AutoSubmit:DisabledHint') . "</span>";
-		$sHtml .= "</span>";
+		if ($bShowObsoleteData)
+		{
+			$sHtml .= "<span class=\"pull-right\">";
+			$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
+		}
+		if($bAutoSubmit === false) {
+			$sHtml .= "<br class='clearboth' />";
+			$sHtml .= "<span class=\"sft_hint pull-right\">".Dict::S('UI:Search:AutoSubmit:DisabledHint')."</span>";
+			$sHtml .= "</span>";
+		}
 		$sHtml .= "<br class='clearboth' />";
 		$oUiSearchBlock->AddToolbarBlock(new Html($sHtml));
 
@@ -282,8 +288,6 @@ class SearchForm
 		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
 		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
 		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
-
-		$bShowObsoleteData = \appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));// ? What to do when true == utils::IsArchiveMode()
 
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",

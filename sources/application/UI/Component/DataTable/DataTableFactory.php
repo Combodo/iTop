@@ -470,6 +470,8 @@ class DataTableFactory
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
+		$aSortOrder=[];
+		$aSortDatable=[];
 		$iIndexColumn=0;
 		if($sSelectMode!="") {
 			$iIndexColumn++;
