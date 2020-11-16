@@ -1915,19 +1915,6 @@ JS
 		return false;
 	}
 
-	public static function GetCompatibleDataModelDir($sInstalledVersion)
-	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches)) {
-			$sMajorVersion = $aMatches[1];
-			$sDir = APPROOT.'datamodels/'.$sMajorVersion.'.x/';
-			if (is_dir($sDir)) {
-				return $sDir;
-			}
-		}
-
-		return false;
-	}
-
 	public static function GetDataModelVersion($sDatamodelDir)
 	{
 		$sVersionFile = $sDatamodelDir.'version.xml';

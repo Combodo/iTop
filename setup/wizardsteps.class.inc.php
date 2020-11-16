@@ -532,33 +532,18 @@ EOF
 
 		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION_FULL."</h2>");
 
-		if ($sInstalledVersion == ITOP_VERSION_FULL)
-		{
+		if ($sInstalledVersion == ITOP_VERSION_FULL) {
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
 		}
 		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
 
-		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
-		{
-			// Special case for upgrading some  development versions (temporary)
-			$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
-			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
-		}
-		else
-		{
-			$sCompatibleDMDir = SetupUtils::GetCompatibleDataModelDir($sInstalledDataModelVersion);
-		}
-
-		if ($sCompatibleDMDir === false)
-		{
+		$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
+		if ($sCompatibleDMDir === false) {
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION_FULL.") does not seem to be compatible with the installed version ($sInstalledVersion).");
-			$oPage->p("The upgrade cannot continue, sorry.");
-		}
-		else
-		{
+			$oPage->p("No datamodel directory found.");
+		} else {
 			$sUpgradeDMVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
 			$sPreviousSourceDir = isset($aInstalledInfo['source_dir']) ? $aInstalledInfo['source_dir'] : 'modules';
 			$aChanges = false;
