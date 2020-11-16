@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
+use cmdbAbstractObject;
 use CMDBChangeOpSetAttributeCaseLog;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
@@ -44,17 +45,25 @@ class ActivityPanelFactory
 	 * Make an activity panel for an object details layout, meaning that it should contain the case logs and the activity.
 	 *
 	 * @param \DBObject $oObject
+	 * @param string    $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 *
+	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
 	 *
 	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanel
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
 	{
 		$sObjClass = get_class($oObject);
 		$iObjId = $oObject->GetKey();
 
 		$oActivityPanel = new ActivityPanel($oObject);
+		$oActivityPanel->SetObjectMode($sMode);
 
 		// Retrieve case logs entries
 		$aCaseLogAttCodes = array_keys($oActivityPanel->GetCaseLogTabs());

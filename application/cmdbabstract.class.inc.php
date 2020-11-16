@@ -66,13 +66,18 @@ require_once(APPROOT.'sources/application/search/criterionconversion/criterionto
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	/** @var string ENUM_OBJECT_MODE_VIEW */
-	const ENUM_OBJECT_MODE_VIEW = 'view';
+	public const ENUM_OBJECT_MODE_VIEW = 'view';
 	/** @var string ENUM_OBJECT_MODE_EDIT */
-	const ENUM_OBJECT_MODE_EDIT = 'edit';
+	public const ENUM_OBJECT_MODE_EDIT = 'edit';
 	/** @var string ENUM_OBJECT_MODE_CREATE */
-	const ENUM_OBJECT_MODE_CREATE = 'create';
+	public const ENUM_OBJECT_MODE_CREATE = 'create';
 	/** @var string ENUM_OBJECT_MODE_STIMULUS */
-	const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+	/**
+	 * @var string DEFAULT_OBJECT_MODE
+	 * @since 3.0.0
+	 */
+	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
 
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
@@ -104,6 +109,24 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
+	}
+
+	/**
+	 * Return the allowed object modes
+	 *
+	 * @see static::ENUM_OBJECT_MODE_XXX
+	 *
+	 * @return string[]
+	 * @since 3.0.0
+	 */
+	public static function EnumObjectModes(): array
+	{
+		return [
+			static::ENUM_OBJECT_MODE_VIEW,
+			static::ENUM_OBJECT_MODE_EDIT,
+			static::ENUM_OBJECT_MODE_CREATE,
+			static::ENUM_OBJECT_MODE_STIMULUS,
+		];
 	}
 
 	/**

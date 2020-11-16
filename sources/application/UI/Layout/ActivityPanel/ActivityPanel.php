@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Layout\ActivityPanel;
 
 
 use AttributeDateTime;
+use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
@@ -28,6 +29,7 @@ use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CaseLogEntry;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm;
 use Combodo\iTop\Application\UI\UIBlock;
 use DBObject;
+use Exception;
 use MetaModel;
 
 /**
@@ -50,6 +52,11 @@ class ActivityPanel extends UIBlock
 
 	/** @var \DBObject $oObject The object for which the activity panel is for */
 	protected $oObject;
+	/**
+	 * @var string $sObjectMode Display mode of $oObject (create, edit, view, ...)
+	 * @see \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 */
+	protected $sObjectMode;
 	/** @var array $aCaseLogs Metadata of the case logs (att. code, color, ...), will be use to make the tabs and identify them easily */
 	protected $aCaseLogs;
 	/** @var ActivityEntry[] $aEntries */
@@ -77,6 +84,7 @@ class ActivityPanel extends UIBlock
 
 		$this->InitializeCaseLogTabs();
 		$this->SetObject($oObject);
+		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
 		$this->SetEntries($aEntries);
 		$this->bAreEntriesSorted = false;
 	}
@@ -118,6 +126,7 @@ class ActivityPanel extends UIBlock
 	{
 		return $this->oObject;
 	}
+
 	/**
 	 * Return the object id for which the activity panel is for
 	 *
@@ -126,6 +135,7 @@ class ActivityPanel extends UIBlock
 	public function GetObjectId(): int {
 		return $this->oObject->GetKey();
 	}
+
 	/**
 	 * Return the object class for which the activity panel is for
 	 *
@@ -133,6 +143,38 @@ class ActivityPanel extends UIBlock
 	 */
 	public function GetObjectClass(): string {
 		return get_class($this->oObject);
+	}
+
+	/**
+	 * Set the display mode of the $oObject
+	 *
+	 * @param string $sMode
+	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 *
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public function SetObjectMode(string $sMode)
+	{
+		// Consistency check
+		if(!in_array($sMode, cmdbAbstractObject::EnumObjectModes())){
+			throw new Exception("Activity panel: Object mode '$sMode' not allowed, should be either ".implode(' / ', cmdbAbstractObject::EnumObjectModes()));
+		}
+
+		$this->sObjectMode = $sMode;
+
+		return $this;
+	}
+
+	/**
+	 * Return the display mode of the $oObject
+	 *
+	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @return string
+	 */
+	public function GetObjectMode(): string
+	{
+		return $this->sObjectMode;
 	}
 
 	/**

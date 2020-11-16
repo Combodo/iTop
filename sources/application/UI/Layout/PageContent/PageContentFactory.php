@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Layout\PageContent;
 
 
+use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityPanelFactory;
 use DBObject;
 
@@ -46,12 +47,15 @@ class PageContentFactory
 	/**
 	 * Make a standard object details page with the form in the middle and the logs / activity in the side panel
 	 *
-	 * @param \DBObject $oObject
+	 * @param \DBObject   $oObject
+	 * @param string      $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
+	 *
+	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
 	 *
 	 * @return \Combodo\iTop\Application\UI\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
 	{
 		$oLayout = new PageContentWithSideContent();
 
@@ -59,7 +63,7 @@ class PageContentFactory
 		// TODO 3.0.0
 
 		// Add object activity layout
-		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject);
+		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject, $sMode);
 		$oLayout->AddSideBlock($oActivityPanel);
 
 		return $oLayout;

@@ -478,7 +478,7 @@ try
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
 				}				
 			}
@@ -733,7 +733,7 @@ EOF
 				{
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
@@ -867,7 +867,7 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
 			else
