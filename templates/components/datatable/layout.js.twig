@@ -1,9 +1,10 @@
 function checkAllDataTable(table, value) {
+    // Set the 'selectionMode' for the future objects to load
+    var selectionMode = 'positive';
     if (value) {
-        $(table).DataTable().rows().select();
-    } else {
-        $(table).DataTable().rows({page: 'current'}).deselect();
+        selectionMode = 'negative';
     }
+
     // Mark all the displayed items as check or unchecked depending on the value
     $(table).find(':checkbox[name^=selectObj]:not([disabled])').each(function () {
         var $currentCheckbox = $(this);
@@ -11,15 +12,18 @@ function checkAllDataTable(table, value) {
         $currentLine = $currentCheckbox.closest("tr");
         (value) ? $currentLine.addClass("selected") : $currentLine.removeClass("selected");
     });
-    // Set the 'selectionMode' for the future objects to load
-    var selectionMode = 'positive';
-    if (value) {
-        selectionMode = 'negative';
-    }
+
     $(table).parent().parent().find(':input[name=selectionMode]').val(selectionMode);
     // Reset the list of saved selection...
     $(':input[name^=storedSelection]').remove();
     $(table).parent().find(':checkbox[name^=selectObj]').trigger("change");
+
+    if (value) {
+        $(table).DataTable().rows().select();
+    } else {
+        $(table).DataTable().rows({page: 'current'}).deselect();
+    }
+
     return true;
 }
 
@@ -27,8 +31,8 @@ $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", fu
      $('#{{ oUIBlock.GetId() }}').DataTable().clear();
 });
 
-{% if oUIBlock.GetOptions()["select_mode"] is defined %}
-var oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }} = [];
+{% if oUIBlock.GetOption("select_mode") is defined %}
+var oSelectedItems{{ oUIBlock.GetOption('sTableId') }} = [];
 {% endif %}
 
 if ($.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
@@ -64,19 +68,19 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 	"order":[],
 	{% endif %}
 	"ordering": true,
-    {% if oUIBlock.GetOptions()["select_mode"] is defined %}
+    {% if oUIBlock.GetOption("select_mode") is defined %}
     "select": {
-        "style": "{{ oUIBlock.GetOptions()["select_mode"] }}"
+        "style": "{{ oUIBlock.GetOption("select_mode") }}"
     },
     "rowCallback": function (oRow, oData) {
         // Hiding pagination if only one page
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]') === "negative") {
-            if (!oData.id in oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}) {
+            if (!oData.id in oSelectedItems{{ oUIBlock.GetOption('sTableId') }}) {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
         } else {
-            if (oData.id in oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}) {
+            if (oData.id in oSelectedItems{{ oUIBlock.GetOption('sTableId') }}) {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
@@ -105,7 +109,7 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             "searchable": false,
             "sortable": false,
             "title":
-                    {% if oUIBlock.GetOption("select_mode") == "multi" %}
+                    {% if oUIBlock.GetOption("select_mode") != "single" %}
                         '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
                     {% else %}
                         '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
@@ -114,7 +118,7 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             "data": "",
             "render": function (data, type, row) {
                 var oCheckboxElem =
-                        {% if oUIBlock.GetOption("select_mode") == "multi" %}
+                        {% if oUIBlock.GetOption("select_mode") != "single" %}
                             $('<span class="row_input"><input type="checkbox" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
                         {% else %}
                             $('<span class="row_input"><input type="radio" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
@@ -171,16 +175,17 @@ oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, ty
     // Saving values in temp array
     for (var i in aData) {
         var iItemId = aData[i].id;
-        if (!(iItemId in oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }})) {
-            oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}.push(iItemId);
+        if (oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId) === -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.push(iItemId);
         }
     }
-    if ((oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")) {
-        $('#btn_ok_{{ oUIBlock.GetOptions()['sTableId'] }}').prop('disabled', true);
+    if ((oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")) {
+        $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
     } else {
-        $('#btn_ok_{{ oUIBlock.GetOptions()['sTableId'] }}').prop('disabled', false);
+        $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
     }
 });
+
 oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
     var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
 
@@ -189,14 +194,14 @@ oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt
     // Saving values in temp array
     for (var i in aData) {
         var iItemId = aData[i].id;
-        if (iItemId in oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}) {
-            oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}.splice($.inArray(removeItem, oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}), 1);
+        if (oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId) > -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId), 1);
         }
     }
-    if ((oSelectedItems{{ oUIBlock.GetOptions()['sTableId'] }}.length === 0 && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "positive")) {
-        $('#btn_ok_{{ oUIBlock.GetOptions()['sTableId'] }}').prop('disabled', true);
+    if ((oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.length === 0 && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "positive")) {
+        $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
     } else {
-        $('#btn_ok_{{ oUIBlock.GetOptions()['sTableId'] }}').prop('disabled', false);
+        $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
     }
 });
 

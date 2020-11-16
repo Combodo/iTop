@@ -7,6 +7,7 @@ use AttributeDashboard;
 use AttributeFriendlyName;
 use AttributeLinkedSet;
 use cmdbAbstract;
+use cmdbAbstractObject;
 use Dict;
 use Metamodel;
 use Serializable;
@@ -106,7 +107,7 @@ class DataTableSettings implements Serializable
      * @param $bViewLink
      * @param $aDefaultLists
      *
-     * @return \DataTableSettings
+     * @return DataTableSettings
      * @throws \CoreException
      * @throws \DictExceptionMissingString
      */
@@ -118,7 +119,7 @@ class DataTableSettings implements Serializable
         $aColumns = array();
         foreach ($aClassAliases as $sAlias => $sClass) {
             if ($aDefaultLists == null) {
-                $aList = cmdbAbstract::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
+                $aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
             } else {
                 $aList = $aDefaultLists[$sAlias];
             }
@@ -189,7 +190,7 @@ class DataTableSettings implements Serializable
      * @param null $sTableId
      * @param bool $bOnlyOnTable
      *
-     * @return \DataTableSettings|null
+     * @return DataTableSettings|null
      * @throws \Exception
      */
     static public function GetTableSettings($aClassAliases, $sTableId = null, $bOnlyOnTable = false)

@@ -487,7 +487,7 @@ JS
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 			$oAlreadyLinkedExpression = $oAlreadyLinkedFilter->GetCriteria();
-			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->Render();
+			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->RenderExpression();
 		} else {
 			$sAlreadyLinkedExpression = '';
 		}
@@ -505,7 +505,7 @@ JS
 			array(
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_id' => 'add_'.$this->m_sAttCode,
+				'table_id' => "add_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'selection_mode' => true,
 				'json' => $sJson,
@@ -566,27 +566,7 @@ HTML
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode)); // Don't display the 'Actions' menu on the results
 	}
-	/**
-	 * Display one row of the whole form
-	 * @param WebPage $oP
-	 * @param array $aConfig
-	 * @param array $aRow
-	 * @param int $iRowId
-	 * @return string
-	 * @deprecated in 3.0
-	 */
-	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
-	{
-		$sHtml = '';
-		$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_row_$iRowId\">\n";
-		foreach($aConfig as $sName=>$void)
-		{
-			$sHtml .= "<td>".$aRow[$sName]."</td>\n";
-		}
-		$sHtml .= "</tr>\n";
 
-		return $sHtml;
-	}
 	/**
 	 * @param WebPage $oP
 	 * @param int $iMaxAddedId
@@ -607,7 +587,6 @@ HTML
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
-				//$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
 				$iAdditionId++;

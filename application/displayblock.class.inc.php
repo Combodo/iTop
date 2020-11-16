@@ -45,6 +45,7 @@ class DisplayBlock
 	protected $m_sStyle;
 	protected $m_bAsynchronous;
 	protected $m_aParams;
+	/** @var \DBObjectSet|null  */
 	protected $m_oSet;
 	protected $m_bShowObsoleteData = null;
 
@@ -524,104 +525,11 @@ class DisplayBlock
 			break;
 
 			case 'list_search':
+				$oBlock = $this->RenderListSearch($aExtraParams, $oPage);
+				break;
+
 			case 'list':
-			$aClasses = $this->m_oSet->GetSelectedClasses();
-			$aAuthorizedClasses = array();
-			if (count($aClasses) > 1)
-			{
-				// Check the classes that can be read (i.e authorized) by this user...
-				foreach($aClasses as $sAlias => $sClassName)
-				{
-					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ,  $this->m_oSet) != UR_ALLOWED_NO)
-					{
-						$aAuthorizedClasses[$sAlias] = $sClassName;
-					}
-				}
-				if (count($aAuthorizedClasses) > 0)
-				{
-					if($this->m_oSet->CountWithLimit(1) > 0)
-					{
-						if (empty($aExtraParams['currentId']))
-						{
-							$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
-						}
-						else
-						{
-							$iListId = $aExtraParams['currentId'];
-						}
-						$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
-					}
-					else
-					{
-						// Empty set	
-						$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
-					}
-				}
-				else
-				{
-					// Not authorized
-					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
-				}
-			}
-			else
-			{
-				// The list is made of only 1 class of objects, actions on the list are possible
-				if ( ($this->m_oSet->CountWithLimit(1)> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
-				{
-					$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
-				}
-				else
-				{
-					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
-					$sClass = $this->m_oFilter->GetClass();
-					$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
-					if ($bDisplayMenu)
-					{
-						if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-						{
-							$sLinkTarget = '';
-							$oAppContext = new ApplicationContext();
-							$sParams = $oAppContext->GetForLink();
-							// 1:n links, populate the target object as a default value when creating a new linked object
-							if (isset($aExtraParams['target_attr']))
-							{
-								$sLinkTarget = ' target="_blank" ';
-								$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
-							}
-							$sDefault = '';
-							if (!empty($aExtraParams['default']))
-							{
-								foreach($aExtraParams['default'] as $sKey => $sValue)
-								{
-									$sDefault.= "&default[$sKey]=$sValue";
-								}
-							}
-							
-							$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
-						}
-					}
-				}
-
-				if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
-				{
-					$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
-					// Limit the size of the URL (N°1585 - request uri too long)
-					if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH)
-					{
-						$seventAttachedData = json_encode(array(
-							'filter' => $sSearchFilter,
-							'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
-							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
-							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
-							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-							'breadcrumb_icon' => 'fas fa-search',
-							'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
-						));
-
-						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
-					}
-				}
-			}
+				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
 			
 			case 'links':
@@ -732,13 +640,8 @@ class DisplayBlock
 			break;
 			
 			case 'search':
-			if (!$oPage->IsPrintableVersion())
-			{
-				$aExtraParams['currentId'] = $sId;
-				$oSearchForm = new SearchForm();
-				$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage,  $this->m_oSet, $aExtraParams);
-		 	}
-			break;
+				$oBlock = $this->RenderSearch($oPage, $sId, $aExtraParams);
+				break;
 			
 			case 'chart':
 			static $iChartCounter = 0;
@@ -1394,6 +1297,129 @@ JS
 		}
 		return $oBlock;
 }
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param string|null $sId
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 */
+	protected function RenderSearch(WebPage $oPage, ?string $sId, array $aExtraParams): iUIBlock
+	{
+		$oBlock = null;
+
+		if (!$oPage->IsPrintableVersion()) {
+			$aExtraParams['currentId'] = $sId;
+			$oSearchForm = new SearchForm();
+			$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage, $this->m_oSet, $aExtraParams);
+		}
+
+		return $oBlock;
+	}
+
+	protected function RenderListSearch(array $aExtraParams, WebPage $oPage)
+	{
+		return $this->RenderList($aExtraParams, $oPage);
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	protected function RenderList(array $aExtraParams, WebPage $oPage)
+	{
+		$aClasses = $this->m_oSet->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		$oBlock = null;
+		$sHtml = '';
+		if (count($aClasses) > 1) {
+			// Check the classes that can be read (i.e authorized) by this user...
+			foreach ($aClasses as $sAlias => $sClassName) {
+				if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
+					$aAuthorizedClasses[$sAlias] = $sClassName;
+				}
+			}
+			if (count($aAuthorizedClasses) > 0) {
+				if ($this->m_oSet->CountWithLimit(1) > 0) {
+					if (empty($aExtraParams['currentId'])) {
+						$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+					} else {
+						$iListId = $aExtraParams['currentId'];
+					}
+					$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
+				} else {
+					// Empty set
+					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				}
+			} else {
+				// Not authorized
+				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+			}
+		} else {
+			// The list is made of only 1 class of objects, actions on the list are possible
+			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
+				$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
+			} else {
+				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				$sClass = $this->m_oFilter->GetClass();
+				$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+				if ($bDisplayMenu) {
+					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+						$sLinkTarget = '';
+						$oAppContext = new ApplicationContext();
+						$sParams = $oAppContext->GetForLink();
+						// 1:n links, populate the target object as a default value when creating a new linked object
+						if (isset($aExtraParams['target_attr'])) {
+							$sLinkTarget = ' target="_blank" ';
+							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
+						}
+						$sDefault = '';
+						if (!empty($aExtraParams['default'])) {
+							foreach ($aExtraParams['default'] as $sKey => $sValue) {
+								$sDefault .= "&default[$sKey]=$sValue";
+							}
+						}
+
+						$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
+					}
+				}
+			}
+
+			if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
+				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+				// Limit the size of the URL (N°1585 - request uri too long)
+				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
+					$seventAttachedData = json_encode(array(
+						'filter' => $sSearchFilter,
+						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+						'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+						'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+						'breadcrumb_icon' => 'fas fa-search',
+						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
+					));
+
+					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+				}
+			}
+		}
+		if (is_null($oBlock)) {
+			$oBlock = new Html($sHtml);
+		}
+		return $oBlock;
+	}
 }
 
 /**

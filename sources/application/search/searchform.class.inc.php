@@ -65,7 +65,8 @@ class SearchForm
 		$oPage->AddUiBlock($this->GetSearchFormUIBlock($oPage, $oSet, $aExtraParams));
 		return '';
 	}
-	public function GetSearchFormUIBlock(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+
+	public function GetSearchFormUIBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oUiBlock =  new UIContentBlock();
 		$oAppContext = new ApplicationContext();

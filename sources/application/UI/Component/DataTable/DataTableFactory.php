@@ -7,20 +7,21 @@
 namespace Combodo\iTop\Application\UI\Component\DataTable;
 
 use ApplicationException;
+use appUserPreferences;
 use AttributeLinkedSet;
-use CMDBObjectSet;
 use cmdbAbstractObject;
+use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
-use MetaModel;
-use appUserPreferences;
-use UserRights;
-use MenuBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use WebPage;
+use DBObjectSet;
 use Dict;
+use MenuBlock;
+use MetaModel;
+use UserRights;
+use WebPage;
 
 /**
  * Class DataTableFactory
@@ -67,7 +68,7 @@ class DataTableFactory
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sListId
-	 * @param \CMDBObjectSet $oSet
+	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
@@ -81,7 +82,7 @@ class DataTableFactory
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	public static function MakeForObject(WebPage $oPage, string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function MakeForObject(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result");
 		$oDataTable = DataTableFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
@@ -345,7 +346,7 @@ class DataTableFactory
 
 	/**
 	 * @param string $sListId
-	 * @param \CMDBObjectSet $oSet
+	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\DataTable\DataTableBlock
@@ -355,7 +356,7 @@ class DataTableFactory
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public static function MakeForRenderingObject(string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function MakeForRenderingObject(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = new DataTableBlock('datatable_'.$sListId);
 		$aList = array();
@@ -476,6 +477,7 @@ class DataTableFactory
 		if($sSelectMode!="") {
 			$iIndexColumn++;
 		}
+		$aSortDatable = [];
 		foreach ($aClassAliases as $sClassAlias => $sClassName) {
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
 				if ($aData['sort'] != 'none') {
