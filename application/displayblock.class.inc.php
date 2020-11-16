@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
@@ -242,6 +243,14 @@ class DisplayBlock
 			try {
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
+				if (UserRights::IsAdministrator()) {
+					$sExceptionContent = <<<HTML
+Exception thrown:<br>
+<code>{$e->getMessage()}</code>
+HTML;
+					$oExceptionAlert = AlertFactory::MakeForFailure('Cannot display results', $sExceptionContent);
+					$oHtml->AddSubBlock($oExceptionAlert);
+				}
 				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
 			}
 			$oHtml->AddHtml("</div>\n");
