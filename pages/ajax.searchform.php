@@ -47,7 +47,7 @@ try
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
 	}
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 	$oPage->SetContentType('text/html');
 
@@ -64,8 +64,6 @@ try
 		$sHiddenCriteria = '';
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
-
-	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
 
 	foreach($aListParams as $key => $value)
@@ -92,11 +90,6 @@ try
 		{
 			$aExtraParams['query_params'] = array('this->object()' => $oObj);
 		}
-
-//        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
-//        $iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
-//        $aExtraParams['current_extkey_id'] = $iCurrentExtKeyId;
-
 	}
 
 	if (!isset($aExtraParams['update_history']))
@@ -115,7 +108,6 @@ try
 	{
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
-
 
 	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
 	{

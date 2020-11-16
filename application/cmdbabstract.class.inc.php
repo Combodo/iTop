@@ -17,9 +17,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\Button;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Component\Field\Field;
 use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Component\Form\Form;
@@ -50,12 +52,14 @@ require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'application/datatable.class.inc.php');
 require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 /**
  * Class cmdbAbstractObject
@@ -389,11 +393,11 @@ EOF
 			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 
-		if (count($aIcons) > 0) {
-			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
-		} else {
-			$sTags = '';
-		}
+//		if (count($aIcons) > 0) {
+//			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
+//		} else {
+//			$sTags = '';
+//		}
 
 		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($this));
 	}
@@ -1042,7 +1046,7 @@ HTML
 	 */
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
+		$oPage->AddUiBlock(self::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
 	}
 
 	/**
@@ -1100,14 +1104,16 @@ HTML
 	 *
 	 * @throws \CoreException*@throws \Exception
 	 * @throws \ApplicationException
+	 * @deprecated 3.0.0 use GetDisplaySetBlock
 	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		if ($oPage->IsPrintableVersion() || $oPage->is_pdf())
-		{
-			return self::GetDisplaySetForPrinting($oPage, $oSet, $aExtraParams);
+		$oPage->AddUiBlock(static::GetDisplaySetBlock( $oPage, $oSet, $aExtraParams ));
+		return "";
 		}
 
+	public static function GetDisplaySetBlock(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	{
 		if (empty($aExtraParams['currentId']))
 		{
 			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
@@ -1117,136 +1123,8 @@ HTML
 			$iListId = $aExtraParams['currentId'];
 		}
 
-		// Initialize and check the parameters
-		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
-		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
-		$iLinkedObjectId = isset($aExtraParams['object_id']) ? $aExtraParams['object_id'] : 0;
-		$sTargetAttr = isset($aExtraParams['target_attr']) ? $aExtraParams['target_attr'] : '';
-		if (!empty($sLinkageAttribute))
-		{
-			if ($iLinkedObjectId == 0)
-			{
-				// if 'links' mode is requested the id of the object to link to must be specified
-				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_object_id'));
-			}
-			if ($sTargetAttr == '')
-			{
-				// if 'links' mode is requested the d of the object to link to must be specified
-				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_target_attr'));
-			}
-		}
-		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
-		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
-		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
-
-		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
-			trim($aExtraParams['extra_fields'])) : array();
-		$aExtraFields = array();
-		foreach($aExtraFieldsRaw as $sFieldName)
-		{
-			// Ignore attributes not of the main queried class
-			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
-			{
-				$sClassAlias = $aMatches[1];
-				$sAttCode = $aMatches[2];
-				if ($sClassAlias == $oSet->GetFilter()->GetClassAlias())
-				{
-					$aExtraFields[] = $sAttCode;
-				}
-			}
-			else
-			{
-				$aExtraFields[] = $sFieldName;
-			}
-		}
-		$sClassName = $oSet->GetFilter()->GetClass();
-		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
-		if ($sZListName !== false)
-		{
-			$aList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-			$aList = array_merge($aList, $aExtraFields);
-		}
-		else
-		{
-			$aList = $aExtraFields;
-		}
-
-		// Filter the list to removed linked set since we are not able to display them here
-		foreach($aList as $index => $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-			if ($oAttDef instanceof AttributeLinkedSet)
-			{
-				// Removed from the display list
-				unset($aList[$index]);
-			}
-		}
-
-
-		if (!empty($sLinkageAttribute))
-		{
-			// The set to display is in fact a set of links between the object specified in the $sLinkageAttribute
-			// and other objects...
-			// The display will then group all the attributes related to the link itself:
-			// | Link_attr1 | link_attr2 | ... || Object_attr1 | Object_attr2 | Object_attr3 | .. | Object_attr_n |
-			$aDisplayList = array();
-			$aAttDefs = MetaModel::ListAttributeDefs($sClassName);
-			assert(isset($aAttDefs[$sLinkageAttribute]));
-			$oAttDef = $aAttDefs[$sLinkageAttribute];
-			assert($oAttDef->IsExternalKey());
-			// First display all the attributes specific to the link record
-			foreach($aList as $sLinkAttCode)
-			{
-				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
-				if ((!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField()))
-				{
-					$aDisplayList[] = $sLinkAttCode;
-				}
-			}
-			// Then display all the attributes neither specific to the link record nor to the 'linkage' object (because the latter are constant)
-			foreach($aList as $sLinkAttCode)
-			{
-				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
-				if (($oLinkAttDef->IsExternalKey() && ($sLinkAttCode != $sLinkageAttribute))
-					|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode() != $sLinkageAttribute)))
-				{
-					$aDisplayList[] = $sLinkAttCode;
-				}
-			}
-			// First display all the attributes specific to the link
-			// Then display all the attributes linked to the other end of the relationship
-			$aList = $aDisplayList;
-		}
-
-		$sSelectMode = 'none';
-		if ($bSelectMode)
-		{
-			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
-		}
-
-		$sClassAlias = $oSet->GetClassAlias();
-		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-
-		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
-		$aClassAliases = array($sClassAlias => $sClassName);
-		$oDataTable = new DataTable($iListId, $oSet, $aClassAliases, $sTableId);
-		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
-
-		if ($bDisplayLimit)
-		{
-			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
-				MetaModel::GetConfig()->GetMinDisplayLimit());
-			$oSettings->iDefaultPageSize = $iDefaultPageSize;
-		}
-		else
-		{
-			$oSettings->iDefaultPageSize = 0;
-		}
-		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-
-		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
+		return DataTableFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
-
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -1265,6 +1143,7 @@ HTML
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @deprecated since 3.0.0
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -1844,7 +1723,7 @@ HTML
 	 */
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
+		$oSearchForm = new SearchForm();
 
 		return $oSearchForm->GetSearchForm($oPage, $oSet, $aExtraParams);
 	}
@@ -2266,7 +2145,7 @@ EOF
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
 					$oForm = $value->GetForm($sFormPrefix);
-					$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oForm);
+					$oRenderer = new ConsoleFormRenderer($oForm);
 					$aRenderRes = $oRenderer->Render();
 
 					$aFieldSetOptions = array(
@@ -2537,8 +2416,7 @@ JS
 
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-				$this->GetName());
+			//$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName());
 
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
@@ -2615,6 +2493,7 @@ CSS
 			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
 		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
 
 		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
@@ -2648,6 +2527,7 @@ CSS
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
 		$sStatesSelection = '';
 		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
 		{
@@ -4315,12 +4195,9 @@ EOF
 			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)))
 			{
 				// Check if the attribute is not read-only because of a synchro...
-				$sSynchroIcon = '';
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					$aReasons = array();
-					$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-					$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 					$sTip = '';
 					foreach($aReasons as $aRow)
 					{
@@ -4339,7 +4216,6 @@ EOF
 				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
 						ENT_QUOTES, 'UTF-8').'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
-				$sComment .= $sSynchroIcon;
 			}
 			else
 			{
@@ -4388,7 +4264,6 @@ HTML
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
 		$aTransitions = $this->EnumTransitions();
-		$aStimuli = MetaModel::EnumStimuli(get_class($this));
 		if (!isset($aTransitions[$sStimulus]))
 		{
 			// Invalid stimulus
@@ -4709,6 +4584,7 @@ EOF
 	 */
 	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
 	{
+		/** @var string[] $aHeaders */
 		$aHeaders = array(
 			'form::select' => array(
 				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
@@ -4745,7 +4621,7 @@ EOF
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($aSelectedObj as $iId)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
@@ -4777,14 +4653,13 @@ EOF
 				$oObj->DBUpdate();
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		$oP->Table($aHeaders, $aRows);
 		if ($bPreview)
 		{
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
 			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
-			$aDefaults = utils::ReadParam('default', array());
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
 			foreach($aContextData as $sKey => $value)
@@ -5000,7 +4875,6 @@ EOF
 				if (count($aObjects) == 1)
 				{
 					$oObj = $aObjects[0];
-					$id = $oObj->GetKey();
 					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
 				}
 				else

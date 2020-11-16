@@ -116,7 +116,7 @@ class DeletionPlan
 		{
 			foreach($aToUpdate as $iId => $aData)
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 				$this->m_iToUpdate++;
 
 				$oObject = $aData['to_reset'];
@@ -142,7 +142,7 @@ class DeletionPlan
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 	}
 
 	public function GetIssues()

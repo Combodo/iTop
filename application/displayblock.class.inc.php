@@ -18,13 +18,16 @@
  */
 
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -43,6 +46,7 @@ class DisplayBlock
 	protected $m_sStyle;
 	protected $m_bAsynchronous;
 	protected $m_aParams;
+	/** @var \DBObjectSet|null  */
 	protected $m_oSet;
 	protected $m_bShowObsoleteData = null;
 
@@ -239,7 +243,6 @@ class DisplayBlock
 		$sFilter = addslashes($this->m_oFilter->serialize(false, $aQueryParams)); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous) {
 			// render now
-			$oHtml->AddHtml("<div id=\"$sId\" class=\"display_block\" >\n");
 			try {
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
@@ -253,12 +256,10 @@ HTML;
 				}
 				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
 			}
-			$oHtml->AddHtml("</div>\n");
 		} else {
 			// render it as an Ajax (asynchronous) call
-			$oHtml->AddHtml("<div id=\"$sId\" class=\"display_block loading\">\n");
+			$oHtml->AddCSSClasses("display_block loading");
 			$oHtml->AddHtml($oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading')));
-			$oHtml->AddHtml("</div>\n");
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
@@ -426,75 +427,8 @@ HTML;
 		switch($this->m_sStyle)
 		{
 			case 'count':
-			if (isset($aExtraParams['group_by']))
-			{
-				$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
-
-				$aRes = CMDBSource::QueryToArray($sSql);
-
-				$aGroupBy = array();
-				$aLabels = array();
-				$aValues = array();
-				$iTotalCount = 0;
-				foreach ($aRes as $iRow => $aRow)
-				{
-					$sValue = $aRow['grouped_by_1'];
-					$aValues[$iRow] = $sValue;
-					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aLabels[$iRow] = $sHtmlValue;
-					$aGroupBy[$iRow] = (int) $aRow[$sFctVar];
-					$iTotalCount += $aRow['_itop_count_'];
-				}
-
-
-				$aData = array();
-				$oAppContext = new ApplicationContext();
-				$sParams = $oAppContext->GetForLink();
-				foreach($aGroupBy as $iRow => $iCount)
-				{
-					// Build the search for this subset
-					$oSubsetSearch = $this->m_oFilter->DeepClone();
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
-					$oSubsetSearch->AddConditionExpression($oCondition);
-					if (isset($aExtraParams['query_params']))
-					{
-						$aQueryParams = $aExtraParams['query_params'];
-					}
-					else
-					{
-						$aQueryParams = array();
-					}
-					$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
-
-					$aData[] = array ('group' => $aLabels[$iRow],
-									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
-				}
-				$aAttribs =array(
-					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array(
-						'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
-						'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
-					),
-				);
-				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
-				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
-				$sHtml .= $oPage->GetTable($aAttribs, $aData);
-				
-				$oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
-			}
-			else
-			{
-				// Simply count the number of elements in the set
-				$iCount = $this->m_oSet->Count();
-				$sFormat = 'UI:CountOfObjects';
-				if (isset($aExtraParams['format']))
-				{
-					$sFormat = $aExtraParams['format'];
-				}
-				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iCount));
-			}
-			
-			break;
+				$oBlock = $this->RenderCount($aExtraParams, $oPage, $sId);
+				break;
 			
 			case 'join':
 			$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']): array();
@@ -582,7 +516,16 @@ HTML;
 								$index++;
 							}
 							$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
-							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplayExtendedSet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
+							if (empty($aExtraParams['currentId']))
+							{
+								$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+							}
+							else
+							{
+								$iListId = $aExtraParams['currentId'];
+							}
+							$oBlock = DataTableFactory::MakeForRendering( $iListId, $this->m_oSet, $aExtraParams);
+							$sHtml .= "<tr><td>".BlockRenderer::RenderBlockTemplates($oBlock)."</td></tr>\n";
 						}
 					}				
 					$sHtml .= "</table>\n";
@@ -591,96 +534,11 @@ HTML;
 			break;
 
 			case 'list_search':
+				$oBlock = $this->RenderListSearch($aExtraParams, $oPage);
+				break;
+
 			case 'list':
-			$aClasses = $this->m_oSet->GetSelectedClasses();
-			$aAuthorizedClasses = array();
-			if (count($aClasses) > 1)
-			{
-				// Check the classes that can be read (i.e authorized) by this user...
-				foreach($aClasses as $sAlias => $sClassName)
-				{
-					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ,  $this->m_oSet) != UR_ALLOWED_NO)
-					{
-						$aAuthorizedClasses[$sAlias] = $sClassName;
-					}
-				}
-				if (count($aAuthorizedClasses) > 0)
-				{
-					if($this->m_oSet->CountWithLimit(1) > 0)
-					{
-						$sHtml .= cmdbAbstractObject::GetDisplayExtendedSet($oPage, $this->m_oSet, $aExtraParams);
-					}
-					else
-					{
-						// Empty set	
-						$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
-					}
-				}
-				else
-				{
-					// Not authorized
-					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));					
-				}
-			}
-			else
-			{
-				// The list is made of only 1 class of objects, actions on the list are possible
-				if ( ($this->m_oSet->CountWithLimit(1)> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
-				{
-					$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
-				}
-				else
-				{
-					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
-					$sClass = $this->m_oFilter->GetClass();
-					$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true; 
-					if ($bDisplayMenu)
-					{
-						if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-						{
-							$sLinkTarget = '';
-							$oAppContext = new ApplicationContext();
-							$sParams = $oAppContext->GetForLink();
-							// 1:n links, populate the target object as a default value when creating a new linked object
-							if (isset($aExtraParams['target_attr']))
-							{
-								$sLinkTarget = ' target="_blank" ';
-								$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
-							}
-							$sDefault = '';
-							if (!empty($aExtraParams['default']))
-							{
-								foreach($aExtraParams['default'] as $sKey => $sValue)
-								{
-									$sDefault.= "&default[$sKey]=$sValue";
-								}
-							}
-							
-							$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
-						}
-					}
-				}
-
-				if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
-				{
-					$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
-					// Limit the size of the URL (N°1585 - request uri too long)
-					if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH)
-					{
-						$seventAttachedData = json_encode(array(
-							'filter' => $sSearchFilter,
-							'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
-							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
-							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
-							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-							'breadcrumb_icon' => 'fas fa-search',
-							'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
-						));
-
-						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
-					}
-				}
-			}
+				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
 			
 			case 'links':
@@ -791,14 +649,8 @@ HTML;
 			break;
 			
 			case 'search':
-			if (!$oPage->IsPrintableVersion())
-			{
-				$sHtml .= "<div id=\"ds_$sId\" class=\"search_box\">\n";
-				$aExtraParams['currentId'] = $sId;
-				$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
-		 		$sHtml .= "</div>\n";
-		 	}
-			break;
+				$oBlock = $this->RenderSearch($oPage, $sId, $aExtraParams);
+				break;
 			
 			case 'chart':
 			static $iChartCounter = 0;
@@ -1377,6 +1229,206 @@ JS
 
 		return $oBlock;
 	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
+	protected function RenderCount(array $aExtraParams, WebPage $oPage, ?string $sId): iUIBlock
+	{
+		if (isset($aExtraParams['group_by'])) {
+			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
+
+			$aRes = CMDBSource::QueryToArray($sSql);
+
+			$aGroupBy = array();
+			$aLabels = array();
+			$aValues = array();
+			$iTotalCount = 0;
+			foreach ($aRes as $iRow => $aRow) {
+				$sValue = $aRow['grouped_by_1'];
+				$aValues[$iRow] = $sValue;
+				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+				$aLabels[$iRow] = $sHtmlValue;
+				$aGroupBy[$iRow] = (int)$aRow[$sFctVar];
+				$iTotalCount += $aRow['_itop_count_'];
+			}
+
+			$aData = array();
+			$oAppContext = new ApplicationContext();
+			$sParams = $oAppContext->GetForLink();
+			foreach ($aGroupBy as $iRow => $iCount) {
+				// Build the search for this subset
+				$oSubsetSearch = $this->m_oFilter->DeepClone();
+				$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				if (isset($aExtraParams['query_params'])) {
+					$aQueryParams = $aExtraParams['query_params'];
+				} else {
+					$aQueryParams = array();
+				}
+				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
+
+				$aData[] = array(
+					'group' => $aLabels[$iRow],
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"
+				); // TO DO: add the context information
+			}
+			$aAttribs = array(
+				'group' => array('label' => $sGroupByLabel, 'description' => ''),
+				'value' => array(
+					'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
+					'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
+				),
+			);
+			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
+			$sTitle = Dict::Format($sFormat, $iTotalCount);
+			$oBlock = DataTableFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
+
+			// $oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
+		} else {
+			// Simply count the number of elements in the set
+			$iCount = $this->m_oSet->Count();
+			$sFormat = 'UI:CountOfObjects';
+			if (isset($aExtraParams['format'])) {
+				$sFormat = $aExtraParams['format'];
+			}
+			$oBlock = new Html($oPage->GetP(Dict::Format($sFormat, $iCount)));
+		}
+		return $oBlock;
+}
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param string|null $sId
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 */
+	protected function RenderSearch(WebPage $oPage, ?string $sId, array $aExtraParams): iUIBlock
+	{
+		$oBlock = null;
+
+		if (!$oPage->IsPrintableVersion()) {
+			$aExtraParams['currentId'] = $sId;
+			$oSearchForm = new SearchForm();
+			$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage, $this->m_oSet, $aExtraParams);
+		}
+
+		return $oBlock;
+	}
+
+	protected function RenderListSearch(array $aExtraParams, WebPage $oPage)
+	{
+		return $this->RenderList($aExtraParams, $oPage);
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	protected function RenderList(array $aExtraParams, WebPage $oPage)
+	{
+		$aClasses = $this->m_oSet->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		$oBlock = null;
+		$sHtml = '';
+		if (count($aClasses) > 1) {
+			// Check the classes that can be read (i.e authorized) by this user...
+			foreach ($aClasses as $sAlias => $sClassName) {
+				if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
+					$aAuthorizedClasses[$sAlias] = $sClassName;
+				}
+			}
+			if (count($aAuthorizedClasses) > 0) {
+				if ($this->m_oSet->CountWithLimit(1) > 0) {
+					if (empty($aExtraParams['currentId'])) {
+						$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+					} else {
+						$iListId = $aExtraParams['currentId'];
+					}
+					$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
+				} else {
+					// Empty set
+					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				}
+			} else {
+				// Not authorized
+				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+			}
+		} else {
+			// The list is made of only 1 class of objects, actions on the list are possible
+			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
+				$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
+			} else {
+				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				$sClass = $this->m_oFilter->GetClass();
+				$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+				if ($bDisplayMenu) {
+					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+						$sLinkTarget = '';
+						$oAppContext = new ApplicationContext();
+						$sParams = $oAppContext->GetForLink();
+						// 1:n links, populate the target object as a default value when creating a new linked object
+						if (isset($aExtraParams['target_attr'])) {
+							$sLinkTarget = ' target="_blank" ';
+							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
+						}
+						$sDefault = '';
+						if (!empty($aExtraParams['default'])) {
+							foreach ($aExtraParams['default'] as $sKey => $sValue) {
+								$sDefault .= "&default[$sKey]=$sValue";
+							}
+						}
+
+						$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
+					}
+				}
+			}
+
+			if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
+				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+				// Limit the size of the URL (N°1585 - request uri too long)
+				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
+					$seventAttachedData = json_encode(array(
+						'filter' => $sSearchFilter,
+						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+						'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+						'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+						'breadcrumb_icon' => 'fas fa-search',
+						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
+					));
+
+					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+				}
+			}
+		}
+		if (is_null($oBlock)) {
+			$oBlock = new Html($sHtml);
+		}
+		return $oBlock;
+	}
 }
 
 /**
@@ -1552,244 +1604,308 @@ class MenuBlock extends DisplayBlock
 		{
 			$this->m_sStyle = 'list';
 		}
-		$oAppContext = new ApplicationContext();
-		$sContext = $oAppContext->GetForLink();
-		if (!empty($sContext)) {
-			$sContext = '&'.$sContext;
-		}
 		$sClass = $this->m_oFilter->GetClass();
-		$oReflectionClass = new ReflectionClass($sClass);
 		$oSet = new CMDBObjectSet($this->m_oFilter);
-		$sFilter = $this->m_oFilter->serialize();
-		$aActions = [];
-		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
-		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
-		// Common params that will be applied to actions
-		$aActionParams = array();
-		if (isset($aExtraParams['menu_actions_target'])) {
-			$aActionParams['target'] = $aExtraParams['menu_actions_target'];
-		}
-		// 1:n links, populate the target object as a default value when creating a new linked object
-		if (isset($aExtraParams['target_attr'])) {
-			$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
-		}
-		$sDefault = '';
-		if (!empty($aExtraParams['default'])) {
-			foreach ($aExtraParams['default'] as $sKey => $sValue) {
-				$sDefault .= "&default[$sKey]=$sValue";
-			}
-		}
-		$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
 		$sRefreshAction = '';
-		switch ($oSet->Count()) {
-			case 0:
-				// No object in the set, the only possible action is "new"
-				if ($bIsCreationAllowed) {
-					$aActions['UI:Menu:New'] = array('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}") + $aActionParams;
+		if (!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") {
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			if (!empty($sContext)) {
+				$sContext = '&'.$sContext;
+			}
+			$oReflectionClass = new ReflectionClass($sClass);
+			$sFilter = $this->m_oFilter->serialize();
+			$aActions = [];
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
+			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+			// Common params that will be applied to actions
+			$aActionParams = array();
+			if (isset($aExtraParams['menu_actions_target'])) {
+				$aActionParams['target'] = $aExtraParams['menu_actions_target'];
+			}
+			// 1:n links, populate the target object as a default value when creating a new linked object
+			if (isset($aExtraParams['target_attr'])) {
+				$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
+			}
+			$sDefault = '';
+			if (!empty($aExtraParams['default'])) {
+				foreach ($aExtraParams['default'] as $sKey => $sValue) {
+					$sDefault .= "&default[$sKey]=$sValue";
 				}
-				break;
+			}
+			$bIsCreationAllowed = (UserRights::IsActionAllowed($sClass,
+						UR_ACTION_CREATE) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+			switch ($oSet->Count()) {
+				case 0:
+					// No object in the set, the only possible action is "new"
+					if ($bIsCreationAllowed) {
+						$aActions['UI:Menu:New'] = array(
+								'label' => Dict::S('UI:Menu:New'),
+								'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"
+							) + $aActionParams;
+					}
+					break;
 
-			case 1:
-				$oObj = $oSet->Fetch();
-				if (is_null($oObj)) {
-					if (!isset($aExtraParams['link_attr'])) {
-						if ($bIsCreationAllowed) {
-							$aActions['UI:Menu:New'] = array('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}") + $aActionParams;
+				case 1:
+					$oObj = $oSet->Fetch();
+					if (is_null($oObj)) {
+						if (!isset($aExtraParams['link_attr'])) {
+							if ($bIsCreationAllowed) {
+								$aActions['UI:Menu:New'] = array(
+										'label' => Dict::S('UI:Menu:New'),
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"
+									) + $aActionParams;
+							}
 						}
-					}
-				} else {
-					$id = $oObj->GetKey();
-					if (utils::ReadParam('operation') == 'details') {
-						if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-							$sRefreshAction = "window.location.reload();";
-						} else {
-							$sRefreshAction = "window.location.href='".ApplicationContext::MakeObjectUrl(get_class($oObj), $id)."';";
+					} else {
+						$id = $oObj->GetKey();
+						if (utils::ReadParam('operation') == 'details') {
+							if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+								$sRefreshAction = "window.location.reload();";
+							} else {
+								$sRefreshAction = "window.location.href='".ApplicationContext::MakeObjectUrl(get_class($oObj), $id)."';";
+							}
 						}
-					}
 
-					$bLocked = false;
-					if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
-						$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
-						if ($aLockInfo['locked']) {
-							$bLocked = true;
-							//$this->AddMenuSeparator($aActions);
-							//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+						$bLocked = false;
+						if (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) {
+							$aLockInfo = iTopOwnershipLock::IsLocked(get_class($oObj), $id);
+							if ($aLockInfo['locked']) {
+								$bLocked = true;
+								//$this->AddMenuSeparator($aActions);
+								//$aActions['concurrent_lock_unlock'] = array ('label' => Dict::S('UI:Menu:ReleaseConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
+							}
 						}
-					}
-					$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-					$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
-					$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
-					// Just one object in the set, possible actions are "new / clone / modify and delete"
-					if (!isset($aExtraParams['link_attr'])) {
-						if ($bIsModifyAllowed) {
-							$aActions['UI:Menu:Modify'] = array('label' => Dict::S('UI:Menu:Modify'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#") + $aActionParams;
-						}
-						if ($bIsCreationAllowed) {
-							$aActions['UI:Menu:New'] = array('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}") + $aActionParams;
-						}
-						if ($bIsDeleteAllowed) {
-							$aActions['UI:Menu:Delete'] = array('label' => Dict::S('UI:Menu:Delete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}") + $aActionParams;
-						}
-						// Transitions / Stimuli
-						if (!$bLocked) {
-							$aTransitions = $oObj->EnumTransitions();
-							if (count($aTransitions)) {
+						$bRawModifiedAllowed = (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY,
+									$oSet) == UR_ALLOWED_YES) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+						$bIsModifyAllowed = !$bLocked && $bRawModifiedAllowed;
+						$bIsDeleteAllowed = !$bLocked && UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
+						// Just one object in the set, possible actions are "new / clone / modify and delete"
+						if (!isset($aExtraParams['link_attr'])) {
+							if ($bIsModifyAllowed) {
+								$aActions['UI:Menu:Modify'] = array(
+										'label' => Dict::S('UI:Menu:Modify'),
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=modify&class=$sClass&id=$id{$sContext}#"
+									) + $aActionParams;
+							}
+							if ($bIsCreationAllowed) {
+								$aActions['UI:Menu:New'] = array(
+										'label' => Dict::S('UI:Menu:New'),
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"
+									) + $aActionParams;
+							}
+							if ($bIsDeleteAllowed) {
+								$aActions['UI:Menu:Delete'] = array(
+										'label' => Dict::S('UI:Menu:Delete'),
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}"
+									) + $aActionParams;
+							}
+							// Transitions / Stimuli
+							if (!$bLocked) {
+								$aTransitions = $oObj->EnumTransitions();
+								if (count($aTransitions)) {
+									$this->AddMenuSeparator($aActions);
+									$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
+									foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+										$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
+											$sStimulusCode, $oSet) : UR_ALLOWED_NO;
+										switch ($iActionAllowed) {
+											case UR_ALLOWED_YES:
+												$aActions[$sStimulusCode] = array(
+														'label' => $aStimuli[$sStimulusCode]->GetLabel(),
+														'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}"
+													) + $aActionParams;
+												break;
+
+											default:
+												// Do nothing
+										}
+									}
+								}
+							}
+							// Relations...
+							$aRelations = MetaModel::EnumRelationsEx($sClass);
+							if (count($aRelations)) {
 								$this->AddMenuSeparator($aActions);
-								$aStimuli = Metamodel::EnumStimuli(get_class($oObj));
-								foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-									$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet) : UR_ALLOWED_NO;
-									switch ($iActionAllowed) {
-										case UR_ALLOWED_YES:
-											$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=stimulus&stimulus=$sStimulusCode&class=$sClass&id=$id{$sContext}") + $aActionParams;
-											break;
+								foreach ($aRelations as $sRelationCode => $aRelationInfo) {
+									if (array_key_exists('down', $aRelationInfo)) {
+										$aActions[$sRelationCode.'_down'] = array(
+												'label' => $aRelationInfo['down'],
+												'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}"
+											) + $aActionParams;
+									}
+									if (array_key_exists('up', $aRelationInfo)) {
+										$aActions[$sRelationCode.'_up'] = array(
+												'label' => $aRelationInfo['up'],
+												'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}"
+											) + $aActionParams;
+									}
+								}
+							}
+							if ($bLocked && $bRawModifiedAllowed) {
+								// Add a special menu to kill the lock, but only to allowed users who can also modify this object
+								/** @var array $aAllowedProfiles */
+								$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
+								$bCanKill = false;
 
-										default:
-											// Do nothing
+								$oUser = UserRights::GetUserObject();
+								$aUserProfiles = array();
+								if (!is_null($oUser)) {
+									$oProfileSet = $oUser->Get('profile_list');
+									while ($oProfile = $oProfileSet->Fetch()) {
+										$aUserProfiles[$oProfile->Get('profile')] = true;
+									}
+								}
+
+								foreach ($aAllowedProfiles as $sProfile) {
+									if (array_key_exists($sProfile, $aUserProfiles)) {
+										$bCanKill = true;
+										break;
+									}
+								}
+
+								if ($bCanKill) {
+									$this->AddMenuSeparator($aActions);
+									$aActions['concurrent_lock_unlock'] = array(
+										'label' => Dict::S('UI:Menu:KillConcurrentLock'),
+										'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}"
+									);
+								}
+							}
+						}
+						$this->AddMenuSeparator($aActions);
+						/** @var \iApplicationUIExtension $oExtensionInstance */
+						foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
+							$oSet->Rewind();
+							foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl) {
+								$aActions[$sLabel] = array('label' => $sLabel, 'url' => $sUrl) + $aActionParams;
+							}
+						}
+					}
+					break;
+
+				default:
+					// Check rights
+					// New / Modify
+					$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY,
+							$oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+					$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY,
+							$oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
+					$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
+					if (isset($aExtraParams['link_attr'])) {
+						$id = $aExtraParams['object_id'];
+						$sTargetAttr = $aExtraParams['target_attr'];
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
+						$sTargetClass = $oAttDef->GetTargetClass();
+						if ($bIsModifyAllowed) {
+							$aActions['UI:Menu:Add'] = array(
+									'label' => Dict::S('UI:Menu:Add'),
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true{$sContext}"
+								) + $aActionParams;
+						}
+						if ($bIsBulkModifyAllowed) {
+							$aActions['UI:Menu:Manage'] = array(
+									'label' => Dict::S('UI:Menu:Manage'),
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id{$sContext}"
+								) + $aActionParams;
+						}
+						//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#") + $aActionParams; }
+					} else {
+						// many objects in the set, possible actions are: new / modify all / delete all
+						if ($bIsCreationAllowed) {
+							$aActions['UI:Menu:New'] = array(
+									'label' => Dict::S('UI:Menu:New'),
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}"
+								) + $aActionParams;
+						}
+						if ($bIsBulkModifyAllowed) {
+							$aActions['UI:Menu:ModifyAll'] = array(
+									'label' => Dict::S('UI:Menu:ModifyAll'),
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=".urlencode($sFilter)."{$sContext}"
+								) + $aActionParams;
+						}
+						if ($bIsBulkDeleteAllowed) {
+							$aActions['UI:Menu:BulkDelete'] = array(
+									'label' => Dict::S('UI:Menu:BulkDelete'),
+									'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=".urlencode($sFilter)."{$sContext}"
+								) + $aActionParams;
+						}
+
+						// Stimuli
+						$aStates = MetaModel::EnumStates($sClass);
+						// Do not perform time consuming computations if there are too may objects in the list
+						$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
+
+						if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->CountWithLimit($iLimit + 1) < $iLimit))) {
+							// Life cycle actions may be available... if all objects are in the same state
+							//
+							// Group by <state>
+							$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
+							$aGroupBy = array('__state__' => $oGroupByExp);
+							$aQueryParams = array();
+							if (isset($aExtraParams['query_params'])) {
+								$aQueryParams = $aExtraParams['query_params'];
+							}
+							$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy);
+							$aRes = CMDBSource::QueryToArray($sSql);
+							if (count($aRes) == 1) {
+								// All objects are in the same state...
+								$sState = $aRes[0]['__state__'];
+								$aTransitions = Metamodel::EnumTransitions($sClass, $sState);
+								if (count($aTransitions)) {
+									$this->AddMenuSeparator($aActions);
+									$aStimuli = Metamodel::EnumStimuli($sClass);
+									foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
+										$oSet->Rewind();
+										// As soon as the user rights implementation will browse the object set,
+										// then we might consider using OptimizeColumnLoad() here
+										$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet);
+										$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $iActionAllowed : UR_ALLOWED_NO;
+										switch ($iActionAllowed) {
+											case UR_ALLOWED_YES:
+											case UR_ALLOWED_DEPENDS:
+												$aActions[$sStimulusCode] = array(
+														'label' => $aStimuli[$sStimulusCode]->GetLabel(),
+														'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=".urlencode($sFilter)."{$sContext}"
+													) + $aActionParams;
+												break;
+
+											default:
+												// Do nothing
+										}
 									}
 								}
 							}
 						}
-						// Relations...
-						$aRelations = MetaModel::EnumRelationsEx($sClass);
-						if (count($aRelations)) {
-							$this->AddMenuSeparator($aActions);
-							foreach ($aRelations as $sRelationCode => $aRelationInfo) {
-								if (array_key_exists('down', $aRelationInfo)) {
-									$aActions[$sRelationCode.'_down'] = array('label' => $aRelationInfo['down'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}") + $aActionParams;
-								}
-								if (array_key_exists('up', $aRelationInfo)) {
-									$aActions[$sRelationCode.'_up'] = array('label' => $aRelationInfo['up'], 'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}") + $aActionParams;
-								}
-							}
-						}
-						if ($bLocked && $bRawModifiedAllowed) {
-							// Add a special menu to kill the lock, but only to allowed users who can also modify this object
-							/** @var array $aAllowedProfiles */
-							$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
-							$bCanKill = false;
-
-							$oUser = UserRights::GetUserObject();
-							$aUserProfiles = array();
-							if (!is_null($oUser)) {
-								$oProfileSet = $oUser->Get('profile_list');
-								while ($oProfile = $oProfileSet->Fetch()) {
-									$aUserProfiles[$oProfile->Get('profile')] = true;
-								}
-							}
-
-							foreach ($aAllowedProfiles as $sProfile) {
-								if (array_key_exists($sProfile, $aUserProfiles)) {
-									$bCanKill = true;
-									break;
-								}
-							}
-
-							if ($bCanKill) {
-								$this->AddMenuSeparator($aActions);
-								$aActions['concurrent_lock_unlock'] = array('label' => Dict::S('UI:Menu:KillConcurrentLock'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}");
-							}
-						}
 					}
-					$this->AddMenuSeparator($aActions);
-					/** @var \iApplicationUIExtension $oExtensionInstance */
-					foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-						$oSet->Rewind();
-						foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl) {
-							$aActions[$sLabel] = array('label' => $sLabel, 'url' => $sUrl) + $aActionParams;
-						}
-					}
-				}
-				break;
-			
-			default:
-			// Check rights
-			// New / Modify
-			$bIsModifyAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sClass)) && UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, $oSet) && ($oReflectionClass->IsSubclassOf('cmdbAbstractObject'));
-			$bIsBulkDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, $oSet);
-			if (isset($aExtraParams['link_attr']))
-			{
-				$id = $aExtraParams['object_id'];
-				$sTargetAttr = $aExtraParams['target_attr'];
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
-				$sTargetClass = $oAttDef->GetTargetClass();
-				if ($bIsModifyAllowed) { $aActions['UI:Menu:Add'] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true{$sContext}") + $aActionParams; }
-				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:Manage'] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id{$sContext}") + $aActionParams; }
-				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#") + $aActionParams; }
 			}
-			else
-			{
-				// many objects in the set, possible actions are: new / modify all / delete all
-				if ($bIsCreationAllowed) { $aActions['UI:Menu:New'] = array ('label' => Dict::S('UI:Menu:New'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=new&class=$sClass{$sContext}{$sDefault}") + $aActionParams; }
-				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:ModifyAll'] = array ('label' => Dict::S('UI:Menu:ModifyAll'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_modify_all&class=$sClass&filter=".urlencode($sFilter)."{$sContext}") + $aActionParams; }
-				if ($bIsBulkDeleteAllowed) { $aActions['UI:Menu:BulkDelete'] = array ('label' => Dict::S('UI:Menu:BulkDelete'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=select_for_deletion&filter=".urlencode($sFilter)."{$sContext}") + $aActionParams; }
 
-				// Stimuli
-				$aStates = MetaModel::EnumStates($sClass);
-				// Do not perform time consuming computations if there are too may objects in the list
-				$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
-				
-				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->CountWithLimit($iLimit + 1) < $iLimit)))
-				{
-					// Life cycle actions may be available... if all objects are in the same state
-					//
-					// Group by <state>
-					$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
-					$aGroupBy = array('__state__' => $oGroupByExp);
-					$aQueryParams = array();
-					if (isset($aExtraParams['query_params']))
-					{
-						$aQueryParams = $aExtraParams['query_params'];
-					}
-					$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy);
-					$aRes = CMDBSource::QueryToArray($sSql);
-					if (count($aRes) == 1)
-					{
-						// All objects are in the same state...
-						$sState = $aRes[0]['__state__'];
-						$aTransitions = Metamodel::EnumTransitions($sClass, $sState);
-						if (count($aTransitions))
-						{
-							$this->AddMenuSeparator($aActions);
-							$aStimuli = Metamodel::EnumStimuli($sClass);
-							foreach($aTransitions as $sStimulusCode => $aTransitionDef)
-							{
-								$oSet->Rewind();
-								// As soon as the user rights implementation will browse the object set,
-								// then we might consider using OptimizeColumnLoad() here
-								$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSet);
-								$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? $iActionAllowed : UR_ALLOWED_NO;
-								switch($iActionAllowed)
-								{
-									case UR_ALLOWED_YES:
-									case UR_ALLOWED_DEPENDS:
-									$aActions[$sStimulusCode] = array('label' => $aStimuli[$sStimulusCode]->GetLabel(), 'url' => "{$sRootUrl}pages/UI.php?operation=select_bulk_stimulus&stimulus=$sStimulusCode&state=$sState&class=$sClass&filter=".urlencode($sFilter)."{$sContext}") + $aActionParams;
-									break;
-									
-									default:
-									// Do nothing
-								}
-							}
-						}
+			$this->AddMenuSeparator($aActions);
+			/** @var \iApplicationUIExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
+				$oSet->Rewind();
+				foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data) {
+					if (is_array($data)) {
+						// New plugins can provide javascript handlers via the 'onclick' property
+						//TODO: enable extension of different menus by checking the 'target' property ??
+						$aActions[$sLabel] = [
+							'label' => $sLabel,
+							'url' => isset($data['url']) ? $data['url'] : '#',
+							'onclick' => isset($data['onclick']) ? $data['onclick'] : ''
+						];
+					} else {
+						// Backward compatibility with old plugins
+						$aActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
 					}
 				}
 			}
-		}
-
-		$this->AddMenuSeparator($aActions);
-		/** @var \iApplicationUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-			$oSet->Rewind();
-			foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data) {
-				if (is_array($data)) {
-					// New plugins can provide javascript handlers via the 'onclick' property
-					//TODO: enable extension of different menus by checking the 'target' property ??
-					$aActions[$sLabel] = ['label' => $sLabel, 'url' => isset($data['url']) ? $data['url'] : '#', 'onclick' => isset($data['onclick']) ? $data['onclick'] : ''];
-				} else {
-					// Backward compatibility with old plugins
-					$aActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
-				}
+			if (empty($sRefreshAction) && $this->m_sStyle == 'list') {
+				//for the detail page this var is defined way beyond this line
+				$sRefreshAction = "window.location.reload();";
 			}
+		}	else
+		{
+			//it's easier just display configure this list and MENU_OBJLIST_TOOLKIT
 		}
 		$param = null;
 		$iMenuId = null;
@@ -1809,7 +1925,7 @@ class MenuBlock extends DisplayBlock
 				}
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
-					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_{$sId}').dialog('open');"];
+					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open');"];
 					utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aActions);
 				}
 				break;
@@ -1876,10 +1992,6 @@ JS
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
-			if (empty($sRefreshAction) && $this->m_sStyle == 'list') {
-				//for the detail page this var is defined way beyond this line
-				$sRefreshAction = "window.location.reload();";
-			}
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction != '')) {
 				$oActionButton = ButtonFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
 				$oActionButton->SetIconClass('fas fa-sync')

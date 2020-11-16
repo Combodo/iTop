@@ -380,7 +380,7 @@ $(function()
 			// Prepare base DOM structure
 			this.element
 				.append('<div class="sfc_header"><div class="sfc_title"></div><span class="sfc_toggle"><a class="fas fa-caret-down"' + ' href="#"></a></span></div>')
-				.append('<div class="sfc_form_group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
+				.append('<div class="sfc_form_group ibo-form-group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
 
 			// Bind events
 			// Note: No event to handle criteria closing when clicking outside of it as it is already handle by the form handler.

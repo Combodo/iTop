@@ -20,6 +20,8 @@
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
+
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
 require_once(APPROOT.'core/modelreflection.class.inc.php');

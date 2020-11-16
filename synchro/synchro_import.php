@@ -491,7 +491,7 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit($iLoopTimeLimit);
+		set_time_limit(intval($iLoopTimeLimit));
 		foreach ($aData as $iRow => $aRow)
 		{
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
@@ -633,7 +633,7 @@ try
 			}
 		}
 		$oMutex->Unlock();
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		if (($sOutput === 'summary') || ($sOutput === 'details'))
 		{

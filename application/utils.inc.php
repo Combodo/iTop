@@ -1697,7 +1697,7 @@ class utils
 		set_time_limit(0);
 		// Compiling SASS
 		$sCss = $oSass->compile($sSassContent);
-		set_time_limit($iCurrentMaxExecTime);
+		set_time_limit(intval($iCurrentMaxExecTime));
 
 		return $sCss;
 	}
