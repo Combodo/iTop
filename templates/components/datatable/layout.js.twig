@@ -28,11 +28,11 @@ function checkAllDataTable(table, value) {
 }
 
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
-     $('#{{ oUIBlock.GetId() }}').DataTable().clear();
+    $('#{{ oUIBlock.GetId() }}').DataTable().clear();
 });
 
 {% if oUIBlock.GetOption("select_mode") is defined %}
-var oSelectedItems{{ oUIBlock.GetOption('sTableId') }} = [];
+var oSelectedItems{{ oUIBlock.GetOption('sListId') }} = [];
 {% endif %}
 
 if ($.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
@@ -40,53 +40,53 @@ if ($.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
 }
 
 var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
-    "language": {
-        "processing": "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
-        "search": "{{ 'UI:Datatables:Language:Search'|dict_s }}",
-        "lengthMenu": "{{ 'UI:Datatables:Language:LengthMenu'|dict_s }}",
-        "zeroRecords": "{{ 'UI:Datatables:Language:ZeroRecords'|dict_s }}",
-        "info": "{{ 'UI:Datatables:Language:Info'|dict_s }}",
-        "infoEmpty": "{{ 'UI:Datatables:Language:InfoEmpty'|dict_s }}",
-        "infoFiltered": "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
-        "emptyTable": "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
-        "paginate": {
-            "first": "<<",
+    language: {
+        processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
+        search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
+        lengthMenu: "{{ 'UI:Datatables:Language:LengthMenu'|dict_s }}",
+        zeroRecords: "{{ 'UI:Datatables:Language:ZeroRecords'|dict_s }}",
+        info: "{{ 'UI:Datatables:Language:Info'|dict_s }}",
+        infoEmpty: "{{ 'UI:Datatables:Language:InfoEmpty'|dict_s }}",
+        infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
+        emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
+        paginate: {
+            first: "<<",
             previous: "<i class=\"fas fa-angle-left\"></i>",
             next: "<i class=\"fas fa-angle-right\"></i>",
-            "last": ">>"
+            last: ">>"
         },
-        "aria": {
-            "sortAscending": ": {{ 'UI:Datatables:Language:Sort:Ascending'|dict_s }}",
-            "sortDescending": ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
+        aria: {
+            sortAscending: ": {{ 'UI:Datatables:Language:Sort:Ascending'|dict_s }}",
+            sortDescending: ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
         }
     },
-    "lengthMenu": [[ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, -1], [ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
-    "dom": "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
-	{% if( oUIBlock.GetOptions()["sort"][0] is defined ) %}
-	"order": [[{{ oUIBlock.GetOptions()["sort"][0]}},'{{ oUIBlock.GetOptions()["sort"][1]}}']],
-	{% else %}
-	"order":[],
-	{% endif %}
-	"ordering": true,
+    lengthMenu: [[ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, -1], [ {{ oUIBlock.GetOptions()["iPageSize"] }},  {{ oUIBlock.GetOptions()["iPageSize"]*2 }},  {{ oUIBlock.GetOptions()["iPageSize"]*3 }}, {{ oUIBlock.GetOptions()["iPageSize"]*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+    dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+    {% if( oUIBlock.GetOptions()["sort"][0] is defined ) %}
+    order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
+    {% else %}
+    order: [],
+    {% endif %}
+    ordering: true,
     {% if oUIBlock.GetOption("select_mode") is defined %}
-    "select": {
-        "style": "{{ oUIBlock.GetOption("select_mode") }}"
+    select: {
+        style: "{{ oUIBlock.GetOption("select_mode") }}"
     },
-    "rowCallback": function (oRow, oData) {
+    rowCallback: function (oRow, oData) {
         // Hiding pagination if only one page
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]') === "negative") {
-            if (!oData.id in oSelectedItems{{ oUIBlock.GetOption('sTableId') }}) {
+            if (!oData.id in oSelectedItems{{ oUIBlock.GetOption('sListId') }}) {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
         } else {
-            if (oData.id in oSelectedItems{{ oUIBlock.GetOption('sTableId') }}) {
+            if (oData.id in oSelectedItems{{ oUIBlock.GetOption('sListId') }}) {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
         }
     },
-    "drawCallback": function () {
+    drawCallback: function () {
         // Hiding pagination if only one page
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]') === "negative") {
             $(this).find('[name=selectAll]').checked();
@@ -96,33 +96,33 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     {% endif %}
-    "rowId": "id",
-    "filter": false,
-    "retrieve": true,
-    "destroy": true,
-    "processing": true,
-    "serverSide": true,
-    "columns": [
+    rowId: "id",
+    filter: false,
+    retrieve: true,
+    destroy: true,
+    processing: true,
+    serverSide: true,
+    columns: [
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         {
-            "width": "auto",
-            "searchable": false,
-            "sortable": false,
-            "title":
+            width: "auto",
+            searchable: false,
+            sortable: false,
+            title:
                     {% if oUIBlock.GetOption("select_mode") != "single" %}
-                        '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
-                    {% else %}
-                        '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
-                    {% endif %},
-            "type": "html",
-            "data": "",
-            "render": function (data, type, row) {
+                '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
+            {% else %}
+            '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}" /></span>'
+            {% endif %},
+            type: "html",
+            data: "",
+            render: function (data, type, row) {
                 var oCheckboxElem =
                         {% if oUIBlock.GetOption("select_mode") != "single" %}
-                            $('<span class="row_input"><input type="checkbox" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
-                        {% else %}
-                            $('<span class="row_input"><input type="radio" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
-                        {% endif %}
+                    $('<span class="row_input"><input type="checkbox" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
+                {% else %}
+                $('<span class="row_input"><input type="radio" class="selectList{{ oUIBlock.GetId() }}" name="selectObject[]" /></span>');
+                {% endif %}
                 if (row.limited_access) {
                     oCheckboxElem.html('-');
                 } else {
@@ -134,33 +134,33 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endif %}
         {% for aColumn in oUIBlock.GetDisplayColumns() %}
         {
-            "width": "auto",
-            "searchable": false,
-            "sortable": true,
-            "title": "{{ aColumn["attribute_label"] }}",
-            "defaultContent": "",
-            "type": "html",
-            'metadata': {
-                'object_class': "{{ aColumn["object_class"] }}",
-                'attribute_code': "{{ aColumn["attribute_code"] }}",
-                'attribute_type': "{{ aColumn["attribute_type"] }}",
-                'attribute_label': "{{ aColumn["attribute_label"] }}"
+            width: "auto",
+            searchable: false,
+            sortable: true,
+            title: "{{ aColumn["attribute_label"] }}",
+            defaultContent: "",
+            type: "html",
+            metadata: {
+                object_class: "{{ aColumn["object_class"] }}",
+                attribute_code: "{{ aColumn["attribute_code"] }}",
+                attribute_type: "{{ aColumn["attribute_type"] }}",
+                attribute_label: "{{ aColumn["attribute_label"] }}"
             },
-            "data": "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}",
-            "render": {
-                "display": function (data, type, row) {  {{ aColumn["render"]|raw }}},
-                "_": "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}"
+            data: "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}",
+            render: {
+                display: function (data, type, row) {  {{ aColumn["render"]|raw }}},
+                _: "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}"
             }
         },
         {% endfor %}
     ],
-    "ajax": $.fn.dataTable.pipeline({
-        "url": "{{ oUIBlock.GetAjaxUrl() }}",
-        "data": {{ oUIBlock.GetAjaxData() |raw }},
-        "method": "post",
-        "pages": 5 // number of pages to cache
+    ajax: $.fn.dataTable.pipeline({
+        url: "{{ oUIBlock.GetAjaxUrl() }}",
+        data: {{ oUIBlock.GetAjaxData() |raw }},
+        method: "post",
+        pages: 5 // number of pages to cache
     }),
-    "initComplete": function() {
+    initComplete: function () {
         if (this.api().page.info().pages === 1) {
             $('.dataTables_paginate').hide();
             $('.dataTables_length').hide();
@@ -168,18 +168,20 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     }
 });
 
+{% if oUIBlock.GetOption("select_mode") is not empty %}
+{% if oUIBlock.GetOption("select_mode") != "single" %}
 oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
     var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
-   // Checking input
+    // Checking input
     $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
     // Saving values in temp array
     for (var i in aData) {
         var iItemId = aData[i].id;
-        if (oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId) === -1) {
-            oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.push(iItemId);
+        if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
         }
     }
-    if ((oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")) {
+    if ((oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")) {
         $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
     } else {
         $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
@@ -194,16 +196,55 @@ oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt
     // Saving values in temp array
     for (var i in aData) {
         var iItemId = aData[i].id;
-        if (oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId) > -1) {
-            oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.indexOf(iItemId), 1);
+        if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
         }
     }
-    if ((oSelectedItems{{ oUIBlock.GetOption('sTableId') }}.length === 0 && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "positive")) {
+    if ((oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === 0 && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "positive")) {
         $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
     } else {
         $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
     }
 });
+{% else %}
+oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+    var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+    // Checking input
+    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+    // Saving values in temp array
+    for (var i in aData) {
+        var iItemId = aData[i].id;
+        if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+        }
+    }
+    if ((oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")) {
+        $('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', true);
+    } else {
+        $('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', false);
+    }
+});
+
+oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+    var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+
+    // Checking input
+    $('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+    // Saving values in temp array
+    for (var i in aData) {
+        var iItemId = aData[i].id;
+        if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
+            oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+        }
+    }
+    if ((oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === 0 && $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "positive")) {
+        $('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', true);
+    } else {
+        $('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', false);
+    }
+});
+{% endif %}
+{% endif %}
 
 // Handles submit button
 //$('#form_{{ oUIBlock.GetId() }} .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
@@ -238,16 +279,16 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
     });
 
 $aOptions = {
-    'sListId': '{{ oUIBlock.GetId() }}',
-    'oColumns': {{ oUIBlock.GetResultColumnsAsJson()|raw }},
-    'sViewLink': '{{ oUIBlock.GetOptions()["bViewLink"] }}',
-    'iPageSize': '{{ oUIBlock.GetOptions()["iPageSize"] }}',
-    'sTableId': '{{ oUIBlock.GetOptions()["sTableId"] }}',
-    "sRenderUrl": "{{ oUIBlock.GetAjaxUrl() }}",
-    "sSelectMode": "{{ oUIBlock.GetOptions()["select_mode"] }}",
-    "oData": {{ oUIBlock.GetAjaxData() |raw }},
-    'oLabels': {"moveup": "{{ 'UI:Button:MoveUp'|dict_s }}", "movedown": "{{ 'UI:Button:MoveDown'|dict_s }}"},
-    'oDefaultSettings': {{ oUIBlock.GetOptions()["oDefaultSettings"]|raw }}
+    sListId: '{{ oUIBlock.GetId() }}',
+    oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
+    sViewLink: '{{ oUIBlock.GetOptions()["bViewLink"] }}',
+    iPageSize: '{{ oUIBlock.GetOptions()["iPageSize"] }}',
+    sTableId: '{{ oUIBlock.GetOptions()["sTableId"] }}',
+    sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
+    sSelectMode: "{{ oUIBlock.GetOptions()["select_mode"] }}",
+    oData: {{ oUIBlock.GetAjaxData() |raw }},
+    oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
+    oDefaultSettings: {{ oUIBlock.GetOptions()["oDefaultSettings"]|raw }}
 };
 
 //if (!typeof $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings() !== "undefined")

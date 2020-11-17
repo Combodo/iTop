@@ -202,14 +202,13 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 			theMap['class'] = me.sClass;
 			$(' :input[name^=storedSelection]', context).each(function () {
-				if (theMap[this.name] == undefined)
-				{
+				if (theMap[this.name] == undefined) {
 					theMap[this.name] = [];
 				}
 				theMap[this.name].push(this.value);
 				$(this).remove(); // Remove the selection for the next time the dialog re-opens
 			});
-			theMap["storedSelection[]"]=eval("oSelectedItemsadd_"+me.id);
+			theMap["storedSelection[]"] = eval("oSelectedItemsResultsToAdd_" + me.id);
 
 			// Retrieve the 'filter' definition
 			theMap['filter'] = $(':input[name=filter]', context).val();

@@ -21,18 +21,20 @@ use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\Button;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Component\Field\Field;
 use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Layout\Object\ObjectFactory;
-use Combodo\iTop\Application\UI\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
 
@@ -57,9 +59,6 @@ require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php')
 require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
-
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
-use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 /**
  * Class cmdbAbstractObject
@@ -1086,10 +1085,8 @@ HTML
 	/**
 	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
 	 *
-	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
-	 *
 	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
-	 * @param CMDBObjectSet $oSet The set of objects to display
+	 * @param \DBObjectSet $oSet The set of objects to display
 	 * @param array $aExtraParams key used :
 	 *      <ul>
 	 *          <li>view_link : if true then for extkey will display links with friendly name and make column sortable, default true
@@ -1102,24 +1099,21 @@ HTML
 	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
 	 *     pagination or table sorting !
 	 *
-	 * @throws \CoreException*@throws \Exception
-	 * @throws \ApplicationException
+	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
+	 *
 	 * @deprecated 3.0.0 use GetDisplaySetBlock
 	 */
-	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function GetDisplaySet(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPage->AddUiBlock(static::GetDisplaySetBlock( $oPage, $oSet, $aExtraParams ));
+		$oPage->AddUiBlock(static::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
 		return "";
-		}
+	}
 
-	public static function GetDisplaySetBlock(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		if (empty($aExtraParams['currentId']))
-		{
+		if (empty($aExtraParams['currentId'])) {
 			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
-		}
-		else
-		{
+		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
 

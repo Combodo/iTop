@@ -327,6 +327,7 @@ class DataTableFactory
 		$aOptions['sTableId'] = $sTableId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
+		$aOptions['sListId'] = $sListId;
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");

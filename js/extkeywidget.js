@@ -276,13 +276,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.UpdateButtons = function () {
-		var okBtn = $('#btn_ok_'+me.id);
-		if ($('#count_'+me.id).val() > 0)
-		{
+		var okBtn = $('#btn_ok_' + me.id + '_results');
+		if ($('#count_' + me.id + '_results').val() > 0) {
 			okBtn.prop('disabled', false);
-		}
-		else
-		{
+		} else {
 			okBtn.prop('disabled', true);
 		}
 	};
@@ -350,18 +347,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.DoOk = function () {
-		var s = $('#'+me.id+'_results').find(':input[name^=storedSelection]');
-		var iObjectId = 0;
-		if (s.length > 0)
-		{
-			iObjectId = s.val();
-		}
-		else
-		{
-			iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
-		}
-		$('#ac_dlg_'+this.id).dialog('close');
-		$('#label_'+this.id).addClass('ac_dlg_loading');
+		var iObjectId = window['oSelectedItems' + me.id + '_results'][0];
+		$('#ac_dlg_' + this.id).dialog('close');
+		$('#label_' + this.id).addClass('ac_dlg_loading');
 
 		// Query the server again to get the display name of the selected object
 		var theMap = {
@@ -715,28 +703,26 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			// Run the query and get the result back directly in JSON
 			me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 				function (data) {
-					var oTemp = $('<div>'+data.name+'</div>');
+					var oTemp = $('<div>' + data.name + '</div>');
 					var txt = oTemp.text(); // this causes HTML entities to be interpreted
 
-					$('#label_'+me.id).val(txt);
-					$('#label_'+me.id).removeClass('ac_dlg_loading');
+					$('#label_' + me.id).val(txt);
+					$('#label_' + me.id).removeClass('ac_dlg_loading');
 
-					var prevValue = $('#'+me.id).val();
-					$('#'+me.id).val(iObjectId);
-					if (prevValue != iObjectId)
-					{
-						$('#'+me.id).trigger('validate');
-						$('#'+me.id).trigger('extkeychange');
-						$('#'+me.id).trigger('change');
+					var prevValue = $('#' + me.id).val();
+					$('#' + me.id).val(iObjectId);
+					if (prevValue != iObjectId) {
+						$('#' + me.id).trigger('validate');
+						$('#' + me.id).trigger('extkeychange');
+						$('#' + me.id).trigger('change');
 					}
-					if ($('#'+me.id).hasClass('multiselect'))
-					{
-						$('#'+me.id+' option').each(function () {
+					if ($('#' + me.id).hasClass('multiselect')) {
+						$('#' + me.id + ' option').each(function () {
 							this.selected = ($(this).attr('value') == iObjectId);
 						});
-						$('#'+me.id).multiselect('refresh');
+						$('#' + me.id).multiselect('refresh');
 					}
-					$('#label_'+me.id).focus();
+					$('#label_' + me.id).focus();
 					me.ajax_request = null;
 				},
 				'json'

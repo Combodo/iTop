@@ -668,8 +668,8 @@ JS
 		<div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
 		</div>
 		<input type="button" id="btn_cancel_{$this->iId}" value="{$sCancel}" onClick="$('#ac_dlg_{$this->iId}').dialog('close');">&nbsp;&nbsp;
-		<input type="button" id="btn_ok_{$this->iId}" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
-		<input type="hidden" id="count_{$this->iId}" value="0">
+		<input type="button" id="btn_ok_{$this->iId}_results" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
+		<input type="hidden" id="count_{$this->iId}_results" value="0">
 		</form>
 		</div></div>
 HTML
