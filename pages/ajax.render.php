@@ -410,7 +410,7 @@ try
 							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetKey();
 						}
 						else {
-							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->Get($sAttCode);
+							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						}
 					}
 				}
@@ -420,7 +420,6 @@ try
 				}
 				array_push($aResult["data"], $aObj);
 			}
-
 			$oPage->add(json_encode($aResult));
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;

@@ -204,7 +204,7 @@ class DataTableFactory
 			$aList = $aDisplayList;
 		}
 
-		$sSelectMode = 'none';
+		$sSelectMode = '';
 		if ($bSelectMode) {
 			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
 		}

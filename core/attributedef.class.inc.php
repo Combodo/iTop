@@ -4915,11 +4915,6 @@ class AttributeEmailAddress extends AttributeString
 
 		return '<a class="mailto" href="mailto:'.$sValue.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
-	public function GetRenderForDataTable(string $sClassAlias) :string
-	{
-		$sRenderFunction = "return '<a class=\'mailto\' href=  \'mailto:'+data+'\'><span class=\'fas fa-envelope\'></span> '+data+'</a>' ;";
-		return $sRenderFunction;
-	}
 }
 
 /**
@@ -5007,11 +5002,6 @@ class AttributePhoneNumber extends AttributeString
 		return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
 
-	public function GetRenderForDataTable(string $sClassAlias) :string
-	{
-		$sRenderFunction = "return '<a class=\'tel\' href=  \'tel:'+data+'\'><span class=\'fas fa-phone\'></span> '+data+'</a>' ;";
-		return $sRenderFunction;
-	}
 }
 
 /**
@@ -10339,6 +10329,7 @@ class AttributeEnumSet extends AttributeSet
 
 		return $sRes;
 	}
+
 
 	/**
 	 * @param ormSet $value
