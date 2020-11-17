@@ -73,12 +73,11 @@ echo <<<'HTML'
 <script>
 bSkipErrorDisplay = false;
 $(document).ready(function () {
-	console.debug("skip=", bSkipErrorDisplay);
 	if (!bSkipErrorDisplay) {
 		var $pageBody = $("body");
 		$pageBody.addClass("error-container");
 		$pageBody.append("<div class='error-message'>" +
-		 "<h1>😭 iTop cannot install</h1>" +
+		  "<h1>😭 iTop cannot install</h1>" +
 		  "<p>💣 PHP error occurred</p>" +
 		  "<p>Your system doesn't meet iTop requirements !</p>")
 	}
