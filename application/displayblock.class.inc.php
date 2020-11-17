@@ -1607,7 +1607,7 @@ class MenuBlock extends DisplayBlock
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sRefreshAction = '';
-		if (!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") {
+		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle!= 'listInObject') {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			if (!empty($sContext)) {
@@ -1916,6 +1916,7 @@ class MenuBlock extends DisplayBlock
 		// New extensions based on iPopupMenuItem interface
 		switch ($this->m_sStyle) {
 			case 'list':
+			case 'listInObject':
 				$oSet->Rewind();
 				$param = $oSet;
 				$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;

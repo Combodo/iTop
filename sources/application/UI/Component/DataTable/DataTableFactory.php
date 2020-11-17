@@ -88,7 +88,7 @@ class DataTableFactory
 		$oDataTable = DataTableFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
 		$oPanel->AddMainBlock($oDataTable);
 
-		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
+		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'listInObject');
 		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 		$oBlockMenu = new UIContentBlock();
 		$oBlockMenu->AddSubBlock($oBlock);
