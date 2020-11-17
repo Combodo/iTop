@@ -23,6 +23,7 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -82px !def
 
 .ibo-input-select{
 	appearance: none;
+	display: inline-block;
 	&.ibo-input-selectize{
 		input{
 			display: none;
