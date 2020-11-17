@@ -65,7 +65,7 @@ class UIPasswordWidget
 		$sHtmlValue .= '<input type="hidden" id="'.$this->iId.'_changed" name="attr_'.$sCode.'[changed]" value="'.$sChangedValue.'"/>';
 		$sHtmlValue .= '</div>';
 
-		$sHtmlValue .= '<span class="form_validation" id="v_'.$this->iId.'"></span><span class="field_status" id="fstatus_'.$this->iId.'"></span>';
+		$sHtmlValue .= '<span class="form_validation ibo-field-validation" id="v_'.$this->iId.'"></span><span class="field_status" id="fstatus_'.$this->iId.'"></span>';
 
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change', function(evt) { return PasswordFieldChanged('$this->iId') } );"); // Bind to a custom event: validate
 		$oPage->add_ready_script("$('#$this->iId').bind('keyup change validate', function(evt, sFormId) { return ValidatePasswordField('$this->iId', sFormId) } );"); // Bind to a custom event: validate
