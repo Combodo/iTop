@@ -255,7 +255,8 @@ try
 			$iLength = utils::ReadParam('end', 10);
 			$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 			$sSelectMode = utils::ReadParam('select_mode', '');
-			$aResult = DataTableFactory::GetOptionsForRendering( $aColumns,  $sSelectMode, $sFilter, $iLength, $aExtraParams);
+			$aClassAliases = utils::ReadParam('class_aliases', array());
+			$aResult = DataTableFactory::GetOptionsForRendering( $aColumns,  $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
 			$oPage->add(json_encode($aResult));
 		break;
 

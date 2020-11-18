@@ -17,6 +17,7 @@
 </table>
 
 <div id="datatable_dlg_{{ oUIBlock.GetId() }}" style="display: none; background : white;" class="">
+	<input type="hidden" name="action" value="none"/>
 	<form id="form_{{ oUIBlock.GetId() }}" onsubmit="return false">
 		<p>
 			<input id="dtbl_dlg_settings_{{ oUIBlock.GetId() }}" type="radio" name="settings"  {% if (oUIBlock.GetOptions()['bUseCustomSettings'] == false) %} checked {% endif %} value="defaults">
@@ -53,7 +54,7 @@
 					<button type="button" onclick="$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel'); $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
 				</td>
 				<td style="text-align:center;">
-					<button type="submit" onclick="$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgOk'); $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog('close');">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
+					<button type="submit" onclick="$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgOk'); ">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
 				</td>
 			</tr>
 		</table>

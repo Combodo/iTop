@@ -161,12 +161,14 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         pages: 5 // number of pages to cache
     }),
     initComplete: function () {
-        if (this.api().page.info().pages === 1) {
+	    if (this.api().page.info().pages === 1) {
             $('.dataTables_paginate').hide();
             $('.dataTables_length').hide();
         }
     }
 });
+
+
 
 {% if oUIBlock.GetOption("select_mode") is not empty %}
 {% if oUIBlock.GetOption("select_mode") != "single" %}
@@ -273,22 +275,29 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
         autoOpen: false,
         title: "{{ 'UI:ListConfigurationTitle'|dict_s }}",
         width: 500,
-        close: function () { //save data and refresh
-            $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
+	    open: function(){
+		    $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val("none");
+	    },
+        close: function (event, ui) { //save data and refresh
+			if( $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val() == "none") {
+				$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
+            }
         }
     });
 
 $aOptions = {
     sListId: '{{ oUIBlock.GetId() }}',
     oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
-    sViewLink: '{{ oUIBlock.GetOptions()["bViewLink"] }}',
-    iPageSize: '{{ oUIBlock.GetOptions()["iPageSize"] }}',
-    sTableId: '{{ oUIBlock.GetOptions()["sTableId"] }}',
+	sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
+    sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
+    iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
+	oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw}}'),
+    sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
+	//oExtraParams
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
-    sSelectMode: "{{ oUIBlock.GetOptions()["select_mode"] }}",
-    oData: {{ oUIBlock.GetAjaxData() |raw }},
+    oData: {{ oUIBlock.GetAjaxData() |raw }},//ttt
+    oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
-    oDefaultSettings: {{ oUIBlock.GetOptions()["oDefaultSettings"]|raw }}
 };
 
 //if (!typeof $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings() !== "undefined")

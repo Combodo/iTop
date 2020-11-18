@@ -328,6 +328,7 @@ class DataTableFactory
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['sListId'] = $sListId;
+		$aOptions['oClassAliases'] = json_encode($aClassAliases);
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
@@ -540,6 +541,7 @@ class DataTableFactory
 		$aOptions['sTableId'] = $sTableId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
+		$aOptions['oClassAliases'] = json_encode($aClassAliases);
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
@@ -567,13 +569,12 @@ class DataTableFactory
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aExtraParams)
+	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
 	{
 		$aOptions = [];
 
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
-		$aClassAliases = [];
 
 		if ($sSelectMode!=""){
 			$aColumnDefinition["width"] = "auto";
@@ -594,8 +595,8 @@ class DataTableFactory
 			array_push($aColumnsDefinitions, $aColumnDefinition);
 		}
 
-		foreach ($aColumns as $sClassName => $aClassColumns) {
-			$aClassAliases[$sClassName] = $sClassName;
+		foreach ($aColumns as $sClassAlias => $aClassColumns) {
+			$sClassName=$aClassAliases[$sClassAlias];
 			foreach ($aClassColumns as $sAttCode => $aData) {
 				if ($aData['checked'] == "true") {
 					$aColumnDefinition["width"] = "auto";
@@ -608,14 +609,15 @@ class DataTableFactory
 						$aColumnDefinition["title"] = $aData['alias'];
 						$aColumnDefinition['metadata'] = [
 							'object_class' => $sClassName,
+							'class_alias' => $sClassAlias,
 							'attribute_code' => $sAttCode,
 							'attribute_type' => '_key_',
 							'attribute_label' => $aData['alias'],
 						];
-						$aColumnDefinition["data"] = $sClassName."/".$sAttCode;
+						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
-							"display" => "return '<a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassName."/friendlyname']+'</a>' ;",
-							"_" => $sClassName."/".$sAttCode,
+							"display" => "return '<a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+							"_" => $sClassAlias."/".$sAttCode,
 						];
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
@@ -625,14 +627,15 @@ class DataTableFactory
 						$aColumnDefinition["title"] = $sAttLabel;
 						$aColumnDefinition['metadata'] = [
 							'object_class' => $sClassName,
+							'class_alias' => $sClassAlias,
 							'attribute_code' => $sAttCode,
 							'attribute_type' => $sAttDefClass,
 							'attribute_label' => $sAttLabel,
 						];
-						$aColumnDefinition["data"] = $sClassName."/".$sAttCode;
+						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
-							"display" => $oAttDef->GetRenderForDataTable($sClassName),
-							"_" => $sClassName."/".$sAttCode,
+							"display" => $oAttDef->GetRenderForDataTable($sClassAlias),
+							"_" => $sClassAlias."/".$sAttCode,
 						];
 					}
 					array_push($aColumnsDefinitions, $aColumnDefinition);

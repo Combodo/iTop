@@ -194,7 +194,9 @@ $(function()
 				}
 			}
 			this._saveDlgState();
-			
+
+			$('#datatable_dlg_'+this.options.sListId).find('[name=action]').val("save");
+			$('#datatable_dlg_'+this.options.sListId).dialog('close');
 		},
 		onDlgCancel: function()
 		{
