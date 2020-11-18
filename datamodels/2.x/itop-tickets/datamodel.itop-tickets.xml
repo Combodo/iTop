@@ -722,6 +722,46 @@
 				</details>
 			</presentation>
 		</class>
+    <class id="Person" _delta="must_exist">
+      <fields>
+        <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>Ticket</linked_class>
+          <ext_key_to_me>caller_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="tickets_list" _delta="define">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Team" _delta="must_exist">
+      <fields>
+        <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>Ticket</linked_class>
+          <ext_key_to_me>team_id</ext_key_to_me>
+          <edit_mode>none</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="tickets_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
 	</classes>
 	<meta>
 		<classes>

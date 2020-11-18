@@ -2262,6 +2262,48 @@ public function PrefillSearchForm(&$aContextParam)
 				</list>
 			</presentation>
 		</class>
+    <class id="DocumentFile" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentNote" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentWeb" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>70</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
 	</classes>
 	<menus>
 		<menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
