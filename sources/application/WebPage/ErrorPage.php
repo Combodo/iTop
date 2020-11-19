@@ -39,8 +39,9 @@ class ErrorPage extends NiceWebPage
 		$this->add("<div class=\"message message-error\">$sText</div>");
 		if(utils::IsEasterEggAllowed())
 		{
-			$this->add('<img src="../images/alpha-fatal-error.gif">');
 			$this->add('<div class="message message-valid">'.Dict::S('UI:ErrorPage:UnstableVersion').'</div>');
+			$this->add('<img src="../images/alpha-fatal-error.gif">');
+			$this->add('<div class="message message-valid">'.nl2br(Dict::S('UI:ErrorPage:KittyDisclaimer')).'</div>');
 		}
 		$this->log_error($sText);
 	}
