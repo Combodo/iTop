@@ -2430,4 +2430,11 @@ class utils
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
 	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public static function IsEasterEggAllowed(){
+		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
 }

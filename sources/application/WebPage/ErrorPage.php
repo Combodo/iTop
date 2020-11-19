@@ -13,6 +13,7 @@ class ErrorPage extends NiceWebPage
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_saas("css/setup.scss");
+		$this->add_saas("css/errorpage.scss");
 	}
 
 	public function info($sText)
@@ -36,6 +37,11 @@ class ErrorPage extends NiceWebPage
 	public function error($sText)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
+		if(utils::IsEasterEggAllowed())
+		{
+			$this->add('<img src="../images/alpha-fatal-error.gif">');
+			$this->add('<div class="message message-valid">'.Dict::S('UI:ErrorPage:UnstableVersion').'</div>');
+		}
 		$this->log_error($sText);
 	}
 
