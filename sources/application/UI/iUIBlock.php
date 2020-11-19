@@ -115,7 +115,6 @@ interface iUIBlock {
 	 */
 	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false);
 
-
 	/**
 	 * Add HTML code to the current block
 	 *

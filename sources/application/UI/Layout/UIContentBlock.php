@@ -29,7 +29,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 	/** @var array */
 	protected $aCSSClasses;
-	/** @var array */
+	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>")  */
 	protected $aDataAttributes;
 	/** @var array */
 	protected $aSubBlocks;
@@ -169,9 +169,9 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @param array $aDataAttributes
 	 *
-	 * @return UIContentBlock
+	 * @return $this
 	 */
-	public function SetDataAttributes(array $aDataAttributes): UIContentBlock
+	public function SetDataAttributes(array $aDataAttributes)
 	{
 		$this->aDataAttributes = $aDataAttributes;
 		return $this;
@@ -182,9 +182,9 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 * @param string $sName
 	 * @param string $sValue
 	 *
-	 * @return UIContentBlock
+	 * @return $this
 	 */
-	public function AddDataAttributes(string $sName, string $sValue): UIContentBlock
+	public function AddDataAttribute(string $sName, string $sValue)
 	{
 		$this->aDataAttributes[$sName] = $sValue;
 		return $this;

@@ -2426,9 +2426,9 @@ JS
 
 		$oContentBlock = new UIContentBlock();
 		$oContentBlock->SetCSSClasses("object-details")
-			->AddDataAttributes('object-class', $sClass)
-			->AddDataAttributes('object-id', $iKey)
-			->AddDataAttributes('object-mode', $sMode);
+			->AddDataAttribute('object-class', $sClass)
+			->AddDataAttribute('object-id', $iKey)
+			->AddDataAttribute('object-mode', $sMode);
 		$oPage->AddUiBlock($oContentBlock);
 
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
