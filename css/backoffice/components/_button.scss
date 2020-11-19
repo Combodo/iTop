@@ -404,7 +404,7 @@ $ibo-button-colors: (
 }
 
 /* Only when a button has both an icon and a label */
-.ibo-button-icon + .ibo-button-label {
+.ibo-button--icon + .ibo-button--label {
 	margin-left: $ibo-button--label--margin-left;
 }
 
