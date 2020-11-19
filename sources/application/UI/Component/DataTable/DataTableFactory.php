@@ -52,7 +52,7 @@ class DataTableFactory
 	 */
 	public static function MakeForResult(WebPage $oPage, string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result");
+		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
 		$oDataTable = DataTableFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
 		$oPanel->AddMainBlock($oDataTable);
 

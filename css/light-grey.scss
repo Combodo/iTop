@@ -231,21 +231,21 @@
 		}
 	}
 
-	table.listContainer {
-		border: 0;
-		padding: 0;
-		margin: 0;
-		width: 100%;
-		clear: both;
-	}
+	//table.listContainer {
+	//	border: 0;
+	//	padding: 0;
+	//	margin: 0;
+	//	width: 100%;
+	//	clear: both;
+	//}
+	//
+	//tr.containerHeader, tr.containerHeader td {
+	//	background: transparent;
+	//}
 
-	tr.containerHeader, tr.containerHeader td {
-		background: transparent;
-	}
-
-	tr.even td, .wizContainer tr.even td {
-		background-color: $table-even-background;
-	}
+	//tr.even td, .wizContainer tr.even td {
+	//	background-color: $table-even-background;
+	//}
 
 	tr.red_even td, .wizContainer tr.red_even td {
 		background-color: #f97e75;

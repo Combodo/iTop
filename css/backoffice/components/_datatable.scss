@@ -1,108 +1,175 @@
+$ibo-datatable--padding-y: 2em !default;
+
+$ibo-datatable-cell-row--line-height: 30px !default;
+$ibo-datatable-cell-row--padding-x: 1em !default;
+$ibo-datatable-cell-row--link--color: $ibo-color-primary-600 !default;
+
+$ibo-datatable-row--odd--background-color: $ibo-color-white-200 !default;
+$ibo-datatable-row--even--background-color: $ibo-color-white-100 !default;
+
+$ibo-datatable--toolbar--elements--padding-top: 0.755em !default;
+
+$ibo-datatable--toolbar--length--padding-right: 0.5em !default;
+$ibo-datatable--toolbar--length--select--height: 18px !default;
+$ibo-datatable--toolbar--length--select--width: unset !default;
+$ibo-datatable--toolbar--length--select--padding-y: 1px !default;
+$ibo-datatable--toolbar--length--select--padding-x: 2px !default;
+
+$ibo-datatable--toolbar--info--padding-right: 2em !default;
+$ibo-datatable--toolbar--info--padding-left: 0em !default;
+$ibo-datatable--toolbar--info--line-height: $ibo-datatable--toolbar--length--select--height + $ibo-datatable--toolbar--length--select--padding-y !default;
+
+$ibo-datatable--select-info--padding-left: 2em !default;
+
+$ibo-datatable--pagination--color: $ibo-color-grey-800 !default;
+
+$ibo-datatable--pagination--position-x: 1.21% !default;
+$ibo-datatable--pagination--position-top: 91.58% !default;
+$ibo-datatable--pagination--position-bottom: 4.85% !default;
+$ibo-datatable--pagination--button-margin-x: 0.5em !default;
+
+$ibo-datatable--paginate--padding-top: $ibo-datatable--toolbar--elements--padding-top !default;
+$ibo-datatable--paginate--padding-left: 2em !default;
+
+$ibo-datatable--paginate-button--link--color: $ibo-color-grey-800 !default;
+$ibo-datatable--paginate-button--link--hover--color: $ibo-color-blue-grey-200 !default;
+
+$ibo-datatable--paginate-button-active--link--color: $ibo-color-grey-900 !default;
+$ibo-datatable--paginate-button-active--link--background-color: $ibo-color-grey-200 !default;
+$ibo-datatable--paginate-button-active--link--padding-y: 2px !default;
+$ibo-datatable--paginate-button-active--link--padding-x: 6px !default;
+$ibo-datatable--paginate-button-active--link--box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.15) !default;
+$ibo-datatable--paginate-button-active--link--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-datatable--sorting--opacity: 0.3 !default;
+$ibo-datatable--sorting--right: 1em !default;
+
+$ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
+
 .ibo-datatable {
-	padding-bottom: 2em;
-	padding-top: 2em;
+	padding-bottom: $ibo-datatable--padding-y;
+	padding-top: $ibo-datatable--padding-y;
 
 	thead tr th, tbody tr td {
-		line-height: 30px;
-		padding-right: 1em;
-		padding-left: 1em;
-		@extend %ibo-font-ral-nor-100;
+		line-height: $ibo-datatable-cell-row--line-height;
+		padding-right: $ibo-datatable-cell-row--padding-x;
+		padding-left: $ibo-datatable-cell-row--padding-x;
+		@extend %ibo-font-ral-med-100;
 
 		a {
-			color: $ibo-color-primary-600;
+			color: $ibo-datatable-cell-row--link--color;
 		}
 	}
 
 	tbody tr:nth-child(odd) {
-		background-color: $ibo-color-secondary-500;
+		background-color: $ibo-datatable-row--odd--background-color;
+	}	
+	tbody tr:nth-child(even) {
+		background-color: $ibo-datatable-row--even--background-color;
 	}
 }
-	.dataTables_length
-	{
-		@extend %ibo-font-ral-med-100;
-		color: $ibo-color-grey-700;
+.dataTables_length {
+	@extend %ibo-font-ral-med-100;
+	color: $ibo-color-grey-700;
 
-		position: relative;
-		float: right;
-		padding-top: 0.755em;
-		padding-right: 0.5em;
+	position: relative;
+	float: right;
+	padding-top: $ibo-datatable--toolbar--elements--padding-top;
+	padding-right: $ibo-datatable--toolbar--length--padding-right;
+	 select{ 
+		 @extend .ibo-input;
+		 @extend .ibo-input-select;
+		 display: inline-block;
+		 height: $ibo-datatable--toolbar--length--select--height;
+		 width: $ibo-datatable--toolbar--length--select--width;
+		 padding: $ibo-datatable--toolbar--length--select--padding-y $ibo-datatable--toolbar--length--select--padding-x;
+		 
+		 @extend %ibo-font-ral-med-100;
 	}
-	.dataTables_info
-	{
-		@extend %ibo-font-ral-med-100;
-		color: $ibo-color-grey-700;
+}
+.dataTables_info {
+	@extend %ibo-font-ral-med-100;
+	color: $ibo-color-grey-700;
 
-		position: relative;
-		float: right;
-		padding-top: 0.755em;
-		padding-right: 2em;
-		padding-left: 0em;
-	}
-	.select-info{
-		padding-left: 2em;
-	}
+	position: relative;
+	float: right;
+	padding-top: $ibo-datatable--toolbar--elements--padding-top;
+	padding-right: $ibo-datatable--toolbar--info--padding-right;
+	padding-left: $ibo-datatable--toolbar--info--padding-left;
+	line-height: $ibo-datatable--toolbar--info--line-height;
+}
+.select-info {
+	padding-left: $ibo-datatable--select-info--padding-left;
+}
+.pagination
+{
+	color: $ibo-datatable--pagination--color;
 
-	.pagination
-	{
-		color: $ibo-color-grey-800;
-
-		left: 1.21%;
-		right: 1.21%;
-		top: 91.58%;
-		bottom: 4.85%;
-		.paginate_button {
-			margin-left: 1em;
-			margin-right: 1em;
-		}
-	}
-	.dataTables_paginate
-	{
-		/*	position: relative;*/
-		float: left;
-		padding-top: 0.755em;
-		padding-left: 2em;
-	}
+	left: $ibo-datatable--pagination--position-x;
+	right: $ibo-datatable--pagination--position-x;
+	top: $ibo-datatable--pagination--position-top;
+	bottom: $ibo-datatable--pagination--position-bottom;
 	.paginate_button {
-		box-sizing: border-box;
-		display: inline-block;
+		margin-left: $ibo-datatable--pagination--button-margin-x;
+		margin-right: $ibo-datatable--pagination--button-margin-x;
 	}
-	.paginate_button a{
-		color: $ibo-color-grey-800;
-		@extend %ibo-font-ral-nor-100;
-	}
-	.paginate_button a:hover {
-		color: $ibo-color-blue-grey-200;
-	}
-	.paginate_button.active a {
-		color: $ibo-color-grey-900;
-		border: 2px solid var(--ibo-color-grey-300);
-		background-color: $ibo-color-grey-200;
-	}
+}
+.dataTables_paginate
+{
+	float: left;
+	padding-top: $ibo-datatable--paginate--padding-top;
+	padding-left: $ibo-datatable--paginate--padding-left;
+}
+.paginate_button {
+	display: inline-block;
+	box-sizing: border-box;
+}
+.paginate_button a{
+	@extend %ibo-font-ral-med-100;
+	color: $ibo-datatable--paginate-button--link--color;
+}
+.paginate_button a:hover {
+	color: $ibo-datatable--paginate-button--link--hover--color;
+}
+.paginate_button.active a {
+	@extend %ibo-font-ral-med-100;
+	
+	color: $ibo-datatable--paginate-button-active--link--color;
+	background-color: $ibo-datatable--paginate-button-active--link--background-color;
+	padding: $ibo-datatable--paginate-button-active--link--padding-y $ibo-datatable--paginate-button-active--link--padding-x;
+	box-shadow: $ibo-datatable--paginate-button-active--link--box-shadow;
+	border-radius: $ibo-border-radius-300;
+}
 .ibo-datatable thead tr th{
 	position: relative;
 }
 .ibo-datatable thead tr th.sorting::after{
-	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0dc";
-	opacity: 0.3;
-	right: 1em;
 	position: absolute;
+	font-family: "Font Awesome 5 Free";
+	content: "\f0dc";
+	font-weight: 900;
+	opacity: $ibo-datatable--sorting--opacity;
+	right: $ibo-datatable--sorting--right;
 }
 .ibo-datatable thead tr th.sorting_desc:after{
-	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0d7";
-	right: 1em;
 	position: absolute;
+	font-family: "Font Awesome 5 Free";
+	content: "\f0d7";
+	font-weight: 900;
+	right: $ibo-datatable--sorting--right;
 }
 .ibo-datatable thead tr th.sorting_asc:after{
-	font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f0d8";
-	right: 1em;
 	position: absolute;
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f0d8";
+	right: $ibo-datatable--sorting--right;
 }
-.ibo-datatable-toolbar {
-	/*position: relative;*/
-	//height: 30px;
+.ibo-datatable-panel > .ibo-panel--body {
+	padding: $ibo-datatable-panel--body--padding;
 }
 .ibo-criterion-area{
-	font-size: $ibo-font-size-50 ;
+	font-size: $ibo-font-size-50;
 }
 .ibo-search-form{
 	padding-top: $ibo-panel--spacing-top ;
