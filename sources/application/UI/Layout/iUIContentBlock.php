@@ -79,4 +79,59 @@ interface iUIContentBlock {
 	 * @return $this
 	 */
 	public function SetSubBlocks(array $aSubBlocks);
+
+
+	/**
+	 * Add $oDeferredBlock, replacing any block with the same ID
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oDeferredBlock
+	 *
+	 * @return $this
+	 */
+	public function AddDeferredBlock(iUIBlock $oDeferredBlock);
+
+	/**
+	 * Remove the sub block identified by $sId.
+	 * Note that if no sub block matches the ID, it proceeds silently.
+	 *
+	 * @param string $sId ID of the sub block to remove
+	 *
+	 * @return $this
+	 */
+	public function RemoveDeferredBlock(string $sId);
+
+	/**
+	 * Return true if there is a sub block identified by $sId
+	 *
+	 * @param string $sId
+	 *
+	 * @return bool
+	 */
+	public function HasDeferredBlock(string $sId): bool;
+
+	/**
+	 * Return the sub block identified by $sId or null if not found
+	 *
+	 * @param string $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock|null
+	 */
+	public function GetDeferredBlock(string $sId): ?iUIBlock;
+
+	/**
+	 * Return an array of all the sub blocks
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
+	 */
+	public function GetDeferredBlocks(): array;
+
+	/**
+	 * Set all sub blocks at once, replacing all existing ones
+	 *
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aDeferredBlocks
+	 *
+	 * @return $this
+	 */
+	public function SetDeferredBlocks(array $aDeferredBlocks);
+
 }

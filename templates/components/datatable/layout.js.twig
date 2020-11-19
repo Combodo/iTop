@@ -288,20 +288,16 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
 $aOptions = {
     sListId: '{{ oUIBlock.GetId() }}',
     oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
-	sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
+    sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
     iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
-	oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw}}'),
+    oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
-	//oExtraParams
+    //oExtraParams
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
     oData: {{ oUIBlock.GetAjaxData() |raw }},//ttt
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
 };
 
-//if (!typeof $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings() !== "undefined")
-if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings()) {
-    $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings("destroy");
-}
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings($aOptions);

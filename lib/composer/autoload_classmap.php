@@ -338,6 +338,7 @@ return array(
     'DashletProxy' => $baseDir . '/application/dashlet.class.inc.php',
     'DashletUnknown' => $baseDir . '/application/dashlet.class.inc.php',
     'DataTable' => $baseDir . '/application/datatable.class.inc.php',
+    'DataTableConfig' => $baseDir . '/sources/application/UI/Component/DataTable/DataTableConfig/DataTableConfig.php',
     'Datamatrix' => $vendorDir . '/combodo/tcpdf/include/barcodes/datamatrix.php',
     'DateTimeFormat' => $baseDir . '/core/datetimeformat.class.inc.php',
     'DeadLockLog' => $baseDir . '/core/log.class.inc.php',

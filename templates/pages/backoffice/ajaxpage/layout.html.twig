@@ -7,6 +7,16 @@
         {{ render_block(oLayout, {aPage: aPage}) }}
     {% endif %}
 
+    {% if aDeferredBlocks is not empty %}
+        {# TODO 3.0.0 #}
+        {# <script type="text/javascript"> #}
+        {# $('body').append('{% for oBlock in aDeferredBlocks %}{{ render_block(oBlock, {aPage: aPage})|escape_for_js_string|raw }}{% endfor %}'); #}
+        {# </script> #}
+        {% for oBlock in aDeferredBlocks %}
+            {{ render_block(oBlock, {aPage: aPage})|raw }}
+        {% endfor %}
+    {% endif %}
+
     {% block iboPageJsInlineLive %}
         {% for sJsInline in aPage.aJsInlineLive %}
             {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
@@ -16,6 +26,12 @@
         {% endfor %}
     {% endblock %}
 
+    {% if sDeferredContent %}
+        <script type="text/javascript">
+            $('body').append('{{ sDeferredContent|raw }}');
+        </script>
+    {% endif %}
+
     {% block iboPageJsFiles %}
         {% for sJsFile in aPage.aJsFiles %}
             <script type="text/javascript">
@@ -24,11 +40,6 @@
         {% endfor %}
     {% endblock %}
 
-    {% if sDeferredContent %}
-        <script type="text/javascript">
-            $('body').append('{{ sDeferredContent|raw }}');
-        </script>
-    {% endif %}
 
     {% block iboPageJsInlineOnDomReady %}
         {% for sJsInline in aPage.aJsInlineOnDomReady %}

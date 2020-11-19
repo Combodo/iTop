@@ -17,7 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Component\Form\Form;
 use Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\UI\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 
@@ -274,33 +277,34 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  */
 function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, $aExtraFormParams = array())
 {
-		$oAppContext = new ApplicationContext();
-		$iBulkActionAllowed = $oChecker->IsAllowed();
-		$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
-		if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS)
-		{
-			$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
-		}
-		else if(UR_ALLOWED_NO)
-		{
+	$oAppContext = new ApplicationContext();
+	$iBulkActionAllowed = $oChecker->IsAllowed();
+	$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
+	if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS) {
+		$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
+	} else {
+		if (UR_ALLOWED_NO) {
 			throw new ApplicationException(Dict::Format('UI:ActionNotAllowed'));
 		}
-		
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oP->add("<form method=\"post\" action=\"./UI.php\">\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES, 'UTF-8')."\">\n");
-		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-		foreach($aExtraFormParams as $sName => $sValue)
-		{
-			$oP->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n");
-		}
-		$oP->add($oAppContext->GetForForm());
-		$oBlock->Display($oP, 1, $aExtraParams);
-		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
-		$oP->add("</form>\n");
-		$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
+	}
+
+	$oForm = new Form();
+	$oForm->SetAction('./UI.php');
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sNextOperation));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $oFilter->GetClass()));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('filter', utils::HtmlEntities($oFilter->Serialize())));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+	foreach ($aExtraFormParams as $sName => $sValue) {
+		$oForm->AddSubBlock(InputFactory::MakeForHidden($sName, $sValue));
+	}
+	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
+	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
+	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
+	$oForm->AddSubBlock(ButtonFactory::MakeNeutral(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
+	$oForm->AddSubBlock(ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
+
+	$oP->AddUiBlock($oForm);
+	$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)

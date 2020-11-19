@@ -368,7 +368,7 @@ EOF;
 			$oPage->add_linked_script($sFileAbsUrl);
 		}
 
-		$oPage->RenderInlineTemplatesRecursively($oBlock);
+		$oPage->RenderInlineScriptsAndCSSRecursively($oBlock);
 		return BlockRenderer::RenderBlockTemplates($oBlock);
 	}
 

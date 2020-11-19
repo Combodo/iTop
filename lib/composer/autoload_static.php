@@ -568,6 +568,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'DashletProxy' => __DIR__ . '/../..' . '/application/dashlet.class.inc.php',
         'DashletUnknown' => __DIR__ . '/../..' . '/application/dashlet.class.inc.php',
         'DataTable' => __DIR__ . '/../..' . '/application/datatable.class.inc.php',
+        'DataTableConfig' => __DIR__ . '/../..' . '/sources/application/UI/Component/DataTable/DataTableConfig/DataTableConfig.php',
         'Datamatrix' => __DIR__ . '/..' . '/combodo/tcpdf/include/barcodes/datamatrix.php',
         'DateTimeFormat' => __DIR__ . '/../..' . '/core/datetimeformat.class.inc.php',
         'DeadLockLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',

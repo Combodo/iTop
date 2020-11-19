@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\UI\Component\DataTable;
 
 
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use DataTableConfig;
 
 /**
  * Class DataTable
@@ -35,6 +36,7 @@ class DataTableBlock extends UIContentBlock
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
+		$this->AddDeferredBlock(new DataTableConfig($this));
 	}
 
 	/**

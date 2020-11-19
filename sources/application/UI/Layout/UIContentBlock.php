@@ -33,6 +33,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	protected $aDataAttributes;
 	/** @var array */
 	protected $aSubBlocks;
+	/** @var array */
+	protected $aDeferredBlocks;
 
 	/**
 	 * UIContentBlock constructor.
@@ -45,6 +47,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 		parent::__construct($sName);
 
 		$this->aSubBlocks = [];
+		$this->aDeferredBlocks = [];
 		$this->aDataAttributes = [];
 		$this->SetCSSClasses($sContainerClass);
 	}
@@ -52,7 +55,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddHtml(string $sHtml) {
+	public function AddHtml(string $sHtml)
+	{
 		$oBlock = new Html($sHtml);
 		$this->AddSubBlock($oBlock);
 
@@ -62,7 +66,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock) {
+	public function AddSubBlock(iUIBlock $oSubBlock)
+	{
 		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
 
 		return $this;
@@ -71,7 +76,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function RemoveSubBlock(string $sId) {
+	public function RemoveSubBlock(string $sId)
+	{
 		if ($this->HasSubBlock($sId)) {
 			unset($this->aSubBlocks[$sId]);
 		}
@@ -82,28 +88,32 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function HasSubBlock(string $sId): bool {
+	public function HasSubBlock(string $sId): bool
+	{
 		return array_key_exists($sId, $this->aSubBlocks);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlock(string $sId): ?iUIBlock {
+	public function GetSubBlock(string $sId): ?iUIBlock
+	{
 		return isset($this->aSubBlocks[$sId]) ? $this->aSubBlocks[$sId] : null;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks(): array {
+	public function GetSubBlocks(): array
+	{
 		return $this->aSubBlocks;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function SetSubBlocks(array $aSubBlocks) {
+	public function SetSubBlocks(array $aSubBlocks)
+	{
 		foreach ($aSubBlocks as $oSubBlock) {
 			$this->AddSubBlock($oSubBlock);
 		}
@@ -114,7 +124,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetCSSClasses(): string {
+	public function GetCSSClasses(): string
+	{
 		return implode(' ', $this->aCSSClasses);
 	}
 
@@ -123,7 +134,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return UIContentBlock
 	 */
-	public function SetCSSClasses(string $sCSSClasses) {
+	public function SetCSSClasses(string $sCSSClasses)
+	{
 		$this->aCSSClasses = [];
 		$this->AddCSSClasses($sCSSClasses);
 
@@ -135,7 +147,8 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddCSSClasses(string $sCSSClasses) {
+	public function AddCSSClasses(string $sCSSClasses)
+	{
 		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
 			if (!empty($sCSSClass)) {
 				$this->aCSSClasses[$sCSSClass] = $sCSSClass;
@@ -174,6 +187,64 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	public function AddDataAttributes(string $sName, string $sValue): UIContentBlock
 	{
 		$this->aDataAttributes[$sName] = $sValue;
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddDeferredBlock(iUIBlock $oDeferredBlock)
+	{
+		$this->aDeferredBlocks[$oDeferredBlock->GetId()] = $oDeferredBlock;
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function RemoveDeferredBlock(string $sId)
+	{
+		if ($this->HasDeferredBlock($sId)) {
+			unset($this->aDeferredBlocks[$sId]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasDeferredBlock(string $sId): bool
+	{
+		return array_key_exists($sId, $this->aDeferredBlocks);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetDeferredBlock(string $sId): ?iUIBlock
+	{
+		return isset($this->aDeferredBlocks[$sId]) ? $this->aDeferredBlocks[$sId] : null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetDeferredBlocks(): array
+	{
+		return $this->aDeferredBlocks;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function SetDeferredBlocks(array $aDeferredBlocks)
+	{
+		foreach ($aDeferredBlocks as $oDeferredBlock) {
+			$this->AddDeferredBlock($oDeferredBlock);
+		}
+
 		return $this;
 	}
 

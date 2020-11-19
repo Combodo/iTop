@@ -18,9 +18,11 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
@@ -69,7 +71,7 @@ class WebPage implements Page
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
 	protected $bAddJSDict;
-	/** @var \Combodo\iTop\Application\UI\Layout\iUIContentBlock $oContentLayout */
+	/** @var iUIContentBlock $oContentLayout */
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
 
@@ -170,9 +172,9 @@ class WebPage implements Page
 	 * @param string $s_html
 	 * @param string $sId
 	 */
-	public function add_at_the_end($s_html, $sId = '')
+	public function add_at_the_end($s_html, $sId = null)
 	{
-		$this->s_deferred_content .= $s_html;
+		$this->oContentLayout->AddDeferredBlock(new Html($s_html, $sId));
 	}
 
 	/**
@@ -711,7 +713,7 @@ class WebPage implements Page
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
 		$sInlineScript = trim($oBlockRenderer->RenderJsInline());
@@ -725,8 +727,23 @@ class WebPage implements Page
 		}
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineTemplatesRecursively($oSubBlock);
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
 		}
+
+		foreach ($oBlock->GetDeferredBlocks() as $oSubBlock) {
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
+		}
+	}
+
+	public function GetDeferredBlocks(iUIBlock $oBlock): array
+	{
+		$aDeferredBlocks = $oBlock->GetDeferredBlocks();
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$aDeferredBlocks = array_merge($aDeferredBlocks, $this->GetDeferredBlocks($oSubBlock));
+		}
+
+		return $aDeferredBlocks;
 	}
 
 	/**
@@ -745,6 +762,7 @@ class WebPage implements Page
 		$aData = [];
 
 		$aData['oLayout'] = $this->oContentLayout;
+		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
 		// CSS files
 		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
@@ -756,7 +774,7 @@ class WebPage implements Page
 		}
 
 		// Inline Templates
-		$this->RenderInlineTemplatesRecursively($this->oContentLayout);
+		$this->RenderInlineScriptsAndCSSRecursively($this->oContentLayout);
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [

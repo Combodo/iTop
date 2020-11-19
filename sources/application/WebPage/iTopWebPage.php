@@ -401,7 +401,7 @@ JS
 		}
 	});
 	docWidth = $(document).width();
-	$('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
+	// $('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
 	
@@ -770,14 +770,14 @@ EOF;
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function RenderInlineTemplatesRecursively(iUIBlock $oBlock): void
+	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
 		$this->add_init_script($oBlockRenderer->RenderJsInline());
 		$this->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineTemplatesRecursively($oSubBlock);
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
 		}
 	}
 
@@ -839,6 +839,10 @@ EOF;
 		$aData['aLayouts']['oTopBar'] = $this->GetTopBarLayout();
 		// - Prepare content
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
+		$aData['aDeferredBlocks'] = array_merge($this->GetDeferredBlocks($this->GetContentLayout()),
+			$this->GetDeferredBlocks($this->GetNavigationMenuLayout()),
+			$this->GetDeferredBlocks($this->GetTopBarLayout()));
+
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
 		/** @var \Combodo\iTop\Application\UI\UIBlock|string $oLayout */
@@ -856,7 +860,7 @@ EOF;
 				$this->add_linked_script($sFileAbsUrl);
 			}
 
-			$this->RenderInlineTemplatesRecursively($oLayout);
+			$this->RenderInlineScriptsAndCSSRecursively($oLayout);
 		}
 
 		// Components

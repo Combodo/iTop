@@ -228,9 +228,9 @@ $(function()
 		_destroy: function()
 		{
 			this.element.removeClass('itop-datatable');
-			
-			$('#sfl_'+this.options.sListId).remove();
-			$('#datatable_dlg_'+this.options.sListId).remove();
+
+			$('#sfl_' + this.options.sListId).remove();
+			$('#datatable_dlg_' + this.options.sListId).remove();
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function()
@@ -274,32 +274,27 @@ $(function()
 			dlgElement.find('input[name=page_size]').val(iPageSize);
 			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.options.oColumns });
 		},
-		_saveDlgState: function()
-		{
-			this.originalState = {};
-			for(k in this.aDlgStateParams)
-			{
-				this.originalState[this.aDlgStateParams[k]] = this.options[this.aDlgStateParams[k]];
-			}
-			this.originalState.oFields = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
-		},
-		_restoreDlgState: function()
-		{
-			var dlgElement = $('#datatable_dlg_'+this.options.sListId);
+	_saveDlgState: function () {
+		this.originalState = {};
+		for (k in this.aDlgStateParams) {
+			this.originalState[this.aDlgStateParams[k]] = this.options[this.aDlgStateParams[k]];
+		}
+		this.originalState.oFields = $('#datatable_dlg_' + this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
+	},
+	_restoreDlgState: function () {
+		var dlgElement = $('#datatable_dlg_' + this.options.sListId);
 
-			for(k in this.aDlgStateParams)
-			{
-				this._setOption(this.aDlgStateParams[k], this.originalState[this.aDlgStateParams[k]]);
-				this._refresh();
-			}
-			
-			dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
-			
-			dlgElement.find(':itop-fieldsorter').fieldsorter('option', { fields: this.originalState.oFields });
+		for (k in this.aDlgStateParams) {
+			this._setOption(this.aDlgStateParams[k], this.originalState[this.aDlgStateParams[k]]);
+		}
 
-			$('#datatable_dlg_'+this.options.sListId).unblock();
+		dlgElement.find('input[name=page_size]').val(this.originalState.iDefaultPageSize);
 
-		},
+		dlgElement.find(':itop-fieldsorter').fieldsorter('option', {fields: this.originalState.oFields});
+
+		dlgElement.unblock();
+
+	},
 		IsDialogOpen: function()
 		{
 			var oDlgOpen = $('#datatable_dlg_'+this.options.sListId+' :visible');

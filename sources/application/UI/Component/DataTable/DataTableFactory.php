@@ -10,7 +10,6 @@ use ApplicationException;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
-use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
@@ -35,7 +34,7 @@ class DataTableFactory
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sListId
-	 * @param \CMDBObjectSet $oSet
+	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Panel\Panel
@@ -50,7 +49,7 @@ class DataTableFactory
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	public static function MakeForResult(WebPage $oPage, string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function MakeForResult(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
 		$oDataTable = DataTableFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
@@ -101,7 +100,7 @@ class DataTableFactory
 	 * Make a basis Panel component
 	 *
 	 * @param string $sListId
-	 * @param \CMDBObjectSet $oSet
+	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
 	 * @return DataTableBlock
@@ -112,7 +111,7 @@ class DataTableFactory
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public static function MakeForRendering(string $sListId, CMDBObjectSet $oSet, $aExtraParams = array())
+	public static function MakeForRendering(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = new DataTableBlock('datatable_'.$sListId);
 		///////////////////////////////////////////////////
@@ -474,7 +473,6 @@ class DataTableFactory
 
 		$aColumnDefinition = [];
 		$aSortOrder=[];
-		$aSortDatable=[];
 		$iIndexColumn=0;
 		if($sSelectMode!="") {
 			$iIndexColumn++;

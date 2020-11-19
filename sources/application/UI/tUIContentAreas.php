@@ -63,12 +63,32 @@ trait tUIContentAreas {
 	 *
 	 * @return $this
 	 */
-	protected function SetContentAreaBlocks(string $sAreaId, array $aBlocks) {
+	protected function SetContentAreaBlocks(string $sAreaId, array $aBlocks)
+	{
 		if (!isset($this->aContentAreasBlocks[$sAreaId])) {
 			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
 		}
 
 		$this->aContentAreasBlocks[$sAreaId]->SetSubBlocks($aBlocks);
+
+		return $this;
+	}
+
+	/**
+	 * Set all block for a content area at once, replacing all existing ones.
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 */
+	protected function SetContentAreaDeferredBlocks(string $sAreaId, array $aBlocks)
+	{
+		if (!isset($this->aContentAreasBlocks[$sAreaId])) {
+			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
+		}
+
+		$this->aContentAreasBlocks[$sAreaId]->SetDeferredBlocks($aBlocks);
 
 		return $this;
 	}
@@ -81,7 +101,8 @@ trait tUIContentAreas {
 	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 * @throws \Combodo\iTop\Application\UI\UIException
 	 */
-	protected function GetContentAreaBlocks(string $sAreaId): array {
+	protected function GetContentAreaBlocks(string $sAreaId): array
+	{
 		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
 			throw new UIException($this, Dict::Format('UIBlock:Error:CannotGetBlocks', $sAreaId, $this->GetId()));
 		}
@@ -98,12 +119,33 @@ trait tUIContentAreas {
 	 *
 	 * @return $this
 	 */
-	protected function AddBlockToContentArea(string $sAreaId, iUIBlock $oBlock) {
+	protected function AddBlockToContentArea(string $sAreaId, iUIBlock $oBlock)
+	{
 		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
 			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
 		}
 
 		$this->aContentAreasBlocks[$sAreaId]->AddSubBlock($oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add $oBlock to the $sAreaId content area.
+	 * Note that if the area doesn't exist yet, it is created. Also if a block with the same ID already exists, it will be replaced.
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	protected function AddDeferredBlockToContentArea(string $sAreaId, iUIBlock $oBlock)
+	{
+		if (!array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
+			$this->aContentAreasBlocks[$sAreaId] = new UIContentBlock($sAreaId);
+		}
+
+		$this->aContentAreasBlocks[$sAreaId]->AddDeferredBlock($oBlock);
 
 		return $this;
 	}

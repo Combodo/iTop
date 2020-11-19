@@ -165,11 +165,12 @@ EOF
 		}
 		$this->outputCollapsibleSectionInit();
 
-		$this->RenderInlineTemplatesRecursively($this->oContentLayout);
+		$this->RenderInlineScriptsAndCSSRecursively($this->oContentLayout);
 
 
 		$aData = [];
 		$aData['oLayout'] = $this->oContentLayout;
+		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
@@ -341,7 +342,7 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function add_at_the_end($s_html, $sId = '')
+	public function add_at_the_end($s_html, $sId = null)
 	{
 		if ($sId != '') {
 			$this->add_script("$('#{$sId}').remove();"); // Remove any previous instance of the same Id

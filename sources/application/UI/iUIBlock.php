@@ -87,6 +87,14 @@ interface iUIBlock {
 	public function GetSubBlocks();
 
 	/**
+	 * Return an array of iUIBlock to add at the end of the page
+	 * Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
+	 *
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
+	 */
+	public function GetDeferredBlocks(): array;
+
+	/**
 	 * Return an array of the JS files URL necessary for the block and all its sub blocks.
 	 * URLs are relative unless the $bAbsolutePath is set to true.
 	 *

@@ -106,14 +106,16 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetCssTemplateRelPath() {
+	public static function GetCssTemplateRelPath()
+	{
 		return static::CSS_TEMPLATE_REL_PATH;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetCssFilesRelPaths() {
+	public static function GetCssFilesRelPaths()
+	{
 		return static::CSS_FILES_REL_PATH;
 	}
 
@@ -123,14 +125,16 @@ abstract class UIBlock implements iUIBlock
 	 * @return string
 	 * @see static::BLOCK_CODE
 	 */
-	public function GetBlockCode() {
+	public function GetBlockCode()
+	{
 		return static::BLOCK_CODE;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetId() {
+	public function GetId()
+	{
 		return $this->sId;
 	}
 
@@ -138,7 +142,17 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
 	 */
-	public function GetSubBlocks() {
+	public function GetSubBlocks()
+	{
+		return [];
+	}
+
+	/**
+	 * @inheritDoc
+	 * @return \Combodo\iTop\Application\UI\iUIBlock[]
+	 */
+	public function GetDeferredBlocks(): array
+	{
 		return [];
 	}
 
@@ -146,7 +160,8 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false) {
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false)
+	{
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, $bAbsoluteUrl);
 	}
 
@@ -154,7 +169,8 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false) {
+	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false)
+	{
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, $bAbsoluteUrl);
 	}
 
@@ -162,7 +178,8 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetJsTemplateRelPathRecursively(): array {
+	public function GetJsTemplateRelPathRecursively(): array
+	{
 		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
 	}
 
@@ -170,7 +187,8 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetCssTemplateRelPathRecursively(): array {
+	public function GetCssTemplateRelPathRecursively(): array
+	{
 		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
 	}
 

@@ -48,6 +48,13 @@
         <div style="display:none" id="ajax_content"></div>
     </div>
 {% endblock %}
+
+{% block iboDeferredBlocks %}
+    {% for oBlock in aDeferredBlocks %}
+        {{ render_block(oBlock, {aPage: aPage}) }}
+    {% endfor %}
+{% endblock %}
+
 {% block iboPageJsFiles %}
     {% for sJsFile in aPage.aJsFiles %}
         <script type="text/javascript" src="{{ sJsFile|add_itop_version }}"></script>

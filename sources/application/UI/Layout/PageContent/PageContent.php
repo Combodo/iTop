@@ -225,12 +225,99 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks(): array {
+	public function GetSubBlocks(): array
+	{
 		$aSubBlocks = [];
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$aSubBlocks = array_merge($aSubBlocks, $oContentArea->GetSubBlocks());
 		}
 
 		return $aSubBlocks;
+	}
+
+	public function GetDeferredBlocks(): array
+	{
+		$aSubBlocks = [];
+		foreach ($this->GetContentAreas() as $oContentArea) {
+			$aSubBlocks = array_merge($aSubBlocks, $oContentArea->GetDeferredBlocks());
+		}
+
+		return $aSubBlocks;
+	}
+
+	/**
+	 * Add the $oDeferredBlock directly in the main area
+	 *
+	 * @inheritDoc
+	 */
+	public function AddDeferredBlock(iUIBlock $oDeferredBlock)
+	{
+		$this->AddDeferredBlockToContentArea(static::ENUM_CONTENT_AREA_MAIN, $oDeferredBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Remove a specified subBlock from all the areas
+	 *
+	 * @param string $sId
+	 *
+	 * @return $this
+	 */
+	public function RemoveDeferredBlock(string $sId)
+	{
+		foreach ($this->GetContentAreas() as $oContentArea) {
+			$oContentArea->RemoveDeferredBlock($sId);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Check if the specified subBlock is within one of all the areas
+	 *
+	 * @param string $sId
+	 *
+	 * @return bool
+	 */
+	public function HasDeferredBlock(string $sId): bool
+	{
+		foreach ($this->GetContentAreas() as $oContentArea) {
+			if ($oContentArea->HasDeferredBlock($sId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get a specific subBlock within all the areas
+	 *
+	 * @inheritDoc
+	 */
+	public function GetDeferredBlock(string $sId): ?iUIBlock
+	{
+		foreach ($this->GetContentAreas() as $oContentArea) {
+			$oDeferredBlock = $oContentArea->GetDeferredBlock($sId);
+			if (!is_null($oDeferredBlock)) {
+				return $oDeferredBlock;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Set the MAIN AREA subBlocks
+	 *
+	 * @inheritDoc
+	 * @return $this|\Combodo\iTop\Application\UI\Layout\iUIContentBlock
+	 */
+	public function SetDeferredBlocks(array $aDeferredBlocks): iUIContentBlock
+	{
+		$this->SetContentAreaDeferredBlocks(self::ENUM_CONTENT_AREA_MAIN, $aDeferredBlocks);
+
+		return $this;
 	}
 }
