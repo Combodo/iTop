@@ -1,0 +1,23 @@
+<form id="{{ oUIBlock.GetId() }}"
+      class="ibo-caselog-entry-form {% if oUIBlock.IsSubmitAutonomous %}ibo-is-closed{% endif %}"
+      data-role="ibo-caselog-entry-form"
+      data-submit-mode="{{ oUIBlock.GetSubmitMode() }}"
+      data-container-tab-type="{{ oUIBlock.GetContainerTabType() }}"
+      method="post">
+	<div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
+		{{ render_block(oUIBlock.GetTextInput(), {aPage: aPage}) }}
+	</div>
+	<div class="ibo-caselog-entry-form--actions">
+		<div class="ibo-caselog-entry-form--action-buttons--left-actions" data-role="ibo-caselog-entry-form--action-buttons--left-actions">
+			{% for TextInputActionButton in oUIBlock.GetExtraActionButtons() %}
+				{{ render_block(TextInputActionButton, {aPage: aPage}) }}
+			{% endfor %}
+		</div>
+		<div class="ibo-caselog-entry-form--action-buttons--right-actions" data-role="ibo-caselog-entry-form--action-buttons--right-actions">
+			{% for FormActionButton in oUIBlock.GetMainActionButtons() %}
+				{{ render_block(FormActionButton, {aPage: aPage}) }}
+			{% endfor %}
+			{{ render_block(oUIBlock.GetSendButtonPopoverMenu(), {aPage: aPage}) }}
+		</div>
+	</div>
+</form>

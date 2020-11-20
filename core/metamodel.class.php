@@ -1553,6 +1553,7 @@ abstract class MetaModel
 	{
 		$aLinkedSets = array();
 		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
+			// Note: Careful, this will only return SUB-classes, which does NOT include AttributeLinkedset itself! We might want to use "is_a()" instead.
 			if (is_subclass_of($oAtt, 'AttributeLinkedSet')) {
 				$aLinkedSets[$sAttCode] = $oAtt;
 			}
@@ -1598,6 +1599,27 @@ abstract class MetaModel
 		} else {
 			return null;
 		}
+	}
+
+	/** @var array Cache for caselog attributes of the classes */
+	protected static $m_aCaseLogsAttributesCache = [];
+
+	/**
+	 * Return an array of attribute codes for the caselogs attributes of $sClass
+	 *
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetCaseLogs(string $sClass)
+	{
+		if (!isset(static::$m_aCaseLogsAttributesCache[$sClass])) {
+			static::$m_aCaseLogsAttributesCache[$sClass] = self::GetAttributesList($sClass, ['AttributeCaseLog']);
+		}
+
+		return static::$m_aCaseLogsAttributesCache[$sClass];
 	}
 
 	/** @var array */

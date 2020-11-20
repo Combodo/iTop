@@ -244,27 +244,4 @@ class PopoverMenuFactory
 		return $oMenu;
 	}
 
-	public static function MakeMenuForActivityNewEntryFormSubmit(array $aCaseLogs): PopoverMenu
-	{
-		$oMenu = new PopoverMenu();
-		$sMenuId = $oMenu->GetId();
-
-		$aItems = [];
-		foreach ($aCaseLogs as $sCaseLogAttCode => $sCaseLogLabel) {
-			// JS
-			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-				new JSPopupMenuItem(
-					$sCaseLogAttCode,
-					$sCaseLogLabel,
-					<<<JS
-$(this).parents('[data-role="ibo-activity-new-entry-form--action-buttons--right-actions"]').trigger('submit', ['caselog', '$sCaseLogAttCode']);
-JS
-				));
-		}
-
-		$oMenu->AddSection('ibo-activity-new-entry-new-entry--submit--caselogs')
-			->SetItems('ibo-activity-new-entry-new-entry--submit--caselogs', $aItems);
-
-		return $oMenu;
-	}
 }

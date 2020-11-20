@@ -24,7 +24,7 @@ use cmdbAbstractObject;
 use CMDBChangeOpSetAttributeCaseLog;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\EditsEntry;
-use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryFormFactory\ActivityNewEntryFormFactory;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryFormFactory\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -65,10 +65,14 @@ class ActivityPanelFactory
 		$oActivityPanel = new ActivityPanel($oObject);
 		$oActivityPanel->SetObjectMode($sMode);
 
-		// Retrieve case logs entries
+		// Prepare caselogs
 		$aCaseLogAttCodes = array_keys($oActivityPanel->GetCaseLogTabs());
 		foreach($aCaseLogAttCodes as $sCaseLogAttCode)
 		{
+			// Add new entry block
+			$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+
+			// Retrieve case logs entries
 			/** @var \ormCaseLog $oCaseLog */
 			$oCaseLog = $oObject->Get($sCaseLogAttCode);
 			foreach($oCaseLog->GetAsArray() as $aOrmEntry)
@@ -78,16 +82,13 @@ class ActivityPanelFactory
 			}
 		}
 
-		if($oActivityPanel->HasCaseLogTabs())
-		{
-			//TODO 3.0.0 check write rights
-			$aCaseLogsForNewEntryForm = [];
-			foreach ($aCaseLogAttCodes as $sCaseLogAttCode){
-				$aCaseLogsForNewEntryForm[$sCaseLogAttCode] = MetaModel::GetLabel($sObjClass, $sCaseLogAttCode);
-			}
-			
-			$oActivityPanel->SetNewEntryForm(ActivityNewEntryFormFactory::MakeForObjectDetailsActivityPanel($aCaseLogsForNewEntryForm));
+		//TODO 3.0.0: Check write rights
+		if($oActivityPanel->HasCaseLogTabs()) {
+
+
 		}
+		$oActivityPanel->SetActivityTabEntryForm(CaseLogEntryFormFactory::MakeForActivityTab($oObject, $sMode));
+
 		// Retrieve history changes (including case logs entries)
 		// - Prepare query to retrieve changes
 		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');

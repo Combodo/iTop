@@ -38,8 +38,9 @@ $(function()
 			js_selectors:
 			{
 				panel_size_toggler: '[data-role="ibo-activity-panel--size-toggler"]',
-				tab: '[data-role="ibo-activity-panel--tab"]',
+				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
+				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 				activity_tab_filter: '[data-role="ibo-activity-panel--activity-filter"]',
 				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
 				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
@@ -121,17 +122,25 @@ $(function()
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
-				const oTabElem = oTabTitleElem.closest(this.js_selectors.tab);
+				const oTabTogglerElem = oTabTitleElem.closest(this.js_selectors.tab_toggler);
+				const sTabType = oTabTogglerElem.attr('data-tab-type');
 
-				this.element.find(this.js_selectors.tab).removeClass(this.css_classes.is_active);
-				oTabElem.addClass(this.css_classes.is_active);
+				// Show tab toggler
+				this.element.find(this.js_selectors.tab_toggler).removeClass(this.css_classes.is_active);
+				oTabTogglerElem.addClass(this.css_classes.is_active);
 
-				if(oTabElem.attr('data-tab-type') === 'caselog')
+				// Show toolbar and entries
+				this.element.find(this.js_selectors.tab_toolbar).removeClass(this.css_classes.is_active);
+				if(sTabType === 'caselog')
 				{
-					this._ShowCaseLogTab(oTabElem.attr('data-caselog-attribute-code'))
+					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
+
+					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="caselog"][data-caselog-attribute-code="' + sCaselogAttCode + '"]').addClass(this.css_classes.is_active);
+					this._ShowCaseLogTab(sCaselogAttCode);
 				}
 				else
 				{
+					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="activity"]').addClass(this.css_classes.is_active);
 					this._ShowActivityTab();
 				}
 			},
@@ -141,12 +150,12 @@ $(function()
 			},
 			_onCaseLogOpenAllClick: function(oIconElem)
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab).attr('data-caselog-attribute-code');
+				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
 				this._OpenAllMessages(sCaseLogAttCode);
 			},
 			_onCaseLogCloseAllClick: function(oIconElem)
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab).attr('data-caselog-attribute-code');
+				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
 				this._CloseAllMessages(sCaseLogAttCode);
 			},
 			_onCaseLogClosedMessageClick: function(oEntryElem)
@@ -170,6 +179,15 @@ $(function()
 			},
 
 			// Methods
+			// - Helpers on host object
+			_GetHostObjectClass: function()
+			{
+				return this.element.attr('data-object-class');
+			},
+			_GetHostObjectID: function()
+			{
+				return this.element.attr('data-object-id');
+			},
 			// - Helpers on dates
 			/**
 			 * Reformat date times to be relative (only if they are not too far in the past)
@@ -198,7 +216,6 @@ $(function()
 				this._HideAllEntries();
 				this.element.find(this.js_selectors.entry+'[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_hidden);
 				this._UpdateEntryGroupsVisibility();
-				this.element.trigger('show-caselog-tab', ['caselog', sCaseLogAttCode]);
 			},
 			_ShowActivityTab: function()
 			{
@@ -206,7 +223,6 @@ $(function()
 				this._OpenAllMessages();
 				this._ShowAllEntries();
 				this._ApplyEntryFilters();
-				this.element.trigger('show-caselog-tab', 'activity');
 			},
 			// - Helpers on messages
 			_OpenMessage: function(oEntryElem)
@@ -311,7 +327,7 @@ $(function()
 			_GetCaseLogRank: function(sCaseLog)
 			{
 				let iIdx = 0;
-				let oCaselogTab = this.element.find(this.js_selectors.tab +
+				let oCaselogTab = this.element.find(this.js_selectors.tab_toggler +
 					'[data-tab-type="caselog"]' +
 					'[data-caselog-attribute-code="'+ sCaseLog +'"]'
 				);

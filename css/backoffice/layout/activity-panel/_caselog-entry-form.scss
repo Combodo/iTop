@@ -3,14 +3,14 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-activity-new-entry-form--width: 100% !default;
-$ibo-activity-new-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
-$ibo-activity-new-entry-form--padding: $ibo-activity-panel--tab-toolbar--height 14px 14px 14px !default;
+$ibo-caselog-entry-form--width: 100% !default;
+$ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
 
-$ibo-activity-new-entry-form--actions--margin-top: 5px !default;
+$ibo-caselog-entry-form--actions--margin-top: 6px !default;
+$ibo-caselog-entry-form--actions--margin-bottom: 8px !default;
 
 $ibo-activity-panel--body--add-caselog-entry--toggler--right: 4px !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--margin-top: calc(#{$ibo-activity-panel--tab-toolbar--height} + 4px) !default;
+$ibo-activity-panel--body--add-caselog-entry--toggler--margin-top: calc(#{$ibo-activity-panel--tab-toolbar-actions--height} + 4px) !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--diameter: 36px !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--background-color: $ibo-color-primary-600 !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--color: $ibo-color-white-100 !default;
@@ -21,23 +21,21 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height: 100% !defau
 $ibo-activity-panel--body--add-caselog-entry--toggler--icon--width: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size: 16px !default;
 $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !default;
-.ibo-activity-new-entry-form{
-	$ibo-activity-new-entry-form--width: 100%;
-	background-color: $ibo-activity-new-entry-form--background-color;
-	padding: $ibo-activity-new-entry-form--padding;
-	&.ibo-is-opened{
-		display: block;
-	}
+.ibo-caselog-entry-form{
+	display: block;
+	width: 100%;
+	background-color: $ibo-caselog-entry-form--background-color;
+
 	&.ibo-is-closed{
 		display: none;
 	}
 }	
-.ibo-activity-new-entry-form--actions{
+.ibo-caselog-entry-form--actions{
 	display: flex;
 	justify-content: space-between;
-	margin-top: $ibo-activity-new-entry-form--actions--margin-top;
+	margin-top: $ibo-caselog-entry-form--actions--margin-top;
+	margin-bottom: $ibo-caselog-entry-form--actions--margin-bottom;
 }
-
 
 .ibo-activity-panel--body--add-caselog-entry--toggler{
 	@extend %ibo-baseline-centered-content;
@@ -67,6 +65,6 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !
 		display: none;
 	}
 }
-.ibo-activity-new-entry-form--action-buttons--right-actions > .ibo-popover-menu{
+.ibo-caselog-entry-form--action-buttons--right-actions > .ibo-popover-menu{
 	z-index: 1;
 }

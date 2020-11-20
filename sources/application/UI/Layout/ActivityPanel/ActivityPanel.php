@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\CaseLogEntry;
-use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm;
+use Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
 use Combodo\iTop\Application\UI\UIBlock;
 use DBObject;
 use Exception;
@@ -65,8 +65,10 @@ class ActivityPanel extends UIBlock
 	protected $bAreEntriesSorted;
 	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
 	protected $bHasLifecycle;
-	/** @var \Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityNewEntryForm\ActivityNewEntryForm $NewEntryForm */
-	protected $oNewEntryForm;
+	/** @var \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oActivityTabEntryForm New entry form for the activity tab which is different from the case log tabs */
+	protected $oActivityTabEntryForm;
+	/** @var \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
+	protected $aCaseLogTabsEntryForms;
 
 	/**
 	 * ActivityPanel constructor.
@@ -83,6 +85,7 @@ class ActivityPanel extends UIBlock
 		parent::__construct($sId);
 
 		$this->InitializeCaseLogTabs();
+		$this->InitializeCaseLogTabsEntryForms();
 		$this->SetObject($oObject);
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
 		$this->SetEntries($aEntries);
@@ -105,7 +108,9 @@ class ActivityPanel extends UIBlock
 
 		// Initialize the case log tabs
 		$this->InitializeCaseLogTabs();
-		$aCaseLogAttCodes = MetaModel::GetAttributesList($sObjectClass, ['AttributeCaseLog']);
+		$this->InitializeCaseLogTabsEntryForms();
+
+		$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass);
 		foreach($aCaseLogAttCodes as $sCaseLogAttCode)
 		{
 			$this->AddCaseLogTab($sCaseLogAttCode);
@@ -460,6 +465,67 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * Empty the caselogs entry forms
+	 *
+	 * @return $this
+	 */
+	protected function InitializeCaseLogTabsEntryForms()
+	{
+		$this->aCaseLogTabsEntryForms = [];
+		return $this;
+	}
+
+	/**
+	 * Return all entry forms for all case log tabs
+	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[]
+	 */
+	public function GetCaseLogTabsEntryForms(): array
+	{
+		return $this->aCaseLogTabsEntryForms;
+	}
+
+	/**
+	 * Set the $oCaseLogEntryForm for the $sCaseLogId tab.
+	 * Note: If there is no caselog for that ID, it will proceed silently.
+	 *
+	 * @param string                                                                              $sCaseLogId
+	 * @param \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oCaseLogEntryForm
+	 *
+	 * @return $this
+	 */
+	public function SetCaseLogTabEntryForm(string $sCaseLogId, CaseLogEntryForm $oCaseLogEntryForm)
+	{
+		if ($this->HasCaseLogTab($sCaseLogId)){
+			$this->aCaseLogTabsEntryForms[$sCaseLogId] = $oCaseLogEntryForm;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Return the caselog entry form for the $sCaseLogId tab
+	 *
+	 * @param string $sCaseLogId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm
+	 */
+	public function GetCaseLogTabEntryForm(string $sCaseLogId)
+	{
+		return $this->aCaseLogTabsEntryForms[$sCaseLogId];
+	}
+
+	/**
+	 * @param string $sCaseLogId
+	 *
+	 * @return bool
+	 */
+	public function HasCaseLogTabEntryForm(string $sCaseLogId): bool
+	{
+		return !empty($this->aCaseLogTabsEntryForms[$sCaseLogId]);
+	}
+
+	/**
 	 * Return true if the host object has a lifecycle
 	 *
 	 * @return bool
@@ -480,31 +546,59 @@ class ActivityPanel extends UIBlock
 		$oDateTimeFormat = AttributeDateTime::GetFormat();
 		return $oDateTimeFormat->ToMomentJS();
 	}
-	
-	public function GetNewEntryForm()
+
+	/**
+	 * Return the entry form for the activity tab
+	 *
+	 * @see $oActivityTabEntryForm
+	 * @return \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm
+	 */
+	public function GetActivityTabEntryForm(): CaseLogEntryForm
 	{
-		return $this->oNewEntryForm;
-	}
-	
-	public function SetNewEntryForm($oNewEntryForm)
-	{
-		$this->oNewEntryForm = $oNewEntryForm;
-		return $this;
-	}
-	
-	public function HasNewEntryForm()
-	{
-		return $this->oNewEntryForm !== null;
+		return $this->oActivityTabEntryForm;
 	}
 
+	/**
+	 * Set the entry form for the activity tab
+	 *
+	 * @param \Combodo\iTop\Application\UI\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oCaseLogEntryForm
+	 * @see $oActivityTabEntryForm
+	 *
+	 * @return $this
+	 *
+	 */
+	public function SetActivityTabEntryForm(CaseLogEntryForm $oCaseLogEntryForm)
+	{
+		$this->oActivityTabEntryForm = $oCaseLogEntryForm;
+		return $this;
+	}
+
+	/**
+	 * Return true is there is an entry form for the activity tab
+	 *
+	 * @return bool
+	 */
+	public function HasActivityTabEntryForm()
+	{
+		return $this->oActivityTabEntryForm !== null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function GetSubBlocks()
 	{
 		$aSubBlocks = array();
-		if ($this->HasNewEntryForm())
-		{
-			$oNewEntryForm = $this->GetNewEntryForm();
+
+		foreach($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
+			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
+		}
+
+		if ($this->HasActivityTabEntryForm()) {
+			$oNewEntryForm = $this->GetActivityTabEntryForm();
 			$aSubBlocks[$oNewEntryForm->GetId()] = $oNewEntryForm;
 		}
+
 		return $aSubBlocks;
 	}
 }

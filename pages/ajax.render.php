@@ -2968,7 +2968,7 @@ EOF
 			$sClass = utils::ReadPostedParam('class', '', 'class');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
-			// TODO 3.0.0 Handle transactions token
+			// TODO 3.0.0 Handle transactions token which is not passed yet
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			$sCaseLogAttCode = utils::ReadPostedParam('caselog_attcode', '');
 			$sCaseLogNewEntry = utils::ReadPostedParam('caselog_new_entry', '', 'raw');
