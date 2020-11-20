@@ -168,18 +168,3 @@ $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-pane
 .ibo-datatable-panel > .ibo-panel--body {
 	padding: $ibo-datatable-panel--body--padding;
 }
-.ibo-criterion-area{
-	font-size: $ibo-font-size-50;
-}
-.ibo-search-form{
-	padding-top: $ibo-panel--spacing-top ;
-}
-
-.ibo-form-group{
-	position: fixed;
-}
-
-.sf_more_criterion.opened > .sfm_content{
-	position: fixed !important;
-	left: auto !important;
-}

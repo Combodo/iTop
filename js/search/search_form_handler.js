@@ -760,7 +760,7 @@ $(function()
 			// Make placeholder if nothing yet
 			if(oResultAreaElem.html() === '')
 			{
-				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button">' + Dict.S('UI:Button:Search') + '<span class="fas fa-search"></span></button></p></div>');
+				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button"><span class="fas fa-search"></span>' + Dict.S('UI:Button:Search') + '</button></p></div>');
 				oResultAreaElem.find('button').on('click', function(){
 					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();

@@ -973,860 +973,860 @@
 		margin-top: 0;
 	}
 
-	/* Search forms v2 */
-	.search_box {
-		box-sizing: border-box;
-		position: relative;
-		z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
-		text-align: center; /* Used when form is closed */
-
-		/* Sizing reset */
-		* {
-			box-sizing: border-box;
-		}
-	}
-
-	.search_form_handler {
+	///* Search forms v2 */
+	//.search_box {
+	//	box-sizing: border-box;
 	//	position: relative;
-	//	z-index: 10;
-	//	width: 100%;
-	//	margin-left: auto;
-	//	margin-right: auto;
-	//	font-size: 12px;
-	//	text-align: left; /* To compensate .search_box:text-align */
-	//	border: 1px solid $search-form-container-bg-color;
-		//transition: width 0.3s ease-in-out;
-
-		/* Sizing reset */
-		* {
-			box-sizing: border-box;
-		}
-
-		/* Hyperlink reset */
-		a {
-			color: inherit;
-			text-decoration: none;
-		}
-
-		/* Input reset */
-		input[type="text"],
-		select {
-			padding: 1px 2px;
-		}
-
-		&:not(.closed) {
-			.sf_title {
-				.sft_short {
-					display: none;
-				}
-
-				.sft_hint,
-				.sfobs_hint,
-				.sft_toggler {
-					margin-top: 4px;
-				}
-
-				.sft_toggler {
-					transform: rotateX(180deg);
-					transition: transform 0.5s linear;
-				}
-			}
-		}
-
-		&.closed {
-			margin-bottom: 0.5em;
-			width: 150px;
-			overflow: hidden;
-			border-radius: 4px;
-			background-color: $complement-color;
-
-			.sf_criterion_area {
-				height: 0;
-				opacity: 0;
-				padding: 0;
-			}
-
-			.sf_title {
-				padding: 6px 8px;
-				text-align: center;
-				font-size: 12px;
-
-				.sft_long {
-					display: none;
-				}
-
-				.sft_hint,
-				.sfobs_hint {
-					display: none;
-				}
-			}
-		}
-
-		&:not(.no_auto_submit) {
-			.sft_hint {
-				display: none;
-			}
-
-			.sfc_fg_apply {
-				display: none;
-			}
-		}
-
-		&.no_auto_submit {
-			.sfc_fg_search {
-				display: none;
-			}
-
-			.sft_hint {
-				display: inline-block;
-			}
-		}
-
-
-		&:not(.hide_obsolete_data) {
-			.sfobs_hint {
-				display: none;
-			}
-		}
-
-		&.hide_obsolete_data {
-			.sfobs_hint {
-				display: inline-block;
-			}
-		}
-
-		&.hide_obsolete_data.no_auto_submit {
-			.sfobs_hint {
-				margin-left: 30px;
-			}
-
-		}
-
-		.sf_title {
-			transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
-			padding: 8px 10px;
-			margin: 0;
-			color: $search-form-container-color;
-			background-color: $search-form-container-bg-color;
-			cursor: pointer;
-
-			.sft_hint,
-			.sfobs_hint {
-				font-size: 8pt;
-				font-style: italic;
-			}
-
-			.sft_toggler {
-				margin-left: 0.7em;
-				transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
-
-				&:hover {
-					color: $gray-extra-light;
-				}
-			}
-		}
-
-		.sf_message {
-			display: none;
-			margin: 8px 8px 0px 8px;
-			border-radius: 0px;
-		}
-
-		.sf_criterion_area {
-			/*display: none;*/
-			padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
-			background-color: $white;
-
-			.sf_criterion_row {
-
-				&:not(:first-child) {
-					margin-top: 20px;
-
-					&::before {
-						content: "";
-						position: absolute;
-						top: -12px;
-						left: 0px;
-						width: 100%;
-						border-top: 1px solid $search-criteria-box-border-color;
-					}
-
-					&::after {
-						content: "or"; /* TODO: Make this into a dict entry */
-						position: absolute;
-						top: -20px;
-						left: 8px;
-						padding-left: 5px;
-						padding-right: 5px;
-						color: $gray-light;
-						background-color: $white; /* Must match .sf_criterion_area:background-color */
-					}
-				}
-
-				.sf_criterion_group {
-					display: inline;
-					.sfc_fg_button,
-					.sfc_header {
-						border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
-						border-radius: 3px;
-					}
-				}
-			}
-
-			/* Common style between criterion and more criterion */
-			.search_form_criteria,
-			.sf_more_criterion,
-			.sf_button {
-				position: relative;
-				display: inline-block;
-				margin-right: 10px;
-				margin-bottom: 5px;
-				vertical-align: top;
-
-				&.opened {
-					margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
-
-					.sfc_header,
-					.sfm_header {
-						border-bottom: none !important;
-						box-shadow: none !important;
-						padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
-					}
-				}
-
-				> * {
-					padding: 7px 8px;
-					vertical-align: top;
-					border: $search-criteria-box-border;
-					border-radius: $search-criteria-box-radius;
-					box-shadow: $box-shadow-regular;
-				}
-
-				.sfm_content {
-					position: absolute;
-					z-index: -1;
-					min-width: 100%;
-					left: 0px;
-					margin-top: -1px;
-
-					.sfc_fg_buttons {
-						white-space: nowrap;
-					}
-				}
-			}
-
-			/* Criteria tags */
-			.search_form_criteria {
-				/* Non editable criteria */
-				&.locked {
-					background-color: $gray-extra-light;
-
-					.sfc_title {
-						user-select: none;
-						cursor: initial;
-					}
-				}
-
-				/* Draft criteria (modifications not applied) */
-				&.draft {
-					.sfc_header,
-					.sfc_form_group {
-						border-style: dashed;
-					}
-
-					.sfc_title {
-						font-style: italic;
-					}
-				}
-
-				/* Opened criteria (form group displayed) */
-				&.opened {
-					z-index: 1; /* To be over other criterion */
-
-					.sfc_toggle {
-						transform: rotateX(-180deg);
-					}
-
-					.sfc_form_group {
-						display: block;
-					}
-				}
-
-				&.opened_left {
-					.sfc_form_group {
-						left: auto;
-						right: 0px;
-					}
-				}
-
-				/* Add "and" on criterion but the one and submit button */
-				&:not(:last-of-type) {
-					margin-right: 30px;
-
-					&::after {
-						/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
-						content: "and";
-						position: absolute;
-						top: 8px;
-						left: calc(100% + 0px);
-						margin-right: 5px;
-						margin-left: 5px;
-						text-align: center;
-						color: $gray-light;
-					}
-				}
-
-				> * {
-					background-color: $search-criteria-box-bg-color;
-					color: $search-criteria-box-color;
-				}
-
-				/* Top left corner icons */
-				.sfc_toggle,
-				.sfc_close {
-					position: absolute;
-					top: 7px;
-					color: $search-criteria-box-picto-color;
-				}
-
-				.sfc_locked {
-					position: absolute;
-					top: 9px;
-					color: $gray-light;
-				}
-
-				.sfc_toggle {
-					display: inline-block;
-					right: 23px;
-					transition: all 0.3s ease-in-out;
-				}
-
-				.sfc_close,
-				.sfc_locked {
-					right: 7px;
-				}
-
-				.sfc_title {
-					max-width: 240px;
-					padding-right: 30px;
-					white-space: nowrap;
-					overflow-x: hidden;
-					text-overflow: ellipsis;
-					cursor: pointer;
-
-					.sfc_values {
-						font-weight: bold;
-					}
-
-				}
-
-				.sfc_form_group {
-					/* Form group (operators) is displayed only when the criteria is toggled to opened state */
-					display: none;
-					max-width: 450px;
-					max-height: 520px;
-					overflow-x: auto;
-					overflow-y: hidden;
-
-					.sfc_fg_operators {
-						font-size: 12px;
-
-						.sfc_fg_operator {
-							&.force_hide {
-								display: none !important;
-							}
-
-							> label {
-								line-height: 20px;
-								white-space: nowrap;
-
-								> * {
-									display: inline-block;
-									vertical-align: middle;
-								}
-							}
-
-							.sfc_op_radio {
-								width: 12px;
-								margin: 0px;
-								margin-right: 7px;
-							}
-
-							.sfc_op_name {
-								width: 90px;
-							}
-
-							.sfc_op_content {
-								input[type="text"] {
-									width: 160px;
-								}
-							}
-
-							.sfc_opc_multichoices {
-								label > input {
-									vertical-align: middle;
-									margin-left: 0px;
-									margin-right: 8px;
-								}
-
-								.sfc_opc_mc_toggler {
-
-								}
-
-								.sfc_opc_mc_items_wrapper {
-									max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
-									overflow-y: auto;
-									margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
-
-									.sfc_opc_mc_items {
-										.sfc_opc_mc_items_list {
-											&.sfc_opc_mc_items_selected {
-												position: relative;
-												padding-top: 5px;
-												margin-top: 5px;
-
-												&::before {
-													content: "";
-													position: absolute;
-													border-top: 1px solid $gray-lighter;
-													width: calc(100% - 12px); /* minus margin-left x2 */
-													margin-left: 6px;
-													top: 0px;
-												}
-											}
-
-											.sfc_opc_mc_placeholder {
-												padding: 15px 8px;
-												font-style: italic;
-												text-align: center;
-											}
-
-											.sfc_opc_mc_item {
-												padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
-
-												&:hover {
-													background-color: $search-criteria-box-hover-color;
-												}
-
-												label {
-													display: inline-block;
-													width: 100%;
-												}
-											}
-										}
-									}
-
-									.sfc_opc_mc_items_hint {
-										margin-top: 15px;
-										margin-bottom: 15px;
-										padding-left: 9px;
-										padding-right: 9px;
-										color: $gray;
-										font-size: 10px;
-										font-style: italic;
-
-										> span {
-											margin-right: 0.5em;
-											font-style: italic;
-										}
-									}
-								}
-							}
-						}
-					}
-
-					.sfc_fg_search,
-					.sfc_fg_apply,
-					.sfc_fg_cancel {
-						margin-top: 8px;
-						padding: 3px 6px;
-						font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
-					}
-
-					.sfc_fg_search,
-					.sfc_fg_apply {
-						margin-right: 5px;
-					}
-
-					.sfc_fg_more,
-					.sfc_fg_less {
-						position: absolute;
-						bottom: 4px;
-						right: 0px;
-						cursor: pointer;
-						color: $search-criteria-more-less-details-color;
-						font-size: 10px;
-						font-weight: bold;
-						border: none;
-						background-color: transparent;
-
-						> span {
-							margin-left: 3px;
-						}
-					}
-
-					/* Show only first operator in simple mode */
-					.sfc_fg_operator:not(:first-of-type),
-					.sfc_fg_operator:first-of-type .sfc_op_radio {
-						display: none;
-					}
-
-					.sfc_fg_less {
-						display: none;
-					}
-
-					.sfc_fg_more {
-						display: inline-block;
-					}
-
-					/* Show all operators in advanced mode */
-					&.advanced {
-
-						.sfc_fg_operator {
-							margin-bottom: 3px;
-
-							&:last-of-type {
-								margin-bottom: 0px;
-							}
-						}
-
-						.sfc_fg_operator:not(:first-of-type),
-						.sfc_fg_operator:first-of-type .sfc_op_radio {
-							display: inherit;
-						}
-
-						.sfc_fg_less {
-							display: inline-block;
-						}
-
-						.sfc_fg_more {
-							display: none;
-						}
-
-						.hide_on_advanced {
-							display: none;
-						}
-
-					}
-
-					&:not(.advanced) {
-						.hide_on_less {
-							display: none;
-						}
-					}
-				}
-
-				/* Special criterion processing */
-				&.search_form_criteria_raw {
-					> * {
-						border-color: transparent;
-					}
-
-					.sfc_title {
-						cursor: initial;
-						padding-right: 20px; /* Less than regular as there is no toggle icon */
-					}
-
-					.sfc_form_group {
-						display: none;
-					}
-				}
-
-				&.search_form_criteria_enum {
-					.sfc_form_group {
-						.sfc_fg_operator_in {
-							> label {
-								display: inline-block;
-								width: 100%;
-								line-height: initial;
-								white-space: nowrap;
-
-								.sfc_op_content {
-									width: 100%;
-								}
-							}
-						}
-					}
-				}
-
-				&.search_form_criteria_tag_set {
-					.sfc_form_group {
-						.sfc_fg_operator_in {
-							> label {
-								display: inline-block;
-								width: 100%;
-								line-height: initial;
-								white-space: nowrap;
-
-								.sfc_op_content {
-									width: 100%;
-								}
-							}
-						}
-					}
-				}
-
-				&.search_form_criteria_numeric {
-					//.sfc_form_group.advanced {
-					//	.sfc_fg_operator_between {
-					//		margin-top: 5px;
-					//		margin-bottom: 5px;
-					//	}
-					//}
-					.sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_between {
-						.sfc_op_content_from_outer {
-							display: inline;
-						}
-
-						.sfc_op_content_until_outer {
-							display: inline;
-							margin-left: 5px;
-						}
-
-						label {
-							&.sfc_op_content_from_label, &.sfc_op_content_until_label {
-								width: 45px;
-								display: inline-block;
-							}
-						}
-
-						input[type="text"] {
-							width: 77px;
-						}
-					}
-				}
-
-				&.search_form_criteria_date_time,
-				&.search_form_criteria_date {
-					.sfc_form_group.advanced {
-						.sfc_fg_operator_between {
-							margin-bottom: 5px;
-						}
-					}
-
-					.sfc_fg_operator_between_days {
-						input {
-							width: 135px;
-						}
-					}
-
-					button.ui-datepicker-trigger {
-						background: none;
-						border: none;
-						height: 100%;
-						padding: 2px;
-
-						img {
-							vertical-align: middle;
-						}
-					}
-				}
-			}
-
-			/* More criterion */
-			.sf_more_criterion {
-				&.opened {
-					z-index: 2; /* To be over criterion */
-
-					.sfm_content {
-						display: inherit;
-					}
-				}
-
-				&.opened_left {
-					.sfm_content {
-						left: auto;
-						right: 0px;
-					}
-				}
-
-				> * {
-					background-color: $search-add-criteria-box-bg-color;
-					color: $search-add-criteria-box-color;
-				}
-
-				.sfm_toggler {
-					.sfm_tg_title {
-						margin-right: 7px;
-					}
-
-					.sfm_tg_icon {
-						color: $search-criteria-box-picto-color;
-					}
-				}
-
-				.sfm_content {
-					display: none;
-					min-width: 200px; /* To avoid element going to thin on filter, not very slick */
-
-					.sfm_lists {
-						margin: 0px -8px;
-						padding: 0px 8px;
-						max-height: 400px;
-						overflow-x: hidden;
-						overflow-y: auto;
-
-						.sfl_items {
-							> li {
-								&:hover {
-									background-color: $search-add-criteria-box-hover-color;
-								}
-							}
-						}
-					}
-
-					.sfm_buttons {
-						display: none;
-
-						button {
-							margin-top: 8px;
-							margin-right: 5px;
-							padding: 3px 6px;
-							font-size: 11px;
-
-							&:last-of-type {
-								margin-right: 0px;
-							}
-						}
-					}
-				}
-			}
-
-			/* Misc. buttons */
-			.sf_button {
-				cursor: pointer;
-
-				> * {
-					background-color: $search-button-box-bg-color;
-					color: $search-button-box-color;
-				}
-			}
-		}
-
-		/* List helpers */
-		.sf_list {
-			&:not(:first-of-type) {
-				.sfl_title {
-					border-top: 1px solid $gray-lighter;
-					padding-top: 8px;
-					margin-top: 5px;
-				}
-			}
-
-			.sfl_title {
-				font-weight: bold;
-			}
-
-			.sfl_items {
-				margin: 5px -8px 0px -8px;
-				padding: 0px;
-
-				> li {
-					padding: 4px 8px;
-					list-style: none;
-					white-space: nowrap;
-
-					&:hover {
-						background-color: $white;
-					}
-
-					&.sfl_i_placeholder {
-						font-style: italic;
-						opacity: 0.8;
-					}
-
-					> label {
-						display: inline-block;
-						width: 100%;
-
-						> * {
-							vertical-align: middle;
-						}
-
-						> input[type="checkbox"] {
-							margin-left: 0px;
-							margin-right: 8px;
-						}
-					}
-				}
-			}
-		}
-
-		.sf_filter {
-			position: relative;
-			margin-top: 8px;
-			margin-bottom: 8px;
-
-			input,
-			button,
-			.sff_picto {
-				vertical-align: middle;
-				height: 22px;
-			}
-
-			input,
-			button {
-				border: 1px solid #ABABAB;
-			}
-
-			input {
-				width: 100% !important;
-			}
-
-			button {
-				width: 23px; /* Must be equals to .sf_filter > *:height */
-				background-color: $search-button-box-bg-color;
-				color: $search-button-box-color;
-				font-size: 10px;
-
-				&:first-of-type {
-					margin-left: 5px;
-				}
-
-				&:not(:first-of-type) {
-					border-left: transparent;
-				}
-			}
-
-			.sff_input_wrapper {
-				position: relative;
-
-				.sff_picto {
-					position: absolute;
-					right: 5px;
-					top: 2px;
-					opacity: 0.6;
-					user-select: none;
-				}
-
-				.sff_reset {
-					display: none;
-				}
-
-				input::-ms-clear {
-					display: none;
-				}
-			}
-
-			&.sf_with_buttons {
-				input {
-					width: calc(100% - 28px) !important; /* Minus button outter width (only one for now) */
-					min-width: 120px;
-				}
-			}
-		}
-	}
-
-	.sf_results_area {
-		.sf_results_placeholder {
-			margin-top: 100px;
-			text-align: center;
-
-			button > span {
-				margin-left: 0.5em;
-			}
-		}
-	}
+	//	z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
+	//	text-align: center; /* Used when form is closed */
+	//
+	//	/* Sizing reset */
+	//	* {
+	//		box-sizing: border-box;
+	//	}
+	//}
+	//
+	//.search_form_handler {
+	////	position: relative;
+	////	z-index: 10;
+	////	width: 100%;
+	////	margin-left: auto;
+	////	margin-right: auto;
+	////	font-size: 12px;
+	////	text-align: left; /* To compensate .search_box:text-align */
+	////	border: 1px solid $search-form-container-bg-color;
+	//	//transition: width 0.3s ease-in-out;
+	//
+	//	/* Sizing reset */
+	//	* {
+	//		box-sizing: border-box;
+	//	}
+	//
+	//	/* Hyperlink reset */
+	//	a {
+	//		color: inherit;
+	//		text-decoration: none;
+	//	}
+	//
+	//	/* Input reset */
+	//	input[type="text"],
+	//	select {
+	//		padding: 1px 2px;
+	//	}
+	//
+	//	&:not(.closed) {
+	//		.sf_title {
+	//			.sft_short {
+	//				display: none;
+	//			}
+	//
+	//			.sft_hint,
+	//			.sfobs_hint,
+	//			.sft_toggler {
+	//				margin-top: 4px;
+	//			}
+	//
+	//			.sft_toggler {
+	//				transform: rotateX(180deg);
+	//				transition: transform 0.5s linear;
+	//			}
+	//		}
+	//	}
+	//
+	//	&.closed {
+	//		margin-bottom: 0.5em;
+	//		width: 150px;
+	//		overflow: hidden;
+	//		border-radius: 4px;
+	//		background-color: $complement-color;
+	//
+	//		.sf_criterion_area {
+	//			height: 0;
+	//			opacity: 0;
+	//			padding: 0;
+	//		}
+	//
+	//		.sf_title {
+	//			padding: 6px 8px;
+	//			text-align: center;
+	//			font-size: 12px;
+	//
+	//			.sft_long {
+	//				display: none;
+	//			}
+	//
+	//			.sft_hint,
+	//			.sfobs_hint {
+	//				display: none;
+	//			}
+	//		}
+	//	}
+	//
+	//	&:not(.no_auto_submit) {
+	//		.sft_hint {
+	//			display: none;
+	//		}
+	//
+	//		.sfc_fg_apply {
+	//			display: none;
+	//		}
+	//	}
+	//
+	//	&.no_auto_submit {
+	//		.sfc_fg_search {
+	//			display: none;
+	//		}
+	//
+	//		.sft_hint {
+	//			display: inline-block;
+	//		}
+	//	}
+	//
+	//
+	//	&:not(.hide_obsolete_data) {
+	//		.sfobs_hint {
+	//			display: none;
+	//		}
+	//	}
+	//
+	//	&.hide_obsolete_data {
+	//		.sfobs_hint {
+	//			display: inline-block;
+	//		}
+	//	}
+	//
+	//	&.hide_obsolete_data.no_auto_submit {
+	//		.sfobs_hint {
+	//			margin-left: 30px;
+	//		}
+	//
+	//	}
+	//
+	//	.sf_title {
+	//		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
+	//		padding: 8px 10px;
+	//		margin: 0;
+	//		color: $search-form-container-color;
+	//		background-color: $search-form-container-bg-color;
+	//		cursor: pointer;
+	//
+	//		.sft_hint,
+	//		.sfobs_hint {
+	//			font-size: 8pt;
+	//			font-style: italic;
+	//		}
+	//
+	//		.sft_toggler {
+	//			margin-left: 0.7em;
+	//			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+	//
+	//			&:hover {
+	//				color: $gray-extra-light;
+	//			}
+	//		}
+	//	}
+	//
+	//	.sf_message {
+	//		display: none;
+	//		margin: 8px 8px 0px 8px;
+	//		border-radius: 0px;
+	//	}
+	//
+	//	.sf_criterion_area {
+	//		/*display: none;*/
+	//		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+	//		background-color: $white;
+	//
+	//		.sf_criterion_row {
+	//
+	//			&:not(:first-child) {
+	//				margin-top: 20px;
+	//
+	//				&::before {
+	//					content: "";
+	//					position: absolute;
+	//					top: -12px;
+	//					left: 0px;
+	//					width: 100%;
+	//					border-top: 1px solid $search-criteria-box-border-color;
+	//				}
+	//
+	//				&::after {
+	//					content: "or"; /* TODO: Make this into a dict entry */
+	//					position: absolute;
+	//					top: -20px;
+	//					left: 8px;
+	//					padding-left: 5px;
+	//					padding-right: 5px;
+	//					color: $gray-light;
+	//					background-color: $white; /* Must match .sf_criterion_area:background-color */
+	//				}
+	//			}
+	//
+	//			.sf_criterion_group {
+	//				display: inline;
+	//				.sfc_fg_button,
+	//				.sfc_header {
+	//					border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+	//					border-radius: 3px;
+	//				}
+	//			}
+	//		}
+	//
+	//		/* Common style between criterion and more criterion */
+	//		.search_form_criteria,
+	//		.sf_more_criterion,
+	//		.sf_button {
+	//			position: relative;
+	//			display: inline-block;
+	//			margin-right: 10px;
+	//			margin-bottom: 5px;
+	//			vertical-align: top;
+	//
+	//			&.opened {
+	//				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+	//
+	//				.sfc_header,
+	//				.sfm_header {
+	//					border-bottom: none !important;
+	//					box-shadow: none !important;
+	//					padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+	//				}
+	//			}
+	//
+	//			> * {
+	//				padding: 7px 8px;
+	//				vertical-align: top;
+	//				border: $search-criteria-box-border;
+	//				border-radius: $search-criteria-box-radius;
+	//				box-shadow: $box-shadow-regular;
+	//			}
+	//
+	//			.sfm_content {
+	//				position: absolute;
+	//				z-index: -1;
+	//				min-width: 100%;
+	//				left: 0px;
+	//				margin-top: -1px;
+	//
+	//				.sfc_fg_buttons {
+	//					white-space: nowrap;
+	//				}
+	//			}
+	//		}
+	//
+	//		/* Criteria tags */
+	//		.search_form_criteria {
+	//			/* Non editable criteria */
+	//			&.locked {
+	//				background-color: $gray-extra-light;
+	//
+	//				.sfc_title {
+	//					user-select: none;
+	//					cursor: initial;
+	//				}
+	//			}
+	//
+	//			/* Draft criteria (modifications not applied) */
+	//			&.draft {
+	//				.sfc_header,
+	//				.sfc_form_group {
+	//					border-style: dashed;
+	//				}
+	//
+	//				.sfc_title {
+	//					font-style: italic;
+	//				}
+	//			}
+	//
+	//			/* Opened criteria (form group displayed) */
+	//			&.opened {
+	//				z-index: 1; /* To be over other criterion */
+	//
+	//				.sfc_toggle {
+	//					transform: rotateX(-180deg);
+	//				}
+	//
+	//				.sfc_form_group {
+	//					display: block;
+	//				}
+	//			}
+	//
+	//			&.opened_left {
+	//				.sfc_form_group {
+	//					left: auto;
+	//					right: 0px;
+	//				}
+	//			}
+	//
+	//			/* Add "and" on criterion but the one and submit button */
+	//			&:not(:last-of-type) {
+	//				margin-right: 30px;
+	//
+	//				&::after {
+	//					/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+	//					content: "and";
+	//					position: absolute;
+	//					top: 8px;
+	//					left: calc(100% + 0px);
+	//					margin-right: 5px;
+	//					margin-left: 5px;
+	//					text-align: center;
+	//					color: $gray-light;
+	//				}
+	//			}
+	//
+	//			> * {
+	//				background-color: $search-criteria-box-bg-color;
+	//				color: $search-criteria-box-color;
+	//			}
+	//
+	//			/* Top left corner icons */
+	//			.sfc_toggle,
+	//			.sfc_close {
+	//				position: absolute;
+	//				top: 7px;
+	//				color: $search-criteria-box-picto-color;
+	//			}
+	//
+	//			.sfc_locked {
+	//				position: absolute;
+	//				top: 9px;
+	//				color: $gray-light;
+	//			}
+	//
+	//			.sfc_toggle {
+	//				display: inline-block;
+	//				right: 23px;
+	//				transition: all 0.3s ease-in-out;
+	//			}
+	//
+	//			.sfc_close,
+	//			.sfc_locked {
+	//				right: 7px;
+	//			}
+	//
+	//			.sfc_title {
+	//				max-width: 240px;
+	//				padding-right: 30px;
+	//				white-space: nowrap;
+	//				overflow-x: hidden;
+	//				text-overflow: ellipsis;
+	//				cursor: pointer;
+	//
+	//				.sfc_values {
+	//					font-weight: bold;
+	//				}
+	//
+	//			}
+	//
+	//			.sfc_form_group {
+	//				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
+	//				display: none;
+	//				max-width: 450px;
+	//				max-height: 520px;
+	//				overflow-x: auto;
+	//				overflow-y: hidden;
+	//
+	//				.sfc_fg_operators {
+	//					font-size: 12px;
+	//
+	//					.sfc_fg_operator {
+	//						&.force_hide {
+	//							display: none !important;
+	//						}
+	//
+	//						> label {
+	//							line-height: 20px;
+	//							white-space: nowrap;
+	//
+	//							> * {
+	//								display: inline-block;
+	//								vertical-align: middle;
+	//							}
+	//						}
+	//
+	//						.sfc_op_radio {
+	//							width: 12px;
+	//							margin: 0px;
+	//							margin-right: 7px;
+	//						}
+	//
+	//						.sfc_op_name {
+	//							width: 90px;
+	//						}
+	//
+	//						.sfc_op_content {
+	//							input[type="text"] {
+	//								width: 160px;
+	//							}
+	//						}
+	//
+	//						.sfc_opc_multichoices {
+	//							label > input {
+	//								vertical-align: middle;
+	//								margin-left: 0px;
+	//								margin-right: 8px;
+	//							}
+	//
+	//							.sfc_opc_mc_toggler {
+	//
+	//							}
+	//
+	//							.sfc_opc_mc_items_wrapper {
+	//								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+	//								overflow-y: auto;
+	//								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+	//
+	//								.sfc_opc_mc_items {
+	//									.sfc_opc_mc_items_list {
+	//										&.sfc_opc_mc_items_selected {
+	//											position: relative;
+	//											padding-top: 5px;
+	//											margin-top: 5px;
+	//
+	//											&::before {
+	//												content: "";
+	//												position: absolute;
+	//												border-top: 1px solid $gray-lighter;
+	//												width: calc(100% - 12px); /* minus margin-left x2 */
+	//												margin-left: 6px;
+	//												top: 0px;
+	//											}
+	//										}
+	//
+	//										.sfc_opc_mc_placeholder {
+	//											padding: 15px 8px;
+	//											font-style: italic;
+	//											text-align: center;
+	//										}
+	//
+	//										.sfc_opc_mc_item {
+	//											padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
+	//
+	//											&:hover {
+	//												background-color: $search-criteria-box-hover-color;
+	//											}
+	//
+	//											label {
+	//												display: inline-block;
+	//												width: 100%;
+	//											}
+	//										}
+	//									}
+	//								}
+	//
+	//								.sfc_opc_mc_items_hint {
+	//									margin-top: 15px;
+	//									margin-bottom: 15px;
+	//									padding-left: 9px;
+	//									padding-right: 9px;
+	//									color: $gray;
+	//									font-size: 10px;
+	//									font-style: italic;
+	//
+	//									> span {
+	//										margin-right: 0.5em;
+	//										font-style: italic;
+	//									}
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//
+	//				.sfc_fg_search,
+	//				.sfc_fg_apply,
+	//				.sfc_fg_cancel {
+	//					margin-top: 8px;
+	//					padding: 3px 6px;
+	//					font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
+	//				}
+	//
+	//				.sfc_fg_search,
+	//				.sfc_fg_apply {
+	//					margin-right: 5px;
+	//				}
+	//
+	//				.sfc_fg_more,
+	//				.sfc_fg_less {
+	//					position: absolute;
+	//					bottom: 4px;
+	//					right: 0px;
+	//					cursor: pointer;
+	//					color: $search-criteria-more-less-details-color;
+	//					font-size: 10px;
+	//					font-weight: bold;
+	//					border: none;
+	//					background-color: transparent;
+	//
+	//					> span {
+	//						margin-left: 3px;
+	//					}
+	//				}
+	//
+	//				/* Show only first operator in simple mode */
+	//				.sfc_fg_operator:not(:first-of-type),
+	//				.sfc_fg_operator:first-of-type .sfc_op_radio {
+	//					display: none;
+	//				}
+	//
+	//				.sfc_fg_less {
+	//					display: none;
+	//				}
+	//
+	//				.sfc_fg_more {
+	//					display: inline-block;
+	//				}
+	//
+	//				/* Show all operators in advanced mode */
+	//				&.advanced {
+	//
+	//					.sfc_fg_operator {
+	//						margin-bottom: 3px;
+	//
+	//						&:last-of-type {
+	//							margin-bottom: 0px;
+	//						}
+	//					}
+	//
+	//					.sfc_fg_operator:not(:first-of-type),
+	//					.sfc_fg_operator:first-of-type .sfc_op_radio {
+	//						display: inherit;
+	//					}
+	//
+	//					.sfc_fg_less {
+	//						display: inline-block;
+	//					}
+	//
+	//					.sfc_fg_more {
+	//						display: none;
+	//					}
+	//
+	//					.hide_on_advanced {
+	//						display: none;
+	//					}
+	//
+	//				}
+	//
+	//				&:not(.advanced) {
+	//					.hide_on_less {
+	//						display: none;
+	//					}
+	//				}
+	//			}
+	//
+	//			/* Special criterion processing */
+	//			&.search_form_criteria_raw {
+	//				> * {
+	//					border-color: transparent;
+	//				}
+	//
+	//				.sfc_title {
+	//					cursor: initial;
+	//					padding-right: 20px; /* Less than regular as there is no toggle icon */
+	//				}
+	//
+	//				.sfc_form_group {
+	//					display: none;
+	//				}
+	//			}
+	//
+	//			&.search_form_criteria_enum {
+	//				.sfc_form_group {
+	//					.sfc_fg_operator_in {
+	//						> label {
+	//							display: inline-block;
+	//							width: 100%;
+	//							line-height: initial;
+	//							white-space: nowrap;
+	//
+	//							.sfc_op_content {
+	//								width: 100%;
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//
+	//			&.search_form_criteria_tag_set {
+	//				.sfc_form_group {
+	//					.sfc_fg_operator_in {
+	//						> label {
+	//							display: inline-block;
+	//							width: 100%;
+	//							line-height: initial;
+	//							white-space: nowrap;
+	//
+	//							.sfc_op_content {
+	//								width: 100%;
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//
+	//			&.search_form_criteria_numeric {
+	//				//.sfc_form_group.advanced {
+	//				//	.sfc_fg_operator_between {
+	//				//		margin-top: 5px;
+	//				//		margin-bottom: 5px;
+	//				//	}
+	//				//}
+	//				.sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_between {
+	//					.sfc_op_content_from_outer {
+	//						display: inline;
+	//					}
+	//
+	//					.sfc_op_content_until_outer {
+	//						display: inline;
+	//						margin-left: 5px;
+	//					}
+	//
+	//					label {
+	//						&.sfc_op_content_from_label, &.sfc_op_content_until_label {
+	//							width: 45px;
+	//							display: inline-block;
+	//						}
+	//					}
+	//
+	//					input[type="text"] {
+	//						width: 77px;
+	//					}
+	//				}
+	//			}
+	//
+	//			&.search_form_criteria_date_time,
+	//			&.search_form_criteria_date {
+	//				.sfc_form_group.advanced {
+	//					.sfc_fg_operator_between {
+	//						margin-bottom: 5px;
+	//					}
+	//				}
+	//
+	//				.sfc_fg_operator_between_days {
+	//					input {
+	//						width: 135px;
+	//					}
+	//				}
+	//
+	//				button.ui-datepicker-trigger {
+	//					background: none;
+	//					border: none;
+	//					height: 100%;
+	//					padding: 2px;
+	//
+	//					img {
+	//						vertical-align: middle;
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		/* More criterion */
+	//		.sf_more_criterion {
+	//			&.opened {
+	//				z-index: 2; /* To be over criterion */
+	//
+	//				.sfm_content {
+	//					display: inherit;
+	//				}
+	//			}
+	//
+	//			&.opened_left {
+	//				.sfm_content {
+	//					left: auto;
+	//					right: 0px;
+	//				}
+	//			}
+	//
+	//			> * {
+	//				background-color: $search-add-criteria-box-bg-color;
+	//				color: $search-add-criteria-box-color;
+	//			}
+	//
+	//			.sfm_toggler {
+	//				.sfm_tg_title {
+	//					margin-right: 7px;
+	//				}
+	//
+	//				.sfm_tg_icon {
+	//					color: $search-criteria-box-picto-color;
+	//				}
+	//			}
+	//
+	//			.sfm_content {
+	//				display: none;
+	//				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
+	//
+	//				.sfm_lists {
+	//					margin: 0px -8px;
+	//					padding: 0px 8px;
+	//					max-height: 400px;
+	//					overflow-x: hidden;
+	//					overflow-y: auto;
+	//
+	//					.sfl_items {
+	//						> li {
+	//							&:hover {
+	//								background-color: $search-add-criteria-box-hover-color;
+	//							}
+	//						}
+	//					}
+	//				}
+	//
+	//				.sfm_buttons {
+	//					display: none;
+	//
+	//					button {
+	//						margin-top: 8px;
+	//						margin-right: 5px;
+	//						padding: 3px 6px;
+	//						font-size: 11px;
+	//
+	//						&:last-of-type {
+	//							margin-right: 0px;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		/* Misc. buttons */
+	//		.sf_button {
+	//			cursor: pointer;
+	//
+	//			> * {
+	//				background-color: $search-button-box-bg-color;
+	//				color: $search-button-box-color;
+	//			}
+	//		}
+	//	}
+	//
+	//	/* List helpers */
+	//	.sf_list {
+	//		&:not(:first-of-type) {
+	//			.sfl_title {
+	//				border-top: 1px solid $gray-lighter;
+	//				padding-top: 8px;
+	//				margin-top: 5px;
+	//			}
+	//		}
+	//
+	//		.sfl_title {
+	//			font-weight: bold;
+	//		}
+	//
+	//		.sfl_items {
+	//			margin: 5px -8px 0px -8px;
+	//			padding: 0px;
+	//
+	//			> li {
+	//				padding: 4px 8px;
+	//				list-style: none;
+	//				white-space: nowrap;
+	//
+	//				&:hover {
+	//					background-color: $white;
+	//				}
+	//
+	//				&.sfl_i_placeholder {
+	//					font-style: italic;
+	//					opacity: 0.8;
+	//				}
+	//
+	//				> label {
+	//					display: inline-block;
+	//					width: 100%;
+	//
+	//					> * {
+	//						vertical-align: middle;
+	//					}
+	//
+	//					> input[type="checkbox"] {
+	//						margin-left: 0px;
+	//						margin-right: 8px;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//
+	//	.sf_filter {
+	//		position: relative;
+	//		margin-top: 8px;
+	//		margin-bottom: 8px;
+	//
+	//		input,
+	//		button,
+	//		.sff_picto {
+	//			vertical-align: middle;
+	//			height: 22px;
+	//		}
+	//
+	//		input,
+	//		button {
+	//			border: 1px solid #ABABAB;
+	//		}
+	//
+	//		input {
+	//			width: 100% !important;
+	//		}
+	//
+	//		button {
+	//			width: 23px; /* Must be equals to .sf_filter > *:height */
+	//			background-color: $search-button-box-bg-color;
+	//			color: $search-button-box-color;
+	//			font-size: 10px;
+	//
+	//			&:first-of-type {
+	//				margin-left: 5px;
+	//			}
+	//
+	//			&:not(:first-of-type) {
+	//				border-left: transparent;
+	//			}
+	//		}
+	//
+	//		.sff_input_wrapper {
+	//			position: relative;
+	//
+	//			.sff_picto {
+	//				position: absolute;
+	//				right: 5px;
+	//				top: 2px;
+	//				opacity: 0.6;
+	//				user-select: none;
+	//			}
+	//
+	//			.sff_reset {
+	//				display: none;
+	//			}
+	//
+	//			input::-ms-clear {
+	//				display: none;
+	//			}
+	//		}
+	//
+	//		&.sf_with_buttons {
+	//			input {
+	//				width: calc(100% - 28px) !important; /* Minus button outter width (only one for now) */
+	//				min-width: 120px;
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//.sf_results_area {
+	//	.sf_results_placeholder {
+	//		margin-top: 100px;
+	//		text-align: center;
+	//
+	//		button > span {
+	//			margin-left: 0.5em;
+	//		}
+	//	}
+	//}
 
 	.hidden {
 		display: none !important;

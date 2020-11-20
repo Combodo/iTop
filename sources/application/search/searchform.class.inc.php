@@ -184,8 +184,8 @@ class SearchForm
 		$sStyle .= ($bOpen == 'true') ? '' : ' closed';
 		$sStyle .= ($bAutoSubmit === true) ? '' : ' no_auto_submit';
 //(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
-		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [],Panel::DEFAULT_COLOR, $sSearchFormId);
-		$oUiSearchBlock->SetCSSClasses("display_block");
+		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [],Panel::ENUM_COLOR_CYAN, $sSearchFormId);
+		$oUiSearchBlock->SetCSSClasses("ibo-search-form-panel display_block");
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
 		$sHtml = "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
 		if ($bShowObsoleteData)
