@@ -504,12 +504,6 @@ JS
 			}
 			
 		});
-
-		
-		function FixPaneVis()
-		{
-			$('.ui-layout-center, .ui-layout-north, .ui-layout-south').css({display: 'block'});
-		}
 JS
 		);
 	}
