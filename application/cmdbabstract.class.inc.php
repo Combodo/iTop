@@ -2438,7 +2438,7 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
 
-			$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
+			//$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
 
 //			$oPage->add(<<<HTML
 //<!-- Beginning of object-details -->
@@ -2486,10 +2486,43 @@ JS
 			}
 		}
 
+		$oContentBlock = new UIContentBlock();
+		$oContentBlock->SetCSSClasses("object-details")
+			->AddDataAttribute('object-class', $sClass)
+			->AddDataAttribute('object-id', $iKey)
+			->AddDataAttribute('object-mode', $sMode);
+		$oPage->AddUiBlock($oContentBlock);
+
 		$oForm = new Form("form_{$this->m_iFormId}");
 		$oForm->SetAction($sFormAction)
 			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
 		$oContentBlock->AddSubBlock($oForm);
+
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+			// The object already exists in the database, it's a modification
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
+		}
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
+
+		// Add transaction ID
+		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
+		$oPage->SetTransactionId($iTransactionId);
+		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
+		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
+			$sClassLabel = MetaModel::GetName($sClass);
+			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
+				$this->GetName());
+
+			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
+				$sClassLabel)); // Set title will take care of the encoding
+
+			$oForm->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
+
+			// TODO 3.0.0: Refactor DisplayBareHeader and call it here
+		}
 
 		// TODO 3.0.0: Dehardcode this after object details are refactored
 		$oPage->add_style(<<<CSS
@@ -2498,19 +2531,12 @@ JS
 }
 .ibo-toolbar-top{
 	padding-left: calc(90px + 64px);
+	text-align: right;
 }
 CSS
 		);
 		$oToolbarTop = new Toolbar();
 		$oToolbarTop->SetCSSClasses('ibo-toolbar ibo-toolbar-top');
-
-
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
-			// The object already exists in the database, it's a modification
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
-		}
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
 
 		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
@@ -2541,10 +2567,10 @@ CSS
 			}
 		}
 
-		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
-		$oPage->SetTransactionId($iTransactionId);
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+		// TODO 3.0.0: Remove config param and related code below when rework is done and UX approved
+		//$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
+		$sButtonsPosition = 'top';
+
 		$sStatesSelection = '';
 		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
 		{
