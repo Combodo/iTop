@@ -570,7 +570,7 @@ class DataTableFactory
 	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
 	{
 		$aOptions = [];
-
+		$sTableId=$aExtraParams["table_id"];
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
 
@@ -578,18 +578,22 @@ class DataTableFactory
 			$aColumnDefinition["width"] = "auto";
 			$aColumnDefinition["searchable"] = false;
 			$aColumnDefinition["sortable"] = false;
-			$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable(\'#{{ oUIBlock.GetId() }}\',this.checked);\" class=\"checkAll\" id=\"field_{{ oUIBlock.GetId() }}_check_all\" name=\"field_{{ oUIBlock.GetId() }}_check_all\" title=\"{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}\" /></span>";
+			if ($sSelectMode != "single") {
+				$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable('#".$sTableId."',this.checked);\" class=\"checkAll\" id=\"field_".$sTableId."_check_all\" name=\"field_".$sTableId."_check_all\" title=\"".Dict::S('UI:SearchValue:CheckAll' )." / ".Dict::S('UI:SearchValue:UncheckAll')."\" /></span>";
+			} else{
+				$aColumnDefinition["title"] = "";
+			}
 			$aColumnDefinition["type"] = "html";
 			$aColumnDefinition["data"] = "";
-			$aColumnDefinition["render"] = "function (data, type, row) {
-				var oCheckboxElem = $('<span class=\"row_input\"><input type=\"checkbox\" class=\"selectList{{ oUIBlock.GetId() }}\" name=\"selectObject\" /></span>');
-				if (row.limited_access) {
-					oCheckboxElem.html('-');
-				} else {
-					oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id);
-				}
-				return oCheckboxElem.prop('outerHTML');
-			}";
+			$aColumnDefinition["render"]["display"] = "";
+			if ($sSelectMode != "single") {
+				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"checkbox\" class=\"selectList".$sTableId."\" name=\"selectObject\" /></span>');";
+			}
+			else {
+				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"radio\" class=\"selectList".$sTableId."\" name=\"selectObject\" /></span>');";
+			}
+			$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . "	if (row.limited_access) { oCheckboxElem.html('-'); } else {	oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id); }";
+			$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"]. "	return oCheckboxElem.prop('outerHTML');	";
 			array_push($aColumnsDefinitions, $aColumnDefinition);
 		}
 

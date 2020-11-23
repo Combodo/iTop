@@ -262,7 +262,7 @@ function UpdateFileName(id, sNewFileName) {
  * Reload a search form for the specified class
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sExtraParams) {
-	var oDiv = $('#'+divId);
+	var oDiv = $('#'+divId).parent();
 	oDiv.block();
 	// deprecated in jQuery 1.8 
 	//var oFormEvents = $('#ds_'+divId+' form').data('events');

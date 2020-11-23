@@ -234,7 +234,7 @@ try
 
 		case 'search_and_refresh':
 			$oPage->SetContentType('application/json');
-			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
+			$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 			$aExtraParams = array();
 			if (is_array($extraParams))
 			{
@@ -411,7 +411,15 @@ try
 							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetKey();
 						}
 						else {
-							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if ($oAttDef instanceof AttributeExternalKey)
+							{
+								$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->Get($sAttCode);
+							}
+							else{
+								$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+							}
+
 						}
 					}
 				}

@@ -211,6 +211,7 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  */
 function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
 {
+	//search block
 	$oBlockForm=null;
 	if ($bSearchForm)
 	{
@@ -245,12 +246,15 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
 		if ($bSearchForm) {
-			$oUIBlockForm=$oBlockForm->GetDisplay($oP,'0');
+			//add search block
 			$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
 			if($sTableId=='')
 			{
-				$sTableId = '1';
+				$sTableId = 'result_1';
 			}
+			$aExtraParams['table_id']=$sTableId;
+			$oUIBlockForm=$oBlockForm->GetDisplay($oP,'search_1');
+			//add result block
 			$oUIBlock=$oBlock->GetDisplay($oP, $sTableId);
 			$oUIBlock->AddCSSClasses("display_block sf_results_area");
 			//$oUIBlockForm->AddSubBlock($oUIBlock);
