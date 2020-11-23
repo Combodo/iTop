@@ -68,6 +68,7 @@ div.error-message > p {
  */
 require_once('../approot.inc.php');
 
+
 echo <<<'HTML'
 <script src="../js/jquery.min.js"></script>
 <script>
@@ -86,14 +87,18 @@ $(document).ready(function () {
 HTML;
 
 
-register_shutdown_function(static function () {
+function HandlePageErrors()
+{
 	$error = error_get_last();
 	if ($error
 		&& (isset($error['type']))
 		&& (in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR], true))) {
 		ob_end_clean();
 	}
-});
+}
+
+
+register_shutdown_function('HandlePageErrors');
 ob_start();
 require_once("wizard.php");
 ob_end_clean();
@@ -107,4 +112,3 @@ HTML;
 ?>
 </body>
 </html>
-
