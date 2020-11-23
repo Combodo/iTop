@@ -472,18 +472,18 @@ class DataTableFactory
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
-		$aSortOrder=[];
-		$iIndexColumn=0;
-		if($sSelectMode!="") {
+		$aSortOrder = [];
+		$iIndexColumn = 0;
+		if ($sSelectMode != "") {
 			$iIndexColumn++;
 		}
 		$aSortDatable = [];
-		foreach ($aClassAliases as $sClassAlias => $sClassName) {
+		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
 				if ($aData['sort'] != 'none') {
 					$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
-					$aSortDatable=[$iIndexColumn,$aData['sort']];
+					$aSortDatable = [$iIndexColumn, $aData['sort']];
 				}
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
