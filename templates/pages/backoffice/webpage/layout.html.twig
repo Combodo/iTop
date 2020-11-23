@@ -12,19 +12,19 @@
     {% endif %}
     <title>{{ aPage.sTitle }}</title>
     {% if aPage.sFaviconUrl is defined %}
-        <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version }}"/>
+        <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version }}">
     {% endif %}
-    <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php"/>
+    <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
 
     {# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
 	- Visual glitches
 	- jQuery scripts spurious problems (like failing on a 'reload') #}
     {% block iboPageCssFiles %}
-        {% for aCssFileData in aPage.aCssFiles %}
-            {% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
-			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version }}" rel="stylesheet" />
+	    {% for aCssFileData in aPage.aCssFiles %}
+		    {% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
+			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version }}" rel="stylesheet">
 			{% if aCssFileData['condition'] != '' %}<![endif]-->{% endif %}
-        {% endfor %}
+	    {% endfor %}
     {% endblock %}
 
     {% block iboPageCssInline %}
