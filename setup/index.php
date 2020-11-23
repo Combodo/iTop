@@ -95,13 +95,13 @@ register_shutdown_function(static function () {
 	}
 });
 ob_start();
-require_once("index.setup.php");
+require_once("wizard.php");
 ob_end_clean();
 
 echo <<<HTML
 <script>
 bSkipErrorDisplay = true;
-document.location = "index.setup.php";
+document.location = "wizard.php";
 </script>
 HTML;
 ?>
