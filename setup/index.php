@@ -2,42 +2,7 @@
 <html>
 <head>
 <title>iTop Setup - redirection</title>
-<style>
-* {
-	position: relative;
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-
-body.error-container {
-	background: rgba(0, 0, 0, 0) radial-gradient(red, black) repeat scroll 0% 0%;
-}
-
-div.error-message {
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	color: white;
-	text-shadow: black 1px 0 10px;
-}
-
-div.error-message > h1 {
-	font-weight: bolder;
-	font-size: 4rem;
-	text-transform: full-width;
-	text-decoration: underline overline red;
-	margin: 2rem 0;
-}
-
-div.error-message > p {
-	font-size: 1.5rem;
-	margin: 0.5rem 0;
-}
-</style>
+<link type="text/css" href="../css/setup.css" rel="stylesheet">
 </head>
 <body>
 <?php
@@ -76,11 +41,12 @@ bSkipErrorDisplay = false;
 $(document).ready(function () {
 	if (!bSkipErrorDisplay) {
 		var $pageBody = $("body");
-		$pageBody.addClass("error-container");
-		$pageBody.append("<div class='error-message'>" +
+		// $pageBody.addClass("error-container");
+		$pageBody.append("<div id='ibo-page-container'>" +
 		  "<h1>😭 iTop cannot install</h1>" +
-		  "<p>💣 PHP error occurred</p>" +
-		  "<p>Your system doesn't meet iTop requirements !</p>")
+		  "<p class=\"message message-error\">💣 PHP error occurred</p>" +
+		  "<p>Your system doesn't meet iTop requirements !</p>" +
+		   "</div>")
 	}
 });
 </script>
