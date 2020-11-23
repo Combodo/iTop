@@ -8,12 +8,12 @@
 		{{ render_block(oUIBlock.GetTextInput(), {aPage: aPage}) }}
 	</div>
 	<div class="ibo-caselog-entry-form--actions">
-		<div class="ibo-caselog-entry-form--action-buttons--left-actions" data-role="ibo-caselog-entry-form--action-buttons--left-actions">
+		<div class="ibo-caselog-entry-form--action-buttons--extra-actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions">
 			{% for TextInputActionButton in oUIBlock.GetExtraActionButtons() %}
 				{{ render_block(TextInputActionButton, {aPage: aPage}) }}
 			{% endfor %}
 		</div>
-		<div class="ibo-caselog-entry-form--action-buttons--right-actions" data-role="ibo-caselog-entry-form--action-buttons--right-actions">
+		<div class="ibo-caselog-entry-form--action-buttons--main-actions" data-role="ibo-caselog-entry-form--action-buttons--main-actions">
 			{% for FormActionButton in oUIBlock.GetMainActionButtons() %}
 				{{ render_block(FormActionButton, {aPage: aPage}) }}
 			{% endfor %}

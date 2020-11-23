@@ -24,7 +24,6 @@ $(function() {
 			options:
 			{
 				submit_mode: 'autonomous',
-				submit_button_disabled: true,
 				target_type: null,
 				text_input_id: '',
 			},
@@ -40,10 +39,10 @@ $(function() {
 				activity_panel_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 				form: '[data-role="ibo-caselog-entry-form"]', // Any caselog entry form
 				toggler: '[data-role="ibo-activity-panel--body--add-caselog-entry--toggler"]',
-				right_actions: '[data-role="ibo-caselog-entry-form--action-buttons--right-actions"]',
-				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--right-actions"] [data-role="ibo-button"][name="cancel"]',
-				send_button: '[data-role="ibo-caselog-entry-form--action-buttons--right-actions"] [data-role="ibo-button"][name="send"]',
-				send_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--right-actions"] [data-role="ibo-button"][name="send"] + [data-role="ibo-popover-menu"]',
+				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
+				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
+				send_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"]',
+				send_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"] + [data-role="ibo-popover-menu"]',
 			},
 			enums:
 			{
@@ -67,10 +66,13 @@ $(function() {
 				if(this._IsSubmitAutonomous())
 				{
 					this._HideEntryForm();
+					this._ShowMainActions();
 				}
 				else
 				{
+					this._AddBridgeInput();
 					this._ShowEntryForm();
+					this._HideMainActions();
 				}
 
 				this._bindEvents();
@@ -92,7 +94,12 @@ $(function() {
 					// Handle only the current CKEditor instance
 					if(oEvent.editor.name === me.options.text_input_id) {
 						CKEDITOR.instances[me.options.text_input_id].on('change', function(){
-							me._UpdateSubmitButtonState();
+							if(me._IsSubmitAutonomous()) {
+								me._UpdateSubmitButtonState();
+							}
+							else {
+								me._UpdateBridgeInput();
+							}
 						});
 					}
 				});
@@ -155,6 +162,7 @@ $(function() {
 			_IsSubmitAutonomous: function() {
 				return this.options.submit_mode === this.enums.submit_mode.autonomous;
 			},
+			// - Form
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.toggler).addClass(this.css_classes.is_hidden);
@@ -163,13 +171,77 @@ $(function() {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).addClass(this.css_classes.is_closed);
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.toggler).removeClass(this.css_classes.is_hidden);
 			},
+			// - Bridged form input
+			/**
+			 * Return the general object form element.
+			 * Only used for caselog tabs in bridged mode.
+			 *
+			 * @returns {null|jQuery.fn.init|jQuery|HTMLElement}
+			 * @private
+			 */
+			_GetGeneralFormElement: function() {
+				const oActivityPanelElem = this.element.closest(this.js_selectors.activity_panel);
+				const sHostObjClass = oActivityPanelElem.attr('data-object-class');
+				const sHostObjId = oActivityPanelElem.attr('data-object-id');
+				// TODO 3.0.0: This might need to be updated when object details are refactored and in a real block
+				const oGeneralFormElem = $('.object-details[data-object-class="'+sHostObjClass+'"][data-object-id="'+sHostObjId+'"] > form');
+
+				// Protection in case this is called with non editable general form
+				if(oGeneralFormElem.length === 0) {
+					return null;
+				}
+
+				return oGeneralFormElem;
+			},
+			/**
+			 * Add a bridge input for the caselog to the general object form.
+			 * Only used for caselog tabs in bridged mode.
+			 *
+			 * @returns {boolean}|{void}
+			 * @private
+			 */
+			_AddBridgeInput: function() {
+				const sCaseLogAttCode = this.element.closest(this.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
+				const oGeneralFormElem = this._GetGeneralFormElement();
+
+				if(oGeneralFormElem === null) {
+					if(window.console && window.console.error){
+						console.error('Could not add bridge input as there is no general form');
+					}
+					return false;
+				}
+
+				$('<input type="hidden" name="attr_'+sCaseLogAttCode+'" />').appendTo(oGeneralFormElem);
+				this._UpdateBridgeInput();
+			},
+			/**
+			 * Update the bridge input for the caselog in the general object form.
+			 * Only used for caselog tabs in bridged mode.
+			 *
+			 * @returns {void}
+			 * @private
+			 */
+			_UpdateBridgeInput: function() {
+				const sCaseLogAttCode = this.element.closest(this.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
+				let oBridgeInputElem = this._GetGeneralFormElement().find('input[name="attr_'+sCaseLogAttCode+'"]');
+
+				oBridgeInputElem.val(this._GetInputData());
+			},
+			// - Input zone
 			_EmptyInput: function() {
 				CKEDITOR.instances[this.options.text_input_id].setData('');
 			},
 			_GetInputData: function() {
 				return (CKEDITOR.instances[this.options.text_input_id] === undefined) ? '' : CKEDITOR.instances[this.options.text_input_id].getData();
 			},
-			_UpdateSubmitButtonState: function(){
+			// - Main actions
+			_ShowMainActions: function() {
+				this.element.find(this.js_selectors.main_actions).show();
+			},
+			_HideMainActions: function() {
+				this.element.find(this.js_selectors.main_actions).hide();
+			},
+			_UpdateSubmitButtonState: function() {
 				const bIsInputEmpty = this._GetInputData() === '';
 
 				this.element.find(this.js_selectors.send_button).prop('disabled', bIsInputEmpty);
