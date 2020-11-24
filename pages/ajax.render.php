@@ -321,14 +321,14 @@ try
 			foreach($aClassAliases as $sAlias => $sClassName)
 			{
 				$aColumnsLoad[$sAlias] = array();
-				foreach($aColumns[$sAlias] as $sAttCode => $aData)
-				{
-					if ($aData['checked'] == 'true')
-					{
+				if (!isset($aColumns[$sAlias])) {
+					continue;
+				}
+				foreach ($aColumns[$sAlias] as $sAttCode => $aData) {
+					if ($aData['checked'] == 'true') {
 						$aColumns[$sAlias][$sAttCode]['checked'] = true;
-						if ($sAttCode == '_key_')
-						{
-							if($sIdName == ""){
+						if ($sAttCode == '_key_') {
+							if ($sIdName == "") {
 								$sIdName = $sAlias."/_key_";
 							}
 							if ($iSortCol == $iSortIndex)
@@ -384,7 +384,6 @@ try
 						$aColumns[$sAlias][$sAttCode]['checked'] = false;
 					}
 				}
-
 			}
 			$aQueryParams = isset($aExtraParams['query_params']) ? $aExtraParams['query_params'] : [];
 
@@ -405,12 +404,14 @@ try
 			$aResult["recordsFiltered"] = $oSet->Count() ;
 			$aResult["data"] = [];
 			while ($aObject = $oSet->FetchAssoc()) {
-				foreach($aClassAliases as $sAlias=>$sClass)	{
-					foreach($aColumns[$sAlias] as $sAttCode => $oAttDef) {
-						if ($sAttCode == "_key_") {
-							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetKey();
-						} else {
-							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+				foreach($aClassAliases as $sAlias=>$sClass) {
+					if (isset($aColumns[$sAlias])) {
+						foreach ($aColumns[$sAlias] as $sAttCode => $oAttDef) {
+							if ($sAttCode == "_key_") {
+								$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetKey();
+							} else {
+								$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+							}
 						}
 					}
 				}
