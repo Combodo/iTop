@@ -61,9 +61,14 @@ $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-pane
 		}
 	}
 
+	.ibo-datatable-header.sorting, .ibo-datatable-header.sorting_asc, .ibo-datatable-header.sorting_desc {
+		cursor: pointer;
+	}
+
 	tbody tr:nth-child(odd) {
 		background-color: $ibo-datatable-row--odd--background-color;
-	}	
+	}
+
 	tbody tr:nth-child(even) {
 		background-color: $ibo-datatable-row--even--background-color;
 	}
