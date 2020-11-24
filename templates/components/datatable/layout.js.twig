@@ -173,78 +173,101 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 
 
 {% if oUIBlock.GetOption("select_mode") is not empty %}
-{% if oUIBlock.GetOption("select_mode") != "single" %}
-console.warn('aa');
-oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-	var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
-	if( $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
-    {
-	     // Checking input
-	    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
-	    // Saving values in temp array
-	    for (var i in aData) {
-		    var iItemId = aData[i].id;
-		    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
-			    oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+	{% if oUIBlock.GetOption("select_mode") != "single" %}
+		oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+			var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+			if( $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+		    {
+			     // Checking input
+			    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+			    // Saving values in temp array
+			    for (var i in aData) {
+				    var iItemId = aData[i].id;
+				    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
+					    oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+				    }
+			    }
+			    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] ) {
+				    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
+			    } else {
+				    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
+			    }
 		    }
-	    }
-	    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"] ) {
-		    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
-	    } else {
-		    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
-	    }
-    }
-	else {
-	     // Checking input
-	    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
-	    // Saving values in temp array
-	    for (var i in aData) {
-		    var iItemId = aData[i].id;
-		    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
-			    oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+			else {
+			     // Checking input
+			    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+			    // Saving values in temp array
+			    for (var i in aData) {
+				    var iItemId = aData[i].id;
+				    if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
+					    oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+				    }
+			    }
+			    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
 		    }
-	    }
-	    $('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
-    }
-});
+		});
 
-oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-	var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+		oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+			var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
 
-	// Checking input
-	$('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
-	// Saving values in temp array
-	if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-		for (var i in aData) {
-			var iItemId = aData[i].id;
-			if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
-				oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+			// Checking input
+			$('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+			// Saving values in temp array
+			if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
+				for (var i in aData) {
+					var iItemId = aData[i].id;
+					if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
+						oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+					}
+				}
+				if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"]) {
+					$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
+				} else {
+					$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
+				}
+			} else {
+				for (var i in aData) {
+					var iItemId = aData[i].id;
+					if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
+						oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+					}
+				}
+				if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === 0) {
+					$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
+				} else {
+					$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
+				}
 			}
-		}
-		if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === oTable{{ oUIBlock.GetId() }}.page.info()["recordsTotal"]) {
-			$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
-		} else {
-			$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
-		}
-	} else {
-		for (var i in aData) {
-			var iItemId = aData[i].id;
-			if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
-				oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+		});
+	{% else %}
+		oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+			var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+			// Checking input
+			$('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+			// Saving values in temp array
+			for (var i in aData) {
+				var iItemId = aData[i].id;
+				if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) === -1) {
+					oSelectedItems{{ oUIBlock.GetOption('sListId') }}.push(iItemId);
+				}
 			}
-		}
-		if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.length === 0) {
-			$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', true);
-		} else {
-			$('#btn_ok_{{ oUIBlock.GetOption('sTableId') }}').prop('disabled', false);
-		}
-	}
-});
-{% else %}
-	oTable{{ oUIBlock.GetId() }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-	    $('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', false);
-	});
-{% endif %}
+			$('#btn_ok_{{ oUIBlock.GetOption('sListId') }}').prop('disabled', false);
+		});
+
+		oTable{{ oUIBlock.GetId() }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+			var aData = oTable{{ oUIBlock.GetId() }}.rows(indexes).data().toArray();
+
+			// Checking input
+			$('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+			// Saving values in temp array
+			for (var i in aData) {
+				var iItemId = aData[i].id;
+				if (oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId) > -1) {
+					oSelectedItems{{ oUIBlock.GetOption('sListId') }}.splice(oSelectedItems{{ oUIBlock.GetOption('sListId') }}.indexOf(iItemId), 1);
+				}
+			}
+		});
+	{% endif %}
 {% endif %}
 
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
