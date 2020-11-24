@@ -6784,20 +6784,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_null($oHostObject))
-		{
+		if (!is_null($oHostObject)) {
 			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
 		}
 
 		return DBObject::MakeHyperLink($this->GetTargetClass(), $sValue);
-	}
-
-	public function GetRenderForDataTable(string $sClassAlias) :string
-	{
-		$oRemoteAtt = $this->GetFinalAttDef();
-		$sTargetClass = $oRemoteAtt->GetTargetClass();
-		$sRenderFunction = "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sTargetClass."&id='+data+'\'>'+row['".$sClassAlias."/".$this->GetCode()."_friendlyname']+'</a>' ;";
-		return $sRenderFunction;
 	}
 }
 

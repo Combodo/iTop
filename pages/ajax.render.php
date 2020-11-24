@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
@@ -407,19 +407,10 @@ try
 			while ($aObject = $oSet->FetchAssoc()) {
 				foreach($aClassAliases as $sAlias=>$sClass)	{
 					foreach($aColumns[$sAlias] as $sAttCode => $oAttDef) {
-						if($sAttCode=="_key_") {
-							$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetKey();
-						}
-						else {
-							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-							if ($oAttDef instanceof AttributeExternalKey)
-							{
-								$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->Get($sAttCode);
-							}
-							else{
-								$aObj[$sAlias."/".$sAttCode ] = $aObject[$sAlias]->GetAsHTML($sAttCode);
-							}
-
+						if ($sAttCode == "_key_") {
+							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetKey();
+						} else {
+							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						}
 					}
 				}
