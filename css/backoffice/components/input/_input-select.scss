@@ -1,3 +1,6 @@
+$ibo-input-select-selectize--value--height: 100% !default;
+$ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
+
 $ibo-input-select-wrapper--width: 100% !default;
 
 $ibo-input-select-wrapper--after--height: 28px !default;
@@ -27,6 +30,11 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -82px !def
 	&.ibo-input-selectize{
 		input{
 			display: none;
+		}
+		>[data-value]
+		{
+			height: $ibo-input-select-selectize--value--height;
+			line-height: $ibo-input-select-selectize--value--line-height;
 		}
 	}
 }

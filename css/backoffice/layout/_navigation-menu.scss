@@ -35,7 +35,6 @@ $ibo-navigation-menu--silo-selection--width: 70% !default;
 $ibo-navigation-menu--silo-selection--margin-left: 15px !default;
 $ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right: -42px !default;
 $ibo-navigation-menu--silo-selection--input--padding-right: 38px !default;
-$ibo-navigation-menu--silo-selection--input--data-value--padding: 5px !default;
 $ibo-navigation-menu--silo-selection--input-select--action-button--hierarchy--margin-left: -42px !default;
 $ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left: 60px !default;
 $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left: -42px !default;
@@ -415,10 +414,6 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 		.ibo-input{
 			padding-right: $ibo-navigation-menu--silo-selection--input--padding-right;
 			overflow: hidden;
-			>[data-value]
-			{
-				padding: $ibo-navigation-menu--silo-selection--input--data-value--padding;
-			}
 		}
 		.ibo-input-select--action-button--hierarchy{
 			margin-left: $ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right;
