@@ -11,7 +11,7 @@
 		<th></th>
 	{% endif %}
 	{% for aColumn in oUIBlock.GetDisplayColumns() %}
-		<th class="ibo-datatable-header" title="{{ aColumn["description"] }}\">{{ aColumn["attribute_label"] }} </th>
+		<th class="ibo-datatable-header" {% if aColumn["description"] is not empty %}title="{{ aColumn["description"] }}"{% endif %}>{{ aColumn["attribute_label"] }} </th>
 	{% endfor %}
 	</thead>
 </table>
