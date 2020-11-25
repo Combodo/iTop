@@ -1,8 +1,12 @@
 {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
 {% if oUIBlock.GetOptions()["select_mode"] is defined %}
 	<input type="hidden" name="selectionMode" value="positive"/>
-	<input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData()["extra_params"] }}"/>
-	<input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData()["filter"] }}"/>
+	{% if oUIBlock.GetAjaxData()["extra_params"] is not empty %}
+		<input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData()["extra_params"] }}"/>
+	{% endif %}
+	{% if oUIBlock.GetAjaxData()["filter"] is not empty %}
+		<input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData()["filter"] }}"/>
+	{% endif %}
 {% endif %}
 
 <table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlockCode() }}">

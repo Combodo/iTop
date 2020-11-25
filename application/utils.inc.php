@@ -107,20 +107,19 @@ class utils
 	private static $m_aParamsFromFile = null;
 	private static $m_aParamSource = array();
 
+	private static $iNextId = 0;
+
 	protected static function LoadParamFile($sParamFile)
 	{
-		if (!file_exists($sParamFile))
-		{
+		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
-		if (!is_readable($sParamFile))
-		{
+		if (!is_readable($sParamFile)) {
 			throw new Exception("Could not load parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		$sParams = file_get_contents($sParamFile);
 
-		if (is_null(self::$m_aParamsFromFile))
-		{
+		if (is_null(self::$m_aParamsFromFile)) {
 			self::$m_aParamsFromFile = array();
 		}
 
@@ -2434,7 +2433,18 @@ class utils
 	/**
 	 * @since 3.0.0
 	 */
-	public static function IsEasterEggAllowed(){
+	public static function IsEasterEggAllowed()
+	{
 		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
+
+	/**
+	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
+	 *
+	 * @return int The unique ID (in this page)
+	 */
+	public static function GetUniqueId()
+	{
+		return static::$iNextId++;
 	}
 }

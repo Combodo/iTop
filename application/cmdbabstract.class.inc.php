@@ -1135,7 +1135,7 @@ HTML
 	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		if (empty($aExtraParams['currentId'])) {
-			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
@@ -1164,9 +1164,8 @@ HTML
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		if (empty($aExtraParams['currentId']))
-		{
-			$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+		if (empty($aExtraParams['currentId'])) {
+			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 		}
 		else
 		{
@@ -1782,9 +1781,8 @@ HTML
 		{
 			$iInputId = $iId;
 		}
-		else
-		{
-			$iInputId = $oPage->GetUniqueId();
+		else {
+			$iInputId = utils::GetUniqueId();
 		}
 
 		$sHTMLValue = '';

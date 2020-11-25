@@ -73,4 +73,18 @@ class Html extends UIBlock
 
 		return $this;
 	}
+
+	/**
+	 * Add HTML, must be already sanitized
+	 *
+	 * @param string $sHtml
+	 *
+	 * @return $this
+	 */
+	public function AddHtml(string $sHtml)
+	{
+		$this->sHtml .= $sHtml;
+
+		return $this;
+	}
 }

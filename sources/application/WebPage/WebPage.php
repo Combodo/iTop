@@ -856,16 +856,6 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
-	 *
-	 * @return int The unique ID (in this page)
-	 */
-	public function GetUniqueId()
-	{
-		return $this->iNextId++;
-	}
-
-	/**
 	 * Set the content-type (mime type) for the page's content
 	 *
 	 * @param $sContentType string

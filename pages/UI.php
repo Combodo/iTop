@@ -278,8 +278,10 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * @param array $aExtraFormParams
  *
  * @throws \ApplicationException
+ * @throws \ArchivedObjectException
+ * @throws \CoreException
  */
-function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, $aExtraFormParams = array())
+function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [])
 {
 	$oAppContext = new ApplicationContext();
 	$iBulkActionAllowed = $oChecker->IsAllowed();
@@ -364,6 +366,7 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
+
 
 try
 {
@@ -722,90 +725,43 @@ EOF
 			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
+			if (empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 			// Check if the user can modify this object
 			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
+			if (is_null($oObj)) {
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			}
-			else
-			{
+			} else {
 				// The object could be read - check if it is allowed to modify it
 				$oSet = CMDBObjectSet::FromObject($oObj);
-				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
-				{
+				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
 				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
-		break;
-	
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
-		$oP->DisableBreadCrumb();
-		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		if (empty($sFilter))
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
-		}
-		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-		$sClass = $oFilter->GetClass();
-		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");			
-		
-		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
-		break;	
+			UI::OperationSelectForModifyAll($oP);
+			break;
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-		// Add user filter
-		$oFullSetFilter->UpdateContextFromUser();
-		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
-		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
-		break;
-		
+			UI::OperationFormForModifyAll($oP, $oAppContext);
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'preview_or_modify_all': // Preview or apply bulk modify
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$bPreview = utils::ReadParam('preview_mode', '');
-		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
-		if ( empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
-		}
-		$aSelectedObj = explode(',', $sSelectedObj);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array(
-			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
-			'selectObj' => $sSelectedObj,
-		);
-		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
-		break;
+			UI::OperationPreviewOrModifyAll($oP, $oAppContext);
+			break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2083,5 +2039,99 @@ catch(Exception $e)
 		}
 
 		IssueLog::Error($e->getMessage());
+	}
+}
+
+class UI
+{
+
+	/**
+	 * Operation select_for_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public static function OperationSelectForModifyAll(iTopWebPage $oP): void
+	{
+		$oP->DisableBreadCrumb();
+		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		if (empty($sFilter)) {
+			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
+		}
+		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
+		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");
+
+		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
+	}
+
+	/**
+	 * Operation form_for_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public static function OperationFormForModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
+	{
+		$oP->DisableBreadCrumb();
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		// Add user filter
+		$oFullSetFilter->UpdateContextFromUser();
+		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array('search' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
+	}
+
+	/**
+	 * Operation preview_or_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \OQLException
+	 */
+	public static function OperationPreviewOrModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
+	{
+		$oP->DisableBreadCrumb();
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$bPreview = utils::ReadParam('preview_mode', '');
+		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
+		if (empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
+		}
+		$aSelectedObj = explode(',', $sSelectedObj);
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array(
+			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
+			'selectObj' => $sSelectedObj,
+		);
+		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
 	}
 }

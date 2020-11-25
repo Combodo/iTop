@@ -85,7 +85,7 @@ class SearchForm
 		}
 		else
 		{
-			$iSearchFormId = $oPage->GetUniqueId();
+			$iSearchFormId = utils::GetUniqueId();
 			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
 			$oUiBlock->AddHtml("<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">");
 			$aListParams['currentId'] = "$iSearchFormId";

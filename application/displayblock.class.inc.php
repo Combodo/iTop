@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\Search\SearchForm;
+use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
@@ -27,7 +27,6 @@ use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -259,7 +258,7 @@ HTML;
 		} else {
 			// render it as an Ajax (asynchronous) call
 			$oHtml->AddCSSClasses("display_block loading");
-			$oHtml->AddHtml($oPage->GetP("<img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading')));
+			$oHtml->AddHtml("<p><img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading').'</p>');
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
@@ -298,7 +297,7 @@ HTML;
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		if (!isset($aExtraParams['currentId'])) {
-			$sId = $oPage->GetUniqueId(); // Works only if the page is not an Ajax one !
+			$sId = utils::GetUniqueId(); // Works only if the page is not an Ajax one !
 		} else {
 			$sId = $aExtraParams['currentId'];
 		}
@@ -427,111 +426,12 @@ HTML;
 		switch($this->m_sStyle)
 		{
 			case 'count':
-				$oBlock = $this->RenderCount($aExtraParams, $oPage, $sId);
+				$oBlock = $this->RenderCount($aExtraParams, $sId);
 				break;
-			
-			case 'join':
-			$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']): array();
-			if (!isset($aExtraParams['group_by']))
-			{
-				$sHtml .= $oPage->GetP(Dict::S('UI:Error:MandatoryTemplateParameter_group_by'));
-			}
-			else
-			{
-				$aGroupByFields = array();
-				$aGroupBy = explode(',', $aExtraParams['group_by']);
-				foreach($aGroupBy as $sGroupBy)
-				{
-					$aMatches = array();
-					if (preg_match('/^(.+)\.(.+)$/', $sGroupBy, $aMatches) > 0)
-					{
-						$aGroupByFields[] = array('alias' => $aMatches[1], 'att_code' => $aMatches[2]);
-					}
-				}
-				if (count($aGroupByFields) == 0)
-				{
-					$sHtml .= $oPage->GetP(Dict::Format('UI:Error:InvalidGroupByFields', $aExtraParams['group_by']));
-				}
-				else
-				{
-					$aResults = array();
-					$aCriteria = array();
-					while($aObjects = $this->m_oSet->FetchAssoc())
-					{
-						$aKeys = array();
-						foreach($aGroupByFields as $aField)
-						{
-							$sAlias = $aField['alias'];
-							if (is_null($aObjects[$sAlias]))
-							{
-								$aKeys[$sAlias.'.'.$aField['att_code']] = '';
-							}
-							else
-							{
-								$aKeys[$sAlias.'.'.$aField['att_code']] = $aObjects[$sAlias]->Get($aField['att_code']);
-							}
-						}
-						$sCategory = implode($aKeys, ' ');
-						$aResults[$sCategory][] = $aObjects;
-						$aCriteria[$sCategory] = $aKeys;						
-					}
 
-					$sHtml .= "<table>\n";
-					// Construct a new (parametric) query that will return the content of this block
-					$oBlockFilter = $this->m_oFilter->DeepClone();
-					$aExpressions = array();
-					$index = 0;
-					foreach($aGroupByFields as $aField)
-					{
-						$aExpressions[] = '`'.$aField['alias'].'`.`'.$aField['att_code'].'` = :param'.$index++;
-					}
-					$sExpression = implode(' AND ', $aExpressions);
-					$oExpression = Expression::FromOQL($sExpression);
-					$oBlockFilter->AddConditionExpression($oExpression);
-					$aExtraParams['menu'] = false;
-					foreach($aResults as $sCategory => $aObjects)
-					{
-						$sHtml .= "<tr><td><h1>$sCategory</h1></td></tr>\n";
-						if (count($aDisplayAliases) == 1)
-						{
-							$aSimpleArray = array();
-							foreach($aObjects as $aRow)
-							{
-								$oObj = $aRow[$aDisplayAliases[0]];
-								if (!is_null($oObj))
-								{
-									$aSimpleArray[] = $oObj;
-								}
-							}
-							$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aSimpleArray);
-							$sHtml .= "<tr><td>".cmdbAbstractObject::GetDisplaySet($oPage, $oSet, $aExtraParams)."</td></tr>\n";
-						}
-						else
-						{
-							$index = 0;
-							$aArgs = array();
-							foreach($aGroupByFields as $aField)
-							{
-								$aArgs['param'.$index] = $aCriteria[$sCategory][$aField['alias'].'.'.$aField['att_code']];
-								$index++;
-							}
-							$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
-							if (empty($aExtraParams['currentId']))
-							{
-								$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
-							}
-							else
-							{
-								$iListId = $aExtraParams['currentId'];
-							}
-							$oBlock = DataTableFactory::MakeForRendering( $iListId, $this->m_oSet, $aExtraParams);
-							$sHtml .= "<tr><td>".BlockRenderer::RenderBlockTemplates($oBlock)."</td></tr>\n";
-						}
-					}				
-					$sHtml .= "</table>\n";
-				}
-			}
-			break;
+			case 'join':
+				$oBlock = $this->RenderJoin($aExtraParams, $oPage);
+				break;
 
 			case 'list_search':
 				$oBlock = $this->RenderListSearch($aExtraParams, $oPage);
@@ -540,46 +440,10 @@ HTML;
 			case 'list':
 				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
-			
+
 			case 'links':
-			//$bDashboardMode = isset($aExtraParams['dashboard']) ? ($aExtraParams['dashboard'] == 'true') : false;
-			//$bSelectMode = isset($aExtraParams['select']) ? ($aExtraParams['select'] == 'true') : false;
-			if ( ($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
-			{
-				//$sLinkage = isset($aExtraParams['linkage']) ? $aExtraParams['linkage'] : '';
-				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
-			}
-			else
-			{
-				$sClass = $this->m_oFilter->GetClass();
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
-				$sTargetClass = $oAttDef->GetTargetClass();
-				$sHtml .= $oPage->GetP(Dict::Format('UI:NoObject_Class_ToDisplay', MetaModel::GetName($sTargetClass)));
-				$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true; 
-				if ($bDisplayMenu)
-				{
-					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-					{
-						$sDefaults = '';
-						if (isset($this->m_aParams['default']))
-						{
-							foreach($this->m_aParams['default'] as $sName => $sValue)
-							{
-								$sDefaults .= '&'.urlencode($sName).'='.urlencode($sValue);
-							}
-						}
-						$sHtml .= $oPage->GetP("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true$sDefaults\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
-					}
-				}
-			}
-			break;
-			
-			case 'details':
-			while($oObj = $this->m_oSet->Fetch())
-			{
-				$sHtml .= $oObj->GetDetails($oPage); // Still used ???
-			}
-			break;
+				$oBlock = $this->RenderLinks($oPage, $aExtraParams);
+				break;
 
 			case 'actions':
 				$oBlock = $this->RenderActions($aExtraParams);
@@ -588,72 +452,22 @@ HTML;
 			case 'summary':
 				$oBlock = $this->RenderSummary($aExtraParams);
 				break;
-			
+
 			case 'csv':
-			$bAdvancedMode = utils::ReadParam('advanced', false);
+				$oBlock = $this->RenderCSV($oAppContext, $oPage);
+				break;
 
-			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
-			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
-			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
-			// Pass the parameters via POST, since expression may be very long
-			$aParamsToPost = array(
-				'expression' => $this->m_oFilter->ToOQL(true),
-				'format' => 'csv',
-				'filename' => $sCsvFile,
-				'charset' => 'UTF-8',
-			);
-			if ($bAdvancedMode)
-			{
-				$sDownloadLink .= '&fields_advanced=1';
-				$aParamsToPost['fields_advance'] = 1;
-				$sChecked = 'CHECKED';
-			}
-			else
-			{
-				$sLinkToToggle = $sLinkToToggle.'&advanced=1';
-				$sChecked = '';
-			}
-			$sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
-				
-			$sCharsetNotice = false;
-			$sHtml .= "<div>";
-			$sHtml .= '<table style="width:100%" class="transparent">';
-			$sHtml .= '<tr>';
-			$sHtml .= '<td><a href="'.$sDownloadLink.'">'.Dict::Format('UI:Download-CSV', $sCsvFile).'</a>'.$sCharsetNotice.'</td>';
-			$sHtml .= '<td style="text-align:right"><input type="checkbox" '.$sChecked.' onClick="window.location.href=\''.$sLinkToToggle.'\'">&nbsp;'.Dict::S('UI:CSVExport:AdvancedMode').'</td>';
-			$sHtml .= '</tr>';
-			$sHtml .= '</table>';
-			if ($bAdvancedMode)
-			{
-				$sHtml .= "<p>";
-				$sHtml .= htmlentities(Dict::S('UI:CSVExport:AdvancedMode+'), ENT_QUOTES, 'UTF-8');
-				$sHtml .= "</p>";
-			}
-			$sHtml .= "</div>";
-
-			$sHtml .= "<div id=\"csv_content_loading\"><div style=\"width: 250px; height: 20px; background: url(../setup/orange-progress.gif); border: 1px #999 solid; margin-left:auto; margin-right: auto; text-align: center;\">".Dict::S('UI:Loading')."</div></div><textarea id=\"csv_content\" style=\"display:none;\">\n";
-			//$sHtml .= htmlentities($sCSVData, ENT_QUOTES, 'UTF-8');
-			$sHtml .= "</textarea>\n";
-			$sJsonParams = json_encode($aParamsToPost);
-			$oPage->add_ready_script("$.post('$sAjaxLink', $sJsonParams, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
-			break;
-
+			case 'details':
 			case 'modify':
-			if ((UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_MODIFY, $this->m_oSet) == UR_ALLOWED_YES))
-			{
-				while($oObj = $this->m_oSet->Fetch())
-				{
-					$sHtml .= $oObj->GetModifyForm($oPage);
-				}
-			}
-			break;
-			
+				$oBlock = new Html('Not supported');
+				break;
+
 			case 'search':
 				$oBlock = $this->RenderSearch($oPage, $sId, $aExtraParams);
 				break;
-			
+
 			case 'chart':
-			static $iChartCounter = 0;
+				static $iChartCounter = 0;
 				$iChartCounter++;
 
 				$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
@@ -1232,7 +1046,6 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param \WebPage $oPage
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\iUIBlock
@@ -1243,7 +1056,7 @@ JS
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
 	 */
-	protected function RenderCount(array $aExtraParams, WebPage $oPage, ?string $sId): iUIBlock
+	protected function RenderCount(array $aExtraParams, ?string $sId): iUIBlock
 	{
 		if (isset($aExtraParams['group_by'])) {
 			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
@@ -1294,7 +1107,6 @@ JS
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
 			$oBlock = DataTableFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
 
-			// $oPage->add_ready_script("LoadGroupBySortOrder('$sId');\n$('#{$sId} table.listResults').unbind('sortEnd.group_by').bind('sortEnd.group_by', function() { SaveGroupBySortOrder('$sId', $(this)[0].config.sortList); })");
 		} else {
 			// Simply count the number of elements in the set
 			$iCount = $this->m_oSet->Count();
@@ -1302,7 +1114,7 @@ JS
 			if (isset($aExtraParams['format'])) {
 				$sFormat = $aExtraParams['format'];
 			}
-			$oBlock = new Html($oPage->GetP(Dict::Format($sFormat, $iCount)));
+			$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
 		}
 		return $oBlock;
 }
@@ -1350,9 +1162,9 @@ JS
 	protected function RenderList(array $aExtraParams, WebPage $oPage)
 	{
 		$aClasses = $this->m_oSet->GetSelectedClasses();
-		$aAuthorizedClasses = array();
+		$aAuthorizedClasses = [];
 		$oBlock = null;
-		$sHtml = '';
+		$oHtml = new Html();
 		if (count($aClasses) > 1) {
 			// Check the classes that can be read (i.e authorized) by this user...
 			foreach ($aClasses as $sAlias => $sClassName) {
@@ -1363,27 +1175,27 @@ JS
 			if (count($aAuthorizedClasses) > 0) {
 				if ($this->m_oSet->CountWithLimit(1) > 0) {
 					if (empty($aExtraParams['currentId'])) {
-						$iListId = $oPage->GetUniqueId(); // Works only if not in an Ajax page !!
+						$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 					} else {
 						$iListId = $aExtraParams['currentId'];
 					}
 					$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
 				} else {
 					// Empty set
-					$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+					$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
 				}
 			} else {
 				// Not authorized
-				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
 			}
 		} else {
 			// The list is made of only 1 class of objects, actions on the list are possible
 			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
 				$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
 			} else {
-				$sHtml .= $oPage->GetP(Dict::S('UI:NoObjectToDisplay'));
+				$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
 				$sClass = $this->m_oFilter->GetClass();
-				$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
+				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
 				if ($bDisplayMenu) {
 					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 						$sLinkTarget = '';
@@ -1401,7 +1213,7 @@ JS
 							}
 						}
 
-						$sHtml .= $oPage->GetP("<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a>\n");
+						$oHtml->AddHtml('<p>'."<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a></p>\n");
 					}
 				}
 			}
@@ -1425,10 +1237,214 @@ JS
 			}
 		}
 		if (is_null($oBlock)) {
-			$oBlock = new Html($sHtml);
+			return $oHtml;
 		}
 		return $oBlock;
 	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\UIContentBlock
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function RenderJoin(array $aExtraParams, WebPage $oPage)
+	{
+		$oContentBlock = new UIContentBlock();
+		$oHtml = new Html();
+		$oContentBlock->AddSubBlock($oHtml);
+		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
+		if (!isset($aExtraParams['group_by'])) {
+			$oHtml->AddHtml('<p>'.Dict::S('UI:Error:MandatoryTemplateParameter_group_by').'</p>');
+		} else {
+			$aGroupByFields = array();
+			$aGroupBy = explode(',', $aExtraParams['group_by']);
+			foreach ($aGroupBy as $sGroupBy) {
+				$aMatches = array();
+				if (preg_match('/^(.+)\.(.+)$/', $sGroupBy, $aMatches) > 0) {
+					$aGroupByFields[] = array('alias' => $aMatches[1], 'att_code' => $aMatches[2]);
+				}
+			}
+			if (count($aGroupByFields) == 0) {
+				$oHtml->AddHtml('<p>'.Dict::Format('UI:Error:InvalidGroupByFields', $aExtraParams['group_by']).'</p>');
+			} else {
+				$aResults = array();
+				$aCriteria = array();
+				while ($aObjects = $this->m_oSet->FetchAssoc()) {
+					$aKeys = array();
+					foreach ($aGroupByFields as $aField) {
+						$sAlias = $aField['alias'];
+						if (is_null($aObjects[$sAlias])) {
+							$aKeys[$sAlias.'.'.$aField['att_code']] = '';
+						} else {
+							$aKeys[$sAlias.'.'.$aField['att_code']] = $aObjects[$sAlias]->Get($aField['att_code']);
+						}
+					}
+					$sCategory = implode($aKeys, ' ');
+					$aResults[$sCategory][] = $aObjects;
+					$aCriteria[$sCategory] = $aKeys;
+				}
+
+				$oHtml->AddHtml("<table>\n");
+				// Construct a new (parametric) query that will return the content of this block
+				$oBlockFilter = $this->m_oFilter->DeepClone();
+				$aExpressions = array();
+				$index = 0;
+				foreach ($aGroupByFields as $aField) {
+					$aExpressions[] = '`'.$aField['alias'].'`.`'.$aField['att_code'].'` = :param'.$index++;
+				}
+				$sExpression = implode(' AND ', $aExpressions);
+				$oExpression = Expression::FromOQL($sExpression);
+				$oBlockFilter->AddConditionExpression($oExpression);
+				$aExtraParams['menu'] = false;
+				foreach ($aResults as $sCategory => $aObjects) {
+					$oHtml->AddHtml("<tr><td><h1>$sCategory</h1></td></tr>\n");
+					if (count($aDisplayAliases) == 1) {
+						$aSimpleArray = array();
+						foreach ($aObjects as $aRow) {
+							$oObj = $aRow[$aDisplayAliases[0]];
+							if (!is_null($oObj)) {
+								$aSimpleArray[] = $oObj;
+							}
+						}
+						$oSet = CMDBObjectSet::FromArray($this->m_oFilter->GetClass(), $aSimpleArray);
+						$oHtml->AddHtml("<tr><td>");
+						$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $oSet, $aExtraParams);
+						$oContentBlock->AddSubBlock($oBlock);
+						$oHtml = new Html();
+						$oContentBlock->AddSubBlock($oHtml);
+						$oHtml->AddHtml("</td></tr>\n");
+					} else {
+						$index = 0;
+						$aArgs = array();
+						foreach ($aGroupByFields as $aField) {
+							$aArgs['param'.$index] = $aCriteria[$sCategory][$aField['alias'].'.'.$aField['att_code']];
+							$index++;
+						}
+						$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
+						if (empty($aExtraParams['currentId'])) {
+							$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
+						} else {
+							$iListId = $aExtraParams['currentId'];
+						}
+						$oBlock = DataTableFactory::MakeForRendering($iListId, $oSet, $aExtraParams);
+						$oHtml->AddHtml("<tr><td>");
+						$oContentBlock->AddSubBlock($oBlock);
+						$oHtml = new Html();
+						$oContentBlock->AddSubBlock($oHtml);
+						$oHtml->AddHtml("</td></tr>\n");
+					}
+				}
+				$oHtml->AddHtml("</table>\n");
+			}
+		}
+		return $oContentBlock;
+	}
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 * @param string $sHtml
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	protected function RenderLinks(WebPage $oPage, array $aExtraParams)
+	{
+		$oBlock = null;
+		if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
+			$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
+		} else {
+			$sClass = $this->m_oFilter->GetClass();
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
+			$sTargetClass = $oAttDef->GetTargetClass();
+			$oBlock = new Html('<p>'.Dict::Format('UI:NoObject_Class_ToDisplay', MetaModel::GetName($sTargetClass)).'</p>');
+			$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true;
+			if ($bDisplayMenu) {
+				if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+					$sDefaults = '';
+					if (isset($this->m_aParams['default'])) {
+						foreach ($this->m_aParams['default'] as $sName => $sValue) {
+							$sDefaults .= '&'.urlencode($sName).'='.urlencode($sValue);
+						}
+					}
+					$oBlock->AddHtml("<p><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true$sDefaults\">".Dict::Format('UI:ClickToCreateNew',
+							Metamodel::GetName($sClass))."</a></p>\n");
+				}
+			}
+		}
+		return $oBlock;
+	}
+
+	/**
+	 * @param \ApplicationContext $oAppContext
+	 * @param string $sHtml
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	protected function RenderCSV(ApplicationContext $oAppContext, WebPage $oPage)
+	{
+		$bAdvancedMode = utils::ReadParam('advanced', false);
+
+		$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
+		$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
+		$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
+		// Pass the parameters via POST, since expression may be very long
+		$aParamsToPost = array(
+			'expression' => $this->m_oFilter->ToOQL(true),
+			'format' => 'csv',
+			'filename' => $sCsvFile,
+			'charset' => 'UTF-8',
+		);
+		if ($bAdvancedMode) {
+			$sDownloadLink .= '&fields_advanced=1';
+			$aParamsToPost['fields_advance'] = 1;
+			$sChecked = 'CHECKED';
+		} else {
+			$sLinkToToggle = $sLinkToToggle.'&advanced=1';
+			$sChecked = '';
+		}
+		$sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
+
+		$sCharsetNotice = false;
+		$oHtml = new Html();
+		$oHtml->AddHtml("<div>");
+		$oHtml->AddHtml('<table style="width:100%" class="transparent">');
+		$oHtml->AddHtml('<tr>');
+		$oHtml->AddHtml('<td><a href="'.$sDownloadLink.'">'.Dict::Format('UI:Download-CSV', $sCsvFile).'</a>'.$sCharsetNotice.'</td>');
+		$oHtml->AddHtml('<td style="text-align:right"><input type="checkbox" '.$sChecked.' onClick="window.location.href=\''.$sLinkToToggle.'\'">&nbsp;'.Dict::S('UI:CSVExport:AdvancedMode').'</td>');
+		$oHtml->AddHtml('</tr>');
+		$oHtml->AddHtml('</table>');
+		if ($bAdvancedMode) {
+			$oHtml->AddHtml("<p>");
+			$oHtml->AddHtml(htmlentities(Dict::S('UI:CSVExport:AdvancedMode+'), ENT_QUOTES, 'UTF-8'));
+			$oHtml->AddHtml("</p>");
+		}
+		$oHtml->AddHtml("</div>");
+
+		$oHtml->AddHtml("<div id=\"csv_content_loading\"><div style=\"width: 250px; height: 20px; background: url(../setup/orange-progress.gif); border: 1px #999 solid; margin-left:auto; margin-right: auto; text-align: center;\">".Dict::S('UI:Loading')."</div></div><textarea id=\"csv_content\" style=\"display:none;\">\n");
+		$oHtml->AddHtml("</textarea>\n");
+		$sJsonParams = json_encode($aParamsToPost);
+		$oPage->add_ready_script("$.post('$sAjaxLink', $sJsonParams, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
+		return $oHtml;
+	}
+
 }
 
 /**
