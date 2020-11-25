@@ -70,7 +70,21 @@ $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
-$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
+if(isset($_FILES['json_data']['name']) && !empty($_FILES['json_data']['name']))
+{
+	$sTmpFilePath = $_FILES['json_data']['tmp_name'];
+	if (is_file($sTmpFilePath)){
+		$sValue = file_get_contents($sTmpFilePath);
+		unlink($sTmpFilePath);
+		if (! empty($sValue)){
+			$sJsonString = utils::Sanitize($sValue, null, 'raw_data');
+		}
+	}
+}
+if (empty($sJsonString)){
+	$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
+}
+
 $sProvider = '';
 
 $oKPI = new ExecutionKPI();
@@ -125,7 +139,7 @@ try
 	{
 		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
-	
+
 	if ($sJsonString == null)
 	{
 		throw new Exception("Missing parameter 'json_data'", RestResult::MISSING_JSON);
