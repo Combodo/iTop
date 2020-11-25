@@ -10181,6 +10181,9 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 }
 
+/**
+ * @since 2.7.0 N°985
+ */
 class AttributeEnumSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
