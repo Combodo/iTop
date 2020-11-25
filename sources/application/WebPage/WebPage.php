@@ -844,15 +844,24 @@ class WebPage implements Page
 	 */
 	public function add_input_hidden($sLabel, $aData)
 	{
-		foreach ($aData as $sKey => $sValue)
-		{
+		foreach ($aData as $sKey => $sValue) {
 			// Note: protection added to protect against the Notice 'array to string conversion' that appeared with PHP 5.4
 			// (this function seems unused though!)
-			if (is_scalar($sValue))
-			{
+			if (is_scalar($sValue)) {
 				$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
 			}
 		}
+	}
+
+	/**
+	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
+	 *
+	 * @return int The unique ID (in this page)
+	 * @deprecated since 3.0.0 use utils::GetUniqueId() instead
+	 */
+	public function GetUniqueId()
+	{
+		return utils::GetUniqueId();
 	}
 
 	/**

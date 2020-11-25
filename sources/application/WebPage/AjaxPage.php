@@ -363,6 +363,14 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
+	public function GetUniqueId()
+	{
+		assert(false);
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);
