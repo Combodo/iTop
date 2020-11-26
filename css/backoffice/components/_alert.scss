@@ -28,6 +28,13 @@ $ibo-alert--title--padding-bottom: 4px !default;
 $ibo-alert--title--highlight--width: 4px !default;
 $ibo-alert--title--highlight--height: 100% !default;
 
+$ibo-alert-minimized--padding-y: 8px !default;
+$ibo-alert-minimized--title--padding-bottom: 0px !default;
+
+$ibo-alert--action-button--top: 5px !default;
+$ibo-alert--maximize-minimize-button--right: 30px !default;
+$ibo-alert--close-button--right: 10px !default;
+
 $ibo-alert-colors: (
 		'primary': ($ibo-color-primary-200, $ibo-color-primary-700, $ibo-color-primary-900),
 		'secondary': ($ibo-color-secondary-200, $ibo-color-secondary-700, $ibo-color-secondary-900),
@@ -80,12 +87,38 @@ $ibo-alert-colors: (
 		width: $ibo-alert--title--highlight--width;
 		height: $ibo-alert--title--highlight--height;
 	}
-
+	
 	.ibo-alert--title {
 		padding-bottom: $ibo-alert--title--padding-bottom;
 
 		@extend %ibo-font-ral-bol-150;
 	}
+	
+	&.ibo-is-opened {
+		.ibo-alert--minimize-button {
+			display: block;
+		}
+		.ibo-alert--maximize-button {
+			display: none;
+		}
+	}
+	&:not(.ibo-is-opened){
+		padding: $ibo-alert-minimized--padding-y $ibo-alert--padding-x;
+		
+		.ibo-alert--title {
+			padding-bottom: $ibo-alert-minimized--title--padding-bottom;
+		}
+		.ibo-alert--minimize-button {
+			display: none;
+		}
+		.ibo-alert--maximize-button {
+			display: block;
+		}
+		.ibo-alert--body {
+			display: none;
+		}
+	}
+
 }
 
 /* Spacing between alert blocks */
@@ -95,4 +128,20 @@ $ibo-alert-colors: (
 /* Spacing between an alert block and something else */
 .ibo-alert + :not(.ibo-alert) {
 	margin-top: $ibo-alert--spacing-top--with-other-blocks;
+}
+
+.ibo-alert--action-button{
+	position: absolute;
+	cursor: pointer;
+	top: $ibo-alert--action-button--top;
+	
+	&:hover i{
+		opacity: 0.8;
+	}
+	&.ibo-alert--maximize-button, &.ibo-alert--minimize-button{
+		right: $ibo-alert--maximize-minimize-button--right;
+	}
+	&.ibo-alert--close-button{
+		right: $ibo-alert--close-button--right;
+	}
 }
