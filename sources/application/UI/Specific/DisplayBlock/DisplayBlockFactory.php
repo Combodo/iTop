@@ -5,7 +5,7 @@
  */
 
 
-namespace Combodo\iTop\Application\Service;
+namespace Combodo\iTop\Application\Specific\DisplayBlock;
 
 
 use Combodo\iTop\Application\UI\iUIBlock;

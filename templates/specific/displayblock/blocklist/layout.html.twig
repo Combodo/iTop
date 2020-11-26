@@ -1,0 +1,25 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+    {% if oUIBlock.GetParameter('bEmptySet') %}
+        <p>{{ 'UI:NoObjectToDisplay'|dict_s }}</p>
+    {% endif %}
+
+    {% if oUIBlock.GetParameter('bNotAuthorized') %}
+        <p>{{ 'UI:NoObjectToDisplay'|dict_s }}</p>
+    {% endif %}
+
+    {% if oUIBlock.GetParameter('bCreateNew') %}
+        <p>
+            <a{{ oUIBlock.GetParameter('sLinkTarget') }} href="{{ oUIBlock.GetParameter('sAbsoluteUrlAppRoot') }}pages/UI.php?operation=new&class={{ oUIBlock.GetParameter('sClass') }}&{{ oUIBlock.GetParameter('sParams') }}{{ oUIBlock.GetParameter('sDefault') }}">
+                {{ 'UI:ClickToCreateNew'|dict_format(oUIBlock.GetParameter('sClassName')) }}
+            </a>
+        </p>
+    {% endif %}
+
+    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% endfor %}
+
+{% endapply %}
