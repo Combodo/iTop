@@ -336,17 +336,14 @@ if (!$oP)
 	$oP->p("Parameters:");
 	$oP->p(" * expression: an OQL expression (URL encoded if needed)");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
-	if (Utils::IsModeCLI())
-	{
+	if (Utils::IsModeCLI()) {
 		$oP->p(" * with_archive: (optional, defaults to 0) if set to 1 then the result set will include archived objects");
-	}
-	else
-	{
+	} else {
 		$oP->p(" * with_archive: (optional, defaults to the current mode) if set to 1 then the result set will include archived objects");
 	}
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv', 'xlsx' or 'xml'");
-	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
+	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a comma");
 	$oP->p(" * fields_advanced: (optional, no effect on XML/HTML formats ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
 	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");
 }

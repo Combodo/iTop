@@ -71,7 +71,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Query/Attribute:description' => 'Popis',
 	'Class:Query/Attribute:description+' => '',
 	'Class:QueryOQL/Attribute:fields' => 'Polia',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Dopyt',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
