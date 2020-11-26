@@ -550,7 +550,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
-	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:AccessAdmin' => 'Accès restreint aux utilisateurs possédant le profil Administrateur.',
 	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
 	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
