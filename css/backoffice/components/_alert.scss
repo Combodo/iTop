@@ -21,6 +21,7 @@ $ibo-alert--spacing-top--with-same-block: 6px !default;
 $ibo-alert--spacing-top--with-other-blocks: 16px !default;
 $ibo-alert--padding-y: 18px !default;
 $ibo-alert--padding-x: 20px !default;
+$ibo-alert--min-height: 30px !default;
 $ibo-alert--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-alert--title--padding-bottom: 4px !default;
@@ -28,7 +29,7 @@ $ibo-alert--title--padding-bottom: 4px !default;
 $ibo-alert--title--highlight--width: 4px !default;
 $ibo-alert--title--highlight--height: 100% !default;
 
-$ibo-alert-minimized--padding-y: 8px !default;
+$ibo-alert-minimized--padding-y: 5px !default;
 $ibo-alert-minimized--title--padding-bottom: 0px !default;
 
 $ibo-alert--action-button--top: 5px !default;
@@ -72,6 +73,7 @@ $ibo-alert-colors: (
 .ibo-alert {
 	position: relative;
 	padding: $ibo-alert--padding-y $ibo-alert--padding-x;
+	min-height: $ibo-alert--min-height;
 	border-radius: $ibo-alert--border-radius;
 	overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
