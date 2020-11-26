@@ -467,6 +467,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Layout\\TopBar\\TopBarFactory' => __DIR__ . '/../..' . '/sources/application/UI/Layout/TopBar/TopBarFactory.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\UIContentBlock' => __DIR__ . '/../..' . '/sources/application/UI/Layout/UIContentBlock.php',
         'Combodo\\iTop\\Application\\UI\\Layout\\iUIContentBlock' => __DIR__ . '/../..' . '/sources/application/UI/Layout/iUIContentBlock.php',
+        'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChartAjaxBars\\BlockChartAjaxBars' => __DIR__ . '/../..' . '/sources/application/UI/Specific/DisplayBlock/BlockChartAjaxBars/BlockChartAjaxBars.php',
+        'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChartAjaxPie\\BlockChartAjaxPie' => __DIR__ . '/../..' . '/sources/application/UI/Specific/DisplayBlock/BlockChartAjaxPie/BlockChartAjaxPie.php',
         'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChart\\BlockChart' => __DIR__ . '/../..' . '/sources/application/UI/Specific/DisplayBlock/BlockChart/BlockChart.php',
         'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockList\\BlockList' => __DIR__ . '/../..' . '/sources/application/UI/Specific/DisplayBlock/BlockList/BlockList.php',
         'Combodo\\iTop\\Application\\UI\\UIBlock' => __DIR__ . '/../..' . '/sources/application/UI/UIBlock.php',

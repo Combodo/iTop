@@ -1,0 +1,31 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+var chart = c3.generate({
+    bindto: d3.select('#my_chart_{{ oUIBlock.GetParameter('sId') }}'),
+    data: {
+        columns: {{ oUIBlock.GetParameter('sJSColumns')|raw }},
+        type: 'pie',
+        names: {{ oUIBlock.GetParameter('sJSNames')|raw }},
+        onclick: function (d, element) {
+            var aURLs = {{ oUIBlock.GetParameter('sJSURLs')|raw }};
+            window.location.href= aURLs[d.index];
+        },
+        order: null
+    },
+    legend: {
+        show: true,
+        position: 'right'
+    },
+    tooltip: {
+        format: {
+            value: function (value) { return value; }
+        }
+    }
+});
+
+if (typeof(charts) === "undefined")
+{
+    charts = [];
+}
+charts.push(chart);

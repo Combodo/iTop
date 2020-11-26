@@ -237,6 +237,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Layout\\TopBar\\TopBarFactory' => $baseDir . '/sources/application/UI/Layout/TopBar/TopBarFactory.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\UIContentBlock' => $baseDir . '/sources/application/UI/Layout/UIContentBlock.php',
     'Combodo\\iTop\\Application\\UI\\Layout\\iUIContentBlock' => $baseDir . '/sources/application/UI/Layout/iUIContentBlock.php',
+    'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChartAjaxBars\\BlockChartAjaxBars' => $baseDir . '/sources/application/UI/Specific/DisplayBlock/BlockChartAjaxBars/BlockChartAjaxBars.php',
+    'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChartAjaxPie\\BlockChartAjaxPie' => $baseDir . '/sources/application/UI/Specific/DisplayBlock/BlockChartAjaxPie/BlockChartAjaxPie.php',
     'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockChart\\BlockChart' => $baseDir . '/sources/application/UI/Specific/DisplayBlock/BlockChart/BlockChart.php',
     'Combodo\\iTop\\Application\\UI\\Specific\\DisplayBlock\\BlockList\\BlockList' => $baseDir . '/sources/application/UI/Specific/DisplayBlock/BlockList/BlockList.php',
     'Combodo\\iTop\\Application\\UI\\UIBlock' => $baseDir . '/sources/application/UI/UIBlock.php',

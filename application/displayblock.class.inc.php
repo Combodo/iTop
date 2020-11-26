@@ -28,6 +28,8 @@ use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChart\BlockChart;
+use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
+use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
 use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockList\BlockList;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -464,154 +466,8 @@ HTML;
 				break;
 			
 			case 'chart_ajax':
-			$sHtml = '';	
-			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
-			$sId = utils::ReadParam('id', '');
-
-			if (isset($aExtraParams['group_by']))
-			{
-				$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
-				$aRes = CMDBSource::QueryToArray($sSql);
-				$oContext = new ApplicationContext();
-				$sContextParam = $oContext->GetForLink();
-
-				$aGroupBy = array();
-				$iTotalCount = 0;
-				$aValues = array();
-				$aURLs = array();
-				foreach ($aRes as $iRow => $aRow)
-				{
-					$sValue = $aRow['grouped_by_1'];
-					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
-					$iTotalCount += $aRow['_itop_count_'];
-					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
-					
-					// Build the search for this subset
-					$oSubsetSearch = $this->m_oFilter->DeepClone();
-					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
-					$oSubsetSearch->AddConditionExpression($oCondition);
-					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".rawurlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
-				}
-				$sJSURLs = json_encode($aURLs);
-			}
-			
-			switch($sChartType)
-			{
-				case 'bars':
-				$aNames = array();
-				foreach($aValues as $idx => $aValue)
-				{
-					$aNames[$idx] = $aValue['label'];
-				}
-				$sJSNames = json_encode($aNames);
-				
-				$sJson = json_encode($aValues);
-				$oPage->add_ready_script(
-<<<EOF
-
-var chart = c3.generate({
-    bindto: d3.select('#my_chart_$sId'),
-    data: {
-   	  json: $sJson,
-      keys: {
-      	x: 'label',
-      	value: ["value"]
-	  },
-	  onclick: function (d, element) {
-		var aURLs = $sJSURLs;
-	    window.location.href = aURLs[d.index];
-	  },
-	  selection: {
-		enabled: true
-	  },
-      type: 'bar'
-    },
-    axis: {
-        x: {
-			tick: {
-				culling: {max: 25}, // Maximum 24 labels on x axis (2 years).
-				centered: true,
-				rotate: 90,
-				multiline: false
-			},
-            type: 'category'   // this needed to load string x value
-        }
-    },
-	grid: {
-		y: {
-			show: true
-		}
-	},
-    legend: {
-      show: false,
-    },
-	tooltip: {
-	  grouped: false,
-	  format: {
-		title: function() { return '' },
-	    name: function (name, ratio, id, index) {
-			var aNames = $sJSNames;
-			return aNames[index];
-		}
-	  }
-	}
-});
-
-if (typeof(charts) === "undefined")
-{
-  charts = [];
-}
-charts.push(chart);
-EOF
-				);
+				$oBlock = $this->RenderChartAjax($aExtraParams);
 				break;
-
-				case 'pie':
-				$aColumns = array();
-				$aNames = array();
-				foreach($aValues as $idx => $aValue)
-				{
-					$aColumns[] = array('series_'.$idx, (int)$aValue['value']);
-					$aNames['series_'.$idx] = $aValue['label'];
-				}
-				$sJSColumns = json_encode($aColumns);
-				$sJSNames = json_encode($aNames);
-				$oPage->add_ready_script(
-<<<EOF
-var chart = c3.generate({
-    bindto: d3.select('#my_chart_$sId'),
-    data: {
-    	columns: $sJSColumns,
-      	type: 'pie',
-		names: $sJSNames,
-	    onclick: function (d, element) {
-			var aURLs = $sJSURLs;
-		    window.location.href= aURLs[d.index];
-		},
-		order: null,
-    },
-    legend: {
-      show: true,
-	  position: 'right',
-    },
-	tooltip: {
-	  format: {
-	    value: function (value, ratio, id) { return value; }
-	  }
-	}
-});
-
-if (typeof(charts) === "undefined")
-{
-  charts = [];
-}
-charts.push(chart);
-EOF
-				);
-				break;				
-			}
-			break;
 			
 			default:
 			// Unsupported style, do nothing.
@@ -1406,6 +1262,80 @@ JS
 
 		$oBlock->AddParameter('sUrl', $sUrl);
 
+		return $oBlock;
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
+	protected function RenderChartAjax(array $aExtraParams)
+	{
+		$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
+		$sId = utils::ReadParam('id', '');
+		$aValues = array();
+		$oBlock = null;
+		$sJSURLs = '';
+
+		if (isset($aExtraParams['group_by'])) {
+			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
+			$aRes = CMDBSource::QueryToArray($sSql);
+			$oContext = new ApplicationContext();
+			$sContextParam = $oContext->GetForLink();
+
+			$iTotalCount = 0;
+			$aURLs = array();
+			foreach ($aRes as $iRow => $aRow) {
+				$sValue = $aRow['grouped_by_1'];
+				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
+				$iTotalCount += $aRow['_itop_count_'];
+				$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int)$aRow[$sFctVar]);
+
+				// Build the search for this subset
+				$oSubsetSearch = $this->m_oFilter->DeepClone();
+				$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".rawurlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
+			}
+			$sJSURLs = json_encode($aURLs);
+		}
+
+		switch ($sChartType) {
+			case 'bars':
+				$aNames = array();
+				foreach ($aValues as $idx => $aValue) {
+					$aNames[$idx] = $aValue['label'];
+				}
+				$sJSNames = json_encode($aNames);
+				$sJson = json_encode($aValues);
+				$oBlock = new BlockChartAjaxBars();
+				$oBlock->AddParameter('sId', $sId);
+				$oBlock->AddParameter('sJson', $sJson);
+				$oBlock->AddParameter('sJSURLs', $sJSURLs);
+				$oBlock->AddParameter('sJSNames', $sJSNames);
+				break;
+
+			case 'pie':
+				$aColumns = array();
+				$aNames = array();
+				foreach ($aValues as $idx => $aValue) {
+					$aColumns[] = array('series_'.$idx, (int)$aValue['value']);
+					$aNames['series_'.$idx] = $aValue['label'];
+				}
+				$sJSColumns = json_encode($aColumns);
+				$sJSNames = json_encode($aNames);
+				$oBlock = new BlockChartAjaxPie();
+				$oBlock->AddParameter('sId', $sId);
+				$oBlock->AddParameter('sJSColumns', $sJSColumns);
+				$oBlock->AddParameter('sJSURLs', $sJSURLs);
+				$oBlock->AddParameter('sJSNames', $sJSNames);
+				break;
+		}
 		return $oBlock;
 	}
 
