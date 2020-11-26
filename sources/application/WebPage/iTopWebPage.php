@@ -28,6 +28,7 @@ use Combodo\iTop\Application\UI\Layout\PageContent\PageContent;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Layout\TopBar\TopBar;
 use Combodo\iTop\Application\UI\Layout\TopBar\TopBarFactory;
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
@@ -658,6 +659,31 @@ JS
 	}
 
 	/**
+	 * Render the banner UIBlock which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetBannerHtml()
+	 * @internal
+	 *
+	 * @return iUIBlock
+	 * @since 3.0.0
+	 */
+	protected function RenderBannerBlock()
+	{
+		$oBanner = new UIContentBlock();
+
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
+		{
+			$oBlock =  $oExtensionInstance->GetBannerBlock();
+			if ($oBlock) {
+				$oBanner->AddSubBlock($oBlock);
+			}
+		}
+
+		return $oBanner;
+	}
+
+	/**
 	 * Render the header HTML which can come from both iTop itself and from extensions
 	 *
 	 * @see \iPageUIExtension::GetNorthPaneHtml()
@@ -735,6 +761,21 @@ EOF;
 		return $sHeaderHtml;
 	}
 
+	protected function RenderHeaderBlock()
+	{
+		$oHeader = new UIContentBlock();
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
+		{
+			$oBlock = $oExtensionInstance->GetNorthPaneBlock();
+			if ($oBlock) {
+				$oHeader->AddSubBlock($oBlock);
+			}
+		}
+
+		return $oHeader;
+	}
+
 	/**
 	 * Render the footer HTML which can come from both iTop itself and from extensions
 	 *
@@ -754,6 +795,30 @@ EOF;
 		}
 
 		return $sFooterHtml;
+	}
+
+	/**
+	 * Render the footer UIBlock which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetSouthPaneHtml()
+	 * @internal
+	 *
+	 * @return iUIBlock
+	 * @since 3.0.0
+	 */
+	protected function RenderFooterBlock()
+	{
+		$oFooter = new UIContentBlock();
+
+		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
+			$oBlock = $oExtensionInstance->GetSouthPaneBlock();
+			if ($oBlock) {
+				$oFooter->AddSubBlock($oBlock);
+			}
+		}
+
+		return $oFooter;
 	}
 
 	/**
@@ -824,8 +889,11 @@ EOF;
 		// Layouts
 		$aData['aLayouts'] = [
 			'sBanner' => $this->RenderBannerHtml(),
+			'oBanner' => $this->RenderBannerBlock(),
 			'sHeader' => $this->RenderHeaderHtml(),
+			'oHeader' => $this->RenderHeaderBlock(),
 			'sFooter' => $this->RenderFooterHtml(),
+			'oFooter' => $this->RenderFooterBlock(),
 		];
 		// - Prepare navigation menu
 		$aData['aLayouts']['oNavigationMenu'] = $this->GetNavigationMenuLayout();

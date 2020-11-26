@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\iUIBlock;
 use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
@@ -1074,6 +1075,49 @@ interface iPageUIExtension
 }
 
 /**
+ * Implement this interface to add content to any iTopWebPage
+ *
+ * There are 3 places where content can be added:
+ *
+ * * The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
+ *   width of the page
+ * * The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
+ *   width of the page
+ * * The admin banner (two tones gray background) at the left of the global search.
+ *   Limited space, use it for short messages
+ *
+ * Each of the methods of this interface is supposed to return the HTML to be inserted at
+ * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
+ *
+ * @api
+ * @package     Extensibility
+ * @since 2.0
+ */
+interface iPageUIBlockExtension
+{
+	/**
+	 * Add content to the header of the page
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetNorthPaneBlock();
+
+	/**
+	 * Add content to the footer of the page
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetSouthPaneBlock();
+
+	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetBannerBlock();
+}
+
+/**
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
@@ -1104,6 +1148,41 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	public function GetBannerHtml(iTopWebPage $oPage)
 	{
 		return '';
+	}
+
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNorthPaneBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSouthPaneBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerBlock()
+	{
+		return null;
 	}
 
 }

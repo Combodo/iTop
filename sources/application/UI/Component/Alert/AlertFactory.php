@@ -22,7 +22,6 @@ namespace Combodo\iTop\Application\UI\Component\Alert;
 /**
  * Class AlertFactory
  *
- * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Alert
  * @since 3.0.0
