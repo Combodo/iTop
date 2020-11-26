@@ -39,7 +39,6 @@ $(function()
 
 			// the constructor
 			_create: function () {
-				console.log('alo');
 				this._bindEvents();
 			},
 			// events bound via _bind are removed automatically
