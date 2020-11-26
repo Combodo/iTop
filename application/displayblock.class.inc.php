@@ -27,6 +27,7 @@ use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\iUIBlock;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockList\BlockList;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -451,15 +452,6 @@ HTML;
 
 			case 'summary':
 				$oBlock = $this->RenderSummary($aExtraParams);
-				break;
-
-			case 'csv':
-				$oBlock = $this->RenderCSV($oAppContext, $oPage);
-				break;
-
-			case 'details':
-			case 'modify':
-				$oBlock = new Html('Not supported');
 				break;
 
 			case 'search':
@@ -1163,8 +1155,16 @@ JS
 	{
 		$aClasses = $this->m_oSet->GetSelectedClasses();
 		$aAuthorizedClasses = [];
-		$oBlock = null;
-		$oHtml = new Html();
+		$oBlock = new BlockList();
+		$bEmptySet = false;
+		$bNotAuthorized = false;
+		$bCreateNew = false;
+		$sLinkTarget = '';
+		$sClass = '';
+		$sParams = '';
+		$sDefault = '';
+		$sEventAttachedData = '';
+
 		if (count($aClasses) > 1) {
 			// Check the classes that can be read (i.e authorized) by this user...
 			foreach ($aClasses as $sAlias => $sClassName) {
@@ -1179,21 +1179,21 @@ JS
 					} else {
 						$iListId = $aExtraParams['currentId'];
 					}
-					$oBlock = DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams);
+					$oBlock->AddSubBlock(DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
 				} else {
 					// Empty set
-					$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
+					$bEmptySet = true;
 				}
 			} else {
 				// Not authorized
-				$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
+				$bNotAuthorized = true;
 			}
 		} else {
 			// The list is made of only 1 class of objects, actions on the list are possible
 			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
-				$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
+				$oBlock->AddSubBlock(cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams));
 			} else {
-				$oHtml->AddHtml('<p>'.Dict::S('UI:NoObjectToDisplay').'</p>');
+				$bEmptySet = true;
 				$sClass = $this->m_oFilter->GetClass();
 				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
 				if ($bDisplayMenu) {
@@ -1212,8 +1212,7 @@ JS
 								$sDefault .= "&default[$sKey]=$sValue";
 							}
 						}
-
-						$oHtml->AddHtml('<p>'."<a{$sLinkTarget} href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=new&class=$sClass&$sParams{$sDefault}\">".Dict::Format('UI:ClickToCreateNew', Metamodel::GetName($sClass))."</a></p>\n");
+						$bCreateNew = true;
 					}
 				}
 			}
@@ -1222,7 +1221,7 @@ JS
 				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
 				// Limit the size of the URL (N°1585 - request uri too long)
 				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
-					$seventAttachedData = json_encode(array(
+					$sEventAttachedData = json_encode(array(
 						'filter' => $sSearchFilter,
 						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
 						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
@@ -1231,14 +1230,23 @@ JS
 						'breadcrumb_icon' => 'fas fa-search',
 						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
 					));
-
-					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
 				}
 			}
 		}
-		if (is_null($oBlock)) {
-			return $oHtml;
+
+		$oBlock->AddParameter('bEmptySet', $bEmptySet);
+		$oBlock->AddParameter('bNotAuthorized', $bNotAuthorized);
+		$oBlock->AddParameter('bCreateNew', $bCreateNew);
+		$oBlock->AddParameter('sLinkTarget', $sLinkTarget);
+		$oBlock->AddParameter('sAbsoluteUrlAppRoot', utils::GetAbsoluteUrlAppRoot());
+		$oBlock->AddParameter('sClass', $sClass);
+		$oBlock->AddParameter('sParams', $sParams);
+		if (!empty($sClass)) {
+			$oBlock->AddParameter('sClassName', Metamodel::GetName($sClass));
 		}
+		$oBlock->AddParameter('sDefault', $sDefault);
+		$oBlock->AddParameter('sEventAttachedData', $sEventAttachedData);
+
 		return $oBlock;
 	}
 
@@ -1254,10 +1262,6 @@ JS
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function RenderJoin(array $aExtraParams, WebPage $oPage)
 	{
@@ -1388,61 +1392,6 @@ JS
 			}
 		}
 		return $oBlock;
-	}
-
-	/**
-	 * @param \ApplicationContext $oAppContext
-	 * @param string $sHtml
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 */
-	protected function RenderCSV(ApplicationContext $oAppContext, WebPage $oPage)
-	{
-		$bAdvancedMode = utils::ReadParam('advanced', false);
-
-		$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
-		$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
-		$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
-		// Pass the parameters via POST, since expression may be very long
-		$aParamsToPost = array(
-			'expression' => $this->m_oFilter->ToOQL(true),
-			'format' => 'csv',
-			'filename' => $sCsvFile,
-			'charset' => 'UTF-8',
-		);
-		if ($bAdvancedMode) {
-			$sDownloadLink .= '&fields_advanced=1';
-			$aParamsToPost['fields_advance'] = 1;
-			$sChecked = 'CHECKED';
-		} else {
-			$sLinkToToggle = $sLinkToToggle.'&advanced=1';
-			$sChecked = '';
-		}
-		$sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
-
-		$sCharsetNotice = false;
-		$oHtml = new Html();
-		$oHtml->AddHtml("<div>");
-		$oHtml->AddHtml('<table style="width:100%" class="transparent">');
-		$oHtml->AddHtml('<tr>');
-		$oHtml->AddHtml('<td><a href="'.$sDownloadLink.'">'.Dict::Format('UI:Download-CSV', $sCsvFile).'</a>'.$sCharsetNotice.'</td>');
-		$oHtml->AddHtml('<td style="text-align:right"><input type="checkbox" '.$sChecked.' onClick="window.location.href=\''.$sLinkToToggle.'\'">&nbsp;'.Dict::S('UI:CSVExport:AdvancedMode').'</td>');
-		$oHtml->AddHtml('</tr>');
-		$oHtml->AddHtml('</table>');
-		if ($bAdvancedMode) {
-			$oHtml->AddHtml("<p>");
-			$oHtml->AddHtml(htmlentities(Dict::S('UI:CSVExport:AdvancedMode+'), ENT_QUOTES, 'UTF-8'));
-			$oHtml->AddHtml("</p>");
-		}
-		$oHtml->AddHtml("</div>");
-
-		$oHtml->AddHtml("<div id=\"csv_content_loading\"><div style=\"width: 250px; height: 20px; background: url(../setup/orange-progress.gif); border: 1px #999 solid; margin-left:auto; margin-right: auto; text-align: center;\">".Dict::S('UI:Loading')."</div></div><textarea id=\"csv_content\" style=\"display:none;\">\n");
-		$oHtml->AddHtml("</textarea>\n");
-		$sJsonParams = json_encode($aParamsToPost);
-		$oPage->add_ready_script("$.post('$sAjaxLink', $sJsonParams, function(data) { $('#csv_content').html(data); $('#csv_content_loading').hide(); $('#csv_content').show();} );");
-		return $oHtml;
 	}
 
 }
