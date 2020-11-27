@@ -1510,6 +1510,8 @@ class MenuBlock extends DisplayBlock
 	 */
 	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
 	{
+		$oRenderBlock = new UIContentBlock();
+
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
 		{
 			$this->m_sStyle = 'list';
@@ -1517,7 +1519,7 @@ class MenuBlock extends DisplayBlock
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sRefreshAction = '';
-		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle!= 'listInObject') {
+		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			if (!empty($sContext)) {
@@ -1813,8 +1815,7 @@ class MenuBlock extends DisplayBlock
 				//for the detail page this var is defined way beyond this line
 				$sRefreshAction = "window.location.reload();";
 			}
-		}	else
-		{
+		} else {
 			//it's easier just display configure this list and MENU_OBJLIST_TOOLKIT
 		}
 		$param = null;
@@ -1837,7 +1838,7 @@ class MenuBlock extends DisplayBlock
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
 					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open');"];
-					utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aActions);
+					$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock(iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aActions));
 				}
 				break;
 
@@ -1848,7 +1849,7 @@ class MenuBlock extends DisplayBlock
 				break;
 
 		}
-		utils::GetPopupMenuItems($oPage, $iMenuId, $param, $aActions);
+		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aActions));
 
 		$aFavoriteActions = array();
 		$aCallSpec = array($sClass, 'GetShortcutActions');

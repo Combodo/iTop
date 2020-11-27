@@ -64,6 +64,11 @@ abstract class UIBlock implements iUIBlock
 	/** @var string $sId */
 	protected $sId;
 
+	/** @var array */
+	protected $aJsFilesRelPath;
+	/** @var array */
+	protected $aCssFilesRelPath;
+
 	/**
 	 * UIBlock constructor.
 	 *
@@ -72,6 +77,8 @@ abstract class UIBlock implements iUIBlock
 	public function __construct(?string $sId = null)
 	{
 		$this->sId = $sId ?? $this->GenerateId();
+		$this->aJsFilesRelPath = [];
+		$this->aCssFilesRelPath = [];
 	}
 
 	/**
@@ -99,7 +106,7 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetJsFilesRelPaths() {
+	public function GetJsFilesRelPaths() {
 		return static::JS_FILES_REL_PATH;
 	}
 
@@ -114,9 +121,9 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetCssFilesRelPaths()
+	public function GetCssFilesRelPaths()
 	{
-		return static::CSS_FILES_REL_PATH;
+		return array_merge(static::CSS_FILES_REL_PATH, $this->aCssFilesRelPath);
 	}
 
 	/**
@@ -202,6 +209,24 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function AddJsFileRelPath(string $sPath)
+	{
+		$this->aJsFilesRelPath[] = $sPath;
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddCssFileRelPath(string $sPath)
+	{
+		$this->aCssFilesRelPath[] = $sPath;
+		return $this;
+	}
+
+	/**
 	 * **Warning**, this shouldn't generate any dot as this will be used in CSS and JQuery selectors !
 	 *
 	 * @return string a unique ID for the block
@@ -229,7 +254,7 @@ abstract class UIBlock implements iUIBlock
 		$sFilesRelPathMethodName = 'Get'.ucfirst($sFileType).'FilesRelPaths';
 
 		// Files from the block itself
-		foreach ($this::$sFilesRelPathMethodName() as $sFilePath) {
+		foreach ($this->$sFilesRelPathMethodName() as $sFilePath) {
 			$aFiles[] = (($bAbsoluteUrl === true) ? utils::GetAbsoluteUrlAppRoot() : '').$sFilePath;
 		}
 

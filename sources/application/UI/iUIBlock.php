@@ -55,7 +55,7 @@ interface iUIBlock {
 	 *
 	 * @return array
 	 */
-	public static function GetJsFilesRelPaths();
+	public function GetJsFilesRelPaths();
 
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the CSS template to use or null if there is no inline CSS to render
@@ -69,7 +69,7 @@ interface iUIBlock {
 	 *
 	 * @return array
 	 */
-	public static function GetCssFilesRelPaths();
+	public function GetCssFilesRelPaths();
 
 	/**
 	 * Return the ID of the block
@@ -130,4 +130,23 @@ interface iUIBlock {
 	 * @return array
 	 */
 	public function GetParameters(): array;
+
+	/**
+	 * Add a JS file to a block
+	 *
+	 * @param string $sPath
+	 *
+	 * @return $this
+	 */
+	public function AddJsFileRelPath(string $sPath);
+
+	/**
+	 * Add a CSS file to a block
+	 *
+	 * @param string $sPath
+	 *
+	 * @return $this
+	 */
+	public function AddCssFileRelPath(string $sPath);
+
 }

@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
 
@@ -1158,13 +1159,33 @@ class utils
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
-	 * @param string $sTableId
-	 * @param string $sDataTableId
+	 * @param string|null $sTableId
+	 * @param string|null $sDataTableId
 	 *
-	 * @throws \Exception
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
+		$oPage->AddUiBlock(static::GetPopupMenuItemsBlock($iMenuId, $param, $aActions, $sDataTableId));
+	}
+
+	/**
+	 * Merge standard menu items with plugin provided menus items
+	 *
+	 * @param int $iMenuId
+	 * @param \DBObjectSet $param
+	 * @param array $aActions
+	 * @param string|null $sDataTableId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Layout\UIContentBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public static function GetPopupMenuItemsBlock($iMenuId, $param, &$aActions, $sDataTableId = null)
+	{
+		$oBlock = new UIContentBlock();
+		$aActions = [];
 		// 1st - add standard built-in menu items
 		// 
 		switch($iMenuId)
@@ -1178,9 +1199,9 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 
 			$aResult = array();
 			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
@@ -1213,12 +1234,12 @@ class utils
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
@@ -1287,11 +1308,13 @@ class utils
 					
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
-						$oPage->add_linked_script($sLinkedScript);
+						$oBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
+
+		return $oBlock;
 	}
 
 	/**
