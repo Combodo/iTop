@@ -192,7 +192,7 @@ function activateFirstTabWithError(sFormId) {
 		if ($fieldsWithError.length > 0)
 		{
 			$tabsContainer.tabs("option", "active", index);
-			return;
+			return false;
 		}
 	});
 }
@@ -218,7 +218,7 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 		if ($('#v_'+sFieldId+' img').length == 0)
 		{
 			$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-		}
+		}X
 		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
 		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
 		{
