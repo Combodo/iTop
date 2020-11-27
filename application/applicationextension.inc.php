@@ -431,7 +431,7 @@ interface iApplicationUIExtension
 	 *
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
-	 * @return string[string]
+	 * @return array
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet);
 }
