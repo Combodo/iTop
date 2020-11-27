@@ -2770,7 +2770,7 @@ EOF;
 			}
 			// Check if a precompiled version of the theme is supplied
 			$sPrecompiledFile = $sTempTargetDir.$aThemeParameters['precompiled_stylesheet'];
-			if (file_exists($sPrecompiledFile))
+			if (file_exists($sPrecompiledFile) && !is_dir($sPrecompiledFile))
 			{
 				copy($sPrecompiledFile, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
