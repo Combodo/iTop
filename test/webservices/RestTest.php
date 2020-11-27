@@ -31,68 +31,6 @@ class RestTest extends ItopDataTestCase
 		}
 	}
 
-	private function GetTicketViaRest($iId){
-		$sJsonGetContent = <<<JSON
-{
-   "operation": "core/get",
-   "class": "UserRequest",
-   "key": "SELECT UserRequest WHERE id=$iId",
-   "output_fields": "id, description"
-}
-JSON;
-
-		return $this->CallRestApi($sJsonGetContent);
-	}
-
-	private function UpdateTicketViaApi($iId, $description){
-		$sJsonUpdateContent = <<<JSON
-{"operation": "core/update","comment": "test","class": "UserRequest","key":"$iId","output_fields": "description","fields":{"description": "$description"}}
-JSON;
-
-		return $this->CallRestApi($sJsonUpdateContent);
-	}
-
-	private function CreateTicketViaApi($description){
-		$sJsonCreateContent = <<<JSON
-{
-   "operation": "core/create",
-   "comment": "test",
-   "class": "UserRequest",
-   "output_fields": "id",
-   "fields":
-   {
-      "org_id": "SELECT Organization WHERE name = \"Demo\"",
-      
-      "title": "Houston, got a problem",
-      "description": "$description"
-   }
-}
-JSON;
-
-		return $this->CallRestApi($sJsonCreateContent);
-	}
-
-	private function DeleteTicketFromApi($iId){
-    	$sJson = <<<JSON
-{
-   "operation": "core/delete",
-   "comment": "Cleanup",
-   "class": "UserRequest",
-   "key":$iId,
-   "simulate": false
-}
-JSON;
-		return $this->CallRestApi($sJson);
-
-	}
-
-	public function BasicProvider(){
-		return [
-			'call rest call' => [ 'bCallApiViaFile' => false],
-			'pass json_data as file' => [ 'bCallApiViaFile' => true]
-			];
-	}
-
 	/**
 	 * @dataProvider BasicProvider
 	 */
@@ -138,7 +76,69 @@ JSON;
 		$this->assertEquals($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
 	}
 
-		private function CallRestApi($sJsonDataContent){
+	private function GetTicketViaRest($iId){
+		$sJsonGetContent = <<<JSON
+{
+   "operation": "core/get",
+   "class": "UserRequest",
+   "key": "SELECT UserRequest WHERE id=$iId",
+   "output_fields": "id, description"
+}
+JSON;
+
+		return $this->CallRestApi($sJsonGetContent);
+	}
+
+	public function BasicProvider(){
+		return [
+			'call rest call' => [ 'bCallApiViaFile' => false],
+			'pass json_data as file' => [ 'bCallApiViaFile' => true]
+		];
+	}
+	
+	private function UpdateTicketViaApi($iId, $description){
+		$sJsonUpdateContent = <<<JSON
+{"operation": "core/update","comment": "test","class": "UserRequest","key":"$iId","output_fields": "description","fields":{"description": "$description"}}
+JSON;
+
+		return $this->CallRestApi($sJsonUpdateContent);
+	}
+
+	private function CreateTicketViaApi($description){
+		$sJsonCreateContent = <<<JSON
+{
+   "operation": "core/create",
+   "comment": "test",
+   "class": "UserRequest",
+   "output_fields": "id",
+   "fields":
+   {
+      "org_id": "SELECT Organization WHERE name = \"Demo\"",
+      
+      "title": "Houston, got a problem",
+      "description": "$description"
+   }
+}
+JSON;
+
+		return $this->CallRestApi($sJsonCreateContent);
+	}
+
+	private function DeleteTicketFromApi($iId){
+    	$sJson = <<<JSON
+{
+   "operation": "core/delete",
+   "comment": "Cleanup",
+   "class": "UserRequest",
+   "key":$iId,
+   "simulate": false
+}
+JSON;
+		return $this->CallRestApi($sJson);
+
+	}
+
+	private function CallRestApi($sJsonDataContent){
 		$ch = curl_init();
 		$aPostFields = [
 			'version' => '1.3',
