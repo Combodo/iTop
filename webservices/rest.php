@@ -70,19 +70,20 @@ $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
-if(isset($_FILES['json_data']['name']) && !empty($_FILES['json_data']['name']))
-{
-	$sTmpFilePath = $_FILES['json_data']['tmp_name'];
-	if (is_file($sTmpFilePath)){
-		$sValue = file_get_contents($sTmpFilePath);
-		unlink($sTmpFilePath);
-		if (! empty($sValue)){
-			$sJsonString = utils::Sanitize($sValue, null, 'raw_data');
+$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
+
+if (empty($sJsonString)){
+	if(isset($_FILES['json_data']['tmp_name']))
+	{
+		$sTmpFilePath = $_FILES['json_data']['tmp_name'];
+		if (is_file($sTmpFilePath)){
+			$sValue = file_get_contents($sTmpFilePath);
+			unlink($sTmpFilePath);
+			if (! empty($sValue)){
+				$sJsonString = utils::Sanitize($sValue, null, 'raw_data');
+			}
 		}
 	}
-}
-if (empty($sJsonString)){
-	$sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 }
 
 $sProvider = '';
