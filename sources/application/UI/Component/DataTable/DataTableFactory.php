@@ -20,6 +20,7 @@ use Dict;
 use MenuBlock;
 use MetaModel;
 use UserRights;
+use utils;
 use WebPage;
 
 /**
@@ -330,7 +331,7 @@ class DataTableFactory
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
 
 		$oDataTable->SetOptions($aOptions);
-		$oDataTable->SetAjaxUrl("ajax.render.php");
+		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData(json_encode([
 			"operation" => 'search',
 			"filter" => $oSet->GetFilter()->serialize(),
