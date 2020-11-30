@@ -716,7 +716,7 @@ class WizStepLicense extends WizardStep
         $aLicenses = SetupUtils::GetLicenses();
 		$oPage->add_style(
 <<<EOF
-fieldset {
+fieldset ul{
 	max-height: 18em;
 	overflow: auto;
 }
