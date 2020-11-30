@@ -753,19 +753,17 @@ try
 		case 'objectSearchForm':
 			$oPage->SetContentType('text/html');
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
+			$sFilter = utils::ReadParam('sFilter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 			$sAttCode = utils::ReadParam('sAttCode', '');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
-			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
+			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode, $sFilter);
 			$sJson = utils::ReadParam('json', '', false, 'raw_data');
-			if (!empty($sJson))
-			{
+			if (!empty($sJson)) {
 				$oWizardHelper = WizardHelper::FromJSON($sJson);
 				$oObj = $oWizardHelper->GetTargetObject();
-			}
-			else
-			{
+			} else {
 				// Search form: no current object
 				$oObj = null;
 			}
@@ -831,9 +829,10 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$iObjectId = utils::ReadParam('iObjectId', '');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+			$sFormAttCode = utils::ReadParam('sFormAttCode', null);
 			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-			$sName = $oWidget->GetObjectName($iObjectId);
+			$sName = $oWidget->GetObjectName($iObjectId, $sFormAttCode);
 			echo json_encode(array('name' => $sName));
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch) {
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch, sFormAttCode) {
 	this.id = id;
 	this.sOriginalTargetClass = sTargetClass;
 	this.sTargetClass = sTargetClass;
@@ -30,6 +30,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
 	this.bDoSearch = bDoSearch; // false if the search is not launched
+	this.sFormAttCode = sFormAttCode;
+
 	var me = this;
 
 	this.Init = function () {
@@ -37,18 +39,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id+'_btnRemove').prop('disabled', true);
 		$('#'+this.id+'_linksToRemove').val('');
 	}
-	this.AddSelectize = function(options, initValue)
-	{
+	this.AddSelectize = function (options, initValue) {
 		$('#'+me.id).selectize({
-				render: {
-					item: function(item) {
-						if ( item.obsolescence_flag == 1)
-						{
-							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
-						}
-						else
-						{
-							val = item.label;
+			render: {
+				item: function (item) {
+					if (item.obsolescence_flag == 1) {
+						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+					} else {
+						val = item.label;
 						}
 						return $("<div>")
 							.append(val);
@@ -208,6 +206,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sTitle: me.sTitle,
 			sAttCode: me.sAttCode,
 			sTargetClass: me.sTargetClass,
+			sFilter: me.sFilter,
 			bSearchMode: me.bSearchMode,
 			operation: 'objectSearchForm'
 		};
@@ -358,6 +357,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			iInputId: me.id,
 			iObjectId: iObjectId,
 			sAttCode: me.sAttCode,
+			sFormAttCode: me.sFormAttCode,
 			bSearchMode: me.bSearchMode,
 			operation: 'getObjectName'
 		};
@@ -371,18 +371,32 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			function (data) {
 				var oTemp = $('<div>'+data.name+'</div>');
 				var txt = oTemp.text(); // this causes HTML entities to be interpreted
-				$('#label_'+me.id).val(txt);
-				$('#label_'+me.id).removeClass('ac_dlg_loading');
+
+				var newValue;
+				if ($('#label_'+me.id).length) {
+					newValue = iObjectId;
+					$('#label_'+me.id).val(txt);
+					$('#label_'+me.id).removeClass('ac_dlg_loading');
+				} else {
+					// N°3227 if no label_* field present, we just want to pick the attribute value !
+					newValue = txt;
+				}
+
 				var prevValue = $('#'+me.id).val();
-				$('#'+me.id).val(iObjectId);
-				if (prevValue != iObjectId)
-				{
+				$('#'+me.id).val(newValue);
+				if (prevValue != newValue) {
 					// dependent fields will be updated using the WizardHelper JS object
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
 				}
-				$('#label_'+me.id).focus();
+
+				if ($('#label_'+me.id).length) {
+					$('#label_'+me.id).focus();
+				} else {
+					$('#'+me.id).focus();
+				}
+
 				me.ajax_request = null;
 			},
 			'json'
@@ -396,9 +410,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	// dialog is very slow. So empty it each time.
 	this.OnClose = function () {
 		me.StopPendingRequest();
+		if (me.bSelectMode) {
+			$('#fstatus_'+me.id).html('');
+		} else {
+			$('#label_'+me.id).removeClass('ac_dlg_loading');
+		}
+
 		// called by the dialog, so in the context 'this' points to the jQueryObject
-		if (me.emptyOnClose)
-		{
+		if (me.emptyOnClose) {
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('ac_dlg_loading');

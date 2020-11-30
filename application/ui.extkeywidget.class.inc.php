@@ -66,12 +66,16 @@ class UIExtKeyWidget
 
 	protected $iId;
 	protected $sTargetClass;
+	protected $sFilter;
 	protected $sAttCode;
 	//@deprecated
 	protected $bSearchMode;
 
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
-	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
+	static public function DisplayFromAttCode(
+		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs,
+		$bSearchMode = false
+	)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
@@ -103,17 +107,17 @@ class UIExtKeyWidget
 					return $oWidget->DisplaySelect($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value,
 						$bMandatory, $sFieldName, $sFormPrefix, $aArgs);
 			}
-		}
-		else
-		{
-			return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle);
+		} else {
+			return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId,
+				$bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle);
 		}
 
 	}
 
-	public function __construct($sTargetClass, $iInputId, $sAttCode = '', $bSearchMode = false)
+	public function __construct($sTargetClass, $iInputId, $sAttCode = '', $bSearchMode = false, $sFilter = null)
 	{
 		$this->sTargetClass = $sTargetClass;
+		$this->sFilter = $sFilter;
 		$this->iId = $iInputId;
 		$this->sAttCode = $sAttCode;
 		$this->bSearchMode = $bSearchMode;
@@ -642,6 +646,9 @@ JS
 			$aParams = array('query_params' => $aArgs);
 			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aArgs);
 			$oFilter = $oSet->GetFilter();
+		} else if (!empty($this->sFilter)) {
+			$aParams = array();
+			$oFilter = DBObjectSearch::FromOQL($this->sFilter);
 		} else {
 			$aParams = array();
 			$oFilter = new DBObjectSearch($this->sTargetClass);
@@ -656,7 +663,7 @@ JS
 				'table_inner_id' => "{$this->iId}_results",
 				'selection_mode' => true,
 				'selection_type' => 'single',
-				'cssCount' => '#count_'.$this->iId
+				'cssCount' => '#count_'.$this->iId,
 			)
 		));
 		$sCancel = Dict::S('UI:Button:Cancel');
@@ -803,17 +810,27 @@ JS
 	}
 
 	/**
-	 * Get the display name of the selected object, to fill back the autocomplete
+	 * @param int $iObjId object ID
+	 * @param string $sFormAttCode attcode if we need a value that isn't the display name
+	 *
+	 * @return string Either the display name of the selected object or the specified attribute value
+	 *
+	 * @uses \DBObject::GetName() to get display name
+	 *
+	 * @since 3.0.0 N°3227 add the $sAttCode parameter and method PHPDoc
 	 */
-	public function GetObjectName($iObjId)
+	public function GetObjectName($iObjId, $sFormAttCode = null)
 	{
 		$aModifierProps = array();
 		$aModifierProps['UserRightsGetSelectFilter']['bSearchMode'] = $this->bSearchMode;
 
 		$oObj = MetaModel::GetObject($this->sTargetClass, $iObjId, false, false, $aModifierProps);
-		if ($oObj)
-		{
-			return $oObj->GetName();
+		if ($oObj) {
+			if (is_null($sFormAttCode)) {
+				return $oObj->GetName();
+			} else {
+				return $oObj->Get($sFormAttCode);
+			}
 		}
 		else
 		{

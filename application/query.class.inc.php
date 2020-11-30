@@ -1,33 +1,28 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Persistent class Event and derived
- * Application internal events
- * There is also a file log 
+/*
+ * Copyright (C) 2010-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 abstract class Query extends cmdbAbstractObject
 {
+	/**
+	 * @throws \CoreException
+	 * @since 3.0.0 N°3227 add is_template field for predefined queries
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -42,17 +37,38 @@ abstract class Query extends cmdbAbstractObject
 			"db_finalclass_field" => "realclass",
 		);
 		MetaModel::Init_Params($aParams);
-		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
+		MetaModel::Init_AddAttribute(new AttributeString("name", array(
+			"allowed_values" => null,
+			"sql" => "name",
+			"default_value" => null,
+			"is_null_allowed" => false,
+			"depends_on" => array(),
+		)));
+		MetaModel::Init_AddAttribute(new AttributeText("description", array(
+			"allowed_values" => null,
+			"sql" => "description",
+			"default_value" => null,
+			"is_null_allowed" => false,
+			"depends_on" => array(),
+		)));
+
+		MetaModel::Init_AddAttribute(new AttributeEnum("is_template", array(
+			'allowed_values' => new ValueSetEnum('yes,no'),
+			'sql' => 'is_template',
+			'default_value' => 'no',
+			'is_null_allowed' => false,
+			'depends_on' => [],
+		)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array('name', 'is_template', 'description')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('default_search', array('name', 'description')); // Criteria of the default search form
+		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'is_template')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('default_search',
+			array('name', 'description', 'is_template')); // Criteria of the default search form
 		// MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
@@ -74,16 +90,30 @@ class QueryOQL extends Query
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeOQL("oql", array("allowed_values"=>null, "sql"=>"oql", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("fields", array("allowed_values"=>null, "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOQL("oql", array(
+			"allowed_values" => null,
+			"sql" => "oql",
+			"default_value" => null,
+			"is_null_allowed" => false,
+			"depends_on" => array(),
+		)));
+		MetaModel::Init_AddAttribute(new AttributeText("fields", array(
+			"allowed_values" => null,
+			"sql" => "fields",
+			"default_value" => null,
+			"is_null_allowed" => true,
+			"depends_on" => array(),
+		)));
 		// Rolled back to AttributeText until AttributeQueryAttCodeSet can manage fields order correctly
 		//MetaModel::Init_AddAttribute(new AttributeQueryAttCodeSet("fields", array("allowed_values"=>null,"max_items" => 1000, "query_field" => "oql", "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array('oql'))));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'oql', 'fields')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array('name', 'is_template', 'description', 'oql', 'fields')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description', 'fields', 'oql')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search',
+			array('name', 'description', 'is_template', 'fields', 'oql')); // Criteria of the std search form
 	}
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())

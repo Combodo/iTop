@@ -1882,24 +1882,68 @@ HTML
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
-					if ($oAttDef->GetEditClass() == 'OQLExpression')
-					{
+					if ($oAttDef->GetEditClass() == 'OQLExpression') {
+						// predefined queries N°3227
+						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
+						$sSearchQuerylbl = Dict::S('UI:Edit:SearchQuery');
+						$sAdditionalStuff = <<<HTML
+<button id="$sPredefinedBtnId" type="button" title="$sSearchQuerylbl" 
+	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
+	<i class="fas fa-search"></i>
+</button>
+HTML;
+						$oPage->add_ready_script(<<<JS
+// noinspection JSAnnotator
+oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQuerylbl', true, null, null, true, true, 'oql');
+// noinspection JSAnnotator
+oACWidget_{$iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>Use the search form above to search for objects to be added.</p></div>";
+$("#$sPredefinedBtnId").click(function () {
+	oACWidget_{$iId}.Search();
+});
+
+if ($('#ac_dlg_{$iId}').length == 0)
+{
+	$('body').append('<div id="ac_dlg_{$iId}"></div>');
+	$('#ac_dlg_{$iId}').dialog({ 
+			width: $(window).width()*0.8, 
+			height: $(window).height()*0.8, 
+			autoOpen: false, 
+			modal: true, 
+			title: '$sSearchQuerylbl', 
+			resizeStop: oACWidget_{$iId}.UpdateSizes, 
+			close: oACWidget_{$iId}.OnClose 
+		});
+}
+JS
+						);
+						// test query link
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
 						$sInitialUrl = $sBaseUrl.urlencode($sEditValue);
-						$sAdditionalStuff = "<a id=\"$sTestResId\" target=\"_blank\" href=\"$sInitialUrl\">".Dict::S('UI:Edit:TestQuery')."</a>";
-						$oPage->add_ready_script("$('#$iId').bind('change keyup', function(evt, sFormId) { $('#$sTestResId').attr('href', '$sBaseUrl'+encodeURIComponent($(this).val())); } );");
+						$sTestQuerylbl = Dict::S('UI:Edit:TestQuery');
+						$sAdditionalStuff .= <<<HTML
+<button type="button" title="{$sTestQuerylbl}" 
+	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
+	<a id="$sTestResId" target="_blank" href="$sInitialUrl">
+		<i class="fas fa-play"></i>
+	</a>
+</button>
+HTML;
+						$oPage->add_ready_script(<<<JS
+$('#$iId').bind('change keyup', function(evt, sFormId) { 
+	$('#$sTestResId').attr('href', '$sBaseUrl'+encodeURIComponent($(this).val())); 
+});
+JS
+						);
+					} else {
+						$sAdditionalStuff = '';
 					}
-					else
-					{
-						$sAdditionalStuff = "";
-					}
-					// Ok, the text area is drawn here
-					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
-							ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
+				// Ok, the text area is drawn here
+				$sHTMLValue = "$sAdditionalStuff<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
+						ENT_QUOTES, 'UTF-8')."</textarea></div>{$sValidationSpan}{$sReloadSpan}";
 
-					$oPage->add_ready_script(
-						<<<EOF
+				$oPage->add_ready_script(
+					<<<EOF
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
