@@ -229,22 +229,13 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 	}
 	if ($bDoSearch)
 	{
-		if (strtolower($sFormat) == 'csv')
-		{
-			$oBlock = new DisplayBlock($oFilter, 'csv', false);
-			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
-			$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
-		}
-		else
-		{
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
+		$oBlock = new DisplayBlock($oFilter, 'list', false);
 
-			// Breadcrumb
-			//$iCount = $oBlock->GetDisplayedCount();
-			$sPageId = "ui-search-".$oFilter->GetClass();
-			$sLabel = MetaModel::GetName($oFilter->GetClass());
-			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-		}
+		// Breadcrumb
+		//$iCount = $oBlock->GetDisplayedCount();
+		$sPageId = "ui-search-".$oFilter->GetClass();
+		$sLabel = MetaModel::GetName($oFilter->GetClass());
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		if ($bSearchForm) {
 			//add search block
 			$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');

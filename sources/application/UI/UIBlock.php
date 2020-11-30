@@ -107,7 +107,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 */
 	public function GetJsFilesRelPaths() {
-		return static::JS_FILES_REL_PATH;
+		return array_merge(static::JS_FILES_REL_PATH, $this->aJsFilesRelPath);
 	}
 
 	/**

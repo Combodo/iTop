@@ -1864,6 +1864,7 @@ class MenuBlock extends DisplayBlock
 		}
 
 		$oActionsBlock = new Toolbar("ibo-action-toolbar-{$sId}", 'ibo-action-toolbar');
+		$oRenderBlock->AddSubBlock($oActionsBlock);
 		$sMenuTogglerId = "ibo-actions-menu-toggler-{$sId}";
 		$sPopoverMenuId = "ibo-other-action-popover-{$sId}";
 
@@ -1886,8 +1887,6 @@ $('#{$sMenuTogglerId}').on('click', function(oEvent) {
 	var popover = $("#{$sPopoverMenuId}");
 	
 	popover.css({
-		// 'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) + oEventTarget.height()) + 'px',
-		// 'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width() - popover.width()) + 'px',
 		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
 		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
 		'z-index': 10060
@@ -1954,7 +1953,7 @@ JS
 			}
 		}
 
-		return $oActionsBlock;
+		return $oRenderBlock;
 	}
 	
 	/**
