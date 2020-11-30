@@ -1043,6 +1043,7 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
+ * @deprecated since 3.0.0 use iPageUIBlockExtension instead
  */
 interface iPageUIExtension
 {
@@ -1091,7 +1092,7 @@ interface iPageUIExtension
  *
  * @api
  * @package     Extensibility
- * @since 2.0
+ * @since 3.0.0
  */
 interface iPageUIBlockExtension
 {
@@ -1123,6 +1124,7 @@ interface iPageUIBlockExtension
  * @api
  * @package     Extensibility
  * @since       2.7.0
+ * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
  */
 abstract class AbstractPageUIExtension implements iPageUIExtension
 {
@@ -1157,7 +1159,7 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
  *
  * @api
  * @package     Extensibility
- * @since       2.7.0
+ * @since       3.0.0
  */
 abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
 {

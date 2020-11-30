@@ -2,6 +2,6 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     {% if oUIBlock.GetParameter('sEventAttachedData') is not empty %}
-        $('body').trigger('update_history.itop', [{{ oUIBlock.GetParameter('sEventAttachedData') }}])
+        $('body').trigger('update_history.itop', [{{ oUIBlock.GetParameter('sEventAttachedData')|raw }}]);
     {% endif %}
 {% endapply %}
