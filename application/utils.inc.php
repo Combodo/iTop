@@ -324,14 +324,16 @@ class utils
 	}
 
 	/**
-	 * @param string $sSanitizationFilter one of utils::ENUM_SANITIZATION_* const
 	 * @param string|string[] $value
+	 * @param string $sSanitizationFilter one of utils::ENUM_SANITIZATION_* const
 	 *
 	 * @return string|string[]|bool boolean for :
 	 *   * the 'class' filter (true if valid, false otherwise)
-	 *   * if the filter fails (@throws \CoreException
+	 *   * if the filter fails ({@link \filter_var()} return value)
 	 *
-	 * @uses \filter_var()) for ENUM
+	 * @throws \CoreException
+	 *
+	 * @uses \filter_var()
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
