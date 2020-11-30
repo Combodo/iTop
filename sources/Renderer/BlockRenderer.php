@@ -21,6 +21,7 @@ namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\iUIBlock;
+use utils;
 
 /**
  * Class BlockRenderer
@@ -51,8 +52,9 @@ class BlockRenderer
 	 */
 	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
 	{
+		$aAdditionalPaths = array_merge(static::TWIG_ADDITIONAL_PATHS, [APPROOT.'env-'.utils::GetCurrentEnvironment()]);
 		if (null === static::$oTwigEnv) {
-			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, static::TWIG_ADDITIONAL_PATHS);
+			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
 		}
 
 		$this->oBlock = $oBlock;
