@@ -4166,11 +4166,7 @@ abstract class MetaModel
 			}
 			if (count($aCurrentUser) > 0)
 			{
-				$oSearch = DBObjectSearch::FromOQL("SELECT User WHERE id = :id");
-				$oSearch->AllowAllData();
-				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetUserId()));
-				$oSet->OptimizeColumnLoad($aCurrentUser);
-				$oUser = $oSet->fetch();
+				$oUser = MetaModel::GetObject("User", UserRights::GetUserId(),true,true);
 				$aPlaceholders['current_user->object()'] = $oUser;
 				foreach ($aCurrentUser as $sField)
 				{
@@ -4179,10 +4175,7 @@ abstract class MetaModel
 			}
 			if (count($aCurrentContact) > 0)
 			{
-				$oSearch = DBObjectSearch::FromOQL("SELECT Contact WHERE id = :id");
-				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetContactId()));
-				$oSet->OptimizeColumnLoad(['Contact' => $aCurrentContact]);
-				$oUser = $oSet->fetch();
+				$oUser = MetaModel::GetObject("Person", UserRights::GetContactId(),true,true);
 				foreach ($aCurrentContact as $sField)
 				{
 					$aPlaceholders['current_contact->'.$sField] = $oUser->Get($sField);
