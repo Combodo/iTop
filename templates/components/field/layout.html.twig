@@ -16,4 +16,7 @@
     >
     <div class="ibo-field--label">{{ aParams.label|raw }}</div>
     <div class="ibo-field--value">{{ aParams.value|raw }}</div>
+	{% if (aParams.comments is not null) %}
+		{{ aParams.comments|raw }}
+	{% endif %}
 </div>
