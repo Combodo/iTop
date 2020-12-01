@@ -307,6 +307,7 @@ class ButtonFactory
 	{
 		$oButton = static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
 		$oButton->SetIconClass($sIconClasses);
+		$oButton->SetTooltip($sTooltipText);
 
 		if (!empty($sURL)) {
 			if (empty($sTarget)) {
