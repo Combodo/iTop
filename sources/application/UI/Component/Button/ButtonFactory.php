@@ -261,21 +261,52 @@ class ButtonFactory
 	 *
 	 * @param string $sURL
 	 * @param string|null $sLabel
-	 * @param string|null $sIconClass
+	 * @param string|null $sIconClasses
 	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sTarget
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
 	 */
-	public static function MakeLinkNeutral(string $sURL, ?string $sLabel = null, ?string $sIconClass = null, ?string $sName = null, ?string $sTarget = null, ?string $sId = null): Button
+	public static function MakeLinkNeutral(
+		string $sURL, ?string $sLabel = null, ?string $sIconClasses = null, ?string $sName = null, ?string $sTarget = null,
+		?string $sId = null
+	): Button
 	{
-		$sType = empty($sIconClass) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
+		$sType = empty($sIconClasses) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
 		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, $sType, null, $sName, false, $sId);
 
-		if (!empty($sIconClass)) {
-			$oButton->SetIconClass($sIconClass);
+		if (!empty($sIconClasses)) {
+			$oButton->SetIconClass($sIconClasses);
 		}
+
+		if (!empty($sURL)) {
+			if (empty($sTarget)) {
+				$sTarget = "_self";
+			}
+			$oButton->SetOnClickJsCode("window.open('{$sURL}', '{$sTarget}');");
+		}
+
+		return $oButton;
+	}
+
+	/**
+	 * @param string $sIconClasses
+	 * @param string $sTooltipText
+	 * @param string|null $sURL
+	 * @param string|null $sName
+	 * @param string|null $sTarget
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Component\Button\Button
+	 */
+	public static function MakeIconLink(
+		string $sIconClasses, string $sTooltipText, ?string $sURL = null, ?string $sName = null, ?string $sTarget = null,
+		?string $sId = null
+	)
+	{
+		$oButton = static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
+		$oButton->SetIconClass($sIconClasses);
 
 		if (!empty($sURL)) {
 			if (empty($sTarget)) {
