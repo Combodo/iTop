@@ -4568,8 +4568,7 @@ HTML
 								}
 							}
 							$sTip .= "</ul></p>";
-							$sTip = addslashes($sTip);
-							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
+							$sTip = utils::HtmlEntities($sTip);
 
 							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set'))
 							{
@@ -4601,7 +4600,7 @@ HTML
 							{
 								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.$iCount.'</div>';
+							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.'</div>';
 						}
 						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
