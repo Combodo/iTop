@@ -984,14 +984,14 @@ JS
 		$aClasses = $this->m_oSet->GetSelectedClasses();
 		$aAuthorizedClasses = [];
 		$oBlock = new BlockList();
-		$bEmptySet = false;
-		$bNotAuthorized = false;
-		$bCreateNew = false;
-		$sLinkTarget = '';
-		$sClass = '';
-		$sParams = '';
-		$sDefault = '';
-		$sEventAttachedData = '';
+		$oBlock->bEmptySet = false;
+		$oBlock->bNotAuthorized = false;
+		$oBlock->bCreateNew = false;
+		$oBlock->sLinkTarget = '';
+		$oBlock->sClass = '';
+		$oBlock->sParams = '';
+		$oBlock->sDefault = '';
+		$oBlock->sEventAttachedData = '';
 
 		if (count($aClasses) > 1) {
 			// Check the classes that can be read (i.e authorized) by this user...
@@ -1010,37 +1010,36 @@ JS
 					$oBlock->AddSubBlock(DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
 				} else {
 					// Empty set
-					$bEmptySet = true;
+					$oBlock->bEmptySet = true;
 				}
 			} else {
 				// Not authorized
-				$bNotAuthorized = true;
+				$oBlock->bNotAuthorized = true;
 			}
 		} else {
 			// The list is made of only 1 class of objects, actions on the list are possible
 			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
 				$oBlock->AddSubBlock(cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams));
 			} else {
-				$bEmptySet = true;
-				$sClass = $this->m_oFilter->GetClass();
+				$oBlock->bEmptySet = true;
+				$oBlock->sClass = $this->m_oFilter->GetClass();
 				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
 				if ($bDisplayMenu) {
-					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
-						$sLinkTarget = '';
+					if ((UserRights::IsActionAllowed($oBlock->sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+						$oBlock->sLinkTarget = '';
 						$oAppContext = new ApplicationContext();
-						$sParams = $oAppContext->GetForLink();
+						$oBlock->sParams = $oAppContext->GetForLink();
 						// 1:n links, populate the target object as a default value when creating a new linked object
 						if (isset($aExtraParams['target_attr'])) {
-							$sLinkTarget = ' target="_blank" ';
+							$oBlock->sLinkTarget = ' target="_blank" ';
 							$aExtraParams['default'][$aExtraParams['target_attr']] = $aExtraParams['object_id'];
 						}
-						$sDefault = '';
 						if (!empty($aExtraParams['default'])) {
 							foreach ($aExtraParams['default'] as $sKey => $sValue) {
-								$sDefault .= "&default[$sKey]=$sValue";
+								$oBlock->sDefault .= "&default[$sKey]=$sValue";
 							}
 						}
-						$bCreateNew = true;
+						$oBlock->bCreateNew = true;
 					}
 				}
 			}
@@ -1049,7 +1048,7 @@ JS
 				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
 				// Limit the size of the URL (N°1585 - request uri too long)
 				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
-					$sEventAttachedData = json_encode(array(
+					$oBlock->sEventAttachedData = json_encode(array(
 						'filter' => $sSearchFilter,
 						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
 						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
@@ -1062,18 +1061,6 @@ JS
 			}
 		}
 
-		$oBlock->AddParameter('bEmptySet', $bEmptySet);
-		$oBlock->AddParameter('bNotAuthorized', $bNotAuthorized);
-		$oBlock->AddParameter('bCreateNew', $bCreateNew);
-		$oBlock->AddParameter('sLinkTarget', $sLinkTarget);
-		$oBlock->AddParameter('sAbsoluteUrlAppRoot', utils::GetAbsoluteUrlAppRoot());
-		$oBlock->AddParameter('sClass', $sClass);
-		$oBlock->AddParameter('sParams', $sParams);
-		if (!empty($sClass)) {
-			$oBlock->AddParameter('sClassName', Metamodel::GetName($sClass));
-		}
-		$oBlock->AddParameter('sDefault', $sDefault);
-		$oBlock->AddParameter('sEventAttachedData', $sEventAttachedData);
 
 		return $oBlock;
 	}
@@ -1239,8 +1226,8 @@ JS
 
 		$oBlock = new BlockChart();
 
-		$oBlock->AddParameter('iChartCounter', $iChartCounter);
-		$oBlock->AddParameter('sId', $sId);
+		$oBlock->iChartCounter = $iChartCounter;
+		$oBlock->sId = $sId;
 
 		$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 		$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
@@ -1260,7 +1247,7 @@ JS
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
 		}
 
-		$oBlock->AddParameter('sUrl', $sUrl);
+		$oBlock->sUrl = $sUrl;
 
 		return $oBlock;
 	}
@@ -1311,13 +1298,11 @@ JS
 				foreach ($aValues as $idx => $aValue) {
 					$aNames[$idx] = $aValue['label'];
 				}
-				$sJSNames = json_encode($aNames);
-				$sJson = json_encode($aValues);
 				$oBlock = new BlockChartAjaxBars();
-				$oBlock->AddParameter('sId', $sId);
-				$oBlock->AddParameter('sJson', $sJson);
-				$oBlock->AddParameter('sJSURLs', $sJSURLs);
-				$oBlock->AddParameter('sJSNames', $sJSNames);
+				$oBlock->sJSNames = json_encode($aNames);
+				$oBlock->sJson = json_encode($aValues);
+				$oBlock->sId = $sId;
+				$oBlock->sJSURLs = $sJSURLs;
 				break;
 
 			case 'pie':
@@ -1327,13 +1312,11 @@ JS
 					$aColumns[] = array('series_'.$idx, (int)$aValue['value']);
 					$aNames['series_'.$idx] = $aValue['label'];
 				}
-				$sJSColumns = json_encode($aColumns);
-				$sJSNames = json_encode($aNames);
 				$oBlock = new BlockChartAjaxPie();
-				$oBlock->AddParameter('sId', $sId);
-				$oBlock->AddParameter('sJSColumns', $sJSColumns);
-				$oBlock->AddParameter('sJSURLs', $sJSURLs);
-				$oBlock->AddParameter('sJSNames', $sJSNames);
+				$oBlock->sJSColumns = json_encode($aColumns);
+				$oBlock->sJSNames = json_encode($aNames);
+				$oBlock->sId = $sId;
+				$oBlock->sJSURLs = $sJSURLs;
 				break;
 		}
 		return $oBlock;

@@ -7,7 +7,6 @@
 namespace Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChartAjaxPie;
 
 
-use Combodo\iTop\Application\UI\tBlockParams;
 use Combodo\iTop\Application\UI\UIBlock;
 
 /**
@@ -21,5 +20,12 @@ class BlockChartAjaxPie extends UIBlock
 	public const BLOCK_CODE = 'ibo-blockchartajaxpie';
 	public const JS_TEMPLATE_REL_PATH = 'specific/displayblock/blockchartajaxpie/layout';
 
-	use tBlockParams;
+	/** @var string */
+	public $sId;
+	/** @var string */
+	public $sJSColumns;
+	/** @var string */
+	public $sJSURLs;
+	/** @var string */
+	public $sJSNames;
 }

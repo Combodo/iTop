@@ -1,15 +1,15 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 var chart = c3.generate({
-    bindto: d3.select('#my_chart_{{ oUIBlock.GetParameter('sId') }}'),
+    bindto: d3.select('#my_chart_{{ oUIBlock.sId }}'),
     data: {
-        json: {{ oUIBlock.GetParameter('sJson')|raw }},
+        json: {{ oUIBlock.sJson|raw }},
         keys: {
             x: 'label',
             value: ["value"]
         },
         onclick: function (d) {
-            var aURLs = {{ oUIBlock.GetParameter('sJSURLs')|raw }};
+            var aURLs = {{ oUIBlock.sJSURLs|raw }};
             window.location.href = aURLs[d.index];
         },
         selection: {
@@ -41,7 +41,7 @@ var chart = c3.generate({
         format: {
             title: function() { return '' },
             name: function (name, ratio, id, index) {
-                var aNames = {{ oUIBlock.GetParameter('sJSNames')|raw }};
+                var aNames = {{ oUIBlock.sJSNames|raw }};
                 return aNames[index];
             }
         }

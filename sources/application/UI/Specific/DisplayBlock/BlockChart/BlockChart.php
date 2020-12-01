@@ -7,7 +7,6 @@
 namespace Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChart;
 
 
-use Combodo\iTop\Application\UI\tBlockParams;
 use Combodo\iTop\Application\UI\UIBlock;
 
 /**
@@ -22,5 +21,10 @@ class BlockChart extends UIBlock
 	public const HTML_TEMPLATE_REL_PATH = 'specific/displayblock/blockchart/layout';
 	public const JS_TEMPLATE_REL_PATH = 'specific/displayblock/blockchart/layout';
 
-	use tBlockParams;
+	/** @var int */
+	public $iChartCounter;
+	/** @var string */
+	public $sId;
+	/** @var string */
+	public $sUrl;
 }

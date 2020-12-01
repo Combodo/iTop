@@ -2,13 +2,13 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 var chart = c3.generate({
-    bindto: d3.select('#my_chart_{{ oUIBlock.GetParameter('sId') }}'),
+    bindto: d3.select('#my_chart_{{ oUIBlock.sId }}'),
     data: {
-        columns: {{ oUIBlock.GetParameter('sJSColumns')|raw }},
+        columns: {{ oUIBlock.sJSColumns|raw }},
         type: 'pie',
-        names: {{ oUIBlock.GetParameter('sJSNames')|raw }},
-        onclick: function (d, element) {
-            var aURLs = {{ oUIBlock.GetParameter('sJSURLs')|raw }};
+        names: {{ oUIBlock.sJSNames|raw }},
+        onclick: function (d) {
+            var aURLs = {{ oUIBlock.sJSURLs|raw }};
             window.location.href= aURLs[d.index];
         },
         order: null

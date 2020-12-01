@@ -8,7 +8,6 @@ namespace Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockList;
 
 
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\tBlockParams;
 
 /**
  * Class BlockList
@@ -22,5 +21,20 @@ class BlockList extends UIContentBlock
 	public const HTML_TEMPLATE_REL_PATH = 'specific/displayblock/blocklist/layout';
 	public const JS_TEMPLATE_REL_PATH = 'specific/displayblock/blocklist/layout';
 
-	use tBlockParams;
+	/** @var bool */
+	public $bEmptySet = false;
+	/** @var bool */
+	public $bNotAuthorized = false;
+	/** @var bool */
+	public $bCreateNew = false;
+	/** @var string */
+	public $sLinkTarget = '';
+	/** @var string */
+	public $sClass = '';
+	/** @var string */
+	public $sParams = '';
+	/** @var string */
+	public $sDefault = '';
+	/** @var string */
+	public $sEventAttachedData = '';
 }
