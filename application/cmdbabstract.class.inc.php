@@ -1885,16 +1885,16 @@ HTML
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
 						// predefined queries N°3227
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
-						$sSearchQuerylbl = Dict::S('UI:Edit:SearchQuery');
+						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
 						$sAdditionalStuff = <<<HTML
-<button id="$sPredefinedBtnId" type="button" title="$sSearchQuerylbl" 
+<button id="$sPredefinedBtnId" type="button" title="$sSearchQueryLbl" 
 	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
 	<i class="fas fa-search"></i>
 </button>
 HTML;
 						$oPage->add_ready_script(<<<JS
 // noinspection JSAnnotator
-oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQuerylbl', true, null, null, true, true, 'oql');
+oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQueryLbl', true, null, null, true, true, 'oql');
 // noinspection JSAnnotator
 oACWidget_{$iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>Use the search form above to search for objects to be added.</p></div>";
 $("#$sPredefinedBtnId").click(function () {
@@ -1909,7 +1909,7 @@ if ($('#ac_dlg_{$iId}').length == 0)
 			height: $(window).height()*0.8, 
 			autoOpen: false, 
 			modal: true, 
-			title: '$sSearchQuerylbl', 
+			title: '$sSearchQueryLbl', 
 			resizeStop: oACWidget_{$iId}.UpdateSizes, 
 			close: oACWidget_{$iId}.OnClose 
 		});
@@ -1920,9 +1920,9 @@ JS
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
 						$sInitialUrl = $sBaseUrl.urlencode($sEditValue);
-						$sTestQuerylbl = Dict::S('UI:Edit:TestQuery');
+						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
 						$sAdditionalStuff .= <<<HTML
-<button type="button" title="{$sTestQuerylbl}" 
+<button type="button" title="{$sTestQueryLbl}" 
 	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
 	<a id="$sTestResId" target="_blank" href="$sInitialUrl">
 		<i class="fas fa-play"></i>
