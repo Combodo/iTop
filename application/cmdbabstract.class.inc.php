@@ -34,6 +34,7 @@ use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -1886,12 +1887,17 @@ HTML
 						// predefined queries N°3227
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
-						$sAdditionalStuff = <<<HTML
-<button id="$sPredefinedBtnId" type="button" title="$sSearchQueryLbl" 
-	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
-	<i class="fas fa-search"></i>
-</button>
-HTML;
+						$oPredefQueryButton = ButtonFactory::MakeIconLink(
+							'fas fa-search',
+							$sSearchQueryLbl,
+							null,
+							null,
+							null,
+							$sPredefinedBtnId
+						);
+						$oPredefQueryButton->AddCSSClasses('ibo-action-button');
+						$oPredefQueryRenderer = new BlockRenderer($oPredefQueryButton);
+						$sAdditionalStuff = $oPredefQueryRenderer->RenderHtml();
 						$oPage->add_ready_script(<<<JS
 // noinspection JSAnnotator
 oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQueryLbl', true, null, null, true, true, 'oql');
@@ -1916,25 +1922,30 @@ if ($('#ac_dlg_{$iId}').length == 0)
 }
 JS
 						);
+
 						// test query link
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
-						$sInitialUrl = $sBaseUrl.urlencode($sEditValue);
 						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
-						$sAdditionalStuff .= <<<HTML
-<button type="button" title="{$sTestQueryLbl}" 
-	class="ibo-button ibo-is-alternative ibo-is-neutral ibo-action-button">
-	<a id="$sTestResId" target="_blank" href="$sInitialUrl">
-		<i class="fas fa-play"></i>
-	</a>
-</button>
-HTML;
+						$oTestQueryButton = ButtonFactory::MakeIconLink(
+							'fas fa-play',
+							$sTestQueryLbl,
+							null,
+							null,
+							null,
+							$sTestResId
+						);
+						$oTestQueryButton->AddCSSClasses('ibo-action-button');
 						$oPage->add_ready_script(<<<JS
-$('#$iId').bind('change keyup', function(evt, sFormId) { 
-	$('#$sTestResId').attr('href', '$sBaseUrl'+encodeURIComponent($(this).val())); 
+$("#$sTestResId").click(function () {
+	var sQueryRaw = $("#$iId").val(),
+		sQueryEncoded = encodeURI(sQueryRaw);
+	window.open('$sBaseUrl' + sQueryEncoded, '_blank');
 });
 JS
 						);
+						$oTestQueryRenderer = new BlockRenderer($oTestQueryButton);
+						$sAdditionalStuff .= $oTestQueryRenderer->RenderHtml();
 					} else {
 						$sAdditionalStuff = '';
 					}
@@ -2204,8 +2215,8 @@ EOF
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
 					$oForm = $value->GetForm($sFormPrefix);
-					$oRenderer = new ConsoleFormRenderer($oForm);
-					$aRenderRes = $oRenderer->Render();
+					$oPredefQueryRenderer = new ConsoleFormRenderer($oForm);
+					$aRenderRes = $oPredefQueryRenderer->Render();
 
 					$aFieldSetOptions = array(
 						'field_identifier_attr' => 'data-field-id',
