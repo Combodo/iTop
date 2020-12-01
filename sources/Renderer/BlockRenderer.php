@@ -111,12 +111,12 @@ class BlockRenderer
 	public function RenderHtml()
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock::GetHtmlTemplateRelPath()))
+		if(!empty($this->oBlock->GetHtmlTemplateRelPath()))
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
-				$this->oBlock::GetHtmlTemplateRelPath(),
+				$this->oBlock->GetHtmlTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_HTML
 			);
 		}
@@ -136,12 +136,12 @@ class BlockRenderer
 	public function RenderJsInline()
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock::GetJsTemplateRelPath()))
+		if(!empty($this->oBlock->GetJsTemplateRelPath()))
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
-				$this->oBlock::GetJsTemplateRelPath(),
+				$this->oBlock->GetJsTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_JS
 			);
 		}
@@ -161,12 +161,12 @@ class BlockRenderer
 	public function RenderCssInline()
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock::GetCssTemplateRelPath()))
+		if(!empty($this->oBlock->GetCssTemplateRelPath()))
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
-				$this->oBlock::GetCssTemplateRelPath(),
+				$this->oBlock->GetCssTemplateRelPath(),
 				TwigHelper::ENUM_FILE_TYPE_CSS
 			);
 		}

@@ -34,21 +34,21 @@ interface iUIBlock {
 	 *
 	 * @return string|null
 	 */
-	public static function GetGlobalTemplateRelPath();
+	public function GetGlobalTemplateRelPath();
 
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the HTML template to use or null if no HTML to render
 	 *
 	 * @return string|null
 	 */
-	public static function GetHtmlTemplateRelPath();
+	public function GetHtmlTemplateRelPath();
 
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the JS template to use or null if there is no inline JS to render
 	 *
 	 * @return string|null
 	 */
-	public static function GetJsTemplateRelPath();
+	public function GetJsTemplateRelPath();
 
 	/**
 	 * Return an array of the relative paths (from <ITOP>/) of the JS files to use for the block itself
@@ -62,7 +62,7 @@ interface iUIBlock {
 	 *
 	 * @return string|null
 	 */
-	public static function GetCssTemplateRelPath();
+	public function GetCssTemplateRelPath();
 
 	/**
 	 * Return an array of the relative paths (from <ITOP>/) of the CSS files to use for the block itself

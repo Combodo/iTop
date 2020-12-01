@@ -64,6 +64,14 @@ abstract class UIBlock implements iUIBlock
 	/** @var string $sId */
 	protected $sId;
 
+	/** @var string */
+	protected $sGlobalTemplateRelPath;
+	/** @var string */
+	protected $sHtmlTemplateRelPath;
+	/** @var string */
+	protected $sJsTemplateRelPath;
+	/** @var string */
+	protected $sCssTemplateRelPath;
 	/** @var array */
 	protected $aJsFilesRelPath;
 	/** @var array */
@@ -77,45 +85,49 @@ abstract class UIBlock implements iUIBlock
 	public function __construct(?string $sId = null)
 	{
 		$this->sId = $sId ?? $this->GenerateId();
-		$this->aJsFilesRelPath = [];
-		$this->aCssFilesRelPath = [];
+		$this->aJsFilesRelPath = static::JS_FILES_REL_PATH;
+		$this->aCssFilesRelPath = static::CSS_FILES_REL_PATH;
+		$this->sHtmlTemplateRelPath = static::HTML_TEMPLATE_REL_PATH;
+		$this->sJsTemplateRelPath = static::JS_TEMPLATE_REL_PATH;
+		$this->sCssTemplateRelPath = static::CSS_TEMPLATE_REL_PATH;
+		$this->sGlobalTemplateRelPath = static::GLOBAL_TEMPLATE_REL_PATH;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetGlobalTemplateRelPath()
+	public function GetGlobalTemplateRelPath()
 	{
-		return static::GLOBAL_TEMPLATE_REL_PATH;
+		return $this->sGlobalTemplateRelPath;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetHtmlTemplateRelPath() {
-		return static::HTML_TEMPLATE_REL_PATH;
+	public function GetHtmlTemplateRelPath() {
+		return $this->sHtmlTemplateRelPath;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetJsTemplateRelPath() {
-		return static::JS_TEMPLATE_REL_PATH;
+	public function GetJsTemplateRelPath() {
+		return $this->sJsTemplateRelPath;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetJsFilesRelPaths() {
-		return array_merge(static::JS_FILES_REL_PATH, $this->aJsFilesRelPath);
+		return $this->aJsFilesRelPath;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function GetCssTemplateRelPath()
+	public function GetCssTemplateRelPath()
 	{
-		return static::CSS_TEMPLATE_REL_PATH;
+		return $this->sCssTemplateRelPath;
 	}
 
 	/**
@@ -123,7 +135,7 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function GetCssFilesRelPaths()
 	{
-		return array_merge(static::CSS_FILES_REL_PATH, $this->aCssFilesRelPath);
+		return $this->aCssFilesRelPath;
 	}
 
 	/**
