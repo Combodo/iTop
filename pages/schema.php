@@ -1158,6 +1158,8 @@ JS
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
+
+// TODO 3.0.0 Replace these layout.js call 
 ////split the page in 2 panels
 //$oPage->add_init_script(
 //	<<<EOF
