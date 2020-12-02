@@ -943,7 +943,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 	'Menu:NotificationsMenu' => 'Notifikationer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguration af <span class="hilite">Notifikationer</span>~~',
+	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I iTop er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:

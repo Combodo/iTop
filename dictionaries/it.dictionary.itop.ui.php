@@ -954,7 +954,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 	'Menu:NotificationsMenu' => 'Notifiche', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configurazione delle <span class="hilite">Notifiche</span>',
+	'UI:NotificationsMenu:Title' => 'Configurazione delle Notifiche',
 	'UI:NotificationsMenu:Help' => 'Aiuto',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop le notifiche sono completamente personalizzabili. Essi si basano su due serie di oggetti: <i>trigger e azioni</i>.</p>
 <p><i>I <b>trigger</b></i> definiscono quando verrà eseguita una notifica. Ci sono diversi trigger come parte del nucleo di iTop, ma altri possono essere portati da estensioni:

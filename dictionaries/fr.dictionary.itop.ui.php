@@ -946,7 +946,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Title' => 'Configuration des Notifications',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :

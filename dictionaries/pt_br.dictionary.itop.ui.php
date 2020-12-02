@@ -954,7 +954,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Menu:NotificationsMenu' => 'Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuração de Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuração de <span class="hilite">Notificações</span>',
+	'UI:NotificationsMenu:Title' => 'Configuração de Notificações',
 	'UI:NotificationsMenu:Help' => 'Ajuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>As Notificações são totalmente personalizáveis​​. Elas são baseadas em dois conjuntos de objetos: <i>Gatilhos e Ações</i>.</p>
 <p><i><b>Gatilhos</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:

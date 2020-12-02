@@ -954,7 +954,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	'Menu:NotificationsMenu' => 'Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuración de las <span class="hilite">Notificaciones</span>',
+	'UI:NotificationsMenu:Title' => 'Configuración de las Notificaciones',
 	'UI:NotificationsMenu:Help' => 'Ayuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>En iTop las notificaciones son completamente personalizables. Están basadas en dos conjuntos de objetos: <i>Disparadores y Acciones</i>.</p>
 <p>Los <i><b>disparadores</b></i> definen cuando una notificación debe ser ejecutada.  Existen 3 tipos de disparadores para cubrir las 3 diferentes fases del ciclo de vida de un objeto:

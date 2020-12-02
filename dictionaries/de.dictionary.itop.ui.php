@@ -942,7 +942,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Menu:NotificationsMenu' => 'Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Einstellungen der <span class="hilite">Benachrichtigungen</span>',
+	'UI:NotificationsMenu:Title' => 'Einstellungen der Benachrichtigungen',
 	'UI:NotificationsMenu:Help' => 'Hilfe',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
 <p><i><b>Trigger</b></i> definieren, wann eine Benachrichtigung ausgeführt wird. Es gibt verschiedene Auslöser als Teil des iTop-Kerns, aber andere können durch Erweiterungen eingebracht werden:

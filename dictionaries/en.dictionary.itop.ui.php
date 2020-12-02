@@ -967,7 +967,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Title' => 'Configuration of the Notifications',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of '.ITOP_APPLICATION_SHORT.' core, but others can be brought by extensions:

@@ -955,7 +955,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
+	'UI:NotificationsMenu:Title' => 'Uyarıların yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:

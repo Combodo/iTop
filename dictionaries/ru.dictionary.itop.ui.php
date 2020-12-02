@@ -933,7 +933,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
+	'UI:NotificationsMenu:Title' => 'Конфигурация Уведомлений',
 	'UI:NotificationsMenu:Help' => 'Помощь',
 	'UI:NotificationsMenu:HelpContent' => '<p>В iTop полностью настраиваемые уведомления, которые основаны на двух наборах объектов: <i>триггерах и действиях</i>.</p>
 <p><i><b>Триггеры</b></i> определяют, когда необходимо выполнить действия. Базовые триггеры доступны как часть ядра iTop, другие триггеры добавляются дополнительными расширениями:

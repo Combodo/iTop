@@ -956,7 +956,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'Menu:NotificationsMenu' => 'Upozornění', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Konfigurace upozornění', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfigurace <span class="hilite">upozornění</span>',
+	'UI:NotificationsMenu:Title' => 'Konfigurace upozornění',
 	'UI:NotificationsMenu:Help' => 'Nápověda',
 	'UI:NotificationsMenu:HelpContent' => '<p>Upozornění v iTop jsou plně nastavitelné. Jsou založena na dvou druzích objektů: <i>triggery (spouštěče) a akce</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:

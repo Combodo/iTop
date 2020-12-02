@@ -941,7 +941,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'Menu:NotificationsMenu' => 'Értesítések', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Értesítések</span> beállítása',
+	'UI:NotificationsMenu:Title' => 'Értesítések beállítása',
 	'UI:NotificationsMenu:Help' => 'Segítség',
 	'UI:NotificationsMenu:HelpContent' => '<p>Az iTop alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>kiváltó okok és akciók</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:

@@ -961,7 +961,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Menu:NotificationsMenu' => 'Meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuratie van <span class="hilite">Meldingen</span>',
+	'UI:NotificationsMenu:Title' => 'Configuratie van Meldingen',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
 <p><i><b>Triggers</b></i> bepalen wanneer er een melding is. Er zijn verschillende triggers als onderdeel van '.ITOP_APPLICATION_SHORT.' core, maar andere kunnen door middel van uitbreidingen worden toegevoegd.

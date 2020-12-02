@@ -941,7 +941,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 	'Menu:NotificationsMenu' => 'Upozornenia', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfigurácia <span class="hilite">Upozornení</span>',
+	'UI:NotificationsMenu:Title' => 'Konfigurácia Upozornení',
 	'UI:NotificationsMenu:Help' => 'Pomoc',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop upozornenia sú plne upraviteľné. Sú založené na dvoch setoch objektov: <i>spúštače a akcie</i>.</p>
 <p><i><b>Spúštače</b></i> definujte bude spustené nejaké upozornenie. Máme 5 typov spúštačov pre pokrytie 3 rôznych fáz životného cyklu objektu:
