@@ -902,6 +902,7 @@ try
 			$sField = utils::ReadParam('field', '');
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
+				$oPage->add_header('X-Frame-Options:'); // resets header, see N°3416
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 			}
 			break;
