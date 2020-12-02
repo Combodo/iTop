@@ -873,7 +873,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$aOrigins[$sOrigin] = true;
 		$sAllowedValues = "";
 		$sMoreInfo = "";
-		$sDefaultNullValue = '""';
+		$sDefaultNullValue = '';
 		$aCols = array();
 		foreach ($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
 		{
@@ -891,8 +891,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 				{
 					$sDefaultNullValue = json_encode($sDefaultNullValue);
 				}
-				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? json_encode(Dict::Format('UI:Schema:DefaultNullValue',
-					$sDefaultNullValue)) : '""');
+				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format('UI:Schema:DefaultNullValue',
+					$sDefaultNullValue) : '');
 			}
 			else
 			{
@@ -927,47 +927,27 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
 		{
 			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
-			$sAllowedValuesEscpd = json_encode($sAllowedValues);
+			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
 
 			$sFilterURL = urlencode($sAllowedValues);
-			$sAllowedValues = "<span id=\"values".$sAttrCode."\"><a href=\"run_query.php?expression=".$sFilterURL."\">⚵</a>".Dict::S('UI:Schema:Attribute/Filter')."</span>";
+			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'">⚵</a>'.Dict::S('UI:Schema:Attribute/Filter')."</span>";
 		}
 		else
 		{
 			$sAllowedValues = '';
 		}
-		$sAttrValueEscpd = json_encode($sValue);
-		$sAttrTypeDescEscpd = json_encode($sTypeDesc);
-		$sAttrOriginEscpd = json_encode($sOrigin);
+		$sAttrValueEscpd = utils::HtmlEntities($sValue);
+		$sAttrTypeDescEscpd = utils::HtmlEntities($sTypeDesc);
+		$sAttrOriginEscpd = utils::HtmlEntities($sOrigin);
+		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
 
 		$aDetails[] = array(
-			'code' => "<span id=\"attr".$sAttrCode."\"><span class=\"attrLabel\">".$oAttDef->GetLabel()."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$oAttDef->GetCode()."</span><span class=\"parenthesis\">)</span></span>",
-			'type' => "<span id=\"type".$sAttrCode."\"><span class=\"attrLabel\">".$sTypeDict."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sType."</span><span class=\"parenthesis\">)</span></span>",
-			'origincolor' => "<span class=\"originColor".$sOrigin."\"></span>",
+			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'"><span class="attrLabel">'.$oAttDef->GetLabel().'</span> <span class="parenthesis">(</span><span class="attrCode">'.$oAttDef->GetCode().'</span><span class="parenthesis">)</span></span>',
+			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'"><span class="attrLabel">'.$sTypeDict.'</span> <span class="parenthesis">(</span><span class="attrCode">'.$sType.'</span><span class="parenthesis">)</span></span>',
+			'origincolor' => '<span class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></span>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
 			'values' => $sAllowedValues,
-			'moreinfo' => "<span id=\"moreinfo".$sAttrCode."\"> $sMoreInfo</span>",
-		);
-		//tooltip construction
-		$oPage->add_ready_script(
-			<<<EOF
-            	if($sAttrValueEscpd != ''){
-		       		$('#attr$sAttrCode').qtip( { content: $sAttrValueEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-		       	}
-		       	if($sAttrTypeDescEscpd != ''){
-		      	  $('#type$sAttrCode').qtip( { content: $sAttrTypeDescEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if($sAttrOriginEscpd != ''){
-					$('#originColor$sAttrCode').parent().qtip( { content: $sAttrOriginEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if( !$sIsEnumValues && $sAllowedValuesEscpd != ''){
-					$('#values$sAttrCode').qtip( { content: $sAllowedValuesEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if($sDefaultNullValue != ''){
-					$('#moreinfo$sAttrCode').qtip( { content: $sDefaultNullValue, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-EOF
-
+			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
 		);
 
 	}
@@ -1136,10 +1116,10 @@ EOF
 );
 
 $oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
-$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
+$oPage->add("<div class='data-model-viewer'> ");
 DisplayClassesList($oPage, $sContext);
 $oPage->add("</div>");
-$oPage->add("<div class='ui-layout-center data-model-viewer'>");
+$oPage->add("<div class='data-model-viewer'>");
 
 switch ($operation)
 {
@@ -1178,21 +1158,21 @@ JS
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
-//split the page in 2 panels
-$oPage->add_init_script(
-	<<<EOF
-		$('#dataModelSplitPane').layout({
-			west : {size: "20%", minSize : 200,paneSize : 600},
-			center : {
-				onresize_end : function(){
-					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
-				}
-			}
-		});
-		// Layout
-EOF
-
-);
+////split the page in 2 panels
+//$oPage->add_init_script(
+//	<<<EOF
+//		$('#dataModelSplitPane').layout({
+//			west : {size: "20%", minSize : 200,paneSize : 600},
+//			center : {
+//				onresize_end : function(){
+//					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
+//				}
+//			}
+//		});
+//		// Layout
+//EOF
+//
+//);
 
 $oPage->output();
 ?>

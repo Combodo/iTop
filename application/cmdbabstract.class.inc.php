@@ -398,11 +398,10 @@ EOF
 							'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
 					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$sLastSynchro."</p>";
 				}
+				$sTip = utils::HtmlEntities($sTip);
 				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fas fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
-				$sTip = addslashes($sTip);
-				$oPage->add_ready_script("$('#$sSynchroTagId').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'topLeft' }, position: { corner: { target: 'bottomMiddle', tooltip: 'topLeft' }} } );");
+				$aIcons[] = '<div class="tag" id="'.$sSynchroTagId.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true"><span class="object-synchronized fas fa-lock fa-1x"></span>'.$sLabel.'</div>';
 			}
 		}
 
@@ -876,7 +875,6 @@ EOF
 											if ($iFlags & OPT_ATT_SLAVE) {
 												$aReasons = array();
 												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
 												foreach ($aReasons as $aRow) {
 													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
@@ -887,8 +885,8 @@ EOF
 													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
 												}
-												$sTip = addslashes($sTip);
-												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+												$sTip = utils::HtmlEntities($sTip);
+												$sSynchroIcon = '<img id="synchro_'.$sInputId.'" src="../images/transp-lock.png"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" />';
 												$sComments = $sSynchroIcon;
 											}
 
@@ -2339,37 +2337,37 @@ EOF
 					}
 					else
 					{
-						$sHTMLValue = "<div class=\"field_input_zone ibo-input-wrapper ibo-input-string-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-string\" title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-								ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-						$aEventsList[] = 'keyup';
-						$aEventsList[] = 'change';
-
+						$sTip = '';
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
 						if (!empty($sDisplayValue))
 						{
+							$sTip = ' data-tooltip-content="'.utils::HtmlEntities($sDisplayValue).'"';
 							$oPage->add_ready_script(
 								<<<EOF
-								var sEscapedVal = $('<div/>').text($('#{$iId}').val()).html();
-								$('#{$iId}').qtip( { content: sEscapedVal, show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'bottomLeft' }, position: { corner: { target: 'topLeft', tooltip: 'bottomLeft' }, adjust: { y: -15}} } );
-								
 								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
-									var oQTipAPI = $(this).qtip('api');
+									var sVal = $('#{$iId}').val();
+									var oTippy = this._tippy;
 									
-									if($(this).val() === '')
+									if(sVal === '')
 									{
-										oQTipAPI.hide();
-										oQTipAPI.disable(true); 
+										oTippy.hide();
+										oTippy.disable(); 
 									}
 									else
 									{
-										oQTipAPI.disable(false); 
+										oTippy.enable(); 
 									}
-									var sEscapedVal = $('<div/>').text($(this).val()).html();                  
-									oQTipAPI.updateContent(sEscapedVal);
+									oTippy.setContent(sVal);
 								});
 EOF
 							);
 						}
+						
+						$sHTMLValue = '<div class="field_input_zone ibo-input-wrapper ibo-input-string-wrapper" data-validation="untouched"><input class="ibo-input ibo-input-string" title="'.$sHelpText.'" type="text" maxlength="'.$iFieldSize.'" name="attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix.'" value="'.htmlentities($sDisplayValue,
+								ENT_QUOTES, 'UTF-8').'" id="'.$iId.'"'.$sTip.' /></div>'.$sValidationSpan.$sReloadSpan;
+						$aEventsList[] = 'keyup';
+						$aEventsList[] = 'change';
+
 					}
 					break;
 			}
@@ -4517,12 +4515,11 @@ HTML
 					if ($oAttDef->GetEditClass() == 'One Way Password')
 					{
 
-						$sTip = "Unknown values";
-						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
+						$sTip = Dict::S('UI:Component:Field:BulkModify:UnknownValues:Tooltip');
 
 						$oDummyObj->Set($sAttCode, null);
 						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'"> ? </div>';
+						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'"> ? </div>';
 						$sReadyScript .= 'ToggleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 					else

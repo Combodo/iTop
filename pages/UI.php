@@ -1440,9 +1440,8 @@ HTML
 							}					
 						}
 						$sTip .= "</ul></p>";
-						$sTip = addslashes($sTip);
-						$sReadyScript .= "$('#multi_values_$sFieldInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
-						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'">'.count($aValues[$sAttCode]).'</div>';
+						$sTip = utils::HtmlEntities($sTip);
+						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).'</div>';
 					}
 					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sFieldInputId\">$sHTMLValue</span>", 'comments' => $sComments);
 					$aFieldsMap[$sAttCode] = $sFieldInputId;
