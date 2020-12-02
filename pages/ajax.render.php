@@ -961,6 +961,7 @@ try
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
 				$oKPI = new ExecutionKPI();
+				$oPage->add_header('X-Frame-Options:'); // resets header, see N°3416
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}
