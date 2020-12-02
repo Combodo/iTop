@@ -109,7 +109,7 @@ var CombodoPortalToolbox = {
 
 			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
 			// See N°3469
-			let sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
+			var sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
 			oModalElem.attr('id', sModalID)
 				.appendTo('body');
 		}
