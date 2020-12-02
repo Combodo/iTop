@@ -26,6 +26,8 @@ namespace Combodo\iTop\Application\UI\Component\Panel;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Panel
  * @since 3.0.0
+ *
+ * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-panels to see live examples
  */
 class PanelFactory
 {

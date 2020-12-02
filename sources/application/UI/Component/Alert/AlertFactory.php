@@ -25,6 +25,8 @@ namespace Combodo\iTop\Application\UI\Component\Alert;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Alert
  * @since 3.0.0
+ *
+ * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-alerts to see live examples
  */
 class AlertFactory
 {

@@ -26,7 +26,6 @@ use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Component\Html\Html;
 use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
-use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateFactory;
 use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 use utils;
@@ -38,9 +37,33 @@ $oPage = new iTopWebPage('Render all UI blocks');
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oPage->SetContentLayout($oPageContentLayout);
 
+$oPage->add_style(<<<CSS
+h1, h2 {
+	font-size: initial;
+	font-weight: initial;
+	margin: initial;
+	padding: initial;
+}
+h1 {
+	text-align: center;
+}
+
+hr {
+	background-color: black;
+}
+CSS
+);
+
+$oMainTitle = new Html('<h1>Buttons examples</h1>');
+$oPage->AddUiBlock($oMainTitle);
+
+$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+
 /////////
 // Alerts
 /////////
+$oAlertsTitle = new Html('<h2 id="title-alerts">Alerts examples</h2>');
+$oPage->AddUiBlock($oAlertsTitle);
 $sContent = <<<HTML
 <div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
 <div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
@@ -60,6 +83,8 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 //////////
 // Buttons
 //////////
+$oButtonsTitle = new Html('<h2 id="title-buttons">Buttons examples</h2>');
+$oPage->AddUiBlock($oButtonsTitle);
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary'));
@@ -82,18 +107,21 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAc
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeIconLink('fas fa-thumbs-up', 'This is the tooltip content'));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
 /////////
 // Panels
 /////////
+$oPanelsTitle = new Html('<h2 id="title-panels">Panels examples</h2>');
+$oPage->AddUiBlock($oPanelsTitle);
 $aSubBlocks = [
 	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
 	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'),
 ];
 
-$oPanel = PanelFactory::MakeNeutral('Neutral alert');
+$oPanel = PanelFactory::MakeNeutral('Neutral panel');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 

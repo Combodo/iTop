@@ -26,6 +26,8 @@ namespace Combodo\iTop\Application\UI\Component\Button;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Component\Button
  * @since 3.0.0
+ *
+ * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-buttons to see live examples
  */
 class ButtonFactory
 {
