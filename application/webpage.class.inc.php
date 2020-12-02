@@ -483,6 +483,23 @@ class WebPage implements Page
 	}
 
 	/**
+	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
+	 *
+	 * @since 2.7.2-2 3.0.0 N°3416
+	 * @uses security_header_xframe config parameter
+	 * @uses \utils::GetConfig()
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+	 */
+	public function add_xframe_options($sHeaderValue = null)
+	{
+		if (is_null($sHeaderValue)) {
+			$sHeaderValue = utils::GetConfig()->Get('security_header_xframe');
+		}
+
+		$this->add_header('X-Frame-Options: '.$sHeaderValue);
+	}
+
+	/**
 	 * Add needed headers to the page so that it will no be cached
 	 */
 	public function no_cache()
@@ -490,7 +507,7 @@ class WebPage implements Page
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
-		$this->add_header('X-Frame-Options: deny');
+		$this->add_xframe_options(); //FIXME shouldn't be done here !!!!!
 	}
 
 	/**
