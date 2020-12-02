@@ -36,8 +36,8 @@ class PopoverMenu extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-popover-menu';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/layout';
-	public const JS_FILES_REL_PATH = [
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/components/popover-menu.js',
 	];
 

@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 class DashboardLayout extends UIBlock
 {
 	public const BLOCK_CODE = 'ibo-dashboard';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/dashboard/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashboard/layout';
 
 	/** @var DashboardRow[] */
 	protected $aDashboardRows;

@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 
 class InputWithLabel extends UIBlock
 {
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/input/inputwithlabel';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/inputwithlabel';
 
 	/** @var string */
 	protected $sLabel;

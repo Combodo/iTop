@@ -23,7 +23,7 @@ class Field extends UIBlock
 	/** @inheritdoc  */
 	public const BLOCK_CODE = 'ibo-field';
 	/** @inheritdoc  */
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/field/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/field/layout';
 
 	/** @var array Array of various parameters of the field. This should be exploded in dedicated properties instead of a grey array. */
 	protected $aParams;

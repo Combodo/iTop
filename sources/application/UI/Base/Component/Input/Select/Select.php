@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Input;
 
 class Select extends Input
 {
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/input/select/select';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/select/select';
 
 	/** @var array */
 	protected $aOptions;

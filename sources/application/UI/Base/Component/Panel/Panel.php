@@ -39,7 +39,7 @@ class Panel extends UIContentBlock
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-panel';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/panel/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/layout';
 
 	// Specific constants
 	/** @var string ENUM_COLOR_PRIMARY */

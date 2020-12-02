@@ -20,7 +20,7 @@ class Title extends UIBlock
 	/** @inheritDoc */
 	public const BLOCK_CODE = 'ibo-title';
 	/** @inheritDoc */
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/title/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/title/layout';
 
 	/** @var string Icon should cover all the space, best for icons with filled background */
 	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';

@@ -35,7 +35,7 @@ class PopoverMenuItem extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-popover-menu--item';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/item/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/item/layout';
 
 	/** @var \ApplicationPopupMenuItem $oPopupMenuItem We decorate the class with the original \ApplicationPopupMenuItem as it is used among the application (backoffice, portal, extensions) and cannot be refactored without BC breaks */
 	protected $oPopupMenuItem;

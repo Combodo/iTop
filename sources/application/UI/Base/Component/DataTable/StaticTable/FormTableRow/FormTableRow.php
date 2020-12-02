@@ -18,8 +18,8 @@ class FormTableRow extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-formtablerow';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtablerow/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtablerow/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtablerow/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtablerow/layout';
 
 	/** @var string */
 	private $sRef;

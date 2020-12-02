@@ -15,6 +15,6 @@ class RichText extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-richtext';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 }

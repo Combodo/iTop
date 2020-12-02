@@ -38,7 +38,7 @@ class TopBar extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-top-bar';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/top-bar/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/top-bar/layout';
 
 	/** @var QuickCreate|null $oQuickCreate */
 	protected $oQuickCreate;

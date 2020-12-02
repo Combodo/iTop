@@ -35,7 +35,7 @@ class TransitionEntry extends ActivityEntry
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-transition-entry';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/transition-entry';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/transition-entry';
 
 	public const DEFAULT_TYPE = 'transition';
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-map-signs';

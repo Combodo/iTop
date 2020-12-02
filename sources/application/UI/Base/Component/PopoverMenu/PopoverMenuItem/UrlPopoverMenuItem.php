@@ -31,7 +31,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem
 class UrlPopoverMenuItem extends PopoverMenuItem
 {
 	// Overloaded constants
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/item/mode_url';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/item/mode_url';
 
 	/**
 	 * @see \URLPopupMenuItem::GetUrl()

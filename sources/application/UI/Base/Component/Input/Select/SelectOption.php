@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 
 class SelectOption extends UIBlock
 {
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/input/select/selectoption';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/select/selectoption';
 
 	/** @var string */
 	protected $sValue;

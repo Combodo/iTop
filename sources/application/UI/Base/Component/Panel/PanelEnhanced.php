@@ -13,7 +13,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 class PanelEnhanced extends Panel
 {
 	public const BLOCK_CODE = 'ibo-panel-enhanced';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/panel/panelenhanced';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/panelenhanced';
 
 	/** @var UIContentBlock */
 	protected $sSubTitle;

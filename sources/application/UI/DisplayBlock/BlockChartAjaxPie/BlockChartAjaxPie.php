@@ -18,7 +18,7 @@ class BlockChartAjaxPie extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-blockchartajaxpie';
-	public const JS_TEMPLATE_REL_PATH = 'application/display-block/block-chart-ajax-pie/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/display-block/block-chart-ajax-pie/layout';
 
 	/** @var string */
 	public $sId;

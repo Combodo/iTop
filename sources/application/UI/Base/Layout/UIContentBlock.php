@@ -26,7 +26,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-content-block';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/content-block/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/content-block/layout';
 
 	/** @var array */
 	protected $aCSSClasses;

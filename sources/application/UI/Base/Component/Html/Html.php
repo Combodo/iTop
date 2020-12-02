@@ -33,7 +33,7 @@ class Html extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-html';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/html/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/html/layout';
 
 	/** @var string $sHtml The raw HTML, must be already sanitized */
 	protected $sHtml;

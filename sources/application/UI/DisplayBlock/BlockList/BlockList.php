@@ -18,8 +18,8 @@ class BlockList extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-blocklist';
-	public const HTML_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
-	public const JS_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
 
 	/** @var bool */
 	public $bEmptySet = false;

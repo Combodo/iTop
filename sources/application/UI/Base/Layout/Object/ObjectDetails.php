@@ -16,7 +16,7 @@ class ObjectDetails extends Panel
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-object-details';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
 
 	/** @var string */
 	protected $sClassName;

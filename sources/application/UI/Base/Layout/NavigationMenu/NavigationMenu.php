@@ -47,9 +47,9 @@ class NavigationMenu extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-navigation-menu';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/navigation-menu/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/layouts/navigation-menu/layout';
-	public const JS_FILES_REL_PATH = [
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/navigation-menu/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/navigation-menu/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/navigation-menu.js',
 		'js/extkeywidget.js',
 		'js/forms-json-utils.js',

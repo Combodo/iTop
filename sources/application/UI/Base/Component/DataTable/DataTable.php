@@ -20,8 +20,8 @@ class DataTableBlock extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 
 	protected $aOptions;//list of specific options for display datatable
 	protected $sAjaxUrl;

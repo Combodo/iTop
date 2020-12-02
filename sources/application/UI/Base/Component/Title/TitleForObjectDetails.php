@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Title;
 
 class TitleForObjectDetails extends Title
 {
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/title/titleforobjectdetails';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/title/titleforobjectdetails';
 
 	/** @var string */
 	protected $sClassName;

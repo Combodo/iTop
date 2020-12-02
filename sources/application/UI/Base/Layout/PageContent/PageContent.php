@@ -39,7 +39,7 @@ class PageContent extends UIBlock implements iUIContentBlock {
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-page-content';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/page-content/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/page-content/layout';
 
 	/** @var string ENUM_CONTENT_AREA_MAIN The main content area */
 	public const ENUM_CONTENT_AREA_MAIN = 'main';

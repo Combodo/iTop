@@ -40,17 +40,17 @@ abstract class UIBlock implements iUIBlock
 	public const BLOCK_CODE = 'ibo-block';
 
 	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used too often as JS/CSS files would be duplicated making browser parsing time way longer. */
-	public const GLOBAL_TEMPLATE_REL_PATH = null;
+	public const DEFAULT_GLOBAL_TEMPLATE_REL_PATH = null;
 	/** @var string|null HTML_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the HTML template */
-	public const HTML_TEMPLATE_REL_PATH = null;
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = null;
 	/** @var array JS_FILES_REL_PATH Relative paths (from <ITOP>/) to the JS files */
-	public const JS_FILES_REL_PATH = [];
+	public const DEFAULT_JS_FILES_REL_PATH = [];
 	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template */
-	public const JS_TEMPLATE_REL_PATH = null;
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 	/** @var array CSS_FILES_REL_PATH Relative paths (from <ITOP>/) to the CSS files */
-	public const CSS_FILES_REL_PATH = [];
+	public const DEFAULT_CSS_FILES_REL_PATH = [];
 	/** @var string|null CSS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the CSS template */
-	public const CSS_TEMPLATE_REL_PATH = null;
+	public const DEFAULT_CSS_TEMPLATE_REL_PATH = null;
 
 	/** @var string ENUM_BLOCK_FILES_TYPE_JS */
 	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
@@ -85,12 +85,12 @@ abstract class UIBlock implements iUIBlock
 	public function __construct(?string $sId = null)
 	{
 		$this->sId = $sId ?? $this->GenerateId();
-		$this->aJsFilesRelPath = static::JS_FILES_REL_PATH;
-		$this->aCssFilesRelPath = static::CSS_FILES_REL_PATH;
-		$this->sHtmlTemplateRelPath = static::HTML_TEMPLATE_REL_PATH;
-		$this->sJsTemplateRelPath = static::JS_TEMPLATE_REL_PATH;
-		$this->sCssTemplateRelPath = static::CSS_TEMPLATE_REL_PATH;
-		$this->sGlobalTemplateRelPath = static::GLOBAL_TEMPLATE_REL_PATH;
+		$this->aJsFilesRelPath = static::DEFAULT_JS_FILES_REL_PATH;
+		$this->aCssFilesRelPath = static::DEFAULT_CSS_FILES_REL_PATH;
+		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
+		$this->sJsTemplateRelPath = static::DEFAULT_JS_TEMPLATE_REL_PATH;
+		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
+		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
 	}
 
 	/**

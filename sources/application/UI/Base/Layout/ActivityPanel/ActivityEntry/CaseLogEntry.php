@@ -34,7 +34,7 @@ class CaseLogEntry extends ActivityEntry
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-caselog-entry';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/caselog-entry';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/caselog-entry';
 
 	public const DEFAULT_TYPE = 'caselog';
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-quote-left';

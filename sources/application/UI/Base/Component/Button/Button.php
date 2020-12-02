@@ -33,8 +33,8 @@ class Button extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-button';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/button/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/button/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/button/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/button/layout';
 
 	// Specific constants
 	/** @var string ENUM_TYPE_BUTTON */

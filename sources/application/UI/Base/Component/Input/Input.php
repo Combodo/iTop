@@ -18,7 +18,7 @@ class Input extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-input';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/input/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/layout';
 
 	public const INPUT_HIDDEN = 'hidden';
 

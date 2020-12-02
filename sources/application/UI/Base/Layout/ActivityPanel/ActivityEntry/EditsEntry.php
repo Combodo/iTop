@@ -37,7 +37,7 @@ class EditsEntry extends ActivityEntry
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-edits-entry';
-	public const HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/edits-entry';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/edits-entry';
 
 	public const DEFAULT_TYPE = 'edits';
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-pen';

@@ -36,13 +36,13 @@ class QuickCreate extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-quick-create';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/quick-create/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/quick-create/layout';
-	public const JS_FILES_REL_PATH = [
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/quick-create/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/quick-create/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/selectize.min.js',
 		'js/components/quick-create.js',
 	];
-	public const CSS_FILES_REL_PATH = [
+	public const DEFAULT_CSS_FILES_REL_PATH = [
 		'css/selectize.default.css',
 	];
 

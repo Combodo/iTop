@@ -36,9 +36,9 @@ class GlobalSearch extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-global-search';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/global-search/layout';
-	public const JS_TEMPLATE_REL_PATH = 'base/components/global-search/layout';
-	public const JS_FILES_REL_PATH = [
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/global-search/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/global-search/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/components/global-search.js',
 	];
 

@@ -18,7 +18,7 @@ class BlockChartAjaxBars extends UIBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-blockchartajaxbars';
-	public const JS_TEMPLATE_REL_PATH = 'application/display-block/block-chart-ajax-bars/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/display-block/block-chart-ajax-bars/layout';
 
 	/** @var string */
 	public $sJSNames;

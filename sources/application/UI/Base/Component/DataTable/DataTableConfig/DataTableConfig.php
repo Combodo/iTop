@@ -11,7 +11,7 @@ class DataTableConfig extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatableconfig';
-	public const HTML_TEMPLATE_REL_PATH = 'base/components/datatable/config/layout';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/config/layout';
 
 	/** @var DataTableBlock */
 	private $oDataTable;
