@@ -32,9 +32,7 @@ class CSVPage extends WebPage
 	function __construct($s_title) {
 		parent::__construct($s_title);
 		$this->add_header("Content-type: text/plain; charset=".self::PAGES_CHARSET);
-		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
-		$this->add_header('Pragma: no-cache');
-		$this->add_header('Expires: 0');
+		$this->no_cache();
 		$this->add_xframe_options();
 		//$this->add_header("Content-Transfer-Encoding: binary");
 	}

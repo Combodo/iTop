@@ -199,8 +199,8 @@ EOF
 		// Integration within MS-Excel web queries + HTTPS + IIS:
 		// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
 		// Then the fix is to force the reset of header values Pragma and Cache-control
-		$oPage->add_header("Pragma:", true);
-		$oPage->add_header("Cache-control:", true);
+		$oPage->add_header("Pragma:");
+		$oPage->add_header("Cache-control:");
 	}
 
 	public function GetHeader()

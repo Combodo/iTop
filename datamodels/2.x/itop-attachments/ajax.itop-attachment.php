@@ -61,7 +61,6 @@ try
 	LoginWebPage::DoLoginEx(null /* any portal */, false);
 
 	$oPage = new ajax_page("");
-	$oPage->no_cache();
 
 	$sOperation = utils::ReadParam('operation', '');
 

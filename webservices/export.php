@@ -190,24 +190,23 @@ if (!empty($sExpression))
 			{
 				case 'html':
 				$oP = new NiceWebPage("iTop - Export");
-				$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
-				
-				// Integration within MS-Excel web queries + HTTPS + IIS:
-				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
-				// Then the fix is to force the reset of header values Pragma and Cache-control 
-				header("Pragma:", true);
-				header("Cache-control:", true);
+					$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
+					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 
-				// The HTML output is made for pages located in the /pages/ folder
-				// since this page is in a different folder, let's adjust the HTML 'base' attribute
-				// to make the relative hyperlinks in the page work
-				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$oP->set_base($sUrl.'pages/');
+					// Integration within MS-Excel web queries + HTTPS + IIS:
+					// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+					// Then the fix is to force the reset of header values Pragma and Cache-control
+					header("Cache-control:", true);
+					header("Pragma:", true);
 
-				if(count($aFields) > 0)
-				{
+					// The HTML output is made for pages located in the /pages/ folder
+					// since this page is in a different folder, let's adjust the HTML 'base' attribute
+					// to make the relative hyperlinks in the page work
+					$sUrl = utils::GetAbsoluteUrlAppRoot();
+					$oP->set_base($sUrl.'pages/');
+
+					if (count($aFields) > 0) {
 					$iSearch = array_search('id', $aFields);
 					if ($iSearch !== false)
 					{

@@ -242,7 +242,6 @@ try
 	{
 		case 'parser_preview':
 		$oPage = new ajax_page("");
-		$oPage->no_cache();
 		$oPage->SetContentType('text/html');
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
 		if ($sSeparator == 'tab') $sSeparator = "\t";

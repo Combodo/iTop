@@ -38,7 +38,6 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
 	$oPage = new ajax_page("");
-	$oPage->no_cache();
 
 	$operation = utils::ReadParam('operation', '');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');

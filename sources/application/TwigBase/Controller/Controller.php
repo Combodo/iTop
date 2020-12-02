@@ -435,18 +435,16 @@ abstract class Controller
 		$sFileMimeType = utils::GetFileMimeType($sFilePath);
 		header('Content-Type: '.$sFileMimeType);
 
-		if ($bFileTransfer)
-		{
+		if ($bFileTransfer) {
 			header('Content-Description: File Transfer');
 			header('Content-Disposition: inline; filename="'.$sDownloadArchiveName);
 		}
 
-		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
+		header('Expires: 0');
 
-		foreach ($aHeaders as $sKey => $sValue)
-		{
+		foreach ($aHeaders as $sKey => $sValue) {
 			header($sKey.': '.$sValue);
 		}
 

@@ -60,8 +60,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			// Create a breadcrumb entry for the current page, but get its title as late as possible (page title could be changed later)
 			$this->bBreadCrumbEnabled = true;
 		}
-		else
-		{
+		else {
 			$this->bBreadCrumbEnabled = false;
 		}
 
@@ -71,9 +70,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
-		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
-		$this->add_header('Pragma: no-cache');
-		$this->add_header('Expires: 0');
+		$this->no_cache();
 		$this->add_xframe_options();
 		$this->add_linked_stylesheet("../css/jquery.treeview.css");
 		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");

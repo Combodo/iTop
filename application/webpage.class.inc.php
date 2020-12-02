@@ -507,7 +507,6 @@ class WebPage implements Page
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
-		$this->add_xframe_options(); //FIXME shouldn't be done here !!!!!
 	}
 
 	/**

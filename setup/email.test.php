@@ -255,11 +255,12 @@ try
 		break;
 		
 		case 'step2':
-		$oP->no_cache();
-		$sTo = Utils::ReadParam('to', '', false, 'raw_data');
-		$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
-		DisplayStep2($oP, $sFrom, $sTo);
-		break;
+			$oP->no_cache();
+			$oP->add_xframe_options('DENY');
+			$sTo = Utils::ReadParam('to', '', false, 'raw_data');
+			$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
+			DisplayStep2($oP, $sFrom, $sTo);
+			break;
 
 		default:
 		$oP->error("Error: unsupported operation '$sOperation'");

@@ -49,7 +49,6 @@ try
 	}
 
 	$oPage = new ajax_page("");
-	$oPage->no_cache();
 	$oPage->SetContentType('text/html');
 
 	$sListParams = utils::ReadParam('list_params', '{}', false, 'raw_data');

@@ -51,7 +51,6 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 $sOperation = utils::ReadParam('operation', '');
 
 $oPage = new ajax_page('');
-$oPage->no_cache();
 $oPage->SetContentType('text/html');
 
 
