@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 
 
 /**

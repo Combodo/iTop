@@ -1,6 +1,6 @@
 <?php
 
-use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 
 /**
  * @copyright   Copyright (C) 2010-2020 Combodo SARL
@@ -12,7 +12,7 @@ interface iTabbedPage
 	 * @param string $sTabContainer
 	 * @param string $sPrefix
 	 *
-	 * @param \Combodo\iTop\Application\UI\Layout\iUIContentBlock|null $oParentBlock
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock|null $oParentBlock
 	 *
 	 * @return mixed
 	 */

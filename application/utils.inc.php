@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
 
@@ -1180,7 +1180,7 @@ class utils
 	 * @param array $aActions
 	 * @param string|null $sDataTableId
 	 *
-	 * @return \Combodo\iTop\Application\UI\Layout\UIContentBlock
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */

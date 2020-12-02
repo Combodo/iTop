@@ -1,7 +1,0 @@
-{% extends 'components/popover-menu/item/layout.html.twig' %}
-
-{% block iboPopoverMenuItem %}
-    <a class="ibo-popover-menu--item" data-role="ibo-popover-menu--item" href="{{ oUIBlock.GetUrl() }}" onclick="{{ oUIBlock.GetJsCode()|escape }}">
-        {{ oUIBlock.GetLabel() }}
-    </a>
-{% endblock %}

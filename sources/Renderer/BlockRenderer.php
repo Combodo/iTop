@@ -20,7 +20,7 @@
 namespace Combodo\iTop\Renderer;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use utils;
 
 /**
@@ -45,7 +45,7 @@ class BlockRenderer
 	/**
 	 * BlockRenderer constructor.
 	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
 	 * @throws \Twig\Error\LoaderError
@@ -65,7 +65,7 @@ class BlockRenderer
 	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
 	 * @return string
@@ -81,7 +81,7 @@ class BlockRenderer
 		return $oSelf->RenderHtml();
 	}
 
-	/** @var \Combodo\iTop\Application\UI\iUIBlock $oBlock */
+	/** @var \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock */
 	protected $oBlock;
 	/** @var array $aContextParams Optional context parameters to pass to the template during rendering */
 	protected $aContextParams;

@@ -18,12 +18,12 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Component\Html\Html;
-use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu;
-use Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenuFactory;
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 
@@ -312,9 +312,9 @@ class WebPage implements Page
 	/**
 	 * Add a UIBlock in the page by dispatching its parts in the right places (CSS, JS, HTML)
 	 *
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock block added
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock block added
 	 * @since 3.0.0
 	 */
 	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
@@ -706,7 +706,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 *
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
@@ -1035,7 +1035,7 @@ class WebPage implements Page
 	 * @param string $sId
 	 * @param array $aActions
 	 *
-	 * @return \Combodo\iTop\Application\UI\Component\PopoverMenu\PopoverMenu|null
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu|null
 	 */
 	public function GetPopoverMenu(string $sId, array $aActions): ?PopoverMenu
 	{

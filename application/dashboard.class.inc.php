@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
-
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');

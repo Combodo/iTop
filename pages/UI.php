@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Form\Form;
-use Combodo\iTop\Application\UI\Component\GlobalSearch\GlobalSearchHelper;
-use Combodo\iTop\Application\UI\Component\Input\InputFactory;
-use Combodo\iTop\Application\UI\Component\QuickCreate\QuickCreateHelper;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum

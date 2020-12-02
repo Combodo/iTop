@@ -18,22 +18,22 @@
  */
 
 use Combodo\iTop\Application\Search\SearchForm;
-use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Component\Button\Button;
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
-use Combodo\iTop\Application\UI\Component\Field\Field;
-use Combodo\iTop\Application\UI\Component\FieldSet\FieldSet;
-use Combodo\iTop\Application\UI\Component\Form\Form;
-use Combodo\iTop\Application\UI\Component\Input\InputFactory;
-use Combodo\iTop\Application\UI\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
-use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
-use Combodo\iTop\Application\UI\Layout\MultiColumn\Column\Column;
-use Combodo\iTop\Application\UI\Layout\MultiColumn\MultiColumn;
-use Combodo\iTop\Application\UI\Layout\Object\ObjectFactory;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\Field\Field;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 

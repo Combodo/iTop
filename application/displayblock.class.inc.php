@@ -18,19 +18,19 @@
  */
 
 use Combodo\iTop\Application\Search\SearchForm;
-use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Component\Badge\BadgeFactory;
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
-use Combodo\iTop\Application\UI\Component\Html\Html;
-use Combodo\iTop\Application\UI\Component\Toolbar\Toolbar;
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChart\BlockChart;
-use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
-use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
-use Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockList\BlockList;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
+use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
+use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
+use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
 
 require_once(APPROOT.'/application/utils.inc.php');
 
@@ -313,7 +313,7 @@ HTML;
 	 * @param array $aExtraParams
 	 * @param $sId
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 * @throws ApplicationException
 	 * @throws CoreException
 	 * @throws CoreWarning
@@ -868,7 +868,7 @@ JS
 	 * @param array $aExtraParams
 	 * @param string|null $sId
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
@@ -944,7 +944,7 @@ JS
 	 * @param string|null $sId
 	 * @param array $aExtraParams
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 */
 	protected function RenderSearch(WebPage $oPage, ?string $sId, array $aExtraParams): iUIBlock
 	{
@@ -1069,7 +1069,7 @@ JS
 	 * @param array $aExtraParams
 	 * @param \WebPage $oPage
 	 *
-	 * @return \Combodo\iTop\Application\UI\Layout\UIContentBlock
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1215,7 +1215,7 @@ JS
 	 *
 	 * @param array $aExtraParams
 	 *
-	 * @return \Combodo\iTop\Application\UI\Specific\DisplayBlock\BlockChart\BlockChart
+	 * @return \Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
@@ -1480,7 +1480,7 @@ class MenuBlock extends DisplayBlock
 	 * @param array $aExtraParams
 	 * @param string|null $sId
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue

@@ -24,9 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Component\Input\InputFactory;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\UIBlock;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 require_once(APPROOT."/application/utils.inc.php");
 

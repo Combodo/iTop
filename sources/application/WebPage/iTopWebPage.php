@@ -19,17 +19,17 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Component\Breadcrumbs\Breadcrumbs;
-use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\Layout\iUIContentBlock;
-use Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenuFactory;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContent;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
-use Combodo\iTop\Application\UI\Layout\TopBar\TopBar;
-use Combodo\iTop\Application\UI\Layout\TopBar\TopBarFactory;
-use Combodo\iTop\Application\UI\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\UIBlock;
+use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar;
+use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
@@ -555,7 +555,7 @@ JS
 	 * Return the navigation menu layout (id, menu groups, ...)
 	 *
 	 * @internal
-	 * @return \Combodo\iTop\Application\UI\Layout\NavigationMenu\NavigationMenu
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
@@ -573,7 +573,7 @@ JS
 	 *
 	 * @internal
 	 *
-	 * @param \Combodo\iTop\Application\UI\Layout\PageContent\PageContent $oLayout
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent $oLayout
 	 *
 	 * @return $this
 	 * @since 3.0.0
@@ -589,7 +589,7 @@ JS
 	 * Return the content layout (main content, [side content,] manually added content, ...)
 	 *
 	 * @internal
-	 * @return \Combodo\iTop\Application\UI\Layout\PageContent\PageContent
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent
 	 * @since 3.0.0
 	 */
 	protected function GetContentLayout()
@@ -822,7 +822,7 @@ EOF;
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 *
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
@@ -907,7 +907,7 @@ EOF;
 
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
-		/** @var \Combodo\iTop\Application\UI\UIBlock|string $oLayout */
+		/** @var \Combodo\iTop\Application\UI\Base\UIBlock|string $oLayout */
 		foreach ($aData['aLayouts'] as $oLayout) {
 			if (!$oLayout instanceof UIBlock) {
 				continue;

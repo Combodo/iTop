@@ -22,11 +22,11 @@
 
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
-use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Html\Html;
-use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 use utils;
 

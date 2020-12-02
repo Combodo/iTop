@@ -24,8 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableFactory;
-use Combodo\iTop\Application\UI\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');

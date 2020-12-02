@@ -1,0 +1,11 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'base/components/title/layout.html.twig' %}
+
+{% block iboPageTitleText %}
+    <h1 class="ibo-title--for-object-details">{{ oUIBlock.GetClassName() }} <span class="ibo-title--emphasis">{{ oUIBlock.GetObjectName()|raw }}</span></h1>
+    <div class="ibo-title--status">
+        <span class="ibo-title--status-dot ibo-is-state-{{ oUIBlock.GetStatusColor() }}"></span>
+        <span class="ibo-title--status-label">{{ oUIBlock.GetStatusLabel() }}</span>
+    </div>
+{% endblock %}

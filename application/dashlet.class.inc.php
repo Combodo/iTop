@@ -16,12 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use Combodo\iTop\Application\UI\Component\Dashlet\DashletContainer;
-use Combodo\iTop\Application\UI\Component\Dashlet\DashletFactory;
-use Combodo\iTop\Application\UI\Component\Html\Html;
-use Combodo\iTop\Application\UI\Component\Panel\PanelFactory;
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\UIBlock;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 

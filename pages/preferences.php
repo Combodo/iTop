@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Component\Form\Form;
-use Combodo\iTop\Application\UI\Component\Html\Html;
-use Combodo\iTop\Application\UI\Component\Input\InputFactory;
-use Combodo\iTop\Application\UI\Component\Input\RichText\RichText;
-use Combodo\iTop\Application\UI\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Component\Title\TitleFactory;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -444,7 +443,7 @@ HTML
  * @param \ApplicationContext $oAppContext
  * @param string $sURL
  *
- * @return \Combodo\iTop\Application\UI\Component\Form\Form
+ * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form
  */
 function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): Form
 {
@@ -465,7 +464,7 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	}
 	ksort($aSortedLang);
 	$oUserLanguageBlockSelect = InputFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
-	/** @var \Combodo\iTop\Application\UI\Component\Input\Select $oUserLanguageBlockSelectInput */
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oUserLanguageBlockSelectInput */
 	$oUserLanguageBlockSelectInput = $oUserLanguageBlockSelect->GetInput();
 	foreach ($aSortedLang as $sCode) {
 		$bSelected = ($sCode == Dict::GetUserLanguage());

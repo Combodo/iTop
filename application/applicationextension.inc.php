@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');

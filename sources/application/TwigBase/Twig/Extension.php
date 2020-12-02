@@ -8,7 +8,7 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;
-use Combodo\iTop\Application\UI\iUIBlock;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;

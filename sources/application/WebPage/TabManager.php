@@ -4,9 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\iUIBlock;
-use Combodo\iTop\Application\UI\Layout\TabContainer\Tab\Tab;
-use Combodo\iTop\Application\UI\Layout\TabContainer\TabContainer;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 
 
 /**
@@ -37,7 +37,7 @@ class TabManager
 	 * @param string $sTabContainer
 	 * @param string $sPrefix
 	 *
-	 * @return \Combodo\iTop\Application\UI\iUIBlock
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 */
 	public function AddTabContainer(string $sTabContainer, $sPrefix = ''): TabContainer
 	{
@@ -168,7 +168,7 @@ class TabManager
 	 * @param string|null $sTabTitle
 	 *
 	 * @return string
-	 * @throws \Combodo\iTop\Application\UI\UIException
+	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
 	public function SetCurrentTab(string $sTabCode = '', string $sTabTitle = null): ?string
 	{
@@ -201,13 +201,13 @@ class TabManager
 	 *
 	 * @return string
 	 *
-	 * @throws \Combodo\iTop\Application\UI\UIException
+	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.0.3
 	 */
 	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, string $sTabTitle = null): string
 	{
 		// Set the content of the tab
-		/** @var \Combodo\iTop\Application\UI\Layout\TabContainer\Tab\AjaxTab $oTab */
+		/** @var \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab $oTab */
 		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle);
 		$oTab->SetUrl($sUrl)
 			->SetCache($bCache);
@@ -312,8 +312,8 @@ class TabManager
 	 * @param string $sTabType
 	 * @param string|null $sTabTitle
 	 *
-	 * @return \Combodo\iTop\Application\UI\Layout\TabContainer\Tab\Tab
-	 * @throws \Combodo\iTop\Application\UI\UIException
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
+	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.7.0
 	 */
 	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, string $sTabTitle = null): Tab

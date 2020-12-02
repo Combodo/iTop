@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Application\UI\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 
 
 /**
