@@ -189,7 +189,7 @@ if (!empty($sExpression))
 			switch($sFormat)
 			{
 				case 'html':
-				$oP = new NiceWebPage("iTop - Export");
+					$oP = new NiceWebPage("iTop - Export");
 					$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
 					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
@@ -207,28 +207,37 @@ if (!empty($sExpression))
 					$oP->set_base($sUrl.'pages/');
 
 					if (count($aFields) > 0) {
-					$iSearch = array_search('id', $aFields);
-					if ($iSearch !== false)
-					{
-						$bViewLink = true;
-						unset($aFields[$iSearch]);
+						$iSearch = array_search('id', $aFields);
+						if ($iSearch !== false) {
+							$bViewLink = true;
+							unset($aFields[$iSearch]);
+						} else {
+							$bViewLink = false;
+						}
+						$sFields = implode(',', $aFields);
+						$aExtraParams = array(
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
+							'localize_values' => $bLocalize,
+							'zlist' => false,
+							'extra_fields' => $sFields,
+							'view_link' => $bViewLink,
+						);
+					} else {
+						$aExtraParams = array(
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
+							'localize_values' => $bLocalize,
+							'zlist' => 'details',
+						);
 					}
-					else
-					{
-						$bViewLink = false;
-					}
-					$sFields = implode(',', $aFields);
-					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => false, 'extra_fields' => $sFields, 'view_link' => $bViewLink);
-				}
-				else
-				{
-					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => 'details');
-				}
 
-				$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
-				$oResultBlock->Display($oP, 'expresult');
-				break;
-				
+					$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
+					$oResultBlock->Display($oP, 'expresult');
+					break;
+
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
 				$sFields = implode(',', $aFields);

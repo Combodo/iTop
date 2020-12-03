@@ -781,7 +781,7 @@ try
 		break;
 
 		case 'create_structure':
-		$oP->no_cache();
+			$oP->no_cache();
 			$oP->add_xframe_options('DENY');
 			$iPlannedContacts = Utils::ReadParam('plannedcontacts');
 			$iPlannedContracts = Utils::ReadParam('plannedcontracts');
