@@ -930,7 +930,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
 
 			$sFilterURL = urlencode($sAllowedValues);
-			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'">⚵</a>'.Dict::S('UI:Schema:Attribute/Filter')."</span>";
+			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'" class="fas fa-search"></a> '.Dict::S('UI:Schema:Attribute/Filter')."</span>";
 		}
 		else
 		{
