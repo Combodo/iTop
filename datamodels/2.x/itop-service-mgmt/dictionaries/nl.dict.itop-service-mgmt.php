@@ -42,7 +42,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per servicelevel',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten per status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
-
 	'Menu:ProviderContract' => 'Leverancierscontracten',
 	'Menu:ProviderContract+' => 'Leverancierscontracten',
 	'Menu:CustomerContract' => 'Klantencontracten',
@@ -201,23 +200,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Naam document',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link Functioneel CI / Leverancierscontract',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverancierscontract',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Naam leverancierscontract',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Naam CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -469,23 +451,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Naam leverancierscontract',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkFunctionalCIToService' => 'Link Functioneel CI / Service',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Naam service',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Naam CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

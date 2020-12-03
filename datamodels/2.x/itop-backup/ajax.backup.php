@@ -20,7 +20,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');
@@ -213,6 +212,9 @@ JS
 			break;
 
 		case 'download':
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';

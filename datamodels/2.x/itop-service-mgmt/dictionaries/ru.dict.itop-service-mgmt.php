@@ -16,7 +16,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Договоры по уровню услуг',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Договоры по статусу',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Договоры, оканчивающиеся в течение 30-ти дней',
-
 	'Menu:ProviderContract' => 'Договоры с поставщиками',
 	'Menu:ProviderContract+' => 'Договоры с поставщиками',
 	'Menu:CustomerContract' => 'Договоры с заказчиками',
@@ -175,23 +174,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Документ',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Связь Функциональная КЕ/Договор с поставщиком',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Договор с поставщиком',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Договор с поставщиком',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'КЕ',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'КЕ',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -443,23 +425,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Договор с поставщиком',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkFunctionalCIToService' => 'Связь Функциональная КЕ/Услуга',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Услуга',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Услуга',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'КЕ',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'КЕ',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

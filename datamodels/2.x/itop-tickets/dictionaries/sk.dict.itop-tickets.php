@@ -111,32 +111,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToTicket' => 'väzba - Komponent / Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referencia na Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'Komponent',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Názov CI',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Dopad',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted~~',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -237,15 +211,15 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
+));
 
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - User portal~~',
-	'Brick:Portal:UserProfile:Title' => 'My profile~~',
-	'Brick:Portal:NewRequest:Title' => 'New request~~',
-	'Brick:Portal:NewRequest:Title+' => '<p>Need help?</p><p>Pick from the services catalog and submit your request to our support teams.</p>~~',
-	'Brick:Portal:OngoingRequests:Title' => 'Ongoing requests~~',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Follow up with your ongoing requests.</p><p>Check the progress, add comments, attach documents, acknowledge the solution.</p>~~',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open~~',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved~~',
-	'Brick:Portal:ClosedRequests:Title' => 'Closed requests~~',
+//
+// Class: Document
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Document/Attribute:contracts_list' => 'Zmluvy',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Služby',
+	'Class:Document/Attribute:services_list+' => '',
 ));

@@ -1,0 +1,61 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet-header-static--padding-x: 16px !default;
+$ibo-dashlet-header-static--padding-y: 16px !default;
+$ibo-dashlet-header-static--min-width: 200px !default;
+$ibo-dashlet-header-static--background-color: $ibo-color-white-100 !default;
+$ibo-dashlet-header-static--border: 1px solid $ibo-color-grey-400 !default;
+$ibo-dashlet-header-static--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-dashlet-header-static--title--text-color: inherit !default;
+$ibo-dashlet-header-static--title--margin-right: 8px !default;
+
+$ibo-dashlet-header-static--text--text-color: inherit !default;
+
+$ibo-dashlet-header-static--icon-container--margin-right: 16px !default;
+$ibo-dashlet-header-static--icon--size: 48px !default;
+
+
+/* Rules */
+.ibo-dashlet-header-static {
+	//min-width: $ibo-dashlet-header-static--min-width;
+	flex-basis: $ibo-dashlet-header-static--min-width;
+	flex-grow: 1;
+	flex-shrink: 1;
+	padding: $ibo-dashlet-header-static--padding-y $ibo-dashlet-header-static--padding-x;
+	background-color: $ibo-dashlet-header-static--background-color;
+	border: $ibo-dashlet-header-static--border;
+	border-radius: $ibo-dashlet-header-static--border-radius;
+}
+
+.ibo-dashlet-header-static--body {
+	display: flex;
+	justify-items: left;
+	align-items: center;
+}
+
+.ibo-dashlet-header-static--icon-container {
+	margin-right: $ibo-dashlet-header-static--icon-container--margin-right;
+}
+
+.ibo-dashlet-header-static--icon {
+	width: $ibo-dashlet-header-static--icon--size;
+	min-width: $ibo-dashlet-header-static--icon--size; /* To avoid image being shrinked when container is too small */
+	max-height: $ibo-dashlet-header-static--icon--size;
+}
+
+.ibo-dashlet-header-static--title {
+	@extend %ibo-font-ral-med-250;
+	color: $ibo-dashlet-header-static--title--text-color;
+	margin-right: $ibo-dashlet-header-static--title--margin-right;
+}
+
+.ibo-dashlet-header-static--text {
+	@extend %ibo-font-ral-nor-200;
+	flex-grow: 1;
+	color: $ibo-dashlet-header-static--text--text-color;
+}

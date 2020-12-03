@@ -98,32 +98,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link FunctionalCI / Ticket~~',
-	'Class:lnkFunctionalCIToTicket+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact (text)~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted~~',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -224,15 +198,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
+));
 
-	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - User portal~~',
-	'Brick:Portal:UserProfile:Title' => 'Il Mio Profilo',
-	'Brick:Portal:NewRequest:Title' => 'Nuova Richiesta',
-	'Brick:Portal:NewRequest:Title+' => '<p>Hai bisogno di aiuto?</p><p>Cerca nel catalogo dei servizi e inviaci una richiesta al nostro supporto.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Richieste in corso',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Segui le tue richieste in corso.</p><p>Verifica i progressi, aggiungi dei commenti, allega i documenti, scopri la soluzione.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Aperte',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Risolte',
-	'Brick:Portal:ClosedRequests:Title' => 'Richieste Chiuse',
+//
+// Class: Document
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Services~~',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 ));

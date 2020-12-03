@@ -1,0 +1,10 @@
+{% extends 'base/layouts/activity-panel/activity-entry/layout.html.twig' %}
+
+{% block iboActivityEntryExtraClasses %}ibo-transition-entry{% endblock %}
+{% block iboActivityEntryExtraDataAttributes %}data-original-state-code="{{ oUIBlock.GetOriginalStateCode() }}" data-target-state-code="{{ oUIBlock.GetTargetStateCode() }}"{% endblock %}
+
+{% block iboActivityEntryMainInformationContent %}
+	{% set sOriginalStateLabelAsHtml = '<span class="ibo-transition-entry--original-state-label">' ~ oUIBlock.GetOriginalStateLabel() ~ '</span>' %}
+	{% set sTargetStateLabelAsHtml = '<span class="ibo-transition-entry--target-state-label">' ~ oUIBlock.GetTargetStateLabel() ~ '</span>' %}
+	{{ 'Change:State_Changed_NewValue_OldValue'|dict_format(sTargetStateLabelAsHtml, sOriginalStateLabelAsHtml)|raw }}
+{% endblock %}

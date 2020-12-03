@@ -8,6 +8,8 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
 use MetaModel;
@@ -84,15 +86,25 @@ class Extension
 			})
 		);
 
-		// Filter to add itopversion to an url
+		// Filter to sanitize an XML / HTML identifier
+		// Usage in twig: {{ 'identifier:to-sanitize'|sanitize_identifier }}
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize_identifier', function ($sString) {
+				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			})
+		);
+
+		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
+		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
+		//
+		// Note: This could be rename "add_cache_buster" instead.
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
 			if (strpos($sUrl, '?') === false)
 			{
-				$sUrl = $sUrl."?itopversion=".ITOP_VERSION;
+				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
 			}
 			else
 			{
-				$sUrl = $sUrl."&itopversion=".ITOP_VERSION;
+				$sUrl = $sUrl."&t=".utils::GetCacheBusterTimestamp();
 			}
 
 			return $sUrl;
@@ -102,17 +114,22 @@ class Extension
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_module_version', function ($sUrl, $sModuleName) {
 			$sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
 
-			if (strpos($sUrl, '?') === false)
-			{
+			if (strpos($sUrl, '?') === false) {
 				$sUrl = $sUrl."?moduleversion=".$sModuleVersion;
-			}
-			else
-			{
+			} else {
 				$sUrl = $sUrl."&moduleversion=".$sModuleVersion;
 			}
 
 			return $sUrl;
 		}));
+
+		// Filter to sanitize a string (escape ')
+		// Usage in twig: {{ 'string'|escape_quotes }}
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('escape_for_js_string', function ($sString) {
+				return str_replace(["'", "\n"], ["\\'", " "], $sString);
+			})
+		);
+
 
 		// Function to check our current environment
 		// Usage in twig:   {% if is_development_environment() %}
@@ -127,6 +144,27 @@ class Extension
 
 			return $oConfig->Get($sParamName);
 		}));
+
+		// Function to get iTop's app root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/)
+		// Usage in twig: {{ get_absolute_url_app_root() }}
+		/** @since 3.0.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_app_root', function () {
+			return utils::GetAbsoluteUrlAppRoot();
+		}));
+
+		// Function to get iTop's modules root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/env-zzz/)
+		// Usage in twig: {{ get_absolute_url_modules_root() }}
+		/** @since 3.0.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_absolute_url_modules_root', function () {
+			return utils::GetAbsoluteUrlModulesRoot();
+		}));
+
+		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
+		// Usage in twig: {{ render_block(oBlock) }}
+		/** @since 3.0.0 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock, $aContextParams = []){
+			return BlockRenderer::RenderBlockTemplates($oBlock, $aContextParams);
+		}, ['is_safe' => ['html']]));
 	}
 
 }

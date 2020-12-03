@@ -17,9 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 /**
@@ -28,81 +35,66 @@ require_once(APPROOT.'/application/startup.inc.php');
  */
 function DisplayPreferences($oP)
 {
+	$oContentLayout = PageContentFactory::MakeStandardEmpty();
 	$oAppContext = new ApplicationContext();
 	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
-	
-	$oP->add('<div class="page_header"><h1><img style="vertical-align:middle" src="../images/preferences.png"/>&nbsp;'.Dict::S('UI:Preferences')."</h1></div>\n");
-	$oP->add('<div id="user_prefs" style="max-width:800px; min-width:400px;">');
-	
+
+	$oContentLayout->AddMainBlock(TitleFactory::MakeForPage(Dict::S('UI:Preferences:Title')));
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// User Language selection
 	//
 	//////////////////////////////////////////////////////////////////////////
-
-	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteLanguage').'</legend>');
-	$oP->add('<form method="post">');
-  	$aLanguages = Dict::GetLanguages();
-  	$aSortedlang = array();
-  	foreach($aLanguages as $sCode => $aLang)
-  	{
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			if ($sCode != Dict::GetUserLanguage())
-			{
-				// Demo mode: only the current user language is listed in the available choices
-				continue;
-			}
-		}
-  		$aSortedlang[$aLang['description']] = $sCode;
-  	}
-  	ksort($aSortedlang);
-  	$oP->add('<p>'.Dict::S('UI:Favorites:SelectYourLanguage').' <select name="language">');
-  	foreach($aSortedlang as $sCode)
-  	{
-  		$sSelected = ($sCode == Dict::GetUserLanguage()) ? 'selected' : '';
-		$oP->add('<option value="'.$sCode.'" '.$sSelected.'/>'.$aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')</option>');
-  	}
-  	$oP->add('</select></p>');
-  	$oP->add('<input type="hidden" name="operation" value="apply_language"/>');
-	$oP->add($oAppContext->GetForForm());
-	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
-	$oP->add('&nbsp;&nbsp;');
-	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
-	$oP->add('</form>');
-	$oP->add('</fieldset>');
+	$oUserLanguageBlock = new Panel(Dict::S('UI:FavoriteLanguage'), array(), 'grey', 'ibo-user-language-selection');
+	$oUserLanguageForm = GetUserLanguageForm($oAppContext, $sURL);
+	$oUserLanguageBlock->AddSubBlock($oUserLanguageForm);
+	$oContentLayout->AddMainBlock($oUserLanguageBlock);
 
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Other (miscellaneous) settings
 	//
 	//////////////////////////////////////////////////////////////////////////
+
+	$oMiscSettingsBlock = new Panel(Dict::S('UI:FavoriteOtherSettings'), array(), 'grey', 'ibo-misc-settings');
+
+	$oMiscSettingsStartForm = new Html('<form method="post" onsubmit="return ValidateOtherSettings()">');
 	
-	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOtherSettings').'</legend>');
-	$oP->add('<form method="post" onsubmit="return ValidateOtherSettings()">');
-
 	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
-	$oP->add('<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>');
+	$sMiscSettingsHtml = '';
+	$sMiscSettingsHtml .= '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>';
 
-	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
+	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data',
+			MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
 	$sSelected = $bShow ? ' checked="checked"' : '';
 	$sDisabled = utils::IsArchiveMode() ? 'disabled="disabled"' : '';
-	$oP->add(
+	$sMiscSettingsHtml .=
 		'<p>'
 		.'<input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"'.$sSelected.$sDisabled.'>'
 		.'<label for="show_obsolete_data" title="'.Dict::S('UI:Favorites:ShowObsoleteData+').'">'.Dict::S('UI:Favorites:ShowObsoleteData').'</label>'
-		.'</p>');
+		.'</p>';
+	$sMiscSettingsHtml .= $oAppContext->GetForForm();
+	$oMiscSettingsHtml = new Html($sMiscSettingsHtml);
 
-	$oP->add('<input type="hidden" name="operation" value="apply_others"/>');
-	$oP->add($oAppContext->GetForForm());
-	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
-	$oP->add('&nbsp;&nbsp;');
-	$oP->add('<input id="other_submit" type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
-	$oP->add('</form>');
-	$oP->add('</fieldset>');
-	
+	// - Cancel button
+	$oMiscSettingsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oMiscSettingsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oMiscSettingsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
+
+	$oMiscSettingsEndHtmlBlock = new Html('</form>');
+
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsStartForm);
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsHtml);
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsCancelButton);
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsSubmitButton);
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsEndHtmlBlock);
+
+	$oContentLayout->AddMainBlock($oMiscSettingsBlock);
+
 	$oP->add_script(
-<<<EOF
+		<<<EOF
 function ValidateOtherSettings()
 {
 	var sPageLength = $('#default_page_size').val();
@@ -110,13 +102,13 @@ function ValidateOtherSettings()
 	if (/^[0-9]+$/.test(sPageLength) && (iPageLength > 0))
 	{
 		$('#v_default_page_size').html('');
-		$('#other_submit').prop('disabled', false);
+		$('#ibo-misc-settings-submit').prop('disabled', false);
 		return true;
 	}
 	else
 	{
 		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
-		$('#other_submit').prop('disabled', true);
+		$('#ibo-misc-settings-submit').prop('disabled', true);
 		return false;
 	}
 }
@@ -129,28 +121,38 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oP->add('<fieldset><legend>'.Dict::S('UI:FavoriteOrganizations').'</legend>');
-	$oP->p(Dict::S('UI:FavoriteOrganizations+'));
-	$oP->add('<form method="post">');	
+	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
+
+	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
+	$oFavoriteOrganizationsBlock->AddHtml('<form method="post">');
 	// Favorite organizations: the organizations listed in the drop-down menu
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$oBlock->Display($oP, 1, array('menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '.selectedCount', 'table_id' => 'user_prefs'));
-	$oP->add($oAppContext->GetForForm());
-	$oP->add('<input type="hidden" name="operation" value="apply"/>');
-	$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
-	$oP->add('&nbsp;&nbsp;');
-	$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
-	$oP->add('</form>');
-	$oP->add('</fieldset>');
+	$oFavoriteOrganizationsBlock->AddSubBlock($oBlock->GetDisplay($oP, 1, array(
+		'menu' => false,
+		'selection_mode' => true,
+		'selection_type' => 'multiple',
+		'cssCount' => '.selectedCount',
+		'table_id' => 'user_prefs',
+	)));
+	$oFavoriteOrganizationsBlock->AddSubBlock($oAppContext->GetForFormBlock());
+
+	// - Cancel button
+	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
+
+	$sFavoriteOrganizationsEndHtml = '</form>';
+	$oFavoriteOrganizationsEndHtmlBlock = new Html($sFavoriteOrganizationsEndHtml);
 
 	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 	if ($aFavoriteOrgs == null)
 	{
 		// All checked
 		$oP->add_ready_script(
-<<<EOF
+			<<<EOF
 	if ($('#user_prefs table.pagination').length > 0)
 	{
 		// paginated display, restore the selection
@@ -198,6 +200,12 @@ EOF
 EOF
 );
 	}
+	
+	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsCancelButton);
+	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsSubmitButton);
+	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsEndHtmlBlock);
+	
+	$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -205,30 +213,23 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oP->add('<fieldset><legend>'.Dict::S('Menu:MyShortcuts').'</legend>');
-	//$oP->p(Dict::S('UI:Menu:MyShortcuts+'));
+	$oShortcutsBlock = new Panel(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
 	$oBMSearch = new DBObjectSearch('Shortcut');
 	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 
-	//$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => 'details');
 	$aExtraParams = array();
 	$oBlock = new DisplayBlock($oBMSearch, 'list', false, $aExtraParams);
-	$oBlock->Display($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount'=> '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts'));
-	$oP->add('<p>');
+	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount' => '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts')));
+	$sShortcutsHtml = '<p>';
 
 	$oSet = new DBObjectSet($oBMSearch);
-	if ($oSet->Count() > 0)
-	{
+	if ($oSet->Count() > 0) {
 		$sButtons = '<img src="../images/tv-item-last.gif">';
-		$sButtons .= '&nbsp;';
 		$sButtons .= '<button id="shortcut_btn_rename">'.Dict::S('UI:Button:Rename').'</button>';
-		$sButtons .= '&nbsp;';
 		$sButtons .= '<button id="shortcut_btn_delete">'.Dict::S('UI:Button:Delete').'</button>';
 
 		// Selection count updated by the pager, and used to enable buttons
-		$oP->add('<input type="hidden" id="shortcut_selection_count"/>');
-		$oP->add('</fieldset>');
-	
+		$sShortcutsHtml .= '<input type="hidden" id="shortcut_selection_count"/>';
 		$sConfirmDelete = addslashes(Dict::S('UI:ShortcutDelete:Confirm'));
 	
 		$oP->add_ready_script(
@@ -289,8 +290,9 @@ OnSelectionCountChange();
 EOF
 		);
 	} // if count > 0
-
-	$oP->add('</fieldset>');
+	$oShortcutsHtmlBlock = new Html($sShortcutsHtml);
+	$oShortcutsBlock->AddSubBlock($oShortcutsHtmlBlock);
+	$oContentLayout->AddMainBlock($oShortcutsBlock);
 	
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -312,16 +314,17 @@ EOF
 	$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 	if ($bNewsroomEnabled && ($iCountProviders > 0))
 	{
-		$oP->add('<fieldset><legend>'.Dict::S('UI:Newsroom:Preferences').'</legend>');
-		
-		$oP->add('<form method="post">');
+		$oNewsroomBlock = new Panel(Dict::S('UI:Newsroom:Preferences'), array(), 'grey', 'ibo-newsroom');
+
+		$sNewsroomHtml = '';
+		$sNewsroomHtml .= '<form method="post">';
 		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
 		
 		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
 		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-comment-dots" style="top: 0;"></i>';
-		$oP->p(Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon));
+		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
 		
 		/**
 		 * @var iNewsroomProvider[] $aProviders
@@ -349,20 +352,79 @@ EOF
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
 				}
 				$sChecked = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true) ? ' checked="" ' : '';
-				$oP->p('<input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">&nbsp;'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider', $oProvider->GetLabel()).'</label> '.$sPreferencesLink);
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on"'.$sChecked.'name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
+						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
-		
-		$oP->p('<button style="float:right" onclick="$(\'.itop-newsroom_menu\').newsroom_menu(\'clearCache\');">'.htmlentities(Dict::S('UI:Newsroom:ResetCache')).'</button>');
-		$oP->add('<input type="hidden" name="operation" value="apply_newsroom_preferences"/>');
-		$oP->add($oAppContext->GetForForm());
-		$oP->add('<p><input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Cancel').'"/>');
-		$oP->add('&nbsp;&nbsp;');
-		$oP->add('<input type="submit" value="'.Dict::S('UI:Button:Apply').'"/></p>');
-		$oP->add('</form>');
-		$oP->add('</fieldset>');
+
+		$sNewsroomHtml .= $oAppContext->GetForForm();
+
+		// - Reset button
+		$oNewsroomResetCacheButton = ButtonFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
+		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		// - Cancel button
+		$oNewsroomCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+		// - Submit button
+		$oNewsroomSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
+			'apply_newsroom_preferences', true);
+
+
+		$sNewsroomEndHtml = '</form>';
+		$oNewsroomEndHtmlBlock = new Html($sNewsroomEndHtml);
+
+		$oNewsroomHtmlBlock = new Html($sNewsroomHtml);
+		$oNewsroomBlock->AddSubBlock($oNewsroomHtmlBlock);
+		$oNewsroomBlock->AddSubBlock($oNewsroomResetCacheButton);
+		$oNewsroomBlock->AddSubBlock($oNewsroomCancelButton);
+		$oNewsroomBlock->AddSubBlock($oNewsroomSubmitButton);
+		$oNewsroomBlock->AddSubBlock($oNewsroomEndHtmlBlock);
+		$oContentLayout->AddMainBlock($oNewsroomBlock);
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// User picture placeholder
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
+
+	$sUserPicturesFolder = '../images/user-pictures/';
+	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
+	$sUserPicturePlaceHolderHtml = '';
+	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
+	foreach (scandir($sUserPicturesFolder) as $sUserPicture)
+	{
+		if ($sUserPicture === '.' || $sUserPicture === '..')
+		{
+			continue;
+		}
+		$sAdditionalClass = '';
+		if ($sUserDefaultPicture === $sUserPicture)
+		{
+			$sAdditionalClass = ' ibo-is-active';
+		}
+		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolder.$sUserPicture.'"/> </a>';
+	}
+	$oP->add_ready_script(
+		<<<JS
+$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
+SetUserPreference('user_picture_placeholder', $(this).attr('data-image-name'), true);
+$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
+$(this).addClass('ibo-is-active');
+});
+JS
+);
+	$sUserPicturePlaceHolderHtml .=
+		<<<HTML
+</div>
+HTML
+	;
+	$oUserPicturePlaceHolderHtmlBlock = new Html($sUserPicturePlaceHolderHtml);
+	$oUserPicturePlaceHolderBlock->AddSubBlock($oUserPicturePlaceHolderHtmlBlock);
+	$oContentLayout->AddMainBlock($oUserPicturePlaceHolderBlock);
+	
 	/** @var iPreferencesExtension $oLoginExtensionInstance */
 	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
 	{
@@ -373,8 +435,52 @@ EOF
 	//
 	// Footer
 	//
-	$oP->add('</div>');
 	$oP->add_ready_script("$('#fav_page_length').bind('keyup change', function(){ ValidateOtherSettings(); })");
+	$oP->SetContentLayout($oContentLayout);
+}
+
+/**
+ * @param \ApplicationContext $oAppContext
+ * @param string $sURL
+ *
+ * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form
+ */
+function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): Form
+{
+	$oUserLanguageForm = new Form();
+	$oUserLanguageForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_language'));
+
+	// Lang selector
+	$aLanguages = Dict::GetLanguages();
+	$aSortedLang = array();
+	foreach ($aLanguages as $sCode => $aLang) {
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
+			if ($sCode != Dict::GetUserLanguage()) {
+				// Demo mode: only the current user language is listed in the available choices
+				continue;
+			}
+		}
+		$aSortedLang[$aLang['description']] = $sCode;
+	}
+	ksort($aSortedLang);
+	$oUserLanguageBlockSelect = InputFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oUserLanguageBlockSelectInput */
+	$oUserLanguageBlockSelectInput = $oUserLanguageBlockSelect->GetInput();
+	foreach ($aSortedLang as $sCode) {
+		$bSelected = ($sCode == Dict::GetUserLanguage());
+		$oUserLanguageBlockSelectInput->AddOption(InputFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
+	}
+	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
+
+	$oUserLanguageForm->AddSubBlock($oAppContext->GetForFormBlock());
+	// - Cancel button
+	$oUserLanguageCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	$oUserLanguageForm->AddSubBlock($oUserLanguageCancelButton);
+	// - Submit button
+	$oUserLanguageSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
+	return $oUserLanguageForm;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -507,10 +613,11 @@ try
 			case 'display':
 			default:
 				$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '',
-					utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+					'fas fa-user-cog', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 				DisplayPreferences($oPage);
 		}
 	}
+	
 	$oPage->output();
 }
 catch(CoreException $e)

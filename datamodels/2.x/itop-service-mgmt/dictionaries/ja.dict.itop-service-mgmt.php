@@ -27,7 +27,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
-
 	'Menu:ProviderContract' => 'プロバイダー契約',
 	'Menu:ProviderContract+' => 'プロバイダー契約',
 	'Menu:CustomerContract' => '顧客契約',
@@ -186,23 +185,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => '文書名',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'リンク 機能的CI/プロバイダー契約',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'プロバイダー契約',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'プロバイダー契約名',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI名',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -454,23 +436,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'プロバイダ契約名',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:lnkFunctionalCIToService' => 'リンク 機能的CI/サービス',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'サービス',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'サービス名',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI名',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

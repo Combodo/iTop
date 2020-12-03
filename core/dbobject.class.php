@@ -1673,6 +1673,7 @@ abstract class DBObject implements iDisplay
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
+		$sClass = get_class($this);
 
 		$aReadOnlyAtts = $this->GetReadOnlyAttributes();
 		if (($aReadOnlyAtts != null) && (in_array($sAttCode, $aReadOnlyAtts)))
@@ -1680,16 +1681,16 @@ abstract class DBObject implements iDisplay
 			return OPT_ATT_READONLY;
 		}
 
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (!empty($sStateAttCode))
+		if (MetaModel::HasLifecycle($sClass))
 		{
 			if ($sTargetState != '')
 			{
-				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $sTargetState, $sAttCode);			
+				$iFlags = MetaModel::GetAttributeFlags($sClass, $sTargetState, $sAttCode);
 			}
 			else
 			{
-				$iFlags = MetaModel::GetAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+				$iFlags = MetaModel::GetAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 			}
 		}
 		$aReasons = array();
@@ -1742,10 +1743,10 @@ abstract class DBObject implements iDisplay
     public function GetTransitionFlags($sAttCode, $sStimulus, &$aReasons = array(), $sOriginState = '')
     {
         $iFlags = 0; // By default (if no lifecycle) no flag at all
+	    $sClass = get_class($this);
 
-        $sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
         // If no state attribute, there is no lifecycle
-        if (empty($sStateAttCode))
+        if (!MetaModel::HasLifecycle($sClass))
         {
             return $iFlags;
         }
@@ -1753,6 +1754,7 @@ abstract class DBObject implements iDisplay
         // Retrieving current state if necessary
         if ($sOriginState === '')
         {
+	        $sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
             $sOriginState = $this->Get($sStateAttCode);
         }
 
@@ -1760,7 +1762,7 @@ abstract class DBObject implements iDisplay
         $iAttributeFlags = $this->GetAttributeFlags($sAttCode, $aReasons, $sOriginState);
 
         // Retrieving transition flags
-        $iTransitionFlags = MetaModel::GetTransitionFlags(get_class($this), $sOriginState, $sStimulus, $sAttCode);
+        $iTransitionFlags = MetaModel::GetTransitionFlags($sClass, $sOriginState, $sStimulus, $sAttCode);
 
         // Merging transition flags with attribute flags
         $iFlags = $iTransitionFlags | $iAttributeFlags;
@@ -1811,10 +1813,12 @@ abstract class DBObject implements iDisplay
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		$iFlags = 0;
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (!empty($sStateAttCode))
+		$sClass = get_class($this);
+
+		if (MetaModel::HasLifecycle($sClass))
 		{
-			$iFlags = MetaModel::GetInitialStateAttributeFlags(get_class($this), $this->Get($sStateAttCode), $sAttCode);
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+			$iFlags = MetaModel::GetInitialStateAttributeFlags($sClass, $this->Get($sStateAttCode), $sAttCode);
 		}
 		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
 	}
@@ -2121,7 +2125,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @uses m_aCheckWarnings to log to user duplicates found
 	 *
-	 * @since 2.8.0 N°3198 check duplicates if necessary :<br>
+	 * @since 3.0.0 N°3198 check duplicates if necessary :<br>
 	 *     Before we could only add or remove lnk using the uilinks widget. This widget has a filter based on existing values, and so
 	 *     forbids to add duplicates.<br>
 	 *     Now we can modify existing entries using the extkey widget, and the widget doesn't have (yet !) such
@@ -2847,7 +2851,14 @@ abstract class DBObject implements iDisplay
 		while ($oTrigger = $oSet->Fetch())
 		{
 			/** @var \Trigger $oTrigger */
-			$oTrigger->DoActivate($this->ToArgs('this'));
+			try
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
 		}
 
 		$this->RecordObjCreation();
@@ -3119,7 +3130,14 @@ abstract class DBObject implements iDisplay
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try
+				{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 
 			$bHasANewExternalKeyValue = false;
@@ -3416,7 +3434,14 @@ abstract class DBObject implements iDisplay
 		while ($oTrigger = $oSet->Fetch())
 		{
 			/** @var \Trigger $oTrigger */
-			$oTrigger->DoActivate($this->ToArgs('this'));
+			try
+			{
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
 		}
 
 		$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
@@ -3574,7 +3599,7 @@ abstract class DBObject implements iDisplay
 				// As a temporary fix: delete only the objects that are still to be deleted...
 				if ($oToDelete->m_bIsInDB)
 				{
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$oToDelete->DBDeleteSingleObject();
 				}
 			}
@@ -3589,13 +3614,13 @@ abstract class DBObject implements iDisplay
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
 				{
 					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$oToUpdate->DBUpdate();
 				}
 			}
 		}
 
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		return $oDeletionPlan;
 	}
@@ -3610,11 +3635,12 @@ abstract class DBObject implements iDisplay
      */
 	public function EnumTransitions()
 	{
-		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		if (empty($sStateAttCode)) return array();
+		$sClass = get_class($this);
+		if (!MetaModel::HasLifecycle($sClass)) return array();
 
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sState = $this->Get($sStateAttCode);
-		return MetaModel::EnumTransitions(get_class($this), $sState);
+		return MetaModel::EnumTransitions($sClass, $sState);
 	}
 
     /**
@@ -3660,14 +3686,14 @@ abstract class DBObject implements iDisplay
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
 		$sClass = get_class($this);
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		if (empty($sStateAttCode))
+		if (!MetaModel::HasLifecycle($sClass))
 		{
 			throw new CoreException('No lifecycle for the class '.$sClass);
 		}
 
 		MyHelpers::CheckKeyInArray('object lifecycle stimulus', $sStimulusCode, MetaModel::EnumStimuli($sClass));
 
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$aStateTransitions = $this->EnumTransitions();
 		if (!array_key_exists($sStimulusCode, $aStateTransitions))
 		{
@@ -3678,16 +3704,14 @@ abstract class DBObject implements iDisplay
 
 		// save current object values in case of an action failure (in memory rollback)
 		$aBackupValues = array();
-		foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			$value = $this->m_aCurrValues[$sAttCode];
-			if (is_object($value))
-			{
-				$aBackupValues[$sAttCode] = clone $value;
-			}
-			else
-			{
-				$aBackupValues[$sAttCode] = $value;
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)	{
+			if (isset($this->m_aCurrValues[$sAttCode])) {
+				$value = $this->m_aCurrValues[$sAttCode];
+				if (is_object($value)) {
+					$aBackupValues[$sAttCode] = clone $value;
+				} else {
+					$aBackupValues[$sAttCode] = $value;
+				}
 			}
 		}
 
@@ -3795,14 +3819,27 @@ abstract class DBObject implements iDisplay
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try
+				{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 
 			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
+				try{
+					$oTrigger->DoActivate($this->ToArgs('this'));
+				}
+				catch(Exception $e)
+				{
+					utils::EnrichRaisedException($oTrigger, $e);
+				}
 			}
 		}
 		else
@@ -4528,7 +4565,7 @@ abstract class DBObject implements iDisplay
 		{
 			foreach ($aPotentialDeletes as $sRemoteExtKey => $aData)
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 
 				/** @var \AttributeExternalKey $oAttDef */
 				$oAttDef = $aData['attribute'];
@@ -4560,7 +4597,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 	}
 
 	/**
@@ -5306,10 +5343,10 @@ abstract class DBObject implements iDisplay
      */
 	public static function MakeDefaultInstance($sClass)
 	{
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$oObj = MetaModel::NewObject($sClass);
-		if (!empty($sStateAttCode))
+		if (MetaModel::HasLifecycle($sClass))
 		{
+			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$sTargetState = MetaModel::GetDefaultState($sClass);
 			$oObj->Set($sStateAttCode, $sTargetState);
 		}

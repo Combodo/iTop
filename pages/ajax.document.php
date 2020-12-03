@@ -31,20 +31,17 @@ if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HT
 try
 {
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/webpage.class.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 
 	$operation = utils::ReadParam('operation', '');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 
-	switch($operation)
-	{
+	switch ($operation) {
 		case 'download_document':
 			LoginWebPage::DoLoginEx('backoffice', false);
 			$id = utils::ReadParam('id', '');
@@ -88,7 +85,7 @@ try
 			
 		case 'dict':
 			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
-			$oPage = new ajax_page(""); // New page to cleanup the no_cache done above
+			$oPage = new AjaxPage(""); // New page to cleanup the no_cache done above
 			$oPage->SetContentType('text/javascript');
 			$oPage->add_header('Cache-control: public, max-age=86400'); // Cache for 24 hours
 			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?

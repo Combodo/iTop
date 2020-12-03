@@ -97,42 +97,40 @@ abstract class DBSearch
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 *
-     * @internal
-     *
+	 * @internal
+	 *
 	 * @return \DBSearch
-	 **/	 	
+	 **/
 	public function DeepClone()
 	{
 		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
-    /**
-     * whether or not some information should be hidden to the current user.
-     *
-     * @api
-     * @see IsAllDataAllowed()
-     *
-     * @return mixed
-     */
-	abstract public function AllowAllData();
+	/**
+	 * @api
+	 * @see IsAllDataAllowed()
+	 *
+	 * @param bool $bAllowAllData whether or not some information should be hidden to the current user.
+	 */
+	abstract public function AllowAllData($bAllowAllData = true);
 
-    /**
-     * Current state of AllowAllData
-     *
-     * @internal
-     * @see AllowAllData()
-     *
-     * @return mixed
-     */
+	/**
+	 * Current state of AllowAllData
+	 *
+	 * @internal
+	 * @see AllowAllData()
+	 *
+	 * @return mixed
+	 */
 	abstract public function IsAllDataAllowed();
 
-    /**
-     * Should the archives be fetched
-     *
-     * @internal
-     *
-     * @param $bEnable
-     */
+	/**
+	 * Should the archives be fetched
+	 *
+	 * @internal
+	 *
+	 * @param $bEnable
+	 */
 	public function SetArchiveMode($bEnable)
 	{
 		$this->m_bArchiveMode = $bEnable;
@@ -605,11 +603,11 @@ abstract class DBSearch
 			elseif (($iPos = strpos($sParam, '->')) !== false)
 			{
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aContextParams[$sParamName.'->object()']))
+				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName]))
 				{
 					$sAttCode = substr($sParam, $iPos + 2);
 					/** @var \DBObject $oObj */
-					$oObj = $aContextParams[$sParamName.'->object()'];
+					$oObj = isset($aContextParams[$sParamName.'->object()']) ? $aContextParams[$sParamName.'->object()'] : $aContextParams[$sParamName];
 					if ($oObj->IsModified())
 					{
 						if ($sAttCode == 'id')

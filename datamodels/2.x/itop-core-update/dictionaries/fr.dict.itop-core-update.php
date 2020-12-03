@@ -114,14 +114,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Class:ModuleInstallation/Attribute:version' => 'Version',
     'Class:ModuleInstallation/Attribute:comment' => 'Commentaire',
 ));
-
-
-
-// Additional language entries not present in English dict
-Dict::Add('FR FR', 'French', 'Français', array(
- 'iTopUpdate:UI:DoBackup' => 'Faire une sauvegarde des fichiers et de la base',
- 'iTopUpdate:UI:WithBackup' => 'Avec sauvegarde de l\'application, l\'archive sera dans \'%1$s\'',
- 'iTopUpdate:UI:InstallationCanBeUpdated' => 'L\'application peut être mise à jour',
- 'iTopUpdate:UI:InstallationCanNotBeUpdated' => 'L\'application ne peut pas être mise à jour',
- 'iTopUpdate:Error:NoUpdate' => 'La mise à jour n\'a pas été effectuée',
-));

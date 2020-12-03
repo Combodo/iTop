@@ -101,32 +101,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkFunctionalCIToTicket' => 'Lien CI / Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Référence',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Titre Ticket',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nom CI',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impact (texte)',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impact',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Ajouté manuellement',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculé',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Non impacté',
-));
-
-
-//
 // Class: WorkOrder
 //
 
@@ -168,7 +142,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 // Fieldset translation
 Dict::Add('FR FR', 'French', 'Français', array(
-
 	'Ticket:baseinfo' => 'Informations générales',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -182,7 +155,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'WorkOrder:Details' => 'Détails',
 	'WorkOrder:Moreinfo' => 'Informations complémentaires',
 	'Tickets:ResolvedFrom' => 'Résolu via %1$s',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set (initialiser)',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Initialiser un champ avec une valeur statique',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Champ Cible',
@@ -227,15 +199,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Temps de Résolution (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTR',
+));
 
-	'portal:itop-portal' => 'Portail standard', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => '%1$s - Portail utilisateur',
-	'Brick:Portal:UserProfile:Title' => 'Mon profil',
-	'Brick:Portal:NewRequest:Title' => 'Nouvelle requête',
-	'Brick:Portal:NewRequest:Title+' => '<p>Besoin d\'assistance&nbsp;?</p><p>Choisissez un service (assistance ou dépannage) et soumettez votre requête à nos équipes de support.</p>',
-	'Brick:Portal:OngoingRequests:Title' => 'Requêtes en cours',
-	'Brick:Portal:OngoingRequests:Title+' => '<p>Suivez vos requêtes en cours.</p><p>Consultez l\'avancement, ajoutez des commentaires ou des pièces jointes, validez la solution.</p>',
-	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Ouvertes',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Résolues',
-	'Brick:Portal:ClosedRequests:Title' => 'Requêtes fermées',
+//
+// Class: Document
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Document/Attribute:contracts_list' => 'Contrats',
+	'Class:Document/Attribute:contracts_list+' => '',
+	'Class:Document/Attribute:services_list' => 'Services',
+	'Class:Document/Attribute:services_list+' => '',
 ));

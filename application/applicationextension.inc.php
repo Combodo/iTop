@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
@@ -430,7 +431,7 @@ interface iApplicationUIExtension
 	 *
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
-	 * @return string[string]
+	 * @return array
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet);
 }
@@ -869,7 +870,7 @@ abstract class ApplicationPopupMenuItem
 class URLPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sURL;
+	protected $sUrl;
 	/** @ignore */
 	protected $sTarget;
 
@@ -878,20 +879,32 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param string $sURL If the menu is an hyperlink, provide the absolute hyperlink here
+	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
 	 * @param string $sTarget In case the menu is an hyperlink and a specific target is needed (_blank for example), pass it here
 	 */
-	public function __construct($sUID, $sLabel, $sURL, $sTarget = '_top')
+	public function __construct($sUID, $sLabel, $sUrl, $sTarget = '_top')
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sURL = $sURL;
+		$this->sUrl = $sUrl;
 		$this->sTarget = $sTarget;
 	}
 
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget, 'css_classes' => $this->aCssClasses);
+		return array('label' => $this->GetLabel(), 'url' => $this->GetUrl(), 'target' => $this-> GetTarget(), 'css_classes' => $this->aCssClasses);
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
+	}
+
+	/** @ignore */
+	public function GetTarget()
+	{
+		return $this->sTarget;
 	}
 }
 
@@ -905,7 +918,9 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 class JSPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sJSCode;
+	protected $sJsCode;
+	/** @ignore */
+	protected $sUrl;
 	/** @ignore */
 	protected $aIncludeJSFiles;
 
@@ -923,7 +938,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = array())
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sJSCode = $sJSCode;
+		$this->sJsCode = $sJSCode;
+		$this->sUrl = '#';
 		$this->aIncludeJSFiles = $aIncludeJSFiles;
 	}
 
@@ -933,9 +949,9 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 		// Note: the semicolumn is a must here!
 		return array(
 			'label' => $this->GetLabel(),
-			'onclick' => $this->sJSCode.'; return false;',
-			'url' => '#',
-			'css_classes' => $this->aCssClasses,
+			'onclick' => $this->GetJsCode().'; return false;',
+			'url' => $this->GetUrl(),
+			'css_classes' => $this->GetCssClasses(),
 		);
 	}
 
@@ -943,6 +959,18 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetLinkedScripts()
 	{
 		return $this->aIncludeJSFiles;
+	}
+	
+	/** @ignore */
+	public function GetJsCode()
+	{
+		return $this->sJsCode;
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
 	}
 }
 
@@ -1015,11 +1043,12 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
+ * @deprecated since 3.0.0 use iPageUIBlockExtension instead
  */
 interface iPageUIExtension
 {
 	/**
-	 * Add content to the North pane
+	 * Add content to the header of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -1028,7 +1057,7 @@ interface iPageUIExtension
 	public function GetNorthPaneHtml(iTopWebPage $oPage);
 
 	/**
-	 * Add content to the South pane
+	 * Add content to the footer of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -1047,11 +1076,55 @@ interface iPageUIExtension
 }
 
 /**
+ * Implement this interface to add content to any iTopWebPage
+ *
+ * There are 3 places where content can be added:
+ *
+ * * The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
+ *   width of the page
+ * * The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
+ *   width of the page
+ * * The admin banner (two tones gray background) at the left of the global search.
+ *   Limited space, use it for short messages
+ *
+ * Each of the methods of this interface is supposed to return the HTML to be inserted at
+ * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
+ *
+ * @api
+ * @package     Extensibility
+ * @since 3.0.0
+ */
+interface iPageUIBlockExtension
+{
+	/**
+	 * Add content to the header of the page
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetNorthPaneBlock();
+
+	/**
+	 * Add content to the footer of the page
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetSouthPaneBlock();
+
+	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @return iUIBlock The Block to add into the page
+	 */
+	public function GetBannerBlock();
+}
+
+/**
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
  * @package     Extensibility
  * @since       2.7.0
+ * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
  */
 abstract class AbstractPageUIExtension implements iPageUIExtension
 {
@@ -1077,6 +1150,41 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	public function GetBannerHtml(iTopWebPage $oPage)
 	{
 		return '';
+	}
+
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       3.0.0
+ */
+abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNorthPaneBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSouthPaneBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerBlock()
+	{
+		return null;
 	}
 
 }

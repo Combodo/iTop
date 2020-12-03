@@ -12,7 +12,7 @@
     "ext-soap": "*",
     "combodo/tcpdf": "6.3.5",
     "nikic/php-parser": "^3.1",
-    "pear/archive_tar": "1.4.9",
+    "pear/archive_tar": "1.4.10",
     "pelago/emogrifier": "2.1.0",
     "scssphp/scssphp": "1.0.6",
     "swiftmailer/swiftmailer": "5.4.12",
@@ -52,7 +52,9 @@
       "application",
       "sources/application",
       "sources/Composer",
-      "sources/Controller"
+      "sources/Controller",
+      "sources/Form",
+      "sources/Renderer"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
@@ -61,6 +63,7 @@
       "core/legacy/querybuildercontextlegacy.class.inc.php",
       "core/querybuilderexpressions.class.inc.php",
       "core/legacy/querybuilderexpressionslegacy.class.inc.php",
+      "application/startup.inc.php",
       "application/loginform.class.inc.php",
       "application/loginbasic.class.inc.php",
       "application/logindefault.class.inc.php",

@@ -132,7 +132,7 @@ a{
 		margin: 0;
 	}
 }
-#setup {
+#setup, #ibo-page-container {
     width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -244,9 +244,6 @@ h3.clickable.open {
 		font-weight: bold;
 		margin-right: 5px;
 	}
-	~ .message{
-		margin-top: 6px;
-	}
     &.message-valid{
         color: $message-valid-text-color;
         background-color: $message-valid-bg-color;
@@ -262,6 +259,9 @@ h3.clickable.open {
         background-color: $message-error-bg-color;
         border-color: $message-error-border-color;
     }
+}
+*:not(.message) + .message{
+    margin-top: 6px;
 }
 .text-valid{
     color:$message-valid-text-color

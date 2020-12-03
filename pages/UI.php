@@ -17,6 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+
 /**
  * Displays a popup welcome message, once per session at maximum
  * until the user unchecks the "Display welcome at startup"
@@ -134,15 +141,6 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 {
 	$sClassLabel = MetaModel::GetName($sClass);
 
-// 2018-04-11 : removal of the search block
-//	$oSearch = new DBObjectSearch($sClass);
-//	$oBlock = new DisplayBlock($oSearch, 'search', false);
-//	$oBlock->Display($oP, 0, array(
-//		'table_id'  => 'search-widget-results-outer',
-//		'open'      => false,
-//		'update_history' => false,
-//	));
-
 	// The object could be listed, check if it is actually allowed to view it
 	$oSet = CMDBObjectSet::FromObject($oObj);
 	if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
@@ -190,11 +188,13 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
 {
 	$sClass = get_class($oObj); // get the leaf class
 	$sIcon = MetaModel::GetClassIcon($sClass, false);
+	$sIconType = iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 	if ($sIcon == '')
 	{
-		$sIcon = utils::GetAbsoluteUrlAppRoot().'images/breadcrumb_object.png';
+		$sIcon = 'fas fa-cube';
+		$sIconType = iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES;
 	}
-	$oPage->SetBreadCrumbEntry("ui-details-$sClass-".$oObj->GetKey(), $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon);
+	$oPage->SetBreadCrumbEntry("ui-details-$sClass-".$oObj->GetKey(), $oObj->Get('friendlyname'), MetaModel::GetName($sClass).': '.$oObj->Get('friendlyname'), '', $sIcon, $sIconType);
 }
 
 /**
@@ -211,6 +211,8 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  */
 function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
 {
+	//search block
+	$oBlockForm=null;
 	if ($bSearchForm)
 	{
 		$aParams = array('open' => $bSearchFormOpen, 'table_id' => '1');
@@ -218,28 +220,40 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 		{
 			$aParams['baseClass'] = $sBaseClass;
 		}
-		$oBlock = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
-		$oBlock->Display($oP, 0);
+		$oBlockForm = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, $aParams);
+
+		if (!$bDoSearch)
+		{
+			$oBlockForm->Display($oP, 0);
+		}
 	}
 	if ($bDoSearch)
 	{
-		if (strtolower($sFormat) == 'csv')
-		{
-			$oBlock = new DisplayBlock($oFilter, 'csv', false);
-			$oBlock->Display($oP, 1);
-			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
-			$oP->add_ready_script(" $('#1>textarea').height($('#1').parent().height() - $('#0').outerHeight() - 30).width( $('#1').parent().width() - 20);"); // adjust the size of the block
-		}
-		else
-		{
-			$oBlock = new DisplayBlock($oFilter, 'list', false);
-			$oBlock->Display($oP, 1);
+		$oBlock = new DisplayBlock($oFilter, 'list', false);
 
-			// Breadcrumb
-			//$iCount = $oBlock->GetDisplayedCount();
-			$sPageId = "ui-search-".$oFilter->GetClass();
-			$sLabel = MetaModel::GetName($oFilter->GetClass());
-			$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
+		// Breadcrumb
+		//$iCount = $oBlock->GetDisplayedCount();
+		$sPageId = "ui-search-".$oFilter->GetClass();
+		$sLabel = MetaModel::GetName($oFilter->GetClass());
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		if ($bSearchForm) {
+			//add search block
+			$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
+			if($sTableId=='')
+			{
+				$sTableId = 'result_1';
+			}
+			$aExtraParams['table_id']=$sTableId;
+			$oUIBlockForm=$oBlockForm->GetDisplay($oP,'search_1');
+			//add result block
+			$oUIBlock=$oBlock->GetDisplay($oP, $sTableId);
+			$oUIBlock->AddCSSClasses("display_block sf_results_area");
+			//$oUIBlockForm->AddSubBlock($oUIBlock);
+			$oP->AddUiBlock($oUIBlockForm);
+			$oP->AddUiBlock($oUIBlock);
+		}
+		else {
+			$oBlock->Display($oP, 1);
 		}
 	}
 }
@@ -255,36 +269,39 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * @param array $aExtraFormParams
  *
  * @throws \ApplicationException
+ * @throws \ArchivedObjectException
+ * @throws \CoreException
  */
-function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, $aExtraFormParams = array())
+function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [])
 {
-		$oAppContext = new ApplicationContext();
-		$iBulkActionAllowed = $oChecker->IsAllowed();
-		$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
-		if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS)
-		{
-			$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
-		}
-		else if(UR_ALLOWED_NO)
-		{
+	$oAppContext = new ApplicationContext();
+	$iBulkActionAllowed = $oChecker->IsAllowed();
+	$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
+	if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS) {
+		$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
+	} else {
+		if (UR_ALLOWED_NO) {
 			throw new ApplicationException(Dict::Format('UI:ActionNotAllowed'));
 		}
-		
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oP->add("<form method=\"post\" action=\"./UI.php\">\n");
-		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-		$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-	$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES, 'UTF-8')."\">\n");
-		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-		foreach($aExtraFormParams as $sName => $sValue)
-		{
-			$oP->add("<input type=\"hidden\" name=\"$sName\" value=\"$sValue\">\n");
-		}
-		$oP->add($oAppContext->GetForForm());
-		$oBlock->Display($oP, 1, $aExtraParams);
-		$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.history.back()\">&nbsp;&nbsp;<input type=\"submit\" value=\"".Dict::S('UI:Button:Next')."\">\n");
-		$oP->add("</form>\n");
-		$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
+	}
+
+	$oForm = new Form();
+	$oForm->SetAction('./UI.php');
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sNextOperation));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $oFilter->GetClass()));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('filter', utils::HtmlEntities($oFilter->Serialize())));
+	$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+	foreach ($aExtraFormParams as $sName => $sValue) {
+		$oForm->AddSubBlock(InputFactory::MakeForHidden($sName, $sValue));
+	}
+	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
+	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
+	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
+	$oForm->AddSubBlock(ButtonFactory::MakeNeutral(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
+	$oForm->AddSubBlock(ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
+
+	$oP->AddUiBlock($oForm);
+	$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
@@ -337,10 +354,10 @@ function DisplayNavigatorGroupTab($oP)
  ***********************************************************************************/
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
+
 
 try
 {
@@ -452,7 +469,19 @@ try
 				if (!is_null($oObj))
 				{
 					SetObjectBreadCrumbEntry($oObj, $oP);
-					DisplayDetails($oP, $sClass, $oObj, $id);
+//					DisplayDetails($oP, $sClass, $oObj, $id);
+
+					// The object could be listed, check if it is actually allowed to view it
+					$oSet = CMDBObjectSet::FromObject($oObj);
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
+					{
+						throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
+					}
+
+					$sClassLabel = MetaModel::GetName($sClass);
+					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oObj->DisplayDetails($oP);
 				}				
 			}
 		break;
@@ -544,15 +573,16 @@ try
 
 		case 'full_text': // Global "google-like" search
 			$oP->DisableBreadCrumb();
-			$sFullText = trim(utils::ReadParam('text', '', false, 'raw_data'));
+			$sQuery = trim(utils::ReadPostedParam('query', '', 'raw_data'));
 			$iTune = utils::ReadParam('tune', 0);
-			if (empty($sFullText))
+			if (empty($sQuery))
 			{
 				$oP->p(Dict::S('UI:Search:NoSearch'));
 			}
 			else
 			{
 				$iErrors = 0;
+				$sFullText = $sQuery;
 
 				// Check if a class name/label is supplied to limit the search
 				$sClassName = '';
@@ -584,6 +614,21 @@ try
 						}
 					}
 				}
+
+				// Save search to history
+				// - Prepare icon
+				$sQueryIconUrl = null;
+				if(!empty($sClassName))
+				{
+					$sQueryIconUrl = MetaModel::GetClassIcon($sClassName, false);
+				}
+				// - Prepare label
+				$sQueryLabel = null;
+				if($sQuery !== $sFullText)
+				{
+					$sQueryLabel = $sFullText;
+				}
+				GlobalSearchHelper::AddQueryToHistory($sQuery, $sQueryIconUrl, $sQueryLabel);
 
 				// Check the needle length
 				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');
@@ -637,7 +682,7 @@ try
 					$sPageId = "ui-global-search";
 					$sLabel = Dict::S('UI:SearchResultsTitle');
 					$sDescription = Dict::S('UI:SearchResultsTitle+');
-					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
+					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
@@ -651,7 +696,7 @@ try
 					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
 <<<EOF
-						var oParams = {operation: 'full_text_search', position: 0, 'class': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
+						var oParams = {operation: 'full_text_search', position: 0, 'classname': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
 						});
@@ -671,89 +716,43 @@ EOF
 			$oP->DisableBreadCrumb();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
+			if (empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
 			// Check if the user can modify this object
 			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
+			if (is_null($oObj)) {
 				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			}
-			else
-			{
+			} else {
 				// The object could be read - check if it is allowed to modify it
 				$oSet = CMDBObjectSet::FromObject($oObj);
-				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
-				{
+				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
-				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the blue borders and the title above the form
+				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
-		break;
-	
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
-		$oP->DisableBreadCrumb();
-		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		if (empty($sFilter))
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
-		}
-		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-		$sClass = $oFilter->GetClass();
-		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");			
-		
-		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
-		break;	
+			UI::OperationSelectForModifyAll($oP);
+			break;
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-		// Add user filter
-		$oFullSetFilter->UpdateContextFromUser();
-		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
-		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
-		break;
-		
+			UI::OperationFormForModifyAll($oP, $oAppContext);
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'preview_or_modify_all': // Preview or apply bulk modify
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$bPreview = utils::ReadParam('preview_mode', '');
-		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
-		if ( empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
-		{
-			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
-		}
-		$aSelectedObj = explode(',', $sSelectedObj);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array(
-			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
-			'selectObj' => $sSelectedObj,
-		);
-		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
-		break;
+			UI::OperationPreviewOrModifyAll($oP, $oAppContext);
+			break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -823,22 +822,8 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sRealClass" data-object-id="$sObjectTmpKey" data-object-mode="create">
-	<div class="page_header">
-		<h1>$sClassIcon $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-				);
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
-				$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-</div><!-- End of object-details -->
-HTML
-				);
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
 			else
 			{
@@ -1201,9 +1186,9 @@ HTML
 		{
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::NewObject($sClass);
-			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-			if (!empty($sStateAttCode))
+			if (MetaModel::HasLifecycle($sClass))
 			{
+				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
 				if ($sTargetState != '')
 				{
@@ -1252,6 +1237,7 @@ HTML
 
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
+				QuickCreateHelper::AddClassToHistory($sClass);
 
 				// Compute the name, by reloading the object, even if it disappeared from the silo
 				$oObj = MetaModel::GetObject($sClass, $oObj->GetKey(), true /* Must be found */, true /* Allow All Data*/);
@@ -1454,9 +1440,8 @@ HTML
 							}					
 						}
 						$sTip .= "</ul></p>";
-						$sTip = addslashes($sTip);
-						$sReadyScript .= "$('#multi_values_$sFieldInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
-						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'">'.count($aValues[$sAttCode]).'</div>';
+						$sTip = utils::HtmlEntities($sTip);
+						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).'</div>';
 					}
 					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sFieldInputId\">$sHTMLValue</span>", 'comments' => $sComments);
 					$aFieldsMap[$sAttCode] = $sFieldInputId;
@@ -1858,8 +1843,9 @@ EOF
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		
-		case 'swf_navigator': // Graphical display of the relations "impact" / "depends on"
+
+		case 'swf_navigator': /** @deprecated SWF was removed in iTop */
+		case 'view_relations': // Graphical display of the relations "impact" / "depends on"
 		require_once(APPROOT.'core/simplegraph.class.inc.php');
 		require_once(APPROOT.'core/relationgraph.class.inc.php');
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
@@ -1881,45 +1867,38 @@ EOF
 		$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
-			if ($sRelation == 'depends on')
-		{
-			$sRelation = 'impacts';
-			$sDirection = 'up';
-		}
-		if ($sDirection == 'up')
-		{
-			$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-		}
-		else
-		{
-			$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
-		}
-		
+			if ($sRelation == 'depends on') {
+				$sRelation = 'impacts';
+				$sDirection = 'up';
+			}
+			if ($sDirection == 'up') {
+				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			} else {
+				$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth);
+			}
 
-		$aResults = $oRelGraph->GetObjectsByClass();
-		$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));		
-		
-		$oP->AddTabContainer('Navigator');
-		$oP->SetCurrentTabContainer('Navigator');
-		
-		$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-		$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
-		
-		// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
-		$sClassForAttachment = null;
-		$iIdForAttachment = null;
-		if (class_exists('Attachment'))
-		{
-			$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
-			foreach($aAllowedClasses as $sAllowedClass)
-			{
-				if ($oObj instanceof $sAllowedClass)
-				{
-					$iIdForAttachment = $id;
-					$sClassForAttachment = $sClass;
+
+			$aResults = $oRelGraph->GetObjectsByClass();
+			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
+
+			$oP->AddTabContainer('Navigator');
+			$oP->SetCurrentTabContainer('Navigator');
+
+			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
+
+			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
+			$sClassForAttachment = null;
+			$iIdForAttachment = null;
+			if (class_exists('Attachment')) {
+				$aAllowedClasses = MetaModel::GetModuleSetting('itop-attachments', 'allowed_classes', array('Ticket'));
+				foreach ($aAllowedClasses as $sAllowedClass) {
+					if ($oObj instanceof $sAllowedClass) {
+						$iIdForAttachment = $id;
+						$sClassForAttachment = $sClass;
+					}
 				}
 			}
-		}
 		
 		// Display the tabs
 		if ($sFirstTab == 'list')
@@ -2003,7 +1982,7 @@ catch(CoreException $e)
 				$oLog->Set('userinfo', '');
 				$oLog->Set('issue', $e->GetIssue());
 				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $e->getTrace());
+				$oLog->Set('callstack', $e->getFullStackTraceAsString());
 				$oLog->Set('data', $e->getContextData());
 				$oLog->DBInsertNoReload();
 			}
@@ -2013,7 +1992,7 @@ catch(CoreException $e)
 			}
 		}
 
-		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getTraceAsString());
+		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getFullStackTraceAsString());
 	}
 
 	// For debugging only
@@ -2050,5 +2029,99 @@ catch(Exception $e)
 		}
 
 		IssueLog::Error($e->getMessage());
+	}
+}
+
+class UI
+{
+
+	/**
+	 * Operation select_for_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public static function OperationSelectForModifyAll(iTopWebPage $oP): void
+	{
+		$oP->DisableBreadCrumb();
+		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		if (empty($sFilter)) {
+			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
+		}
+		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
+		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");
+
+		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
+	}
+
+	/**
+	 * Operation form_for_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public static function OperationFormForModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
+	{
+		$oP->DisableBreadCrumb();
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		// Add user filter
+		$oFullSetFilter->UpdateContextFromUser();
+		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array('search' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
+	}
+
+	/**
+	 * Operation preview_or_modify_all
+	 *
+	 * @param \iTopWebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \OQLException
+	 */
+	public static function OperationPreviewOrModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
+	{
+		$oP->DisableBreadCrumb();
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
+
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$bPreview = utils::ReadParam('preview_mode', '');
+		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
+		if (empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
+		}
+		$aSelectedObj = explode(',', $sSelectedObj);
+		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
+		$aContext = array(
+			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
+			'selectObj' => $sSelectedObj,
+		);
+		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
 	}
 }

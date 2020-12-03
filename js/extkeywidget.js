@@ -1,21 +1,22 @@
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * Copyright (C) 2010-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
-function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch) {
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch, sFormAttCode) {
 	this.id = id;
 	this.sOriginalTargetClass = sTargetClass;
 	this.sTargetClass = sTargetClass;
@@ -29,6 +30,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
 	this.bDoSearch = bDoSearch; // false if the search is not launched
+	this.sFormAttCode = sFormAttCode;
+
 	var me = this;
 
 	this.Init = function () {
@@ -36,18 +39,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id+'_btnRemove').prop('disabled', true);
 		$('#'+this.id+'_linksToRemove').val('');
 	}
-	this.AddSelectize = function(options, initValue)
-	{
+	this.AddSelectize = function (options, initValue) {
 		$('#'+me.id).selectize({
-				render: {
-					item: function(item) {
-						if ( item.obsolescence_flag == 1)
-						{
-							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
-						}
-						else
-						{
-							val = item.label;
+			render: {
+				item: function (item) {
+					if (item.obsolescence_flag == 1) {
+						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+					} else {
+						val = item.label;
 						}
 						return $("<div>")
 							.append(val);
@@ -75,6 +74,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				searchField: ['value'],
 				options:JSON.parse(options),
 				maxItems: 1,
+				copyClassesToDropdown: false,
+				inputClass: 'ibo-input ibo-input-select ibo-input-selectize'
 			});
 	}
 	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
@@ -143,6 +144,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 		})
 		.autocomplete("instance")._renderItem = function (ul, item) {
+			$(ul).addClass('selectize-dropdown');
 			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
 			var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 			if (item.obsolescence_flag == '1')
@@ -155,7 +157,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 
 			return $("<li>")
-				.append("<div>"+val+"</div>")
+				.append("<div data-selectable=\"\">"+val+"</div>")
 				.appendTo(ul);
 		};
 
@@ -204,6 +206,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sTitle: me.sTitle,
 			sAttCode: me.sAttCode,
 			sTargetClass: me.sTargetClass,
+			sFilter: me.sFilter,
 			bSearchMode: me.bSearchMode,
 			operation: 'objectSearchForm'
 		};
@@ -273,13 +276,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.UpdateButtons = function () {
-		var okBtn = $('#btn_ok_'+me.id);
-		if ($('#count_'+me.id).val() > 0)
-		{
+		var okBtn = $('#btn_ok_' + me.id + '_results');
+		if ($('#count_' + me.id + '_results').val() > 0) {
 			okBtn.prop('disabled', false);
-		}
-		else
-		{
+		} else {
 			okBtn.prop('disabled', true);
 		}
 	};
@@ -347,18 +347,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	this.DoOk = function () {
-		var s = $('#'+me.id+'_results').find(':input[name^=storedSelection]');
-		var iObjectId = 0;
-		if (s.length > 0)
-		{
-			iObjectId = s.val();
-		}
-		else
-		{
-			iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
-		}
-		$('#ac_dlg_'+this.id).dialog('close');
-		$('#label_'+this.id).addClass('ac_dlg_loading');
+		var iObjectId = window['oSelectedItems' + me.id + '_results'][0];
+		$('#ac_dlg_' + this.id).dialog('close');
+		$('#label_' + this.id).addClass('ac_dlg_loading');
 
 		// Query the server again to get the display name of the selected object
 		var theMap = {
@@ -366,6 +357,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			iInputId: me.id,
 			iObjectId: iObjectId,
 			sAttCode: me.sAttCode,
+			sFormAttCode: me.sFormAttCode,
 			bSearchMode: me.bSearchMode,
 			operation: 'getObjectName'
 		};
@@ -379,18 +371,32 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			function (data) {
 				var oTemp = $('<div>'+data.name+'</div>');
 				var txt = oTemp.text(); // this causes HTML entities to be interpreted
-				$('#label_'+me.id).val(txt);
-				$('#label_'+me.id).removeClass('ac_dlg_loading');
+
+				var newValue;
+				if ($('#label_'+me.id).length) {
+					newValue = iObjectId;
+					$('#label_'+me.id).val(txt);
+					$('#label_'+me.id).removeClass('ac_dlg_loading');
+				} else {
+					// N°3227 if no label_* field present, we just want to pick the attribute value !
+					newValue = txt;
+				}
+
 				var prevValue = $('#'+me.id).val();
-				$('#'+me.id).val(iObjectId);
-				if (prevValue != iObjectId)
-				{
+				$('#'+me.id).val(newValue);
+				if (prevValue != newValue) {
 					// dependent fields will be updated using the WizardHelper JS object
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
 				}
-				$('#label_'+me.id).focus();
+
+				if ($('#label_'+me.id).length) {
+					$('#label_'+me.id).focus();
+				} else {
+					$('#'+me.id).focus();
+				}
+
 				me.ajax_request = null;
 			},
 			'json'
@@ -404,9 +410,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	// dialog is very slow. So empty it each time.
 	this.OnClose = function () {
 		me.StopPendingRequest();
+		if (me.bSelectMode) {
+			$('#fstatus_'+me.id).html('');
+		} else {
+			$('#label_'+me.id).removeClass('ac_dlg_loading');
+		}
+
 		// called by the dialog, so in the context 'this' points to the jQueryObject
-		if (me.emptyOnClose)
-		{
+		if (me.emptyOnClose) {
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('ac_dlg_loading');
@@ -712,28 +723,26 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			// Run the query and get the result back directly in JSON
 			me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 				function (data) {
-					var oTemp = $('<div>'+data.name+'</div>');
+					var oTemp = $('<div>' + data.name + '</div>');
 					var txt = oTemp.text(); // this causes HTML entities to be interpreted
 
-					$('#label_'+me.id).val(txt);
-					$('#label_'+me.id).removeClass('ac_dlg_loading');
+					$('#label_' + me.id).val(txt);
+					$('#label_' + me.id).removeClass('ac_dlg_loading');
 
-					var prevValue = $('#'+me.id).val();
-					$('#'+me.id).val(iObjectId);
-					if (prevValue != iObjectId)
-					{
-						$('#'+me.id).trigger('validate');
-						$('#'+me.id).trigger('extkeychange');
-						$('#'+me.id).trigger('change');
+					var prevValue = $('#' + me.id).val();
+					$('#' + me.id).val(iObjectId);
+					if (prevValue != iObjectId) {
+						$('#' + me.id).trigger('validate');
+						$('#' + me.id).trigger('extkeychange');
+						$('#' + me.id).trigger('change');
 					}
-					if ($('#'+me.id).hasClass('multiselect'))
-					{
-						$('#'+me.id+' option').each(function () {
+					if ($('#' + me.id).hasClass('multiselect')) {
+						$('#' + me.id + ' option').each(function () {
 							this.selected = ($(this).attr('value') == iObjectId);
 						});
-						$('#'+me.id).multiselect('refresh');
+						$('#' + me.id).multiselect('refresh');
 					}
-					$('#label_'+me.id).focus();
+					$('#label_' + me.id).focus();
 					me.ajax_request = null;
 				},
 				'json'

@@ -24,7 +24,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-files-information/2.8.0',
+	'itop-files-information/3.0.0',
 	array(
 		// Identification
 		//

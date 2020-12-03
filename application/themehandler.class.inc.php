@@ -337,7 +337,7 @@ CSS;
 	 * @param string $sThemeId : used only for logging purpose
 	 *
 	 * @return array complete path of the images, but with slashes as dir separator instead of DIRECTORY_SEPARATOR
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	public static function GetIncludedImages($aThemeParametersVariables, $aStylesheetFiles, $sThemeId)
 	{

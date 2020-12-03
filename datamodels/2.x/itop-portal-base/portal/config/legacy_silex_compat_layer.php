@@ -34,23 +34,30 @@ $oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);
 
 // Load portal conf. such as properties, themes, templates, ...
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oBasicCompat = new Basic($oModuleDesign);
 $oBasicCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal conf. such as properties, themes, templates, ...');
 
 // Load portal forms definition
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oFormsCompat = new Forms($oModuleDesign);
 $oFormsCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal forms definition');
 
 // Load portal lists definition
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oListsCompat = new Lists($oModuleDesign);
 $oListsCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal lists definition');
 
 // Generating CSS files
 // Note: We do this here as it is not user dependent and therefore can be cached for everyone.
 // A dedicated listener 'CssFromSassCompiler' exists to compile files again when by-passing HTTP cache.
 // This is to keep developers comfort when tuning the SCSS files.
+$oKPI = new ExecutionKPI();
 $aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
 $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
 foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
@@ -71,4 +78,6 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 		$aPortalConf['properties']['themes'][$sKey] = $aValues;
 	}
 }
+$oKPI->ComputeAndReport('Generating CSS files');
+
 $container->setParameter('combodo.portal.instance.conf', $aPortalConf);

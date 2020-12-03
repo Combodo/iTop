@@ -202,9 +202,10 @@ $(function()
 				}
 
 
-				$('#itop-breadcrumb')
-					.breadcrumb('destroy')
-					.breadcrumb({
+				$('#ibo-breadcrumbs')
+					.breadcrumbs('destroy')
+					.html('')
+					.breadcrumbs({
 					itop_instance_id: oData['breadcrumb_instance_id'],
 					max_count: oData['breadcrumb_max_count'],
 					new_entry: {
@@ -212,6 +213,7 @@ $(function()
 						"label": oData['breadcrumb_label'],
 						"url": sNewUrl,
 						'icon': oData['breadcrumb_icon'],
+						'icon_type': oData['breadcrumb_icon_type'],
 						'description': ''
 					}
 				});
@@ -347,14 +349,14 @@ $(function()
 				me._submit();
 			});
 			// - Toggle icon
-			this.element.find('.sf_title').on('click', function(oEvent){
+			this.element.find('.ibo-panel--header').on('click', function(oEvent){
 				// Prevent anchors
 				oEvent.preventDefault();
 
 				// Prevent toggle on <select>
 				if(oEvent.target.nodeName.toLowerCase() !== 'select' && oEvent.target.nodeName.toLowerCase() !== 'option')
 				{
-					me.element.toggleClass('closed');
+					me.element.find('ibo-panel--body').toggle();
 				}
 			});
 		},
@@ -372,17 +374,17 @@ $(function()
 			{
 				oCriterionAreaElem = $('<div></div>').appendTo(this.element);
 			}
-			oCriterionAreaElem.addClass('sf_criterion_area');
+			oCriterionAreaElem.addClass('sf_criterion_area ibo-criterion-area');
 			this.elements.criterion_area = oCriterionAreaElem;
 
 			// Clean area
 			oCriterionAreaElem
 				.html('')
-				.append('<div class="sf_criterion_row"></div>');
+				.append('<div class="sf_criterion_row ibo-criterion-row"></div>');
 
 			// Prepare content
-			this._prepareMoreCriterionMenu();
 			this._prepareExistingCriterion();
+			this._prepareMoreCriterionMenu();
 			this._prepareSubmitButton();
 		},
 		// - Prepare "more" button
@@ -397,7 +399,7 @@ $(function()
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_icon fas fa-plus"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part
@@ -694,7 +696,7 @@ $(function()
 				else
 				{
 					var oCriterionRowElem = $('<div></div>')
-						.addClass('sf_criterion_row')
+						.addClass('sf_criterion_row ibo-criterion-row')
 						.appendTo(this.elements.criterion_area);
 				}
 
@@ -705,7 +707,7 @@ $(function()
 				else
 				{
 					var oCriterionGroupElem = $('<div></div>')
-						.addClass('sf_criterion_group')
+						.addClass('sf_criterion_group ibo-criterion-group')
 						.appendTo(oCriterionRowElem);
 				}
 
@@ -753,12 +755,12 @@ $(function()
 					oResultAreaElem = $('<div class="display_block"></div>').insertAfter(this.element.closest('.display_block'));
 				}
 			}
-			oResultAreaElem.addClass('sf_results_area');
+			//oResultAreaElem.addClass('display_block sf_results_area');
 
 			// Make placeholder if nothing yet
 			if(oResultAreaElem.html() === '')
 			{
-				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button">' + Dict.S('UI:Button:Search') + '<span class="fas fa-search"></span></button></p></div>');
+				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button"><span class="fas fa-search"></span>' + Dict.S('UI:Button:Search') + '</button></p></div>');
 				oResultAreaElem.find('button').on('click', function(){
 					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();

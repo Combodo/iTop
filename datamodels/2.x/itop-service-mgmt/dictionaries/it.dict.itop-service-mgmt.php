@@ -38,7 +38,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratti per livello di servizio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratti per stato',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratti che terminano in meno di 30 giorni',
-
 	'Menu:ProviderContract' => 'Contratti con Provider',
 	'Menu:ProviderContract+' => 'Contratti con Provider',
 	'Menu:CustomerContract' => 'Contratti con Clienti',
@@ -197,23 +196,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Document Name~~',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
-	'Class:lnkFunctionalCIToProviderContract+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 ));
 
 //
@@ -465,23 +447,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Provider contract Name~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '~~',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service~~',
-	'Class:lnkFunctionalCIToService+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Service Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CI~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Name~~',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
 ));
 
 //

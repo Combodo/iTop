@@ -1,0 +1,163 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* This is an overload of the default lib. stylesheet to use local fonts instead of the CDN */
+@font-face {
+	font-family: Monorale;
+	font-weight: 100;
+	font-style: normal;
+	src: local('Raleway-v4020 Thin'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Thin.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Thin.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 100;
+	font-style: italic;
+	src: local('Raleway-v4020 Thin'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-ThinItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-ThinItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 200;
+	font-style: normal;
+	src: local('Raleway-v4020 ExtraLight'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraLight.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraLight.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 200;
+	font-style: italic;
+	src: local('Raleway-v4020 ExtraLight'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraLightItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraLightItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 300;
+	font-style: normal;
+	src: local('Raleway-v4020 Light'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Light.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Light.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 300;
+	font-style: italic;
+	src: local('Raleway-v4020 Light'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-LightItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-LightItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 400;
+	font-style: normal;
+	src: local('Raleway-v4020'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Regular.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Regular.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 400;
+	font-style: italic;
+	src: local('Raleway-v4020'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Italic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Italic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 500;
+	font-style: normal;
+	src: local('Raleway-v4020 Medium'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Medium.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Medium.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 500;
+	font-style: italic;
+	src: local('Raleway-v4020 Medium'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-MediumItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-MediumItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 600;
+	font-style: normal;
+	src: local('Raleway-v4020 SemiBold'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-SemiBold.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-SemiBold.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 600;
+	font-style: italic;
+	src: local('Raleway-v4020 SemiBold'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-SemiBoldItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-SemiBoldItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 700;
+	font-style: normal;
+	src: local('Raleway-v4020'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Bold.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Bold.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 700;
+	font-style: italic;
+	src: local('Raleway-v4020'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-BoldItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-BoldItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 800;
+	font-style: normal;
+	src: local('Raleway-v4020 ExtraBold'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraBold.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraBold.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 800;
+	font-style: italic;
+	src: local('Raleway-v4020 ExtraBold'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraBoldItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraBoldItalic.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 900;
+	font-style: normal;
+	src: local('Raleway-v4020 Black'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-Black.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-Black.woff') format('woff');
+}
+@font-face {
+	font-family: Monorale;
+	font-weight: 900;
+	font-style: italic;
+	src: local('Raleway-v4020 Black'),
+	url('../../lib/samvk/monorale-raleway-sober/otf/Monorale-BlackItalic.otf') format('otf'),
+	url('../../lib/samvk/monorale-raleway-sober/woff/Monorale-BlackItalic.woff') format('woff');
+}

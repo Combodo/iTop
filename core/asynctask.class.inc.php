@@ -81,7 +81,6 @@ abstract class AsyncTask extends DBObject
 			"db_table" => "priv_async_task",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 
@@ -322,7 +321,6 @@ class AsyncSendEmail extends AsyncTask
 			"db_table" => "priv_async_send_email",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

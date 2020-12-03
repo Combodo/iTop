@@ -461,7 +461,7 @@ try
 	$oP->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-db-tools/default.scss');
 
 	$oP->add(
-<<<EOF
+		<<<EOF
 <div class="page_header">
   	<h1>$sPageTitle</h1>
 </div>

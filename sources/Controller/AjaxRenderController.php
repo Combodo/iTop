@@ -6,7 +6,8 @@
 
 namespace Combodo\iTop\Controller;
 
-use ajax_page;
+use AjaxPage;
+use ApplicationMenu;
 use BulkExport;
 use BulkExportException;
 use DBObjectSearch;
@@ -18,13 +19,13 @@ use utils;
 class AjaxRenderController
 {
 	/**
-	 * @param \ajax_page $oPage
+	 * @param \AjaxPage $oPage
 	 *
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
 	 */
-	public static function ExportBuild(ajax_page $oPage, bool $bTokenOnly)
+	public function ExportBuild(AjaxPage $oPage, bool $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();
@@ -112,5 +113,20 @@ class AjaxRenderController
 			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
 			$oPage->add(json_encode($aResult));
 		}
+	}
+
+	/**
+	 * Get all the menus count
+	 *
+	 * The resulting JSON is added to the page with the format:
+	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
+	 *
+	 * @param \AjaxPage $oPage
+	 */
+	public function GetMenusCount(AjaxPage $oPage)
+	{
+		$aCounts = ApplicationMenu::GetMenusCount();
+		$aResult = ['code' => 'done', 'counts' => $aCounts];
+		$oPage->add(json_encode($aResult));
 	}
 }

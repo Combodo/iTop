@@ -93,7 +93,7 @@ class ExceptionListener implements ContainerAwareInterface
 			'exception' => $oFlattenException,
 			'code' => $iStatusCode,
 			'error_title' => $sErrorTitle,
-			'error_message' => $sErrorMessage,
+			'error_message' => '',
 		);
 
 		// Generate the response

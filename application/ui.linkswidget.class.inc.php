@@ -24,7 +24,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'application/webpage.class.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
 class UILinksWidget 
@@ -337,66 +340,29 @@ JS
 	}
 
 	/**
-	 * Display one row of the whole form
-	 *
-	 * @param WebPage $oP
-	 * @param array $aConfig
-	 * @param array $aRow
-	 * @param int $iRowId
-	 *
-	 * @return string
-	 */
-	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
-	{
-		$sHtml = '';
-		$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_row_$iRowId\">\n";
-		foreach($aConfig as $sName=>$void)
-		{
-			$sHtml .= "<td>".$aRow[$sName]."</td>\n";
-		}
-		$sHtml .= "</tr>\n";
-		
-		return $sHtml;
-	}
-	
-	/**
 	 * Display the table with the form for editing all the links at once
+	 *
 	 * @param WebPage $oP The web page used for the output
 	 * @param array $aConfig The table's header configuration
 	 * @param array $aData The tabular data to be displayed
+	 *
 	 * @return string Html fragment representing the form table
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
-		$sHtml = "<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\">";
-		$sHtml .= "<table class=\"listResults\">\n";
-		// Header
-		$sHtml .= "<thead>\n";
-		$sHtml .= "<tr>\n";
-		foreach($aConfig as $sName=>$aDef)
-		{
-			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
-		}
-		$sHtml .= "</tr>\n";
-		$sHtml .= "</thead>\n";
-
-		// Content
-		$sHtml .= "</tbody>\n";
-		$sEmptyRowStyle = '';
-		if (count($aData) != 0)
-		{
-			$sEmptyRowStyle = 'style="display:none;"';
-		}
+		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
 
 		foreach ($aData as $iRowId => $aRow)
 		{
-			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
+			$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aRow, $iRowId);
+			$oTable->AddRow($oRow);
 		}
-		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
-		$sHtml .= "</tbody>\n";
 
-		// Footer
-		$sHtml .= "</table>\n";
+		$sHtml = BlockRenderer::RenderBlockTemplates($oTable);
 
 		return $sHtml;
 	}
@@ -464,6 +430,7 @@ JS
             $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
+		// To prevent adding forms inside the main form
 
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
@@ -514,53 +481,55 @@ JS
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
-		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
-		{
+		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 			$oAlreadyLinkedExpression = $oAlreadyLinkedFilter->GetCriteria();
-			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->Render();
-		}
-		else
-		{
+			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->RenderExpression();
+		} else {
 			$sAlreadyLinkedExpression = '';
 		}
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
-		if(!empty($oCurrentObj))
-		{
+		if (!empty($oCurrentObj)) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 			$aPrefillFormParam['filter'] = $oFilter;
 			$aPrefillFormParam['dest_class'] = $this->m_sRemoteClass;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_id' => 'add_'.$this->m_sAttCode,
+				'table_id' => "add_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'selection_mode' => true,
 				'json' => $sJson,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sAlreadyLinkedExpression,
-			));
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"0\"/>";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
-		$sHtml .= "</div>\n";
-		$sHtml .= "</form>\n";
-		$oPage->add($sHtml);
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
+			)));
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sAdd = Dict::S('UI:Button:Add');
+
+		$oPage->add(<<<HTML
+<form id="ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}">
+    <div id="SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+    </div>
+    <input type="hidden" id="count_{$this->m_sAttCode}{$this->m_sNameSuffix}" value="0"/>
+    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;
+    <input id="btn_ok_add_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
+</form>
+HTML
+		);
+
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."' , autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
 	}
@@ -618,7 +587,8 @@ JS
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
-				$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
+				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
+				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
 			}
 			else

@@ -795,7 +795,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 *
-	 * @since 2.8.0 N°2334 returns both lnk and remote classes for indirect relations
+	 * @since 3.0.0 N°2334 returns both lnk and remote classes for indirect relations
 	 */
 	public function ToDBObjectSet($bShowObsolete = true)
 	{

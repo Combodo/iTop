@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -46,8 +45,7 @@ function GraphvizEscape($s)
 function GraphvizLifecycle($sClass)
 {
 	$sDotFileContent = "";
-	$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-	if (empty($sStateAttCode))
+	if (!MetaModel::HasLifecycle($sClass))
 	{
 		//$oPage->p("no lifecycle for this class");
 	}

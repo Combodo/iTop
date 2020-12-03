@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
@@ -92,7 +91,7 @@ $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
-$oP->SetBreadCrumbEntry('ui-tool-runquery', Dict::S('Menu:RunQueriesMenu'), Dict::S('Menu:RunQueriesMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+$oP->SetBreadCrumbEntry('ui-tool-runquery', Dict::S('Menu:RunQueriesMenu'), Dict::S('Menu:RunQueriesMenu+'), '', 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 // Main program
 $sExpression = utils::ReadParam('expression', '', false, 'raw_data');
@@ -208,7 +207,7 @@ EOF
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, '../images/breadcrumb-search.png');
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oP->p('');
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');

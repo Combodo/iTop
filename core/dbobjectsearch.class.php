@@ -63,9 +63,15 @@ class DBObjectSearch extends DBSearch
 	{
 		parent::__construct();
 
-		if (is_null($sClassAlias)) $sClassAlias = $sClass;
-		if(!is_string($sClass)) throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
-		if(!MetaModel::IsValidClass($sClass)) throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		if (is_null($sClassAlias)) {
+			$sClassAlias = $sClass;
+		}
+		if (!is_string($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
+		}
+		if (!MetaModel::IsValidClass($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		}
 
 		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
@@ -75,30 +81,43 @@ class DBObjectSearch extends DBSearch
 		$this->m_aReferencedBy = array();
 	}
 
-	public function AllowAllData($bAllowAllData = true) {$this->m_bAllowAllData = $bAllowAllData;}
-	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
-	protected function IsDataFiltered() {return $this->m_bDataFiltered; }
-	protected function SetDataFiltered() {$this->m_bDataFiltered = true;}
+	public function AllowAllData($bAllowAllData = true) {
+		$this->m_bAllowAllData = $bAllowAllData;
+
+		$this->m_oSearchCondition->Browse(function ($oThisExpression) use ($bAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bAllowAllData);
+		});
+	}
+
+	public function IsAllDataAllowed() {
+		return $this->m_bAllowAllData;
+	}
+
+	protected function IsDataFiltered() {
+		return $this->m_bDataFiltered;
+	}
+
+	protected function SetDataFiltered() {
+		$this->m_bDataFiltered = true;
+	}
 
 	// Create a search definition that leads to 0 result, still a valid search object
-	static public function FromEmptySet($sClass)
-	{
+	public static function FromEmptySet($sClass) {
 		$oResultFilter = new DBObjectSearch($sClass);
 		$oResultFilter->m_oSearchCondition = new FalseExpression;
+
 		return $oResultFilter;
 	}
 
 
-	public function GetJoinedClasses() {return $this->m_aClasses;}
+	public function GetJoinedClasses() {
+		return $this->m_aClasses;
+	}
 
-	public function GetClassName($sAlias)
-	{
-		if (array_key_exists($sAlias, $this->m_aSelectedClasses))
-		{
+	public function GetClassName($sAlias) {
+		if (array_key_exists($sAlias, $this->m_aSelectedClasses)) {
 			return $this->m_aSelectedClasses[$sAlias];
-		}
-		else
-		{
+		} else {
 			throw new CoreException("Invalid class alias '$sAlias'");
 		}
 	}
@@ -358,37 +377,35 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->RenameParam($sOldName, $sNewName);
 					}
 				}
 			}
 		}
 	}
-	
-	public function ResetCondition()
-	{
+
+	public function ResetCondition() {
 		$this->m_oSearchCondition = new TrueExpression();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
-	public function MergeConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression); 
+	public function MergeConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression);
 	}
 
-	public function AddConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression); 
+	public function AddConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression);
+
+		$bRootSearchAllowAllData = $this->IsAllDataAllowed();
+		$oExpression->Browse(function ($oThisExpression) use ($bRootSearchAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bRootSearchAllowAllData);
+		});
 	}
 
-  	public function AddNameCondition($sName)
-	{
+	public function AddNameCondition($sName) {
 		$oValueExpr = new ScalarExpression($sName);
 		$oNameExpr = new FieldExpression('friendlyname', $this->GetClassAlias());
 		$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);

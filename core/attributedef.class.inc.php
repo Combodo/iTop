@@ -31,13 +31,9 @@ require_once('ormlinkset.class.inc.php');
 require_once('ormset.class.inc.php');
 require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
-require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
 require_once('datetimeformat.class.inc.php');
-// This should be changed to a use when we go full-namespace
-require_once(APPROOT.'sources/form/validator/validator.class.inc.php');
-require_once(APPROOT.'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row
@@ -1030,10 +1026,17 @@ abstract class AttributeDefinition
 			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
+		// Description
+		$sAttDescription = $this->GetDescription();
+		if(!empty($sAttDescription))
+		{
+			$oFormField->SetDescription($this->GetDescription());
+		}
+
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
-		$oFormField->AddMetadata('attribute-label', utils::HtmlEntities($this->GetLabel()));
+		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
@@ -1050,7 +1053,7 @@ abstract class AttributeDefinition
 		// - Value raw
 		if ($this::IsScalar())
 		{
-			$oFormField->AddMetadata('value-raw', utils::HtmlEntities($oObject->Get($this->GetCode())));
+			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -1269,6 +1272,15 @@ abstract class AttributeDefinition
 	public function Fingerprint($value)
 	{
 		return (string)$value;
+	}
+
+	/*
+	 * return string
+	 */
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return data;";
+		return $sRenderFunction;
 	}
 }
 
@@ -4989,6 +5001,7 @@ class AttributePhoneNumber extends AttributeString
 
 		return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
+
 }
 
 /**
@@ -6771,8 +6784,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_null($oHostObject))
-		{
+		if (!is_null($oHostObject)) {
 			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
 		}
 
@@ -10169,6 +10181,9 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 }
 
+/**
+ * @since 2.7.0 N°985
+ */
 class AttributeEnumSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
@@ -10308,6 +10323,7 @@ class AttributeEnumSet extends AttributeSet
 
 		return $sRes;
 	}
+
 
 	/**
 	 * @param ormSet $value

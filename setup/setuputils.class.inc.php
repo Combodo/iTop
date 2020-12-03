@@ -41,7 +41,7 @@ class CheckResult {
 
 	/**
 	 * @return string
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public function __toString(): string {
 		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
@@ -55,7 +55,7 @@ class CheckResult {
 	 *
 	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array {
 		return array_filter($aResults,
@@ -75,7 +75,7 @@ class CheckResult {
 	 * @return string[]
 	 * @uses \CheckResult::__toString
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
 	public static function FromObjectsToStrings(array $aResults): array {
 		return array_map(static function ($value) {
@@ -129,8 +129,8 @@ class SetupUtils
 	 *            <li>php.ini option : session.save_handler
 	 *         </ul>
 	 *
-	 * @since 2.8.0 N°2214 disable some checks when in CLI mode
-	 * @since 2.8.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 disable some checks when in CLI mode
+	 * @since 3.0.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
 	public static function CheckPhpAndExtensions() {
 		$aResult = array();
@@ -409,7 +409,7 @@ class SetupUtils
 	 * @uses \IssueLog::Error()
 	 * @uses \exit()
 	 *
-	 * @since 2.8.0 N°2214 Add PHP version checks in CLI scripts
+	 * @since 3.0.0 N°2214 Add PHP version checks in CLI scripts
 	 */
 	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1) {
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
@@ -436,7 +436,7 @@ class SetupUtils
 	/**
 	 * @param CheckResult[] $aResult checks log
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	private static function CheckPhpVersion(array &$aResult) {
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
@@ -482,7 +482,7 @@ class SetupUtils
 	 *
 	 * @return array
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules) {
 		$aResult = array();
@@ -510,7 +510,7 @@ class SetupUtils
 	 *
 	 * @return \CheckResult[] An array of CheckResults objects
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null) {
 		$aResult = array();
@@ -595,7 +595,7 @@ class SetupUtils
 	 * @return CheckResult[] The result of the check AS CheckResult::INFO or CheckResult::WARNING, plus debug traces as some
 	 *     CheckResult::TRACE
 	 *
-	 * @since 2.8.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
 	public static function CheckGraphviz($sGraphvizPath) {
 		$aResult = [];
@@ -653,7 +653,7 @@ class SetupUtils
 	 *
 	 * @return string
 	 *
-	 * @since 2.8.0
+	 * @since 3.0.0
 	 */
 	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string {
 		return (json_encode($sValue) !== false)
@@ -1321,17 +1321,16 @@ EOF
 	 *
 	 * @return boolean false if DB doesn't meet the minimum version requirement
 	 */
-	static private function CheckDbServerVersion(&$aResult, $oDBSource)
+	private static function CheckDbServerVersion(&$aResult, $oDBSource)
 	{
-		$sDBVendor= $oDBSource->GetDBVendor();
+		$sDBVendor = $oDBSource->GetDBVendor();
 		$sDBVersion = $oDBSource->GetDBVersion();
 
 		if (
 			!empty(self::MYSQL_NOT_VALIDATED_VERSION)
 			&& ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)
 			&& version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=')
-		)
-		{
+		) {
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
 				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
 
@@ -1381,17 +1380,18 @@ EOF
 	 * @return string
 	 * @throws \MySQLException
 	 */
-	static public function GetMySQLVersion(
+	public static function GetMySQLVersion(
 		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCa = null
 	)
 	{
 		$oDBSource = new CMDBSource;
 		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa);
 		$sDBVersion = $oDBSource->GetDBVersion();
+
 		return $sDBVersion;
 	}
 
-	static public function AsyncCheckDB($oPage, $aParameters)
+	public static function AsyncCheckDB($oPage, $aParameters)
 	{
 		$sDBServer = $aParameters['db_server'];
 		$sDBUser = $aParameters['db_user'];
@@ -1399,8 +1399,7 @@ EOF
 		$sDBName = $aParameters['db_name'];
 
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-		if ($bIsWindows && (preg_match('@([%!"])@',$sDBPwd) > 0))
-		{
+		if ($bIsWindows && (preg_match('@([%!"])@', $sDBPwd) > 0)) {
 			// Unsupported Password, warn the user
 			$oPage->add_ready_script(
 <<<JS
@@ -1511,26 +1510,25 @@ JS
 
 	/**
 	 * Helper function to get the available languages from the given directory
+	 *
 	 * @param $sDir String Path to the dictionary
+	 *
 	 * @return array of language code => description
 	 */
-	static public function GetAvailableLanguages($sDir)
+	public static function GetAvailableLanguages($sDir)
 	{
 		require_once(APPROOT.'/core/coreexception.class.inc.php');
 		require_once(APPROOT.'/core/dict.class.inc.php');
 
 		$aFiles = scandir($sDir);
-		foreach($aFiles as $sFile)
-		{
-			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
-			{
+		foreach ($aFiles as $sFile) {
+			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git') {
 				// Skip
 				continue;
 			}
 
 			$sFilePath = $sDir.'/'.$sFile;
-			if (is_file($sFilePath) && preg_match('/^.*dict.*\.php$/i', $sFilePath, $aMatches))
-			{
+			if (is_file($sFilePath) && preg_match('/^.*dict.*\.php$/i', $sFilePath, $aMatches)) {
 				require_once($sFilePath);
 			}
 		}
@@ -1538,15 +1536,15 @@ JS
 		return Dict::GetLanguages();
 	}
 
-	static public function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
+	public static function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
 	{
 		$sHtml = '<select  id="'.$sInputName.'" name="'.$sInputName.'">';
 		$sSourceDir = APPROOT.'dictionaries/';
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
-		foreach($aLanguages as $sCode => $aInfo)
-		{
+		foreach ($aLanguages as $sCode => $aInfo) {
 			$sSelected = ($sCode == $sDefaultLanguageCode) ? 'selected ' : '';
-			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES, 'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
+			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES,
+					'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
 		}
 		$sHtml .= '</select></td></tr>';
 
@@ -1917,42 +1915,31 @@ JS
 		return false;
 	}
 
-	public static function GetCompatibleDataModelDir($sInstalledVersion)
-	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
-			$sMajorVersion = $aMatches[1];
-			$sDir = APPROOT.'datamodels/'.$sMajorVersion.'.x/';
-			if (is_dir($sDir))
-			{
-				return $sDir;
-			}
-		}
-		return false;
-	}
-
-	static public function GetDataModelVersion($sDatamodelDir)
+	public static function GetDataModelVersion($sDatamodelDir)
 	{
 		$sVersionFile = $sDatamodelDir.'version.xml';
-		if (file_exists($sVersionFile))
-		{
+		if (file_exists($sVersionFile)) {
 			$oParams = new XMLParameters($sVersionFile);
+
 			return $oParams->Get('version');
 		}
+
 		return false;
 	}
 
 	/**
 	 * Returns an array of xml nodes describing the licences.
-	 * @param $sEnv string|null Execution environment. If present loads licenses only for installed modules else loads all licenses available.
+	 *
+	 * @param $sEnv string|null Execution environment. If present loads licenses only for installed modules else loads all licenses
+	 *     available.
+	 *
 	 * @return array Licenses list.
 	 */
-	static public function GetLicenses($sEnv = null)
+	public static function GetLicenses($sEnv = null)
 	{
 		$aLicenses = array();
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
-		if (empty($sEnv))
-		{
+		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
@@ -1966,19 +1953,19 @@ JS
 			$oXml = simplexml_load_file($sFile);
 			if (!empty($oXml->license))
 			{
-				foreach ($oXml->license as $oLicense)
-				{
+				foreach ($oXml->license as $oLicense) {
 					$aLicenses[(string)$oLicense->product] = $oLicense;
 				}
 			}
 		}
+
 		return $aLicenses;
 	}
 
 	/**
 	 * @return string path to the log file where the create and/or alter queries are written
 	 */
-	static public function GetSetupQueriesFilePath()
+	public static function GetSetupQueriesFilePath()
 	{
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
@@ -2061,8 +2048,7 @@ JS
 					throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
 				}
 			}
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Ignore errors
 		}
 	}
@@ -2072,18 +2058,17 @@ JS
 	 *
 	 * @return string token
 	 */
-	public final static function CreateSetupToken()
+	final public static function CreateSetupToken()
 	{
-		if (!is_dir(APPROOT.'data'))
-		{
+		if (!is_dir(APPROOT.'data')) {
 			mkdir(APPROOT.'data');
 		}
-		if (!is_dir(APPROOT.'data/setup'))
-		{
+		if (!is_dir(APPROOT.'data/setup')) {
 			mkdir(APPROOT.'data/setup');
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+
 		return $sUID;
 	}
 
@@ -2094,7 +2079,8 @@ JS
 	 *
 	 * @throws \SecurityException
 	 */
-	public final static function CheckSetupToken($bRemoveToken = false) {
+	final public static function CheckSetupToken($bRemoveToken = false)
+	{
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 		$sTokenFile = APPROOT.'data/setup/authent';
 		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile)) {
@@ -2109,7 +2095,7 @@ JS
 	 * @param string $sText
 	 *
 	 * @since 2.7.0 N°2240 Maintenance mode
-	 * @since 2.8.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
+	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
 	 */
 	private static function Log($sText) {
 		if (class_exists('SetupPage')) {
@@ -2137,7 +2123,7 @@ JS
 			'zlib',
 			'zip',
 			'fileinfo', // N°3123
-			'mbstring', // N°2899
+			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];
 	}
@@ -2153,7 +2139,6 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {

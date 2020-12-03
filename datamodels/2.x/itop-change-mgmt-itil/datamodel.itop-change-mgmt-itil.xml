@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="Change" _delta="define">
       <parent>Ticket</parent>
@@ -21,7 +21,9 @@
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
@@ -200,7 +202,6 @@
         </field>
       </fields>
       <lifecycle>
-        <attribute>status</attribute>
         <highlight_scale>
           <item id="approved">
             <rank>1</rank>
@@ -1216,7 +1217,6 @@
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
@@ -2013,7 +2013,6 @@
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
@@ -3015,7 +3014,6 @@
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
@@ -3709,7 +3707,6 @@
             <attribute id="ref"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/change.png</icon>
         <reconciliation>
           <attributes>
@@ -4456,6 +4453,9 @@
   <menus>
     <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
       <rank>50</rank>
+	    <style>
+		    <decoration_classes>fas fa-exchange-alt</decoration_classes>
+	    </style>
     </menu>
     <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>

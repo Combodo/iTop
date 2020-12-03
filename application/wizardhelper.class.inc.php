@@ -346,7 +346,7 @@ class WizardHelper
 
 	/**
 	 * @return string JS code to be executed for fields update
-	 * @since 2.8.0 N°3198
+	 * @since 3.0.0 N°3198
 	 */
 	public function GetJsForUpdateFields()
 	{

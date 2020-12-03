@@ -50,7 +50,6 @@ abstract class Trigger extends cmdbAbstractObject
 			"db_table" => "priv_trigger",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -168,7 +167,6 @@ abstract class TriggerOnObject extends Trigger
 			"db_table" => "priv_trigger_onobject",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -295,7 +293,6 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 			"db_table" => "priv_trigger_onportalupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -328,7 +325,6 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 			"db_table" => "priv_trigger_onstatechange",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -363,7 +359,6 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 			"db_table" => "priv_trigger_onstateenter",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -397,7 +392,6 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 			"db_table" => "priv_trigger_onstateleave",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -431,7 +425,6 @@ class TriggerOnObjectCreate extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjcreate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -465,7 +458,6 @@ class TriggerOnObjectDelete extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjdelete",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -500,7 +492,6 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -593,7 +584,6 @@ class lnkTriggerAction extends cmdbAbstractObject
 			"db_table" => "priv_link_action_trigger",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"is_link" => true,
 		);
 		MetaModel::Init_Params($aParams);
@@ -633,7 +623,6 @@ class TriggerOnThresholdReached extends TriggerOnObject
 			"db_table" => "priv_trigger_threshold",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

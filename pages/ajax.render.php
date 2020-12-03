@@ -17,14 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/webpage.class.inc.php');
 require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'application/pdfpage.class.inc.php');
 require_once(APPROOT.'application/wizardhelper.class.inc.php');
 require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
 require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
@@ -67,7 +69,7 @@ try
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 	$oPage->no_cache();
 
 
@@ -78,8 +80,7 @@ try
 
 	// N°2780 Fix ContextTag for console
 	// some operations are also used in the portal though
-	switch ($operation)
-	{
+	switch ($operation) {
 		case 'export_build_portal':
 		case 'export_download':
 			// do nothing : used in portal (export.js in portal-base)
@@ -89,25 +90,21 @@ try
 			ContextTag::AddContext(ContextTag::TAG_CONSOLE);
 	}
 
-	switch ($operation)
-	{
+	$oAjaxRenderController = new AjaxRenderController();
+
+	switch ($operation) {
 		case 'datatable':
 		case 'pagination':
 			$oPage->SetContentType('text/html');
 			$extraParams = utils::ReadParam('extra_param', '', false, 'raw_data');
 			$aExtraParams = array();
-			if (is_array($extraParams))
-			{
+			if (is_array($extraParams)) {
 				$aExtraParams = $extraParams;
-			}
-			else
-			{
+			} else {
 				$sExtraParams = stripslashes($extraParams);
-				if (!empty($sExtraParams))
-				{
+				if (!empty($sExtraParams)) {
 					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
-					if ($val !== null)
-					{
+					if ($val !== null) {
 						$aExtraParams = $val;
 					}
 				}
@@ -232,6 +229,199 @@ try
 				$sHtml = $oDataTable->GetAsHTMLTableRows($oPage, $iEnd - $iStart, $aColumns, $sSelectMode, $bDisplayKey, $aExtraParams);
 			}
 			$oPage->add($sHtml);
+			$oKPI->ComputeAndReport('Data fetch and format');
+			break;
+
+		case 'search_and_refresh':
+			$oPage->SetContentType('application/json');
+			$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+			$aExtraParams = array();
+			if (is_array($extraParams))
+			{
+				$aExtraParams = $extraParams;
+			}
+			else
+			{
+				$sExtraParams = stripslashes($extraParams);
+				if (!empty($sExtraParams))
+				{
+					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+					if ($val !== null)
+					{
+						$aExtraParams = $val;
+					}
+				}
+			}
+			$iLength = utils::ReadParam('end', 10);
+			$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+			$sSelectMode = utils::ReadParam('select_mode', '');
+			$aClassAliases = utils::ReadParam('class_aliases', array());
+			$aResult = DataTableFactory::GetOptionsForRendering( $aColumns,  $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
+			$oPage->add(json_encode($aResult));
+		break;
+
+		case 'search':
+			$oPage->SetContentType('application/json');
+			$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+			$aExtraParams = array();
+			if (is_array($extraParams))
+			{
+				$aExtraParams = $extraParams;
+			}
+			else
+			{
+				$sExtraParams = stripslashes($extraParams);
+				if (!empty($sExtraParams))
+				{
+					$val = json_decode(str_replace("'", '"', $sExtraParams), true /* associative array */);
+					if ($val !== null)
+					{
+						$aExtraParams = $val;
+					}
+				}
+			}
+			if ($sEncoding == 'oql')
+			{
+				$oFilter = DBSearch::FromOQL($sFilter);
+			}
+			else
+			{
+				$oFilter = DBSearch::unserialize($sFilter);
+			}
+			$iStart = utils::ReadParam('start', 0);
+			$iEnd = utils::ReadParam('end', 1);
+			$iDrawNumber= utils::ReadParam('draw', 1);
+
+			$aSort = utils::ReadParam('order', [], false, 'array');
+			if(count($aSort)>0){
+				$iSortCol = $aSort[0]["column"];
+				$sSortOrder = $aSort[0]["dir"];
+			}
+			else{
+				$iSortCol = 0;
+				$sSortOrder = "asc";
+			}
+			$sSelectMode = utils::ReadParam('select_mode', '');
+			if (!empty($sSelectMode) && ($sSelectMode != 'none'))
+			{
+				// The first column is used for the selection (radio / checkbox) and is not sortable
+				$iSortCol--;
+			}
+			$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
+			$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+			$aClassAliases = utils::ReadParam('class_aliases', array());
+			$iListId = utils::ReadParam('list_id', 0);
+
+			// Filter the list to removed linked set since we are not able to display them here
+			$sIdName ="";
+			$aOrderBy = array();
+			$iSortIndex = 0;
+
+			$aColumnsLoad = array();
+			foreach($aClassAliases as $sAlias => $sClassName)
+			{
+				$aColumnsLoad[$sAlias] = array();
+				if (!isset($aColumns[$sAlias])) {
+					continue;
+				}
+				foreach ($aColumns[$sAlias] as $sAttCode => $aData) {
+					if ($aData['checked'] == 'true') {
+						$aColumns[$sAlias][$sAttCode]['checked'] = true;
+						if ($sAttCode == '_key_') {
+							if ($sIdName == "") {
+								$sIdName = $sAlias."/_key_";
+							}
+							if ($iSortCol == $iSortIndex)
+							{
+								if (!MetaModel::HasChildrenClasses($oFilter->GetClass()))
+								{
+									$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+									if ($aNameSpec[0] == '%1$s')
+									{
+										// The name is made of a single column, let's sort according to the sort algorithm for this column
+										$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = ($sSortOrder == 'asc');
+									}
+									else
+									{
+										$aOrderBy[$sAlias.'.'.'friendlyname'] = ($sSortOrder == 'asc');
+									}
+								}
+								else
+								{
+									$aOrderBy[$sAlias.'.'.'friendlyname'] = ($sSortOrder == 'asc');
+								}
+							}
+						}
+						else
+						{
+							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+							if ($oAttDef instanceof AttributeLinkedSet)
+							{
+								// Removed from the display list
+								unset($aColumns[$sAlias][$sAttCode]);
+							}
+							else
+							{
+								$aColumnsLoad[$sAlias][] = $sAttCode;
+							}
+							if ($iSortCol == $iSortIndex)
+							{
+								if ($oAttDef->IsExternalKey())
+								{
+									$sSortCol = $sAttCode.'_friendlyname';
+								}
+								else
+								{
+									$sSortCol = $sAttCode;
+								}
+								$aOrderBy[$sAlias.'.'.$sSortCol] = ($sSortOrder == 'asc');
+							}
+						}
+						$iSortIndex++;
+					}
+					else
+					{
+						$aColumns[$sAlias][$sAttCode]['checked'] = false;
+					}
+				}
+			}
+			$aQueryParams = isset($aExtraParams['query_params']) ? $aExtraParams['query_params'] : [];
+
+			// Load only the requested columns
+			$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
+			$oSet->OptimizeColumnLoad($aColumnsLoad);
+
+			if (isset($aExtraParams['show_obsolete_data']))	{
+				$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
+			}
+			else {
+				$bShowObsoleteData = utils::ShowObsoleteData();
+			}
+			$oSet->SetShowObsoleteData($bShowObsoleteData);
+			$oKPI = new ExecutionKPI();
+			$aResult["draw"] = $iDrawNumber;
+			$aResult["recordsTotal"] = $oSet->Count() ;
+			$aResult["recordsFiltered"] = $oSet->Count() ;
+			$aResult["data"] = [];
+			while ($aObject = $oSet->FetchAssoc()) {
+				foreach($aClassAliases as $sAlias=>$sClass) {
+					if (isset($aColumns[$sAlias])) {
+						foreach ($aColumns[$sAlias] as $sAttCode => $oAttDef) {
+							if ($sAttCode == "_key_") {
+								$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetKey();
+							} else {
+								$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+							}
+						}
+					}
+				}
+				if($sIdName!="")
+				{
+					$aObj["id" ] = $aObj[$sIdName];
+				}
+				array_push($aResult["data"], $aObj);
+			}
+			$oPage->add(json_encode($aResult));
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
@@ -563,19 +753,17 @@ try
 		case 'objectSearchForm':
 			$oPage->SetContentType('text/html');
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
+			$sFilter = utils::ReadParam('sFilter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 			$sAttCode = utils::ReadParam('sAttCode', '');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
-			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
+			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode, $sFilter);
 			$sJson = utils::ReadParam('json', '', false, 'raw_data');
-			if (!empty($sJson))
-			{
+			if (!empty($sJson)) {
 				$oWizardHelper = WizardHelper::FromJSON($sJson);
 				$oObj = $oWizardHelper->GetTargetObject();
-			}
-			else
-			{
+			} else {
 				// Search form: no current object
 				$oObj = null;
 			}
@@ -641,9 +829,10 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$iObjectId = utils::ReadParam('iObjectId', '');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+			$sFormAttCode = utils::ReadParam('sFormAttCode', null);
 			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-			$sName = $oWidget->GetObjectName($iObjectId);
+			$sName = $oWidget->GetObjectName($iObjectId, $sFormAttCode);
 			echo json_encode(array('name' => $sName));
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
@@ -1116,7 +1305,7 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'reload_dashboard':
@@ -1135,7 +1324,7 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'save_dashboard':
@@ -1157,12 +1346,12 @@ try
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
-			$('.dashboard_contents#$sDivId').block();
+			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.dashboard_contents#$sDivId').html(data);
-				 $('.dashboard_contents#$sDivId').unblock();
+				 $('.ibo-dashboard#$sDivId').html(data);
+				 $('.ibo-dashboard#$sDivId').unblock();
 				}
 			 );
 EOF
@@ -1180,12 +1369,12 @@ EOF
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
-			$('.dashboard_contents#$sDivId').block();
+			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.dashboard_contents#$sDivId').html(data);
-				 $('.dashboard_contents#$sDivId').unblock();
+				 $('.ibo-dashboard#$sDivId').html(data);
+				 $('.ibo-dashboard#$sDivId').unblock();
 				}
 			 );
 EOF
@@ -1274,8 +1463,7 @@ EOF
 			$sDashletId = $aParams['attr_dashlet_id'];
 			$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
 			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
-			if (is_subclass_of($sDashletClass, 'Dashlet'))
-			{
+			if (is_subclass_of($sDashletClass, 'Dashlet')) {
 				/** @var \Dashlet $oDashlet */
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 				$oDashlet->SetDashletType($sDashletType);
@@ -1284,8 +1472,7 @@ EOF
 
 				$aCurrentValues = $aValues;
 				$aUpdatedDecoded = array();
-				foreach($aUpdatedProperties as $sProp)
-				{
+				foreach ($aUpdatedProperties as $sProp) {
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
 					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
 					$aUpdatedDecoded[] = $sDecodedProp;
@@ -1295,30 +1482,21 @@ EOF
 				$sPrevClass = get_class($oDashlet);
 				$oDashlet = $oDashlet->Update($aValues, $aUpdatedDecoded);
 				$sNewClass = get_class($oDashlet);
-				if ($sNewClass != $sPrevClass)
-				{
+				if ($sNewClass != $sPrevClass) {
 					$oPage->add_ready_script("$('#dashlet_$sDashletId').dashlet('option', {dashlet_class: '$sNewClass'});");
 				}
-				if ($oDashlet->IsRedrawNeeded())
-				{
-					$offset = $oPage->start_capture();
-					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */, $aExtraParams);
-					$sHtml = addslashes($oPage->end_capture($offset));
-					$sHtml = str_replace("\n", '', $sHtml);
-					$sHtml = str_replace("\r", '', $sHtml);
-
-					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');"); // in ajax web page add_script has the same effect as add_ready_script
-					// but is executed BEFORE all 'ready_scripts'
+				if ($oDashlet->IsRedrawNeeded()) {
+					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
+					$sHtml = BlockRenderer::RenderBlockTemplates($oBlock);
+					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
-				if ($oDashlet->IsFormRedrawNeeded())
-				{
+				if ($oDashlet->IsFormRedrawNeeded()) {
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
 					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
-					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
+					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true, '.itop-dashboard'));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
-					$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')"); // in ajax web page add_script has the same effect as add_ready_script																	   // but is executed BEFORE all 'ready_scripts'
-					// but is executed BEFORE all 'ready_scripts'
+					$oPage->add_script("$('#dashlet_properties_$sDashletId').html('$sHtml')");
 				}
 			}
 			break;
@@ -1644,6 +1822,7 @@ JS
 			$oPage->add("</div>");
 			break;
 
+		// TODO 3.0.0: Handle the history pagination
 		case 'history':
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
@@ -1656,6 +1835,7 @@ JS
 			$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
+			// TODO 3.0.0: What to do with this?
 		case 'history_from_filter':
 			$oPage->SetContentType('text/html');
 			$oHistoryFilter = DBSearch::unserialize($sFilter);
@@ -1672,12 +1852,11 @@ JS
 		case 'full_text_search':
 			$aFullTextNeedles = utils::ReadParam('needles', array(), false, 'raw_data');
 			$sFullText = trim(implode(' ', $aFullTextNeedles));
-			$sClassName = utils::ReadParam('class', '');
+			$sClassName = utils::ReadParam('classname', '');
 			$iCount = utils::ReadParam('count', 0);
 			$iCurrentPos = utils::ReadParam('position', 0);
 			$iTune = utils::ReadParam('tune', 0);
-			if (empty($sFullText))
-			{
+			if (empty($sFullText)) {
 				$oPage->p(Dict::S('UI:Search:NoSearch'));
 				break;
 			}
@@ -2448,11 +2627,11 @@ EOF
 			break;
 
 		case 'export_build':
-			AjaxRenderController::ExportBuild($oPage, false);
+			$oAjaxRenderController->ExportBuild($oPage, false);
 			break;
 
 		case 'export_build_portal':
-			AjaxRenderController::ExportBuild($oPage, true);
+			$oAjaxRenderController->ExportBuild($oPage, true);
 			break;
 
 		case 'export_download':
@@ -2782,6 +2961,32 @@ EOF
 				$aResult['error'] = $e->getMessage();
 			}
 			$oPage->add(json_encode($aResult));
+			break;
+		case 'add_caselog_entry':
+			// TODO 3.0.0: Handle errors & rights
+			$sClass = utils::ReadPostedParam('class', '', 'class');
+			$sClassLabel = MetaModel::GetName($sClass);
+			$id = utils::ReadPostedParam('id', '');
+			// TODO 3.0.0 Handle transactions token which is not passed yet
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+			$sCaseLogAttCode = utils::ReadPostedParam('caselog_attcode', '');
+			$sCaseLogNewEntry = utils::ReadPostedParam('caselog_new_entry', '', 'raw');
+			$iCaseLogRank = utils::ReadPostedParam('caselog_rank', 0, 'integer');
+			if($id !== 0 && MetaModel::IsValidClass($sClass))
+			{
+				$oObj = MetaModel::GetObject($sClass, $id);
+				$oObj->Set($sCaseLogAttCode, $sCaseLogNewEntry);
+				$oObj->DBWrite();
+			}
+			$oNewEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $oObj->Get($sCaseLogAttCode)->GetAsArray()[0]);
+			$oNewEntry->SetCaseLogRank($iCaseLogRank);
+			$oPage->AddUiBlock($oNewEntry);
+			break;
+		case 'new_entry_group':
+			break;
+
+		case 'get_menus_count':
+			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
 		default:

@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{# Dashboard Column #}
+{% apply spaceless %}
+    {% if oUIBlock.IsEditMode() %}
+        {% if oUIBlock.IsLastRow() %}
+            {% set sCellClass = "layout_cell edit_mode layout_extension" %}
+        {% else %}
+            {% set sCellClass = "layout_cell edit_mode" %}
+        {% endif %}
+    {% else %}
+        {% set sCellClass = "dashboard" %}
+    {% endif %}
+    <div class="ibo-dashboard--grid-column ibo-dashboard--grid-cell {{ sCellClass }}"
+         data-dashboard-grid-column-index="{{ oUIBlock.GetColumnIndex() }}"
+         data-dashboard-grid-cell-index="{{ oUIBlock.GetCellIndex() }}">
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </div>
+{% endapply %}

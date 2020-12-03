@@ -997,6 +997,7 @@ EOF
 			$aClassParams['is_link'] = 'true';
 		}
 
+		// Naming
 		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
@@ -1023,18 +1024,30 @@ EOF
 			$sNameAttCode = "''";
 		}
 		$aClassParams['name_attcode'] = $sNameAttCode;
-	
-		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
-		if ($oLifecycle)
-		{
-			$sStateAttCode = $oLifecycle->GetChildText('attribute');
+
+		// Semantic
+		// - Default attributes code
+		$sImageAttCode = "";
+		$sStateAttCode = "";
+		// - Parse optional fields semantic node
+		$oFieldsSemantic = $oProperties->GetOptionalElement('fields_semantic');
+		if ($oFieldsSemantic) {
+			// Image attribute
+			$oImageAttribute = $oFieldsSemantic->GetOptionalElement('image_attribute');
+			if ($oImageAttribute) {
+				$sImageAttCode = $oImageAttribute->GetText();
+			}
+
+			// State attribute (for XML v1.7- the lifecycle/attribute node should have been migrated in this one)
+			$oStateAttribute = $oFieldsSemantic->GetOptionalElement('state_attribute');
+			if($oStateAttribute) {
+				$sStateAttCode = $oStateAttribute->GetText();
+			}
 		}
-		else
-		{
-			$sStateAttCode = "";
-		}
+		$aClassParams['image_attcode'] = "'$sImageAttCode'";
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
-	
+
+		// Reconcialiation
 		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation'))
 		{
 			$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
@@ -1070,12 +1083,6 @@ EOF
 			$sDefaultFinalClass = '';
 		}
 		$aClassParams['db_finalclass_field'] = $this->GetPropString($oProperties, 'db_final_class_field', $sDefaultFinalClass);
-	
-		if (($sDisplayTemplate = $oProperties->GetChildText('display_template')) && (strlen($sDisplayTemplate) > 0))
-		{
-			$sDisplayTemplate = $sModuleRelativeDir.'/'.$sDisplayTemplate;
-			$aClassParams['display_template'] = "utils::GetAbsoluteUrlModulesRoot().'$sDisplayTemplate'";
-		}
 	
 		$this->CompileFiles($oProperties, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
@@ -1571,7 +1578,7 @@ EOF
 						$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
 						$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 						$oXMLDoc->appendChild($oRootNode);
-						foreach($oDashboardDefinition->childNodes as $oNode)
+						foreach ($oDashboardDefinition->childNodes as $oNode)
 						{
 							$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
 							$oRootNode->appendChild($oDefNode);
@@ -1627,8 +1634,8 @@ EOF
 		//
 		$sLifecycle = '';
 		$sHighlightScale = '';
-		if ($oLifecycle)
-		{
+		$oLifecycle = $oClass->GetOptionalElement('lifecycle');
+		if ($oLifecycle) {
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
 			$sLifecycle .= "\t\t//\n";
 	
@@ -1853,6 +1860,26 @@ EOF
                     $sLifecycle .= "            )\n";
                     $sLifecycle .= "        ));\n";
 				}
+			}
+		}
+		// No "real" lifecycle with stimuli and such but still a state attribute, we need to define states from the enum. values
+		elseif ($oFieldsSemantic && $oStateAttribute) {
+			$sLifecycle .= "\t\t// States but no lifecycle declared in XML (status attribute: $sStateAttCode)\n";
+			$sLifecycle .= "\t\t//\n";
+
+			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
+			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
+			$oValues = $oField->GetUniqueElement('values');
+			$oValueNodes = $oValues->getElementsByTagName('value');
+			foreach($oValueNodes as $oValue)
+			{
+				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
+				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
+				$sLifecycle .= "			array(\n";
+				$sLifecycle .= "				\"attribute_inherit\" => '',\n";
+				$sLifecycle .= "				\"attribute_list\" => array()\n";
+				$sLifecycle .= "			)\n";
+				$sLifecycle .= "		);\n";
 			}
 		}
 		
@@ -2145,7 +2172,7 @@ EOF
 				$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
 				$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 				$oXMLDoc->appendChild($oRootNode);
-				foreach($oDashboardDefinition->childNodes as $oNode)
+				foreach ($oDashboardDefinition->childNodes as $oNode)
 				{
 					$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
 					$oRootNode->appendChild($oDefNode);
@@ -2196,6 +2223,13 @@ EOF
 			break;
 
 		case 'MenuGroup':
+			$oStyleNode = $oMenu->GetOptionalElement('style');
+			// Note: We use '' as the default value to ease the MenuGroup::__construct() call as we would have to make a different processing to not put the quotes around the parameter in case of null.
+			$sDecorationClasses = ($oStyleNode === null) ? '' : $oStyleNode->GetChildText('decoration_classes', '');
+
+			$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sDecorationClasses' {$sOptionalEnableParams});";
+			break;
+
 		default:
 			$sNewMenu = "new $sMenuClass('$sMenuId', $fRank {$sOptionalEnableParams});";
 		}
@@ -2736,7 +2770,7 @@ EOF;
 			}
 			// Check if a precompiled version of the theme is supplied
 			$sPrecompiledFile = $sTempTargetDir.$aThemeParameters['precompiled_stylesheet'];
-			if (file_exists($sPrecompiledFile))
+			if (file_exists($sPrecompiledFile) && !is_dir($sPrecompiledFile))
 			{
 				copy($sPrecompiledFile, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
@@ -2776,8 +2810,9 @@ EOF;
 			// Transform file refs into files in the images folder
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo-full');
+			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo_compact', 'main-logo-compact');
 			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
 
 			// Cleanup the images directory (eventually made by CompileFiles)

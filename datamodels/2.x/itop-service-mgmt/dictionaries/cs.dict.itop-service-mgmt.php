@@ -40,7 +40,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Smlouvy podle úrovně služeb',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Smlouvy podle stavu',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Smlouvy končící během 30 dní',
-
 	'Menu:ProviderContract' => 'Smlouvy s poskytovateli',
 	'Menu:ProviderContract+' => 'Smlouvy s poskytovateli',
 	'Menu:CustomerContract' => 'Smlouvy se zákazníky',
@@ -199,23 +198,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Spojení (Funkční konfigurační položka / Smlouva s poskytovatelem)',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Smlouva s poskytovatelem',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Název smlouvy s poskytovatelem',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'Konfigurační položka',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Název konfigurační položky',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -467,23 +449,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Název smlouvy s poskytovatelem',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:lnkFunctionalCIToService' => 'Spojení (Funkční konfigurační položka / Služba)',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Služba',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Název služby',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'Konfigurační položka',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Název konfigurační položky',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
 //

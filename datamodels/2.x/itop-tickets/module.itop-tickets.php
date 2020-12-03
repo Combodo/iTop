@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.8.0',
+	'itop-tickets/3.0.0',
 	array(
 		// Identification
 		//
@@ -13,10 +13,10 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.4.0',
+			'itop-structure/2.7.1',
 		),
-		'mandatory' => true,
-		'visible' => false,
+		'mandatory' => false,
+		'visible' => true,
 		'installer' => 'TicketsInstaller',
 
 		// Components
@@ -55,9 +55,16 @@ class TicketsInstaller extends ModuleInstallerAPI
 		$oSet = new DBObjectSet($oSearch);
 		while($oTrigger = $oSet->Fetch())
 		{
-			if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+			try
 			{
-				$oTrigger->DBDelete();
+				if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+				{
+					$oTrigger->DBDelete();
+				}
+			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
 	}

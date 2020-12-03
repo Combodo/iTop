@@ -29,9 +29,6 @@ if (!defined('__DIR__'))
 }
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
-require_once APPROOT.'/application/webpage.class.inc.php';
-require_once APPROOT.'/application/csvpage.class.inc.php';
-require_once APPROOT.'/application/clipage.class.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
 
 class ExchangeException extends Exception
@@ -229,14 +226,6 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 	return false;
 }
 
-
-class CLILikeWebPage extends WebPage
-{
-	public function add_comment($sText)
-	{
-		$this->add('#'.$sText."<br/>\n");
-	}
-}
 
 /////////////////////////////////
 // Main program
@@ -502,7 +491,7 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit($iLoopTimeLimit);
+		set_time_limit(intval($iLoopTimeLimit));
 		foreach ($aData as $iRow => $aRow)
 		{
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
@@ -644,7 +633,7 @@ try
 			}
 		}
 		$oMutex->Unlock();
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		if (($sOutput === 'summary') || ($sOutput === 'details'))
 		{

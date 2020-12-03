@@ -71,6 +71,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query/Attribute:name+' => 'Identification de la requête',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Description complète (finalité, utilisations, public)',
+	'Class:Query/Attribute:is_template' => 'Base pour champ OQL',
+	'Class:Query/Attribute:is_template+' => 'Utilisable comme base pour les destinataires des Notifications',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Oui',
+	'Class:Query/Attribute:is_template/Value:no' => 'Non',
 	'Class:QueryOQL/Attribute:fields' => 'Champs',
 	'Class:QueryOQL/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
 	'Class:QueryOQL' => 'Requête OQL',
@@ -339,7 +343,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
 <ul>il contient:
-<li>Une base de gestion des configuration (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
+<li>Une base de gestion des configurations (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
 <li>Un module de gestion des incidents pour suivre les incidents d\'exploitation et gérer la communication à propos de ces incidents.</li>
 <li>Un module de gestion des changements pour planifier et suivre les modifications de votre SI.</li>
 <li>Une base des erreurs connues, pour accélérer la résolution des incidents.</li>
@@ -355,7 +359,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Améliorer la satisfaction client et fournir aux responsables des vues sur la performance interne du SI.</li>
 </ul>
 </p>
-<p>iTop est complètement ouvert pour s\'intéger avec votre environnement informatique.</p>
+<p>iTop est complètement ouvert pour s\'intégrer avec votre environnement informatique.</p>
 <p>
 <ul>Grâce à ce portail opérationnel de nouvelle génération:
 <li>Gérez un environnement informatique de plus en plus complexe.</li>
@@ -550,7 +554,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
-	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:AccessAdmin' => 'Accès restreint aux utilisateurs possédant le profil Administrateur.',
 	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
 	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
@@ -755,6 +759,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Attribute/Filter' => 'Filtre',
 	'UI:Schema:DefaultNullValue' => 'Valeur null par défaut : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
+	'UI:Edit:SearchQuery' => 'Sélectionner une requête prédéfinie',
 	'UI:Edit:TestQuery' => 'Tester la requête',
 	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
@@ -1153,7 +1158,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
 	'UI:UseDefaultSettings' => 'Utiliser les réglages par défaut',
 	'UI:UseSpecificSettings' => 'Utiliser les réglages suivants:',
-	'UI:Display_X_ItemsPerPage' => 'Afficher %1$s éléments par page',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Afficher',
+	'UI:Display_X_ItemsPerPage_suffix' => 'éléments par page',
 	'UI:UseSavetheSettings' => 'Enregistrer ces réglages',
 	'UI:OnlyForThisList' => 'Seulement pour cette liste',
 	'UI:ForAllLists' => 'Défaut pour toutes les listes',
