@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Layout\PageContent\PageContentFactory;
+
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
