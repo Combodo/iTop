@@ -834,7 +834,7 @@ class utils
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = self::IsConnectionSecure() ? 'https' : 'http';
+		$sProtocol = self::IsConnectionSecure(true) ? 'https' : 'http';
 		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
 		if ($sProtocol == 'http')
 		{
@@ -920,16 +920,20 @@ class utils
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
 	 * Others might leave it unset (no array entry)	 
+	 *
+	 * @param bool $bTrustProxy
+	 *
+	 * @return bool
 	 */	 	
-	public static function IsConnectionSecure()
+	public static function IsConnectionSecure($bTrustProxy=false)
 	{
 		$bSecured = false;
 
-		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $bTrustProxy)
 		{
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 		}
-		elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']))
+		elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && $bTrustProxy)
 		{
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
 		}
