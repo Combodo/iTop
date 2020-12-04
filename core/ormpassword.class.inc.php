@@ -51,7 +51,8 @@ class ormPassword
 	 */
 	public function SetPassword($sClearTextPassword)
 	{
-		$this->m_sHashed = password_hash($sClearTextPassword, PASSWORD_DEFAULT);
+		$iHashAlgo = MetaModel::GetConfig()->GetPasswordHashAlgo();
+		$this->m_sHashed = password_hash($sClearTextPassword, $iHashAlgo);
 	}
 
 	/**
@@ -96,18 +97,18 @@ class ormPassword
 	{
 		$bResult = false;
 		$aInfo = password_get_info($this->m_sHashed);
-		switch ($aInfo["algo"])
+		if (is_null($aInfo["algo"]) || $aInfo["algo"] === 0)
 		{
-			case 0:
-				//unknown, assume it's a legacy password
-				$sHashedPwd = $this->ComputeHash($sClearTextPassword);
-				if ($this->m_sHashed == $sHashedPwd)
-				{
-					$bResult = true;
-				}
-				break;
-			default:
-				$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
+			//unknown, assume it's a legacy password
+			$sHashedPwd = $this->ComputeHash($sClearTextPassword);
+			if ($this->m_sHashed == $sHashedPwd)
+			{
+				$bResult = true;
+			}
+		}
+		else
+		{
+			$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
 		return $bResult;
 	}

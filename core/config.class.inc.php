@@ -1496,6 +1496,11 @@ class Config
 	protected $m_aCharsets;
 
 	/**
+	 * @var array Password hash algorithm to use.
+	 */
+	protected $m_iPasswordHashAlgo;
+
+	/**
 	 * Config constructor.
 	 *
 	 * @param string|null $sConfigFile
@@ -1538,6 +1543,7 @@ class Config
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
+		$this->m_iPasswordHashAlgo = PASSWORD_DEFAULT;
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -1697,6 +1703,7 @@ class Config
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
+		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
 	}
 
 	protected function Verify()
@@ -1852,6 +1859,11 @@ class Config
 		return $this->m_aCharsets;
 	}
 
+	public function GetPasswordHashAlgo()
+	{
+		return $this->m_iPasswordHashAlgo;
+	}
+
 	public function SetLogGlobal($iLogGlobal)
 	{
 		$this->m_iLogGlobal = $iLogGlobal;
@@ -1967,6 +1979,7 @@ class Config
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
+		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
