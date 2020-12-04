@@ -5,6 +5,7 @@
  */
 namespace Combodo\iTop\Application\UI\Base\Component\Input\RichText;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class RichText
@@ -17,4 +18,26 @@ class RichText extends UIBlock
 	public const BLOCK_CODE = 'ibo-richtext';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
+	/** @var string */
+	protected $aConfig;
+
+	/**
+	 * RichText constructor.
+	 *
+	 * @param string|null $sId
+	 */
+	public function __construct(?string $sId = null)
+	{
+		parent::__construct($sId);
+		$this->aConfig = json_encode(utils::GetCkeditorPref());
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function GetConfig()
+	{
+		return $this->aConfig;
+	}
 }

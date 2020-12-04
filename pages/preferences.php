@@ -381,6 +381,32 @@ EOF
 		$oNewsroomBlock->AddSubBlock($oNewsroomEndHtmlBlock);
 		$oContentLayout->AddMainBlock($oNewsroomBlock);
 	}
+	//////////////////////////////////////////////////////////////////////////
+	//
+	// Rich text editor preferences
+	//
+	//////////////////////////////////////////////////////////////////////////
+	$oRichTextBlock = new Panel(Dict::S('UI:RichText:Preferences'), array(), 'grey', 'ibo-richtext');
+
+	$oRichTextForm = new Form();
+	$oRichTextForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_richtext_config'));
+	
+	$sRichTextToolbarDefaultState = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
+	$oRichTextToolbarDefaultStateInput = InputFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:RichText:ToolbarState'));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputFactory::MakeForSelectOption('true', Dict::S('UI:RichText:ToolbarState:Expanded'), $sRichTextToolbarDefaultState));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
+	$oRichTextForm->AddSubBlock($oRichTextToolbarDefaultStateInput);
+	
+	// - Cancel button
+	$oRichTextCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oRichTextCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	$oRichTextForm->AddSubBlock($oRichTextCancelButton);
+	// - Submit button
+	$oRichTextSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oRichTextForm->AddSubBlock($oRichTextSubmitButton);
+
+	$oRichTextBlock->AddSubBlock($oRichTextForm);
+	$oContentLayout->AddMainBlock($oRichTextBlock);
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -532,7 +558,15 @@ try
 				}
 				DisplayPreferences($oPage);
 				break;
-
+			case 'apply_richtext_config':
+				$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
+				
+				$bToolbarExpanded = utils::ReadParam('toolbarexpanded', 'false') === 'true';
+				$aRichTextConfig['toolbarStartupExpanded'] = $bToolbarExpanded;
+				
+				appUserPreferences::SetPref('richtext_config', json_encode($aRichTextConfig));
+				DisplayPreferences($oPage);
+				break;
 			case 'apply_language':
 				$sLangCode = utils::ReadParam('language', 'EN US');
 				$oUser = UserRights::GetUserObject();

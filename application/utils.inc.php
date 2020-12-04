@@ -2471,4 +2471,19 @@ class utils
 	{
 		return static::$iNextId++;
 	}
+
+	public static function GetCkeditorPref()
+	{
+		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+		
+		$aDefaultConf = array('language'=> $sLanguage, 
+			'contentsLanguage' => $sLanguage, 
+			'extraPlugins' => 'disabler,codesnippet',
+		);
+		
+		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
+
+		
+		return array_merge($aDefaultConf, $aRichTextConfig);
+	}
 }

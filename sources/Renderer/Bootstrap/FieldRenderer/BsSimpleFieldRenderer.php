@@ -153,11 +153,14 @@ EOF
 
 					// Some additional stuff if we are displaying it with a rich editor
 					if ($bRichEditor) {
-						$sEditorLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+						$aConfig = utils::GetCkeditorPref();
+						$aConfig['extraPlugins'] = 'codesnippet';
+						$sJsConfig = json_encode($aConfig);
+						
 						$oOutput->AddJs(
 <<<EOF
 							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'}).editor.on("change", function(){
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig).editor.on("change", function(){
                                 	$('#{$this->oField->GetGlobalId()}').trigger("change");
                               });
 EOF

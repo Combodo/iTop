@@ -22,4 +22,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:Title' => 'Preferences',
 	'UI:Preferences:ChooseAPlaceholder' => 'User placeholder image',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one',
+	'UI:RichText:Preferences' => 'Rich text editor',
+	'UI:RichText:ToolbarState' => 'Toolbar default state',
+	'UI:RichText:ToolbarState:Expanded' => 'Expanded',
+	'UI:RichText:ToolbarState:Collapsed' => 'Collapsed',
 ));

@@ -103,11 +103,14 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
-							$sEditorLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+							$aConfig = utils::GetCkeditorPref();
+							$aConfig['extraPlugins'] = 'codesnippet';
+							$sJsConfig = json_encode($aConfig);
+							
 							$oOutput->AddJs(
 <<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'});
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
 EOF
 							);
 							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))

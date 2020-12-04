@@ -2012,11 +2012,7 @@ EOF
 					// To change the default settings of the editor,
 					// a) edit the file /js/ckeditor/config.js
 					// b) or override some of the configuration settings, using the second parameter of ckeditor()
-					$aConfig = array();
-					$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-					$aConfig['language'] = $sLanguage;
-					$aConfig['contentsLanguage'] = $sLanguage;
-					$aConfig['extraPlugins'] = 'disabler,codesnippet';
+					$aConfig = utils::GetCkeditorPref();
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 					$sConfigJS = json_encode($aConfig);
 
