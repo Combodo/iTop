@@ -69,12 +69,12 @@ ob_start();
 require_once("wizard.php");
 ob_end_clean();
 
-//echo <<<HTML
-//<script>
-//bSkipErrorDisplay = true;
-//document.location = "wizard.php";
-//</script>
-//HTML;
+echo <<<HTML
+<script>
+bSkipErrorDisplay = true;
+document.location = "wizard.php";
+</script>
+HTML;
 ?>
 </body>
 </html>
