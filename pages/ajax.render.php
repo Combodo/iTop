@@ -958,7 +958,11 @@ try
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
 				$oKPI = new ExecutionKPI();
-				$oPage->add_xframe_options(''); // the header is set in page constructor, we reset its value ! See N°3416
+
+				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
+				// so we're resetting its value ! (see N°3416)
+				$oPage->add_xframe_options('');
+
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}
