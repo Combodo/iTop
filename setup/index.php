@@ -44,8 +44,8 @@ $(document).ready(function () {
 		// $pageBody.addClass("error-container");
 		$pageBody.append("<div id='ibo-page-container'>" +
 		  "<h1>😭 iTop cannot install</h1>" +
-		  "<p class=\"message message-error\">💣 PHP error occurred</p>" +
-		  "<p>Your system doesn't meet iTop requirements !</p>" +
+		  "<p class=\"message message-error\">💣 PHP version isn't compatible</p>" +
+		  "<p>Please check <a href=\"https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstalling_itop#software_requirements\" target=\"_blank\">iTop requirements</a></p>" +
 		   "</div>")
 	}
 });
@@ -69,12 +69,12 @@ ob_start();
 require_once("wizard.php");
 ob_end_clean();
 
-echo <<<HTML
-<script>
-bSkipErrorDisplay = true;
-document.location = "wizard.php";
-</script>
-HTML;
+//echo <<<HTML
+//<script>
+//bSkipErrorDisplay = true;
+//document.location = "wizard.php";
+//</script>
+//HTML;
 ?>
 </body>
 </html>
