@@ -1450,7 +1450,7 @@ class Config
 	protected $m_aCharsets;
 
 	/**
-	 * @var array Password hash algorithm to use.
+	 * @var integer Password hash algorithm to use.
 	 */
 	protected $m_iPasswordHashAlgo;
 
