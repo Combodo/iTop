@@ -13,8 +13,12 @@ use Exception;
  */
 class RestTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
 	private $sTmpFile = "";
 	private $bPassJsonDataAsFile = false;
+	private $sLogin;
+	private $sPassword = "Iuytrez9876543ç_è-(";
 
 	/**
      * @throws Exception
@@ -22,9 +26,21 @@ class RestTest extends ItopDataTestCase
     protected function setUp()
 	{
 		parent::setUp();
+		require_once(APPROOT.'application/startup.inc.php');
+		$this->sLogin = "rest-user-" . date('dmYHis');
+		$this->CreateTestOrganization();
 
 		if (!empty($this->sTmpFile)){
 			unlink($this->sTmpFile);
+		}
+
+		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
+		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+
+		if (is_object($oRestProfile) && is_object($oAdminProfile))
+		{
+			$oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
+			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 		}
 	}
 
@@ -40,8 +56,8 @@ class RestTest extends ItopDataTestCase
 		$description = date('dmY H:i:s');
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
-		$this->assertContains("0", "".$aJson['code']);
-		$sUserRequestKey = array_key_first($aJson['objects']);
+		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 		$sExpectedJsonOuput=<<<JSON
@@ -62,6 +78,20 @@ JSON;
 	}
 
 	/**
+	 * array_key_first comes with PHP7.3
+	 * itop should also work with previous PHP versions
+	 */
+	private function array_key_first($aTab){
+		if (!is_array($aTab) || empty($aTab)){
+			return false;
+		}
+
+		foreach ($aTab as $sKey => $sVal){
+			return $sKey;
+		}
+	}
+
+	/**
 	 * @dataProvider BasicProvider
 	 * @param bool $bPassJsonDataAsFile
 	 */
@@ -73,8 +103,8 @@ JSON;
 		$description = date('dmY H:i:s');
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
-		$this->assertContains("0", "".$aJson['code']);
-		$sUserRequestKey = array_key_first($aJson['objects']);
+		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
@@ -105,8 +135,8 @@ JSON;
 
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
-		$this->assertContains("0", "".$aJson['code']);
-		$sUserRequestKey = array_key_first($aJson['objects']);
+		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
+		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
 		$iId = $aJson['objects'][$sUserRequestKey]['key'];
 
@@ -188,8 +218,8 @@ JSON;
 		$ch = curl_init();
 		$aPostFields = [
 			'version' => '1.3',
-			'auth_user' => 'admin',
-			'auth_pwd' => 'admin',
+			'auth_user' => $this->sLogin,
+			'auth_pwd' => $this->sPassword,
 		];
 
 		if ($this->bPassJsonDataAsFile){
@@ -202,14 +232,14 @@ JSON;
 			$aPostFields['json_data'] = $sJsonDataContent;
 		}
 
-		curl_setopt($ch, CURLOPT_URL, "http://webserver/iTop/webservices/rest.php");
+		$sUrl = \MetaModel::GetConfig()->Get('app_root_url');
+		curl_setopt($ch, CURLOPT_URL, "$sUrl/webservices/rest.php");
 		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$sJson = curl_exec($ch);
 		curl_close ($ch);
 
-		var_dump($sJson);
 		return $sJson;
 	}
 

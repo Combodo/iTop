@@ -73,7 +73,7 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		//require_once(APPROOT.'/application/startup.inc.php');
+		require_once(APPROOT.'/application/startup.inc.php');
 
 		require_once(APPROOT.'application/utils.inc.php');
 
@@ -408,8 +408,12 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
 	{
+		if (empty($sPassword)){
+			$sPassword = $sLogin;
+		}
+
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
@@ -417,11 +421,34 @@ class ItopDataTestCase extends ItopTestCase
 		$oUser = $this->createObject('UserLocal', array(
 			'contactid' => 2,
 			'login' => $sLogin,
-			'password' => $sLogin,
+			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => $oSet,
 		));
 		$this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
+
+		return $oUser;
+	}
+
+	/**
+	 * @param \DBObject $oUser
+	 * @param int $iProfileId
+	 *
+	 * @return \DBObject
+	 * @throws Exception
+	 */
+	protected function AddProfileToUser($oUser, $iProfileId)
+	{
+		$oUserProfile = new URP_UserProfile();
+		$oUserProfile->Set('profileid', $iProfileId);
+		$oUserProfile->Set('reason', 'UNIT Tests');
+		/** @var DBObjectSet $oSet */
+		$oSet = $oUser->Get('profile_list');
+		$oSet->AddObject($oUserProfile);
+		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+			'profile_list' => $oSet,
+		));
+		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
 
 		return $oUser;
 	}
