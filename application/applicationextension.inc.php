@@ -1345,6 +1345,11 @@ class RestUtils
 	{
 		$sComment = self::GetMandatoryParam($oData, 'comment');
 		CMDBObject::SetTrackInfo($sComment);
+
+		/** @var \CMDBChange $oChange */
+		$oChange = CMDBObject::GetCurrentChange();
+		$oChange->Set("userinfo", $sComment);
+		$oChange->DBUpdate();
 	}
 
 	/**
