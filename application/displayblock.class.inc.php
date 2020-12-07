@@ -1502,6 +1502,7 @@ class MenuBlock extends DisplayBlock
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sRefreshAction = '';
+		$aActions = [];
 		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
@@ -1510,7 +1511,6 @@ class MenuBlock extends DisplayBlock
 			}
 			$oReflectionClass = new ReflectionClass($sClass);
 			$sFilter = $this->m_oFilter->serialize();
-			$aActions = [];
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 			$sRootUrl = utils::GetAbsoluteUrlAppRoot();
 			// Common params that will be applied to actions
@@ -1852,17 +1852,18 @@ class MenuBlock extends DisplayBlock
 		$sPopoverMenuId = "ibo-other-action-popover-{$sId}";
 
 		if (!$oPage->IsPrintableVersion()) {
-			if (count($aFavoriteActions) > 0) {
-				$sName = 'UI:Menu:OtherActions';
-			} else {
-				$sName = 'UI:Menu:Actions';
-			}
-			$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
-			// TODO Add Js
-			$oActionsBlock->AddSubBlock($oActionButton)
-				->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-			$oActionButton->AddCSSClasses('ibo-action-button')
-				->SetJsCode(<<<JS
+			if (!empty($aActions)) {
+				if (count($aFavoriteActions) > 0) {
+					$sName = 'UI:Menu:OtherActions';
+				} else {
+					$sName = 'UI:Menu:Actions';
+				}
+				$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+				// TODO Add Js
+				$oActionsBlock->AddSubBlock($oActionButton)
+					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
+				$oActionButton->AddCSSClasses('ibo-action-button')
+					->SetJsCode(<<<JS
 $("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
 $('#{$sMenuTogglerId}').on('click', function(oEvent) {
 	var oEventTarget = $('#{$sMenuTogglerId}');
@@ -1877,7 +1878,8 @@ $('#{$sMenuTogglerId}').on('click', function(oEvent) {
 	popover.popover_menu("togglePopup");
 });
 JS
-				);
+					);
+			}
 
 			if ($this->m_sStyle == 'details') {
 				$oActionButton = ButtonFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
