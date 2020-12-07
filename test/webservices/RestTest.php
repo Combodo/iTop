@@ -17,6 +17,7 @@ class RestTest extends ItopDataTestCase
 
 	private $sTmpFile = "";
 	private $bPassJsonDataAsFile = false;
+	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
 
@@ -33,6 +34,11 @@ class RestTest extends ItopDataTestCase
 		if (!empty($this->sTmpFile)){
 			unlink($this->sTmpFile);
 		}
+
+		$sConfigFile = \utils::GetConfig()->GetLoadedFile();
+		@chmod($sConfigFile, 0770);
+		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
+		@chmod($sConfigFile, 0444); // Read-only
 
 		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
 		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
@@ -232,8 +238,7 @@ JSON;
 			$aPostFields['json_data'] = $sJsonDataContent;
 		}
 
-		$sUrl = \MetaModel::GetConfig()->Get('app_root_url');
-		curl_setopt($ch, CURLOPT_URL, "$sUrl/webservices/rest.php");
+		curl_setopt($ch, CURLOPT_URL, "$this->sUrl/webservices/rest.php");
 		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
