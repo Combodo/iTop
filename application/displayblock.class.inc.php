@@ -981,9 +981,9 @@ JS
 	 */
 	protected function RenderList(array $aExtraParams, WebPage $oPage)
 	{
+		$oBlock = new BlockList();
 		$aClasses = $this->m_oSet->GetSelectedClasses();
 		$aAuthorizedClasses = [];
-		$oBlock = new BlockList();
 		$oBlock->bEmptySet = false;
 		$oBlock->bNotAuthorized = false;
 		$oBlock->bCreateNew = false;
@@ -992,6 +992,7 @@ JS
 		$oBlock->sParams = '';
 		$oBlock->sDefault = '';
 		$oBlock->sEventAttachedData = '';
+		$oBlock->sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
 
 		if (count($aClasses) > 1) {
 			// Check the classes that can be read (i.e authorized) by this user...
