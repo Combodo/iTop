@@ -151,6 +151,15 @@ class AjaxPage extends WebPage implements iTabbedPage
 			header($s_header);
 		}
 
+		// CSS files
+		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$this->add_linked_stylesheet($sFileAbsUrl);
+		}
+		// JS files
+		foreach ($this->oContentLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$this->add_linked_script($sFileAbsUrl);
+		}
+
 		// Render the blocks
 		// Additional UI widgets to be activated inside the ajax fragment
 		// Important: Testing the content type is not enough because some ajax handlers have not correctly positionned the flag (e.g json response corrupted by the script)
@@ -350,6 +359,26 @@ EOF
 		$this->s_deferred_content .= $s_html;
 	}
 
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
+	{
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
+		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
+		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
+		$this->add_style($oBlockRenderer->RenderCssInline());
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
+		}
+	}
 	/**
 	 * @inheritDoc
 	 */

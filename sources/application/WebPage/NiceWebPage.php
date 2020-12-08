@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
@@ -50,21 +53,6 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
 	    //TODO end deprecated in 3.0.0
-	    // Datatables added in 3.0.0
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/jquery.dataTables.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.bootstrap.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.fixedHeader.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.responsive.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.scroller.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'lib/datatables/js/dataTables.select.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/dataTables.settings.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/dataTables.pipeline.js');
-		/*$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/dataTables.bootstrap.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/fixedHeader.bootstrap.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/responsive.bootstrap.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/scroller.bootstrap.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/select.bootstrap.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'lib/datatables/css/select.dataTables.min.css');*/
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
@@ -210,7 +198,31 @@ EOF
 			$this->m_aReadyScripts[] = $sScript;
 		}
 	}
-	
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
+	{
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
+		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
+		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
+
+		$this->add_style($oBlockRenderer->RenderCssInline());
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
+		}
+
+		foreach ($oBlock->GetDeferredBlocks() as $oSubBlock) {
+			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
+		}
+	}
 		/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
 	 */

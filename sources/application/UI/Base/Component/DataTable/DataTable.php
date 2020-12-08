@@ -22,6 +22,16 @@ class DataTableBlock extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-datatable';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'lib/datatables/js/jquery.dataTables.min.js',
+		'lib/datatables/js/dataTables.bootstrap.min.js',
+		'lib/datatables/js/dataTables.fixedHeader.min.js',
+		'lib/datatables/js/dataTables.responsive.min.js',
+		'lib/datatables/js/dataTables.scroller.min.js',
+		'lib/datatables/js/dataTables.select.min.js',
+		'js/dataTables.settings.js',
+		'js/dataTables.pipeline.js',
+	];
 
 	protected $aOptions;//list of specific options for display datatable
 	protected $sAjaxUrl;

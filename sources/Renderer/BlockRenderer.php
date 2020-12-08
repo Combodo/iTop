@@ -127,26 +127,27 @@ class BlockRenderer
 	/**
 	 * Return the raw output of the JS template
 	 *
+	 * @param string $sType javascript type only JS_TYPE_ON_INIT / JS_TYPE_ON_READY / JS_TYPE_LIVE
+	 *
 	 * @return string
-	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function RenderJsInline()
+	public function RenderJsInline(string $sType)
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock->GetJsTemplateRelPath()))
+		if(!empty($this->oBlock->GetJsTemplateRelPath($sType)))
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
-				$this->oBlock->GetJsTemplateRelPath(),
-				TwigHelper::ENUM_FILE_TYPE_JS
+				$this->oBlock->GetJsTemplateRelPath($sType),
+				$sType
 			);
 		}
 
-		return $sOutput;
+		return trim($sOutput);
 	}
 
 	/**
@@ -171,7 +172,7 @@ class BlockRenderer
 			);
 		}
 
-		return $sOutput;
+		return trim($sOutput);
 	}
 
 	/**

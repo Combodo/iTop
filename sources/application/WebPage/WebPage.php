@@ -716,15 +716,10 @@ class WebPage implements Page
 	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
-		$sInlineScript = trim($oBlockRenderer->RenderJsInline());
-		if (!empty($sInlineScript)) {
-			$this->add_script($sInlineScript);
-		}
+		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
+		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
 
-		$sInlineStyle = trim($oBlockRenderer->RenderCssInline());
-		if (!empty($sInlineStyle)) {
-			$this->add_style($sInlineStyle);
-		}
+		$this->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
 			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);

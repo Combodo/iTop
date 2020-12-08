@@ -86,6 +86,12 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
 	/**
+	 * @var string For variables names
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
+
+	/**
 	 * @var string
 	 * @since 3.0.0
 	 */
@@ -409,6 +415,10 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
 				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			default:

@@ -832,7 +832,9 @@ EOF;
 	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
 	{
 		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_init_script($oBlockRenderer->RenderJsInline());
+		$this->add_init_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
+		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
+		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
 		$this->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {

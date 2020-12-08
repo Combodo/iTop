@@ -93,6 +93,12 @@ class Extension
 			})
 		);
 
+		// Filter to sanitize a variable name
+		// Usage in twig: {{ 'variable_name:to-sanitize'|variable_name }}
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('variable_name', function ($sString) {
+				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
+			})
+		);
 		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
 		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
 		//

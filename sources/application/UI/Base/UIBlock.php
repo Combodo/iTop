@@ -45,8 +45,12 @@ abstract class UIBlock implements iUIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = null;
 	/** @var array JS_FILES_REL_PATH Relative paths (from <ITOP>/) to the JS files */
 	public const DEFAULT_JS_FILES_REL_PATH = [];
-	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template */
+	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template on dom ready*/
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
+	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template not deferred */
+	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = null;
+	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template after DEFAULT_JS_TEMPLATE_REL_PATH */
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = null;
 	/** @var array CSS_FILES_REL_PATH Relative paths (from <ITOP>/) to the CSS files */
 	public const DEFAULT_CSS_FILES_REL_PATH = [];
 	/** @var string|null CSS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the CSS template */
@@ -68,8 +72,8 @@ abstract class UIBlock implements iUIBlock
 	protected $sGlobalTemplateRelPath;
 	/** @var string */
 	protected $sHtmlTemplateRelPath;
-	/** @var string */
-	protected $sJsTemplateRelPath;
+	/** @var array */
+	protected $aJsTemplateRelPath;
 	/** @var string */
 	protected $sCssTemplateRelPath;
 	/** @var array */
@@ -88,7 +92,9 @@ abstract class UIBlock implements iUIBlock
 		$this->aJsFilesRelPath = static::DEFAULT_JS_FILES_REL_PATH;
 		$this->aCssFilesRelPath = static::DEFAULT_CSS_FILES_REL_PATH;
 		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
-		$this->sJsTemplateRelPath = static::DEFAULT_JS_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
 	}
@@ -111,8 +117,11 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJsTemplateRelPath() {
-		return $this->sJsTemplateRelPath;
+	public function GetJsTemplateRelPath(string $sType) {
+		if ($sType != self::JS_TYPE_LIVE && $sType != self::JS_TYPE_ON_INIT &&  $sType != self::JS_TYPE_ON_READY){
+			throw new UIException($this, "Type of javascript $sType not supported");
+		}
+		return $this->aJsTemplateRelPath[$sType];
 	}
 
 	/**
