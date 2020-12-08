@@ -242,6 +242,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChartAjaxBars\\BlockChartAjaxBars' => $baseDir . '/sources/application/UI/DisplayBlock/BlockChartAjaxBars/BlockChartAjaxBars.php',
     'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChartAjaxPie\\BlockChartAjaxPie' => $baseDir . '/sources/application/UI/DisplayBlock/BlockChartAjaxPie/BlockChartAjaxPie.php',
     'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChart\\BlockChart' => $baseDir . '/sources/application/UI/DisplayBlock/BlockChart/BlockChart.php',
+    'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockCsv\\BlockCsv' => $baseDir . '/sources/application/UI/DisplayBlock/BlockCsv/BlockCsv.php',
     'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockList\\BlockList' => $baseDir . '/sources/application/UI/DisplayBlock/BlockList/BlockList.php',
     'Combodo\\iTop\\Application\\UI\\Helper\\UIHelper' => $baseDir . '/sources/application/UI/Helper/UIHelper.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',

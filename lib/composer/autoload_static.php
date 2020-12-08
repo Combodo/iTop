@@ -472,6 +472,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChartAjaxBars\\BlockChartAjaxBars' => __DIR__ . '/../..' . '/sources/application/UI/DisplayBlock/BlockChartAjaxBars/BlockChartAjaxBars.php',
         'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChartAjaxPie\\BlockChartAjaxPie' => __DIR__ . '/../..' . '/sources/application/UI/DisplayBlock/BlockChartAjaxPie/BlockChartAjaxPie.php',
         'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockChart\\BlockChart' => __DIR__ . '/../..' . '/sources/application/UI/DisplayBlock/BlockChart/BlockChart.php',
+        'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockCsv\\BlockCsv' => __DIR__ . '/../..' . '/sources/application/UI/DisplayBlock/BlockCsv/BlockCsv.php',
         'Combodo\\iTop\\Application\\UI\\DisplayBlock\\BlockList\\BlockList' => __DIR__ . '/../..' . '/sources/application/UI/DisplayBlock/BlockList/BlockList.php',
         'Combodo\\iTop\\Application\\UI\\Helper\\UIHelper' => __DIR__ . '/../..' . '/sources/application/UI/Helper/UIHelper.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',

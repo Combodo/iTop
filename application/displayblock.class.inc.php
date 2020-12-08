@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
+use Combodo\iTop\Application\UI\DisplayBlock\BlockCsv\BlockCsv;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockList\BlockList;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -455,6 +456,10 @@ HTML;
 
 			case 'summary':
 				$oBlock = $this->RenderSummary($aExtraParams);
+				break;
+
+			case 'csv':
+				$oBlock = $this->RenderCsv($oAppContext, $sId);
 				break;
 
 			case 'search':
@@ -1320,6 +1325,44 @@ JS
 				$oBlock->sJSURLs = $sJSURLs;
 				break;
 		}
+		return $oBlock;
+	}
+
+	/**
+	 * @param \ApplicationContext $oAppContext
+	 * @param string|null $sId
+	 *
+	 * @return iUIBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	protected function RenderCsv(ApplicationContext $oAppContext, string $sId = null)
+	{
+		$oBlock = new BlockCsv($sId);
+		$oBlock->bAdvancedMode = utils::ReadParam('advanced', false);
+
+		$oBlock->sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
+		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
+		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
+		// Pass the parameters via POST, since expression may be very long
+		$aParamsToPost = array(
+			'expression' => $this->m_oFilter->ToOQL(true),
+			'format' => 'csv',
+			'filename' => $oBlock->sCsvFile,
+			'charset' => 'UTF-8',
+		);
+		if ($oBlock->bAdvancedMode) {
+			$oBlock->sDownloadLink .= '&fields_advanced=1';
+			$aParamsToPost['fields_advance'] = 1;
+			$oBlock->sChecked = 'CHECKED';
+		} else {
+			$oBlock->sLinkToToggle = $oBlock->sLinkToToggle.'&advanced=1';
+			$oBlock->sChecked = '';
+		}
+		$oBlock->sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
+
+		$oBlock->sCharsetNotice = false;
+		$oBlock->sJsonParams = json_encode($aParamsToPost);
 		return $oBlock;
 	}
 
