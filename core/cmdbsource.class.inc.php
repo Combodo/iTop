@@ -64,7 +64,7 @@ class MySQLException extends CoreException
 /**
  * Class MySQLQueryHasNoResultException
  *
- * @since 2.5
+ * @since 2.5.0
  */
 class MySQLQueryHasNoResultException extends MySQLException
 {
@@ -74,7 +74,7 @@ class MySQLQueryHasNoResultException extends MySQLException
 /**
  * Class MySQLHasGoneAwayException
  *
- * @since 2.5
+ * @since 2.5.0
  * @see itop bug 1195
  * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
  */
@@ -119,19 +119,30 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
-	
+
+	/**
+	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
+	 *   Message: Lock wait timeout exceeded; try restarting transaction
+	 */
+	const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
+	/**
+	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
+	 *   Message: Deadlock found when trying to get lock; try restarting transaction
+	 */
+	const MYSQL_ERRNO_DEADLOCK = 1213;
+
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
 	/**
 	 * @var boolean
-	 * @since 2.5 N°1260 MySQL TLS first implementation
+	 * @since 2.5.0 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_bDBTlsEnabled;
 	/**
 	 * @var string
-	 * @since 2.5 N°1260 MySQL TLS first implementation
+	 * @since 2.5.0 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
 
@@ -661,6 +672,7 @@ class CMDBSource
 		}
 		catch (mysqli_sql_exception $e)
 		{
+			self::LogDeadLock($e);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
@@ -674,11 +686,53 @@ class CMDBSource
 			{
 				throw new MySQLHasGoneAwayException(self::GetError(), $aContext);
 			}
-
-			throw new MySQLException('Failed to issue SQL query', $aContext);
+			$e = new MySQLException('Failed to issue SQL query', $aContext);
+			self::LogDeadLock($e);
+			throw $e;
 		}
 
 		return $oResult;
+	}
+
+	/**
+	 * @param \Exception $e
+	 *
+	 * @since 2.7.1
+	 */
+	private static function LogDeadLock(Exception $e)
+	{
+		// checks MySQL error code
+		$iMySqlErrorNo = self::$m_oMysqli->errno;
+		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
+		{
+			return;
+		}
+
+		// Get error info
+		$sUser = UserRights::GetUser();
+		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
+		if ($oError !== false)
+		{
+			$aData = $oError->fetch_all(MYSQLI_ASSOC);
+			$sInnodbStatus = $aData[0];
+		}
+		else
+		{
+			$sInnodbStatus = 'Get status query cannot execute';
+		}
+
+		// log !
+		$sMessage = "deadlock detected: user= $sUser; errno=$iMySqlErrorNo";
+		$aLogContext = array(
+			'userinfo' => $sUser,
+			'errno' => $iMySqlErrorNo,
+			'ex_msg' => $e->getMessage(),
+			'callstack' => $e->getTraceAsString(),
+			'data' => $sInnodbStatus,
+		);
+		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
+
+		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
 	}
 
 	/**
@@ -803,25 +857,6 @@ class CMDBSource
 	private static function RemoveAllTransactionLevels()
 	{
 		self::$m_iTransactionLevel = 0;
-	}
-
-	/**
-	 *
-	 * @deprecated 2.7.0 N°1627 use ItopCounter instead
-	 *
-	 * @param string $sTable
-	 *
-	 * @return int
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 */
-	public static function GetNextInsertId($sTable)
-	{
-		$sSQL = "SHOW TABLE STATUS LIKE '$sTable'";
-		$oResult = self::Query($sSQL);
-		$aRow = $oResult->fetch_assoc();
-
-		return $aRow['Auto_increment'];
 	}
 
 	public static function GetInsertId()
@@ -1194,9 +1229,9 @@ class CMDBSource
 	 */
 	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
 	{
-		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?$/', $sCompleteFieldType, $aMatches);
+		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?/', $sCompleteFieldType, $aMatches);
 
-		$sDataType = $aMatches[1];
+		$sDataType = isset($aMatches[1]) ? $aMatches[1] : '';
 		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
 		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
 
@@ -1390,7 +1425,7 @@ class CMDBSource
 	 * @return string query to upgrade table charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.0 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
 	 */
 	public static function DBCheckTableCharsetAndCollation($sTableName)
@@ -1540,7 +1575,7 @@ class CMDBSource
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.0 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 */
 	public static function DBCheckCharsetAndCollation()

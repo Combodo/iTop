@@ -29,6 +29,11 @@ require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
+
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+
+
 try
 {
 	// Do this before loging, in order to allow setting user credentials from within the file
@@ -37,12 +42,15 @@ try
 catch(Exception $e)
 {
 	echo "Error: ".$e->GetMessage()."<br/>\n";
-	exit -2;
+	exit(EXIT_CODE_FATAL);
 }
 
 if (utils::IsModeCLI()) 
 {
-	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data'); 
+	$oP = new CLIPage("iTop - Export");
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
+
+	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data'); 
 
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) 
@@ -51,10 +59,9 @@ if (utils::IsModeCLI())
 	} 
 	else 
 	{ 
-		$oP = new CLIPage("iTop - Export"); 
-		$oP->p("Access restricted or wrong credentials ('$sAuthUser')"); 
+		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output(); 
-		exit -1; 
+		exit(EXIT_CODE_ERROR);
 	}
 } 
 else 
@@ -74,7 +81,7 @@ if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
 	$oP = new CLIPage("iTop - Export");
 	$oP->p("The user account is not authorized to access the archives");
 	$oP->output();
-	exit -1;
+	exit(EXIT_CODE_ERROR);
 }
 
 $bLocalize = (utils::ReadParam('no_localize', 0) != 1);
@@ -191,6 +198,8 @@ if (!empty($sExpression))
 				case 'html':
 				$oP = new NiceWebPage("iTop - Export");
 				$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
+				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 				
 				// Integration within MS-Excel web queries + HTTPS + IIS:
 				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS

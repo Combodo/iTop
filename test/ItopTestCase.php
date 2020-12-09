@@ -46,7 +46,6 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../../approot.inc.php';
 
         $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
-
 	}
 
 	protected function debug($sMsg)

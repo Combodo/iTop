@@ -281,8 +281,16 @@ $(function()
 		},
 		_on_upload_error: function(data, status, e)
 		{
-			alert(e);
-			this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
+			if(data.responseText.indexOf('login-body') !== false)
+			{
+				alert('Sorry, your session has expired. In order to continue, the whole page has to be loaded again.');
+				this.oUploadDlg.dialog('close');
+			}
+			else
+			{
+				alert(e);
+				this.oUploadDlg.closest('.ui-dialog').find('.ui-button').button('enable');
+			}
 		}
 	});
 });

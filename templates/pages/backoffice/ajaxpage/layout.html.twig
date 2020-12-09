@@ -1,0 +1,102 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    {% if bEscapeContent %}
+        {{ render_block(oLayout, {aPage: aPage})|escape }}
+    {% else %}
+        {{ render_block(oLayout, {aPage: aPage}) }}
+    {% endif %}
+
+	{% block iboPageJsInlineLive %}
+		{% for sJsInline in aPage.aJsInlineLive %}
+			{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+			<script type="text/javascript">
+			{{ sJsInline|raw }}
+			</script>
+		{% endfor %}
+	{% endblock %}
+
+	{% if aPage.aJsFiles is not empty %}
+		{% set sId = oUIBlock.GetId() | variable_name %}
+		{% block iboPageJsFiles %}
+			<script type="text/javascript">
+				var aFilesToLoad{{ sId }} = [];
+				{% for sJsFile in aPage.aJsFiles %}
+					aFilesToLoad{{ sId }}.push('{{ sJsFile|raw }}');
+				{% endfor %}
+				var iCurrentIdx{{ sId }} = 0;
+				var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
+				var fLoadScript{{ sId }} = function(){
+					$.when(
+						$.ajax({
+									url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
+									dataType: 'script',
+									cache: true
+								})
+						)
+						.then(function(){
+							iCurrentIdx{{ sId }}++;
+							if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
+							{
+								fLoadScript{{ sId }}();
+							}
+							else
+							{
+								{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+									{{ sJsInlineOnDomReady|raw }}
+								{% endfor %}
+							}
+						});
+				};
+				fLoadScript{{ sId }}();
+			</script>
+		{% endblock %}
+	{% else %}
+		{% block iboPageJsInlineOnDomReady %}
+			{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+				<script type="text/javascript">
+					{{ sJsInlineOnDomReady|raw }}
+				</script>
+			{% endfor %}
+		{% endblock %}
+	{% endif %}
+
+    {% if aDeferredBlocks is not empty %}
+        {# TODO 3.0.0 #}
+        {# <script type="text/javascript"> #}
+        {# $('body').append('{% for oBlock in aDeferredBlocks %}{{ render_block(oBlock, {aPage: aPage})|escape_for_js_string|raw }}{% endfor %}'); #}
+        {# </script> #}
+        {% for oBlock in aDeferredBlocks %}
+            {{ render_block(oBlock, {aPage: aPage})|raw }}
+        {% endfor %}
+    {% endif %}
+
+    {% if sDeferredContent %}
+        <script type="text/javascript">
+            $('body').append('{{ sDeferredContent|raw }}');
+        </script>
+    {% endif %}
+
+    {% block iboPageCssFiles %}
+        {% for aCssFileData in aPage.aCssFiles %}
+            <script type="text/javascript">
+           /* $.ajax({
+			            url: aKBFilesToLoad[iKBCurrentIdx].url,
+			            dataType: aKBFilesToLoad[iKBCurrentIdx].type,
+			            cache: true
+		            })
+		            .done(function(){
+			            if ( (aKBFilesToLoad[iKBCurrentIdx].type === 'text') && ($('head link[type="text/css"][href="' + aKBFilesToLoad[iKBCurrentIdx].url + '"]').length === 0) )
+			            {
+				            $('<link rel="stylesheet" type="text/css" href="' + aKBFilesToLoad[iKBCurrentIdx].url + '" />').appendTo('head');
+			            }
+		            })
+            )*/
+                if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {{ aPage.sCapturedOutput|raw }}
+
+{% endapply %}

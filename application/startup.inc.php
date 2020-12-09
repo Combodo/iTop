@@ -35,7 +35,17 @@ register_shutdown_function(function()
 	$sReservedMemory = null;
 	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
 	{
-		IssueLog::error($err['message']);
+		// Remove stack trace from MySQLException
+		$sMessage = $err['message'];
+		if (strpos($sMessage, 'MySQLException') !== false)
+		{
+			$iStackTracePos = strpos($sMessage, 'Stack trace:');
+			if ($iStackTracePos !== false)
+			{
+				$sMessage = substr($sMessage, 0, $iStackTracePos);
+			}
+		}
+		IssueLog::error($sMessage);
 		if (strpos($err['message'], 'Allowed memory size of') !== false)
 		{
 			$sLimit = ini_get('memory_limit');

@@ -32,7 +32,7 @@ use Exception;
  */
 class Cache
 {
-    const CACHE_VERSION = 0;
+    const CACHE_VERSION = 1;
 
     // directory used for storing data
     public static $cacheDir = false;
@@ -41,12 +41,12 @@ class Cache
     public static $prefix = 'scssphp_';
 
     // force a refresh : 'once' for refreshing the first hit on a cache only, true to never use the cache in this hit
-    public static $forceFefresh = false;
+    public static $forceRefresh = false;
 
     // specifies the number of seconds after which data cached will be seen as 'garbage' and potentially cleaned up
     public static $gcLifetime = 604800;
 
-    // array of already refreshed cache if $forceFefresh==='once'
+    // array of already refreshed cache if $forceRefresh==='once'
     protected static $refreshed = [];
 
     /**
@@ -57,12 +57,12 @@ class Cache
     public function __construct($options)
     {
         // check $cacheDir
-        if (isset($options['cache_dir'])) {
-            self::$cacheDir = $options['cache_dir'];
+        if (isset($options['cacheDir'])) {
+            self::$cacheDir = $options['cacheDir'];
         }
 
         if (empty(self::$cacheDir)) {
-            throw new Exception('cache_dir not set');
+            throw new Exception('cacheDir not set');
         }
 
         if (isset($options['prefix'])) {
@@ -74,7 +74,7 @@ class Cache
         }
 
         if (isset($options['forceRefresh'])) {
-            self::$forceFefresh = $options['force_refresh'];
+            self::$forceRefresh = $options['forceRefresh'];
         }
 
         self::checkCacheDir();
@@ -97,13 +97,13 @@ class Cache
     {
         $fileCache = self::$cacheDir . self::cacheName($operation, $what, $options);
 
-        if ((! self::$forceRefresh || (self::$forceRefresh === 'once' && isset(self::$refreshed[$fileCache])))
-            && file_exists($fileCache)
+        if (((self::$forceRefresh === false) || (self::$forceRefresh === 'once' &&
+            isset(self::$refreshed[$fileCache]))) && file_exists($fileCache)
         ) {
             $cacheTime = filemtime($fileCache);
 
-            if ((is_null($lastModified) || $cacheTime > $lastModified)
-                && $cacheTime + self::$gcLifetime > time()
+            if ((is_null($lastModified) || $cacheTime > $lastModified) &&
+                $cacheTime + self::$gcLifetime > time()
             ) {
                 $c = file_get_contents($fileCache);
                 $c = unserialize($c);
@@ -176,13 +176,13 @@ class Cache
         self::$cacheDir = str_replace('\\', '/', self::$cacheDir);
         self::$cacheDir = rtrim(self::$cacheDir, '/') . '/';
 
-        if (! file_exists(self::$cacheDir)) {
+        if (! is_dir(self::$cacheDir)) {
             if (! mkdir(self::$cacheDir)) {
                 throw new Exception('Cache directory couldn\'t be created: ' . self::$cacheDir);
             }
-        } elseif (! is_dir(self::$cacheDir)) {
-            throw new Exception('Cache directory doesn\'t exist: ' . self::$cacheDir);
-        } elseif (! is_writable(self::$cacheDir)) {
+        }
+
+        if (! is_writable(self::$cacheDir)) {
             throw new Exception('Cache directory isn\'t writable: ' . self::$cacheDir);
         }
     }

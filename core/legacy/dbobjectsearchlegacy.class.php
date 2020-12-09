@@ -546,7 +546,7 @@ class DBObjectSearch extends DBSearch
 	 *
 	 * @throws \CoreException
 	 *
-	 * @since 2.5 N°1418
+	 * @since 2.5.0 N°1418
 	 */
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{
@@ -1678,6 +1678,25 @@ class DBObjectSearch extends DBSearch
 		return $sRet;
 	}
 
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 * @param array $aValues is an array of $sAttCode => $value
+	 * @param array $aArgs
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public function MakeInsertQuery($aValues, $aArgs = array())
+	{
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
+		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$sRet = $oSQLQuery->RenderInsert($aScalarArgs);
+		return $sRet;
+	}
+
 	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
 		// Hide objects that are not visible to the current user
@@ -2583,5 +2602,9 @@ class DBObjectSearch extends DBSearch
 		return $oExpression;
 	}
 
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
+	}
 
 }

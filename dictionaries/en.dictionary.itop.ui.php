@@ -88,6 +88,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes',
+	'Class:Query/Attribute:is_template/Value:no' => 'No',
 	'Class:QueryOQL/Attribute:fields' => 'Fields',
 	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL Query',
@@ -398,6 +402,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Cancel' => 'Cancel',
 	'UI:Button:Close' => 'Close',
 	'UI:Button:Apply' => 'Apply',
+	'UI:Button:Send' => 'Send',
+	'UI:Button:AddEntryAndWithChoice' => 'Add entry and...',
+	'UI:Button:AddEntryToWithChoice' => 'Add entry to...',
 	'UI:Button:Back' => ' << Back ',
 	'UI:Button:Restart' => ' |<< Restart ',
 	'UI:Button:Next' => ' Next >> ',
@@ -422,6 +429,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Insert' => 'Insert',
 	'UI:Button:More' => 'More',
 	'UI:Button:Less' => 'Less',
+	'UI:Button:Wait' => 'Please wait while updating fields',
+	'UI:Treeview:CollapseAll' => 'Collapse All',
+	'UI:Treeview:ExpandAll' => 'Expand All',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
@@ -457,7 +467,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'You are not allowed to perform a bulk update of objects of class %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '%2$s is currently in the "%3$s" state, the "%1$s" operation you requested could not be applied.',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
@@ -537,7 +547,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.',
 	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.',
 
@@ -770,6 +780,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- select a value ---',
 	'UI:Label:SelectedObjects' => 'Selected objects: ',
@@ -804,12 +815,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Deletion of %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Deletion of %1$d objects of class %2$s',
 	'UI:Delete:CannotDeleteBecause' => 'Could not be deleted: %1$s',
-	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automaticaly deleted, but this is not feasible: %1$s',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automatically deleted, but this is not feasible: %1$s',
 	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Must be deleted manually, but this is not feasible: %1$s',
-	'UI:Delete:WillBeDeletedAutomatically' => 'Will be automaticaly deleted',
+	'UI:Delete:WillBeDeletedAutomatically' => 'Will be automatically deleted',
 	'UI:Delete:MustBeDeletedManually' => 'Must be deleted manually',
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Should be automatically updated, but: %1$s',
-	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'will be automaticaly updated (reset: %1$s)',
+	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'will be automatically updated (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objects/links are referencing %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'To ensure Database integrity, any reference should be further eliminated',
@@ -860,7 +871,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:FatalErrorMessage' => 'Fatal error, '.ITOP_APPLICATION_SHORT.' cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => ITOP_APPLICATION_SHORT.' user management - class projections',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
 	'UI:UserManagement:Class+' => 'Class of objects',
@@ -869,8 +879,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:AnyObject' => '* any *',
 	'UI:UserManagement:User' => 'User',
 	'UI:UserManagement:User+' => 'User involved in the projection',
-	'UI:UserManagement:Profile' => 'Profile',
-	'UI:UserManagement:Profile+' => 'Profile in which the projection is specified',
 	'UI:UserManagement:Action:Read' => 'Read',
 	'UI:UserManagement:Action:Read+' => 'Read/display objects',
 	'UI:UserManagement:Action:Modify' => 'Modify',
@@ -903,14 +911,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'System',
+	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
 	'UI:ChangeManagementMenu:Title' => 'Changes Overview',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes by type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes by status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes by workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes not yet assigned',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
@@ -960,7 +967,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Title' => 'Configuration of the Notifications',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of '.ITOP_APPLICATION_SHORT.' core, but others can be brought by extensions:
@@ -1001,8 +1008,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:QueryMenu' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Data Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:UniversalSearchMenu' => 'Universal Search', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Search for anything...', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1174,7 +1181,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:',
 	'UI:UseDefaultSettings' => 'Use the Default Settings',
 	'UI:UseSpecificSettings' => 'Use the Following Settings:',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per page',
 	'UI:UseSavetheSettings' => 'Save the Settings',
 	'UI:OnlyForThisList' => 'Only for this list',
 	'UI:ForAllLists' => 'Default for all lists',
@@ -1447,6 +1455,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:RemoveImage' => 'Remove the image',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
 
+	'UI:Button:RemoveDocument' => 'Remove the document',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> Auto submit has been disabled for this class',
@@ -1589,4 +1599,44 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
+));
+
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Menu:DataSources' => 'Synchronization Data Sources',
+	'Menu:DataSources+' => 'All Synchronization Data Sources',
+	'Menu:WelcomeMenu' => 'Welcome',
+	'Menu:WelcomeMenu+' => 'Welcome to iTop',
+	'Menu:WelcomeMenuPage' => 'Welcome',
+	'Menu:WelcomeMenuPage+' => 'Welcome to iTop',
+	'Menu:AdminTools' => 'Administration',
+	'Menu:AdminTools+' => 'Administration tools',
+	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile',
+	'Menu:DataModelMenu' => 'Data Model',
+	'Menu:DataModelMenu+' => 'Overview of the Data Model',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML',
+	'Menu:NotificationsMenu' => 'Notifications',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
+	'Menu:AuditCategories' => 'Audit Categories',
+	'Menu:AuditCategories+' => 'Audit Categories',
+	'Menu:Notifications:Title' => 'Audit Categories',
+	'Menu:RunQueriesMenu' => 'Run Queries',
+	'Menu:RunQueriesMenu+' => 'Run any query',
+	'Menu:QueryMenu' => 'Query phrasebook',
+	'Menu:QueryMenu+' => 'Query phrasebook',
+	'Menu:UniversalSearchMenu' => 'Universal Search',
+	'Menu:UniversalSearchMenu+' => 'Search for anything...',
+	'Menu:UserManagementMenu' => 'User Management',
+	'Menu:UserManagementMenu+' => 'User management',
+	'Menu:ProfilesMenu' => 'Profiles',
+	'Menu:ProfilesMenu+' => 'Profiles',
+	'Menu:ProfilesMenu:Title' => 'Profiles',
+	'Menu:UserAccountsMenu' => 'User Accounts',
+	'Menu:UserAccountsMenu+' => 'User Accounts',
+	'Menu:UserAccountsMenu:Title' => 'User Accounts',
+	'Menu:MyShortcuts' => 'My Shortcuts',
+	'Menu:UserManagement' => 'User Management',
+	'Menu:Queries' => 'Queries',
+	'Menu:ConfigurationTools' => 'Configuration',
 ));

@@ -8,6 +8,7 @@
 namespace coreExtensions;
 
 
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use UserLocal;
 use UserLocalPasswordPolicyMockNotValid;
@@ -24,7 +25,7 @@ use UserPasswordPolicyRegex;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class UserLocalTest extends ItopTestCase
+class UserLocalTest extends ItopDataTestCase
 {
 
 	public function setUp()
@@ -43,13 +44,18 @@ class UserLocalTest extends ItopTestCase
 	 * @preserveGlobalState disabled
 	 * @backupGlobals disabled
 	 */
-	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null)
+	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
 		$configMock = $this->createMock(\Config::class);
 
 		$configMock
 			->method('GetModuleSetting')
 			->willReturnMap($aConfigValueMap);
+
+		if (isset($sUserLanguage))
+		{
+			\Dict::SetUserLanguage($sUserLanguage);
+		}
 
 		/** @var UserLocal $oUserLocal */
 		$oUserLocal = \MetaModel::NewObject('UserLocal', array('login' => 'john'));
@@ -171,6 +177,76 @@ class UserLocalTest extends ItopTestCase
 				'expectedCheckIssues' => 'UserLocalPasswordPolicyMockNotValid',
 			),
 
+			'notValidPattern custom message FR' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('FR FR' => 'fr message', 'EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'fr message',
+				'userLanguage' => 'FR FR',
+			),
+			'notValidPattern custom message EN' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('FR FR' => 'fr message', 'EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'en message',
+				'userLanguage' => 'EN US',
+			),
+			'notValidPattern custom message Fallback' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array('EN US' => 'en message')),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'en message',
+				'userLanguage' => 'FR FR',
+			),
+			'notValidPattern custom message empty array' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, array()),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
+				'userLanguage' => 'EN US',
+			),
+			'notValidPattern custom message string not array' => array(
+				'password' => 'foo',
+				'aValidatorCollection' => array(
+					'UserPasswordPolicyRegex',
+				),
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
+					array('authent-local', 'password_validation.message', null, 'not an array'),
+
+				),
+				'expectedCheckStatus' => false,
+				'expectedCheckIssues' => 'not an array',
+				'userLanguage' => 'EN US',
+			),
 		);
 	}
 
@@ -199,11 +275,30 @@ class UserLocalTest extends ItopTestCase
 			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
 		);
 
+
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
-		$oUserLocal->Set('password', 'foo');
+		//INSERT
+		$oUserLocal->Set('password', 'fooBar1???');
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'INSERT changes the "password_renewed_date"');
 
-		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'));
+		//UPDATE password_renewed_date
+		$oUserLocal->Set('password_renewed_date', $oBefore);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change the "password_renewed_date"');
+
+		//UPDATE password
+		$oUserLocal->Set('password', 'fooBar1???1');
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
+
+
+		//UPDATE both password & password_renewed_date
+		$oUserLocal->Set('password', 'fooBar1???2');
+		$oUserLocal->Set('password_renewed_date', $oBefore);
+		$oUserLocal->DBWrite();
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change both "password" and "password_renewed_date"');
 	}
 
 	public function ProviderPasswordRenewal()

@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * UserRightsProfile
- * User management Module, basing the right on profiles and a matrix (similar to UserRightsMatrix, but profiles and other decorations have been added) 
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 define('ADMIN_PROFILE_NAME', 'Administrator');
@@ -84,7 +77,6 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			"db_table" => "priv_urp_profiles",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -319,11 +311,9 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-			$this->DoShowGrantSumary($oPage);		
-		}
+
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage);
 	}
 }
 
@@ -343,7 +333,6 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 			"db_table" => "priv_urp_userprofile",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -383,7 +372,6 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 			"db_table" => "priv_urp_userorg",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -424,7 +412,6 @@ class URP_ActionGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -461,7 +448,6 @@ class URP_StimulusGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_stimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -498,7 +484,6 @@ class URP_AttributeGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_attributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -542,7 +527,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
-			$oOrg = new Organization();
+			$oOrg = MetaModel::NewObject('Organization');
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
 			$oOrg::SetCurrentChange($oChange);
@@ -551,16 +536,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			// Support drastic data model changes: no Person class  (or not writable)!
 			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
 			{
-				$oContact = new Person();
+				$oContact = MetaModel::NewObject('Person');
 				$oContact->Set('name', 'My last name');
 				$oContact->Set('first_name', 'My first name');
 				if (MetaModel::IsValidAttCode('Person', 'org_id'))
 				{
 					$oContact->Set('org_id', $iOrgId);
-				}
-				if (MetaModel::IsValidAttCode('Person', 'phone'))
-				{
-					$oContact->Set('phone', '+00 000 000 000');
 				}
 				$oContact->Set('email', 'my.email@foo.org');
 				$oContact::SetCurrentChange($oChange);
@@ -718,7 +699,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	public function LoadCache()
 	{
-		if (!is_null($this->m_aProfiles)) return;
+		if (!is_null($this->m_aProfiles)) return false;
 		// Could be loaded in a shared memory (?)
 
 		$oKPI = new ExecutionKPI();

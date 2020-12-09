@@ -1,28 +1,22 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Data Exchange - synchronization with external applications (incoming data)
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
+
 class SynchroExceptionNotStarted extends CoreException
 {
 }
@@ -266,7 +260,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	{
 		if (!$this->IsNew())
 		{
-			$oPage->SetCurrentTab(Dict::S('Core:SynchroAttributes'));
+			$oPage->SetCurrentTab('Core:SynchroAttributes');
 			$oAttributeSet = $this->Get('attribute_list');
 			$aAttributes = array();
 
@@ -404,7 +398,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	 */
 	protected function DisplayStatusTab(WebPage $oPage)
 	{
-		$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
+		$oPage->SetCurrentTab('Core:SynchroStatus');
 
 		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
 		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/,
@@ -2834,7 +2828,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		//$this->DisplayBareHeader($oPage, $bEditMode);
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
 
@@ -2963,7 +2957,7 @@ class SynchroExecution
 		$this->m_bIsImportPhaseDateKnown = ($oImportPhaseStartDate != null);
 		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
 
-		$this->m_oCtx = new ContextTag('Synchro');
+		$this->m_oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
 
@@ -3472,7 +3466,7 @@ class SynchroExecution
 			/** @var SynchroReplica $oReplica */
 			while($oReplica = $oSetToProcess->Fetch())
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 				$iLastReplicaProcessed = $oReplica->GetKey();
 				switch ($sDeletePolicy)
 				{
@@ -3601,7 +3595,7 @@ class SynchroExecution
 		/** @var \SynchroReplica $oReplica */
 		while ($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
@@ -3703,7 +3697,7 @@ class SynchroExecution
 		/** @var SynchroReplica $oReplica */
 		while($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace('Destination object to be DELETED', $oReplica);
 			$oReplica->DeleteDestObject($this->m_oChange, $this->m_oStatLog);

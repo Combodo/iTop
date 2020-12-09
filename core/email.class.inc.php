@@ -100,7 +100,7 @@ class EMail
 		}
 		if (array_key_exists('reply_to', $aData))
 		{
-			$oMessage->SetRecipientReplyTo($aData['reply_to']);
+			$oMessage->SetRecipientReplyTo($aData['reply_to']['address'], $aData['reply_to']['label']);
 		}
 		if (array_key_exists('to', $aData))
 		{
@@ -304,8 +304,12 @@ class EMail
 			$oHeaders = $this->m_oMessage->getHeaders();
 			switch(strtolower($sKey))
 			{
+				case 'return-path':
+					$this->m_oMessage->setReturnPath($sValue);
+					break;
+
 				default:
-				$oHeaders->addTextHeader($sKey, $sValue);
+					$oHeaders->addTextHeader($sKey, $sValue);
 			}
 		}
 	}
@@ -461,10 +465,14 @@ class EMail
 		}
 	}
 
-	public function SetRecipientReplyTo($sAddress)
+	public function SetRecipientReplyTo($sAddress, $sLabel = '')
 	{
-		$this->m_aData['reply_to'] = $sAddress;
-		if (!empty($sAddress))
+		$this->m_aData['reply_to'] = array('address' => $sAddress, 'label' => $sLabel);
+		if ($sLabel != '')
+		{
+			$this->m_oMessage->setReplyTo(array($sAddress => $sLabel));
+		}
+		else if (!empty($sAddress))
 		{
 			$this->m_oMessage->setReplyTo($sAddress);
 		}

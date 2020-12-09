@@ -29,6 +29,7 @@ class ormSet
 	protected $sClass; // class of the field
 	protected $sAttCode; // attcode of the field
 	protected $aOriginalObjects = null;
+	protected $m_bDisplayPartial = false;
 
 	/**
 	 * Object from the original set, minus the removed objects
@@ -111,7 +112,7 @@ class ormSet
 
 	/**
 	 *
-	 * @param array $aItems
+	 * @param string[] $aItems
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue when a code is invalid
@@ -126,7 +127,7 @@ class ormSet
 		$aValues = array();
 		$iCount = 0;
 		$bError = false;
-		foreach($aItems as $oItem)
+		foreach($aItems as $sItem)
 		{
 			$iCount++;
 			if (($this->iLimit != 0) && ($iCount > $this->iLimit))
@@ -134,7 +135,7 @@ class ormSet
 				$bError = true;
 				continue;
 			}
-			$aValues[] = $oItem;
+			$aValues[] = $sItem;
 		}
 
 		$this->aPreserved = &$aValues;
@@ -160,8 +161,19 @@ class ormSet
 	public function GetValues()
 	{
 		$aValues = array_merge($this->aPreserved, $this->aAdded);
-
+		sort($aValues);
 		return $aValues;
+	}
+
+	public function GetLabels()
+	{
+		$aLabels = array();
+		$aValues = $this->GetValues();
+		foreach ($aValues as $sValue)
+		{
+			$aLabels[$sValue] = $sValue;
+		}
+		return $aLabels;
 	}
 
 	/**
@@ -376,5 +388,19 @@ class ormSet
 		return implode(', ', $this->GetValue()) === implode(', ', $other->GetValue());
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function DisplayPartial()
+	{
+		return $this->m_bDisplayPartial;
+	}
 
+	/**
+	 * @param bool $m_bDisplayPartial
+	 */
+	public function SetDisplayPartial($m_bDisplayPartial)
+	{
+		$this->m_bDisplayPartial = $m_bDisplayPartial;
+	}
 }

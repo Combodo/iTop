@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,7 @@
  *
  * @since 2.7.0
  */
-var CombodoPortalToolbox = {
+const CombodoPortalToolbox = {
 	/**
 	 * Close all opened modals on the page
 	 */
@@ -56,7 +56,7 @@ var CombodoPortalToolbox = {
 		});
 	},
 	/**
-	 * Generic function to create and open a modal, used by high-levconfiel functions such as "CombodoPortalToolbox.OpenUrlInModal()".
+	 * Generic function to create and open a modal, used by high-level functions such as "CombodoPortalToolbox.OpenUrlInModal()".
 	 * When developing extensions, you should use them instead.
 	 *
 	 * @param oOptions
@@ -80,7 +80,7 @@ var CombodoPortalToolbox = {
 		);
 
 		// Compute modal selector
-		var oSelectorElem = null;
+		let oSelectorElem = null;
 		switch(typeof oOptions.base_modal.selector)
 		{
 			case 'string':
@@ -96,11 +96,11 @@ var CombodoPortalToolbox = {
 				{
 					console.warn('Could not open modal dialog as the select option was malformed: ', oOptions.content);
 				}
-				break;
+				return false;
 		}
 
 		// Get modal element by either
-		var oModalElem = null;
+		let oModalElem = null;
 		// - Create a new modal from template
 		//   Note : This could be better if we check for an existing modal first instead of always creating a new one
 		if (oOptions.base_modal.usage === 'clone')
@@ -116,7 +116,7 @@ var CombodoPortalToolbox = {
 		}
 
 		// Set attributes
-		for(var sProp in oOptions.attributes)
+		for(let sProp in oOptions.attributes)
 		{
 			oModalElem.attr(sProp, oOptions.attributes[sProp]);
 		}

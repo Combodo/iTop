@@ -251,17 +251,27 @@ class ormStopWatch
 		return $sRes;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param \AttributeStopWatch $oAttDef
+	 *
+	 * @return float goal value (in second)
+	 * @uses \iMetricComputer::ComputeMetric()
+	 * @throws \CoreException
+	 */
 	protected function ComputeGoal($oObject, $oAttDef)
 	{
 		$sMetricComputer = $oAttDef->Get('goal_computing');
+		/** @var \iMetricComputer $oComputer */
 		$oComputer = new $sMetricComputer();
+
 		$aCallSpec = array($oComputer, 'ComputeMetric');
 		if (!is_callable($aCallSpec))
 		{
 			throw new CoreException("Unknown class/verb '$sMetricComputer/ComputeMetric'");
 		}
-		$iRet = call_user_func($aCallSpec, $oObject);
-		return $iRet;
+
+		return $oComputer->ComputeMetric($oObject);
 	}
 
 	/**
@@ -597,14 +607,22 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							// Activate any existing trigger
 							// 
 							$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+
 							$oTriggerSet = new DBObjectSet(
-								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code=:stop_watch_code AND threshold_index = :threshold_index"),
+								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code MATCHES :stop_watch_code AND threshold_index = :threshold_index"),
 								array(), // order by
 								array('stop_watch_code' => $sAttCode, 'threshold_index' => $iThreshold)
 							);
 							while ($oTrigger = $oTriggerSet->Fetch())
 							{
-								$oTrigger->DoActivate($oObj->ToArgs('this'));
+								try
+								{
+									$oTrigger->DoActivate($oObj->ToArgs('this'));
+								}
+								catch(Exception $e)
+								{
+									utils::EnrichRaisedException($oTrigger, $e);
+								}
 							}
 						}
 					}

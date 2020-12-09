@@ -41,14 +41,14 @@ class BasicServices extends WebServicesBase
 	 */
 	static public function GetVersion()
 	{
-		if (ITOP_REVISION == '$WCREV$')
+		if (ITOP_REVISION == 'svn')
 		{
 			$sVersionString = ITOP_VERSION.' [dev]';
 		}
 		else
 		{
 			// This is a build made from SVN, let display the full information
-			$sVersionString = ITOP_VERSION."-".ITOP_REVISION." ".ITOP_BUILD_DATE;
+			$sVersionString = ITOP_VERSION_FULL." ".ITOP_BUILD_DATE;
 		}
 
 		return $sVersionString;

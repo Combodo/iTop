@@ -108,6 +108,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:User/Attribute:finalclass+' => 'Tipo de Cuenta',
 	'Class:User/Attribute:contactid' => 'Contacto (persona)',
 	'Class:User/Attribute:contactid+' => 'Detalles personales de la información de negocio',
+	'Class:User/Attribute:org_id' => 'Organización',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Apellidos',
 	'Class:User/Attribute:last_name+' => 'Apellidos',
 	'Class:User/Attribute:first_name' => 'Nombre',
@@ -416,6 +418,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Insert' => 'Insertar',
 	'UI:Button:More' => 'Más',
 	'UI:Button:Less' => 'Menos',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Buscar',
 	'UI:ClickToCreateNew' => 'Crear %1$s',
@@ -522,6 +527,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop puede enviarle un correo en el cual encontrará las instrucciones a seguir para restablecer su contraseña.',
 	'UI:Login:ResetPassword' => 'Enviar Ahora',
 	'UI:Login:ResetPwdFailed' => 'Error al enviar correo-e: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' no es un usuario válido',
 	'UI:ResetPwd-Error-NotPossible' => 'Cuentas externas no permiten restablecimiento de contraseña.',
@@ -530,7 +536,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'La cuenta no está asociada a una persona con correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'Falta dirección de correo electrónico. Por favor contacte al administrador.',
 	'UI:ResetPwd-Error-Send' => 'Falla al envar un correo. Por favor contacte al administrador.',
-	'UI:ResetPwd-EmailSent' => 'Por favor verifique su buzón de correo y siga las instrucciones...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Restablecer contraseña de iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Ha solicitado restablecer su contraseña en iTop.</p><p>Por favor de click en la siguiente liga: <a href="%1$s">proporcione una nueva contraseña</a></p>.',
 
@@ -558,6 +564,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Login' => 'Entrar',
 	'UI:Login:Error:AccessRestricted' => 'El acceso a iTop está restringido. Por favor contacte al Administrador de iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Acceso restringido a usuarios con privilegio de administrador. Por favor contacte al Administrador de iTop.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- seleccione uno --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore este campo --',
 	'UI:CSVImport:NoData' => 'Conjunto de datos vacío..., por favor provea algun dato.',
@@ -685,6 +694,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:RunQuery:MoreInfo' => 'Más información acerca de la consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Expresión de consulta rediseñada: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro de serialización: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Ha ocurrido un error al ejecutar la consulta: %1$s',
 	'UI:Query:UrlForExcel' => 'URL para usarse en consultas web de MS-Excel',
 	'UI:Query:UrlV1' => 'La lista de campos se ha dejado sin especificación. La página <em>export-V2.php</em> no puede ser invocada sin está información. Por lo tanto, el URL sugerido abajo apunta a la página legada: <em>export.php</em>. Esta versión legada de exportación tiene la siguiente limitación: la lista de campos exportados puede variar, dependiendo del formato de salida y el modelo de datos de iTop. Desea garantizar que la lista de columnas exportadas permanenzcan estables durante la ejecución, entonces debe especificar un valor para el atributo "Campos" y utilice la página <em>export-V2.php</em>.',
@@ -845,7 +858,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:FatalErrorMessage' => 'Error fatal, iTop no puede continuar.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'Administración de usuarios iTop - proyecciones de clases',
 	'UI:PageTitle:ProfileProjections' => 'Administración de usuarios iTop - proyecciones de Perfil',
 	'UI:UserManagement:Class' => 'Clase',
 	'UI:UserManagement:Class+' => 'Clase de objetos',
@@ -854,8 +866,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:UserManagement:AnyObject' => '* cualquiera *',
 	'UI:UserManagement:User' => 'Usuario',
 	'UI:UserManagement:User+' => 'Usuario implicado en la proyección',
-	'UI:UserManagement:Profile' => 'Perfil',
-	'UI:UserManagement:Profile+' => 'Perfil en el cual se especifico la proyección',
 	'UI:UserManagement:Action:Read' => 'Leer',
 	'UI:UserManagement:Action:Read+' => 'Leer/Mostrar objetos',
 	'UI:UserManagement:Action:Modify' => 'Modificar',
@@ -888,13 +898,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:AdminTools' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Control de Cambios',
 	'UI:ChangeManagementMenu+' => 'Control de Cambios',
 	'UI:ChangeManagementMenu:Title' => 'Resumen de Cambios',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Cambios por Tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Cambios por Estatus',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambios por Grupo de Trabajo',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambios No Asignados Aún',
 
 	'UI:ConfigurationManagementMenu' => 'Administración de la Configuración',
@@ -944,7 +954,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	'Menu:NotificationsMenu' => 'Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuración de las <span class="hilite">Notificaciones</span>',
+	'UI:NotificationsMenu:Title' => 'Configuración de las Notificaciones',
 	'UI:NotificationsMenu:Help' => 'Ayuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>En iTop las notificaciones son completamente personalizables. Están basadas en dos conjuntos de objetos: <i>Disparadores y Acciones</i>.</p>
 <p>Los <i><b>disparadores</b></i> definen cuando una notificación debe ser ejecutada.  Existen 3 tipos de disparadores para cubrir las 3 diferentes fases del ciclo de vida de un objeto:
@@ -1159,7 +1169,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:ColumnsAndSortOrder' => 'Columnas y Ordenamiento:',
 	'UI:UseDefaultSettings' => 'Usar Configuración por Omisión',
 	'UI:UseSpecificSettings' => 'Usar la Siguiente Configuración:',
-	'UI:Display_X_ItemsPerPage' => 'Desplegar %1$s elementos por página',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Desplegar',
+	'UI:Display_X_ItemsPerPage_suffix' => 'elementos por página',
 	'UI:UseSavetheSettings' => 'Guardar Configuraciones',
 	'UI:OnlyForThisList' => 'Sólo esta Lista',
 	'UI:ForAllLists' => 'Defecto en todas las listas',
@@ -1432,9 +1443,12 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Button:RemoveImage' => 'Remover imágen',
 	'UI:UploadNotSupportedInThisMode' => 'La modificación de imágenes o archivos no está soportado en este modo.',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar/ Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto enviar ha sido deshabilitado para esta clase',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Agregar nuevo criterio',
 	// - Add new criteria button
@@ -1573,4 +1587,43 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
+	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
+	'Menu:WelcomeMenu' => 'Bienvenido',
+	'Menu:WelcomeMenu+' => 'Bienvenido a iTop',
+	'Menu:WelcomeMenuPage' => 'Bienvenido',
+	'Menu:WelcomeMenuPage+' => 'Bienvenido a iTop',
+	'Menu:AdminTools' => 'Herramientas Administrativas',
+	'Menu:AdminTools+' => 'Herramientas Administrativas',
+	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador',
+	'Menu:DataModelMenu' => 'Modelo de Datos',
+	'Menu:DataModelMenu+' => 'Resumen del Modelo de Datos',
+	'Menu:ExportMenu' => 'Exportar',
+	'Menu:ExportMenu+' => 'Exportar los Resultados de Cualquier Consulta en HTML, CSV o XML',
+	'Menu:NotificationsMenu' => 'Notificaciones',
+	'Menu:NotificationsMenu+' => 'Configuración de las Notificaciones',
+	'Menu:AuditCategories' => 'Auditar Categorías',
+	'Menu:AuditCategories+' => 'Auditar Categorías',
+	'Menu:Notifications:Title' => 'Auditar Categorías',
+	'Menu:RunQueriesMenu' => 'Ejecutar Consultas',
+	'Menu:RunQueriesMenu+' => 'Ejecutar Cualquier Consulta',
+	'Menu:QueryMenu' => 'Libreta de Consultas',
+	'Menu:QueryMenu+' => 'Libreta de Consultas',
+	'Menu:UniversalSearchMenu' => 'Búsqueda Universal',
+	'Menu:UniversalSearchMenu+' => 'Buscar cualquier cosa',
+	'Menu:UserManagementMenu' => 'Administración de Usuarios',
+	'Menu:UserManagementMenu+' => 'Administración de Usuarios',
+	'Menu:ProfilesMenu' => 'Perfiles',
+	'Menu:ProfilesMenu+' => 'Perfiles',
+	'Menu:ProfilesMenu:Title' => 'Perfiles',
+	'Menu:UserAccountsMenu' => 'Cuentas de Usuario',
+	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario',
+	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario',
+	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
+	'Menu:UserManagement' => 'Gestión de usuarios',
+	'Menu:Queries' => 'Consultas',
+	'Menu:ConfigurationTools' => 'Configuración',
 ));

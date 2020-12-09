@@ -1,0 +1,5 @@
+{% block iboInputLabel %}
+{% endblock %}
+{% block iboInput %}
+    <input type="{{ oUIBlock.GetType() }}" id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}" value="{{ oUIBlock.GetValue()|raw }}"/>
+{% endblock %}

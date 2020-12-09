@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="Organization">
       <fields>
@@ -60,7 +60,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -348,7 +350,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -396,7 +397,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -569,7 +569,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/contract.png</icon>
         <reconciliation>
           <attributes>
@@ -750,7 +749,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -831,7 +829,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="document_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -896,87 +893,6 @@ public function PrefillSearchForm(&$aContextParam)
         </list>
       </presentation>
     </class>
-    <class id="lnkFunctionalCIToProviderContract" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkfunctionalcitoprovidercontract</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="providercontract_id"/>
-            <attribute id="functionalci_id"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="providercontract_id"/>
-            <attribute id="functionalci_id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="providercontract_id" xsi:type="AttributeExternalKey">
-          <sql>providercontract_id</sql>
-          <target_class>ProviderContract</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="providercontract_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>providercontract_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="functionalci_id" xsi:type="AttributeExternalKey">
-          <sql>functionalci_id</sql>
-          <target_class>FunctionalCI</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="functionalci_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>functionalci_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="providercontract_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="providercontract_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="providercontract_id">
-              <rank>10</rank>
-            </item>
-            <item id="functionalci_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
     <class id="ServiceFamily" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -991,7 +907,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <image_attribute>icon</image_attribute>
+        </fields_semantic>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -1074,7 +992,10 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <image_attribute>icon</image_attribute>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -1266,7 +1187,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="document_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1347,7 +1267,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1426,7 +1345,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -1579,7 +1500,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/sla.png</icon>
         <reconciliation>
           <attributes>
@@ -1627,7 +1547,39 @@ public function PrefillSearchForm(&$aContextParam)
           <duplicates>true</duplicates>
         </field>
       </fields>
-      <methods/>
+      <methods>
+	      <method id="DoCheckToWrite">
+		      <static>false</static>
+		      <access>public</access>
+		      <code><![CDATA[
+					public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aCustomerContracts = $this->Get("customercontracts_list");
+		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
+		{
+			// Recurse inside the subdirectories
+			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
+			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
+			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
+			if ($this->Get("id") != null)
+			{
+				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
+				$aQueryParams['sla_id'] = $this->Get("id");
+			}
+			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
+			$oResultSql = new DBObjectSet($oQuery);
+			$oResultSql->OptimizeColumnLoad(['ccs.customercontract_name','ccs.service_name']);
+			if ($aCurrentRow = $oResultSql->Fetch())
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
+			}
+		}
+	}
+			     ]]></code>
+	      </method>
+      </methods>
       <presentation>
         <details>
           <items>
@@ -1687,7 +1639,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/slt.png</icon>
         <reconciliation>
           <attributes>
@@ -1835,7 +1786,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="slt_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1956,7 +1906,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="service_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2053,7 +2002,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="providercontract_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2134,7 +2082,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="functionalci_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2213,7 +2160,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/service.png</icon>
         <reconciliation>
           <attributes>
@@ -2320,7 +2266,6 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2404,10 +2349,55 @@ public function PrefillSearchForm(&$aContextParam)
         </list>
       </presentation>
     </class>
+    <class id="DocumentFile" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentNote" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>80</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DocumentWeb" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="contracts_list" _delta="define">
+              <rank>70</rank>
+            </item>
+            <item id="services_list" _delta="define">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
   </classes>
   <menus>
     <menu id="ServiceManagement" xsi:type="MenuGroup" _delta="define">
       <rank>60</rank>
+	    <style>
+		    <decoration_classes>fas fa-hands-helping</decoration_classes>
+	    </style>
     </menu>
     <menu id="Service:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>

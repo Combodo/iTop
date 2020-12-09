@@ -108,6 +108,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contatto (persona)',
 	'Class:User/Attribute:contactid+' => 'Dettagli personali per dati aziendali',
+	'Class:User/Attribute:org_id' => 'Organizzazione',
+	'Class:User/Attribute:org_id+' => 'Organizzazione della persona associata',
 	'Class:User/Attribute:last_name' => 'Cognome',
 	'Class:User/Attribute:last_name+' => 'Cognome del contatto corrispondente',
 	'Class:User/Attribute:first_name' => 'Nome',
@@ -202,7 +204,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserOrg/Attribute:userid+' => 'Account Utente',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
 	'Class:URP_UserOrg/Attribute:userlogin+' => 'Login Utente',
-	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organizazione',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organizzazione',
 	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Organizzazione permesse',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organizzazione',
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organizzazione permesse',
@@ -416,6 +418,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Cerca',
 	'UI:ClickToCreateNew' => 'Crea un nuovo %1$s~~',
@@ -522,6 +527,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'O',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -530,7 +536,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -558,6 +564,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:Login' => 'Entra in iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accesso a iTop è limitato. Si prega di contattare un amministratore iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Accesso limitato alle persone che hanno privilegi di amministratore. Si prega di contattare un amministratore iTop.',
+	'UI:Login:Error:WrongOrganizationName' => 'Organizzazione sconosciuta',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Più contatti hanno la stessa e-mail',
+	'UI:Login:Error:NoValidProfiles' => 'Nessun profilo valido fornito',
 	'UI:CSVImport:MappingSelectOne' => '-- seleziona uno --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignora questo campo --',
 	'UI:CSVImport:NoData' => 'Insieme di dati vuoto ..., si prega di fornire alcuni dati!',
@@ -685,6 +694,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:RunQuery:MoreInfo' => 'Maggiori informazioni sulla query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Espressione della query riqualificata:',
 	'UI:RunQuery:SerializedFilter' => 'Filtro pubblicato: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Si è verificato un errore durante l\'esecuzione della query: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -845,7 +858,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:FatalErrorMessage' => 'Fatal error, iTop non può continuare.',
 	'UI:Error_Details' => 'Errore: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop gestione degli utenti - proiezioni classe',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestione degli utenti - proiezioni profilo',
 	'UI:UserManagement:Class' => 'Classe',
 	'UI:UserManagement:Class+' => '',
@@ -854,8 +866,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:UserManagement:AnyObject' => '* qualsiasi *',
 	'UI:UserManagement:User' => 'Utente',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profilo',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Leggi',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Modifica',
@@ -888,13 +898,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:AdminTools' => 'Strumenti di amministrazione', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Strumenti accessibile solo agli utenti con il profilo di amministratore', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'Sistema',
 
 	'UI:ChangeManagementMenu' => 'Gestione Cambi',
 	'UI:ChangeManagementMenu+' => '',
 	'UI:ChangeManagementMenu:Title' => 'Panoramica dei cambi',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Cambi per tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Cambi per stato',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambi per gruppi di lavoro',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambi non ancora assegnati',
 
 	'UI:ConfigurationManagementMenu' => 'Gestione Configurazione',
@@ -944,7 +954,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 	'Menu:NotificationsMenu' => 'Notifiche', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configurazione delle <span class="hilite">Notifiche</span>',
+	'UI:NotificationsMenu:Title' => 'Configurazione delle Notifiche',
 	'UI:NotificationsMenu:Help' => 'Aiuto',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop le notifiche sono completamente personalizzabili. Essi si basano su due serie di oggetti: <i>trigger e azioni</i>.</p>
 <p><i>I <b>trigger</b></i> definiscono quando verrà eseguita una notifica. Ci sono diversi trigger come parte del nucleo di iTop, ma altri possono essere portati da estensioni:
@@ -1431,9 +1441,12 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1572,4 +1585,43 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
+	'Menu:DataSources+' => '',
+	'Menu:WelcomeMenu' => 'Benveuto',
+	'Menu:WelcomeMenu+' => '',
+	'Menu:WelcomeMenuPage' => 'Benvenuto',
+	'Menu:WelcomeMenuPage+' => '',
+	'Menu:AdminTools' => 'Strumenti di amministrazione',
+	'Menu:AdminTools+' => '',
+	'Menu:AdminTools?' => 'Strumenti accessibile solo agli utenti con il profilo di amministratore',
+	'Menu:DataModelMenu' => 'Modello Dati',
+	'Menu:DataModelMenu+' => '',
+	'Menu:ExportMenu' => 'Esporta',
+	'Menu:ExportMenu+' => '',
+	'Menu:NotificationsMenu' => 'Notifiche',
+	'Menu:NotificationsMenu+' => '',
+	'Menu:AuditCategories' => 'Categorie di Audit',
+	'Menu:AuditCategories+' => '',
+	'Menu:Notifications:Title' => 'Categorie di Audit',
+	'Menu:RunQueriesMenu' => 'Esegui query',
+	'Menu:RunQueriesMenu+' => '',
+	'Menu:QueryMenu' => 'Rubbrica delle Query',
+	'Menu:QueryMenu+' => 'Rubbrica delle Query',
+	'Menu:UniversalSearchMenu' => 'Ricerca universale',
+	'Menu:UniversalSearchMenu+' => '',
+	'Menu:UserManagementMenu' => 'Gestione degli utenti',
+	'Menu:UserManagementMenu+' => '',
+	'Menu:ProfilesMenu' => 'Profili',
+	'Menu:ProfilesMenu+' => '',
+	'Menu:ProfilesMenu:Title' => 'Profili',
+	'Menu:UserAccountsMenu' => 'Account utente',
+	'Menu:UserAccountsMenu+' => '',
+	'Menu:UserAccountsMenu:Title' => 'Account utente',
+	'Menu:MyShortcuts' => 'Le mie scorciatoie',
+	'Menu:UserManagement' => 'Gestione utenti',
+	'Menu:Queries' => 'Interrogazioni',
+	'Menu:ConfigurationTools' => 'configurazione',
 ));

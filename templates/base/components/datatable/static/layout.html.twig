@@ -1,0 +1,48 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% set columns = oUIBlock.GetColumns() %}
+<table id="{{ oUIBlock.GetId() }}" class="ibo-datatable listResults" style="width:100%;">
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th class="ibo-datatable-header" title="{{ column.description }}">{{ column.label }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for data in oUIBlock.GetData() %}
+        {% if data['@class'] is not empty %}
+        <tr role="row" class="{{ data['@class'] }}">
+        {% else %}
+            <tr>
+        {% endif %}
+        {% for name,column in columns %}
+            <td {% if column.class is not empty %}class="{{ column.class }}" {% endif %}
+                    {% if column.metadata is not empty %}
+                        {% for prop,value in column.metadata %}
+                            data-{{ prop|replace({'_': '-'}) }}="{{ value }}"
+                        {% endfor %}
+                    {% endif %}
+                    {% set cellValueHtml = '' %}
+                    {% for cellName,cellValue in data %}
+                        {% if cellName == name %}
+                            {% if cellValue.value_raw is empty %}
+                                {% set cellValueHtml = cellValue %}
+                            {% else %}
+                                data-value-raw="{{ cellValue.value_raw }}"
+                                {% if cellValue.value_html is not empty %}
+                                    {% set cellValueHtml = cellValue.value_html %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if cellValueHtml is empty %}
+                        {% set cellValueHtml = '&nbsp;' %}
+                    {% endif %}
+            >{{ cellValueHtml|raw }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

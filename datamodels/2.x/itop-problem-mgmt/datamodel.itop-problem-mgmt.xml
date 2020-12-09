@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
     <classes>
         <class id="Problem" _delta="define">
             <parent>Ticket</parent>
@@ -21,7 +21,9 @@
                         <attribute id="ref"/>
                     </attributes>
                 </naming>
-                <display_template/>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
                 <icon>images/problem.png</icon>
                 <reconciliation>
                     <attributes>
@@ -161,7 +163,6 @@
                 </field>
             </fields>
             <lifecycle>
-                <attribute>status</attribute>
                 <stimuli>
                     <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
                     <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
@@ -685,6 +686,9 @@
     <menus>
         <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
             <rank>42</rank>
+				    <style>
+					    <decoration_classes>fas fa-question</decoration_classes>
+				    </style>
         </menu>
         <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
             <rank>5</rank>

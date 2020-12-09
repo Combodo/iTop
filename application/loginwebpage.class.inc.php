@@ -78,26 +78,65 @@ class LoginWebPage extends NiceWebPage
 	
 	public function __construct($sTitle = null)
 	{
-	    if($sTitle === null)
-        {
-            $sTitle = Dict::S('UI:Login:Title');
-        }
+		if ($sTitle === null) {
+			$sTitle = Dict::S('UI:Login:Title');
+		}
 
 		parent::__construct($sTitle);
 		$this->SetStyleSheet();
-		$this->add_header("Cache-control: no-cache");
+		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
+		$this->add_header('Pragma: no-cache');
+		$this->add_header('Expires: 0');
+		$this->add_header('X-Frame-Options: deny');
 	}
 	
 	public function SetStyleSheet()
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
 	{
 		self::$m_sLoginFailedMessage = $sMessage;
+	}
+
+	/**
+	 * @param $oUser
+	 * @param array $aProfiles
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public static function SynchronizeProfiles(&$oUser, array $aProfiles, $sOrigin)
+	{
+		$oProfilesSet = $oUser->Get(‘profile_list’);
+		//delete old profiles
+		$aExistingProfiles = [];
+		while ($oProfile = $oProfilesSet->Fetch())
+		{
+			array_push($aExistingProfiles, $oProfile->Get('profileid'));
+			$iArrayKey = array_search($oProfile->Get('profileid'), $aProfiles);
+			if (!$iArrayKey)
+			{
+				$oProfilesSet->RemoveItem($oProfile->Get('profileid'));
+			}
+			else
+			{
+				unset($aProfiles[$iArrayKey]);
+			}
+		}
+		//add profiles not already linked with user
+		foreach ($aProfiles as $iProfileId)
+		{
+			$oLink = new URP_UserProfile();
+			$oLink->Set('profileid', $iProfileId);
+			$oLink->Set('reason', $sOrigin);
+
+			$oProfilesSet->AddItem(MetaModel::NewObject('URP_UserProfile', array('profileid' => $iProfileId, 'reason' => $sOrigin)));
+		}
+		$oUser->Set('profile_list', $oProfilesSet);
 	}
 
 	public function DisplayLoginHeader($bMainAppLogo = false)
@@ -189,51 +228,52 @@ class LoginWebPage extends NiceWebPage
 			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
             /** @var UserInternal $oUser */
             $oUser = UserRights::GetUserObject();
-			if ($oUser == null)
+
+			if ($oUser != null)
 			{
-				throw new Exception(Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser));
-			}
-			if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
-			}
-			if (!$oUser->CanChangePassword())
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
-			}
-			
-			$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-			if ($sTo == '')
-			{
-				throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+				}
+				if (!$oUser->CanChangePassword())
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+				}
+
+				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+				if ($sTo == '')
+				{
+					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+				}
+
+				// This token allows the user to change the password without knowing the previous one
+				$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
+				$oUser->Set('reset_pwd_token', $sToken);
+				CMDBObject::SetTrackInfo('Reset password');
+				$oUser->AllowWrite(true);
+				$oUser->DBUpdate();
+
+				$oEmail = new Email();
+				$oEmail->SetRecipientTO($sTo);
+				$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
+				$oEmail->SetRecipientFrom($sFrom);
+				$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
+				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
+				$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
+				$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
+				switch ($iRes)
+				{
+					//case EMAIL_SEND_PENDING:
+					case EMAIL_SEND_OK:
+						break;
+
+					case EMAIL_SEND_ERROR:
+					default:
+						IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
+						throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+				}
 			}
 
-			// This token allows the user to change the password without knowing the previous one
-			$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
-			$oUser->Set('reset_pwd_token', $sToken);
-			CMDBObject::SetTrackInfo('Reset password');
-			$oUser->AllowWrite(true);
-			$oUser->DBUpdate();
-
-			$oEmail = new Email();
-			$oEmail->SetRecipientTO($sTo);
-			$sFrom = MetaModel::GetConfig()->Get('forgot_password_from');
-			$oEmail->SetRecipientFrom($sFrom);
-			$oEmail->SetSubject(Dict::S('UI:ResetPwd-EmailSubject', $oUser->Get('login')));
-			$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
-			$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
-			$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
-			switch ($iRes)
-			{
-				//case EMAIL_SEND_PENDING:
-				case EMAIL_SEND_OK:
-					break;
-		
-				case EMAIL_SEND_ERROR:
-				default:
-					IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
-					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
-			}
 
 			$oTwigContext = new LoginTwigRenderer();
 			$aVars = $oTwigContext->GetDefaultVars();
@@ -315,7 +355,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
-				$oUser->Set('reset_pwd_token', '');
+				$oUser->Set('reset_pwd_token', new ormPassword());
 				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
 				$aVars['sUrl'] = utils::GetAbsoluteUrlAppRoot();
@@ -789,12 +829,13 @@ class LoginWebPage extends NiceWebPage
 		$oPerson = null;
 		try
 		{
-			$sOrigin = 'External User provisioning';
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
 			if (isset($_SESSION['login_mode']))
 			{
-				$sOrigin .= " ({$_SESSION['login_mode']})";
+				$sInfo .= " ({$_SESSION['login_mode']})";
 			}
-			CMDBObject::SetTrackOrigin($sOrigin);
+			CMDBObject::SetTrackInfo($sInfo);
 
 			$oPerson = MetaModel::NewObject('Person');
 			$oPerson->Set('first_name', $sFirstName);
@@ -842,6 +883,14 @@ class LoginWebPage extends NiceWebPage
 		$oUser = null;
 		try
 		{
+			CMDBObject::SetTrackOrigin('custom-extension');
+			$sInfo = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sInfo .= " ({$_SESSION['login_mode']})";
+			}
+			CMDBObject::SetTrackInfo($sInfo);
+
 			$oUser = MetaModel::GetObjectByName('UserExternal', $sAuthUser, false);
 			if (is_null($oUser))
 			{
@@ -876,20 +925,12 @@ class LoginWebPage extends NiceWebPage
 			}
 
 			// Now synchronize the profiles
-			$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
 			$sOrigin = 'External User provisioning';
 			if (isset($_SESSION['login_mode']))
 			{
 				$sOrigin .= " ({$_SESSION['login_mode']})";
 			}
-			foreach ($aProfiles as $iProfileId)
-			{
-				$oLink = new URP_UserProfile();
-				$oLink->Set('profileid', $iProfileId);
-				$oLink->Set('reason', $sOrigin);
-				$oProfilesSet->AddObject($oLink);
-			}
-			$oUser->Set('profile_list', $oProfilesSet);
+			$aExistingProfiles = self::SynchronizeProfiles($oUser, $aProfiles, $sOrigin);
 			if ($oUser->IsModified())
 			{
 				$oUser->DBWrite();
@@ -929,6 +970,7 @@ class LoginWebPage extends NiceWebPage
 			{
 				// No rights to be here, redirect to the portal
 				header('Location: '.$ret);
+				die();
 			}
 		}
 		return self::EXIT_CODE_OK;
@@ -983,7 +1025,7 @@ class LoginWebPage extends NiceWebPage
 				else
 				{
 					require_once(APPROOT.'/setup/setuppage.class.inc.php');
-					$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+					$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");
 					$oP->p("<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/logoff.php\">".Dict::S('UI:LogOffMenu')."</a>");
 					$oP->output();
@@ -1060,6 +1102,24 @@ class LoginWebPage extends NiceWebPage
 				$oPage->output();
 				exit;
 			}
+		}
+		else if ($operation == 'check_pwd_policy')
+		{
+			$sAuthUser = $_SESSION['auth_user'];
+			UserRights::Login($sAuthUser); // Set the user's language
+
+			$aPwdMap = array();
+
+			foreach (array('new_pwd', 'retype_new_pwd') as $postedPwd)
+			{
+				$oUser = new UserLocal();
+				$oUser->ValidatePassword($_POST[$postedPwd]);
+
+				$aPwdMap[$postedPwd]['isValid'] = $oUser->IsPasswordValid();
+				$aPwdMap[$postedPwd]['message'] = $oUser->getPasswordValidityMessage();
+			}
+			echo json_encode($aPwdMap);
+			die();
 		}
 		if ($operation == 'do_change_pwd')
 		{

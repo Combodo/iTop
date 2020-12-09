@@ -95,6 +95,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '連絡先(人物)',
 	'Class:User/Attribute:contactid+' => 'ビジネスデータから抽出した個人の詳細',
+	'Class:User/Attribute:org_id' => '組織',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'ラストネーム',
 	'Class:User/Attribute:last_name+' => '対応する連絡先の名前',
 	'Class:User/Attribute:first_name' => 'ファーストネーム',
@@ -403,6 +405,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => '検索（トグル↓↑)',
 	'UI:ClickToCreateNew' => '新規 %1$s を作成',
@@ -441,6 +446,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'エラー：状態"%3$s"のオブジェクト%2$s上の無効なスティミュラス"%1$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
@@ -507,6 +514,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -515,7 +523,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -543,6 +551,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:Login' => 'iTopへ入る',
 	'UI:Login:Error:AccessRestricted' => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
 	'UI:Login:Error:AccessAdmin' => '管理者権限をもつユーザにアクセスが制限されています。iTop管理者に問い合わせしてください。',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- 選択ください --',
 	'UI:CSVImport:MappingNotApplicable' => '--このフィールドを無視する --',
 	'UI:CSVImport:NoData' => '空のデータセット..., データを提供してください。',
@@ -670,6 +681,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:MoreInfo' => 'クエリに関する追加情報',
 	'UI:RunQuery:DevelopedQuery' => 'クエリ式の再開発',
 	'UI:RunQuery:SerializedFilter' => 'シリアライズされたフィルタ：',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'クエリ: %1$s 実行時にエラーが発生しました',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -830,7 +845,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:FatalErrorMessage' => '致命的なエラー、ITOPを続行することはできません。',
 	'UI:Error_Details' => 'エラー：%1$s',
 
-	'UI:PageTitle:ClassProjections' => 'iTop ユーザ管理 - クラスプロジェクション',
 	'UI:PageTitle:ProfileProjections' => 'iTop ユーザ管理 - プロフィールプロジェクション',
 	'UI:UserManagement:Class' => 'クラス',
 	'UI:UserManagement:Class+' => 'オブジェクトのクラス',
@@ -839,8 +853,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:AnyObject' => '* 任意 *',
 	'UI:UserManagement:User' => 'ユーザ',
 	'UI:UserManagement:User+' => 'このプロジェクションに関与しているユーザー',
-	'UI:UserManagement:Profile' => 'プロフィール',
-	'UI:UserManagement:Profile+' => 'プロジェクションが指定されているプロフィール',
 	'UI:UserManagement:Action:Read' => '読み込み',
 	'UI:UserManagement:Action:Read+' => 'オブジェクトの読み込み/表示',
 	'UI:UserManagement:Action:Modify' => '修正',
@@ -873,13 +885,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',
 	'UI:ChangeManagementMenu:Title' => '変更管理概要',
 	'UI-ChangeManagementMenu-ChangesByType' => 'タイプ別変更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '状態別変更',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'ワークグループ別変更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'まだ割り当てられていない変更',
 
 	'UI:ConfigurationManagementMenu' => '構成管理',
@@ -929,7 +941,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '通知の設定', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">通知</span>の設定',
+	'UI:NotificationsMenu:Title' => '通知の設定',
 	'UI:NotificationsMenu:Help' => 'ヘルプ',
 	'UI:NotificationsMenu:HelpContent' => '<p>iTopでは、通知はすべてカスタマイズが可能です。通知は<i>トリガーとアクション</i>という二つのオブジェクトがベースになっています。
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1142,7 +1154,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ColumnsAndSortOrder' => 'カラムと並び順:',
 	'UI:UseDefaultSettings' => '既定のセッティングを使用',
 	'UI:UseSpecificSettings' => '次のセッティングを使用:',
-	'UI:Display_X_ItemsPerPage' => '1ページに %1$s アイテムを表示',
+	'UI:Display_X_ItemsPerPage_prefix' => '1ページに',
+	'UI:Display_X_ItemsPerPage_suffix' => 'アイテムを表示',
 	'UI:UseSavetheSettings' => 'セッティングを保存',
 	'UI:OnlyForThisList' => 'このリストのみ',
 	'UI:ForAllLists' => 'すべてのリストのデフォルト',
@@ -1415,9 +1428,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1556,4 +1572,43 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Menu:DataSources' => '同期データソース',
+	'Menu:DataSources+' => '全ての同期データソース',
+	'Menu:WelcomeMenu' => 'ようこそ',
+	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenuPage' => 'ようこそ',
+	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ',
+	'Menu:AdminTools' => '管理ツール',
+	'Menu:AdminTools+' => '管理ツール',
+	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',
+	'Menu:DataModelMenu' => 'データモデル',
+	'Menu:DataModelMenu+' => 'データモデル概要',
+	'Menu:ExportMenu' => 'エクスポート',
+	'Menu:ExportMenu+' => '任意のクエリ結果をHTML、CSV、XMLでエクスポートする',
+	'Menu:NotificationsMenu' => '通知',
+	'Menu:NotificationsMenu+' => '通知の設定',
+	'Menu:AuditCategories' => '監査カテゴリ',
+	'Menu:AuditCategories+' => '監査カテゴリ',
+	'Menu:Notifications:Title' => '監査カテゴリ',
+	'Menu:RunQueriesMenu' => 'クエリ実行',
+	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
+	'Menu:QueryMenu' => 'クエリのフレーズブック',
+	'Menu:QueryMenu+' => 'クエリのフレーズブック',
+	'Menu:UniversalSearchMenu' => '全検索',
+	'Menu:UniversalSearchMenu+' => '何か...検索',
+	'Menu:UserManagementMenu' => 'ユーザ管理',
+	'Menu:UserManagementMenu+' => 'ユーザ管理',
+	'Menu:ProfilesMenu' => 'プロフィール',
+	'Menu:ProfilesMenu+' => 'プロフィール',
+	'Menu:ProfilesMenu:Title' => 'プロフィール',
+	'Menu:UserAccountsMenu' => 'ユーザアカウント',
+	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
+	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
+	'Menu:MyShortcuts' => '私のショートカット',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

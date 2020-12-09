@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
     <classes>
         <class id="Change" _delta="define">
             <parent>Ticket</parent>
@@ -21,7 +21,9 @@
                         <attribute id="ref"/>
                     </attributes>
                 </naming>
-                <display_template/>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
                 <icon>images/change.png</icon>
                 <reconciliation>
                     <attributes>
@@ -161,7 +163,6 @@
                         <icon>images/change-closed.png</icon>
                     </item>
                 </highlight_scale>
-                <attribute>status</attribute>
                 <stimuli>
                     <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
                     <stimulus id="ev_plan" xsi:type="StimulusUserAction"/>
@@ -735,6 +736,9 @@
     <menus>
         <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
             <rank>50</rank>
+				    <style>
+					    <decoration_classes>fas fa-exchange-alt</decoration_classes>
+				    </style>
         </menu>
         <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
             <rank>0</rank>

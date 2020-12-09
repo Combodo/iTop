@@ -71,6 +71,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query/Attribute:name+' => 'Identification de la requête',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Description complète (finalité, utilisations, public)',
+	'Class:Query/Attribute:is_template' => 'Base pour champ OQL',
+	'Class:Query/Attribute:is_template+' => 'Utilisable comme base pour les destinataires des Notifications',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Oui',
+	'Class:Query/Attribute:is_template/Value:no' => 'Non',
 	'Class:QueryOQL/Attribute:fields' => 'Champs',
 	'Class:QueryOQL/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
 	'Class:QueryOQL' => 'Requête OQL',
@@ -339,7 +343,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
 <ul>il contient:
-<li>Une base de gestion des configuration (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
+<li>Une base de gestion des configurations (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
 <li>Un module de gestion des incidents pour suivre les incidents d\'exploitation et gérer la communication à propos de ces incidents.</li>
 <li>Un module de gestion des changements pour planifier et suivre les modifications de votre SI.</li>
 <li>Une base des erreurs connues, pour accélérer la résolution des incidents.</li>
@@ -355,7 +359,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Améliorer la satisfaction client et fournir aux responsables des vues sur la performance interne du SI.</li>
 </ul>
 </p>
-<p>iTop est complètement ouvert pour s\'intéger avec votre environnement informatique.</p>
+<p>iTop est complètement ouvert pour s\'intégrer avec votre environnement informatique.</p>
 <p>
 <ul>Grâce à ce portail opérationnel de nouvelle génération:
 <li>Gérez un environnement informatique de plus en plus complexe.</li>
@@ -405,6 +409,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Insert' => 'Insérer',
 	'UI:Button:More' => 'Plus',
 	'UI:Button:Less' => 'Moins',
+	'UI:Button:Wait' => 'Patientez pendant la mise à jour des champs',
+	'UI:Treeview:CollapseAll' => 'Tout replier',
+	'UI:Treeview:ExpandAll' => 'Tout déplier',
 
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
@@ -440,7 +447,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une modification massive sur les objets de type %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erreur: l\'objet a déjà été dupliqué !',
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '%2$s est actuellement dans l\'état "%3$s", l\'opération "%1$s" que vous avez demandée ne peut être appliquée.',
 	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
@@ -520,9 +527,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'il manque un attribut de type "email" sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-NoEmail' => 'il manque une adresse email sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-Send' => 'erreur technique lors de l\'envoi de l\'email. Veuillez contacter l\'administrateur de l\'application.',
-	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email...',
+	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email. Si vous ne recevez pas d\'email, merci de vérifier le login saisi',
 	'UI:ResetPwd-EmailSubject' => 'Changer votre mot de passe iTop',
-	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe iTop sans connaitre le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
+	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe iTop sans connaître le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Nouveau mot de passe',
 	'UI:ResetPwd-Error-InvalidToken' => 'Désolé, le mot de passe a déjà été modifié avec le lien que vous avez suivi, ou bien vous avez reçu plusieurs emails. Dans ce cas, veillez à utiliser le tout dernier lien reçu.',
@@ -547,7 +554,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
 	'UI:Button:Login' => 'Entrer dans iTop',
 	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
-	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:AccessAdmin' => 'Accès restreint aux utilisateurs possédant le profil Administrateur.',
 	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
 	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
@@ -682,7 +689,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'OQL développé pour le compte',
 	'UI:RunQuery:ResultSQLCount' => 'SQL généré pour le compte',
 	'UI:RunQuery:ResultSQL' => 'SQL généré',
-
 	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
@@ -753,6 +759,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Attribute/Filter' => 'Filtre',
 	'UI:Schema:DefaultNullValue' => 'Valeur null par défaut : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
+	'UI:Edit:SearchQuery' => 'Sélectionner une requête prédéfinie',
 	'UI:Edit:TestQuery' => 'Tester la requête',
 	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
@@ -843,7 +850,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop gestion des utilisateurs - projections des classes',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestion des utilisateurs - projections des profils',
 	'UI:UserManagement:Class' => 'Type',
 	'UI:UserManagement:Class+' => 'Type des objets',
@@ -852,8 +858,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:AnyObject' => '* indifférent *',
 	'UI:UserManagement:User' => 'Utilisateur',
 	'UI:UserManagement:User+' => 'L\'utilisateur',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil dans lequel la projection est définie',
 	'UI:UserManagement:Action:Read' => 'Lecture',
 	'UI:UserManagement:Action:Read+' => 'Lecture et affichage d\'un objet',
 	'UI:UserManagement:Action:Modify' => 'Modification',
@@ -886,14 +890,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:AdminTools' => 'Outils d\'admin', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:System' => 'Système',
+	'Menu:SystemTools' => 'Système',
 
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu+' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu:Title' => 'Résumé des changements',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changements par type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changements par état',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changements par workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changements en attente d\'assignation',
 
 	'UI:ConfigurationManagementMenu' => 'Gestion de Configuration',
@@ -943,7 +946,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
+	'UI:NotificationsMenu:Title' => 'Configuration des Notifications',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :
@@ -1155,7 +1158,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
 	'UI:UseDefaultSettings' => 'Utiliser les réglages par défaut',
 	'UI:UseSpecificSettings' => 'Utiliser les réglages suivants:',
-	'UI:Display_X_ItemsPerPage' => 'Afficher %1$s éléments par page',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Afficher',
+	'UI:Display_X_ItemsPerPage_suffix' => 'éléments par page',
 	'UI:UseSavetheSettings' => 'Enregistrer ces réglages',
 	'UI:OnlyForThisList' => 'Seulement pour cette liste',
 	'UI:ForAllLists' => 'Défaut pour toutes les listes',
@@ -1428,6 +1432,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
 
+	'UI:Button:RemoveDocument' => 'Supprimer le document',
+
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
 	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> La soumission automatique a été desactivée pour cette classe',
@@ -1570,4 +1576,43 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:ResetCache' => 'Ràz du cache',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
+));
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:DataSources' => 'Synchronisation',
+	'Menu:DataSources+' => '',
+	'Menu:WelcomeMenu' => 'Bienvenue',
+	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop',
+	'Menu:WelcomeMenuPage' => 'Bienvenue',
+	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop',
+	'Menu:AdminTools' => 'Administration',
+	'Menu:AdminTools+' => 'Outils d\'administration',
+	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',
+	'Menu:DataModelMenu' => 'Modèle de Données',
+	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Export des résultats d\'une requête en HTML, CSV ou XML',
+	'Menu:NotificationsMenu' => 'Notifications',
+	'Menu:NotificationsMenu+' => 'Configuration des Notifications',
+	'Menu:AuditCategories' => 'Catégories d\'audit',
+	'Menu:AuditCategories+' => 'Catégories d\'audit',
+	'Menu:Notifications:Title' => 'Catégories d\'audit',
+	'Menu:RunQueriesMenu' => 'Requêtes OQL',
+	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',
+	'Menu:QueryMenu' => 'Livre des requêtes',
+	'Menu:QueryMenu+' => 'Livre des requêtes',
+	'Menu:UniversalSearchMenu' => 'Recherche Universelle',
+	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...',
+	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs',
+	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs',
+	'Menu:ProfilesMenu' => 'Profils',
+	'Menu:ProfilesMenu+' => 'Profils',
+	'Menu:ProfilesMenu:Title' => 'Profils',
+	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
+	'Menu:MyShortcuts' => 'Mes raccourcis',
+	'Menu:UserManagement' => 'Utilisateurs',
+	'Menu:Queries' => 'Requêtes',
+	'Menu:ConfigurationTools' => 'Configuration',
 ));

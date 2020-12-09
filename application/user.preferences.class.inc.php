@@ -34,16 +34,21 @@ require_once(APPROOT.'/core/userrights.class.inc.php');
  */
 class appUserPreferences extends DBObject
 {
-	static $oUserPrefs = null; // Local cache
-	
+	private static $oUserPrefs = null; // Local cache
+
 	/**
 	 * Get the value of the given property/preference
 	 * If not set, the default value will be returned
+	 *
 	 * @param string $sCode Code/Name of the property to set
-	 * @param string $sDefaultValue The default value
-	 * @return string The value of the property for the current user
+	 * @param mixed $defaultValue The default value
+	 *
+	 * @return mixed The value of the property for the current user
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	static function GetPref($sCode, $sDefaultValue)
+	public static function GetPref($sCode, $defaultValue)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -56,40 +61,52 @@ class appUserPreferences extends DBObject
 		}
 		else
 		{
-			return $sDefaultValue;
+			return $defaultValue;
 		}
 	}
-	
+
 	/**
 	 * Set the value for a given preference, and stores it into the database
+	 *
 	 * @param string $sCode Code/Name of the property/preference to set
-	 * @param string $sValue Value to set
+	 * @param mixed $value Value to set
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	static function SetPref($sCode, $sValue)
+	public static function SetPref($sCode, $value)
 	{
 		if (self::$oUserPrefs == null)
 		{
 			self::Load();
 		}
 		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $sValue))
+		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $value))
 		{
 			// Do not write it again
 		}
 		else
 		{
-			$aPrefs[$sCode] = $sValue;
+			$aPrefs[$sCode] = $value;
 			self::$oUserPrefs->Set('preferences', $aPrefs);
 			self::Save();
 		}
 	}
-	
+
 	/**
 	 * Clears the value for a given preference (or list of preferences that matches a pattern), and updates the database
-	 * @param string $sPattern Code/Pattern of the properties/preferences to reset
+	 *
+	 * @param string $sCodeOrPattern Code/Pattern of the properties/preferences to reset
 	 * @param boolean $bPattern Whether or not the supplied code is a PCRE pattern
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	static function UnsetPref($sCodeOrPattern, $bPattern = false)
+	public static function UnsetPref($sCodeOrPattern, $bPattern = false)
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -119,12 +136,16 @@ class appUserPreferences extends DBObject
 			self::Save();
 		}
 	}
-	
+
 	/**
 	 * Call this function to get all the preferences for the user, packed as a JSON object
+	 *
 	 * @return string JSON representation of the preferences
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	static function GetAsJSON()
+	public static function GetAsJSON()
 	{
 		if (self::$oUserPrefs == null)
 		{
@@ -136,20 +157,30 @@ class appUserPreferences extends DBObject
 
 	/**
 	 * Call this function if the user has changed (like when doing a logoff...)
+	 *
+	 * @return void
 	 */
-	static public function ResetPreferences()
+	public static function ResetPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
+
 	/**
 	 * Call this function to ERASE all the preferences from the current user
+	 *
+	 * @return void
 	 */
-	static public function ClearPreferences()
+	public static function ClearPreferences()
 	{
 		self::$oUserPrefs = null;
 	}
-	
-	static protected function Save()
+
+	/**
+	 * Save preferences in the DB
+	 *
+	 * @return void;
+	 */
+	protected static function Save()
 	{
 		if (self::$oUserPrefs != null)
 		{
@@ -161,12 +192,17 @@ class appUserPreferences extends DBObject
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads the preferences for the current user, creating the record in the database
 	 * if needed
+	 *
+	 * @return void;
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	static protected function Load()
+	protected static function Load()
 	{
 		if (self::$oUserPrefs != null) return;
 		$oSearch = new DBObjectSearch('appUserPreferences');
@@ -193,6 +229,9 @@ class appUserPreferences extends DBObject
 		self::$oUserPrefs = $oObj;
 	}
 
+	/**
+	 * @throws \CoreException
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -213,9 +252,22 @@ class appUserPreferences extends DBObject
 	}
 
 	/**
-	* Overloading this function here to secure a fix done right before the release
-	* The real fix should be to implement this verb in DBObject	
-	*/
+	 * Overloading this function here to secure a fix done right before the release
+	 * The real fix should be to implement this verb in DBObject
+	 *
+	 * @param \CMDBChange $oChange
+	 * @param bool|null $bSkipStrongSecurity
+	 * @param \DeletionPlan|null $oDeletionPlan
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
 		utils::PushArchiveMode(false);

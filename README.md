@@ -21,21 +21,35 @@ iTop also offers mass import tools and web services to integrate with your IT
 - [Data synchronization][18] (for data federation)
 
 
+## Latest release
+
+ - [Changes since the previous version][62]
+ - [New features][63]
+ - [Installation notes][64]
+ - [Download][65]
+
+[62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
+[63]: https://www.itophub.io/wiki/page?id=latest:release:start
+[64]: https://www.itophub.io/wiki/page?id=latest:install:start
+[65]: https://sourceforge.net/projects/itop/files/latest/download
+
+
 ## Resources
 
  - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [Documentation][4] covering both iTop and its official extensions
- - [iTop Hub][5] : discover and install extensions !
-
+ - [Software requirements][4]
+ - [Documentation][5] covering both iTop and its official extensions
+ - [iTop Hub][6] : discover and install extensions !
 
 
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
 [3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki
-[5]: https://store.itophub.io/en_US/
+[4]: https://www.itophub.io/wiki/page?id=latest:install:upgrading_itop
+[5]: https://www.itophub.io/wiki
+[6]: https://store.itophub.io/en_US/
 
 [10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
 [11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
@@ -46,48 +60,6 @@ iTop also offers mass import tools and web services to integrate with your IT
 [16]: https://www.itophub.io/wiki/page?id=latest%3Auser%3Abulk_modify#uploading_data
 [17]: https://www.itophub.io/wiki/page?id=latest%3Aadmin%3Aaudit
 [18]: https://www.itophub.io/wiki/page?id=latest%3Aadvancedtopics%3Adata_synchro_overview
-
-
-
-## Last releases
-
-### Versions 2.6.*
- - 2.6.0 published on January 9, 2019
- - [Changes since the previous version][58]
- - [New features][59]
- - [Migration notes][60]
- - [Download iTop 2.6.1][61]
-
-[58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
-[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
-[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.1
-
-
-### Versions 2.5.*
- - 2.5.0 published on July 11, 2018
- - [Changes since the previous version][54]
- - [New features][55]
- - [Migration notes][56]
- - [Download iTop 2.5.1][57]
-
-[54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
-[55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
-[56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
-[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
- 
-
-### Versions 2.4.*
- - 2.4.0 published on November 16, 2017
- - [Changes since the previous version][50]
- - [New features][51]
- - [Migration notes][52]
- - [Download iTop 2.4.1][53]
-
-[50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
-[51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
-[52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
-[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
 
 
 
@@ -106,12 +78,13 @@ We would like to give a special thank you to the people from the community who c
  - Alves, David
  - Beck, Pedro
  - Bilger, Jean-François
- - Bostoen, Jeffrey
+ - Bostoen, Jeffrey (a.k.a @jbostoen)
  - Cardoso, Anderson
  - Cassaro, Bruno
- - Casteleyn, Thomas
+ - Casteleyn, Thomas (a.k.a @Hipska)
  - Castro, Randall Badilla
  - Colantoni, Maria Laura
+ - Couronné, Guy
  - Dvořák, Lukáš
  - Goethals, Stefan
  - Gumble, David
@@ -121,8 +94,10 @@ We would like to give a special thank you to the people from the community who c
  - Konečný, Kamil
  - Kunin, Vladimir
  - Lassiter, Dennis
+ - Lazcano, Federico
  - Lucas, Jonathan
  - Malik, Remie
+ - Mindêllo de Andrade, Lucas (a.k.a @rokam)
  - Rosenke, Stephan
  - Seki, Shoji
  - Shilov, Vladimir
@@ -143,4 +118,5 @@ We would like to give a special thank you to the people from the community who c
 ### Companies
  - Hardis
  - ITOMIG
+ - Pimkie
 

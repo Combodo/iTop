@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 /**
  * Attachments rendering for iTop console.
@@ -67,6 +68,14 @@ abstract class AbstractAttachmentsRenderer
 	 * If size (in bits) is above this, then we will display a file icon instead of preview
 	 */
 	const MAX_SIZE_FOR_PREVIEW = 500000;
+
+	/**
+	 * Attachments list container HTML id, that must be generated in {@link RenderEditAttachmentsList}
+	 *
+	 * @since 2.7.0-2 N°2968 ajax buttons (on especially the #attachment_plugin hidden input) should not be refreshed
+	 *             so we are refreshing only the content of this container
+	 */
+	const ATTACHMENTS_LIST_CONTAINER_ID = 'AttachmentsListContainer';
 
 	/** @var \WebPage */
 	protected $oPage;
@@ -128,13 +137,38 @@ abstract class AbstractAttachmentsRenderer
 	}
 
 	/**
+	 * Can be overriden to change display order, but must generate an HTML container of ID {@link ATTACHMENTS_LIST_CONTAINER_ID} for JS refresh.
+	 *
 	 * @param int[] $aAttachmentsDeleted Attachments id that should be deleted after form submission
 	 *
-	 * @return string
+	 * @return void will print using {@link oPage}
 	 */
-	abstract public function RenderEditAttachmentsList($aAttachmentsDeleted = array());
+	public function RenderEditAttachmentsList($aAttachmentsDeleted = array())
+	{
+		$this->AddUploadButton();
 
-	abstract public function RenderViewAttachmentsList();
+		$this->oPage->add('<div id="'.self::ATTACHMENTS_LIST_CONTAINER_ID.'">');
+		$this->AddAttachmentsListContent(true, $aAttachmentsDeleted);
+		$this->oPage->add('</div>');
+	}
+
+	/**
+	 * Generates the attachments list content
+	 *
+	 * @param bool $bWithDeleteButton
+	 * @param array $aAttachmentsDeleted
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	abstract public function AddAttachmentsListContent($bWithDeleteButton, $aAttachmentsDeleted = array());
+
+	public function RenderViewAttachmentsList()
+	{
+		$this->AddAttachmentsListContent(false, array());
+	}
 
 	protected function AddUploadButton()
 	{
@@ -153,9 +187,9 @@ abstract class AbstractAttachmentsRenderer
 
 		$this->oPage->add_ready_script(
 			<<<JS
-	function RefreshAttachmentsDisplay()
+	function RefreshAttachmentsDisplay(dataUpload)
 	{
-		var sContentNode = '#AttachmentsContent',
+		var sContentNode = '#AttachmentsContent>div#AttachmentsListContainer',
 			aAttachmentsDeletedHiddenInputs = $('table.attachmentsList>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
 			aAttachmentsDeletedIds = aAttachmentsDeletedHiddenInputs.map(function() { return $(this).val() }).toArray();
 		$(sContentNode).block();
@@ -171,8 +205,10 @@ abstract class AbstractAttachmentsRenderer
 		   function(data) {
 			 $(sContentNode).html(data);
 			 $(sContentNode).unblock();
+			 
+			 $('#attachment_plugin').trigger('add_attachment', [dataUpload.result.att_id, dataUpload.result.msg, false]);
 			}
-		 );
+		 )
 	}
 	
     $('#file').fileupload({
@@ -180,7 +216,17 @@ abstract class AbstractAttachmentsRenderer
 		formData: { operation: 'add', temp_id: '$this->sTransactionId', obj_class: '$sClass' },
         dataType: 'json',
 		pasteZone: null, // Don't accept files via Chrome's copy/paste
-        done: RefreshAttachmentsDisplay,
+        done: function(e, data) {
+			if(typeof(data.result.error) != 'undefined')
+			{
+				if(data.result.error !== '')
+				{
+					alert(data.result.error);
+					return;
+				}
+			}
+			RefreshAttachmentsDisplay(data);
+		},
 	    send: function(e, data){
 	        // Don't send attachment if size is greater than PHP post_max_size, otherwise it will break the request and all its parameters (\$_REQUEST, \$_POST, ...)
 	        // Note: We loop on the files as the data structures is an array but in this case, we only upload 1 file at a time.
@@ -319,9 +365,12 @@ JS;
 }
 
 
+/**
+ * Class TableDetailsAttachmentsRenderer
+ */
 class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 {
-	private function AddAttachmentsTable($bWithDeleteButton, $aAttachmentsDeleted = array())
+	public function AddAttachmentsListContent($bWithDeleteButton, $aAttachmentsDeleted = array())
 	{
 		if ($this->GetAttachmentsCount() === 0)
 		{
@@ -335,22 +384,22 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileName = Dict::S('Attachments:File:Name');
 		$sFileSize = Dict::S('Attachments:File:Size');
 		$sFileDate = Dict::S('Attachments:File:Date');
-		$sFileCreator = Dict::S('Attachments:File:Creator');
+		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
 		$sDeleteColumn = '';
 		if ($bWithDeleteButton)
 		{
-			$sDeleteColumn = '<th></th>';
+			$sDeleteColumn = '<th role="delete"></th>';
 		}
 		$this->oPage->add(<<<HTML
 <table class="listResults attachmentsList">
 	<thead>
-		<th>$sThumbnail</th>
-		<th>$sFileName</th>
-		<th>$sFileSize</th>
-		<th>$sFileDate</th>
-		<th>$sFileCreator</th>
-		<th>$sFileType</th>
+		<th role="icon">$sThumbnail</th>
+		<th role="filename">$sFileName</th>
+		<th role="formatted-size">$sFileSize</th>
+		<th role="upload-date">$sFileDate</th>
+		<th role="uploader">$sFileUploader</th>
+		<th role="type">$sFileType</th>
 		$sDeleteColumn
 	</thead>
 <tbody>
@@ -385,13 +434,6 @@ JS
 		{
 			$this->oPage->add_script($this->GetDeleteAttachmentJs());
 		}
-		$this->oPage->add_style(
-			<<<CSS
-table.attachmentsList>tbody>tr>td:first-child {
-	text-align: center;
-}
-CSS
-		);
 
 		$bIsEven = false;
 		$aAttachmentsDate = AttachmentsHelper::GetAttachmentsDateAddedFromDb($this->sObjClass, $this->iObjKey);
@@ -408,17 +450,35 @@ CSS
 
 		$this->oPage->add('</tbody>'.PHP_EOL);
 		$this->oPage->add('</table>'.PHP_EOL);
+
+		$this->oPage->add_ready_script(<<<'JS'
+var $attachmentsTable = $("table.attachmentsList");
+$attachmentsTable.tablesorter(
+	{
+		textExtraction : 
+			function(node, table, cellIndex) {
+				if ($(node).is("[data-order]")) {
+					return $(node).attr("data-order");
+				}
+
+				return $(node).text();
+			}
+		}
+);
+JS
+		);
 	}
 
 	/**
-	 * @param $bWithDeleteButton
-	 * @param $bIsEven
+	 * @param bool $bWithDeleteButton
+	 * @param bool $bIsEven
 	 * @param \DBObject $oAttachment
 	 * @param array $aAttachmentsDate
 	 * @param int[] $aAttachmentsDeleted
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	private function AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oAttachment, $aAttachmentsDate, $aAttachmentsDeleted)
 	{
@@ -445,9 +505,11 @@ CSS
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
 		$sAttachmentMeta = $this->GetAttachmentHiddenInput($iAttachmentId, $bIsDeletedAttachment);
-		$sFileSize = $oDoc->GetFormatedSize();
+		$iFileSize = $oDoc->GetSize();
+		$sFileFormattedSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
-		$sAttachmentDate = '';
+		$sAttachmentDateFormatted = '';
+		$iAttachmentDateRaw = '';
 		if (!$bIsTempAttachment)
 		{
 			$sAttachmentDate = $oAttachment->Get('creation_date');
@@ -455,9 +517,13 @@ CSS
 			{
 				$sAttachmentDate = $aAttachmentsDate[$iAttachmentId];
 			}
+			$oAttachmentDate = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $sAttachmentDate);
+			$sAttachmentDateFormatted = AttributeDateTime::GetFormat()->Format($oAttachmentDate);
+			$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 		}
 
-		$sAttachmentCreator = $oAttachment->Get('contact_id_friendlyname');
+		$sAttachmentUploader = $oAttachment->Get('contact_id_friendlyname');
+		$sAttachmentUploaderForHtml = utils::HtmlEntities($sAttachmentUploader);
 
 		$sFileType = $oDoc->GetMimeType();
 
@@ -476,38 +542,20 @@ CSS
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);
-			$sDeleteColumn = "<td>$sDeleteButton</td>";
+			$sDeleteColumn = "<td role=\"delete\">$sDeleteButton</td>";
 		}
 
 		$this->oPage->add(<<<HTML
-	<tr id="$sTrId" $sLineClass $sLineStyle>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
-	  <td>$sFileSize</td>
-	  <td>$sAttachmentDate</td>
-	  <td>$sAttachmentCreator</td>
-	  <td>$sFileType</td>
+	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$iFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
+	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
+	  <td role="formatted-size" data-order="$iFileSize">$sFileFormattedSize</td>
+	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDateFormatted</td>
+	  <td role="uploader">$sAttachmentUploader</td>
+	  <td role="type">$sFileType</td>
 	  $sDeleteColumn
 	</tr>
 HTML
 		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function RenderEditAttachmentsList($aAttachmentsDeleted = array())
-	{
-		$this->AddUploadButton();
-
-		$this->AddAttachmentsTable(true, $aAttachmentsDeleted);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function RenderViewAttachmentsList()
-	{
-		$this->AddAttachmentsTable(false);
 	}
 }

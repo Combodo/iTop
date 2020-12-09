@@ -10,7 +10,7 @@ use MetaModel;
 /**
  * Class UniquenessConstraintTest
  *
- * @since 2.6 N°659 uniqueness constraint
+ * @since 2.6.0 N°659 uniqueness constraint
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */

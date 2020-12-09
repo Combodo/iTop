@@ -1,30 +1,22 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Web page used for the setup
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/nicewebpage.class.inc.php');
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
@@ -89,7 +81,7 @@ class SetupPage extends NiceWebPage
 
 	public function error($sText)
 	{
-		$this->add("<div class=\"message message-error\"><span class=\"message-title\">Error:</span>$sText</div>");
+		$this->add("<div class=\"message message-error\">$sText</div>");
 		$this->log_error($sText);
 	}
 
@@ -158,31 +150,35 @@ class SetupPage extends NiceWebPage
 		return parent::output();
 	}
 
+	//@deprecated since 3.0.0 use SetupLog::Error
 	public static function log_error($sText)
 	{
 		SetupLog::Error($sText);
 	}
-
+	//@deprecated since 3.0.0 use SetupLog::Warning
 	public static function log_warning($sText)
 	{
 		SetupLog::Warning($sText);
 	}
-
+	//@deprecated since 3.0.0 use SetupLog::Info
 	public static function log_info($sText)
 	{
 		SetupLog::Info($sText);
 	}
-
+	//@deprecated since 3.0.0 use SetupLog::Ok
 	public static function log_ok($sText)
 	{
 		SetupLog::Ok($sText);
 	}
-
+	//@deprecated since 3.0.0 use SetupLog::Ok
 	public static function log($sText)
 	{
 		SetupLog::Ok($sText);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function LoadTheme()
 	{
 		// Do nothing

@@ -201,6 +201,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -496,10 +503,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ',
 	'Class:ActionEmail/Attribute:test_recipient+' => '状態がテストの場合の宛先',
-	'Class:ActionEmail/Attribute:from' => 'From',
-	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます',
-	'Class:ActionEmail/Attribute:reply_to' => 'Reply to',
-	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます',
+	'Class:ActionEmail/Attribute:from' => 'From~~',
+	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Reply to~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
 	'Class:ActionEmail/Attribute:to+' => 'メールの宛先',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -533,6 +544,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Trigger/Attribute:action_list+' => 'トリガーが発行された場合に動作するアクション',
 	'Class:Trigger/Attribute:finalclass' => 'タイプ',
 	'Class:Trigger/Attribute:finalclass+' => 'タイプ',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1034,4 +1047,40 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

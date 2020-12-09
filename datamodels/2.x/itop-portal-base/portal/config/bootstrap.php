@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -145,6 +145,13 @@ if (empty($_ENV['PORTAL_ID']))
 {
 	echo "Missing argument 'portal_id'";
 	exit;
+}
+
+// Make sure that the PORTAL_ID constant is also defined
+// Note: This is widely used in extensions, snippets and all
+if (!defined('PORTAL_ID'))
+{
+	define('PORTAL_ID', $_ENV['PORTAL_ID']);
 }
 
 // Env. vars to be used in templates and others

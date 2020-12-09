@@ -24,19 +24,23 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
+
 require_once(APPROOT."/application/utils.inc.php");
 
 /**
  * Interface for directing end-users to the relevant application
- */ 
+ */
 interface iDBObjectURLMaker
 {
-    /**
-     * @param string $sClass
-     * @param string $iId
-     *
-     * @return string
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $iId
+	 *
+	 * @return string
+	 */
 	public static function MakeObjectURL($sClass, $iId);
 }
 
@@ -200,23 +204,46 @@ class ApplicationContext
 		}
 		return implode("&", $aParams);
 	}
-	
+	/**
+	 * @since 3.0.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
+	 * Returns the params as c[menu]:..., c[org_id]:....
+	 * @return string The params
+	 */
+	public function GetForPostParams()
+	{
+		return json_encode($this->aValues);
+	}
+
 	/**
 	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
+	 *
 	 * @return string The context as a sequence of <input type="hidden" /> tags
 	 */
 	public function GetForForm()
 	{
 		$sContext = "";
-		foreach($this->aValues as $sName => $sValue)
-		{
+		foreach ($this->aValues as $sName => $sValue) {
 			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
 		}
 		return $sContext;
 	}
 
 	/**
+	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
+	 *
+	 */
+	public function GetForFormBlock(): UIBlock
+	{
+		$oContext = new UIContentBlock();
+		foreach ($this->aValues as $sName => $sValue) {
+			$oContext->AddSubBlock(InputFactory::MakeForHidden('c[$sName]', utils::HtmlEntities($sValue)));
+		}
+		return $oContext;
+	}
+
+	/**
 	 * Returns the context as a hash array 'parameter_name' => value
+	 *
 	 * @return array The context information
 	 */
 	public function GetAsHash()

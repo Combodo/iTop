@@ -19,10 +19,8 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(true); // Check user rights and prompt if needed, admins only here !
 
@@ -67,6 +65,7 @@ try
 		$oBlock->Display($oP, 1);
 		break;
 
+		case 'delete':
 		case 'select_for_deletion':
 		// Redirect to the page that implements bulk delete
 		$sDelete = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$_SERVER['QUERY_STRING'];

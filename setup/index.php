@@ -1,6 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>iTop Setup - redirection</title>
+<link type="text/css" href="../css/setup.css" rel="stylesheet">
+</head>
+<body>
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
+/*
+ * Copyright (C) 2010-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,42 +24,57 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-$bBypassMaintenance = true; // Reset maintenance mode in case of problem
+
+/**
+ * Simple redirection page
+ * Will display an error message if a parse error occurs !
+ *
+ * @since 3.0.0 N°3253
+ */
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/setup/setuppage.class.inc.php');
-require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
-clearstatcache(); // Make sure we know what we are doing !
-SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
-SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
-// Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
-ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
-// While running the setup it is desirable to see any error that may happen
-ini_set('display_errors', true);
-ini_set('display_startup_errors', true);
-date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
-/////////////////////////////////////////////////////////////////////
-// Fake functions to protect the first run of the installer
-// in case the PHP JSON module is not installed...
-if (!function_exists('json_encode'))
+echo <<<'HTML'
+<script src="../js/jquery.min.js"></script>
+<script>
+bSkipErrorDisplay = false;
+$(document).ready(function () {
+	if (!bSkipErrorDisplay) {
+		var $pageBody = $("body");
+		// $pageBody.addClass("error-container");
+		$pageBody.append("<div id='ibo-page-container'>" +
+		  "<h1>😭 iTop cannot install</h1>" +
+		  "<p class=\"message message-error\">💣 PHP version isn't compatible</p>" +
+		  "<p>Please check <a href=\"https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstalling_itop#software_requirements\" target=\"_blank\">iTop requirements</a></p>" +
+		   "</div>")
+	}
+});
+</script>
+HTML;
+
+
+function HandlePageErrors()
 {
-	function json_encode($value, $options = null)
-	{
-		return '[]';
+	$error = error_get_last();
+	if ($error
+		&& (isset($error['type']))
+		&& (in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR], true))) {
+		ob_end_clean();
 	}
 }
-if (!function_exists('json_decode'))
-{
-	function json_decode($json, $assoc=null)
-	{
-		return array();
-	}
-}
-/////////////////////////////////////////////////////////////////////
 
-$oWizard = new WizardController('WizStepWelcome');
-$oWizard->Run();
+
+register_shutdown_function('HandlePageErrors');
+ob_start();
+require_once("wizard.php");
+ob_end_clean();
+
+echo <<<HTML
+<script>
+bSkipErrorDisplay = true;
+document.location = "wizard.php";
+</script>
+HTML;
+?>
+</body>
+</html>

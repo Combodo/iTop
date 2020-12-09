@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\VariableAccessor;
@@ -39,8 +37,8 @@ class CombodoCurrentContactPhotoUrl
 {
 	/** @var \User $oUser */
 	private $oUser;
-	/** @var string $sCombodoPortalInstanceAbsoluteUrl */
-	private $sCombodoPortalInstanceAbsoluteUrl;
+	/** @var string $sCombodoPortalBaseAbsoluteUrl */
+	private $sCombodoPortalBaseAbsoluteUrl;
 	/** @var string|null $sContactPhotoUrl */
 	private $sContactPhotoUrl;
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
@@ -51,13 +49,13 @@ class CombodoCurrentContactPhotoUrl
 	 *
 	 * @param \User                                                     $oUser
 	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
-	 * @param string                                                    $sCombodoPortalInstanceAbsoluteUrl
+	 * @param string                                                    $sCombodoPortalBaseAbsoluteUrl
 	 */
-	public function __construct(User $oUser, ContainerInterface $oContainer, $sCombodoPortalInstanceAbsoluteUrl)
+	public function __construct(User $oUser, ContainerInterface $oContainer, $sCombodoPortalBaseAbsoluteUrl)
 	{
 		$this->oUser = $oUser;
 		$this->oContainer = $oContainer;
-		$this->sCombodoPortalInstanceAbsoluteUrl = $sCombodoPortalInstanceAbsoluteUrl;
+		$this->sCombodoPortalBaseAbsoluteUrl = $sCombodoPortalBaseAbsoluteUrl;
 		$this->sContactPhotoUrl = null;
 	}
 
@@ -84,7 +82,7 @@ class CombodoCurrentContactPhotoUrl
 	private function ComputeContactPhotoUrl()
 	{
 		// Contact
-		$sContactPhotoUrl = "{$this->sCombodoPortalInstanceAbsoluteUrl}img/user-profile-default-256px.png";
+		$sContactPhotoUrl = "{$this->sCombodoPortalBaseAbsoluteUrl}img/user-profile-default-256px.png";
 		// - Checking if we can load the contact
 		try
 		{
@@ -113,7 +111,7 @@ class CombodoCurrentContactPhotoUrl
 				$oImage = $oContact->Get($sPictureAttCode);
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
-					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 3.0
 					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($oContact), 'sObjectId' => $oContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400));
 				}
 				else

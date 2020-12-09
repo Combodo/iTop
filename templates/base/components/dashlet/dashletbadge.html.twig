@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    <div class="ibo-dashlet-badge--body">
+        <div class="ibo-dashlet-badge--icon-container">
+            <img class="ibo-dashlet-badge--icon" src="{{ oUIBlock.GetClassIconUrl() }}"/>
+        </div>
+        <div class="ibo-dashlet-badge--actions">
+            <a class="ibo-dashlet-badge--action-list" href="{{ oUIBlock.GetHyperlink() }}">
+                <span class="ibo-dashlet-badge--action-list-count">{{ oUIBlock.GetCount() }}</span>
+                <span class="ibo-dashlet-badge--action-list-label">{{ oUIBlock.GetClassLabel() }}</span>
+            </a>
+            {% if oUIBlock.GetCreateActionUrl() is not empty %}
+                <a class="ibo-dashlet-badge--action-create" href="{{ oUIBlock.GetCreateActionUrl() }}">
+                    <span class="ibo-dashlet-badge--action-create-icon fas fa-plus"></span>
+                    <span class="ibo-dashlet-badge--action-create-label">{{ oUIBlock.GetCreateActionLabel() }}</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endapply %}

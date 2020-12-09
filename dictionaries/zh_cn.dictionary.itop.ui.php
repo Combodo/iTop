@@ -108,6 +108,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '联系人 (个人)',
 	'Class:User/Attribute:contactid+' => '来自业务数据的个人明细信息',
+	'Class:User/Attribute:org_id' => '组织',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => '姓',
 	'Class:User/Attribute:last_name+' => '对应联系人的姓氏',
 	'Class:User/Attribute:first_name' => '名',
@@ -416,6 +418,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Insert' => '插入',
 	'UI:Button:More' => '更多',
 	'UI:Button:Less' => '更少',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => '搜索',
 	'UI:ClickToCreateNew' => '新建 %1$s',
@@ -454,6 +459,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '错误: 在对象 %2$s 的 "%3$s" 状态上的无效刺激 "%1$s" .',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '元素数量',
@@ -520,6 +527,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop 将会给您发送一封密码重置邮件.',
 	'UI:Login:ResetPassword' => '立即发送!',
 	'UI:Login:ResetPwdFailed' => '邮件发送失败: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' 用户名无效',
 	'UI:ResetPwd-Error-NotPossible' => '外部账户不允许重置密码.',
@@ -528,7 +536,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => '该账户未关联邮箱地址，请联系管理员.',
 	'UI:ResetPwd-Error-NoEmail' => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send' => '邮件传输存在技术原因. 请联系管理员.',
-	'UI:ResetPwd-EmailSent' => '请检查邮箱并按照提示操作...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => '重置iTop 密码',
 	'UI:ResetPwd-EmailBody' => '<body><p>您已请求重置iTop 密码.</p><p>请点击这个链接 (一次性) <a href="%1$s">来输入新的密码</a></p>.',
 
@@ -556,6 +564,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Login' => '登录iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop 访问被限制. 请联系管理员.',
 	'UI:Login:Error:AccessAdmin' => '只有具有管理员权限的人才能访问. 请联系管理员.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- 请选择 --',
 	'UI:CSVImport:MappingNotApplicable' => '-- 忽略该栏 --',
 	'UI:CSVImport:NoData' => '数据为空..., 请提供数据!',
@@ -683,6 +694,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:RunQuery:MoreInfo' => '该查询的更多信息: ',
 	'UI:RunQuery:DevelopedQuery' => '重新开发的查询表达式: ',
 	'UI:RunQuery:SerializedFilter' => '序列化的过滤器: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => '运行该查询时发生了一个错误: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
@@ -843,7 +858,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:FatalErrorMessage' => '致命错误, iTop 无法继续.',
 	'UI:Error_Details' => '错误: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop 用户管理 - 类映射',
 	'UI:PageTitle:ProfileProjections' => 'iTop 用户管理 - 角色映射',
 	'UI:UserManagement:Class' => '类',
 	'UI:UserManagement:Class+' => '对象的类',
@@ -852,8 +866,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:AnyObject' => '* 任何 *',
 	'UI:UserManagement:User' => '用户',
 	'UI:UserManagement:User+' => '与该映射相关的用户',
-	'UI:UserManagement:Profile' => '角色',
-	'UI:UserManagement:Profile+' => '映射被指定的角色',
 	'UI:UserManagement:Action:Read' => '读',
 	'UI:UserManagement:Action:Read+' => '读/显示 对象',
 	'UI:UserManagement:Action:Modify' => '修改',
@@ -886,13 +898,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:AdminTools' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => '具有管理员角色的用户才能获得的工具', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '变更管理',
 	'UI:ChangeManagementMenu+' => '变更管理',
 	'UI:ChangeManagementMenu:Title' => '变更概况',
 	'UI-ChangeManagementMenu-ChangesByType' => '按类别划分的变更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '按状态划分的变更',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => '按执行团队划分的变更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => '尚未分配的变更',
 
 	'UI:ConfigurationManagementMenu' => '配置管理',
@@ -942,7 +954,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '通知的配置', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
+	'UI:NotificationsMenu:Title' => '配置 通知',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在iTop 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
 <p><i><b>触发器</b></i> 定义了什么时候发送通知. iTop core 自带一些触发器, 另一些触发器可由扩展提供:
@@ -1155,7 +1167,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ColumnsAndSortOrder' => '列和排序顺序:',
 	'UI:UseDefaultSettings' => '使用默认配置',
 	'UI:UseSpecificSettings' => '使用下面的配置:',
-	'UI:Display_X_ItemsPerPage' => '每页显示 %1$s 个项目',
+	'UI:Display_X_ItemsPerPage_prefix' => '每页显示',
+	'UI:Display_X_ItemsPerPage_suffix' => '个项目',
 	'UI:UseSavetheSettings' => '保存设置',
 	'UI:OnlyForThisList' => '仅这个列表',
 	'UI:ForAllLists' => '默认所有列表',
@@ -1428,9 +1441,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '该类别已禁用自动提交',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则，或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
@@ -1569,4 +1585,43 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:ResetCache' => '重置缓存',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自 %1$s 的消息',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => '在 %2$s 菜单中最多显示 %1$s 条消息.',
+));
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Menu:DataSources' => '同步数据源',
+	'Menu:DataSources+' => '所有同步数据源',
+	'Menu:WelcomeMenu' => '欢迎',
+	'Menu:WelcomeMenu+' => '欢迎使用iTop',
+	'Menu:WelcomeMenuPage' => '欢迎',
+	'Menu:WelcomeMenuPage+' => '欢迎使用iTop',
+	'Menu:AdminTools' => '管理工具',
+	'Menu:AdminTools+' => '管理工具',
+	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
+	'Menu:DataModelMenu' => '数据模型',
+	'Menu:DataModelMenu+' => '数据模型概况',
+	'Menu:ExportMenu' => '导出',
+	'Menu:ExportMenu+' => '以HTML, CSV 或XML 格式导出任何查询的结果',
+	'Menu:NotificationsMenu' => '通知',
+	'Menu:NotificationsMenu+' => '配置通知',
+	'Menu:AuditCategories' => '审计类别',
+	'Menu:AuditCategories+' => '审计类别',
+	'Menu:Notifications:Title' => '审计类别',
+	'Menu:RunQueriesMenu' => '运行查询',
+	'Menu:RunQueriesMenu+' => '运行任何查询',
+	'Menu:QueryMenu' => '查询手册',
+	'Menu:QueryMenu+' => '查询手册',
+	'Menu:UniversalSearchMenu' => '全局搜索',
+	'Menu:UniversalSearchMenu+' => '搜索所有...',
+	'Menu:UserManagementMenu' => '用户管理',
+	'Menu:UserManagementMenu+' => '用户管理',
+	'Menu:ProfilesMenu' => '角色',
+	'Menu:ProfilesMenu+' => '角色',
+	'Menu:ProfilesMenu:Title' => '角色',
+	'Menu:UserAccountsMenu' => '用户帐户',
+	'Menu:UserAccountsMenu+' => '用户帐户',
+	'Menu:UserAccountsMenu:Title' => '用户帐户',
+	'Menu:MyShortcuts' => '我的快捷方式',
+	'Menu:UserManagement' => '用户管理',
+	'Menu:Queries' => '查询',
+	'Menu:ConfigurationTools' => '配置',
 ));

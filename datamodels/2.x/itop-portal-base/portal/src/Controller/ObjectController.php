@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -133,7 +133,7 @@ class ObjectController extends BrickController
 			$oModifyButton = new JSButtonItem(
 				'modify_object',
 				Dict::S('UI:Menu:Modify'),
-				'CombodoPortalToolbox.OpenUrlInModal("'.$sModifyUrl.'");'
+				'CombodoPortalToolbox.OpenUrlInModal("'.$sModifyUrl.'", true);'
 			);
 			// Putting this one first
 			$aData['form']['buttons']['actions'][] = $oModifyButton->GetMenuItem() + array('js_files' => $oModifyButton->GetLinkedScripts());
@@ -639,14 +639,8 @@ class ObjectController extends BrickController
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%'.$sQuery.'%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
-		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
-		{
-			$oSet->SetLimit(static::DEFAULT_LIST_LENGTH);
-		}
-		else
-		{
-			$oSet->SetLimit($oTargetAttDef->GetMaximumComboLength()); // TODO : Is this the right limit value ? We might want to use another parameter
-		}
+		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_display_limit'));
+
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
 		{
@@ -1031,6 +1025,7 @@ class ObjectController extends BrickController
 		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
 		$sObjectId = $oRequestManipulator->ReadParam('sObjectId', '');
 		$sObjectField = $oRequestManipulator->ReadParam('sObjectField', '');
+		$bCheckSecurity = true;
 
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
 		if ($sObjectClass === 'Attachment')
@@ -1043,11 +1038,16 @@ class ObjectController extends BrickController
 		{
 			$sHostClass = $sObjectClass;
 			$sHostId = $sObjectId;
+
+			// Security bypass for the image attribute of a class
+			if(MetaModel::GetImageAttributeCode($sObjectClass) === $sObjectField) {
+				$bCheckSecurity = false;
+			}
 		}
 
 		// Checking security layers
 		// Note: Checking if host object already exists as we can try to download document from an object that is being created
-		if (($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
+		if (($bCheckSecurity === true) && ($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
 		{
 			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to retrieve document from attribute '.$sObjectField.' as it not allowed to read '.$sHostClass.'::'.$sHostId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
@@ -1100,17 +1100,11 @@ class ObjectController extends BrickController
 	 * Note: This is inspired from itop-attachment/ajax.attachment.php
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sOperation
+	 * @param string $sOperation
 	 *
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
 	 * @throws \Exception
 	 */
 	public function AttachmentAction(Request $oRequest, $sOperation = null)
@@ -1147,6 +1141,7 @@ class ObjectController extends BrickController
 					try
 					{
 						$oDocument = utils::ReadPostedDocument($sFieldName);
+						/** @noinspection PhpUndefinedClassInspection */
 						/** @var \Attachment $oAttachment */
 						$oAttachment = MetaModel::NewObject('Attachment');
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
@@ -1164,7 +1159,7 @@ class ObjectController extends BrickController
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
-						$aData['file_size'] = $oDocument->GetFormatedSize();
+						$aData['file_size'] = $oDocument->GetFormattedSize();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
 						$aData['file_type'] = $oDocument->GetMimeType();

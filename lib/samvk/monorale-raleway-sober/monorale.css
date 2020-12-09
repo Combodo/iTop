@@ -1,0 +1,125 @@
+@font-face {
+    font-family: Monorale;
+    font-weight: 100;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Thin.woff') format('woff');
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 100;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-ThinItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 200;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-ExtraLight.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 200;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-ExtraLightItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 300;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Light.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 300;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-LightItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 400;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Regular.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 400;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Italic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 500;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Medium.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 500;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-MediumItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 600;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-SemiBold.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 600;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-SemiBoldItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 700;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Bold.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 700;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-BoldItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 800;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-ExtraBold.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 800;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-ExtraBoldItalic.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 900;
+    font-style: normal;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-Black.woff') format('woff');
+
+}
+@font-face {
+    font-family: Monorale;
+    font-weight: 900;
+    font-style: italic;
+    src: url('https://cdn.rawgit.com/samvk/monorale-raleway-sober/master/woff/Monorale-BlackItalic.woff') format('woff');
+
+}

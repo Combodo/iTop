@@ -190,6 +190,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Core:AttributeTag' => 'Тег',
 	'Core:AttributeTag+' => 'Тег',
+	
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'cron',
+	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
 
@@ -485,10 +492,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Тестовый получатель',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Получатель, если уведомление в статусе "Тест"',
-	'Class:ActionEmail/Attribute:from' => 'От',
-	'Class:ActionEmail/Attribute:from+' => 'Будет отправлено в заголовке email',
-	'Class:ActionEmail/Attribute:reply_to' => 'Ответить на',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отправлено в заголовке email',
+	'Class:ActionEmail/Attribute:from' => 'От~~',
+	'Class:ActionEmail/Attribute:from+' => 'Будет отправлено в заголовке email~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Ответить на~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отправлено в заголовке email~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Кому',
 	'Class:ActionEmail/Attribute:to+' => 'Получатель email',
 	'Class:ActionEmail/Attribute:cc' => 'Копия',
@@ -522,6 +533,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Контекст',
+	'Class:Trigger/Attribute:context+' => 'Контекст, в котором будет срабатывать триггер',
 ));
 
 //
@@ -728,16 +741,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica~~',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)~~',
 	'Core:SynchroAtt:attcode' => 'Атрибут',
-	'Core:SynchroAtt:attcode+' => 'Field of the object',
-	'Core:SynchroAtt:reconciliation' => 'Reconciliation ?~~',
-	'Core:SynchroAtt:reconciliation+' => 'Used for searching',
-	'Core:SynchroAtt:update' => 'Обновить?',
-	'Core:SynchroAtt:update+' => 'Used to update the object',
-	'Core:SynchroAtt:update_policy' => 'Политика обновлений~~',
-	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field',
-	'Core:SynchroAtt:reconciliation_attcode' => 'Reconciliation Key~~',
-	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation',
-	'Core:SyncDataExchangeComment' => '(Data Synchro)~~',
+	'Core:SynchroAtt:attcode+' => 'Поле объекта',
+	'Core:SynchroAtt:reconciliation' => 'Сопоставление ?',
+	'Core:SynchroAtt:reconciliation+' => 'Атрибуты, используемые для поиска существуюущего объекта',
+	'Core:SynchroAtt:update' => 'Обновление ?',
+	'Core:SynchroAtt:update+' => 'Атрибуты, которые будут обновляться при синхронизации',
+	'Core:SynchroAtt:update_policy' => 'Политика обновления',
+	'Core:SynchroAtt:update_policy+' => 'Поведение обновляемого атрибута',
+	'Core:SynchroAtt:reconciliation_attcode' => 'Ключ сопоставления',
+	'Core:SynchroAtt:reconciliation_attcode+' => 'Код атрибута для сопоставления с внешним ключом',
+	'Core:SyncDataExchangeComment' => '(Синхронизация)',
 	'Core:Synchro:ListOfDataSources' => 'Список данных:~~',
 	'Core:Synchro:LastSynchro' => 'Последняя синхронизация:',
 	'Core:Synchro:ThisObjectIsSynchronized' => 'This object is synchronized with an external data source~~',
@@ -1023,4 +1036,40 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:AbstractResource' => 'Ресурс',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceAdminMenu' => 'Меню Инструменты администратора',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceRunQueriesMenu' => 'Меню Выполнение запросов',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceSystemMenu' => 'Меню Система',
+	'Class:ResourceSystemMenu+' => '',
 ));

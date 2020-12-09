@@ -1,0 +1,74 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+.ibo-is-hidden{
+	display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
+%ibo-fully-centered-content{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+%ibo-vertically-centered-content{
+	display: flex;
+	align-items: center;
+}
+/* Typically to align icons and text */
+%ibo-baseline-centered-content{
+	display: flex;
+	align-items: baseline;
+}
+/* Note: This might not be named correctly. The intention is to make an element occupy the full height of its parent and to be centered in it */
+%ibo-full-height-content{
+	display: flex;
+	align-items: stretch;
+}
+
+%ibo-text-truncated-with-ellipsis{
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+%ibo-medallion{
+	position: relative;
+	border-radius: var(--ibo-border-radius-full);
+	border: 2px solid var(--ibo-color-grey-300);
+	overflow: hidden;
+	@extend %ibo-fully-centered-content;
+
+	> *{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-position: center;
+		background-size: contain;
+		background-color: var(--ibo-color-grey-500);
+	}
+}
+
+%ibo-hyperlink-inherited-colors{
+	color: inherit;
+
+	&:hover,
+	&:active{
+		color: inherit;
+	}
+}

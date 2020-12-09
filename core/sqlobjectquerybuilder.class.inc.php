@@ -92,14 +92,7 @@ class SQLObjectQueryBuilder
 	 */
 	private function GetOQLClassTree($oBuild)
 	{
-		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($this->oDBObjetSearch, $oBuild);
-		$oOQLClassNode = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-		$oOQLClassTreeOptimizer = new OQLClassTreeOptimizer($oOQLClassNode, $oBuild);
-		$oOQLClassTreeOptimizer->OptimizeClassTree();
-		$oOQLActualClassTreeResolver = new OQLActualClassTreeResolver($oOQLClassNode, $oBuild);
-		$oOQLClassNode = $oOQLActualClassTreeResolver->Resolve();
-
-		return $oOQLClassNode;
+		return OQLClassTreeBuilder::GetOQLClassTree($this->oDBObjetSearch, $oBuild);
 	}
 
 	/**

@@ -97,6 +97,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'kontakt (person)',
 	'Class:User/Attribute:contactid+' => 'Personlige oplysninger og virksomheds data',
+	'Class:User/Attribute:org_id' => 'Organisation',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Efternavn',
 	'Class:User/Attribute:last_name+' => 'Kontaktens efternavn',
 	'Class:User/Attribute:first_name' => 'Fornavn',
@@ -405,6 +407,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Søg',
 	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s ',
@@ -443,6 +448,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fejl: ikke lovlig påvirkning "%1$s" på objekt %2$s i tilstand "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
@@ -509,6 +516,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -517,7 +525,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -545,6 +553,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop adgang er begrænset. Venligst, kontakt en iTop administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Adgang er begrænset til administratorer. Venligst, kontakt en iTop administrator.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Vælg venligst --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer dette felt --',
 	'UI:CSVImport:NoData' => 'Tomt data sæt..., venligst angiv nogle data!',
@@ -672,6 +683,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:RunQuery:MoreInfo' => 'Mere information om forespørgslen: ',
 	'UI:RunQuery:DevelopedQuery' => 'Videreudviklet forespørgselsudtryk: ',
 	'UI:RunQuery:SerializedFilter' => 'Serielt filter: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Der opstod en fejl under afviklingen af forespøgrslen: %1$s',
 	'UI:Query:UrlForExcel' => 'URL til brug for MS-Excel web forespøgrsler',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -832,7 +847,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:FatalErrorMessage' => 'Fatal fejl, iTop kan ikke fortsætte.',
 	'UI:Error_Details' => 'Fejl: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop bruger styring - klasse projection',
 	'UI:PageTitle:ProfileProjections' => 'iTop bruger styring - profil projection',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => '',
@@ -841,8 +855,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:UserManagement:AnyObject' => '* enhver *',
 	'UI:UserManagement:User' => 'Bruger',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Læs',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Ændring',
@@ -875,13 +887,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:AdminTools' => 'Admin værktøjer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => '',
 	'UI:ChangeManagementMenu:Title' => 'Changes Overblik',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes efter type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes efter status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes efter workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes endnu ikke tildelt',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
@@ -931,7 +943,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 	'Menu:NotificationsMenu' => 'Notifikationer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguration af <span class="hilite">Notifikationer</span>~~',
+	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I iTop er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1144,7 +1156,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ColumnsAndSortOrder' => 'Kolonner og sortering:',
 	'UI:UseDefaultSettings' => 'Brug de anbefalede indstillinger',
 	'UI:UseSpecificSettings' => 'Brug følgende indstillinger:',
-	'UI:Display_X_ItemsPerPage' => 'Vis %1$s emner per side',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Vis',
+	'UI:Display_X_ItemsPerPage_suffix' => 'emner per side',
 	'UI:UseSavetheSettings' => 'Gem indstillinger',
 	'UI:OnlyForThisList' => 'Kun for denne liste',
 	'UI:ForAllLists' => 'For alle lister',
@@ -1417,9 +1430,12 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1558,4 +1574,43 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Menu:DataSources' => 'Synkroniserings Data Kilder',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:WelcomeMenu' => 'Velkomen',
+	'Menu:WelcomeMenu+' => 'Velkommen til iTop',
+	'Menu:WelcomeMenuPage' => 'Velkomen',
+	'Menu:WelcomeMenuPage+' => 'Velkommen til iTop',
+	'Menu:AdminTools' => 'Admin værktøjer',
+	'Menu:AdminTools+' => 'Administration tools~~',
+	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
+	'Menu:DataModelMenu' => 'Data Model~~',
+	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
+	'Menu:ExportMenu' => 'Export~~',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
+	'Menu:NotificationsMenu' => 'Notifikationer',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
+	'Menu:AuditCategories' => 'Audit Kategorier',
+	'Menu:AuditCategories+' => 'Audit Categories~~',
+	'Menu:Notifications:Title' => 'Audit Kategorier',
+	'Menu:RunQueriesMenu' => 'Kør forespørgsler',
+	'Menu:RunQueriesMenu+' => 'Run any query~~',
+	'Menu:QueryMenu' => 'Query parlør',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Universal Søgning',
+	'Menu:UniversalSearchMenu+' => 'Search for anything...~~',
+	'Menu:UserManagementMenu' => 'Bruger styring',
+	'Menu:UserManagementMenu+' => 'User management~~',
+	'Menu:ProfilesMenu' => 'Profiler',
+	'Menu:ProfilesMenu+' => 'Profiles~~',
+	'Menu:ProfilesMenu:Title' => 'Profiler',
+	'Menu:UserAccountsMenu' => 'Bruger konti',
+	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
+	'Menu:MyShortcuts' => 'Mine Genveje',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

@@ -63,9 +63,15 @@ class DBObjectSearch extends DBSearch
 	{
 		parent::__construct();
 
-		if (is_null($sClassAlias)) $sClassAlias = $sClass;
-		if(!is_string($sClass)) throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
-		if(!MetaModel::IsValidClass($sClass)) throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		if (is_null($sClassAlias)) {
+			$sClassAlias = $sClass;
+		}
+		if (!is_string($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
+		}
+		if (!MetaModel::IsValidClass($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		}
 
 		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
@@ -75,30 +81,43 @@ class DBObjectSearch extends DBSearch
 		$this->m_aReferencedBy = array();
 	}
 
-	public function AllowAllData($bAllowAllData = true) {$this->m_bAllowAllData = $bAllowAllData;}
-	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
-	protected function IsDataFiltered() {return $this->m_bDataFiltered; }
-	protected function SetDataFiltered() {$this->m_bDataFiltered = true;}
+	public function AllowAllData($bAllowAllData = true) {
+		$this->m_bAllowAllData = $bAllowAllData;
+
+		$this->m_oSearchCondition->Browse(function ($oThisExpression) use ($bAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bAllowAllData);
+		});
+	}
+
+	public function IsAllDataAllowed() {
+		return $this->m_bAllowAllData;
+	}
+
+	protected function IsDataFiltered() {
+		return $this->m_bDataFiltered;
+	}
+
+	protected function SetDataFiltered() {
+		$this->m_bDataFiltered = true;
+	}
 
 	// Create a search definition that leads to 0 result, still a valid search object
-	static public function FromEmptySet($sClass)
-	{
+	public static function FromEmptySet($sClass) {
 		$oResultFilter = new DBObjectSearch($sClass);
 		$oResultFilter->m_oSearchCondition = new FalseExpression;
+
 		return $oResultFilter;
 	}
 
 
-	public function GetJoinedClasses() {return $this->m_aClasses;}
+	public function GetJoinedClasses() {
+		return $this->m_aClasses;
+	}
 
-	public function GetClassName($sAlias)
-	{
-		if (array_key_exists($sAlias, $this->m_aSelectedClasses))
-		{
+	public function GetClassName($sAlias) {
+		if (array_key_exists($sAlias, $this->m_aSelectedClasses)) {
 			return $this->m_aSelectedClasses[$sAlias];
-		}
-		else
-		{
+		} else {
 			throw new CoreException("Invalid class alias '$sAlias'");
 		}
 	}
@@ -223,9 +242,9 @@ class DBObjectSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bFound = false;
-		if (array_key_exists($sOldName, $this->m_aClasses))
+		if (!array_key_exists($sOldName, $this->m_aClasses))
 		{
-			$bFound = true;
+			return false;
 		}
 		if (array_key_exists($sNewName, $this->m_aClasses))
 		{
@@ -313,6 +332,11 @@ class DBObjectSearch extends DBSearch
 		return true;
 	}
 
+	/**
+	 * Move conditions from $oFilter to $this
+	 * @param \DBSearch $oFilter
+	 * @param $aTranslation
+	 */
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		// Prevent collisions in the parameter names by renaming them if needed
@@ -335,6 +359,7 @@ class DBObjectSearch extends DBSearch
 		$oTranslated = $oFilter->GetCriteria()->Translate($aTranslation, false, false /* leave unresolved fields */);
 		$this->AddConditionExpression($oTranslated);
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
+		$oFilter->ResetCondition();
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -352,37 +377,35 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->RenameParam($sOldName, $sNewName);
 					}
 				}
 			}
 		}
 	}
-	
-	public function ResetCondition()
-	{
+
+	public function ResetCondition() {
 		$this->m_oSearchCondition = new TrueExpression();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
-	public function MergeConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression); 
+	public function MergeConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression);
 	}
 
-	public function AddConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression); 
+	public function AddConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression);
+
+		$bRootSearchAllowAllData = $this->IsAllDataAllowed();
+		$oExpression->Browse(function ($oThisExpression) use ($bRootSearchAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bRootSearchAllowAllData);
+		});
 	}
 
-  	public function AddNameCondition($sName)
-	{
+	public function AddNameCondition($sName) {
 		$oValueExpr = new ScalarExpression($sName);
 		$oNameExpr = new FieldExpression('friendlyname', $this->GetClassAlias());
 		$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
@@ -437,7 +460,6 @@ class DBObjectSearch extends DBSearch
 		case '<|':
 		case '=|':
 			throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', array('operator' => $sOpCode));
-			break;
 
 		case 'IN':
 			if (!is_array($value)) $value = array($value);
@@ -522,13 +544,15 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Helper method for IN / NOT IN conditions : values won't be parsed in the expression tree, that will save some time !
+	 *
 	 * @param string $sFilterCode attribute code to use
 	 * @param array $aValues
 	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN
 	 *
 	 * @throws \CoreException
 	 *
-	 * @since 2.5 N°1418
+	 * @since 2.5.0 N°1418
 	 */
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{
@@ -617,22 +641,40 @@ class DBObjectSearch extends DBSearch
 	public function AddCondition_FullText($sNeedle)
 	{
 		// Transform the full text condition into additional condition expression
-		$aFullTextFields = array();
-		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef)
-		{
+		$aAttCodes = [];
+		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef) {
 			if (!$oAttDef->IsScalar()) continue;
 			if ($oAttDef->IsExternalKey()) continue;
 			if (!$oAttDef->IsSearchable()) continue;
+			$aAttCodes[] = $sAttCode;
+		}
+		$this->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+	}
+
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		$aFullTextFields = [];
+		foreach ($aAttCodes as $sAttCode) {
 			$aFullTextFields[] = new FieldExpression($sAttCode, $this->GetClassAlias());
 		}
+
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
 
-		$sQueryParam = 'needle';
+		$sQueryParam = str_replace('.', '', uniqid('needle_', true));
 		$oFlexNeedle = new CharConcatExpression(array(new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')));
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
 		$this->AddConditionExpression($oNewCond);
-		$this->m_aParams[$sQueryParam] = $sNeedle;
+		//replace in order to search the character "_" ("_" in mysql is like "%" for only one character).
+		$sFullText = str_replace('_', '\_', $sNeedle);
+
+		$this->m_aParams[$sQueryParam] = $sFullText;
 	}
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
@@ -781,10 +823,11 @@ class DBObjectSearch extends DBSearch
 	 * Helper to
 	 * - convert a translation table (format optimized for the translation in an expression tree) into simple hash
 	 * - compile over an eventually existing map
+	 * - accept multiple translations for the same alias for unions
 	 *
 	 * @param array $aRealiasingMap Map to update
 	 * @param array $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
-	 * @return void of <old-alias> => <new-alias>
+	 * @return void of [old-alias][] => new-alias (@since 2.7.2)
 	 */
 	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
 	{
@@ -792,17 +835,33 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach ($aAliasTranslation as $sPrevAlias => $aRules)
 			{
-				if (isset($aRules['*']))
+				if (!isset($aRules['*']))
 				{
-					$sNewAlias = $aRules['*'];
-					$sOriginalAlias = array_search($sPrevAlias, $aRealiasingMap);
-					if ($sOriginalAlias !== false)
+					continue;
+				}
+
+				$sNewAlias = $aRules['*'];
+				$bOriginalFound = false;
+				$iIndex = 0;
+				foreach ($aRealiasingMap as $sOriginalAlias => $aAliases)
+				{
+					$iIndex = array_search($sPrevAlias, $aAliases);
+					if ($iIndex !== false)
 					{
-						$aRealiasingMap[$sOriginalAlias] = $sNewAlias;
+						$bOriginalFound = true;
+						break;
 					}
-					else
+
+				}
+				if ($bOriginalFound)
+				{
+					$aRealiasingMap[$sOriginalAlias][$iIndex] = $sNewAlias;
+				}
+				else
+				{
+					if (!isset($aRealiasingMap[$sPrevAlias]) || !in_array($sNewAlias, $aRealiasingMap[$sPrevAlias]))
 					{
-						$aRealiasingMap[$sPrevAlias] = $sNewAlias;
+						$aRealiasingMap[$sPrevAlias][] = $sNewAlias;
 					}
 				}
 			}
@@ -848,10 +907,14 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
-	 * @param $sExtKeyAttCode
+	 * Add a link to another filter, using an extkey already present in current filter
+	 *
+	 * @param DBObjectSearch $oFilter filter to join to (can be modified)
+	 * @param string $sExtKeyAttCode extkey present in current filter, that allows to points to $oFilter
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed.
+	 *          Doesn't change existing alias, use {@link \DBObjectSearch::RenameAlias()} for that.
+	 *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
@@ -940,7 +1003,7 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
+	 * @param DBObjectSearch $oFilter (can be modified)
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
@@ -1036,7 +1099,7 @@ class DBObjectSearch extends DBSearch
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (($this->GetFirstJoinedClass() == $oFilter->GetFirstJoinedClass()))
+		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(),$this->GetFirstJoinedClass()))
 		{
 			return $this->Intersect($oFilter);
 		}
@@ -1068,7 +1131,6 @@ class DBObjectSearch extends DBSearch
 	{
 		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
 		{
-			$oSearch->ResetCondition();
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
 			return $oSearch->GetCriteria();
 		}
@@ -1314,7 +1376,7 @@ class DBObjectSearch extends DBSearch
 
 			// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams($bExclude magic params)
 			$aNakedMagicArguments = array();
-			foreach (MetaModel::PrepareQueryArguments(array()) as $sArgName => $value)
+			foreach (MetaModel::PrepareQueryArguments(array(),array(), $this->GetExpectedArguments()) as $sArgName => $value)
 			{
 				$iPos = strpos($sArgName, '->object()');
 				if ($iPos === false)
@@ -1377,7 +1439,7 @@ class DBObjectSearch extends DBSearch
 			{
 				$aParams = array_merge($aContextParams, $this->m_aParams);
 			}
-			$aParams = MetaModel::PrepareQueryArguments($aParams);
+			$aParams = MetaModel::PrepareQueryArguments($aParams,array(), $this->GetExpectedArguments());
 		}
 		else
 		{
@@ -1570,7 +1632,7 @@ class DBObjectSearch extends DBSearch
 		$aRet = array('selects' => array(), 'joins' => array(), 'where' => array());
 
 		$aParams = array_merge($this->m_aParams);
-		$aParams = MetaModel::PrepareQueryArguments($aParams);
+		$aParams = MetaModel::PrepareQueryArguments($aParams, array(), $this->GetExpectedArguments());
 
 		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
 		{
@@ -1777,7 +1839,7 @@ class DBObjectSearch extends DBSearch
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectDeleteQuery();
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		$sRet = $oSQLQuery->RenderDelete($aScalarArgs);
 		return $sRet;
 	}
@@ -1793,11 +1855,29 @@ class DBObjectSearch extends DBSearch
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		$sRet = $oSQLQuery->RenderUpdate($aScalarArgs);
 		return $sRet;
 	}
 
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 * @param array $aValues is an array of $sAttCode => $value
+	 * @param array $aArgs
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public function MakeInsertQuery($aValues, $aArgs = array())
+	{
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
+		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
+		$sRet = $oSQLQuery->RenderInsert($aScalarArgs);
+		return $sRet;
+	}
 
 	/**
 	 * Get an SQLObjectQuery from the search. This SQLObjectQuery can be rendered as a select, select group by, update or delete
@@ -2068,5 +2148,10 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 		return $oExpression;
+	}
+
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
 	}
 }

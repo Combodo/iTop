@@ -211,6 +211,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -506,10 +513,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test alıcısı',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Durumu "Test" olması durumundaki alıcı',
-	'Class:ActionEmail/Attribute:from' => 'Kimden',
-	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek',
-	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla',
-	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek',
+	'Class:ActionEmail/Attribute:from' => 'Kimden~~',
+	'Class:ActionEmail/Attribute:from+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Yanıtla~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'e-posta başlığında gönderilecek~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Kime',
 	'Class:ActionEmail/Attribute:to+' => 'E-posta alıcısı',
 	'Class:ActionEmail/Attribute:cc' => 'Kopya',
@@ -543,6 +554,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Trigger/Attribute:action_list+' => 'Tetiklenen işlemler',
 	'Class:Trigger/Attribute:finalclass' => 'Tip',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1044,4 +1057,40 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

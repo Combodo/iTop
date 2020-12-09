@@ -21,10 +21,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
-));
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
 
@@ -108,8 +104,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
+	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
 
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
@@ -206,6 +202,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -501,10 +504,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
-	'Class:ActionEmail/Attribute:from' => '发件人',
-	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to' => '回复到',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:from' => '发件人~~',
+	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => '回复到~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => '收件人',
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => '抄送',
@@ -538,6 +545,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -618,8 +627,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -1039,4 +1048,45 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AbstractResource' => '抽象资源',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceAdminMenu' => '资源管理菜单',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '',
 ));

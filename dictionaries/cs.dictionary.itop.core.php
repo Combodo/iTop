@@ -205,6 +205,13 @@ Operátory:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -500,10 +507,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Adresát pro test',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Cílová adresa pro případ, kdy je stav nastaven na "Testování"',
-	'Class:ActionEmail/Attribute:from' => 'Odesílatel',
-	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:reply_to' => 'Odpověď na',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
+	'Class:ActionEmail/Attribute:from' => 'Odesílatel~~',
+	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Odpověď na~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
 	'Class:ActionEmail/Attribute:to+' => 'Adresát',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -537,6 +548,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Trigger/Attribute:action_list+' => 'Akce prováděné, když je aktivován trigger',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1038,4 +1051,40 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

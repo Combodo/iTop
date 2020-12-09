@@ -7,7 +7,7 @@
 {% set sFormDisplayModeClass = (form.display_mode is defined and form.display_mode is not null) ? 'form_' ~ form.display_mode : '' %}
 {% set sFormObjectStateClass = (form.object_state is defined and form.object_state is not null) ? 'form_object_state_' ~ form.object_state : '' %}
 
-<form id="{{ sFormId }}" class="{{ sFormDisplayModeClass }} {{ sFormObjectStateClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}"
+<form id="{{ sFormId }}" class="object-details {{ sFormDisplayModeClass }} {{ sFormObjectStateClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}"
 	{% if sMode is defined and sMode is not null %}data-form-mode="{{ sMode }}"{% endif %}
 	{% if form.object_class is defined and form.object_class is not null %}data-object-class="{{ form.object_class }}"{% endif %}
 	{% if form.object_id is defined and form.object_id is not null %}data-object-id="{{ form.object_id }}"{% endif %}

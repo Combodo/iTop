@@ -84,7 +84,6 @@ class UserLocal extends UserInternal
 			"db_table" => "priv_user_local",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -96,7 +95,19 @@ class UserLocal extends UserInternal
 		MetaModel::Init_AddAttribute(new AttributeDate("password_renewed_date", array("allowed_values"=>null, "sql"=>"password_renewed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'password', 'expiration', 'password_renewed_date', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array(
+				'col:col1' =>
+					array(
+						'fieldset:UserLocal:info' =>  array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',)
+					),
+				'col:col2' =>
+					array(
+						'fieldset:UserLocal:password:expiration' =>  array('expiration', 'password_renewed_date',),
+					),
+			)
+
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
@@ -157,17 +168,45 @@ class UserLocal extends UserInternal
 
 		if ('password' == $sAttCode)
 		{
-			$sNow = date(\AttributeDate::GetInternalFormat());
-			$this->Set('password_renewed_date', $sNow);
 			$this->ValidatePassword($value);
 		}
 
 		return $result;
 	}
 
+	protected function OnUpdate()
+	{
+		parent::OnUpdate();
+
+		$this->OnWrite();
+	}
+
+	protected function OnInsert()
+	{
+		parent::OnInsert();
+
+		$this->OnWrite();
+	}
+
+	protected function OnWrite()
+	{
+		if (empty($this->m_oPasswordValidity))
+		{
+			return;
+		}
+
+		if (array_key_exists('password_renewed_date', $this->ListChanges()))
+		{
+			return;
+		}
+
+		$sNow = date(\AttributeDate::GetInternalFormat());
+		$this->Set('password_renewed_date', $sNow);
+	}
+
 	public function IsPasswordValid()
 	{
-		if (ContextTag::Check('Setup'))
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
 		{
 			// during the setup, the admin account can have whatever password you want ...
 			return true;
@@ -177,6 +216,21 @@ class UserLocal extends UserInternal
 	}
 
 
+	public function getPasswordValidityMessage()
+	{
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
+		{
+			// during the setup, the admin account can have whatever password you want ...
+			return null;
+		}
+
+		if (empty($this->m_oPasswordValidity))
+		{
+			return null;
+		}
+
+		return $this->m_oPasswordValidity->getPasswordValidityMessage();
+	}
 
 	/**
 	 * set the $m_oPasswordValidity based on UserLocalPasswordValidator instances vote.
@@ -192,6 +246,14 @@ class UserLocal extends UserInternal
 		if (null == $config)
 		{
 			$config =  MetaModel::GetConfig();
+		}
+
+		//if the $proposedValue is an ormPassword, then it cannot be checked
+		//this if is even more permissive as we can only check against strings
+		if (!is_string($proposedValue) && !empty($proposedValue))
+		{
+			$this->m_oPasswordValidity = new UserLocalPasswordValidity(true);
+			return;
 		}
 
 		if (null == $aValidatorCollection)
@@ -238,7 +300,7 @@ class UserLocal extends UserInternal
 		{
 			if (strpos('contactid,login,language,password,status,profile_list,allowed_org_list', $sAttCode) !== false)
 			{
-				// contactid and allowed_org_list are disabled to make sure the portal remains accessible 
+				// contactid and allowed_org_list are disabled to make sure the portal remains accessible
 				$aReasons[] = 'Sorry, this attribute is read-only in the demonstration mode!';
 				$iFlags |= OPT_ATT_READONLY;
 			}
@@ -298,7 +360,24 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 			return new UserLocalPasswordValidity(true);
 		}
 
-		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		$sUserLanguage = Dict::GetUserLanguage();
+		$customMessages = $config->GetModuleSetting('authent-local', 'password_validation.message', null);
+		if (is_string($customMessages) )
+		{
+			$sMessage = $customMessages;
+		}
+		elseif (isset($customMessages) && array_key_exists($sUserLanguage, $customMessages))
+		{
+			$sMessage = $customMessages[$sUserLanguage];
+		}
+		elseif (isset($customMessages) && array_key_exists('EN US', $customMessages))
+		{
+			$sMessage = $customMessages['EN US'];
+		}
+		else
+		{
+			$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		}
 
 		return new UserLocalPasswordValidity(
 			false,

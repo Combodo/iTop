@@ -1,27 +1,27 @@
-// Copyright (c) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/*
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 function ExportStartExport() {
     var oParams = {};
-    oParams.operation = 'export_build';
+    oParams.operation = 'export_build_portal';
     oParams.format = sFormat;
-    oParams.expression = sOQL;
-    oParams.fields = sFields;
+    oParams.token = sToken;
+    oParams.start = 1;
     $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {
         if (data == null) {
             ExportError('Export failed (no data provided), please contact your administrator');
@@ -56,7 +56,7 @@ function ExportRun(data) {
                 $('#export-close').show();
             }
             else {
-                oParams.operation = 'export_build';
+                oParams.operation = 'export_build_portal';
             }
 
             $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {

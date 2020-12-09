@@ -97,42 +97,40 @@ abstract class DBSearch
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 *
-     * @internal
-     *
+	 * @internal
+	 *
 	 * @return \DBSearch
-	 **/	 	
+	 **/
 	public function DeepClone()
 	{
 		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
-    /**
-     * whether or not some information should be hidden to the current user.
-     *
-     * @api
-     * @see IsAllDataAllowed()
-     *
-     * @return mixed
-     */
-	abstract public function AllowAllData();
+	/**
+	 * @api
+	 * @see IsAllDataAllowed()
+	 *
+	 * @param bool $bAllowAllData whether or not some information should be hidden to the current user.
+	 */
+	abstract public function AllowAllData($bAllowAllData = true);
 
-    /**
-     * Current state of AllowAllData
-     *
-     * @internal
-     * @see AllowAllData()
-     *
-     * @return mixed
-     */
+	/**
+	 * Current state of AllowAllData
+	 *
+	 * @internal
+	 * @see AllowAllData()
+	 *
+	 * @return mixed
+	 */
 	abstract public function IsAllDataAllowed();
 
-    /**
-     * Should the archives be fetched
-     *
-     * @internal
-     *
-     * @param $bEnable
-     */
+	/**
+	 * Should the archives be fetched
+	 *
+	 * @internal
+	 *
+	 * @param $bEnable
+	 */
 	public function SetArchiveMode($bEnable)
 	{
 		$this->m_bArchiveMode = $bEnable;
@@ -237,6 +235,12 @@ abstract class DBSearch
      * @return mixed
      */
 	abstract public function GetClassAlias();
+
+	/**
+	 * @return string
+	 * @internal
+	 */
+	abstract public function GetFirstJoinedClass();
 
 	/**
      * Change the class
@@ -398,7 +402,9 @@ abstract class DBSearch
      */
 	abstract public function AddCondition_FullText($sFullText);
 
-	/**
+	abstract public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle);
+
+		/**
      * Perform a join, the remote class being matched by the mean of its primary key
      *
      * The join is performed
@@ -501,6 +507,7 @@ abstract class DBSearch
 		}
 		else
 		{
+			/** @var \DBObjectSearch $oFilter */
 			if ($iDirection === static::JOIN_POINTING_TO)
 			{
 				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
@@ -596,11 +603,11 @@ abstract class DBSearch
 			elseif (($iPos = strpos($sParam, '->')) !== false)
 			{
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aContextParams[$sParamName.'->object()']))
+				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName]))
 				{
 					$sAttCode = substr($sParam, $iPos + 2);
 					/** @var \DBObject $oObj */
-					$oObj = $aContextParams[$sParamName.'->object()'];
+					$oObj = isset($aContextParams[$sParamName.'->object()']) ? $aContextParams[$sParamName.'->object()'] : $aContextParams[$sParamName];
 					if ($oObj->IsModified())
 					{
 						if ($sAttCode == 'id')
@@ -624,7 +631,7 @@ abstract class DBSearch
 		}
 
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties));
+		return urlencode(json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties)));
 	}
 
 	/**
@@ -641,7 +648,7 @@ abstract class DBSearch
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = json_decode($sValue, true);
+		$aData = json_decode(urldecode($sValue), true);
 		if (is_null($aData))
 		{
 			throw new CoreException("Invalid filter parameter");
@@ -973,7 +980,7 @@ abstract class DBSearch
 		$aAttToLoad = array();
 		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr, $aSelectExpr);
 
-		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		try
 		{
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
@@ -991,6 +998,10 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	function GetExpectedArguments()
+	{
+		return $this->GetCriteria()->ListParameters();
+	}
 
 	/**
      * Generate a SQL query from the current search
@@ -1070,7 +1081,7 @@ abstract class DBSearch
 		else
 		{
 			// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
-			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		}
 		try
 		{
@@ -1101,6 +1112,8 @@ abstract class DBSearch
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°2555
 	 */
 	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
 	{
@@ -1136,21 +1149,22 @@ abstract class DBSearch
      */
 	protected abstract function SetDataFiltered();
 
-    /**
-     * @internal
-     *
-     * @param      $aOrderBy
-     * @param      $aArgs
-     * @param      $aAttToLoad
-     * @param      $aExtendedDataSpec
-     * @param      $iLimitCount
-     * @param      $iLimitStart
-     * @param      $bGetCount
-     * @param null $aGroupByExpr
-     * @param null $aSelectExpr
-     *
-     * @return mixed
-     */
+	/**
+	 * @param      $aOrderBy
+	 * @param      $aArgs
+	 * @param      $aAttToLoad
+	 * @param      $aExtendedDataSpec
+	 * @param      $iLimitCount
+	 * @param      $iLimitStart
+	 * @param      $bGetCount
+	 * @param null $aGroupByExpr
+	 * @param null $aSelectExpr
+	 *
+	 * @return SQLObjectQuery
+	 * @throws \CoreException
+	 * @internal
+	 *
+	 */
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oSearch = $this;
@@ -1167,8 +1181,7 @@ abstract class DBSearch
 				if (is_object($oVisibleObjects))
 				{
 					$oVisibleObjects->AllowAllData();
-					$oSearch = $this->Filter($sClassAlias, $oVisibleObjects);
-					/** @var DBSearch $oSearch */
+					$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
 					$oSearch->SetDataFiltered();
 				}
 			}
@@ -1218,6 +1231,8 @@ abstract class DBSearch
 	 * @return \Expression
 	 */
 	public abstract function GetCriteria();
+
+	public abstract function ListParameters();
 
     /**
      * Shortcut to add efficient IN condition

@@ -203,6 +203,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -498,10 +505,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test modtager',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'Fra',
-	'Class:ActionEmail/Attribute:from+' => 'Afsender af emailen',
-	'Class:ActionEmail/Attribute:reply_to' => 'Svar til',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Svar sendes til',
+	'Class:ActionEmail/Attribute:from' => 'Fra~~',
+	'Class:ActionEmail/Attribute:from+' => 'Afsender af emailen~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Svar til~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Svar sendes til~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Til',
 	'Class:ActionEmail/Attribute:to+' => 'Modtager af emailen',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -535,6 +546,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1036,4 +1049,40 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

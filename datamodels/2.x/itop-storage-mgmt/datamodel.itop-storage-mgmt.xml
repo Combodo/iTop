@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="StorageSystem" _delta="define">
       <parent>DatacenterDevice</parent>
@@ -15,7 +15,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/storageArea.png</icon>
         <reconciliation>
           <attributes>
@@ -240,18 +239,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -276,7 +264,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/switch-san.png</icon>
         <reconciliation>
           <attributes>
@@ -498,18 +485,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -534,7 +510,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/tapelibrary.png</icon>
         <reconciliation>
           <attributes>
@@ -756,18 +731,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -792,7 +756,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/nas.png</icon>
         <reconciliation>
           <attributes>
@@ -1014,18 +977,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -1050,7 +1002,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/tape.png</icon>
         <reconciliation>
           <attributes>
@@ -1127,18 +1078,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="NASFileSystem" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1154,7 +1094,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/filesystem.png</icon>
         <reconciliation>
           <attributes>
@@ -1245,18 +1184,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
     </class>
     <class id="FiberChannelInterface" _delta="define">
       <parent>NetworkInterface</parent>
@@ -1273,7 +1201,6 @@
             <attribute id="datacenterdevice_name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/fc-interface.png</icon>
         <reconciliation>
           <attributes>
@@ -1382,7 +1309,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>images/volume.png</icon>
         <reconciliation>
           <attributes>
@@ -1511,18 +1437,7 @@
           </items>
         </list>
       </presentation>
-      <methods>
-        <method id="GetRelationQueries">
-          <comment>/**
-	 * Placeholder for backward compatibility (iTop &lt;= 2.1.0)
-	 * in case an extension attempts to redefine this function...	 
-	 */</comment>
-          <static>true</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public static function GetRelationQueries($sRelCode){return parent::GetRelationQueries($sRelCode);} ]]></code>
-        </method>
-      </methods>
+      <methods/>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -1548,7 +1463,6 @@
             <attribute id="volume_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1639,7 +1553,6 @@
             <attribute id="san_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>

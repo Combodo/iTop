@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
@@ -176,7 +174,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oUrlGenerator->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PreferencesFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
@@ -248,6 +246,8 @@ class UserProfileBrickController extends BrickController
 	{
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $this->get('url_generator');
 
 		$aFormData = array();
 
@@ -259,7 +259,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oUrlGenerator->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PasswordFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
@@ -373,7 +373,7 @@ class UserProfileBrickController extends BrickController
 					$aFormData['error'] = $e->GetMessage();
 				}
 
-				// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+				// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 3.0
 				$aFormData['picture_url'] = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oCurContact), 'sObjectId' => $oCurContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400, 't' => time()));
 				$aFormData['validation'] = array(
 					'valid' => true,

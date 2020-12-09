@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -28,10 +28,6 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
-use Silex\Application;
-use Symfony\Component\Debug\ErrorHandler;
-use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Contains static methods to help loading / registering classes of the application.
@@ -90,121 +86,6 @@ class ApplicationHelper
 	}
 
 	/**
-	 * Registers an exception handler that will intercept controllers exceptions and display them in a nice template.
-	 * Note : It is only active when $oApp['debug'] is false
-	 *
-	 * @param Application $oApp
-	 *
-	 * @todo
-	 */
-	public static function RegisterExceptionHandler(Application $oApp)
-	{
-		// Intercepting fatal errors and exceptions
-		ErrorHandler::register();
-		ExceptionHandler::register(($oApp['debug'] === true));
-
-		// Intercepting manually aborted request
-		if (1 || !$oApp['debug'])
-		{
-			$oApp->error(function (Exception $oException /*, Request $oRequest*/) use ($oApp) {
-				$iErrorCode = ($oException instanceof HttpException) ? $oException->getStatusCode() : 500;
-
-				$aData = array(
-					'exception' => $oException,
-					'code' => $iErrorCode,
-					'error_title' => '',
-					'error_message' => $oException->getMessage(),
-				);
-
-				switch ($iErrorCode)
-				{
-					case 404:
-						$aData['error_title'] = Dict::S('Error:HTTP:404');
-						break;
-					default:
-						$aData['error_title'] = Dict::S('Error:HTTP:500');
-						break;
-				}
-
-				IssueLog::Error($aData['error_title'].' : '.$aData['error_message']);
-
-				if ($oApp['request_stack']->getCurrentRequest()->isXmlHttpRequest())
-				{
-					$oResponse = $oApp->json($aData, $iErrorCode);
-				}
-				else
-				{
-					// Preparing debug trace
-					$aSteps = array();
-					foreach ($oException->getTrace() as $aStep)
-					{
-						// - Default file name
-						if (!isset($aStep['file']))
-						{
-							$aStep['file'] = '';
-						}
-						$aFileParts = explode('\\', $aStep['file']);
-						// - Default line number
-						if (!isset($aStep['line']))
-						{
-							$aStep['line'] = 'unknown';
-						}
-						// - Default class name
-						if (isset($aStep['class']) && isset($aStep['function']) && isset($aStep['type']))
-						{
-							$aClassParts = explode('\\', $aStep['class']);
-							$sClassName = $aClassParts[count($aClassParts) - 1];
-							$sClassFQ = $aStep['class'];
-
-							$aArgsAsString = array();
-							foreach ($aStep['args'] as $arg)
-							{
-								if (is_array($arg))
-								{
-									$aArgsAsString[] = 'array(...)';
-								}
-								elseif (is_object($arg))
-								{
-									$aArgsAsString[] = 'object('.get_class($arg).')';
-								}
-								else
-								{
-									$aArgsAsString[] = $arg;
-								}
-							}
-
-							$sFunctionCall = $sClassName.$aStep['type'].$aStep['function'].'('.implode(', ',
-									$aArgsAsString).')';
-						}
-						else
-						{
-							$sClassName = null;
-							$sClassFQ = null;
-							$sFunctionCall = null;
-						}
-
-						$aSteps[] = array(
-							'file_fq' => $aStep['file'],
-							'file_name' => $aFileParts[count($aFileParts) - 1],
-							'line' => $aStep['line'],
-							'class_name' => $sClassName,
-							'class_fq' => $sClassFQ,
-							'function_call' => $sFunctionCall,
-						);
-					}
-
-					$aData['debug_trace_steps'] = $aSteps;
-
-					$oResponse = $oApp['twig']->render('itop-portal-base/portal/templates/errors/layout.html.twig',
-						$aData);
-				}
-
-				return $oResponse;
-			});
-		}
-	}
-
-	/**
 	 * Loads the brick's security from the OQL queries to profiles arrays
 	 *
 	 * @param \Combodo\iTop\Portal\Brick\AbstractBrick $oBrick
@@ -249,13 +130,14 @@ class ApplicationHelper
 	 * If not found, tries to find one from the closest parent class.
 	 * Else returns a default form based on zlist 'details'
 	 *
-	 * @param array  $aForms
+	 * @param array $aForms
 	 * @param string $sClass Object class to find a form for
-	 * @param string $sMode  Form mode to find (view|edit|create)
+	 * @param string $sMode Form mode to find (view|edit|create)
 	 *
 	 * @return array
 	 *
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public static function GetLoadedFormFromClass($aForms, $sClass, $sMode)
 	{
@@ -359,10 +241,11 @@ class ApplicationHelper
 	 * Generate the form data for the $sClass.
 	 * Form will look like the "Properties" tab of a $sClass object in the console.
 	 *
-	 * @param string $sClass
-	 * @param bool   $bAddLinksets
+	 * @param string    $sClass
+	 * @param bool      $bAddLinksets
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	protected static function GenerateDefaultFormForClass($sClass, $bAddLinksets = false)
 	{
@@ -390,6 +273,13 @@ class ApplicationHelper
 		// - Retrieve zlist details
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, array(), 'UI:PropertiesTab', 'col1', '');
+		if(!isset($aDetailsStruct['UI:PropertiesTab']))
+		{
+			// For the iTop administrator
+			IssueLog::Error('Could not generate default form for "'.$sClass.'" class. Is the "details" zlist empty?');
+			// For the end-user
+			throw new Exception('Could not generate form, check the error log for more information.');
+		}
 		$aPropertiesStruct = $aDetailsStruct['UI:PropertiesTab'];
 
 		// Count cols (not linksets)
@@ -469,4 +359,23 @@ class ApplicationHelper
 		return $aForm;
 	}
 
+	/**
+	 * Return an array of AttributeDefinition classes for which the raw value should be excluded from the markup meta (because its too big / complex)
+	 * IMPORTANT: This needs to be refactored when the portal will handle attributes display in a better way. Also this is a duplicate from cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as for the moment we have no clean place to put this.
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+		return array(
+			'AttributeBlob',
+			'AttributeCustomFields',
+			'AttributeDashboard',
+			'AttributeLinkedSet',
+			'AttributeStopWatch',
+			'AttributeSubItem',
+			'AttributeTable',
+			'AttributeText'
+		);
+	}
 }

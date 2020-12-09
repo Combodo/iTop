@@ -1,0 +1,58 @@
+/*!
+ * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashboard--grid--width: 100% !default;
+$ibo-dashboard--grid--elements-spacing-x: $ibo-dashlet--elements-spacing-x !default;
+$ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !default;
+
+/* Rules */
+.ibo-dashboard--content{
+	display: flex;
+	flex-direction: column;
+}
+.ibo-dashboard--grid{
+	width: $ibo-dashboard--grid--width;
+}
+.ibo-dashboard--grid-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow: hidden; /* Because of the column negative margin (which is for the dashlets spacing) */
+
+  /* Compensate negative margin on inner borders to simulate egal dashlets spacing between rows */
+  &:not(:last-child) {
+    padding-bottom: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
+  }
+
+  &:not(:first-child) {
+    padding-top: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
+  }
+}
+
+.ibo-dashboard--grid-column {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  width: calc(100% + (2 * #{$ibo-dashboard--grid--elements-spacing-x}));
+  margin: calc(-1 * #{$ibo-dashboard--grid--elements-spacing-y} / 2) calc(-1 * #{$ibo-dashboard--grid--elements-spacing-x} / 2); /* Because of the margin all around the dashlets, we need to compensate it */
+
+  /* Compensate negative margin on inner borders to simulate egal dashlets spacing between columns */
+  &:not(:last-child) {
+    margin-right: 0;
+  }
+
+  &:not(:first-child) {
+    margin-left: 0;
+  }
+
+  &.edit_mode {
+    margin: 1px;
+    border: 2px #ccc dashed;
+    width: 100%;
+    min-height: 40px;
+  }
+}

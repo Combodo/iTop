@@ -24,7 +24,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'application/webpage.class.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
 class UILinksWidget 
@@ -39,6 +42,7 @@ class UILinksWidget
 	protected $m_sLinkedClass;
 	protected $m_sRemoteClass;
 	protected $m_bDuplicatesAllowed;
+	/** @var string[] list of editables attcodes */
 	protected $m_aEditableFields;
 	protected $m_aTableConfig;
 
@@ -46,7 +50,7 @@ class UILinksWidget
 	 * UILinksWidget constructor.
 	 *
 	 * @param string $sClass
-	 * @param string $sAttCode
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
 	 * @param int $iInputId
 	 * @param string $sNameSuffix
 	 * @param bool $bDuplicatesAllowed
@@ -73,41 +77,36 @@ class UILinksWidget
 		/** @var AttributeExternalKey $oLinkingAttDef */
 		$oLinkingAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $this->m_sExtKeyToRemote);
 		$this->m_sRemoteClass = $oLinkingAttDef->GetTargetClass();
-		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-		$sStateAttCode = MetaModel::GetStateAttributeCode($this->m_sClass);
-		$sDefaultState = MetaModel::GetDefaultState($this->m_sClass);		
 
 		$this->m_aEditableFields = array();
 		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array( 'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">", 'description' => Dict::S('UI:SelectAllToggle+'));
+		$this->m_aTableConfig['form::checkbox'] = array(
+			'label' => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_iInputId.".OnSelectChange();\">",
+			'description' => Dict::S('UI:SelectAllToggle+'),
+		);
 
-		foreach(MetaModel::FlattenZList(MetaModel::GetZListItems($this->m_sLinkedClass, 'list')) as $sAttCode)
+		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
+		foreach ($aLnkAttDefsToDisplay as $oLnkAttDef)
 		{
-			$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sAttCode);
-			if ($sStateAttCode == $sAttCode)
-			{
-				// State attribute is always hidden from the UI
-			}
-			else if ($oAttDef->IsWritable() && ($sAttCode != $sExtKeyToMe) && ($sAttCode != $this->m_sExtKeyToRemote) && ($sAttCode != 'finalclass'))
-			{
-				$iFlags = MetaModel::GetAttributeFlags($this->m_sLinkedClass, $sDefaultState, $sAttCode);				
-				if ( !($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY) )
-				{
-					$this->m_aEditableFields[] = $sAttCode;
-					$this->m_aTableConfig[$sAttCode] = array( 'label' => $oAttDef->GetLabel(), 'description' => $oAttDef->GetDescription());				
-				}
-			}
+			$sLnkAttCode = $oLnkAttDef->GetCode();
+			$this->m_aEditableFields[] = $sLnkAttCode;
+			$this->m_aTableConfig[$sLnkAttCode] = array('label' => $oLnkAttDef->GetLabel(), 'description' => $oLnkAttDef->GetDescription());
 		}
-		
-		$this->m_aTableConfig['static::key'] = array( 'label' => MetaModel::GetName($this->m_sRemoteClass), 'description' => MetaModel::GetClassDescription($this->m_sRemoteClass));
-		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
+
+		$this->m_aTableConfig['static::key'] = array(
+			'label' => MetaModel::GetName($this->m_sRemoteClass),
+			'description' => MetaModel::GetClassDescription($this->m_sRemoteClass),
+		);
+		$this->m_aEditableFields[] = $this->m_sExtKeyToRemote;
+
+		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
+		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef)
 		{
-			// TO DO: check the state of the attribute: hidden or visible ?
-			if ($sFieldCode != 'finalclass')
-			{
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sRemoteClass, $sFieldCode);
-				$this->m_aTableConfig['static::'.$sFieldCode] = array( 'label' => $oAttDef->GetLabel(), 'description' => $oAttDef->GetDescription());
-			}
+			$sRemoteAttCode = $oRemoteAttDef->GetCode();
+			$this->m_aTableConfig['static::'.$sRemoteAttCode] = array(
+				'label' => $oRemoteAttDef->GetLabel(),
+				'description' => $oRemoteAttDef->GetDescription(),
+			);
 		}
 	}
 
@@ -116,7 +115,7 @@ class UILinksWidget
 	 *
 	 * @param WebPage $oP Web page used for the ouput
 	 * @param DBObject $oLinkedObj Remote object
-	 * @param mixed $linkObjOrId Either the object linked or a unique number for new link records to add
+	 * @param DBObject|int $linkObjOrId Either the lnk object or a unique number for new link records to add
 	 * @param array $aArgs Extra context arguments
 	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
 	 * @param int $iUniqueId A unique identifier of new links
@@ -134,43 +133,39 @@ class UILinksWidget
 		$aRow = array();
 		$aFieldsMap = array();
 		$iKey = 0;
-		if(is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
+
+		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
 		{
 			$iKey = $linkObjOrId->GetKey();
-			$iRemoteObjKey =  $linkObjOrId->Get($this->m_sExtKeyToRemote);
+			$iRemoteObjKey = $linkObjOrId->Get($this->m_sExtKeyToRemote);
 			$sPrefix .= "[$iKey][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$iKey}";
 			$aArgs['this'] = $linkObjOrId;
 
-			if($bReadOnly)
-            {
-                $aRow['form::checkbox'] = "";
-                foreach($this->m_aEditableFields as $sFieldCode)
-                {
-                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-                    $aRow[$sFieldCode] = $sDisplayValue;
-                }
-            }
-            else
-            {
-                $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
-                foreach($this->m_aEditableFields as $sFieldCode)
-                {
-                    $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
-                    $sSafeId = utils::GetSafeId($sFieldId);
-                    $sValue = $linkObjOrId->Get($sFieldCode);
-                    $sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
-                    $oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-                    $aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-                        cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId, $sNameSuffix, 0, $aArgs).
-	                    '</div></div></div>';
-                    $aFieldsMap[$sFieldCode] = $sSafeId;
-                }
-            }
+			if ($bReadOnly)
+			{
+				$aRow['form::checkbox'] = "";
+				foreach ($this->m_aEditableFields as $sFieldCode)
+				{
+					$sDisplayValue = $linkObjOrId->GetEditValue($sFieldCode);
+					$aRow[$sFieldCode] = $sDisplayValue;
+				}
+			}
+			else
+			{
+				$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
+				foreach ($this->m_aEditableFields as $sFieldCode)
+				{
+					$sSafeFieldId = $this->GetFieldId($linkObjOrId->GetKey(), $sFieldCode);
+					$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $linkObjOrId, $oP, $sNameSuffix, $sSafeFieldId);
+					$aFieldsMap[$sFieldCode] = $sSafeFieldId;
+				}
+			}
 
 			$sState = $linkObjOrId->GetState();
+			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->m_sExtKeyToRemote);;
 		}
 		else
 		{
@@ -180,15 +175,18 @@ class UILinksWidget
 				// New link existing only in memory
 				$oNewLinkObj = $linkObjOrId;
 				$iRemoteObjKey = $oNewLinkObj->Get($this->m_sExtKeyToRemote);
-				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe,
+					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
 			else
 			{
 				$iRemoteObjKey = $linkObjOrId;
 				$oNewLinkObj = MetaModel::NewObject($this->m_sLinkedClass);
 				$oRemoteObj = MetaModel::GetObject($this->m_sRemoteClass, $iRemoteObjKey);
-				$oNewLinkObj->Set($this->m_sExtKeyToRemote, $oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-				$oNewLinkObj->Set($this->m_sExtKeyToMe, $oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToRemote,
+					$oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
+				$oNewLinkObj->Set($this->m_sExtKeyToMe,
+					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
 			}
 			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
@@ -222,112 +220,150 @@ EOF
 
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
-				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
-				$sSafeId = utils::GetSafeId($sFieldId);
+				$sSafeFieldId = $this->GetFieldId($iUniqueId, $sFieldCode);
+				$this->AddRowForFieldCode($aRow, $sFieldCode, $aArgs, $oNewLinkObj, $oP, $sNameSuffix, $sSafeFieldId);
+				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
+
 				$sValue = $oNewLinkObj->Get($sFieldCode);
-				$sDisplayValue = $oNewLinkObj->GetEditValue($sFieldCode);
-				$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
-				$aRow[$sFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'.
-					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs).
-					'</div></div></div>';
-				$aFieldsMap[$sFieldCode] = $sSafeId;
-				$oP->add_ready_script(<<<EOF
+				$oP->add_ready_script(
+					<<<JS
 oWidget{$this->m_iInputId}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
-EOF
-					);
+JS
+				);
 			}
+
 			$sState = '';
+			$sRemoteKeySafeFieldId = $this->GetFieldId($iUniqueId, $this->m_sExtKeyToRemote);
 		}
 
-		if(!$bReadOnly)
-        {
-            $sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
-            $aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
-            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
-
-            $sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
-            $aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
-            $aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
-        }
-
-		$iFieldsCount = count($aFieldsMap);
-		$sJsonFieldsMap = json_encode($aFieldsMap);
-		
-		$oP->add_script(
-<<<EOF
-var {$aArgs['wizHelper']} = new WizardHelper('{$this->m_sLinkedClass}', '', '$sState');
-{$aArgs['wizHelper']}.SetFieldsMap($sJsonFieldsMap);
-{$aArgs['wizHelper']}.SetFieldsCount($iFieldsCount);
-EOF
-		);
-		$aRow['static::key'] = $oLinkedObj->GetHyperLink();
-		foreach(MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
+		if (!$bReadOnly)
 		{
-			$aRow['static::'.$sFieldCode] = $oLinkedObj->GetAsHTML($sFieldCode);
+			$sExtKeyToMeId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToMe);
+			$aFieldsMap[$this->m_sExtKeyToMe] = $sExtKeyToMeId;
+			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToMeId\" value=\"".$oCurrentObj->GetKey()."\">";
+
+			$sExtKeyToRemoteId = utils::GetSafeId($sPrefix.$this->m_sExtKeyToRemote);
+			$aFieldsMap[$this->m_sExtKeyToRemote] = $sExtKeyToRemoteId;
+			$aRow['form::checkbox'] .= "<input type=\"hidden\" id=\"$sExtKeyToRemoteId\" value=\"$iRemoteObjKey\">";
 		}
+
+		// Adding fields from remote class
+		// all fields are embedded in a span + added to $aFieldsMap array so that we can refresh them after extkey change
+		$aRemoteFieldsMap = [];
+		foreach (MetaModel::GetZListItems($this->m_sRemoteClass, 'list') as $sFieldCode)
+		{
+			$sSafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $sFieldCode);
+			$aRow['static::'.$sFieldCode] = "<span id='field_$sSafeFieldId'>".$oLinkedObj->GetAsHTML($sFieldCode).'</span>';
+			$aRemoteFieldsMap[$sFieldCode] = $sSafeFieldId;
+		}
+		// id field is needed so that remote object could be load server side
+		$aRemoteFieldsMap['id'] = $sRemoteKeySafeFieldId;
+
+		// Generate WizardHelper to update dependant fields
+		$this->AddWizardHelperInit($oP, $aArgs['wizHelper'], $this->m_sLinkedClass, $sState, $aFieldsMap);
+		//instantiate specific WizarHelper instance for remote class fields refresh
+		$bHasExtKeyUpdatingRemoteClassFields = (
+			array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
+			&& ($aArgs['replaceDependenciesByRemoteClassFields'])
+		);
+		if ($bHasExtKeyUpdatingRemoteClassFields)
+		{
+			$this->AddWizardHelperInit($oP, $aArgs['wizHelperRemote'], $this->m_sRemoteClass, $sState, $aRemoteFieldsMap);
+		}
+
 		return $aRow;
 	}
 
-	/**
-	 * Display one row of the whole form
-	 * @param WebPage $oP
-	 * @param array $aConfig
-	 * @param array $aRow
-	 * @param int $iRowId
-	 * @return string
-	 */
-	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
+	private function AddRowForFieldCode(&$aRow, $sFieldCode, &$aArgs, $oLnk, $oP, $sNameSuffix, $sSafeFieldId): void
 	{
-		$sHtml = '';
-		$sHtml .= "<tr id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_row_$iRowId\">\n";
-		foreach($aConfig as $sName=>$void)
+		if (($sFieldCode === $this->m_sExtKeyToRemote))
 		{
-			$sHtml .= "<td>".$aRow[$sName]."</td>\n";
+			// current field is the lnk extkey to the remote class
+			$aArgs['replaceDependenciesByRemoteClassFields'] = true;
+			$sRowFieldCode = 'static::key';
+			$aArgs['wizHelperRemote'] = $aArgs['wizHelper'].'_remote';
+			$aRemoteAttDefs = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
+			$aRemoteCodes = array_map(
+				function ($value) {
+					return $value->GetCode();
+				},
+				$aRemoteAttDefs
+			);
+			$aArgs['remoteCodes'] = $aRemoteCodes;
 		}
-		$sHtml .= "</tr>\n";
-		
-		return $sHtml;
+		else
+		{
+			$aArgs['replaceDependenciesByRemoteClassFields'] = false;
+			$sRowFieldCode = $sFieldCode;
+		}
+		$sValue = $oLnk->Get($sFieldCode);
+		$sDisplayValue = $oLnk->GetEditValue($sFieldCode);
+		$oAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $sFieldCode);
+
+		$aRow[$sRowFieldCode] = '<div class="field_container" style="border:none;"><div class="field_data"><div class="field_value">'
+			.cmdbAbstractObject::GetFormElementForField(
+				$oP,
+				$this->m_sLinkedClass,
+				$sFieldCode,
+				$oAttDef,
+				$sValue,
+				$sDisplayValue,
+				$sSafeFieldId,
+				$sNameSuffix,
+				0,
+				$aArgs
+			)
+			.'</div></div></div>';
 	}
-	
+
+	private function GetFieldId($iLnkId, $sFieldCode, $bSafe = true)
+	{
+		$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$iLnkId.']';
+
+		return ($bSafe) ? utils::GetSafeId($sFieldId) : $sFieldId;
+	}
+
+	private function AddWizardHelperInit($oP, $sWizardHelperVarName, $sWizardHelperClass, $sState, $aFieldsMap): void
+	{
+		$iFieldsCount = count($aFieldsMap);
+		$sJsonFieldsMap = json_encode($aFieldsMap);
+
+		$oP->add_script(
+			<<<JS
+var $sWizardHelperVarName = new WizardHelper('$sWizardHelperClass', '', '$sState');
+$sWizardHelperVarName.SetFieldsMap($sJsonFieldsMap);
+$sWizardHelperVarName.SetFieldsCount($iFieldsCount);
+$sWizardHelperVarName.SetReturnNotEditableFields(true);
+$sWizardHelperVarName.SetWizHelperJsVarName('$sWizardHelperVarName');
+JS
+		);
+	}
+
 	/**
 	 * Display the table with the form for editing all the links at once
+	 *
 	 * @param WebPage $oP The web page used for the output
 	 * @param array $aConfig The table's header configuration
 	 * @param array $aData The tabular data to be displayed
+	 *
 	 * @return string Html fragment representing the form table
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
 	{
-		$sHtml = "<input type=\"hidden\" name=\"attr_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"\">";
-		$sHtml .= "<table class=\"listResults\">\n";
-		// Header
-		$sHtml .= "<thead>\n";
-		$sHtml .= "<tr>\n";
-		foreach($aConfig as $sName=>$aDef)
+		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
+
+		foreach ($aData as $iRowId => $aRow)
 		{
-			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
-		}
-		$sHtml .= "</tr>\n";
-		$sHtml .= "</thead>\n";
-		
-		// Content
-		$sHtml .= "</tbody>\n";
-		$sEmptyRowStyle = '';
-		if (count($aData) != 0)
-		{
-			$sEmptyRowStyle = 'style="display:none;"';
+			$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aRow, $iRowId);
+			$oTable->AddRow($oRow);
 		}
 
-		foreach($aData as $iRowId => $aRow)
-		{
-			$sHtml .= $this->DisplayFormRow($oP, $aConfig, $aRow, $iRowId);
-		}		
-		$sHtml .= "<tr $sEmptyRowStyle id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_empty_row\"><td colspan=\"".count($aConfig)."\" style=\"text-align:center;\">".Dict::S('UI:Message:EmptyList:UseAdd')."</td></tr>";
-		$sHtml .= "</tbody>\n";
-		
-		// Footer
-		$sHtml .= "</table>\n";
-		
+		$sHtml = BlockRenderer::RenderBlockTemplates($oTable);
+
 		return $sHtml;
 	}
 
@@ -360,20 +396,21 @@ EOF
 		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script(<<<EOF
-		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
-		oWidget{$this->m_iInputId}.Init();
-EOF
+		$oPage->add_ready_script(<<<JS
+oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
+oWidget{$this->m_iInputId}.Init();
+JS
 		);
 
-		while($oCurrentLink = $oValue->Fetch())
+		while ($oCurrentLink = $oValue->Fetch())
 		{
-		    // We try to retrieve the remote object as usual
-			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */);
+			// We try to retrieve the remote object as usual
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote),
+				false /* Must not be found */);
 			// If successful, it means that we can edit its link
-			if($oLinkedObj !== null)
-            {
-                $bReadOnly = false;
+			if ($oLinkedObj !== null)
+			{
+				$bReadOnly = false;
             }
             // Else we retrieve it without restrictions (silos) and will display its link as readonly
             else
@@ -393,6 +430,7 @@ EOF
             $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
+		// To prevent adding forms inside the main form
 
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
@@ -443,53 +481,55 @@ EOF
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
-		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
-		{
+		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 			$oAlreadyLinkedExpression = $oAlreadyLinkedFilter->GetCriteria();
-			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->Render();
-		}
-		else
-		{
+			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->RenderExpression();
+		} else {
 			$sAlreadyLinkedExpression = '';
 		}
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
-		if(!empty($oCurrentObj))
-		{
+		if (!empty($oCurrentObj)) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 			$aPrefillFormParam['filter'] = $oFilter;
 			$aPrefillFormParam['dest_class'] = $this->m_sRemoteClass;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_id' => 'add_'.$this->m_sAttCode,
+				'table_id' => "add_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'selection_mode' => true,
 				'json' => $sJson,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sAlreadyLinkedExpression,
-			));
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"0\"/>";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
-		$sHtml .= "</div>\n";
-		$sHtml .= "</form>\n";
-		$oPage->add($sHtml);
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."'});");
+			)));
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sAdd = Dict::S('UI:Button:Add');
+
+		$oPage->add(<<<HTML
+<form id="ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}">
+    <div id="SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+    </div>
+    <input type="hidden" id="count_{$this->m_sAttCode}{$this->m_sNameSuffix}" value="0"/>
+    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;
+    <input id="btn_ok_add_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
+</form>
+HTML
+		);
+
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."' , autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
 	}
@@ -547,7 +587,8 @@ EOF
 			if (is_object($oLinkedObj))
 			{
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
-				$oP->add($this->DisplayFormRow($oP, $this->m_aTableConfig, $aRow, -$iAdditionId));
+				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
+				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
 			}
 			else

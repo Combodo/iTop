@@ -109,6 +109,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'İrtibat (kişi)',
 	'Class:User/Attribute:contactid+' => 'İrtibat detayları',
+	'Class:User/Attribute:org_id' => 'Kurum',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Soyadı',
 	'Class:User/Attribute:last_name+' => 'İrtibatın soyadı',
 	'Class:User/Attribute:first_name' => 'Adı',
@@ -417,6 +419,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Ara',
 	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
@@ -455,6 +460,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hata: "%3$s" durumundaki %2$s nesnesi için "%1$s" uyarısı geçersizdir.',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -521,6 +528,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -529,7 +537,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -557,6 +565,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Login' => 'iTop\'a Giriş',
 	'UI:Login:Error:AccessRestricted' => 'iTop erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
 	'UI:Login:Error:AccessAdmin' => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Birini seçiniz --',
 	'UI:CSVImport:MappingNotApplicable' => '-- alanı ihmal et --',
 	'UI:CSVImport:NoData' => 'Boş veri seti..., veri giriniz!',
@@ -684,6 +695,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:MoreInfo' => 'Sorgu hakkında detaylı bilgi: ',
 	'UI:RunQuery:DevelopedQuery' => 'Yeniden düzenlenen sorgu: ',
 	'UI:RunQuery:SerializedFilter' => 'Özel filtre: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -844,7 +859,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:FatalErrorMessage' => 'Kritik Hata, iTop devam edemiyor.',
 	'UI:Error_Details' => 'Hata: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop Kullanıcı Yönetimi - sınıf koruması',
 	'UI:PageTitle:ProfileProjections' => 'iTop Kullanıcı Yönetimi - profil koruması',
 	'UI:UserManagement:Class' => 'Sınıf',
 	'UI:UserManagement:Class+' => 'Nesnin sınıfı',
@@ -853,8 +867,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:AnyObject' => '* herhangi *',
 	'UI:UserManagement:User' => 'Kullanıcı',
 	'UI:UserManagement:User+' => 'User involved in the projection',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profile in which the projection is specified',
 	'UI:UserManagement:Action:Read' => 'Oku',
 	'UI:UserManagement:Action:Read+' => 'Nesneyi görüntüle',
 	'UI:UserManagement:Action:Modify' => 'Güncelle',
@@ -887,13 +899,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Değişiklik Yönetimi',
 	'UI:ChangeManagementMenu+' => 'Değişiklik Yönetimi',
 	'UI:ChangeManagementMenu:Title' => 'Değişiklik Özeti',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Değişiklik tipine göre',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Değişiklik durumuna göre',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'İş grubuna değişiklikler',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Atanmamış Değişiklikler',
 
 	'UI:ConfigurationManagementMenu' => 'Konfigürasyon Yönetimi',
@@ -943,7 +955,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
+	'UI:NotificationsMenu:Title' => 'Uyarıların yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1429,9 +1441,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1570,4 +1585,43 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Menu:DataSources' => 'Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
+	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
+	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:AdminTools' => 'Yönetim Araçları',
+	'Menu:AdminTools+' => 'Yönetim Araçları',
+	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
+	'Menu:DataModelMenu' => 'Veri Modeli',
+	'Menu:DataModelMenu+' => 'Veri Modeli Özeti',
+	'Menu:ExportMenu' => 'Dışarı ver',
+	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar',
+	'Menu:NotificationsMenu' => 'Uyarılar',
+	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
+	'Menu:AuditCategories' => 'Denetleme Kategorileri',
+	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
+	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Genel sorgu',
+	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
+	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
+	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',
+	'Menu:ProfilesMenu' => 'Profiller',
+	'Menu:ProfilesMenu+' => 'Profiller',
+	'Menu:ProfilesMenu:Title' => 'Profiller',
+	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

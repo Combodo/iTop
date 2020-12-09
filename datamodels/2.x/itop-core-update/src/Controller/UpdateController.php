@@ -6,9 +6,9 @@
 
 namespace Combodo\iTop\CoreUpdate\Controller;
 
+use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
-use Combodo\iTop\TwigBase\Controller\Controller;
 use Dict;
 use Exception;
 use SetupUtils;
@@ -16,8 +16,6 @@ use utils;
 
 class UpdateController extends Controller
 {
-	const LOCAL_DIR = __DIR__;
-
     public function OperationSelectUpdateFile()
 	{
 		$sTransactionId = utils::GetNewTransactionId();
@@ -110,7 +108,8 @@ class UpdateController extends Controller
         $sTransactionId = utils::GetNewTransactionId();
 		$aParams['sTransactionId'] = $sTransactionId;
 
-		$this->DisplayPage($aParams);
+		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
+		$this->DisplaySetupPage($aParams);
 	}
 
 	public function OperationUpdateCoreFiles()
@@ -138,8 +137,18 @@ class UpdateController extends Controller
             'sAjaxURL' => utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true')),
         );
         $this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
+        $this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 
-        $this->DisplayPage($aParams);
+        $this->DisplaySetupPage($aParams);
+    }
+
+    public function OperationRunSetup()
+    {
+	    SetupUtils::CheckSetupToken(true);
+	    $sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
+	    @chmod($sConfigFile, 0770);
+	    $sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
+	    header("Location: $sRedirectURL");
     }
 
     private function GetPreviousInstallations()

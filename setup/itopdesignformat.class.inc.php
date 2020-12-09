@@ -1,22 +1,23 @@
 <?php
-// Copyright (C) 2014-2019 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+define('ITOP_DESIGN_LATEST_VERSION', '3.0');
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -40,7 +41,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
  */
 class iTopDesignFormat
 {
-	protected static $aVersions = array(
+	public static $aVersions = array(
 		'1.0' => array(
 			'previous' => null,
 			'go_to_previous' => null,
@@ -86,6 +87,12 @@ class iTopDesignFormat
 		'1.7' => array(
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
+			'next' => '3.0',
+			'go_to_next' => 'From17To30',
+		),
+		'3.0' => array(
+			'previous' => '1.7',
+			'go_to_previous' => 'From30To17',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -324,7 +331,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.0 to 1.1
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From10To11($oFactory)
@@ -379,7 +386,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.1 to 1.0
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From11To10($oFactory)
@@ -449,7 +456,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.1 to 1.2
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From11To12($oFactory)
@@ -458,7 +465,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.2 to 1.1
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From12To11($oFactory)
@@ -516,7 +523,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.2 to 1.3
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From12To13($oFactory)
@@ -525,7 +532,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.3 to 1.2
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From13To12($oFactory)
@@ -578,7 +585,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.3 to 1.4
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From13To14($oFactory)
@@ -587,7 +594,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.4 to 1.3
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From14To13($oFactory)
@@ -621,7 +628,7 @@ class iTopDesignFormat
 
 	/**
 	 * Downgrade the format from version 1.5 to 1.4
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From15To14($oFactory)
@@ -640,7 +647,7 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 1.4 to 1.5
-	 * @param $oFactory
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From14To15($oFactory)
@@ -648,8 +655,8 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Upgrade the format from version 1.5 to 1.6
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From15To16($oFactory)
@@ -658,8 +665,8 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Downgrade the format from version 1.6 to 1.5
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From16To15($oFactory)
@@ -678,33 +685,168 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Upgrade the format from version 1.6 to 1.7
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From16To17($oFactory)
 	{
-		// nothing changed !
+		// N°2275 Clean branding node (move "define" from collection to logos or theme, noe that any other nodes will be seen as "merge")
+		$this->CleanDefineOnCollectionNode('/itop_design/branding',
+			'*[self::main_logo or self::login_logo or self::portal_logo]|themes/theme');
+
+		// N°2275 Clean portal form properties node (move "define" from collection to each property)
+		$this->CleanDefineOnCollectionNode('/itop_design/module_designs/module_design[@id="itop-portal"]/forms/form/properties', '*');
+
+		// N°2806 Clean legacy portal constants
+		$aConstantsIDsToRemove = array(
+			'PORTAL_POWER_USER_PROFILE',
+			'PORTAL_SERVICECATEGORY_QUERY',
+			'PORTAL_SERVICE_SUBCATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICECATEGORY_QUERY',
+			'PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY',
+			'PORTAL_ALL_PARAMS',
+			'PORTAL_SET_TYPE_FROM',
+			'PORTAL_TYPE_TO_CLASS',
+			'PORTAL_TICKETS_SEARCH_CRITERIA',
+			'PORTAL_TICKETS_SEARCH_FILTER_service_id',
+			'PORTAL_TICKETS_SEARCH_FILTER_caller_id',
+			'PORTAL_INCIDENT_PUBLIC_LOG',
+			'PORTAL_INCIDENT_USER_COMMENT',
+			'PORTAL_INCIDENT_FORM_ATTRIBUTES',
+			'PORTAL_INCIDENT_TYPE',
+			'PORTAL_INCIDENT_LIST_ZLIST',
+			'PORTAL_INCIDENT_CLOSED_ZLIST',
+			'PORTAL_INCIDENT_DETAILS_ZLIST',
+			'PORTAL_INCIDENT_DISPLAY_QUERY',
+			'PORTAL_INCIDENT_DISPLAY_POWERUSER_QUERY',
+			'PORTAL_USERREQUEST_PUBLIC_LOG',
+			'PORTAL_USERREQUEST_USER_COMMENT',
+			'PORTAL_USERREQUEST_FORM_ATTRIBUTES',
+			'PORTAL_USERREQUEST_TYPE',
+			'PORTAL_USERREQUEST_LIST_ZLIST',
+			'PORTAL_USERREQUEST_CLOSED_ZLIST',
+			'PORTAL_USERREQUEST_DETAILS_ZLIST',
+			'PORTAL_USERREQUEST_DISPLAY_QUERY',
+			'PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY',
+		);
+		foreach($aConstantsIDsToRemove as $sConstantIDToRemove)
+		{
+			$sXPath = '/itop_design/constants/constant[@id="'.$sConstantIDToRemove.'"]';
+			$this->RemoveNodeFromXPath($sXPath);
+		}
+
+		// N°2806 Clean legacy portal "portal" node
+		$sXPath = '/itop_design/portals/portal[@id="legacy_portal"]';
+		$this->RemoveNodeFromXPath($sXPath);
 	}
 
 	/**
-	 * @param $oFactory
-	 *
+	 * Upgrade the format from version 1.4 to 1.5
+	 * @param \ModelFactory $oFactory
 	 * @return void (Errors are logged)
 	 */
 	protected function From17To16($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
-		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		// N°1283 - remove "in_new_window" option for WebPageMenuNode
 		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
 		$this->RemoveNodeFromXPath($sPath);
-		
-		// -- 2314 : remove "themes" nodes
+
+		// N°2314 - remove "themes" nodes
 		$sPath = "/itop_design/branding/themes";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°2746 - remove attributes Enum Set
+		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
 		$this->RemoveNodeFromXPath($sPath);
 	}
 
+	/**
+	 * Upgrade the format from version 1.7 to 3.0
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To30($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3233 - Remove "display template" feature from MetaModel
+		$sPath = "/itop_design//class/properties/display_template";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3203 - Datamodel: Add semantic for image & state attributes
+		// - Move lifecycle attribute declaration to the semantic node
+		$oNodeList = $oXPath->query("/itop_design//class/lifecycle/attribute");
+		/** @var \DOMElement $oNode */
+		foreach ($oNodeList as $oNode) {
+			// Find semantic node or create it
+			$oPropertiesNode = $oXPath->query("../../properties", $oNode)->item(0);
+			$oFieldsSemanticNodeList = $oXPath->query("fields_semantic", $oPropertiesNode);
+			if ($oFieldsSemanticNodeList->length > 0) {
+				$oSemanticNode = $oFieldsSemanticNodeList->item(0);
+			}
+			else {
+				$oSemanticNode = $oPropertiesNode->ownerDocument->createElement("fields_semantic");
+				$oPropertiesNode->appendChild($oSemanticNode);
+			}
+
+			// Create state_attribute node
+			$oStateNode = $oSemanticNode->ownerDocument->createElement("state_attribute", $oNode->nodeValue);
+			$oSemanticNode->appendChild($oStateNode);
+
+			// Remove current node from lifecycle
+			$this->DeleteNode($oNode);
+		}
+	}
+
+	/**
+	 * Downgrade the format from version 3.0 to 1.7
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From30To17($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3182 - Remove style node from MenuGroup
+		$sPath = "/itop_design/menus/menu[@xsi:type='MenuGroup']/style";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3185 - Remove main_logo_compact node from branding
+		$sPath = "/itop_design/branding/main_logo_compact";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°2982 - Speed up SCSS themes compilation during setup
+		$sPath = "/itop_design/branding/themes/theme/precompiled_stylesheet";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3203 - Datamodel: Add semantic for image & state attributes
+		// - Move state_attribute back to the lifecycle node if it has one
+		$oNodeList = $oXPath->query("/itop_design//class/properties/fields_semantic/state_attribute");
+		/** @var \DOMElement $oNode */
+		foreach ($oNodeList as $oNode) {
+			// Move node under lifecycle only if there is such a node
+			$oLifecycleNode = $oXPath->query("../../../lifecycle", $oNode)->item(0);
+			if($oLifecycleNode !== null)
+			{
+				// Create attribute node
+				$oAttributeNode = $oLifecycleNode->ownerDocument->createElement("attribute", $oNode->nodeValue);
+				$oLifecycleNode->appendChild($oAttributeNode);
+			}
+
+			// Remove current node from semantic in all cases
+			$this->DeleteNode($oNode);
+		}
+		// - Remove semantic node
+		$sPath = "/itop_design//class/properties/fields_semantic";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * @param string $sPath
+	 *
+	 * @return void
+	 */
 	private function RemoveNodeFromXPath($sPath)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
@@ -717,15 +859,48 @@ class iTopDesignFormat
 		}
 	}
 
+	/**
+	 * Clean a collection node by removing the _delta="define" on it and moving it to the item nodes.
+	 *
+	 * @param string $sCollectionXPath Absolute XPath to the collection node
+	 * @param string $sItemsRelativeXPath *Relative* XPath to the item nodes from the collection node
+	 *
+	 * @return void
+	 * @since 2.7.0
+	 */
+	private function CleanDefineOnCollectionNode($sCollectionXPath, $sItemsRelativeXPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// Iterate over collections
+		$oCollectionNodeList = $oXPath->query($sCollectionXPath);
+		/** @var \DOMElement $oCollectionNode */
+		foreach ($oCollectionNodeList as $oCollectionNode)
+		{
+			// Move _delta="define" from collection to items
+			if (($oCollectionNode->hasAttribute('_delta')) && ($oCollectionNode->getAttribute('_delta') === "define"))
+			{
+				$oCollectionNode->removeAttribute('_delta');
+
+				$oItemNodeList = $oXPath->query($sItemsRelativeXPath, $oCollectionNode);
+				/** @var \DOMElement $oItemNode */
+				foreach ($oItemNodeList as $oItemNode)
+				{
+					$oItemNode->setAttribute('_delta', 'define');
+				}
+			}
+		}
+	}
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.
 	 * This prevents generating empty lines in the middle of the XML
+	 *
 	 * @param DOMNode $oNode
 	 */
 	protected function DeleteNode($oNode)
 	{
-		if ( $oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent()) )
+		if ($oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent()))
 		{
 			$oNode->parentNode->removeChild($oNode->nextSibling);
 		}

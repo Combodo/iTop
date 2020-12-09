@@ -95,6 +95,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Kapcsolattartó (személy)',
 	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Szervezeti egység',
+	'Class:User/Attribute:org_id+' => 'A társult személy szervezete',
 	'Class:User/Attribute:last_name' => 'Családnév',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Keresztnév',
@@ -403,6 +405,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Keresés',
 	'UI:ClickToCreateNew' => 'Új %1$s létrehozása',
@@ -441,6 +446,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Hiba: érvénytelen stimulus "%1$s" a következő objektum %2$s következő állapotában "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Számossága',
 	'UI:GroupBy:Count+' => '',
@@ -507,6 +514,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -515,7 +523,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'the account is not associated to a person having an email attribute. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions...~~',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
 	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
@@ -543,6 +551,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Login' => 'Belépés az iTop alkalmazásba',
 	'UI:Login:Error:AccessRestricted' => 'iTop hozzáférés korlátozva. Kérem forduljon az iTop adminisztrátorhoz!',
 	'UI:Login:Error:AccessAdmin' => 'Adminisztrátori hozzáférés korlátozott. Kérem forduljon az iTop adminisztrátorhoz!',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- válasszon ki egyet --',
 	'UI:CSVImport:MappingNotApplicable' => '-- mező figyelmen kívül hagyása --',
 	'UI:CSVImport:NoData' => 'Üres mező..., kérem agyjon meg adatot!',
@@ -670,6 +681,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:RunQuery:MoreInfo' => 'Több információ a lekérdezésről: ',
 	'UI:RunQuery:DevelopedQuery' => 'Újraírt lekérdező értékelés: ',
 	'UI:RunQuery:SerializedFilter' => 'Szerializált szűrő: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'A lekérdezés futtatása közben a következő hiba jelentkezett: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -830,7 +845,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:FatalErrorMessage' => 'Fatális hiba, iTop nem tudja a működését folytatni',
 	'UI:Error_Details' => 'Hiba: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop felhasználó menedzsmet - osztály nézet',
 	'UI:PageTitle:ProfileProjections' => 'iTop felhasználó menedzsmet - profil nézet',
 	'UI:UserManagement:Class' => 'Osztály',
 	'UI:UserManagement:Class+' => '',
@@ -839,8 +853,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:AnyObject' => '* any *',
 	'UI:UserManagement:User' => 'Felhasználó',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Olvas',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Módosít',
@@ -873,13 +885,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:AdminTools' => 'Adminisztrációs eszközök', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Változás menedzsment',
 	'UI:ChangeManagementMenu+' => '',
 	'UI:ChangeManagementMenu:Title' => 'Változás áttekintése',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Változások típusok szerint',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Változások státusz szerint',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Változások csoportok szerint',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Még nem kiosztott változások',
 
 	'UI:ConfigurationManagementMenu' => 'Konfiguráció menedzsment',
@@ -929,7 +941,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'Menu:NotificationsMenu' => 'Értesítések', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Értesítések</span> beállítása',
+	'UI:NotificationsMenu:Title' => 'Értesítések beállítása',
 	'UI:NotificationsMenu:Help' => 'Segítség',
 	'UI:NotificationsMenu:HelpContent' => '<p>Az iTop alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>kiváltó okok és akciók</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1414,9 +1426,12 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Button:RemoveImage' => 'Remove the image~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1555,4 +1570,43 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Menu:DataSources' => 'Szinkronizált adatforrások',
+	'Menu:DataSources+' => '',
+	'Menu:WelcomeMenu' => 'Üdvözlöm',
+	'Menu:WelcomeMenu+' => '',
+	'Menu:WelcomeMenuPage' => 'Üdvözlöm',
+	'Menu:WelcomeMenuPage+' => '',
+	'Menu:AdminTools' => 'Adminisztrációs eszközök',
+	'Menu:AdminTools+' => '',
+	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.',
+	'Menu:DataModelMenu' => 'Adatmodell',
+	'Menu:DataModelMenu+' => '',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => '',
+	'Menu:NotificationsMenu' => 'Értesítések',
+	'Menu:NotificationsMenu+' => '',
+	'Menu:AuditCategories' => 'Audit kategóriák',
+	'Menu:AuditCategories+' => '',
+	'Menu:Notifications:Title' => 'Audit kategóriák',
+	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',
+	'Menu:RunQueriesMenu+' => '',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Univerzális keresés',
+	'Menu:UniversalSearchMenu+' => '',
+	'Menu:UserManagementMenu' => 'Felhasználó menedzsment',
+	'Menu:UserManagementMenu+' => '',
+	'Menu:ProfilesMenu' => 'Profilok',
+	'Menu:ProfilesMenu+' => '',
+	'Menu:ProfilesMenu:Title' => 'Profilok',
+	'Menu:UserAccountsMenu' => 'Felhasználói fiókok',
+	'Menu:UserAccountsMenu+' => '',
+	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

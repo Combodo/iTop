@@ -1,29 +1,21 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * User rights management API
+ * Copyright (C) 2013-2020 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 class UserRightException extends CoreException
 {
@@ -53,25 +45,85 @@ define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions 
  */
 abstract class UserRightsAddOnAPI
 {
+	/**
+	 * @param string $sAdminUser
+	 * @param string $sAdminPwd
+	 * @param string $sLanguage
+	 *
+	 * @return mixed
+	 */
 	abstract public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US'); // could be used during initial installation
 
+	/**
+	 * @return void
+	 */
 	abstract public function Init(); // loads data (possible optimizations)
 
-	// Used to build select queries showing only objects visible for the given user
+	/**
+	 * Used to build select queries showing only objects visible for the given user
+	 *
+	 * @param string $sLogin
+	 * @param string $sClass
+	 * @param array $aSettings
+	 *
+	 * @return mixed
+	 */
 	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = array()); // returns a filter object
 
-	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null);
-	abstract public function IsAdministrator($oUser);
-	abstract public function IsPortalUser($oUser);
-	abstract public function FlushPrivileges();
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param int $iActionCode
+	 * @param null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null);
 
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param string $sStimulusCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null);
+
+	/**
+	 * @param \User $oUser
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param int $iActionCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 *
+	 * @return bool
+	 */
+	abstract public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null);
+
+	/**
+	 * @param \User $oUser
+	 *
+	 * @return bool
+	 */
+	abstract public function IsAdministrator($oUser);
+
+	/**
+	 * @param \User $oUser
+	 *
+	 * @return bool
+	 */
+	abstract public function IsPortalUser($oUser);
+
+	/**
+	 * @return void
+	 */
+	abstract public function FlushPrivileges();
 
 	/**
 	 * Default behavior for addons that do not support profiles
 	 *
-	 * @param $oUser User
+	 * @param \User $oUser
 	 * @return array
 	 */
 	public function ListProfiles($oUser)
@@ -80,7 +132,18 @@ abstract class UserRightsAddOnAPI
 	}
 
 	/**
-	 *	...
+	 * ...
+	 *
+	 * @param string$sClass
+	 * @param array $aAllowedOrgs
+	 * @param array $aSettings
+	 * @param string|null $sAttCode
+	 *
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 */
 	public function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
 	{
@@ -164,6 +227,9 @@ abstract class UserRightsAddOnAPI
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 abstract class User extends cmdbAbstractObject
 {
+	/**
+	 * @throws \CoreException
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -176,7 +242,6 @@ abstract class User extends cmdbAbstractObject
 			"db_table" => "priv_user",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -210,7 +275,11 @@ abstract class User extends cmdbAbstractObject
 
 	/*
 	* Compute a name in best effort mode
-	*/	
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	*/
 	public function GetFriendlyName()
 	{
 		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
@@ -236,6 +305,32 @@ abstract class User extends cmdbAbstractObject
 			}
 		}
 		return $this->Get('login');
+	}
+
+	/*
+	* Compute the initials in best effort mode
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	*/
+	public function GetInitials()
+	{
+		$sInitials = '';
+
+		if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
+		{
+			$sInitials .= mb_substr($this->Get('first_name'), 0, 1);
+			$sInitials .= mb_substr($this->Get('last_name'), 0, 1);
+		}
+
+		if (empty($sInitials))
+		{
+			$sInitials = mb_substr($this->Get('login'), 0, 1);
+		}
+
+		return $sInitials;
 	}
 
 	protected $oContactObject;
@@ -417,25 +512,23 @@ abstract class User extends cmdbAbstractObject
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-			$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
 
-			// debug
-			if (false)
-			{
-				$oPage->SetCurrentTab('More on user rigths (dev only)');
-				$oPage->add("<h3>User rights</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'addon/userrights');
-				$oPage->add("<h3>Change log</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'core/cmdb');
-				$oPage->add("<h3>Application</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'application');
-				$oPage->add("<h3>GUI</h3>\n");
-				$this->DoShowGrantSumary($oPage, 'gui');
-				
-			}					
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
+
+		// debug
+		if (false)
+		{
+			$oPage->SetCurrentTab('More on user rigths (dev only)');
+			$oPage->add("<h3>User rights</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'addon/userrights');
+			$oPage->add("<h3>Change log</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'core/cmdb');
+			$oPage->add("<h3>Application</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'application');
+			$oPage->add("<h3>GUI</h3>\n");
+			$this->DoShowGrantSumary($oPage, 'gui');
+
 		}
 	}
 	
@@ -578,25 +671,38 @@ interface iSelfRegister
  */
 class UserRights
 {
+	const DEFAULT_USER_CONTACT_ID_ATTCODE = 'contactid';
+	const DEFAULT_CONTACT_ORG_ID_ATTCODE = 'org_id';
+	const DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE = self::DEFAULT_CONTACT_ORG_ID_ATTCODE.'_friendlyname';
+	const DEFAULT_CONTACT_FIRSTNAME_ATTCODE = 'first_name';
+	const DEFAULT_CONTACT_PICTURE_ATTCODE = 'picture';
+
+	public static $m_aCacheUsers;
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
 	protected static $m_oUser;
 	protected static $m_oRealUser;
 	protected static $m_sSelfRegisterAddOn = null;
+	protected static $m_aAdmins = array();
+	protected static $m_aPortalUsers = array();
 	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
 	private static $m_sLastLoginStatus = null;
 
+	/**
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
 	public static function SelectModule($sModuleName)
 	{
 		if (!class_exists($sModuleName))
 		{
 			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
-			return;
 		}
 		if (!is_subclass_of($sModuleName, 'UserRightsAddOnAPI'))
 		{
 			throw new CoreException("Could not select this module, the class '$sModuleName' is not derived from UserRightsAddOnAPI");
-			return;
 		}
 		self::$m_oAddOn = new $sModuleName;
 		self::$m_oAddOn->Init();
@@ -604,6 +710,12 @@ class UserRights
 		self::$m_oRealUser = null;
 	}
 
+	/**
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
 	public static function SelectSelfRegister($sModuleName)
 	{
 		if (!class_exists($sModuleName))
@@ -613,19 +725,33 @@ class UserRights
 		self::$m_sSelfRegisterAddOn = $sModuleName;
 	}
 
+	/**
+	 * @return \UserRightsAddOnAPI
+	 */
 	public static function GetModuleInstance()
 	{
 		return self::$m_oAddOn;
 	}
 
-	// Installation: create the very first user
+	/**
+	 * Installation: create the very first user
+	 *
+	 * @param string $sAdminUser
+	 * @param string $sAdminPwd
+	 * @param string $sLanguage
+	 *
+	 * @return bool
+	 */
 	public static function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		$bRes = self::$m_oAddOn->CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage);
 		self::FlushPrivileges(true /* reset admin cache */);
 		return $bRes;
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public static function IsLoggedIn()
 	{
 		if (self::$m_oUser == null)
@@ -638,9 +764,17 @@ class UserRights
 		}	
 	}
 
-	public static function Login($sName, $sAuthentication = 'any')
+	/**
+	 * @param string $sLogin Login of the concerned user
+	 * @param string $sAuthentication
+	 *
+	 * @return bool
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public static function Login($sLogin, $sAuthentication = 'any')
 	{
-		$oUser = self::FindUser($sName, $sAuthentication);
+		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
 			return false;
@@ -657,38 +791,55 @@ class UserRights
 		return true;
 	}
 
-	public static function CheckCredentials($sName, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
+	/**
+	 * @param string $sLogin Login of the user to check the credentials for
+	 * @param string $sPassword
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 *
+	 * @return bool
+	 * @throws \OQLException
+	 */
+	public static function CheckCredentials($sLogin, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
 	{
-		$oUser = self::FindUser($sName, $sAuthentication);
+		$oUser = self::FindUser($sLogin, $sAuthentication);
 		if (is_null($oUser))
 		{
 			// Check if the user does not exist at all or if it is just disabled
-			if (self::FindUser($sName, $sAuthentication, true) == null)
+			if (self::FindUser($sLogin, $sAuthentication, true) == null)
 			{
 				// User does not exist at all
-				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
-				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => $bCheckCredentialsAndCreateUser);
+				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sLogin, $sPassword, $sLoginMode, $sAuthentication);
+				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => $bCheckCredentialsAndCreateUser);
 				return $bCheckCredentialsAndCreateUser;
 			}
 			else
 			{
 				// User is actually disabled
-				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
+				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
 				return  false;
 			}
 		}
 
 		if (!$oUser->CheckCredentials($sPassword))
 		{
-			self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
+			self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
 			return false;
 		}
 		self::UpdateUser($oUser, $sLoginMode, $sAuthentication);
-		self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => true);
+		self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => true);
 
 		return true;
 	}
-	
+
+	/**
+	 * @param string $sName
+	 * @param string $sPassword
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 *
+	 * @return mixed
+	 */
 	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
 	{
 		if (self::$m_sSelfRegisterAddOn != null)
@@ -697,6 +848,11 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param \User $oUser
+	 * @param string $sLoginMode
+	 * @param string $sAuthentication
+	 */
 	public static function UpdateUser($oUser, $sLoginMode, $sAuthentication)
 	{
 		if (self::$m_sSelfRegisterAddOn != null)
@@ -704,7 +860,10 @@ class UserRights
 			call_user_func(array(self::$m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
 		}
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public static function TrustWebServerContext()
 	{
 		if (!is_null(self::$m_oUser))
@@ -719,9 +878,11 @@ class UserRights
 
 	/**
 	 * Tells whether or not the archive mode is allowed to the current user
-	 * @return boolean
+	 *
+	 * @return bool
+	 * @throws \CoreException
 	 */
-	static function CanBrowseArchive()
+	public static function CanBrowseArchive()
 	{
 		if (is_null(self::$m_oUser))
 		{
@@ -740,6 +901,9 @@ class UserRights
 		return $bRet;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function CanChangePassword()
 	{
 		if (MetaModel::DBIsReadOnly())
@@ -757,16 +921,24 @@ class UserRights
 		}
 	}
 
-	public static function ChangePassword($sOldPassword, $sNewPassword, $sName = '')
+	/**
+	 * @param string $sOldPassword
+	 * @param string $sNewPassword
+	 * @param string $sLogin Login of the concerned user
+	 *
+	 * @return bool
+	 * @throws \OQLException
+	 */
+	public static function ChangePassword($sOldPassword, $sNewPassword, $sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
 			// find the id out of the login string
-			$oUser = self::FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
@@ -780,15 +952,18 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sName Login identifier of the user to impersonate
+	 * @param string $sLogin Login identifier of the user to impersonate
+	 *
 	 * @return bool True if an impersonation occurred
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
 	 */
-	public static function Impersonate($sName)
+	public static function Impersonate($sLogin)
 	{
 		if (!self::CheckLogin()) return false;
 
 		$bRet = false;
-		$oUser = self::FindUser($sName);
+		$oUser = self::FindUser($sLogin);
 		if ($oUser)
 		{
 			$bRet = true;
@@ -807,13 +982,16 @@ class UserRights
 				// Do impersonate!
 				self::$m_oUser = $oUser;
 				Dict::SetUserLanguage(self::GetUserLanguage());
-				$_SESSION['impersonate_user'] = $sName;
+				$_SESSION['impersonate_user'] = $sLogin;
 				self::_ResetSessionCache();
 			}
 		}
 		return $bRet;
 	}
 
+	/**
+	 * @throws \DictExceptionUnknownLanguage
+	 */
 	public static function Deimpersonate()
 	{
 		if (!is_null(self::$m_oRealUser))
@@ -825,6 +1003,11 @@ class UserRights
 		}
 	}
 
+	/**
+	 * Return the current user login or an empty string if nobody connected.
+	 *
+	 * @return string
+	 */
 	public static function GetUser()
 	{
 		if (is_null(self::$m_oUser))
@@ -837,7 +1020,9 @@ class UserRights
 		}
 	}
 
-	/** User */
+	/**
+	 * @return \User|null
+	 */
 	public static function GetUserObject()
 	{
 		if (is_null(self::$m_oUser))
@@ -849,7 +1034,10 @@ class UserRights
 			return self::$m_oUser;
 		}
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public static function GetUserLanguage()
 	{
 		if (is_null(self::$m_oUser))
@@ -863,9 +1051,15 @@ class UserRights
 		}
 	}
 
-	public static function GetUserId($sName = '')
+	/**
+	 * @param string $sLogin
+	 *
+	 * @return string|null
+	 * @throws \OQLException
+	 */
+	public static function GetUserId($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			// return current user id
 			if (is_null(self::$m_oUser))
@@ -877,7 +1071,7 @@ class UserRights
 		else
 		{
 			// find the id out of the login string
-			$oUser = self::$m_oAddOn->FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 			if (is_null($oUser))
 			{
 				return null;
@@ -886,27 +1080,163 @@ class UserRights
 		}
 	}
 
-	public static function GetContactId($sName = '')
+	/**
+	 * @param string $sLogin Login of the user from which we return the contact ID
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetContactId($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
 			return '';
 		}
-		if (!MetaModel::IsValidAttCode(get_class($oUser), 'contactid'))
+		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
 		{
 			return '';
 		}
-		return $oUser->Get('contactid');
+		return $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
 	}
 
+	/**
+	 * Return the absolute URL of the contact picture
+	 *
+	 * @param string $sLogin               Login of the user from which we return the picture URL
+	 * @param bool   $bAllowDefaultPicture Set to false if you want it to return null instead of the default picture URL when the contact has no picture defined. This can be useful when we want to display something else than the default picture (eg. initials)
+	 *
+	 * @return null|string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetContactPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
+	{
+		// First, the default picture
+		if($bAllowDefaultPicture === true)
+		{
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . 'user-profile-default-256px.png';
+		}
+		else
+		{
+			$sPictureUrl = null;
+		}
+
+		// Then check if the user has a contact attached and if it has an picture defined
+		$sContactId = UserRights::GetContactId($sLogin);
+		if(!empty($sContactId))
+		{
+			$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
+			$sContactClass = get_class($oContact);
+
+			// Check that Contact object still exists and that Contact class has a picture attribute
+			if(!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE))
+			{
+				/** @var \ormDocument $oPicture */
+				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+				if($oPicture->IsEmpty())
+				{
+					if($bAllowDefaultPicture === true)
+					{
+						/** @var \AttributeImage $oAttDef */
+						$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$sPictureUrl = $oAttDef->Get('default_image');
+					}
+					else
+					{
+						$sPictureUrl = null;
+					}
+				}
+				else
+				{
+					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
+						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
+					}
+					else {
+						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+					}
+				}
+			}
+		}
+
+		return $sPictureUrl;
+	}
+
+	/**
+	 * Return the organization name of the current user's contact.
+	 * If the user has no contact linked, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetContactOrganizationFriendlyname()
+	{
+		$sOrgFriendlyname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE))
+		{
+			$sOrgFriendlyname = $oContact->Get(static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE);
+		}
+
+		return $sOrgFriendlyname;
+	}
+
+	/**
+	 * Return the first name of the current user's contact.
+	 * If the user has no contact, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetContactFirstname()
+	{
+		$sFirstname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE))
+		{
+			$sFirstname = $oContact->Get(static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE);
+		}
+
+		return $sFirstname;
+	}
+
+	/**
+	 * Return the friendlyname of the current user's contact.
+	 * If the user has no contact, null is returned.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetContactFriendlyname()
+	{
+		$sFriendlyname = null;
+
+		$oContact = static::GetContactObject();
+		if(!is_null($oContact))
+		{
+			$sFriendlyname = $oContact->GetRawName();
+		}
+
+		return $sFriendlyname;
+	}
+
+	/**
+	 * @return \DBObject|null
+	 */
 	public static function GetContactObject()
 	{
 		if (is_null(self::$m_oUser))
@@ -919,16 +1249,23 @@ class UserRights
 		}
 	}
 
-	// Render the user name in best effort mode
-	public static function GetUserFriendlyName($sName = '')
+	/**
+	 * Render the user name in best effort mode
+	 *
+	 * @param string $sLogin Login of the user we want to retrieve the friendlyname
+	 *
+	 * @return string
+	 * @throws \OQLException
+	 */
+	public static function GetUserFriendlyName($sLogin = '')
 	{
-		if (empty($sName))
+		if (empty($sLogin))
 		{
 			$oUser = self::$m_oUser;
 		}
 		else
 		{
-			$oUser = FindUser($sName);
+			$oUser = self::FindUser($sLogin);
 		}
 		if (is_null($oUser))
 		{
@@ -937,6 +1274,48 @@ class UserRights
 		return $oUser->GetFriendlyName();
 	}
 
+	/**
+	 * Render the user initials in best effort mode
+	 *
+	 * @param string $sLogin Login of the user from which we want to retrieve the initials
+	 *
+	 * @return string
+	 * @throws \OQLException
+	 * @since 3.0.0
+	 */
+	public static function GetUserInitials($sLogin = '')
+	{
+		if (empty($sLogin))
+		{
+			$oUser = self::$m_oUser;
+		}
+		else
+		{
+			$oUser = self::FindUser($sLogin);
+		}
+		if (is_null($oUser))
+		{
+			$sInitials = '';
+			$aLoginParts = explode(' ', $sLogin);
+			foreach($aLoginParts as $sLoginPart)
+			{
+				// Keep only upper case first letters
+				// eg. "My first name My last name" => "MM"
+				// eg. "Carrie Anne Moss" => "CAM"
+				if(preg_match('/^\p{Lu}/u', $sLoginPart) > 0)
+				{
+					$sInitials .= mb_substr($sLoginPart, 0, 1);
+				}
+			}
+
+			return $sInitials;
+		}
+		return $oUser->GetInitials();
+	}
+
+	/**
+	 * @return bool
+	 */
 	public static function IsImpersonated()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -946,6 +1325,9 @@ class UserRights
 		return true;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUser()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -955,11 +1337,17 @@ class UserRights
 		return self::$m_oRealUser->Get('login');
 	}
 
+	/**
+	 * @return \User|null
+	 */
 	public static function GetRealUserObject()
 	{
 		return self::$m_oRealUser;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUserId()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -969,6 +1357,9 @@ class UserRights
 		return self::$m_oRealUser->GetKey();
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetRealUserFriendlyName()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -978,6 +1369,9 @@ class UserRights
 		return self::$m_oRealUser->GetFriendlyName();
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected static function CheckLogin()
 	{
 		if (!self::IsLoggedIn())
@@ -991,7 +1385,7 @@ class UserRights
 	/**
 	 * Add additional filter for organization silos to all the requests.
 	 *
-	 * @param $sClass
+	 * @param string $sClass
 	 * @param array $aSettings
 	 *
 	 * @return bool|\Expression
@@ -1023,11 +1417,13 @@ class UserRights
 	/**
 	 * @param string $sClass
 	 * @param int $iActionCode
-	 * @param DBObjectSet $oInstanceSet
-	 * @param User $oUser
+	 * @param \DBObjectSet $oInstanceSet
+	 * @param \User $oUser
+	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
+	 * @throws \CoreException
 	 */
-	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
+	public static function IsActionAllowed($sClass, $iActionCode, $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
 		if (!self::CheckLogin()) return UR_ALLOWED_YES;
@@ -1079,6 +1475,15 @@ class UserRights
 		}
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sStimulusCode
+	 * @param \DBObjectSet|null $oInstanceSet
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
@@ -1110,9 +1515,11 @@ class UserRights
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param int $iActionCode
-	 * @param DBObjectSet $oInstanceSet
-	 * @param User $oUser
+	 * @param \DBObjectSet $oInstanceSet
+	 * @param \User $oUser
+	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO)
+	 * @throws \CoreException
 	 */
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
 	{
@@ -1147,7 +1554,11 @@ class UserRights
 
 	}
 
-	protected static $m_aAdmins = array();
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 */
 	public static function IsAdministrator($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -1164,7 +1575,11 @@ class UserRights
 		return self::$m_aAdmins[$iUser];
 	}
 
-	protected static $m_aPortalUsers = array();
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return bool
+	 */
 	public static function IsPortalUser($oUser = null)
 	{
 		if (!self::CheckLogin()) return false;
@@ -1181,6 +1596,9 @@ class UserRights
 		return self::$m_aPortalUsers[$iUser];
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function GetAllowedPortals()
     {
         $aAllowedPortals = array();
@@ -1206,6 +1624,50 @@ class UserRights
         return $aAllowedPortals;
     }
 
+	/**
+	 * @see UR_ACTION_READ, UR_ACTION_MODIFY, ...
+	 *
+	 * @param int $iActionCode
+	 * @param array $aCategories
+	 * @param bool $bWithLabels
+	 * @param \User|null $oUser
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @throws \CoreException
+	 */
+    public static function GetAllowedClasses($iActionCode, $aCategories = array('bizmodel'), $bWithLabels = false, $oUser = null)
+    {
+    	$aAllowedClasses = [];
+    	foreach(MetaModel::GetClasses(implode(',', $aCategories)) as $sClass)
+	    {
+	    	if(static::IsActionAllowed($sClass, $iActionCode, null, $oUser) === UR_ALLOWED_YES)
+		    {
+		    	if($bWithLabels)
+			    {
+			    	$aAllowedClasses[$sClass] = MetaModel::GetName($sClass);
+			    }
+		    	else
+			    {
+		    	    $aAllowedClasses[] = $sClass;
+			    }
+		    }
+	    }
+
+    	// Sort by label
+    	if($bWithLabels)
+	    {
+	    	asort($aAllowedClasses);
+	    }
+
+    	return $aAllowedClasses;
+    }
+
+	/**
+	 * @param \User|null $oUser
+	 *
+	 * @return array|mixed
+	 */
     public static function ListProfiles($oUser = null)
 	{
 		if (is_null($oUser))
@@ -1269,8 +1731,6 @@ class UserRights
 		}
 	}
 
-	static $m_aCacheUsers;
-
 	/**
 	 * Find a user based on its login and its type of authentication
 	 *
@@ -1328,6 +1788,18 @@ class UserRights
 		return $oUser;
 	}
 
+	/**
+	 * @param string$sClass
+	 * @param array $aAllowedOrgs
+	 * @param array $aSettings
+	 * @param string|null $sAttCode
+	 *
+	 * @return \DBObjectSearch
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
 	{
 		return self::$m_oAddOn->MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);
@@ -1352,9 +1824,8 @@ class UserRights
 			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
 			// fails we just silently ignore the error and keep the same session id...
 			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
-			session_regenerate_id();
-			if ($old_error_handler !== null)
-			{
+			session_regenerate_id(true);
+			if ($old_error_handler !== null) {
 				set_error_handler($old_error_handler);
 			}
 		}

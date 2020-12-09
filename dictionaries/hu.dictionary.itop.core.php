@@ -201,6 +201,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
+	
+	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => 'Portal~~',
 ));
 
 
@@ -496,10 +503,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Teszt címzett',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'Feladó',
-	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:reply_to' => 'Válasz',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
+	'Class:ActionEmail/Attribute:from' => 'Feladó~~',
+	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Válasz~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Címzett',
 	'Class:ActionEmail/Attribute:to+' => '',
 	'Class:ActionEmail/Attribute:cc' => 'Másolatot kap',
@@ -533,6 +544,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Típus',
 	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
 //
@@ -1034,4 +1047,40 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

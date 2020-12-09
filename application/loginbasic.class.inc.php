@@ -26,6 +26,10 @@ class LoginBasic extends AbstractLoginFSMExtension
 			{
 				$_SESSION['login_mode'] = 'basic';
 			}
+			elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION']))
+			{
+				$_SESSION['login_mode'] = 'basic';
+			}
 			elseif (isset($_SERVER['PHP_AUTH_USER']))
 			{
 				$_SESSION['login_mode'] = 'basic';
@@ -36,7 +40,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (!isset($_SESSION['login_mode']) || $_SESSION['login_mode'] == 'basic')
 		{
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
 			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
@@ -92,9 +96,19 @@ class LoginBasic extends AbstractLoginFSMExtension
 	{
 		$sAuthUser = '';
 		$sAuthPwd = null;
+		$sAuthorization = '';
 		if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
 		{
-			list($sAuthUser, $sAuthPwd) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+			$sAuthorization = $_SERVER['HTTP_AUTHORIZATION'];
+		}
+		elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION']))
+		{
+			$sAuthorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+		}
+
+		if (!empty($sAuthorization))
+		{
+			list($sAuthUser, $sAuthPwd) = explode(':', base64_decode(substr($sAuthorization, 6)));
 		}
 		else
 		{

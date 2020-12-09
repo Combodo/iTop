@@ -1,4 +1,4 @@
-# CRON parameters file used by cron.cmd
+# cron parameters file used by cron.cmd
 #
 # Warning: make sure that this file is NOT readable by the web server
 

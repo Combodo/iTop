@@ -19,7 +19,6 @@
 
 require_once('../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 /**
@@ -32,7 +31,7 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
  */
 function RenderAttachments(ajax_page $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadParam('objclass', '');
+	$sClass = utils::ReadParam('objclass', '', false, 'class');
 	$sId = utils::ReadParam('objkey', '');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
 	$bEditMode = utils::ReadParam('edit_mode', 0);
@@ -46,7 +45,7 @@ function RenderAttachments(ajax_page $oPage, $iTransactionId)
 		: AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
 	if ($bEditMode && !$bIsReadOnlyState)
 	{
-		$oAttachmentsRenderer->RenderEditAttachmentsList($aAttachmentsDeleted);
+		$oAttachmentsRenderer->AddAttachmentsListContent(true, $aAttachmentsDeleted);
 	}
 	else
 	{
@@ -89,6 +88,10 @@ try
 				try
 				{
 					$oDoc = utils::ReadPostedDocument('file');
+					if ($oDoc->IsEmpty())
+					{
+						throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
+					}
 					/** @var Attachment $oAttachment */
 					$oAttachment = MetaModel::NewObject('Attachment');
 					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));

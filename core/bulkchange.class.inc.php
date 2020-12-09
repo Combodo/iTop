@@ -309,7 +309,7 @@ class BulkChange
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
 			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+			$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
@@ -363,6 +363,7 @@ class BulkChange
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
 					// Default reporting
+					// $aRowData[$iCol] is always null
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				if ($oExtKey->IsNullAllowed())
@@ -395,7 +396,7 @@ class BulkChange
 					}
 					$aCacheKeys[] = $value;
 					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
@@ -465,7 +466,7 @@ class BulkChange
 						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
-							$aResults[$iCol] = new CellStatus_Modify($aRowData[$iCol]);
+							$aResults[$iCol] = new CellStatus_Modify(utils::HtmlEntities($aRowData[$iCol]));
 						}
 					}
 				}
@@ -538,7 +539,7 @@ class BulkChange
 		{
 			if ($sAttCode == 'id')
 			{
-				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+				$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 			}
 			else
 			{
@@ -554,7 +555,7 @@ class BulkChange
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
-					$aResults[$iCol]= new CellStatus_Issue($aRowData[$iCol], $sOrigValue, $aErrors[$sAttCode]);
+					$aResults[$iCol]= new CellStatus_Issue(utils::HtmlEntities($aRowData[$iCol]), $sOrigValue, $aErrors[$sAttCode]);
 				}
 				elseif (array_key_exists($sAttCode, $aChangedFields))
 				{
@@ -577,7 +578,7 @@ class BulkChange
 					}
 					else
 					{
-						$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+						$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 					}
 				}
 			}
@@ -924,7 +925,7 @@ class BulkChange
 								{
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, utils::HtmlEntities($this->m_aData[$iRow][$iCol]), Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 								}
 							}
 						}
@@ -947,7 +948,7 @@ class BulkChange
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			if (isset($aResult[$iRow]["__STATUS__"]))
 			{
 				// An issue at the earlier steps - skip the rest
@@ -1066,13 +1067,13 @@ class BulkChange
 				$iObj = $oObj->GetKey();
 				if (!in_array($iObj, $aVisited))
 				{
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$iRow++;
 					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(itval($iPreviousTimeLimit));
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
 		//
@@ -1082,7 +1083,7 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
@@ -1096,7 +1097,7 @@ class BulkChange
 					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+						$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 					}
 				}
 			}

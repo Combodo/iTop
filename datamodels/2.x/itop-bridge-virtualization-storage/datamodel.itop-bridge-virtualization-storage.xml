@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="lnkVirtualDeviceToVolume" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -16,7 +16,6 @@
             <attribute id="volume_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>

@@ -1,3 +1,21 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 $bootstrap-sass-asset-helper: false !default;
 // Combodo Portal 1.0.0 (Based on Simplex 3.3.6)
 // Variables
@@ -537,19 +555,19 @@ $jumbotron-heading-font-size:    ceil(($font-size-base * 4.5)) !default;
 
 $state-success-text:             #468847 !default;
 $state-success-bg:               #dff0d8 !default;
-$state-success-border:           darken(adjust-hue($state-success-bg, -10), 5%) !default;
+$state-success-border:           lighten($state-success-text, 10%) !default;
 
 $state-info-text:                #3a87ad !default;
 $state-info-bg:                  #d9edf7 !default;
-$state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%) !default;
+$state-info-border:              lighten($state-info-text, 10%) !default;
 
 $state-warning-text:             #c09853 !default;
 $state-warning-bg:               #fcf8e3 !default;
-$state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 3%) !default;
+$state-warning-border:           lighten($state-warning-text, 10%) !default;
 
 $state-danger-text:              #b94a48 !default;
 $state-danger-bg:                #f2dede !default;
-$state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 3%) !default;
+$state-danger-border:            lighten($state-danger-text, 10%) !default;
 
 
 //== Tooltips
@@ -919,3 +937,21 @@ $dl-horizontal-offset:        $component-offset-horizontal !default;
 $dl-horizontal-breakpoint:    $grid-float-breakpoint !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
+
+
+//== Messaging
+//
+//##
+
+$messaging-self-primary-color: $white !default;
+$messaging-self-secondary-color: $gray-dark !default;
+$messaging-1st-peer-primary-color: $combodo-orange !default;
+$messaging-1st-peer-secondary-color: $white !default;
+$messaging-2nd-peer-primary-color: #e9a537 !default;
+$messaging-2nd-peer-secondary-color: $white !default;
+$messaging-3rd-peer-primary-color: darken($combodo-orange, 7%) !default;
+$messaging-3rd-peer-secondary-color: $white !default;
+$messaging-4th-peer-primary-color: #e3952c !default;
+$messaging-4th-peer-secondary-color: $white !default;
+$messaging-5th-peer-primary-color: darken($combodo-orange, 14%) !default;
+$messaging-5th-peer-secondary-color: $white !default;

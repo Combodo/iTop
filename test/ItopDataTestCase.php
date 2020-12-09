@@ -713,7 +713,7 @@ class ItopDataTestCase extends ItopTestCase
 			$iId = $oLnk->Get('functionalci_id');
 			if (!empty($aWaitedCIList))
 			{
-				$this->assertTrue(array_key_exists($iId, $aWaitedCIList));
+				$this->assertArrayHasKey($iId, $aWaitedCIList);
 				$this->assertEquals($aWaitedCIList[$iId], $oLnk->Get('impact_code'));
 			}
 		}
@@ -737,7 +737,7 @@ class ItopDataTestCase extends ItopTestCase
 			$iId = $oLnk->Get('contact_id');
 			if (!empty($aWaitedContactList))
 			{
-				$this->assertTrue(array_key_exists($iId, $aWaitedContactList));
+				$this->assertArrayHasKey($iId, $aWaitedContactList);
 				foreach ($aWaitedContactList[$iId] as $sAttCode => $oValue)
 				{
 					if (MetaModel::IsValidAttCode(get_class($oTicket), $sAttCode))
@@ -756,5 +756,29 @@ class ItopDataTestCase extends ItopTestCase
 		$this->iTestOrgId = $oOrg->GetKey();
 	}
 
-
+	/**
+	 *  Assert that a series of operations will trigger a given number of MySL queries
+	 *
+	 * @param $iExpectedCount  Number of MySQL queries that should be executed
+	 * @param callable $oFunction Operations to perform
+	 *
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	protected static function assertDBQueryCount($iExpectedCount, callable $oFunction)
+	{
+		$iInitialCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$oFunction();
+		$iFinalCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$iCount = $iFinalCount - 1 - $iInitialCount;
+		if ($iCount != $iExpectedCount)
+		{
+			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+		}
+		else
+		{
+			// Otherwise PHP Unit will consider that no assertion has been made
+			static::assertTrue(true);
+		}
+	}
 }

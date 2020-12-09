@@ -174,7 +174,7 @@ class RunTimeEnvironment
 			ROOT_MODULE => array(
 				'version_db' => '',
 				'name_db' => '',
-				'version_code' => ITOP_VERSION.'.'.ITOP_REVISION,
+				'version_code' => ITOP_VERSION_FULL,
 				'name_code' => ITOP_APPLICATION,
 			)
 		);
@@ -544,7 +544,16 @@ class RunTimeEnvironment
 
 	/**
 	 * Helper function to create the database structure
+	 *
+	 * @param \Config $oConfig
+	 * @param $sMode
+	 *
 	 * @return boolean true on success, false otherwise
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function CreateDatabaseStructure(Config $oConfig, $sMode)
 	{
@@ -554,7 +563,7 @@ class RunTimeEnvironment
 		}
 		else
 		{
-			$this->log_info("Creating the structure in '".$oConfig->Get('db_subname')."'.");
+			$this->log_info("Creating the structure in '".$oConfig->Get('db_name')."'.");
 		}
 	
 		//MetaModel::CheckDefinitions();
@@ -721,7 +730,7 @@ class RunTimeEnvironment
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
-		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+		$oInstallRec->Set('version', ITOP_VERSION_FULL);
 		$oInstallRec->Set('comment', $sMainComment);
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
@@ -875,19 +884,19 @@ class RunTimeEnvironment
 	 */	
 	protected function log_error($sText)
 	{
-		SetupPage::log_error($sText);
+		SetupLog::Error($sText);
 	}
 	protected function log_warning($sText)
 	{
-		SetupPage::log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 	protected function log_info($sText)
 	{
-		SetupPage::log_info($sText);
+		SetupLog::Info($sText);
 	}
 	protected function log_ok($sText)
 	{
-		SetupPage::log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	/**
@@ -895,7 +904,7 @@ class RunTimeEnvironment
 	 *
 	 * @param string $sQuery
 	 *
-	 * @since 2.5 N°1001 utf8mb4 switch
+	 * @since 2.5.0 N°1001 utf8mb4 switch
 	 * @uses \SetupUtils::GetSetupQueriesFilePath()
 	 */
 	protected function log_db_query($sQuery)
@@ -1056,6 +1065,14 @@ class RunTimeEnvironment
 			}
 		}
 	}
+
+	public function Rollback()
+	{
+		if ($this->sFinalEnv != $this->sTargetEnv)
+		{
+			SetupUtils::tidydir(APPROOT.'env-'.$this->sTargetEnv);
+		}
+	}
 	
 	/**
 	 * Call the given handler method for all selected modules having an installation handler
@@ -1071,7 +1088,7 @@ class RunTimeEnvironment
 	            isset($aAvailableModules[$sModuleId]['installer']) )
 	        {
 	            $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-	            SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+		        SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
 	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
 	            if (is_callable($aCallSpec))
 	            {
@@ -1093,8 +1110,8 @@ class RunTimeEnvironment
 	    
 	    CMDBObject::SetTrackInfo("Initialization");
 	    $oMyChange = CMDBObject::GetCurrentChange();
-	    
-	    SetupPage::log_info("starting data load session");
+
+		SetupLog::Info("starting data load session");
 	    $oDataLoader->StartSession($oMyChange);
 	    
 	    $aFiles = array();
@@ -1144,7 +1161,7 @@ class RunTimeEnvironment
 	    foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
+		    SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1152,13 +1169,13 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName, true);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    foreach($aFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName");
+		    SetupLog::Info("Loading file: $sFileName");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1166,11 +1183,11 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    $oDataLoader->EndSession();
-	    SetupPage::log_info("ending data load session");
+		SetupLog::Info("ending data load session");
 	}
 	
 	/**

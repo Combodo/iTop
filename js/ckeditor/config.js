@@ -40,4 +40,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Enable the browser spell checking
 	config.disableNativeSpellChecker = false;
+	
+	// Set theme for codesnippet plugin - N°1164
+	config.codeSnippet_theme = 'obsidian';
 };

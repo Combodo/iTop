@@ -48,7 +48,7 @@ if (empty($sMemoryLimit))
 	// On some PHP installations, memory_limit does not exist as a PHP setting!
 	// (encountered on a 5.2.0 under Windows)
 	// In that case, ini_set will not work, let's keep track of this and proceed with the data load
-	SetupPage::log_info("No memory limit has been defined in this instance of PHP");		
+	SetupLog::Info("No memory limit has been defined in this instance of PHP");
 }
 else
 {
@@ -59,11 +59,11 @@ else
 	{
 		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 		{
-			SetupPage::log_error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
+			SetupLog::Error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");
 		}
 		else
 		{
-			SetupPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
+			SetupLog::Info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");
 		}
 	}
 }
@@ -89,7 +89,7 @@ function ShutdownCallback()
 	$errline = $error["line"];
 	$errstr = $error["message"];
 	$sLogMessage = "PHP error occured : msg=$errstr, no=$errno, file=$errfile, line=$errline";
-	SetupPage::log_error("Setup error: $sLogMessage");
+	SetupLog::Error("Setup error: $sLogMessage");
 	echo '<'.PHP_FATAL_ERROR_TAG.'>'.$sLogMessage.'</'.PHP_FATAL_ERROR_TAG.'>';
 }
 
@@ -188,17 +188,17 @@ catch(Exception $e)
 	header("HTTP/1.0 500 Internal server error.");
 	echo "<p>An error happened while processing the installation:</p>\n";
 	echo '<p>'.$e."</p>\n";
-	SetupPage::log_error("An error happened while processing the installation: ".$e);
+	SetupLog::Error("An error happened while processing the installation: ".$e);
 }
 
 if (function_exists('memory_get_peak_usage'))
 {
 	if ($sOperation == 'file')
 	{
-		SetupPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
 	}
 	else
 	{
-		SetupPage::log_info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
+		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 	}
 }

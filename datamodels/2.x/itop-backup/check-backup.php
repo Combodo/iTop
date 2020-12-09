@@ -23,7 +23,7 @@
 // Developer's notes:
 //   Duplicated code: sys_get_temp_dir, the computation of the target filename, etc.
 
-// Recommended usage in CRON
+// Recommended usage in cron
 // /usr/bin/php -q /var/www/combodo/modules/itop-backup/check-backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
 // Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
@@ -250,6 +250,8 @@ catch(Exception $e)
 
 if (utils::IsModeCLI())
 {
+	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('Check backup utility'));
+
 	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
 	try
 	{

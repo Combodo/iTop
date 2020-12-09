@@ -131,7 +131,7 @@ class SQLUnionQuery extends SQLQuery
 
 		if ($bGetCount)
 		{
-			$sSelects = "({$sLimitStart}".implode(" {$sLimit}{$sLimitEnd}{$sLineSep} UNION{$sLineSep} {$sLimitStart}", $aSelects)." {$sLimit}{$sLimitEnd})";
+			$sSelects = "{$sLimitStart}".implode(" {$sLimit}{$sLimitEnd}{$sLineSep} UNION{$sLineSep} {$sLimitStart}", $aSelects)." {$sLimit}{$sLimitEnd}";
 			$sFrom = "({$sLineSep}{$sSelects}{$sLineSep}) as __selects__";
 			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM {$sFrom}{$sLineSep}) AS _union_alderaan_";
 		}

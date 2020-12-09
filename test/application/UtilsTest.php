@@ -68,7 +68,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	 */
 	public function testRealPath($sPath, $sBasePath, $expected)
 	{
-		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath));
+		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath), "utils::RealPath($sPath, $sBasePath) does not match $expected");
 	}
 
 	public function realPathDataProvider()
@@ -77,14 +77,19 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 
 		$sSep = DIRECTORY_SEPARATOR;
 		$sItopRootRealPath = realpath(APPROOT).$sSep;
+		$sLicenseFileName = 'license.txt';
+		if (!is_file(APPROOT.$sLicenseFileName))
+		{
+			$sLicenseFileName = 'LICENSE';
+		}
 
 		return [
-			'licence.txt' => [APPROOT.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
+			$sLicenseFileName => [APPROOT.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
 			'unexisting file' => [APPROOT.'license_DOES_NOT_EXIST.txt', APPROOT, false],
-			'/license.txt' => [APPROOT.$sSep.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
-			'%2flicense.txt' => [APPROOT.'%2flicense.txt', APPROOT, false],
-			'../license.txt' => [APPROOT.'..'.$sSep.'license.txt', APPROOT, false],
-			'%2e%2e%2flicense.txt' => [APPROOT.'%2e%2e%2flicense.txt', APPROOT, false],
+			'/'.$sLicenseFileName => [APPROOT.$sSep.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
+			'%2f'.$sLicenseFileName => [APPROOT.'%2f'. $sLicenseFileName, APPROOT, false],
+			'../'.$sLicenseFileName => [APPROOT.'..'.$sSep.$sLicenseFileName, APPROOT, false],
+			'%2e%2e%2f'.$sLicenseFileName => [APPROOT.'%2e%2e%2f'.$sLicenseFileName, APPROOT, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
 				APPROOT.'application/utils.inc.php',
 				APPROOT,
@@ -96,10 +101,71 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'basepath containing / and \\' => [
-				APPROOT.'sources/form/form.class.inc.php',
-				APPROOT.'sources/form\\form.class.inc.php',
-				$sItopRootRealPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
+				APPROOT.'sources/Form/Form.php',
+				APPROOT.'sources/Form\\Form.php',
+				$sItopRootRealPath.'sources'.$sSep.'Form'.$sSep.'Form.php',
 			],
 		];
 	}
+
+	/**
+	 * @dataProvider LocalPathProvider
+	 *
+	 * @param $sAbsolutePath
+	 * @param $expected
+	 */
+	public function testLocalPath($sAbsolutePath, $expected)
+	{
+		$this->assertSame($expected, utils::LocalPath($sAbsolutePath));
+
+	}
+
+	public function LocalPathProvider()
+	{
+		return array(
+			'index.php' => array(
+				'sAbsolutePath' => APPROOT.'index.php',
+				'expected' => 'index.php',
+			),
+			'non existing' => array(
+				'sAbsolutePath' => APPROOT.'nonexisting/nonexisting',
+				'expected' => false,
+			),
+			'outside' => array(
+				'sAbsolutePath' => '/tmp',
+				'expected' => false,
+			),
+			'application/cmdbabstract.class.inc.php' => array(
+				'sAbsolutePath' => APPROOT.'application/cmdbabstract.class.inc.php',
+				'expected' => 'application/cmdbabstract.class.inc.php',
+			),
+			'dir' => array(
+				'sAbsolutePath' => APPROOT.'application/.',
+				'expected' => 'application',
+			),
+			'root' => array(
+				'sAbsolutePath' => APPROOT.'.',
+				'expected' => '',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider appRootUrlProvider
+	 * @covers utils::GetAppRootUrl
+	 */
+	public function testGetAppRootUrl($sReturnValue, $sCurrentScript, $sAppRoot, $sAbsoluteUrl)
+	{
+		$this->assertEquals($sReturnValue, utils::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl));
+	}
+
+	public function appRootUrlProvider()
+	{
+		return array(
+			'Setup index (windows antislash)' => array('http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'),
+			'Setup index (windows slash)' => array('http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+			'Setup index (windows slash, drive letter case difference)' => array('http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
+		);
+	}
+
 }

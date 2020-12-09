@@ -1,1 +1,0 @@
-# itop-files-information

@@ -23,7 +23,7 @@ Some iTop specific tags were added :
  
 ### known limitations:
 #### `@see` tags must be very specific: 
-   * always prefix class members with `ClassName::` 
+   * always prefix class members (attributes or methods) with `ClassName::` (do not use self) 
    * for methods always suffix them with `()`, 
    * do not reference variables since they are not documented. If you have to, always prefix them with `$`
  

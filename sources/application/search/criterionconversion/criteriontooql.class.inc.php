@@ -200,9 +200,12 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aRawValues[] = $sRawValue;
 			}
 		}
-		$sValue = implode(' ', $aRawValues);
-
-		if (empty($sValue))
+		// This allow to search for complete words
+		if (!empty($aRawValues))
+		{
+			$sValue = implode(' ', $aRawValues).' _';
+		}
+		else
 		{
 			if ($bHasUnDefined)
 			{
@@ -408,7 +411,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				// Use the 'below' operator by default
 				$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 				$oCriteria = $oSearch->GetCriteria();
-				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams());
+				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments() );
 				$oSearch->ResetCondition();
 				$sCondition = $oCriteria->Render($aArgs);
 			}

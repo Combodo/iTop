@@ -1,0 +1,5 @@
+<div id="session-messages">
+	{% for aSessionMessage in app['session_message_helper'] %}
+		{% include 'itop-portal-base/portal/templates/helpers/session_messages/session_message.html.twig' with {aSessionMessage: aSessionMessage} %}
+	{% endfor %}
+</div>

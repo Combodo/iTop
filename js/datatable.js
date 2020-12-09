@@ -1,4 +1,5 @@
 // jQuery UI style "widget" for selecting and sorting "fields"
+//@deprecated
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,
@@ -53,7 +54,7 @@ $(function()
 			oParams.operation = 'datatable';
 			
 			oParams.filter = this.options.sFilter;
-			oParams.extra_param = this.options.oExtraParams;
+			oParams.extra_param = JSON.stringify(this.options.oExtraParams);
 			oParams.start = 0;
 			oParams.end = this.options.iPageSize;
 			oParams.select_mode = this.options.sSelectMode;

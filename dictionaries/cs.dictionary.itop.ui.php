@@ -110,6 +110,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Kontakt (osoba)',
 	'Class:User/Attribute:contactid+' => 'Osobní údaje',
+	'Class:User/Attribute:org_id' => 'Organizace',
+	'Class:User/Attribute:org_id+' => 'Přístupná organizace',
 	'Class:User/Attribute:last_name' => 'Příjmení',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Jméno',
@@ -418,6 +420,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Insert' => 'Insert~~',
 	'UI:Button:More' => 'More~~',
 	'UI:Button:Less' => 'Less~~',
+	'UI:Button:Wait' => 'Please wait while updating fields~~',
+	'UI:Treeview:CollapseAll' => 'Collapse All~~',
+	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Hledání',
 	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
@@ -456,6 +461,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Chyba: neplatná operace "%1$s" na objektu %2$s ve stavu "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
@@ -522,6 +529,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop vám může zaslat instrukce pro obnovení vašeho hesla.',
 	'UI:Login:ResetPassword' => 'Zaslat nyní!',
 	'UI:Login:ResetPwdFailed' => 'Chyba při odesílání emailu: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' není platné uživatelské jméno',
 	'UI:ResetPwd-Error-NotPossible' => 'obnova hesla u externích účtů není možná.',
@@ -530,7 +538,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ResetPwd-Error-NoEmailAtt' => 'účet není spojen s osobou s uvedenou emailovou adresou. Kontaktujte administrátora.',
 	'UI:ResetPwd-Error-NoEmail' => 'chybí emailová adresa. Kontaktujte administrátora.',
 	'UI:ResetPwd-Error-Send' => 'technický problém při odesílání emailu. Kontaktujte administrátora.',
-	'UI:ResetPwd-EmailSent' => 'Vyčkejte na příchod emailové zprávy a postupujte dle instrukcí...',
+	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Obnovení hesla pro iTop',
 	'UI:ResetPwd-EmailBody' => '<body><p>Vyžádali jste obovení hesla pro iTop.</p><p>Pokračujte kliknutím na následující <a href="%1$s">jednorázový odkaz</a> a zadejte nové heslo.</p>',
 
@@ -558,6 +566,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Login' => 'Přihlásit',
 	'UI:Login:Error:AccessRestricted' => 'Přístup je omezen. Kontaktujte administrátora.',
 	'UI:Login:Error:AccessAdmin' => 'Přístup vyhrazen osobám s administrátorskými právy. Kontaktujte administrátora.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- zvolte jednu z možností --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorovat --',
 	'UI:CSVImport:NoData' => 'Žádná data!',
@@ -685,6 +696,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:RunQuery:MoreInfo' => 'Více informací o dotazu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rekonstruovaný dotaz: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filtr: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Nastala chyba při provádění dotazu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL pro MS-Excel web queries',
 	'UI:Query:UrlV1' => 'Nebyl specifikován seznam sloupců k exportu. Bez této informace nemůže stránka <em>export-V2.php</em> provést export. Pro export všech polí použijte stránku <em>export.php</em>. Pokud však chcete udržet konzistenci v delším časovém horzontu, použijte stávající stránku a specifikujte paramter "fields".',
@@ -845,7 +860,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:FatalErrorMessage' => 'Závažná chyba, iTop nemůže pokračovat.',
 	'UI:Error_Details' => 'Chyba: %1$s',
 
-	'UI:PageTitle:ClassProjections' => 'iTop správa uživatelů - projekce tříd',
 	'UI:PageTitle:ProfileProjections' => 'iTop správa uživatelů - projekce profilů',
 	'UI:UserManagement:Class' => 'Třída',
 	'UI:UserManagement:Class+' => 'Třída objektů',
@@ -854,8 +868,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:UserManagement:AnyObject' => '* jakýkoli *',
 	'UI:UserManagement:User' => 'Uživatel',
 	'UI:UserManagement:User+' => 'User zapojený do projekce',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil, ve kterém je projekce specifikována',
 	'UI:UserManagement:Action:Read' => 'Čtení',
 	'UI:UserManagement:Action:Read+' => 'Čtení/zobrazování objektů',
 	'UI:UserManagement:Action:Modify' => 'Upravování',
@@ -888,13 +900,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:AdminTools' => 'Administrace', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Nástroje pro administraci', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Řízení změn',
 	'UI:ChangeManagementMenu+' => 'Řízení změn',
 	'UI:ChangeManagementMenu:Title' => 'Přehled změn',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Změny podle typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Změny podle stavu',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Změny podle pracovních skupin',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nepřidělené změny',
 
 	'UI:ConfigurationManagementMenu' => 'Správa konfigurací',
@@ -944,7 +956,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'Menu:NotificationsMenu' => 'Upozornění', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Konfigurace upozornění', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfigurace <span class="hilite">upozornění</span>',
+	'UI:NotificationsMenu:Title' => 'Konfigurace upozornění',
 	'UI:NotificationsMenu:Help' => 'Nápověda',
 	'UI:NotificationsMenu:HelpContent' => '<p>Upozornění v iTop jsou plně nastavitelné. Jsou založena na dvou druzích objektů: <i>triggery (spouštěče) a akce</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1155,7 +1167,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ColumnsAndSortOrder' => 'Sloupce a jejich řazení:',
 	'UI:UseDefaultSettings' => 'Použít výchozí nastavení',
 	'UI:UseSpecificSettings' => 'Použít následující nastavení:',
-	'UI:Display_X_ItemsPerPage' => 'Zobrazit %1$s položek na stránku',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Zobrazit',
+	'UI:Display_X_ItemsPerPage_suffix' => 'položek na stránku',
 	'UI:UseSavetheSettings' => 'Uložit nastavení',
 	'UI:OnlyForThisList' => 'Jen pro tento seznam',
 	'UI:ForAllLists' => 'Pro všechny seznamy',
@@ -1428,9 +1441,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:RemoveImage' => 'Odebrat obrázek',
 	'UI:UploadNotSupportedInThisMode' => 'Úprava obrázků není v tomto režimu podporována.',
 
+	'UI:Button:RemoveDocument' => 'Remove the document~~',
+
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1569,4 +1585,43 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
+	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
+	'Menu:WelcomeMenu' => 'Vítejte',
+	'Menu:WelcomeMenu+' => 'Vítejte v iTop',
+	'Menu:WelcomeMenuPage' => 'Vítejte',
+	'Menu:WelcomeMenuPage+' => 'Vítejte v iTop',
+	'Menu:AdminTools' => 'Administrace',
+	'Menu:AdminTools+' => 'Nástroje pro administraci',
+	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění',
+	'Menu:DataModelMenu' => 'Datový model',
+	'Menu:DataModelMenu+' => 'Přehled datového modelu',
+	'Menu:ExportMenu' => 'Exportovat',
+	'Menu:ExportMenu+' => 'Exportovat výsledky jakéhokoli dotazu do HTML, CSV nebo XML',
+	'Menu:NotificationsMenu' => 'Upozornění',
+	'Menu:NotificationsMenu+' => 'Konfigurace upozornění',
+	'Menu:AuditCategories' => 'Kategorie auditu',
+	'Menu:AuditCategories+' => 'Kategorie auditu',
+	'Menu:Notifications:Title' => 'Kategorie auditu',
+	'Menu:RunQueriesMenu' => 'Provést dotaz',
+	'Menu:RunQueriesMenu+' => 'Provést dotaz',
+	'Menu:QueryMenu' => 'Knihovna dotazů',
+	'Menu:QueryMenu+' => 'Knihovna dotazů',
+	'Menu:UniversalSearchMenu' => 'Univerzální hledání',
+	'Menu:UniversalSearchMenu+' => 'Hledejte cokoli...',
+	'Menu:UserManagementMenu' => 'Správa uživatelů',
+	'Menu:UserManagementMenu+' => 'Správa uživatelů',
+	'Menu:ProfilesMenu' => 'Profily (Role)',
+	'Menu:ProfilesMenu+' => 'Profily (Role)',
+	'Menu:ProfilesMenu:Title' => 'Profily (Role)',
+	'Menu:UserAccountsMenu' => 'Uživatelské účty',
+	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
+	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
+	'Menu:MyShortcuts' => 'Mé odkazy',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

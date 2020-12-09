@@ -2,27 +2,26 @@
   "type": "project",
   "license": "AGPLv3",
   "require": {
-    "php": ">=5.6.0",
-    "ext-soap": "*",
+    "php": ">=7.1.3",
+    "ext-ctype": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "ext-iconv": "*",
     "ext-json": "*",
     "ext-mysqli": "*",
-    "ext-dom": "*",
-    "ext-iconv": "*",
-    "ext-gd": "*",
-    "ext-ctype": "*",
-
-    "scssphp/scssphp": "1.0.0",
-    "swiftmailer/swiftmailer": "5.4.9",
+    "ext-soap": "*",
+    "combodo/tcpdf": "6.3.5",
+    "nikic/php-parser": "^3.1",
+    "pear/archive_tar": "1.4.10",
     "pelago/emogrifier": "2.1.0",
-    "combodo/tcpdf": "6.3.0",
-    "pear/archive_tar": "1.4.7",
-
+    "scssphp/scssphp": "1.0.6",
+    "swiftmailer/swiftmailer": "5.4.12",
     "symfony/console": "3.4.*",
     "symfony/dotenv": "3.4.*",
     "symfony/framework-bundle": "3.4.*",
+    "symfony/polyfill-php70": "1.*",
     "symfony/twig-bundle": "3.4.*",
-    "symfony/yaml": "3.4.*",
-    "symfony/polyfill-php70": "1.*"
+    "symfony/yaml": "3.4.*"
   },
   "require-dev": {
     "symfony/stopwatch": "3.4.*",
@@ -38,18 +37,24 @@
   },
   "config": {
     "platform": {
-      "php": "5.6.0"
+      "php": "7.2.0"
     },
     "vendor-dir": "lib",
     "preferred-install": {
       "*": "dist"
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "classmap-authoritative": true
   },
   "autoload": {
     "classmap": [
       "core",
-      "application"
+      "application",
+      "sources/application",
+      "sources/Composer",
+      "sources/Controller",
+      "sources/Form",
+      "sources/Renderer"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
@@ -58,6 +63,7 @@
       "core/legacy/querybuildercontextlegacy.class.inc.php",
       "core/querybuilderexpressions.class.inc.php",
       "core/legacy/querybuilderexpressionslegacy.class.inc.php",
+      "application/startup.inc.php",
       "application/loginform.class.inc.php",
       "application/loginbasic.class.inc.php",
       "application/logindefault.class.inc.php",
@@ -73,5 +79,10 @@
       "allow-contrib": false,
       "require": "3.4.*"
     }
+  },
+  "scripts": {
+    "post-install-cmd": ["@rmDeniedTestDir"],
+    "post-update-cmd": ["@rmDeniedTestDir"],
+    "rmDeniedTestDir":  "@php .make/composer/rmDeniedTestDir.php"
   }
 }

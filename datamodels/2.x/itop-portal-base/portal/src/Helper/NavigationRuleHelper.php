@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -569,7 +569,7 @@ class NavigationRuleHelper
 		);
 
 		// Get form's navigation rules
-		$aFormNavRules = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['navigation_rules'] : array('submit' => null, 'cancel' => null);
+		$aFormNavRules = (isset($aFormProperties['properties']['navigation_rules'])) ? $aFormProperties['properties']['navigation_rules'] : array('submit' => null, 'cancel' => null);
 
 		// Check from which origin the rule will be called
 		$sRuleCallOrigin = ($bIsCurrentFormInModal) ? 'modal' : 'default';

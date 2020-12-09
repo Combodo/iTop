@@ -1,6 +1,9 @@
 <?php
+
+use Combodo\iTop\Renderer\BlockRenderer;
+
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,19 +23,21 @@
 class DataTable
 {
 	protected $iListId;		// Unique ID inside the web page
+	/** @var string */
+	private $sDatatableContainerId;
 	protected $sTableId;	// identifier for saving the settings (combined with the class aliases)
 	protected $oSet;		// The set of objects to display
 	protected $aClassAliases;	// The aliases (alias => class) inside the set
-	protected $iNbObjects;		// Total number of objects inthe set
+	protected $iNbObjects;		// Total number of objects in the set
 	protected $bUseCustomSettings;	// Whether or not the current display uses custom settings
 	protected $oDefaultSettings;	// the default settings for displaying such a list
 	protected $bShowObsoleteData;
 
 	/**
-	 * @param $iListId mixed Unique ID for this div/table in the page
-	 * @param $oSet DBObjectSet The set of data to display
-	 * @param $aClassAliases array The list of classes/aliases to be displayed in this set $sAlias => $sClassName
-	 * @param $sTableId mixed A string (or null) identifying this table in order to persist its settings
+	 * @param string $iListId  Unique ID for this div/table in the page
+	 * @param DBObjectSet $oSet The set of data to display
+	 * @param array$aClassAliases The list of classes/aliases to be displayed in this set $sAlias => $sClassName
+	 * @param string $sTableId A string (or null) identifying this table in order to persist its settings
 	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
@@ -42,6 +47,7 @@ class DataTable
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
 		$this->iListId = utils::GetSafeId($iListId); // Make a "safe" ID for jQuery
+		$this->sDatatableContainerId = 'datatable_'.utils::GetSafeId($iListId);
 		$this->oSet = $oSet;
 		$this->aClassAliases = $aClassAliases;
 		$this->sTableId = $sTableId;
@@ -154,18 +160,18 @@ class DataTable
 		$sPager = $this->GetPager($oPage, $iPageSize, $iDefaultPageSize, $iPageIndex);
 		$sActionsMenu = '';
 		$sToolkitMenu = '';
-		if ($bActionsMenu)
-		{
+		if ($bActionsMenu) {
 			$sActionsMenu = $this->GetActionsMenu($oPage, $aExtraParams);
 		}
-		if ($bToolkitMenu)
-		{
-			$sToolkitMenu = $this->GetToolkitMenu($oPage, $aExtraParams);
-		}
+//		if ($bToolkitMenu)
+//		{
+//			$sToolkitMenu = $this->GetToolkitMenu($oPage, $aExtraParams);
+//		}
+
 		$sDataTable = $this->GetHTMLTable($oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		$sConfigDlg = $this->GetTableConfigDlg($oPage, $aColumns, $bViewLink, $iDefaultPageSize);
-		
-		$sHtml = "<table id=\"datatable_{$this->iListId}\" class=\"datatable\">";
+
+		$sHtml = "<table id=\"{$this->sDatatableContainerId}\" class=\"datatable\">";
 		$sHtml .= "<tr><td>";
 		$sHtml .= "<table style=\"width:100%;\">";
 		$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
@@ -201,11 +207,11 @@ class DataTable
 			$aOptions['oDefaultSettings'] = $this->GetAsHash($this->oDefaultSettings);
 		}
 		$sJSOptions = json_encode($aOptions);
-		$oPage->add_ready_script("$('#datatable_{$this->iListId}').datatable($sJSOptions);");
+		$oPage->add_ready_script("$('#{$this->sDatatableContainerId}').datatable($sJSOptions);");
 
 		return $sHtml;
 	}
-	
+
 	/**
 	 * When refreshing the body of a paginated table, get the rows of the table (inside the TBODY)
 	 * return string The HTML rows to insert inside the <tbody> node
@@ -352,9 +358,18 @@ EOF;
 	protected function GetActionsMenu(WebPage $oPage, $aExtraParams)
 	{
 		$oMenuBlock = new MenuBlock($this->oSet->GetFilter(), 'list');
-		
-		$sHtml = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
-		return $sHtml;
+
+		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
+		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_stylesheet($sFileAbsUrl);
+		}
+		// JS files
+		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_script($sFileAbsUrl);
+		}
+
+		$oPage->RenderInlineScriptsAndCSSRecursively($oBlock);
+		return BlockRenderer::RenderBlockTemplates($oBlock);
 	}
 
 	/**
@@ -418,15 +433,15 @@ EOF;
 		$sHtml .= "<input id=\"dtbl_dlg_all_{$this->iListId}\" type=\"radio\" name=\"scope\" $sGenericChecked value=\"defaults\"><label for=\"dtbl_dlg_all_{$this->iListId}\">&nbsp;".Dict::S('UI:ForAllLists').'</label></p>';
 		$sHtml .= "</fieldset>";
 		$sHtml .= '<table style="width:100%"><tr><td style="text-align:center;">';
-		$sHtml .= '<button type="button" onclick="$(\'#datatable_'.$this->iListId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
+		$sHtml .= '<button type="button" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgCancel\'); $(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\')">'.Dict::S('UI:Button:Cancel').'</button>';
 		$sHtml .= '</td><td style="text-align:center;">';
-		$sHtml .= '<button type="submit" onclick="$(\'#datatable_'.$this->iListId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
+		$sHtml .= '<button type="submit" onclick="$(\'#'.$this->sDatatableContainerId.'\').datatable(\'onDlgOk\');$(\'#datatable_dlg_'.$this->iListId.'\').dialog(\'close\');">'.Dict::S('UI:Button:Ok').'</button>';
 		$sHtml .= '</td></tr></table>';
 		$sHtml .= "</form>";
 		$sHtml .= "</div>";
 		
 		$sDlgTitle = addslashes(Dict::S('UI:ListConfigurationTitle'));
-		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#datatable_{$this->iListId}').datatable('onDlgCancel'); } });");
+		$oPage->add_ready_script("$('#datatable_dlg_{$this->iListId}').dialog({autoOpen: false, title: '$sDlgTitle', width: 500, close: function() { $('#{$this->sDatatableContainerId}').datatable('onDlgCancel'); } });");
 
 		return $sHtml;
 	}
@@ -443,24 +458,29 @@ EOF;
 	}
 
 	/**
-	 * @param $aColumns
-	 * @param $sSelectMode
-	 * @param $bViewLink
+	 * @param array $aColumns
+	 * @param string $sSelectMode
+	 * @param bool $bViewLink
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	protected function GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink)
 	{
 		$aAttribs = array();
 		if ($sSelectMode == 'multiple')
 		{
-			$aAttribs['form::select'] = array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>", 'description' => Dict::S('UI:SelectAllToggle+'));
+			$aAttribs['form::select'] = array(
+				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->iListId}:not(:disabled)', this.checked);\" class=\"checkAll\"></input>",
+				'description' => Dict::S('UI:SelectAllToggle+'),
+				'metadata' => array(),
+			);
 		}
 		else if ($sSelectMode == 'single')
 		{
-			$aAttribs['form::select'] = array('label' => "", 'description' => '');
+			$aAttribs['form::select'] = array('label' => '', 'description' => '', 'metadata' => array());
 		}
 
 		foreach($this->aClassAliases as $sAlias => $sClassName)
@@ -471,18 +491,40 @@ EOF;
 				{
 					if ($sAttCode == '_key_')
 					{
-						$aAttribs['key_'.$sAlias] = array('label' => MetaModel::GetName($sClassName), 'description' => '');
+						$sAttLabel = MetaModel::GetName($sClassName);
+
+						$aAttribs['key_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => '',
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 					else
 					{
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						$aAttribs[$sAttCode.'_'.$sAlias] = array('label' => MetaModel::GetLabel($sClassName, $sAttCode), 'description' => $oAttDef->GetOrderByHint());
+						$sAttDefClass = get_class($oAttDef);
+						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
+
+						$aAttribs[$sAttCode.'_'.$sAlias] = array(
+							'label' => $sAttLabel,
+							'description' => $oAttDef->GetOrderByHint(),
+							'metadata' => array(
+								'object_class' => $sClassName,
+								'attribute_code' => $sAttCode,
+								'attribute_type' => $sAttDefClass,
+								'attribute_label' => $sAttLabel,
+							),
+						);
 					}
 				}
 			}
 		}
 		return $aAttribs;
 	}
+
 
 	/**
 	 * @param $aColumns
@@ -497,6 +539,7 @@ EOF;
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	protected function GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
@@ -507,6 +550,7 @@ EOF;
 		}
 
 		$aValues = array();
+		$aAttDefsCache = array();
 		$this->oSet->Seek(0);
 		$iMaxObjects = $iPageSize;
 		while (($aObjects = $this->oSet->FetchAssoc()) && ($iMaxObjects != 0))
@@ -547,11 +591,41 @@ EOF;
 						{
 							if ($sAttCode == '_key_')
 							{
-								$aRow['key_'.$sAlias] = $aObjects[$sAlias]->GetHyperLink();
+								$aRow['key_'.$sAlias] = array(
+									'value_raw' => $aObjects[$sAlias]->GetKey(),
+									'value_html' => $aObjects[$sAlias]->GetHyperLink(),
+								);
 							}
 							else
 							{
-								$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								// Prepare att. def. classes cache to avoid retrieving AttDef for each row
+								if(!isset($aAttDefsCache[$sClassName][$sAttCode]))
+								{
+									$aAttDefClassesCache[$sClassName][$sAttCode] = get_class(MetaModel::GetAttributeDef($sClassName, $sAttCode));
+								}
+
+								// Only retrieve raw (stored) value for simple fields
+								$bExcludeRawValue = false;
+								foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+								{
+									if (is_a($aAttDefClassesCache[$sClassName][$sAttCode], $sAttDefClassToExclude, true))
+									{
+										$bExcludeRawValue = true;
+										break;
+									}
+								}
+
+								if($bExcludeRawValue)
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize);
+								}
+								else
+								{
+									$aRow[$sAttCode.'_'.$sAlias] = array(
+										'value_raw' => $aObjects[$sAlias]->Get($sAttCode),
+										'value_html' => $aObjects[$sAlias]->GetAsHTML($sAttCode, $bLocalize),
+									);
+								}
 							}
 						}
 					}
@@ -597,6 +671,7 @@ EOF;
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	public function GetHTMLTable(WebPage $oPage, $aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams)
 	{
@@ -609,7 +684,7 @@ EOF;
 
 		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 
-		$sHtml = '<table class="listContainer">';
+		$sHtml = '<table class="listContainer object-list">';
 
 		foreach($this->oSet->GetFilter()->GetInternalParams() as $sName => $sValue)
 		{
@@ -686,12 +761,25 @@ EOF;
 		}
 		$sOQL = addslashes($this->oSet->GetFilter()->serialize());
 		$oPage->add_ready_script(
-<<<EOF
-var oTable = $('#{$this->iListId} table.listResults');
+<<<JS
+var oTable = $('#{$this->sDatatableContainerId} table.listResults');
 oTable.tableHover();
-oTable.tablesorter( { $sHeaders widgets: ['myZebra', 'truncatedList']} ).tablesorterPager({container: $('#pager{$this->iListId}'), totalRows:$iCount, size: $iPageSize, filter: '$sOQL', extra_params: '$sExtraParams', select_mode: '$sSelectModeJS', displayKey: $sDisplayKey, table_id: '{$this->iListId}', columns: $sJSColumns, class_aliases: $sJSClassAliases $sCssCount});
-EOF
-		);
+oTable
+	.tablesorter({ $sHeaders widgets: ['myZebra', 'truncatedList']})
+	.tablesorterPager({
+		container: $('#pager{$this->iListId}'),
+		totalRows:$iCount,
+		size: $iPageSize,
+		filter: '$sOQL',
+		extra_params: '$sExtraParams',
+		select_mode: '$sSelectModeJS',
+		displayKey: $sDisplayKey,
+		table_id: '{$this->sDatatableContainerId}',
+		columns: $sJSColumns,
+		class_aliases: $sJSClassAliases $sCssCount
+	});
+JS
+	);
 		if ($sFakeSortList != '')
 		{
 			$oPage->add_ready_script("oTable.trigger(\"fakesorton\", [$sFakeSortList]);");
@@ -783,389 +871,5 @@ class PrintableDataTable extends DataTable
 		$sHtml = $oPage->GetTable($aAttribs, $aValues);
 		
 		return $sHtml;
-	}
-}
-
-class DataTableSettings implements Serializable
-{
-	public $aClassAliases;
-	public $sTableId;
-	public $iDefaultPageSize;
-	public $aColumns;
-
-
-	/**
-	 * DataTableSettings constructor.
-	 *
-	 * @param $aClassAliases
-	 * @param null $sTableId
-	 */
-	public function __construct($aClassAliases, $sTableId = null)
-	{
-		$this->aClassAliases = $aClassAliases;
-		$this->sTableId = $sTableId;
-		$this->iDefaultPageSize = 10;
-		$this->aColumns = array();
-	}
-
-	/**
-	 * @param $iDefaultPageSize
-	 * @param $aSortOrder
-	 * @param $aColumns
-	 */
-	protected function Init($iDefaultPageSize, $aSortOrder, $aColumns)
-	{
-		$this->iDefaultPageSize = $iDefaultPageSize;
-		$this->aColumns = $aColumns;
-		$this->FixVisibleColumns();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function serialize()
-	{
-		// Save only the 'visible' columns
-		$aColumns = array();
-		foreach($this->aClassAliases as $sAlias => $sClass)
-		{
-			$aColumns[$sAlias] = array();
-			foreach($this->aColumns[$sAlias] as $sAttCode => $aData)
-			{
-				unset($aData['label']); // Don't save the display name
-				unset($aData['alias']); // Don't save the alias (redundant)
-				unset($aData['code']); // Don't save the code (redundant)
-				if ($aData['checked'])
-				{
-					$aColumns[$sAlias][$sAttCode] = $aData;
-				}
-			}
-		}
-		return serialize(
-			array(
-				'iDefaultPageSize' => $this->iDefaultPageSize,
-				'aColumns' => $aColumns,		
-			)
-		);
-	}
-
-	/**
-	 * @param string $sData
-	 *
-	 * @throws \Exception
-	 */
-	public function unserialize($sData)
-	{
-		$aData = unserialize($sData);
-		$this->iDefaultPageSize = $aData['iDefaultPageSize'];
-		$this->aColumns = $aData['aColumns'];
-		foreach($this->aClassAliases as $sAlias => $sClass)
-		{
-			foreach($this->aColumns[$sAlias] as $sAttCode => $aData)
-			{
-				$aFieldData = false;
-				if ($sAttCode == '_key_')
-				{
-					$aFieldData = $this->GetFieldData($sAlias, $sAttCode, null, true /* bChecked */, $aData['sort']);
-				}
-				else if (MetaModel::isValidAttCode($sClass, $sAttCode))
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$aFieldData = $this->GetFieldData($sAlias, $sAttCode, $oAttDef, true /* bChecked */, $aData['sort']);
-				}
-
-				if ($aFieldData)
-				{
-					$this->aColumns[$sAlias][$sAttCode] = $aFieldData;
-				}
-				else
-				{
-					unset($this->aColumns[$sAlias][$sAttCode]);
-				}
-			}
-		}
-		$this->FixVisibleColumns();		
-	}
-
-	/**
-	 * @param $aClassAliases
-	 * @param $bViewLink
-	 * @param $aDefaultLists
-	 *
-	 * @return \DataTableSettings
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	static public function GetDataModelSettings($aClassAliases, $bViewLink, $aDefaultLists)
-	{
-		$oSettings = new DataTableSettings($aClassAliases);
-		// Retrieve the class specific settings for each class/alias based on the 'list' ZList
-		//TODO let the caller pass some other default settings (another Zlist, extre fields...)
-		$aColumns = array();
-		foreach($aClassAliases as $sAlias => $sClass)
-		{
-			if ($aDefaultLists == null)
-			{
-				$aList = cmdbAbstract::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
-			}
-			else
-			{
-				$aList = $aDefaultLists[$sAlias];
-			}
-			
-			$aSortOrder = MetaModel::GetOrderByDefault($sClass);
-			if ($bViewLink)
-			{
-				$sSort = 'none';
-				if(array_key_exists('friendlyname', $aSortOrder))
-				{
-					$sSort = $aSortOrder['friendlyname'] ? 'asc' : 'desc';
-				}
-				$sNormalizedFName = MetaModel::NormalizeFieldSpec($sClass, 'friendlyname');
-				if(array_key_exists($sNormalizedFName, $aSortOrder))
-				{
-					$sSort = $aSortOrder[$sNormalizedFName] ? 'asc' : 'desc';
-				}
-				
-				$aColumns[$sAlias]['_key_'] = $oSettings->GetFieldData($sAlias, '_key_', null, true /* bChecked */, $sSort);
-			}
-			foreach($aList as $sAttCode)
-			{
-				$sSort = 'none';
-				if(array_key_exists($sAttCode, $aSortOrder))
-				{
-					$sSort = $aSortOrder[$sAttCode] ? 'asc' : 'desc';
-				}
-				$oAttDef = Metamodel::GetAttributeDef($sClass, $sAttCode);
-				$aFieldData = $oSettings->GetFieldData($sAlias, $sAttCode, $oAttDef, true /* bChecked */, $sSort);
-				if ($aFieldData) $aColumns[$sAlias][$sAttCode] = $aFieldData;
-			}
-		}
-		$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
-		$oSettings->Init($iDefaultPageSize, $aSortOrder, $aColumns);
-		return $oSettings;
-	}
-
-	/**
-	 * @throws \CoreException
-	 */
-	protected function FixVisibleColumns()
-	{
-		foreach($this->aClassAliases as $sAlias => $sClass)
-		{
-			if (!isset($this->aColumns[$sAlias]))
-			{
-				continue;
-			}
-			foreach($this->aColumns[$sAlias] as $sAttCode => $aData)
-			{
-				// Remove non-existent columns
-				// TODO: check if the existing ones are still valid (in case their type changed)
-				if (($sAttCode != '_key_') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
-				{
-					unset($this->aColumns[$sAlias][$sAttCode]);
-				}
-			}
-			$aList = MetaModel::ListAttributeDefs($sClass);
-			
-			// Add the other (non visible ones), sorted in alphabetical order
-			$aTempData = array();
-			foreach($aList as $sAttCode => $oAttDef)
-			{
-				if ( (!array_key_exists($sAttCode, $this->aColumns[$sAlias])) && (!($oAttDef instanceof AttributeLinkedSet || $oAttDef instanceof AttributeDashboard)))
-				{
-					$aFieldData = $this->GetFieldData($sAlias, $sAttCode, $oAttDef, false /* bChecked */, 'none');
-					if ($aFieldData) $aTempData[$aFieldData['label']] = $aFieldData;
-				}
-			}
-			ksort($aTempData);
-			foreach($aTempData as $sLabel => $aFieldData)
-			{
-				$this->aColumns[$sAlias][$aFieldData['code']] = $aFieldData;
-			}
-		}		
-	}
-
-	/**
-	 * @param $aClassAliases
-	 * @param null $sTableId
-	 * @param bool $bOnlyOnTable
-	 *
-	 * @return \DataTableSettings|null
-	 * @throws \Exception
-	 */
-	static public function GetTableSettings($aClassAliases, $sTableId = null, $bOnlyOnTable = false)
-	{
-		$pref = null;
-		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
-
-		if ($sTableId != null)
-		{
-			// An identified table, let's fetch its own settings (if any)
-			$pref = appUserPreferences::GetPref($oSettings->GetPrefsKey($sTableId), null);
-		}
-		
-		if ($pref == null)
-		{
-			if (!$bOnlyOnTable)
-			{
-				// Try the global preferred values for this class / set of classes
-				$pref = appUserPreferences::GetPref($oSettings->GetPrefsKey(null), null);
-			}
-			if ($pref == null)
-			{
-				// no such settings, use the default values provided by the data model
-				return null;
-			}
-		}
-		$oSettings->unserialize($pref);
-		
-		return $oSettings;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function GetSortOrder()
-	{
-		$aSortOrder = array();
-		foreach($this->aColumns as $sAlias => $aColumns)
-		{
-			foreach($aColumns as $aColumn)
-			{
-				if ($aColumn['sort'] != 'none')
-				{
-					$sCode = ($aColumn['code'] == '_key_') ? 'friendlyname' : $aColumn['code'];
-					$aSortOrder[$sCode] = ($aColumn['sort']=='asc'); // true for ascending, false for descending
-				}
-			}
-			break; // TODO: For now the Set object supports only sorting on the first class of the set
-		}
-		return $aSortOrder;
-	}
-
-	/**
-	 * @param null $sTargetTableId
-	 *
-	 * @return bool
-	 */
-	public function Save($sTargetTableId = null)
-	{
-		$sSaveId = is_null($sTargetTableId) ? $this->sTableId : $sTargetTableId;
-		if ($sSaveId == null) return false; // Cannot save, the table is not identified, use SaveAsDefault instead
-		
-		$sSettings = $this->serialize();
-		appUserPreferences::SetPref($this->GetPrefsKey($sSaveId), $sSettings);
-		return true;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function SaveAsDefault()
-	{
-		$sSettings = $this->serialize();
-		appUserPreferences::SetPref($this->GetPrefsKey(null), $sSettings);
-		return true;
-	}
-	
-
-	/**
-	 * Clear the preferences for this particular table
-	 * @param $bResetAll boolean If true,the settings for all tables of the same class(es)/alias(es) are reset
-	 */
-	public function ResetToDefault($bResetAll)
-	{
-		if (($this->sTableId == null) && (!$bResetAll)) return false; // Cannot reset, the table is not identified, use force $bResetAll instead
-		if ($bResetAll)
-		{
-			// Turn the key into a suitable PCRE pattern
-			$sKey = $this->GetPrefsKey(null);
-			$sPattern = str_replace(array('|'), array('\\|'), $sKey); // escape the | character
-			$sPattern = '#^'.str_replace(array('*'), array('.*'), $sPattern).'$#'; // Don't use slash as the delimiter since it's used in our key to delimit aliases
-			appUserPreferences::UnsetPref($sPattern, true);
-		}
-		else
-		{
-			appUserPreferences::UnsetPref($this->GetPrefsKey($this->sTableId), false);
-		}
-		return true;
-	}
-
-	/**
-	 * @param null $sTableId
-	 *
-	 * @return string
-	 */
-	protected function GetPrefsKey($sTableId = null)
-	{
-		if ($sTableId == null) $sTableId = '*';
-		$aKeys = array();
-		foreach($this->aClassAliases as $sAlias => $sClass)
-		{
-			$aKeys[] = $sAlias.'-'.$sClass;
-		}
-		return implode('/', $aKeys).'|'.$sTableId;
-	}
-
-	/**
-	 * @param $sAlias
-	 * @param $sAttCode
-	 * @param $oAttDef
-	 * @param $bChecked
-	 * @param $sSort
-	 *
-	 * @return array|bool
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	protected function GetFieldData($sAlias, $sAttCode, $oAttDef, $bChecked, $sSort)
-	{
-		$ret = false;
-		if ($sAttCode == '_key_')
-		{
-			$sLabel = Dict::Format('UI:ExtKey_AsLink', MetaModel::GetName($this->aClassAliases[$sAlias]));
-			$ret = array(
-				'label' => $sLabel,
-				'checked' => true,
-				'disabled' => true,
-				'alias' => $sAlias,
-				'code' => $sAttCode,
-				'sort' => $sSort,
-			);
-		}
-		else if (!$oAttDef->IsLinkSet())
-		{
-			$sLabel = $oAttDef->GetLabel();
-			if ($oAttDef->IsExternalKey())
-			{
-				$sLabel = Dict::Format('UI:ExtKey_AsLink', $oAttDef->GetLabel());
-			}
-			else if ($oAttDef->IsExternalField())
-			{
-				if ($oAttDef->IsFriendlyName())
-				{
-					$sLabel = Dict::Format('UI:ExtKey_AsFriendlyName', $oAttDef->GetLabel());
-				}
-				else
-				{
-					$oExtAttDef = $oAttDef->GetExtAttDef();
-					$sLabel = Dict::Format('UI:ExtField_AsRemoteField', $oAttDef->GetLabel(), $oExtAttDef->GetLabel());
-				}
-			}
-			elseif ($oAttDef instanceof AttributeFriendlyName)
-			{
-				$sLabel = Dict::Format('UI:ExtKey_AsFriendlyName', $oAttDef->GetLabel());
-			}
-			$ret = array(
-				'label' => $sLabel,
-				'checked' => $bChecked,
-				'disabled' => false,
-				'alias' => $sAlias,
-				'code' => $sAttCode,
-				'sort' => $sSort,
-			);
-		}
-		return $ret;		
 	}
 }

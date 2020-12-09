@@ -29,9 +29,6 @@ if (!defined('__DIR__'))
 }
 require_once __DIR__.'/../approot.inc.php';
 require_once APPROOT.'/application/application.inc.php';
-require_once APPROOT.'/application/webpage.class.inc.php';
-require_once APPROOT.'/application/csvpage.class.inc.php';
-require_once APPROOT.'/application/clipage.class.inc.php';
 require_once APPROOT.'/application/startup.inc.php';
 
 class ExchangeException extends Exception
@@ -159,27 +156,16 @@ $aPageParams = array
 function UsageAndExit($oP)
 {
 	global $aPageParams;
-	$bModeCLI = utils::IsModeCLI();
+	$sMode = utils::IsModeCLI() ? 'cli' : 'http';
 
 	$oP->p("USAGE:\n");
 	foreach ($aPageParams as $sParam => $aParamData)
 	{
 		$aModes = explode(',', $aParamData['modes']);
-		if ($bModeCLI)
+		if (in_array($sMode, $aModes, false))
 		{
-			if (in_array('cli', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
-		}
-		else
-		{
-			if (in_array('http', $aModes, false))
-			{
-				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
-				$oP->p("$sParam = $sDesc");
-			}
+			$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
+			$oP->p("$sParam = $sDesc");
 		}
 	}
 	$oP->output();
@@ -241,20 +227,13 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 }
 
 
-class CLILikeWebPage extends WebPage
-{
-	public function add_comment($sText)
-	{
-		$this->add('#'.$sText."<br/>\n");
-	}
-}
-
 /////////////////////////////////
 // Main program
 
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {
@@ -302,7 +281,6 @@ if (utils::IsModeCLI())
 }
 else
 {
-	$_REQUEST['login_mode'] = 'basic';
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
@@ -513,7 +491,7 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit($iLoopTimeLimit);
+		set_time_limit(intval($iLoopTimeLimit));
 		foreach ($aData as $iRow => $aRow)
 		{
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
@@ -534,11 +512,7 @@ try
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null)
-					{
-						$aValues[] = 'NULL';
-					}
-					elseif ($aIsDateToTransform[$iCol] !== false)
+					if ($aIsDateToTransform[$iCol] !== false)
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
@@ -550,7 +524,7 @@ try
 						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
 						if ($sDate === false)
 						{
-							$aValues[] = CMDBSource::Quote('');
+							$aValues[] = '';
 							if ($sOutput === 'details')
 							{
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
@@ -558,15 +532,15 @@ try
 						}
 						else
 						{
-							$aValues[] = CMDBSource::Quote($sDate);
+							$aValues[] = $sDate;
 						}
 					}
 					else
 					{
-						$aValues[] = CMDBSource::Quote($value);
+						$aValues[] = $value;
 					}
 				}
-				$sValues = implode(', ', $aValues);
+				$sValues = implode(', ', CMDBSource::Quote($aValues));
 				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
 				try
 				{
@@ -659,7 +633,7 @@ try
 			}
 		}
 		$oMutex->Unlock();
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		if (($sOutput === 'summary') || ($sOutput === 'details'))
 		{

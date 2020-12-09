@@ -33,6 +33,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s',
+
 	'Core:AttributeDashboard' => 'Dashboard',
 	'Core:AttributeDashboard+' => '',
 
@@ -203,6 +205,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
+	
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'cron',
+	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
 
@@ -230,7 +239,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp' => 'Change Operation',
-	'Class:CMDBChangeOp+' => 'Change operations tracking',
+	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
 	'Class:CMDBChangeOp/Attribute:change+' => 'change',
 	'Class:CMDBChangeOp/Attribute:date' => 'date',
@@ -238,11 +247,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'user',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'who made this change',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'object class',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'object id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'object id',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Name of the final class',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed',
 ));
 
 //
@@ -291,12 +300,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Change:ObjectCreated' => 'Object created',
 	'Change:ObjectDeleted' => 'Object deleted',
 	'Change:ObjectModified' => 'Object modified',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s set to %2$s (previous value: %3$s)',
 	'Change:AttName_SetTo' => '%1$s set to %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s appended to %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modified, previous value: %2$s',
 	'Change:AttName_Changed' => '%1$s modified',
 	'Change:AttName_EntryAdded' => '%1$s modified, new entry added: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s',
 	'Change:LinkSet:Added' => 'added %1$s',
 	'Change:LinkSet:Removed' => 'removed %1$s',
 	'Change:LinkSet:Modified' => 'modified %1$s',
@@ -338,7 +351,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
 	'Class:Event/Attribute:finalclass' => 'Event sub-class',
-	'Class:Event/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occured',
 ));
 
 //
@@ -467,7 +480,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:description' => 'Description',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'In production or ?',
+	'Class:Action/Attribute:status+' => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test' => 'Being tested',
 	'Class:Action/Attribute:status/Value:test+' => 'Being tested',
 	'Class:Action/Attribute:status/Value:enabled' => 'In production',
@@ -496,12 +509,20 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionEmail' => 'Email notification',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
-	'Class:ActionEmail/Attribute:from' => 'From',
-	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to' => 'Reply to',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email used when notification is being tested',
+	'Class:ActionEmail/Attribute:from' => 'From (email)',
+	'Class:ActionEmail/Attribute:from+' => 'Sender email address will be sent into the email header',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header',
+	'Class:ActionEmail/Attribute:reply_to' => 'Reply to (email)',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Reply to email address Will be sent into the email header',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header',
 	'Class:ActionEmail/Attribute:to' => 'To',
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -535,6 +556,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => 'Context',
+	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start',
 ));
 
 //
@@ -1036,4 +1059,53 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:AbstractResource' => 'Abstract Resource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu',
+	'Class:ResourceSystemMenu+' => '',
+));
+
+
+

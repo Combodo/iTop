@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -57,25 +57,25 @@ class ObjectFormHandlerHelper
 	/** @var string ENUM_MODE_CREATE */
 	const ENUM_MODE_CREATE = 'create';
 
-	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 	private $oRequestManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator */
 	private $oContextManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper */
+	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper */
 	private $oNavigationRuleHelper;
-	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 	private $oScopeValidator;
-	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
+	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
 	private $oSecurityHelper;
-	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator */
+	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
 	private $oUrlGenerator;
-	/** @var array */
+	/** @var array $aCombodoPortalInstanceConf */
 	private $aCombodoPortalInstanceConf;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Combodo\iTop\Portal\Twig\AppExtension */
+	/** @var \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension */
 	private $oAppExtension;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
 	private $oContainer;
 
 	/**
@@ -152,7 +152,7 @@ class ObjectFormHandlerHelper
 				// Preparing object
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObject);
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 				);
 				$oObject->PrefillForm('creation_from_0', $aPrefillFormParam);
@@ -217,7 +217,7 @@ class ObjectFormHandlerHelper
 			else
 			{
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)['code'],
 				);
@@ -234,16 +234,42 @@ class ObjectFormHandlerHelper
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
-			if (in_array($sMode, array('create', 'edit', 'view')))
+			switch($sMode)
 			{
-				$sFormEndpoint = $this->oUrlGenerator->generate('p_object_'.$sMode, array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
+				case 'create':
+				case 'edit':
+				case 'view':
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_'.$sMode,
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+						)
+					);
+					break;
+
+				case 'apply_stimulus':
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_apply_stimulus',
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+							'sStimulusCode' => $this->oRequestManipulator->ReadParam('sStimulusCode'),
+						)
+					);
+					break;
+
+				default:
+					// As of N°2306 we don't put the $_SERVER['REQUEST_URI'] anymore as it could lead to XSS.
+					$sFormEndpoint = null;
+					break;
 			}
-			else
-			{
-				$sFormEndpoint = $_SERVER['REQUEST_URI'];
-			}
+
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($sFormEndpoint);
+			if($sFormEndpoint !== null)
+			{
+				$oFormRenderer->SetEndpoint($sFormEndpoint);
+			}
 
 			$oFormManager = new ObjectFormManager();
 			$oFormManager->SetContainer($this->oContainer)
@@ -251,8 +277,7 @@ class ObjectFormHandlerHelper
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
-				->SetFormProperties($aFormProperties)
-				->SetIsSubmittable(isset($aFormData['buttons']['submit']));
+				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
 

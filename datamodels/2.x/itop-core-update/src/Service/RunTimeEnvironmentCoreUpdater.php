@@ -12,9 +12,41 @@ require_once(APPROOT."setup/runtimeenv.class.inc.php");
 use Config;
 use Exception;
 use RunTimeEnvironment;
+use SetupUtils;
 
 class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 {
+	/**
+	 * Constructor
+	 *
+	 * @param string $sEnvironment
+	 * @param bool $bAutoCommit
+	 *
+	 * @throws \Exception
+	 */
+	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
+	{
+		parent::__construct($sEnvironment, $bAutoCommit);
+
+		if ($sEnvironment != $this->sTargetEnv)
+		{
+			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv))
+			{
+				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+			}
+			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
+			{
+				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			}
+			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+		}
+	}
+
+	/**
+	 * @param $sTargetEnv
+	 *
+	 * @throws \Exception
+	 */
 	public function CheckDirectories($sTargetEnv)
 	{
 		$sTargetDir = APPROOT.'env-'.$sTargetEnv;
@@ -46,36 +78,35 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		@unlink($sTempFile);
 	}
 
+	/**
+	 * @param null $sEnvironmentLabel
+	 *
+	 * @return \Config
+	 * @throws \CoreException
+	 */
 	public function MakeConfigFile($sEnvironmentLabel = null)
 	{
-		$oConfig = $this->GetConfig();
-		if (!is_null($oConfig))
-		{
-			// Return the existing one
-			$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
-		}
-		else
-		{
-			// Clone the default 'production' config file
-			//
-			$oConfig = clone($this->GetConfig('production'));
+		// Clone the default 'production' config file
+		//
+		$oConfig = clone($this->GetConfig('production'));
 
-			$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
+		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
 
-			if (is_null($sEnvironmentLabel))
-			{
-				$sEnvironmentLabel = $this->sTargetEnv;
-			}
-			$oConfig->Set('app_env_label', $sEnvironmentLabel);
-			if ($this->sFinalEnv !== 'production')
-			{
-				$oConfig->Set('db_name', $oConfig->Get('db_name').'_'.$this->sFinalEnv);
-			}
+		if (is_null($sEnvironmentLabel))
+		{
+			$sEnvironmentLabel = $this->sTargetEnv;
 		}
+		$oConfig->Set('app_env_label', $sEnvironmentLabel, 'application updater');
 
 		return $oConfig;
 	}
 
+	/**
+	 * @param null $sEnvironment
+	 *
+	 * @return \Config
+	 * @throws \Exception
+	 */
 	protected function GetConfig($sEnvironment = null)
 	{
 		if (is_null($sEnvironment))
@@ -85,12 +116,14 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		$sFile = APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 		if (file_exists($sFile))
 		{
-			$oConfig = new Config($sFile);
-			return $oConfig;
+			try
+			{
+				return new Config($sFile);
+			}
+			catch (Exception $e)
+			{
+			}
 		}
-		else
-		{
-			return null;
-		}
+		throw new Exception('No configuration file available');
 	}
 }

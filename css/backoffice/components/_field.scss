@@ -1,0 +1,62 @@
+/*!
+ * copyright   Copyright (C) 2010-2020 Combodo SARL
+ * license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-field--sibling-spacing: 16px !default;
+$ibo-field--value--color: $ibo-color-grey-700 !default;
+
+$ibo-field--label--description--content: "?" !default;
+$ibo-field--label--description--padding-left: 2px !default;
+$ibo-field--label--description--color: $ibo-color-grey-700 !default;
+
+.ibo-field {
+  @extend %ibo-font-ral-nor-150;
+
+  & ~ .ibo-field {
+    margin-top: $ibo-field--sibling-spacing;
+  }
+}
+
+.ibo-field-large {
+  display: inherit;
+
+  .ibo-field--label {
+    display: inherit;
+  }
+}
+
+.ibo-field-small {
+  display: table;
+  width: 100%;
+
+  .ibo-field--label {
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+
+.ibo-field--label {
+  min-width: 100px;
+  max-width: 145px;
+  width: 30%;
+  padding-right: 10px;
+
+  > .ibo-has-description {
+    &::after {
+      content: $ibo-field--label--description--content;
+      padding-left: $ibo-field--label--description--padding-left;
+      vertical-align: top;
+
+      cursor: pointer;
+      color: $ibo-field--label--description--color;
+      @extend %ibo-font-ral-bol-100;
+    }
+  }
+}
+
+.ibo-field--value {
+  display: table;
+  width: 100%;
+  color: $ibo-field--value--color;
+}

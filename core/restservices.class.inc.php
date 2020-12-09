@@ -303,7 +303,7 @@ class CoreServices implements iRestServiceProvider
 	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @param string $sVerb
-	 * @param $aParams
+	 * @param object $aParams
 	 *
 	 * @return RestResult The standardized result structure (at least a message)
 	 * @throws \CoreException
@@ -467,6 +467,18 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                {
+                                        $aFields = $aShowFields[$sClass];
+                                        //Id is not a valid attribute to optimize
+                                        if (in_array('id', $aFields)) 
+                                        {
+                                            unset($aFields[array_search('id', $aFields)]);
+                                        }
+                                        $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
+                                        $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+                                }
+                                
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
@@ -476,6 +488,7 @@ class CoreServices implements iRestServiceProvider
 			break;
 
 		case 'core/delete':
+			RestUtils::InitTrackingComment($aParams);
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);

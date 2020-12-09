@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
@@ -30,29 +32,19 @@ ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
+$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-$oP->add('<div class="page_header" style="padding:0.5em;">');
-$oP->add('<h1>'.dict::S('UI:NotificationsMenu:Title').'</h1>');
-$oP->add('</div>');
+$oPageContentLayout = PageContentFactory::MakeStandardEmpty();
+$oP->SetContentLayout($oPageContentLayout);
 
-$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', '../images/bell.png');
-
-$oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true, 'notifications-home');
-$oP->add('<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">');
-$oP->add('<img src="../images/bell.png" style="margin-top: -60px; margin-right: 10px; float: right;">');
-$oP->add(Dict::S('UI:NotificationsMenu:HelpContent'));
-$oP->add('</div>');
-$oP->add('');
-$oP->add('');
-$oP->EndCollapsibleSection();
-
-$oP->add('<p>&nbsp;</p>');
-
+$sAlertTitle = Dict::S('UI:NotificationsMenu:Title');
+$sAlertContent = Dict::S('UI:NotificationsMenu:HelpContent');
+$oPageContentLayout->AddMainBlock(AlertFactory::MakeForInformation($sAlertTitle, $sAlertContent));
 
 $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
 
-$oP->SetCurrentTab(Dict::S('UI:NotificationsMenu:Triggers'));
+$oP->SetCurrentTab('UI:NotificationsMenu:Triggers');
 $oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableTriggers').'</h2>');
 $oFilter = new DBObjectSearch('Trigger');
 $aParams = array();
@@ -69,7 +61,7 @@ foreach(MetaModel::EnumChildClasses('Action', ENUM_CHILD_CLASSES_EXCLUDETOP) as 
 	}
 }
 
-$oP->SetCurrentTab(Dict::S('UI:NotificationsMenu:Actions'));
+$oP->SetCurrentTab('UI:NotificationsMenu:Actions');
 
 if (count($aActionClasses) == 1)
 {

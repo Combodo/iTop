@@ -1,6 +1,7 @@
 <?php
 /**
  * iTop
+ *
  * @copyright   Copyright (C) 2010,2019 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
@@ -17,6 +18,7 @@ use iTopExtension;
 use iTopExtensionsMap;
 use iTopMutex;
 use MetaModel;
+use SetupLog;
 use SetupUtils;
 use utils;
 use ZipArchive;
@@ -26,14 +28,14 @@ require_once APPROOT.'setup/runtimeenv.class.inc.php';
 
 final class CoreUpdater
 {
-    const DOWNLOAD_DIR = APPROOT.'data/downloaded-core/';
+	const DOWNLOAD_DIR = APPROOT.'data/downloaded-core/';
 	const UPDATE_DIR = APPROOT.'data/core-update/';
 
-    /**
-     * @param bool $bDoBackup
-     *
-     * @throws \Exception
-     */
+	/**
+	 * @param bool $bDoBackup
+	 *
+	 * @throws \Exception
+	 */
 	public static function CopyCoreFiles()
 	{
 		set_time_limit(600);
@@ -46,7 +48,7 @@ final class CoreUpdater
 		}
 		if (is_file(self::UPDATE_DIR.'web/setup/appupgradecopy.php'))
 		{
-			IssueLog::Info('itop-core-update: Use updater provided in the archive');
+			SetupLog::Info('itop-core-update: Use updater provided in the archive');
 			self::CopyFile(self::UPDATE_DIR.'web/setup/appupgradecopy.php', APPROOT.'setup/appupgradecopy.php');
 			@include_once(APPROOT.'setup/appupgradecopy.php');
 		}
@@ -62,23 +64,64 @@ final class CoreUpdater
 			else
 			{
 				// Local function for older iTop versions
-				IssueLog::Info('itop-core-update: Use default updater');
+				SetupLog::Info('itop-core-update: Use default updater');
 				self::LocalUpdateCoreFiles(self::UPDATE_DIR.'web/');
 			}
-			IssueLog::Info('itop-core-update: Update done, check files integrity');
+			SetupLog::Info('itop-core-update: Update done, check files integrity');
 			FilesIntegrity::CheckInstallationIntegrity(APPROOT);
-			IssueLog::Info('itop-core-update: Files integrity OK');
+			SetupLog::Info('itop-core-update: Files integrity OK');
+			// Reset the opcache since otherwise the "core" files may still be cached !!
+			if (function_exists('opcache_reset'))
+			{
+				// Zend opcode cache
+				opcache_reset();
+			}
+			if (function_exists('apc_clear_cache'))
+			{
+				// APC(u) cache
+				apc_clear_cache();
+			}
+		} catch (Exception $e)
+		{
+			SetupLog::error($e->getMessage());
+			SetupLog::Info('itop-core-update: ended');
+			throw $e;
+		} finally
+		{
+			self::RRmdir(self::UPDATE_DIR);
+		}
+	}
 
+	/**
+	 * @throws \Exception
+	 */
+	public static function CheckCompile()
+	{
+		try
+		{
+			// Compile code
+			SetupLog::Info('itop-core-update: Start checking compilation');
+
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
+			$oRuntimeEnv->CheckDirectories($sFinalEnv);
+			$oRuntimeEnv->CompileFrom('production');
+
+			$oRuntimeEnv->Rollback();
+
+			SetupLog::Info('itop-core-update: Checking compilation done');
 		}
 		catch (Exception $e)
 		{
-			IssueLog::error($e->getMessage());
-			IssueLog::Info('itop-core-update: ended');
+			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
 			throw $e;
-		}
-		finally
-		{
-			self::RRmdir(self::UPDATE_DIR);
 		}
 	}
 
@@ -90,19 +133,51 @@ final class CoreUpdater
 		try
 		{
 			// Compile code
-			IssueLog::Info('itop-core-update: Start compilation');
-			IssueLog::Info('itop-core-update: Version Dev');
+			SetupLog::Info('itop-core-update: Start compilation');
 
-			$sTargetEnv = 'production';
-			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sTargetEnv);
-			$oRuntimeEnv->CheckDirectories($sTargetEnv);
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
+			$oRuntimeEnv->CheckDirectories($sFinalEnv);
 			$oRuntimeEnv->CompileFrom('production');
-			$oConfig = $oRuntimeEnv->MakeConfigFile($sTargetEnv.' (built on '.date('Y-m-d').')');
+
+			SetupLog::Info('itop-core-update: Compilation done');
+		}
+		catch (Exception $e)
+		{
+			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
+			throw $e;
+		}
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	public static function UpdateDatabase()
+	{
+		try
+		{
+			SetupLog::Info('itop-core-update: Start Update database');
+
+			$sFinalEnv = 'production';
+			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
+			$oConfig = $oRuntimeEnv->MakeConfigFile($sFinalEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);
 			$oRuntimeEnv->WriteConfigFileSafe($oConfig);
 			$oRuntimeEnv->InitDataModel($oConfig, true);
 
-			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $oRuntimeEnv->GetBuildDir());
+			$sModulesDirToKeep = $oRuntimeEnv->GetBuildDir();
+			$aDirsToScanForModules = array(
+				$sModulesDirToKeep,
+				APPROOT.'extensions'
+			);
+			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $aDirsToScanForModules);
 			$aSelectedModules = array();
 			foreach ($aAvailableModules as $sModuleId => $aModule)
 			{
@@ -142,11 +217,18 @@ final class CoreUpdater
 			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules,
 				$aSelectedExtensionCodes, 'Done by the iTop Core Updater');
 
-			IssueLog::Info('itop-core-update: Compilation done');
+			SetupLog::Info('itop-core-update: Update database done');
 		}
 		catch (Exception $e)
 		{
-			IssueLog::error($e->getMessage());
+			SetupLog::error($e->getMessage());
+			try
+			{
+				SetupUtils::ExitReadOnlyMode();
+			} catch (Exception $e1)
+			{
+				IssueLog::Error("ExitMaintenance: ".$e1->getMessage());
+			}
 			throw $e;
 		}
 	}
@@ -186,87 +268,87 @@ final class CoreUpdater
 	 */
 	public static function Backup()
 	{
-        $sBackupName = self::GetBackupName();
-        $sBackupFile = self::GetBackupFile();
-        if (file_exists($sBackupFile))
-        {
-            @unlink($sBackupFile);
-        }
+		$sBackupName = self::GetBackupName();
+		$sBackupFile = self::GetBackupFile();
+		if (file_exists($sBackupFile))
+		{
+			@unlink($sBackupFile);
+		}
 
-        self::DoBackup($sBackupName);
+		self::DoBackup($sBackupName);
 	}
 
 	/**
 	 * @throws \Exception
 	 */
 	public static function CreateItopArchive()
-    {
-    	set_time_limit(0);
-	    $sItopArchiveFile = self::GetItopArchiveFile();
-        if (file_exists($sItopArchiveFile))
-        {
-	        @unlink($sItopArchiveFile);
-        }
+	{
+		set_time_limit(0);
+		$sItopArchiveFile = self::GetItopArchiveFile();
+		if (file_exists($sItopArchiveFile))
+		{
+			@unlink($sItopArchiveFile);
+		}
 
-        $sTempFile = sys_get_temp_dir().'/'.basename($sItopArchiveFile);
-	    if (file_exists($sTempFile))
-	    {
-		    @unlink($sTempFile);
-	    }
+		$sTempFile = sys_get_temp_dir().'/'.basename($sItopArchiveFile);
+		if (file_exists($sTempFile))
+		{
+			@unlink($sTempFile);
+		}
 
-	    $aPathInfo = pathInfo(realpath(APPROOT));
-        $sParentPath = $aPathInfo['dirname'];
-        $sDirName = $aPathInfo['basename'];
+		$aPathInfo = pathInfo(realpath(APPROOT));
+		$sParentPath = $aPathInfo['dirname'];
+		$sDirName = $aPathInfo['basename'];
 
-        $oZipArchive = new ZipArchive();
-	    $oZipArchive->open($sTempFile, ZIPARCHIVE::CREATE);
-        $oZipArchive->addEmptyDir($sDirName);
-        self::ZipFolder(realpath(APPROOT), $oZipArchive, strlen("$sParentPath/"));
-        $oZipArchive->close();
-        
-        if (!file_exists($sTempFile))
-        {
-        	IssueLog::Error("Failed to create itop archive $sTempFile");
-        }
+		$oZipArchive = new ZipArchive();
+		$oZipArchive->open($sTempFile, ZIPARCHIVE::CREATE);
+		$oZipArchive->addEmptyDir($sDirName);
+		self::ZipFolder(realpath(APPROOT), $oZipArchive, strlen("$sParentPath/"));
+		$oZipArchive->close();
 
-	    if (@rename($sTempFile, $sItopArchiveFile))
-	    {
-		    IssueLog::Info("Archive $sItopArchiveFile Created");
-	    }
-	    else
-	    {
-		    IssueLog::Error("Failed to create archive $sItopArchiveFile");
-	    }
-    }
+		if (!file_exists($sTempFile))
+		{
+			SetupLog::Error("Failed to create itop archive $sTempFile");
+		}
 
-    /**
-     *
-     * @param string $sTargetFile
-     * @throws Exception
-     */
-    private static function DoBackup($sTargetFile)
-    {
-        // Make sure the target directory exists
-        $sBackupDir = dirname($sTargetFile);
-        SetupUtils::builddir($sBackupDir);
+		if (@rename($sTempFile, $sItopArchiveFile))
+		{
+			SetupLog::Info("Archive $sItopArchiveFile Created");
+		}
+		else
+		{
+			SetupLog::Error("Failed to create archive $sItopArchiveFile");
+		}
+	}
 
-        $oBackup = new DBBackup();
-        $oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
+	/**
+	 *
+	 * @param string $sTargetFile
+	 *
+	 * @throws Exception
+	 */
+	private static function DoBackup($sTargetFile)
+	{
+		// Make sure the target directory exists
+		$sBackupDir = dirname($sTargetFile);
+		SetupUtils::builddir($sBackupDir);
 
-        $oMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
-        $oMutex->Lock();
-        try
-        {
-            $oBackup->CreateCompressedBackup($sTargetFile);
-            IssueLog::Info('itop-core-update: Backup done: '.$sTargetFile);
-        }
-        catch (Exception $e)
-        {
-            $oMutex->Unlock();
-            throw $e;
-        }
-        $oMutex->Unlock();
-    }
+		$oBackup = new DBBackup();
+		$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
+
+		$oMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
+		$oMutex->Lock();
+		try
+		{
+			$oBackup->CreateCompressedBackup($sTargetFile);
+			SetupLog::Info('itop-core-update: Backup done: '.$sTargetFile);
+		} catch (Exception $e)
+		{
+			$oMutex->Unlock();
+			throw $e;
+		}
+		$oMutex->Unlock();
+	}
 
 	/**
 	 * @param $sSource
@@ -283,9 +365,9 @@ final class CoreUpdater
 				@mkdir($sDest, 0755);
 			}
 			$aFiles = scandir($sSource);
-			if(sizeof($aFiles) > 0 )
+			if (sizeof($aFiles) > 0)
 			{
-				foreach($aFiles as $sFile)
+				foreach ($aFiles as $sFile)
 				{
 					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
 					{
@@ -315,7 +397,8 @@ final class CoreUpdater
 		}
 	}
 
-	public static function RRmdir($sDir) {
+	public static function RRmdir($sDir)
+	{
 		if (is_dir($sDir))
 		{
 			$oDir = @opendir($sDir);
@@ -368,9 +451,11 @@ final class CoreUpdater
 	 * @param ZipArchive $oZipArchive
 	 * @param int $iStrippedLength Number of text to be removed from the file path.
 	 */
-	private static function ZipFolder($sFolder, &$oZipArchive, $iStrippedLength) {
+	private static function ZipFolder($sFolder, &$oZipArchive, $iStrippedLength)
+	{
 		$oFolder = opendir($sFolder);
-		while (false !== ($sFile = readdir($oFolder))) {
+		while (false !== ($sFile = readdir($oFolder)))
+		{
 			if (($sFile == '.') || ($sFile == '..'))
 			{
 				continue;
@@ -385,9 +470,12 @@ final class CoreUpdater
 
 			// Remove prefix from file path before add to zip.
 			$sLocalPath = substr($sFilePath, $iStrippedLength);
-			if (is_file($sFilePath)) {
+			if (is_file($sFilePath))
+			{
 				$oZipArchive->addFile($sFilePath, $sLocalPath);
-			} elseif (is_dir($sFilePath)) {
+			}
+			elseif (is_dir($sFilePath))
+			{
 				// Add sub-directory.
 				$oZipArchive->addEmptyDir($sLocalPath);
 				self::ZipFolder($sFilePath, $oZipArchive, $iStrippedLength);
@@ -414,109 +502,106 @@ final class CoreUpdater
 		return $sItopArchiveFile;
 	}
 
-    /**
-     * @return string
-     */
-    private static function GetBackupName()
-    {
-        $sBackupName = APPROOT.'data/backups/manual/backup-core-update';
-        return $sBackupName;
-    }
+	/**
+	 * @return string
+	 */
+	private static function GetBackupName()
+	{
+		$sBackupName = APPROOT.'data/backups/manual/backup-core-update';
+		return $sBackupName;
+	}
 
-    /**
-     * @return string
-     */
-    public static function GetBackupFile()
-    {
-        $sBackupFile = self::GetBackupName().'.tar.gz';
-        return $sBackupFile;
-    }
+	/**
+	 * @return string
+	 */
+	public static function GetBackupFile()
+	{
+		$sBackupFile = self::GetBackupName().'.tar.gz';
+		return $sBackupFile;
+	}
 
-    /**
-     * @param $sArchiveFile
-     *
-     * @throws \Exception
-     */
-    public static function ExtractDownloadedFile($sArchiveFile)
-    {
-        try
-        {
-            // Extract archive file
-            self::ExtractUpdateFile($sArchiveFile);
+	/**
+	 * @param $sArchiveFile
+	 *
+	 * @throws \Exception
+	 */
+	public static function ExtractDownloadedFile($sArchiveFile)
+	{
+		try
+		{
+			// Extract archive file
+			self::ExtractUpdateFile($sArchiveFile);
 
-            IssueLog::Info('itop-core-update: Archive extracted, check files integrity');
+			SetupLog::Info('itop-core-update: Archive extracted, check files integrity');
 
-            // Check files integrity
-            FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
+			// Check files integrity
+			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
 
-            IssueLog::Info('itop-core-update: Files integrity OK');
-        }
-        catch (Exception $e)
-        {
-            self::RRmdir(self::UPDATE_DIR);
-            throw $e;
-        }
-        finally
-        {
-	        self::RRmdir(self::DOWNLOAD_DIR);
-        }
-    }
+			SetupLog::Info('itop-core-update: Files integrity OK');
+		} catch (Exception $e)
+		{
+			self::RRmdir(self::UPDATE_DIR);
+			throw $e;
+		} finally
+		{
+			self::RRmdir(self::DOWNLOAD_DIR);
+		}
+	}
 
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public static function GetVersionToInstall()
-    {
-        try
-        {
-            $sConfigFile = self::UPDATE_DIR.'web/core/config.class.inc.php';
-            if (!is_file($sConfigFile))
-            {
-                throw new Exception(Dict::S(Dict::S('iTopUpdate:Error:BadFileContent')));
-            }
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetVersionToInstall()
+	{
+		try
+		{
+			$sConfigFile = self::UPDATE_DIR.'web/core/config.class.inc.php';
+			if (!is_file($sConfigFile))
+			{
+				throw new Exception(Dict::S(Dict::S('iTopUpdate:Error:BadFileContent')));
+			}
 
-            $sContents = file_get_contents($sConfigFile);
-            preg_match_all("@define\('(?<name>ITOP_[^']*)', '(?<value>[^']*)'\);@", $sContents, $aMatches);
-            if (empty($aMatches))
-            {
-                throw new Exception(Dict::S(Dict::S('iTopUpdate:Error:BadFileContent')));
-            }
-            $aValues = array();
-            foreach ($aMatches['name'] as $index => $sName)
-            {
-                $aValues[$sName] = $aMatches['value'][$index];
-            }
+			$sContents = file_get_contents($sConfigFile);
+			preg_match_all("@define\('(?<name>ITOP_[^']*)', '(?<value>[^']*)'\);@", $sContents, $aMatches);
+			if (empty($aMatches))
+			{
+				throw new Exception(Dict::S(Dict::S('iTopUpdate:Error:BadFileContent')));
+			}
+			$aValues = array();
+			foreach ($aMatches['name'] as $index => $sName)
+			{
+				$aValues[$sName] = $aMatches['value'][$index];
+			}
 
-            if ($aValues['ITOP_APPLICATION'] != ITOP_APPLICATION)
-            {
-                throw new Exception(Dict::S('iTopUpdate:Error:BadItopProduct'));
-            }
+			if ($aValues['ITOP_APPLICATION'] != ITOP_APPLICATION)
+			{
+				throw new Exception(Dict::S('iTopUpdate:Error:BadItopProduct'));
+			}
 
-	        // Extract updater file from the new version if available
-	        if (is_file(APPROOT.'setup/appupgradecheck.php'))
-	        {
-		        // Remove previous specific updater
-		        @unlink(APPROOT.'setup/appupgradecheck.php');
-	        }
-	        if (is_file(self::UPDATE_DIR.'web/setup/appupgradecheck.php'))
-	        {
-		        IssueLog::Info('itop-core-update: Use updater provided in the archive');
-		        self::CopyFile(self::UPDATE_DIR.'web/setup/appupgradecheck.php', APPROOT.'setup/appupgradecheck.php');
-		        @include_once(APPROOT.'setup/appupgradecheck.php');
-	        }
-	        if (function_exists('AppUpgradeCheckInstall'))
-	        {
-		        AppUpgradeCheckInstall();
-	        }
+			// Extract updater file from the new version if available
+			if (is_file(APPROOT.'setup/appupgradecheck.php'))
+			{
+				// Remove previous specific updater
+				@unlink(APPROOT.'setup/appupgradecheck.php');
+			}
+			if (is_file(self::UPDATE_DIR.'web/setup/appupgradecheck.php'))
+			{
+				SetupLog::Info('itop-core-update: Use updater provided in the archive');
+				self::CopyFile(self::UPDATE_DIR.'web/setup/appupgradecheck.php', APPROOT.'setup/appupgradecheck.php');
+				@include_once(APPROOT.'setup/appupgradecheck.php');
+			}
+			if (function_exists('AppUpgradeCheckInstall'))
+			{
+				AppUpgradeCheckInstall();
+			}
 
-            return Dict::Format('UI:iTopVersion:Long', $aValues['ITOP_APPLICATION'], $aValues['ITOP_VERSION'], $aValues['ITOP_REVISION'], $aValues['ITOP_BUILD_DATE']);
-        }
-        catch (Exception $e)
-        {
-            self::RRmdir(self::UPDATE_DIR);
-            self::RRmdir(self::DOWNLOAD_DIR);
-            throw $e;
-        }
-    }
+			return Dict::Format('UI:iTopVersion:Long', $aValues['ITOP_APPLICATION'], $aValues['ITOP_VERSION'], $aValues['ITOP_REVISION'], $aValues['ITOP_BUILD_DATE']);
+		} catch (Exception $e)
+		{
+			self::RRmdir(self::UPDATE_DIR);
+			self::RRmdir(self::DOWNLOAD_DIR);
+			throw $e;
+		}
+	}
 }

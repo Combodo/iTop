@@ -1,6 +1,6 @@
 /*
-Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 
 body
@@ -16,13 +16,13 @@ body
 	/* Remove the background color to make it transparent. */
 	background-color: #fff;
 
-	margin: 20px;
+	margin: 5px 10px; /* Changed. Original value was 20px */
 }
 
 .cke_editable
 {
 	font-size: 13px;
-	line-height: 1.6;
+	line-height: 1.4; /* Changed. Original value was 1.6 */
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
 	word-wrap: break-word;
@@ -114,7 +114,8 @@ span[lang]
 figure
 {
 	text-align: center;
-	outline: solid 1px #ccc;
+	border: solid 1px #ccc;
+	border-radius: 2px;
 	background: rgba(0,0,0,0.05);
 	padding: 10px;
 	margin: 10px 20px;
@@ -132,6 +133,11 @@ a > img {
 	margin: 1px;
 	border: none;
 	outline: 1px solid #0782C1;
+}
+
+p {
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
 }
 
 /* Widget Styles */

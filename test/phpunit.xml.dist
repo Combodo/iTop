@@ -59,6 +59,9 @@
         <testsuite name="Status">
             <directory>status</directory>
         </testsuite>
+        <testsuite name="Integration">
+            <directory>integration</directory>
+        </testsuite>
         <testsuite name="CoreExtensions">
             <directory>coreExtensions</directory>
         </testsuite>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Routing;
@@ -27,7 +25,6 @@ use Exception;
 /**
  * Class ItopExtensionsExtraRoutes
  *
- * @deprecated Compatibility layer for migrating brick's routes to iTop 2.7+
  * @package    Combodo\iTop\Portal\Routing
  * @since      2.7.0
  * @author     Bruno Da Silva <bruno.dasilva@combodo.com>
@@ -41,8 +38,6 @@ class ItopExtensionsExtraRoutes
 	 * @param array $extraRoutes
 	 *
 	 * @throws Exception
-	 * @deprecated Since 2.7.0
-	 *
 	 */
 	public static function AddRoutes($extraRoutes)
 	{
