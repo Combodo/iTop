@@ -2582,15 +2582,13 @@ EOF
 			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
 
 			// Check parameters
-			if($sTargetClass === '')
-			{
+			if($sTargetClass === '') {
 				throw new Exception('Invalid parameters, target_class must be specified.');
 			}
 
 			$aMatches = array();
-			if ($sNeedle !== '')
-			{
-				$sObjectPictureAttCode = 'picture';
+			if ($sNeedle !== '') {
+				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sTargetClass);
 
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
@@ -2599,16 +2597,23 @@ EOF
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
-				while($oObject = $oSet->Fetch())
-				{
+				while($oObject = $oSet->Fetch()) {
+					// Note $oObject finalclass might be different than $sTargetClass
+					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
-					/** @var \ormDocument $oImage */
-					$oImage = $oObject->Get($sObjectPictureAttCode);
-					$aMatches[] = array(
+					$aMatch = [
+						'class' => $sObjectClass,
 						'id' => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
-						'picture_url' => $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectPictureAttCode),
-					);
+					];
+
+					if(!empty($sObjectImageAttCode)) {
+						/** @var \ormDocument $oImage */
+						$oImage = $oObject->Get($sObjectImageAttCode);
+						$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+					}
+
+					$aMatches[] = $aMatch;
 				}
 			}
 

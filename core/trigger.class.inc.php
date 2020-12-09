@@ -590,6 +590,7 @@ class TriggerOnObjectMention extends TriggerOnObject
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 	}
 
+	// TODO 3.0.0: Clean this up. What was the intention?
 //	public function IsTargetObject($iObjectId, $aChanges = array())
 //	{
 //		if (!parent::IsTargetObject($iObjectId, $aChanges))

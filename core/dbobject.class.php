@@ -3159,8 +3159,9 @@ abstract class DBObject implements iDisplay
 				/** @var \ormCaseLog $oUpdatedCaseLog */
 				$oUpdatedCaseLog = $this->Get($sAttCode);
 				$aMentionMatches = array();
-				// Note: As the sanitizer removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+				// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
 				// If we change the sanitizer, we might want to use this regexp as it's easier to read
+				// Note 2: This is only working for backoffice URLs...
 				$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
 				preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $oUpdatedCaseLog->GetModifiedEntry(), $aMentionMatches);
 
@@ -3188,7 +3189,9 @@ abstract class DBObject implements iDisplay
 				{
 					/** @var \DBObject $oMentionedObject */
 					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
-					$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
+					// Important: Here the "$this->object()$" placeholder is actually the mentioned object and not the current object. The current object can be used through the $source->object()$ placeholder.
+					// This is due to the current implementation of triggers, the events will only be visible on the object the trigger's OQL is based on... 😕
+					$aTriggerArgs = $this->ToArgs('source') + array('this->object()' => $oMentionedObject);
 
 					$aParams = array('class_list' => MetaModel::EnumParentClasses($sMentionedClass, ENUM_PARENT_CLASSES_ALL));
 					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"),

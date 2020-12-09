@@ -1969,6 +1969,7 @@ EOF
 					);
 					break;
 
+				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions?
 				case 'CaseLog':
 					$aStyles = array();
 					$sStyle = '';
@@ -2014,26 +2015,7 @@ EOF
 					// b) or override some of the configuration settings, using the second parameter of ckeditor()
 					$aConfig = utils::GetCkeditorPref();
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
-					// - Mentions
-					// TODO 3.0.0: Should this be in the utils::GetCkeditorPref() as well? (Note that if we do so, we should warn that the endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal)
-					$sMentionsEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class=Person&needle={encodedQuery}';
-					$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=Person&id={id}';
-					$sMentionItemTemplate = <<<HTML
-<li class="mentions_item" data-id="{id}"><span role="image" style="background-image: url('{picture_url}');"></span><span role="friendlyname">{friendlyname}</span></li>
-HTML;
-					$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl">{friendlyname}</a>
-HTML;
-					$aConfig['mentions'] = array(
-						array(
-							'feed' => $sMentionsEndpoint,
-							'marker' => '@',
-							'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-							'itemTemplate' => $sMentionItemTemplate,
-							'outputTemplate' => $sMentionOutputTemplate,
-							'throttle' => 500,
-						),
-					);
+
 					// - Final config
 					$sConfigJS = json_encode($aConfig);
 

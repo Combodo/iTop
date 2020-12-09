@@ -2500,6 +2500,27 @@ class utils
 			'contentsLanguage' => $sLanguage, 
 			'extraPlugins' => 'disabler,codesnippet,mentions',
 		);
+
+		// Mentions
+		// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
+		$sMentionsEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class=Person&needle={encodedQuery}';
+		$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=Person&id={id}';
+		$sMentionItemTemplate = <<<HTML
+<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}"><span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');"></span><span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
+HTML;
+		$sMentionOutputTemplate = <<<HTML
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">@{friendlyname}</a>
+HTML;
+		$aDefaultConf['mentions'] = array(
+			array(
+				'feed' => $sMentionsEndpoint,
+				'marker' => '@',
+				'minChars' => 1, //MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+				'itemTemplate' => $sMentionItemTemplate,
+				'outputTemplate' => $sMentionOutputTemplate,
+				'throttle' => 500,
+			),
+		);
 		
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
 
