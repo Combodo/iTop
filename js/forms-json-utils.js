@@ -124,6 +124,13 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 
 function OnSubmit(sFormId)
 {
+	if($('#'+sFormId).attr('data-form-state') === 'onsubmit')
+	{
+		return false;
+	}
+	
+	$('#'+sFormId).attr('data-form-state','onsubmit');
+
 	window.bInSubmit=true; // This is a submit, make sure that when the page gets unloaded we don't cancel the action
 
 	if ($('#'+sFormId).data('force_submit')) {
@@ -134,6 +141,7 @@ function OnSubmit(sFormId)
 	if (!bResult)
 	{
 		window.bInSubmit = false; // Submit is/will be canceled
+		$('#'+sFormId).attr('data-form-state', 'default');
 	}
 	return bResult;
 }
