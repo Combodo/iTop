@@ -2482,13 +2482,23 @@ class utils
 		return static::$iNextId++;
 	}
 
+	/**
+	 * Return the CKEditor config as an array
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
 	public static function GetCkeditorPref()
 	{
 		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 		
-		$aDefaultConf = array('language'=> $sLanguage, 
+		$aDefaultConf = array(
+			'language'=> $sLanguage,
 			'contentsLanguage' => $sLanguage, 
-			'extraPlugins' => 'disabler,codesnippet',
+			'extraPlugins' => 'disabler,codesnippet,mentions',
 		);
 		
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);

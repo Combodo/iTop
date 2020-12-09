@@ -2015,6 +2015,7 @@ EOF
 					$aConfig = utils::GetCkeditorPref();
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 					// - Mentions
+					// TODO 3.0.0: Should this be in the utils::GetCkeditorPref() as well? (Note that if we do so, we should warn that the endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal)
 					$sMentionsEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class=Person&needle={encodedQuery}';
 					$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=Person&id={id}';
 					$sMentionItemTemplate = <<<HTML
