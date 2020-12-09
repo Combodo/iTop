@@ -4287,38 +4287,6 @@
 		padding: 0 !important;
 	}
 
-/* Mentions in caselogs */
-/* Note: Mind the "ul", it allows us to have a more precise rule than the original plugin's CSS so we can override it */
-/* TODO 3.0.0: Move this to new SCSS files */
-ul.cke_autocomplete_panel{
-	border: none;
-	border-radius: 0;
-	box-shadow: $box-shadow-regular;
-
-	.mentions_item{
-		display: flex;
-		justify-content: left;
-		align-items: center;
-
-		> [role="image"]{
-			width: 25px;
-			height: 25px;
-			background-position: center center;
-			background-size: 100%;
-			border-radius: 100%;
-			margin-right: 0.5rem;
-			background-color: $mentions-item-image-bg-color;
-			border: $mentions-item-image-border;
-		}
-		> [role="friendlyname"]{
-			color: #3a3a3a;
-			font-size: 0.75rem;
-			font-weight: bold;
-		}
-	}
-}
-
-
 	.clearboth {
 		clear: both;
 	}
