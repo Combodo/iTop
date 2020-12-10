@@ -790,11 +790,13 @@ class utils
     /**
      * Returns the absolute URL to the application root path
      *
+     * @param bool $bTrustProxy
+     *
      * @return string The absolute URL to the application root, without the first slash
      *
      * @throws \Exception
      */
-	public static function GetAbsoluteUrlAppRoot()
+	public static function GetAbsoluteUrlAppRoot($bTrustProxy=false)
 	{
 		static $sUrl = null;
 		if ($sUrl === null)
@@ -802,7 +804,7 @@ class utils
 			$sUrl = self::GetConfig()->Get('app_root_url');
 			if ($sUrl == '')
 			{
-				$sUrl = self::GetDefaultUrlAppRoot();
+				$sUrl = self::GetDefaultUrlAppRoot($bTrustProxy);
 			}
 			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
@@ -826,15 +828,17 @@ class utils
 	 * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the
 	 * app_root_url conf parameter is not defined.
 	 *
+	 * @param bool $bTrustProxy
+	 * 
 	 * @return string
 	 *
 	 * @throws \Exception
      */
-    public static function GetDefaultUrlAppRoot()
+    public static function GetDefaultUrlAppRoot($bTrustProxy=false)
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = self::IsConnectionSecure(true) ? 'https' : 'http';
+		$sProtocol = self::IsConnectionSecure($bTrustProxy) ? 'https' : 'http';
 		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
 		if ($sProtocol == 'http')
 		{

@@ -978,7 +978,7 @@ class WizStepMiscParams extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$sDefaultLanguage = $this->oWizard->GetParameter('default_language', $this->oWizard->GetParameter('admin_language'));
-		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot());
+		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot(true));
 		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';
 		$sGraphvizPath = $this->oWizard->GetParameter('graphviz_path', $sDefaultGraphvizPath);
 		$sSampleData = $this->oWizard->GetParameter('sample_data', 'yes');
@@ -1125,7 +1125,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 
 	public function Display(WebPage $oPage)
 	{
-		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot());
+		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot(true));
 		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';
 		$sGraphvizPath = $this->oWizard->GetParameter('graphviz_path', $sDefaultGraphvizPath);
 		$oPage->add('<h2>Additional parameters</h2>');
@@ -1376,14 +1376,14 @@ class WizStepModulesChoice extends WizardStep
 			if (substr($sBannerPath, 0, 1) == '/')
 			{
 				// absolute path, means relative to APPROOT
-				$sBannerUrl = utils::GetDefaultUrlAppRoot().$sBannerPath;
+				$sBannerUrl = utils::GetDefaultUrlAppRoot(true).$sBannerPath;
 			}
 			else
 			{
 				// relative path: i.e. relative to the directory containing the XML file
 				$sFullPath = dirname($this->GetSourceFilePath()).'/'.$sBannerPath;
 				$sRealPath = realpath($sFullPath);
-				$sBannerUrl = utils::GetDefaultUrlAppRoot().str_replace(realpath(APPROOT), '', $sRealPath);
+				$sBannerUrl = utils::GetDefaultUrlAppRoot(true).str_replace(realpath(APPROOT), '', $sRealPath);
 			}
 			$oPage->add('<td><img src="'.$sBannerUrl.'"/><td>');
 		}
@@ -2494,7 +2494,7 @@ class WizStepDone extends WizardStep
 		$aManualSteps = array();
 		$aAvailableModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 
-		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+		$sRootUrl = utils::GetAbsoluteUrlAppRoot(true);
 		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
 		foreach($aSelectedModules as $sModuleId)
 		{
@@ -2526,7 +2526,7 @@ class WizStepDone extends WizardStep
 			{
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
-				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			}
 			else
 			{
