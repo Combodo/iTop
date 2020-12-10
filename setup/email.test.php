@@ -33,10 +33,14 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
 $sOperation = Utils::ReadParam('operation', 'step1');
 $oP = new SetupPage('iTop email test utility');
 
+// Although this page doesn't expose sensitive info, with it we can send multiple emails
+// So we're adding this http header to reduce CSRF exposure...
+$oP->add_xframe_options('DENY');
+
 
 /**
  * Helper to check server setting required to send an email
- */  
+ */
 function CheckEmailSetting($oP)
 {
 	$bRet = true;
@@ -255,11 +259,11 @@ try
 		break;
 		
 		case 'step2':
-		$oP->no_cache();
-		$sTo = Utils::ReadParam('to', '', false, 'raw_data');
-		$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
-		DisplayStep2($oP, $sFrom, $sTo);
-		break;
+			$oP->no_cache();
+			$sTo = Utils::ReadParam('to', '', false, 'raw_data');
+			$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
+			DisplayStep2($oP, $sFrom, $sTo);
+			break;
 
 		default:
 		$oP->error("Error: unsupported operation '$sOperation'");

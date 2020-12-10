@@ -47,6 +47,9 @@
         <testsuite name="Core">
             <directory>core</directory>
         </testsuite>
+        <testsuite name="Webservices">
+          <directory>webservices</directory>
+        </testsuite>
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>

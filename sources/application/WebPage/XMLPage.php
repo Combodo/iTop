@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use \Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 
 /**
  * Class XMLPage
@@ -43,10 +43,8 @@ class XMLPage extends WebPage
 		$this->m_bPassThrough = $bPassThrough;
 		$this->m_bHeaderSent = false;
 		$this->add_header("Content-type: text/xml; charset=".self::PAGES_CHARSET);
-		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
-		$this->add_header('Pragma: no-cache');
-		$this->add_header('Expires: 0');
-		$this->add_header('X-Frame-Options: deny');
+		$this->no_cache();
+		$this->add_xframe_options();
 		$this->add_header("Content-location: export.xml");
 	}	
 

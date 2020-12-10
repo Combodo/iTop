@@ -212,9 +212,9 @@ function DisplayInconsistenciesReport($aResults)
 	header('Content-Description: File Transfer');
 	header('Content-Type: multipart/x-zip');
 	header('Content-Disposition: inline; filename="'.basename($sZipReport).'"');
-	header('Expires: 0');
 	header('Cache-Control: must-revalidate');
 	header('Pragma: public');
+	header('Expires: 0');
 	header('Content-Length: '.filesize($sZipReport));
 	readfile($sZipReport);
 	unlink($sZipReport);

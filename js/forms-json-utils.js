@@ -200,7 +200,7 @@ function activateFirstTabWithError(sFormId) {
 		if ($fieldsWithError.length > 0)
 		{
 			$tabsContainer.tabs("option", "active", index);
-			return;
+			return false;
 		}
 	});
 }

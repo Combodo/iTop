@@ -18,13 +18,13 @@
 $approot-relative: "../../../../" !default; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              #444 !default;
-$gray:                   #777 !default;
-$gray-light:             #808080 !default;
-$gray-lighter:           #ddd !default;
-$gray-extra-light:       #F1F1F1 !default;
+$gray-base: #000 !default;
+$gray-darker: lighten($gray-base, 13.5%) !default; // #222
+$gray-dark: #444 !default;
+$gray: #777 !default;
+$gray-light: #808080 !default;
+$gray-lighter: #ddd !default;
+$gray-extra-light: #F1F1F1 !default;
 
 $white:					#FFFFFF !default;
 

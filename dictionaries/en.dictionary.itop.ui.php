@@ -93,7 +93,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes',
 	'Class:Query/Attribute:is_template/Value:no' => 'No',
 	'Class:QueryOQL/Attribute:fields' => 'Fields',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL Query',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',

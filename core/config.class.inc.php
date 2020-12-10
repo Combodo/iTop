@@ -1306,8 +1306,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security_header_xframe' => [
+			'type' => 'string',
+			'description' => 'Value of the X-Frame-Options HTTP header sent by iTop. Possible values : DENY, SAMEORIGIN, or empty string.',
+			'default' => 'SAMEORIGIN',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 	];
-
 
 
 	public function IsProperty($sPropCode)

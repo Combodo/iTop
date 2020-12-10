@@ -111,7 +111,6 @@ function DoBackup($sTargetFile)
 function ReportStatus($sMessage, $bSuccess, $iErrorCode = 0, $aMoreFields = array())
 {
 	$oPage = new ajax_page("");
-	$oPage->no_cache();
 	$oPage->SetContentType('application/json');
 	$aResult = array(
 		'code' => $iErrorCode,
