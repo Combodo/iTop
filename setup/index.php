@@ -43,9 +43,9 @@ $(document).ready(function () {
 		var $pageBody = $("body");
 		// $pageBody.addClass("error-container");
 		$pageBody.append("<div id='ibo-page-container'>" +
-		  "<h1>😭 iTop cannot install</h1>" +
+		  "<h1>😭 The application cannot be installed</h1>" +
 		  "<p class=\"message message-error\">💣 PHP version isn't compatible</p>" +
-		  "<p>Please check <a href=\"https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstalling_itop#software_requirements\" target=\"_blank\">iTop requirements</a></p>" +
+		  "<p>Please check <a href=\"https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstalling_itop#software_requirements\" target=\"_blank\">iTop core requirements</a></p>" +
 		   "</div>")
 	}
 });
