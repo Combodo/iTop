@@ -118,6 +118,8 @@ class Button extends UIBlock
 		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '',
 		string $sOnClickJsCode = ''
 	) {
+		parent::__construct($sId);
+
 		$this->sLabel = $sLabel;
 		$this->sName = $sName;
 		$this->sValue = $sValue;
@@ -130,8 +132,7 @@ class Button extends UIBlock
 		$this->sOnClickJsCode = $sOnClickJsCode;
 		$this->bIsDisabled = false;
 		$this->aAdditionalCSSClasses = [];
-
-		parent::__construct($sId);
+		$this->aDataAttributes = ['role' => 'ibo-button'];
 	}
 
 	/**

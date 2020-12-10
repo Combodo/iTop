@@ -208,7 +208,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				theMap[this.name].push(this.value);
 				$(this).remove(); // Remove the selection for the next time the dialog re-opens
 			});
-			theMap["storedSelection[]"] = eval("oSelectedItemsResultsToAdd_" + me.id);
 
 			// Retrieve the 'filter' definition
 			theMap['filter'] = $(':input[name=filter]', context).val();

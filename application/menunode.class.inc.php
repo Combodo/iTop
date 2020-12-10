@@ -1130,7 +1130,7 @@ class OQLMenuNode extends MenuNode
 		}
 
 		//$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
-		$oPage->add("<div class='sf_results_area'>");
+		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
 		$oTitle = TitleFactory::MakeForPage($sTitle);
 		$oPage->AddUiBlock($oTitle);
 

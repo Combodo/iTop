@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -122,30 +123,32 @@ EOF
 	//////////////////////////////////////////////////////////////////////////
 
 	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
-
 	$oFavoriteOrganizationsBlock->AddHtml(Dict::S('UI:FavoriteOrganizations+'));
-	$oFavoriteOrganizationsBlock->AddHtml('<form method="post">');
+	$oFavoriteOrganizationsForm = new Form();
+	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsForm);
 	// Favorite organizations: the organizations listed in the drop-down menu
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$oFavoriteOrganizationsBlock->AddSubBlock($oBlock->GetDisplay($oP, 1, array(
+	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, 1, [
 		'menu' => false,
 		'selection_mode' => true,
 		'selection_type' => 'multiple',
 		'cssCount' => '.selectedCount',
 		'table_id' => 'user_prefs',
-	)));
-	$oFavoriteOrganizationsBlock->AddSubBlock($oAppContext->GetForFormBlock());
+		'surround_with_panel' => false,
+	]));
+	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
+	$oFavoriteOrganizationsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+	$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
 	// - Cancel button
 	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsCancelButton);
 	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
 	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
-
-	$sFavoriteOrganizationsEndHtml = '</form>';
-	$oFavoriteOrganizationsEndHtmlBlock = new Html($sFavoriteOrganizationsEndHtml);
+	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 
 	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 	if ($aFavoriteOrgs == null)
@@ -153,17 +156,8 @@ EOF
 		// All checked
 		$oP->add_ready_script(
 			<<<EOF
-	if ($('#user_prefs table.pagination').length > 0)
-	{
-		// paginated display, restore the selection
-		var pager = $('#user_prefs form .pager');
-		$(':input[name=selectionMode]', pager).val('negative');
-		$('#user_prefs table.listResults').trigger('load_selection');
-	}
-	else
-	{
-		$('#user_prefs table.listResults').trigger('check_all');
-	}
+	$('#1 .checkAll').prop('checked', true);
+	checkAllDataTable('datatable_1',true,'1');
 EOF
 );
 
@@ -201,10 +195,6 @@ EOF
 );
 	}
 	
-	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsCancelButton);
-	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsSubmitButton);
-	$oFavoriteOrganizationsBlock->AddSubBlock($oFavoriteOrganizationsEndHtmlBlock);
-	
 	$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -217,9 +207,17 @@ EOF
 	$oBMSearch = new DBObjectSearch('Shortcut');
 	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 
-	$aExtraParams = array();
-	$oBlock = new DisplayBlock($oBMSearch, 'list', false, $aExtraParams);
-	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, 'shortcut_list', array('view_link' => false, 'menu' => false, 'toolkit_menu' => false, 'selection_mode' => true, 'selection_type' => 'multiple', 'cssCount' => '#shortcut_selection_count', 'table_id' => 'user_prefs_shortcuts')));
+	$oBlock = new DisplayBlock($oBMSearch, 'list', false);
+	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, 'shortcut_list', [
+		'view_link' => false,
+		'menu' => false,
+		'toolkit_menu' => false,
+		'selection_mode' => true,
+		'selection_type' => 'multiple',
+		'cssCount' => '#shortcut_selection_count',
+		'table_id' => 'user_prefs_shortcuts',
+		'surround_with_panel' => false,
+	]));
 	$sShortcutsHtml = '<p>';
 
 	$oSet = new DBObjectSet($oBMSearch);
@@ -282,7 +280,7 @@ function OnSelectionCountChange()
 var oUpperCheckBox = $('#datatable_shortcut_list .checkAll').first();
 oUpperCheckBox.parent().width(oUpperCheckBox.width() + 2);
 
-$('#datatable_shortcut_list').append('<tr><td colspan="2">&nbsp;&nbsp;&nbsp;$sButtons</td></tr>');
+$('#shortcut_list').append('<tr><td colspan="2">&nbsp;&nbsp;&nbsp;$sButtons</td></tr>');
 $('#shortcut_selection_count').bind('change', OnSelectionCountChange);
 $('#shortcut_btn_rename').bind('click', OnShortcutBtnRename);
 $('#shortcut_btn_delete').bind('click', OnShortcutBtnDelete);

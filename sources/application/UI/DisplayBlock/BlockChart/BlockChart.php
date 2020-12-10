@@ -24,7 +24,7 @@ class BlockChart extends UIBlock
 	/** @var int */
 	public $iChartCounter;
 	/** @var string */
-	public $sId;
+	public $sChartId;
 	/** @var string */
 	public $sUrl;
 }

@@ -224,9 +224,10 @@ class DisplayBlock
 		$oPage->AddUiBlock($this->GetDisplay($oPage, $sId, $aExtraParams));
 	}
 
-	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): iUIBlock
+	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): UIContentBlock
 	{
-		$oHtml = new UIContentBlock();
+		$oHtml = new UIContentBlock($sId);
+		$oHtml->AddCSSClasses("display_block");
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
@@ -262,7 +263,7 @@ HTML;
 			}
 		} else {
 			// render it as an Ajax (asynchronous) call
-			$oHtml->AddCSSClasses("display_block loading");
+			$oHtml->AddCSSClasses("loading");
 			$oHtml->AddHtml("<p><img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading').'</p>');
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
@@ -431,7 +432,7 @@ HTML;
 		switch($this->m_sStyle)
 		{
 			case 'count':
-				$oBlock = $this->RenderCount($aExtraParams, $sId);
+				$oBlock = $this->RenderCount($aExtraParams);
 				break;
 
 			case 'join':
@@ -459,11 +460,11 @@ HTML;
 				break;
 
 			case 'csv':
-				$oBlock = $this->RenderCsv($oAppContext, $sId);
+				$oBlock = $this->RenderCsv($oAppContext);
 				break;
 
 			case 'search':
-				$oBlock = $this->RenderSearch($oPage, $sId, $aExtraParams);
+				$oBlock = $this->RenderSearch($oPage, $aExtraParams);
 				break;
 
 			case 'chart':
@@ -871,7 +872,6 @@ JS
 
 	/**
 	 * @param array $aExtraParams
-	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 * @throws \ArchivedObjectException
@@ -881,7 +881,7 @@ JS
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
 	 */
-	protected function RenderCount(array $aExtraParams, ?string $sId): iUIBlock
+	protected function RenderCount(array $aExtraParams): iUIBlock
 	{
 		if (isset($aExtraParams['group_by'])) {
 			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
@@ -946,17 +946,15 @@ JS
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param string|null $sId
 	 * @param array $aExtraParams
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock
 	 */
-	protected function RenderSearch(WebPage $oPage, ?string $sId, array $aExtraParams): iUIBlock
+	protected function RenderSearch(WebPage $oPage, array $aExtraParams): iUIBlock
 	{
 		$oBlock = null;
 
 		if (!$oPage->IsPrintableVersion()) {
-			$aExtraParams['currentId'] = $sId;
 			$oSearchForm = new SearchForm();
 			$oBlock = $oSearchForm->GetSearchFormUIBlock($oPage, $this->m_oSet, $aExtraParams);
 		}
@@ -1216,7 +1214,7 @@ JS
 	}
 
 	/**
-	 * @param string|null $sId
+	 * @param string|null $sChartId
 	 * @param array $aQueryParams
 	 *
 	 * @param array $aExtraParams
@@ -1225,7 +1223,7 @@ JS
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	protected function RenderChart(?string $sId, array $aQueryParams, array $aExtraParams)
+	protected function RenderChart(?string $sChartId, array $aQueryParams, array $aExtraParams)
 	{
 		static $iChartCounter = 0;
 		$iChartCounter++;
@@ -1233,7 +1231,7 @@ JS
 		$oBlock = new BlockChart();
 
 		$oBlock->iChartCounter = $iChartCounter;
-		$oBlock->sId = $sId;
+		$oBlock->sChartId = $sChartId;
 
 		$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 		$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
@@ -1248,9 +1246,9 @@ JS
 		$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
 
 		if (isset($aExtraParams['group_by_label'])) {
-			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
 		} else {
-			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sChartId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sChartId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam;
 		}
 
 		$oBlock->sUrl = $sUrl;
@@ -1330,15 +1328,14 @@ JS
 
 	/**
 	 * @param \ApplicationContext $oAppContext
-	 * @param string|null $sId
 	 *
 	 * @return iUIBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	protected function RenderCsv(ApplicationContext $oAppContext, string $sId = null)
+	protected function RenderCsv(ApplicationContext $oAppContext)
 	{
-		$oBlock = new BlockCsv($sId);
+		$oBlock = new BlockCsv();
 		$oBlock->bAdvancedMode = utils::ReadParam('advanced', false);
 
 		$oBlock->sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
@@ -1353,7 +1350,7 @@ JS
 		);
 		if ($oBlock->bAdvancedMode) {
 			$oBlock->sDownloadLink .= '&fields_advanced=1';
-			$aParamsToPost['fields_advance'] = 1;
+			$aParamsToPost['fields_advanced'] = 1;
 			$oBlock->sChecked = 'CHECKED';
 		} else {
 			$oBlock->sLinkToToggle = $oBlock->sLinkToToggle.'&advanced=1';

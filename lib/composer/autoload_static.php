@@ -392,7 +392,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletContainer' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Dashlet/DashletContainer.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Dashlet/DashletFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletHeaderStatic' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Dashlet/DashletHeaderStatic.php',
-        'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableBlock' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/DataTable/DataTable.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/DataTable/DataTable.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/DataTable/DataTableFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableSettings' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/DataTable/DataTableSettings.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTableRow\\FormTableRow' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/DataTable/StaticTable/FormTableRow/FormTableRow.php',

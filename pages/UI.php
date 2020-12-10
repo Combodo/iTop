@@ -249,6 +249,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 			//add result block
 			$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
 			$oUIBlock->AddCSSClasses("display_block sf_results_area");
+			$oUIBlock->AddDataAttribute('target', 'search_results');
 			//$oUIBlockForm->AddSubBlock($oUIBlock);
 			$oP->AddUiBlock($oUIBlockForm);
 			$oP->AddUiBlock($oUIBlock);

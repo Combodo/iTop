@@ -16,7 +16,7 @@ use DataTableConfig;
  * @package Combodo\iTop\Application\UI\Base\Component\DataTable
  * @since 3.0.0
  */
-class DataTableBlock extends UIContentBlock
+class DataTable extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
@@ -30,6 +30,7 @@ class DataTableBlock extends UIContentBlock
 		'lib/datatables/js/dataTables.responsive.min.js',
 		'lib/datatables/js/dataTables.scroller.min.js',
 		'lib/datatables/js/dataTables.select.min.js',
+		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
 	];
@@ -69,15 +70,26 @@ class DataTableBlock extends UIContentBlock
 	/**
 	 * @return mixed
 	 */
-	public function GetAjaxData(): string
+	public function GetAjaxData(string $sName)
 	{
-		return $this->sAjaxData;
+		if (isset($this->sAjaxData[$sName])) {
+			return $this->sAjaxData[$sName];
+		}
+		return '';
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetJsonAjaxData(): string
+	{
+		return json_encode($this->sAjaxData);
 	}
 
 	/**
 	 * @param mixed $sAjaxData
 	 */
-	public function SetAjaxData(string $sAjaxData): void
+	public function SetAjaxData(array $sAjaxData): void
 	{
 		$this->sAjaxData = $sAjaxData;
 	}

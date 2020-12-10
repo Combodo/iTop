@@ -80,6 +80,8 @@ abstract class UIBlock implements iUIBlock
 	protected $aJsFilesRelPath;
 	/** @var array */
 	protected $aCssFilesRelPath;
+	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>")  */
+	protected $aDataAttributes;
 
 	/**
 	 * UIBlock constructor.
@@ -97,6 +99,7 @@ abstract class UIBlock implements iUIBlock
 		$this->aJsTemplateRelPath[self::JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
+		$this->aDataAttributes = [];
 	}
 
 	/**
@@ -316,5 +319,38 @@ abstract class UIBlock implements iUIBlock
 		}
 
 		return $aFiles;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function GetDataAttributes(): array
+	{
+		return $this->aDataAttributes;
+	}
+
+	/**
+	 * @param array $aDataAttributes
+	 *
+	 * @return $this
+	 */
+	public function SetDataAttributes(array $aDataAttributes)
+	{
+		$this->aDataAttributes = $aDataAttributes;
+		return $this;
+	}
+
+
+	/**
+	 * @param string $sName
+	 * @param string $sValue
+	 *
+	 * @return $this
+	 */
+	public function AddDataAttribute(string $sName, string $sValue)
+	{
+		$this->aDataAttributes[$sName] = $sValue;
+		return $this;
 	}
 }

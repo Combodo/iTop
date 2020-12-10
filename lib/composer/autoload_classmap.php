@@ -162,7 +162,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletContainer' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletContainer.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletFactory' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletHeaderStatic' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletHeaderStatic.php',
-    'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableBlock' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTable.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTable.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableFactory' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTableFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableSettings' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTableSettings.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\StaticTable\\FormTableRow\\FormTableRow' => $baseDir . '/sources/application/UI/Base/Component/DataTable/StaticTable/FormTableRow/FormTableRow.php',

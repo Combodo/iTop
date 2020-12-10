@@ -752,11 +752,9 @@ $(function()
 				}
 				else
 				{
-					oResultAreaElem = $('<div class="display_block"></div>').insertAfter(this.element.closest('.display_block'));
+					oResultAreaElem = $('<div class="display_block sf_results_area" data-target="search_results"></div>').insertAfter(this.element.closest('.display_block'));
 				}
 			}
-			//oResultAreaElem.addClass('display_block sf_results_area');
-
 			// Make placeholder if nothing yet
 			if(oResultAreaElem.html() === '')
 			{

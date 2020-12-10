@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\F
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSet;
 use Dict;
@@ -38,7 +39,7 @@ class DataTableFactory
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -52,17 +53,8 @@ class DataTableFactory
 	 */
 	public static function MakeForResult(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
 		$oDataTable = DataTableFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
-		$oPanel->AddMainBlock($oDataTable);
-
-		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
-		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
-		$oBlockMenu = new UIContentBlock();
-		$oBlockMenu->AddSubBlock($oBlock);
-		$oPanel->AddToolbarBlock($oBlockMenu);
-
-		return $oPanel;
+		return self::RenderDataTable($oDataTable, 'list', $oPage, $sListId, $oSet, $aExtraParams);
 	}
 
 	/**
@@ -71,7 +63,7 @@ class DataTableFactory
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -84,17 +76,51 @@ class DataTableFactory
 	 */
 	public static function MakeForObject(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oPanel = PanelFactory::MakeForClass($oSet->GetClass(), "Result");
 		$oDataTable = DataTableFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
-		$oPanel->AddMainBlock($oDataTable);
+		return self::RenderDataTable($oDataTable, 'listInObject', $oPage, $sListId, $oSet, $aExtraParams);
+	}
 
-		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'listInObject');
-		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
-		$oBlockMenu = new UIContentBlock();
-		$oBlockMenu->AddSubBlock($oBlock);
-		$oPanel->AddToolbarBlock($oBlockMenu);
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable $oDataTable
+	 * @param string $sStyle
+	 * @param \WebPage $oPage
+	 * @param string $sListId
+	 * @param \DBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	protected static function RenderDataTable(DataTable $oDataTable, string $sStyle, WebPage $oPage, string $sListId, DBObjectSet $oSet, array $aExtraParams)
+	{
+		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
+			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
+			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
+		} else {
+			$oBlockMenu = new UIContentBlock();
+		}
 
-		return $oPanel;
+		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
+			$oContainer = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
+			$oContainer->AddToolbarBlock($oBlockMenu);
+			$oContainer->AddMainBlock($oDataTable);
+		} else {
+			$oContainer = new UIContentBlock();
+			$oToolbar = new Toolbar();
+			$oToolbar->AddSubBlock($oBlockMenu);
+			$oContainer->AddSubBlock($oToolbar);
+			$oContainer->AddSubBlock($oDataTable);
+		}
+
+		return $oContainer;
 	}
 
 	/**
@@ -104,7 +130,7 @@ class DataTableFactory
 	 * @param \DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
-	 * @return DataTableBlock
+	 * @return DataTable
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -114,7 +140,7 @@ class DataTableFactory
 	 */
 	public static function MakeForRendering(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = new DataTableBlock('datatable_'.$sListId);
+		$oDataTable = new DataTable('datatable_'.$sListId);
 		///////////////////////////////////////////////////
 		/*TODO 3.0.0 PrintableVersion
 		if ($oPage->IsPrintableVersion() || $oPage->is_pdf())
@@ -332,14 +358,14 @@ class DataTableFactory
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
-		$oDataTable->SetAjaxData(json_encode([
+		$oDataTable->SetAjaxData([
 			"operation" => 'search',
 			"filter" => $oSet->GetFilter()->serialize(),
 			"columns" => $oCustomSettings->aColumns,
 			"extra_params" => $aExtraParams,
 			"class_aliases" => $aClassAliases,
 			"select_mode" => $sSelectMode,
-		]));
+		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 
@@ -351,7 +377,7 @@ class DataTableFactory
 	 * @param DBObjectSet $oSet
 	 * @param array $aExtraParams
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableBlock
+	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -360,7 +386,7 @@ class DataTableFactory
 	 */
 	public static function MakeForRenderingObject(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = new DataTableBlock('datatable_'.$sListId);
+		$oDataTable = new DataTable('datatable_'.$sListId);
 		$aList = array();
 
 		// Initialize and check the parameters
@@ -544,14 +570,14 @@ class DataTableFactory
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
-		$oDataTable->SetAjaxData(json_encode([
+		$oDataTable->SetAjaxData([
 			"operation" => 'search',
 			"filter" => $oSet->GetFilter()->serialize(),
 			"columns" => $oCustomSettings->aColumns,
 			"extra_params" => $aExtraParams,
 			"class_aliases" => $aClassAliases,
 			"select_mode" => $sSelectMode,
-		]));
+		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
 
@@ -572,6 +598,7 @@ class DataTableFactory
 	{
 		$aOptions = [];
 		$sTableId=$aExtraParams["table_id"];
+		$sListId = $aExtraParams["list_id"];
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
 
@@ -580,7 +607,7 @@ class DataTableFactory
 			$aColumnDefinition["searchable"] = false;
 			$aColumnDefinition["sortable"] = false;
 			if ($sSelectMode != "single") {
-				$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable('#".$sTableId."',this.checked);\" class=\"checkAll\" id=\"field_".$sTableId."_check_all\" name=\"field_".$sTableId."_check_all\" title=\"".Dict::S('UI:SearchValue:CheckAll' )." / ".Dict::S('UI:SearchValue:UncheckAll')."\" /></span>";
+				$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable('".$sTableId."',this.checked,'".$sListId."');\" class=\"checkAll\" id=\"field_".$sTableId."_check_all\" name=\"field_".$sTableId."_check_all\" title=\"".Dict::S('UI:SearchValue:CheckAll' )." / ".Dict::S('UI:SearchValue:UncheckAll')."\" /></span>";
 			} else{
 				$aColumnDefinition["title"] = "";
 			}

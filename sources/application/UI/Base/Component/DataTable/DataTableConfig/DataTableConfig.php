@@ -1,6 +1,6 @@
 <?php
 
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableBlock;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
@@ -13,19 +13,19 @@ class DataTableConfig extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-datatableconfig';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/config/layout';
 
-	/** @var DataTableBlock */
+	/** @var DataTable */
 	private $oDataTable;
 
-	public function __construct(DataTableBlock $oDataTable, ?string $sId = null)
+	public function __construct(DataTable $oDataTable, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->oDataTable = $oDataTable;
 	}
 
 	/**
-	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableBlock
+	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable
 	 */
-	private function GetDataTable(): DataTableBlock
+	private function GetDataTable(): DataTable
 	{
 		return $this->oDataTable;
 	}

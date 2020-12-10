@@ -173,3 +173,8 @@ $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-pane
 .ibo-datatable-panel > .ibo-panel--body {
 	padding: $ibo-datatable-panel--body--padding;
 }
+
+// For cancel / OK / next... selection validation buttons
+.ibo-datatable--selection-validation-buttons-toolbar {
+	clear: both;
+}
