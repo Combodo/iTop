@@ -3,9 +3,53 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-vendors-highlightjs--padding: 0.9rem !default;
+$ibo-vendors-highlightjs--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-vendors-ckeditor--autocomplete-panel--border: none !default;
+$ibo-vendors-ckeditor--autocomplete-panel--border-radius: $ibo-border-radius-300 !default;
+$ibo-vendors-ckeditor--autocomplete-panel--background-color: $ibo-color-white-100 !default;
+
+$ibo-vendors-ckeditor--autocomplete-item-image--size: 25px !default;
+$ibo-vendors-ckeditor--autocomplete-item-image--margin-right: 0.5rem !default;
+$ibo-vendors-ckeditor--autocomplete-item-image--background-color: $ibo-color-grey-200 !default;
+$ibo-vendors-ckeditor--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
+
+$ibo-vendors-ckeditor--autocomplete-item-title--text-color: #3A3A3A !default;
+
+/* Highlight JS */
 .hljs {
-	padding: 0.9em !important;
+	padding: $ibo-vendors-highlightjs--padding !important;
 	box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4);
-	border-radius: $ibo-border-radius-300;
+	border-radius: $ibo-vendors-highlightjs--border-radius;
 	white-space: pre-wrap;
+}
+
+/* Mentions in caselogs */
+/* Note: Mind the "ul", it allows us to have a more precise rule than the original plugin's CSS so we can override it */
+ul.cke_autocomplete_panel{
+	background-color: $ibo-vendors-ckeditor--autocomplete-panel--background-color;
+	border: $ibo-vendors-ckeditor--autocomplete-panel--border;
+	border-radius: $ibo-vendors-ckeditor--autocomplete-panel--border-radius;
+	@extend %ibo-elevation-300;
+
+	.ibo-vendors-ckeditor--autocomplete-item{
+		display: flex;
+		justify-content: left;
+		align-items: center;
+	}
+	.ibo-vendors-ckeditor--autocomplete-item-image{
+		width: $ibo-vendors-ckeditor--autocomplete-item-image--size;
+		height: $ibo-vendors-ckeditor--autocomplete-item-image--size;
+		background-position: center center;
+		background-size: 100%;
+		border-radius: 100%;
+		margin-right: $ibo-vendors-ckeditor--autocomplete-item-image--margin-right;
+		background-color: $ibo-vendors-ckeditor--autocomplete-item-image--background-color;
+		border: $ibo-vendors-ckeditor--autocomplete-item-image--border;
+	}
+	.ibo-vendors-ckeditor--autocomplete-item-title{
+		color: $ibo-vendors-ckeditor--autocomplete-item-title--text-color;
+		@extend %ibo-font-ral-bol-100;
+	}
 }

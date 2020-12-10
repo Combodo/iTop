@@ -1969,6 +1969,7 @@ EOF
 					);
 					break;
 
+				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions?
 				case 'CaseLog':
 					$aStyles = array();
 					$sStyle = '';
@@ -2014,6 +2015,8 @@ EOF
 					// b) or override some of the configuration settings, using the second parameter of ckeditor()
 					$aConfig = utils::GetCkeditorPref();
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+
+					// - Final config
 					$sConfigJS = json_encode($aConfig);
 
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
@@ -2358,7 +2361,7 @@ EOF
 EOF
 							);
 						}
-						
+
 						$sHTMLValue = '<div class="field_input_zone ibo-input-wrapper ibo-input-string-wrapper" data-validation="untouched"><input class="ibo-input ibo-input-string" title="'.$sHelpText.'" type="text" maxlength="'.$iFieldSize.'" name="attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix.'" value="'.htmlentities($sDisplayValue,
 								ENT_QUOTES, 'UTF-8').'" id="'.$iId.'"'.$sTip.' /></div>'.$sValidationSpan.$sReloadSpan;
 						$aEventsList[] = 'keyup';

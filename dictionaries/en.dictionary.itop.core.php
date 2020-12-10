@@ -643,6 +643,15 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
