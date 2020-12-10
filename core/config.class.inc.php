@@ -1152,6 +1152,16 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'mentions.allowed_classes' => [
+			'type' => 'array',
+			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete (eg. "@" => "Person")',
+			'default' => [
+				'@' => 'Person',
+			],
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		],
 		'global_search.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the global search is enabled',

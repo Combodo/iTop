@@ -2502,25 +2502,35 @@ class utils
 		);
 
 		// Mentions
-		// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-		$sMentionsEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class=Person&needle={encodedQuery}';
-		$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=Person&id={id}';
-		$sMentionItemTemplate = <<<HTML
-<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}"><span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');"></span><span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
+		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+		if(!empty($aMentionsAllowedClasses)) {
+			$aDefaultConf['mentions'] = [];
+
+			foreach($aMentionsAllowedClasses as $sMentionChar => $sMentionClass) {
+				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class='.$sMentionClass.'&needle={encodedQuery}';
+				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
+
+				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');"></span>
 HTML;
-		$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">@{friendlyname}</a>
+				$sMentionItemTemplate = <<<HTML
+<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
 HTML;
-		$aDefaultConf['mentions'] = array(
-			array(
-				'feed' => $sMentionsEndpoint,
-				'marker' => '@',
-				'minChars' => 1, //MetaModel::GetConfig()->Get('min_autocomplete_chars'),
-				'itemTemplate' => $sMentionItemTemplate,
-				'outputTemplate' => $sMentionOutputTemplate,
-				'throttle' => 500,
-			),
-		);
+				$sMentionOutputTemplate = <<<HTML
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionChar}{friendlyname}</a>
+HTML;
+
+				$aDefaultConf['mentions'][] = [
+					'feed' => $sMentionEndpoint,
+					'marker' => $sMentionChar,
+					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+					'itemTemplate' => $sMentionItemTemplate,
+					'outputTemplate' => $sMentionOutputTemplate,
+					'throttle' => 500,
+				];
+			}
+		}
 		
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
 

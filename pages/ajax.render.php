@@ -2576,6 +2576,7 @@ EOF
 			$oPage->add("</fieldset></div>");
 			break;
 
+		// TODO 3.0.0: Move this to new ajax render controller?
 		case 'cke_mentions':
 			$oPage->SetContentType('application/json');
 			$sTargetClass = utils::ReadParam('target_class', '', false, 'class');
