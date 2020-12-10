@@ -1,25 +1,11 @@
-<!--
-  ~ Copyright (C) 2013-2019 Combodo SARL
-  ~
-  ~ This file is part of iTop.
-  ~
-  ~ iTop is free software; you can redistribute it and/or modify
-  ~ it under the terms of the GNU Affero General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ iTop is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU Affero General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Affero General Public License
-  -->
-
 <!DOCTYPE html>
+<!--
+Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+-->
 <!--[if IE 8]><html class="ie8"><![endif]-->
 <!--[if gt IE 8]><html><![endif]-->
-<!--[if !IE]><!--><html><!--<![endif]-->
+<!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
 	<meta charset="utf-8">
 	<title>Toolbar Configurator</title>
@@ -33,6 +19,7 @@
 	<link rel="stylesheet" href="lib/codemirror/neo.css">
 	<link rel="stylesheet" href="css/fontello.css">
 	<link rel="stylesheet" href="../css/samples.css">
+	<meta name="description" content="Try the latest sample of CKEditor 4 and learn more about customizing your WYSIWYG editor with endless possibilities.">
 </head>
 <body id="toolbar">
 
@@ -40,8 +27,8 @@
 	<div class="grid-container">
 		<ul class="navigation-a-left grid-width-70">
 			<li><a href="https://ckeditor.com/ckeditor-4/">Project Homepage</a></li>
-			<li><a href="https://github.com/ckeditor/ckeditor-dev/issues">I found a bug</a></li>
-			<li><a href="https://github.com/ckeditor/ckeditor-dev" class="icon-pos-right icon-navigation-a-github">Fork CKEditor on GitHub</a></li>
+			<li><a href="https://github.com/ckeditor/ckeditor4/issues">I found a bug</a></li>
+			<li><a href="https://github.com/ckeditor/ckeditor4" class="icon-pos-right icon-navigation-a-github">Fork CKEditor on GitHub</a></li>
 		</ul>
 		<ul class="navigation-a-right grid-width-30">
 			<li><a href="https://ckeditor.com/blog/">CKEditor Blog</a></li>
@@ -150,7 +137,7 @@
 		CKEditor &ndash; The text editor for the Internet &ndash; <a class="samples" href="https://ckeditor.com/">https://ckeditor.com</a>
 	</p>
 	<p class="grid-width-100" id="copy">
-		Copyright &copy; 2003-2019, <a class="samples" href="https://cksource.com/">CKSource</a> &ndash; Frederico Knabben. All rights reserved.
+		Copyright &copy; 2003-2020, <a class="samples" href="https://cksource.com/">CKSource</a> &ndash; Frederico Knabben. All rights reserved.
 	</p>
 </footer>
 
@@ -425,7 +412,7 @@
 		positionSticky.init();
 
 		CKEDITOR.document.getWindow().on( 'scroll',
-			new CKEDITOR.tools.eventsBuffer( 100, positionSticky.checkAll, positionSticky ).input
+			CKEDITOR.tools.eventsBuffer( 100, positionSticky.checkAll, positionSticky ).input
 		);
 
 		// Make the toolbar sticky.

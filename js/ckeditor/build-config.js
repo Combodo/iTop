@@ -1,19 +1,6 @@
-﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+﻿/**
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/license
  */
 
 /**
@@ -26,10 +13,10 @@
  * (1) https://ckeditor.com/cke4/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) https://ckeditor.com/cke4/builder/300274e4a17716c9eba05206734cd435
+ * (2) https://ckeditor.com/cke4/builder/143b9bf00528ab508250ab06c94991b8
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) https://ckeditor.com/cke4/builder/download/300274e4a17716c9eba05206734cd435
+ * (3) https://ckeditor.com/cke4/builder/download/143b9bf00528ab508250ab06c94991b8
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -38,7 +25,7 @@
  */
 
 var CKBUILDER_CONFIG = {
-	skin: 'flat',
+	skin: 'moono-lisa',
 	preset: 'standard',
 	ignore: [
 		'.DS_Store',
@@ -52,6 +39,7 @@ var CKBUILDER_CONFIG = {
 		'.jshintrc',
 		'.mailmap',
 		'.npm',
+		'.nvmrc',
 		'.travis.yml',
 		'bender-err.log',
 		'bender-out.log',
@@ -61,6 +49,7 @@ var CKBUILDER_CONFIG = {
 		'gruntfile.js',
 		'less',
 		'node_modules',
+		'package-lock.json',
 		'package.json',
 		'tests'
 	],
@@ -112,11 +101,20 @@ var CKBUILDER_CONFIG = {
 		'wysiwygarea' : 1
 	},
 	languages : {
+		'cs' : 1,
+		'da' : 1,
 		'de' : 1,
 		'en' : 1,
 		'es' : 1,
 		'fr' : 1,
+		'hu' : 1,
 		'it' : 1,
-		'pt-br' : 1
+		'ja' : 1,
+		'nl' : 1,
+		'pt-br' : 1,
+		'ru' : 1,
+		'sk' : 1,
+		'tr' : 1,
+		'zh-cn' : 1
 	}
 };

@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.plugins.setLang("specialchar","sr",{euro:"Знак еура",lsquo:"Леви симпли знак навода",rsquo:"Десни симпли знак навода",ldquo:"Леви дупли знак навода",rdquo:"Десни дупли знак навода",ndash:"Кратка цртица",mdash:"Дугачка цртица",iexcl:"Обрнути узвичник",cent:"Знак цент",pound:"Знак фунте",curren:"Знак валуте",yen:"Знак јена",brvbar:"Трака са прекидом",sect:"Знак параграфа",uml:"Умлаут",copy:"Знак ауторско право",ordf:"Женски редни индикатор",laquo:"Дупла стрелица лево",not:"Без знака",reg:"Регистровани знак",
 macr:"Знак дужине",deg:"Знак за степен",sup2:"Знак на квадрату",sup3:"Знак на куб",acute:"Оштар акценат",micro:"Знак микро",para:"Знак пасуса",middot:"Средња тачка",cedil:"Цедиле",sup1:"Знак на првом",ordm:"Мушки редни индикатор",raquo:"Десна дупла стрелица",frac14:"Знак за четвртину",frac12:"Знак за половину",frac34:"Знак за трећину",iquest:"Обрнути упитник",Agrave:"Велико латинично слово А са обрнутом кукицом",Aacute:"Велико латинично слово А са кукицом",Acirc:"Велико латинично слово А са савијеном кукицом",
 Atilde:"Велико латинично слово А са знаком таласа",Auml:"Велико латинично слово А са двотачком",Aring:"Велико латинично слово А прстеном изнад",AElig:"Велико латинично слово  Æ",Ccedil:"Велико латинично слово Ц са цедилом",Egrave:"Велико латинично слово Е са обрнутом кукицом",Eacute:"Велико латинично слово Е са кукицом",Ecirc:"Велико латинично слово Е са савијеном кукицом",Euml:"Велико латинично слово Е са двотачком",Igrave:"Велико латинично слово И са обрнутом кукицом",Iacute:"Велико латинично слово И са кукицом",

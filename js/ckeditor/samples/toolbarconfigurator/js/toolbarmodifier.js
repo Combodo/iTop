@@ -1,22 +1,4 @@
-﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-(function(){function d(a,b){l.call(this,a,b);this.actualConfig=this.originalConfig=this.removedButtons=null;this.emptyVisible=!1;this.state="edit";this.toolbarButtons=[{text:{active:"Hide empty toolbar groups",inactive:"Show empty toolbar groups"},group:"edit",position:"left",cssClass:"button-a-soft",clickCallback:function(a,b){a[a.hasClass("button-a-background")?"removeClass":"addClass"]("button-a-background");this._toggleVisibilityEmptyElements();this.emptyVisible?a.setText(b.text.active):a.setText(b.text.inactive)}},
+﻿(function(){function d(a,b){l.call(this,a,b);this.actualConfig=this.originalConfig=this.removedButtons=null;this.emptyVisible=!1;this.state="edit";this.toolbarButtons=[{text:{active:"Hide empty toolbar groups",inactive:"Show empty toolbar groups"},group:"edit",position:"left",cssClass:"button-a-soft",clickCallback:function(a,b){a[a.hasClass("button-a-background")?"removeClass":"addClass"]("button-a-background");this._toggleVisibilityEmptyElements();this.emptyVisible?a.setText(b.text.active):a.setText(b.text.inactive)}},
 {text:"Add row separator",group:"edit",position:"left",cssClass:"button-a-soft",clickCallback:function(){this._addSeparator()}},{text:"Select config",group:"config",position:"left",cssClass:"button-a-soft",clickCallback:function(){this.configContainer.findOne("textarea").$.select()}},{text:"Back to configurator",group:"config",position:"right",cssClass:"button-a-background",clickCallback:function(){if("paste"===this.state){var a=this.configContainer.findOne("textarea").getValue();(a=d.evaluateToolbarGroupsConfig(a))?
 this.setConfig(a):alert("Your pasted config is wrong.")}this.state="edit";this._showConfigurationTool();this.showToolbarBtnsByGroupName(this.state)}},{text:'Get toolbar \x3cspan class\x3d"highlight"\x3econfig\x3c/span\x3e',group:"edit",position:"right",cssClass:"button-a-background icon-pos-left icon-download",clickCallback:function(){this.state="config";this._showConfig();this.showToolbarBtnsByGroupName(this.state)}}];this.cachedActiveElement=null}var l=ToolbarConfigurator.AbstractToolbarModifier;
 ToolbarConfigurator.ToolbarModifier=d;d.prototype=Object.create(ToolbarConfigurator.AbstractToolbarModifier.prototype);d.prototype.getActualConfig=function(){var a=l.prototype.getActualConfig.call(this);if(a.toolbarGroups)for(var b=a.toolbarGroups.length,c=0;c<b;c+=1)a.toolbarGroups[c]=d.parseGroupToConfigValue(a.toolbarGroups[c]);return a};d.prototype._onInit=function(a,b,c){c=!0===c;l.prototype._onInit.call(this,void 0,b);this.removedButtons=[];c?this.removedButtons=this.actualConfig.removeButtons?

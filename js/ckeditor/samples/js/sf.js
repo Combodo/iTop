@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 var SF=function(){function d(a){return(a=a.attributes?a.attributes.getNamedItem("class"):null)?a.value.split(" "):[]}function c(a){var e=document.createAttribute("class");e.value=a.join(" ");return e}var b={attachListener:function(a,e,b){if(a.addEventListener)a.addEventListener(e,b,!1);else if(a.attachEvent)a.attachEvent("on"+e,function(){b.apply(a,arguments)});else throw Error("Could not attach event.");}};b.indexOf=function(){var a=Array.prototype.indexOf;return"function"===a?function(e,b){return a.call(e,
 b)}:function(a,b){for(var c=a.length,d=0;d<c;d++)if(a[d]===b)return d;return-1}}();b.accept=function(a,e){var c;a.children?(c=a.children,e(a)):"number"===typeof a.length&&(c=a);for(var d=c?c.length||0:0;d--;)b.accept(c[d],e)};b.getByClass=function(){var a=document.getElementsByClassName;return"function"===typeof a?function(e,b){"string"===typeof e&&(b=e,e=document);return a.call(e,b)}:function(a,c){"string"===typeof a&&(c=a,a=document.getElementsByTagName("html")[0]);var d=[];b.accept(a,function(a){b.classList.contains(a,
 c)&&d.push(a)});return d}}();b.classList={};b.classList.add=function(a,b){var f=d(a);f.push(b);a.attributes.setNamedItem(c(f))};b.classList.remove=function(a,e){var f=d(a,e),n=b.indexOf(f,e);-1!==n&&(f.splice(n,1),a.attributes.setNamedItem(c(f)))};b.classList.contains=function(a,c){return-1!==b.indexOf(d(a),c)};b.classList.toggle=function(a,b){this.contains(a,b)?this.remove(a,b):this.add(a,b)};return b}();"use strict";

@@ -1,22 +1,4 @@
-﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-(function(f){"object"==typeof exports&&"object"==typeof module?f(require("../../lib/codemirror")):"function"==typeof define&&define.amd?define(["../../lib/codemirror"],f):f(CodeMirror)})(function(f){function p(a,b){this.cm=a;this.options=this.buildOptions(b);this.widget=null;this.tick=this.debounce=0;this.startPos=this.cm.getCursor();this.startLen=this.cm.getLine(this.startPos.line).length;var c=this;a.on("cursorActivity",this.activityFunc=function(){c.cursorActivity()})}function w(a,b){function c(a,
+﻿(function(f){"object"==typeof exports&&"object"==typeof module?f(require("../../lib/codemirror")):"function"==typeof define&&define.amd?define(["../../lib/codemirror"],f):f(CodeMirror)})(function(f){function p(a,b){this.cm=a;this.options=this.buildOptions(b);this.widget=null;this.tick=this.debounce=0;this.startPos=this.cm.getCursor();this.startLen=this.cm.getLine(this.startPos.line).length;var c=this;a.on("cursorActivity",this.activityFunc=function(){c.cursorActivity()})}function w(a,b){function c(a,
 c){var d;d="string"!=typeof c?function(a){return c(a,b)}:e.hasOwnProperty(c)?e[c]:c;f[a]=d}var e={Up:function(){b.moveFocus(-1)},Down:function(){b.moveFocus(1)},PageUp:function(){b.moveFocus(-b.menuSize()+1,!0)},PageDown:function(){b.moveFocus(b.menuSize()-1,!0)},Home:function(){b.setFocus(0)},End:function(){b.setFocus(b.length-1)},Enter:b.pick,Tab:b.pick,Esc:b.close},d=a.options.customKeys,f=d?{}:e;if(d)for(var g in d)d.hasOwnProperty(g)&&c(g,d[g]);if(d=a.options.extraKeys)for(g in d)d.hasOwnProperty(g)&&
 c(g,d[g]);return f}function v(a,b){for(;b&&b!=a;){if("LI"===b.nodeName.toUpperCase()&&b.parentNode==a)return b;b=b.parentNode}}function n(a,b){this.completion=a;this.data=b;this.picked=!1;var c=this,e=a.cm,d=this.hints=document.createElement("ul");d.className="CodeMirror-hints";this.selectedHint=b.selectedHint||0;for(var m=b.list,g=0;g<m.length;++g){var l=d.appendChild(document.createElement("li")),h=m[g],k="CodeMirror-hint"+(g!=this.selectedHint?"":" CodeMirror-hint-active");null!=h.className&&(k=
 h.className+" "+k);l.className=k;h.render?h.render(l,b,h):l.appendChild(document.createTextNode(h.displayText||("string"==typeof h?h:h.text)));l.hintId=g}var g=e.cursorCoords(a.options.alignWithWord?b.from:null),r=g.left,t=g.bottom,n=!0;d.style.left=r+"px";d.style.top=t+"px";l=window.innerWidth||Math.max(document.body.offsetWidth,document.documentElement.offsetWidth);k=window.innerHeight||Math.max(document.body.offsetHeight,document.documentElement.offsetHeight);(a.options.container||document.body).appendChild(d);

@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.plugins.setLang("specialchar","et",{euro:"Euromärk",lsquo:"Alustav ühekordne jutumärk",rsquo:"Lõpetav ühekordne jutumärk",ldquo:"Alustav kahekordne jutumärk",rdquo:"Lõpetav kahekordne jutumärk",ndash:"Enn-kriips",mdash:"Emm-kriips",iexcl:"Pööratud hüüumärk",cent:"Sendimärk",pound:"Naela märk",curren:"Valuutamärk",yen:"Jeeni märk",brvbar:"Katkestatud kriips",sect:"Lõigu märk",uml:"Täpid",copy:"Autoriõiguse märk",ordf:"Naissoost järjestuse märk",laquo:"Alustav kahekordne nurk jutumärk",not:"Ei-märk",
 reg:"Kaubamärk registreeritud märk",macr:"Pikkusmärk",deg:"Kraadimärk",sup2:"Ülaindeks kaks",sup3:"Ülaindeks kolm",acute:"Akuutrõhk",micro:"Mikro-märk",para:"Lõigumärk",middot:"Keskpunkt",cedil:"Sedii",sup1:"Ülaindeks üks",ordm:"Meessoost järjestuse märk",raquo:"Lõpetav kahekordne nurk jutumärk",frac14:"Lihtmurd veerand",frac12:"Lihtmurd pool",frac34:"Lihtmurd kolmveerand",iquest:"Pööratud küsimärk",Agrave:"Ladina suur A graavisega",Aacute:"Ladina suur A akuudiga",Acirc:"Ladina suur A tsirkumfleksiga",
 Atilde:"Ladina suur A tildega",Auml:"Ladina suur A täppidega",Aring:"Ladina suur A ülasõõriga",AElig:"Ladina suur AE",Ccedil:"Ladina suur E sediiga",Egrave:"Ladina suur E graavisega",Eacute:"Ladina suur E akuudiga",Ecirc:"Ladina suur E tsirkumfleksiga",Euml:"Ladina suur E täppidega",Igrave:"Ladina suur I graavisega",Iacute:"Ladina suur I akuudiga",Icirc:"Ladina suur I tsirkumfleksiga",Iuml:"Ladina suur I täppidega",ETH:"Ladina suur ETH",Ntilde:"Ladina suur N tildega",Ograve:"Ladina suur O graavisega",

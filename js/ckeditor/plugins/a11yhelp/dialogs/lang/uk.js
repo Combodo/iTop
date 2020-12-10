@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.plugins.setLang("a11yhelp","uk",{title:"Спеціальні Інструкції",contents:"Довідка. Натисніть ESC і вона зникне.",legend:[{name:"Основне",items:[{name:"Панель Редактора",legend:"Натисніть ${toolbarFocus} для переходу до панелі інструментів. Для переміщення між групами панелі інструментів використовуйте TAB і SHIFT+TAB. Для переміщення між кнопками панелі іструментів використовуйте кнопки СТРІЛКА ВПРАВО або ВЛІВО. Натисніть ПРОПУСК або ENTER для запуску кнопки панелі інструментів."},{name:"Діалог Редактора",
 legend:'Усередині діалогу, натисніть TAB щоб перейти до наступного елементу діалогу, натисніть SHIFT+TAB щоб перейти до попереднього елемента діалогу, натисніть ENTER щоб відправити діалог, натисніть ESC щоб скасувати діалог. Коли діалогове вікно має декілька вкладок, отримати доступ до панелі вкладок як частині діалогу можна натисканням або поєднання ALT+F10 або TAB, при цьому активні елементи діалогу будуть перебиратися з урахуванням порядку табуляції. При активній панелі вкладок, перехід до наступної або попередньої вкладці здійснюється натисканням стрілки "ВПРАВО" або стрілки "ВЛЕВО" відповідно.'},
 {name:"Контекстне Меню Редактора",legend:"Press ${contextMenu} or APPLICATION KEY to open context-menu. Потім перейдіть до наступного пункту меню за допомогою TAB або СТРІЛКИ ВНИЗ. Натисніть ПРОПУСК або ENTER для вибору параметру меню. Відкрийте підменю поточного параметру, натиснувши ПРОПУСК або ENTER або СТРІЛКУ ВПРАВО. Перейдіть до батьківського елемента меню, натиснувши ESC або СТРІЛКУ ВЛІВО. Закрийте контекстне меню, натиснувши ESC."},{name:"Скринька Списків Редактора",legend:"Усередині списку, перехід до наступного пункту списку виконується клавішею TAB або СТРІЛКА ВНИЗ. Перехід до попереднього елемента списку клавішею SHIFT+TAB або СТРІЛКА ВГОРУ. Натисніть ПРОПУСК або ENTER, щоб вибрати параметр списку. Натисніть клавішу ESC, щоб закрити список."},

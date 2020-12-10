@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.plugins.setLang("a11yhelp","da",{title:"Tilgængelighedsinstrukser",contents:"Onlinehjælp. For at lukke dette vindue klik ESC",legend:[{name:"Generelt",items:[{name:"Editor værktøjslinje",legend:"Tryk ${toolbarFocus} for at navigere til værktøjslinjen. Flyt til næste eller forrige værktøjsline gruppe ved hjælp af TAB eller SHIFT+TAB. Flyt til næste eller forrige værktøjslinje knap med venstre- eller højre piltast. Tryk på SPACE eller ENTER for at aktivere værktøjslinje knappen."},{name:"Editor dialogboks",
 legend:"Inde i en dialogboks kan du, trykke på TAB for at navigere til næste element, trykke på SHIFT+TAB for at navigere til forrige element, trykke på ENTER for at afsende eller trykke på ESC for at lukke dialogboksen. Når en dialogboks har flere faner, fanelisten kan tilgås med ALT+F10 eller med TAB. Hvis fanelisten er i fokus kan du skifte til næste eller forrige tab, med højre- og venstre piltast."},{name:"Redaktør kontekstmenu",legend:"Tryk ${contextMenu} eller APPLICATION KEY for at åbne kontekstmenuen. Flyt derefter til næste menuvalg med TAB eller PIL NED. Flyt til forrige valg med SHIFT+TAB eller PIL OP. Tryk MELLEMRUM eller RETUR for at vælge menu-muligheder. Åben under-menu af aktuelle valg med MELLEMRUM eller RETUR eller HØJRE PIL. Gå tilbage til overliggende menu-emne med ESC eller VENSTRE PIL. Luk kontekstmenu med ESC."},
 {name:"Redaktør listeboks",legend:"Flyt til næste emne med TAB eller PIL NED inde i en listeboks. Flyt til forrige listeemne med SHIFT+TAB eller PIL OP. Tryk MELLEMRUM eller RETUR for at vælge liste-muligheder. Tryk ESC for at lukke liste-boksen."},{name:"Redaktør elementsti-bar",legend:"Tryk ${elementsPathFocus} for at navigere til elementernes sti-bar. Flyt til næste element-knap med TAB eller HØJRE PIL. Flyt til forrige knap med SHIFT+TAB eller VENSTRE PIL. Klik MELLEMRUM eller RETUR for at vælge element i editoren."}]},

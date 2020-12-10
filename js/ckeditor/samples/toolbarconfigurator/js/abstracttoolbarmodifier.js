@@ -1,22 +1,4 @@
-﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-"function"!=typeof Object.create&&function(){var a=function(){};Object.create=function(b){if(1<arguments.length)throw Error("Second argument not supported");if(null===b)throw Error("Cannot set a null [[Prototype]]");if("object"!=typeof b)throw TypeError("Argument must be an object");a.prototype=b;return new a}}();
+﻿"function"!=typeof Object.create&&function(){var a=function(){};Object.create=function(b){if(1<arguments.length)throw Error("Second argument not supported");if(null===b)throw Error("Cannot set a null [[Prototype]]");if("object"!=typeof b)throw TypeError("Argument must be an object");a.prototype=b;return new a}}();
 CKEDITOR.plugins.add("toolbarconfiguratorarea",{afterInit:function(a){a.addMode("wysiwyg",function(b){var c=CKEDITOR.dom.element.createFromHtml('\x3cdiv class\x3d"cke_wysiwyg_div cke_reset" hidefocus\x3d"true"\x3e\x3c/div\x3e');a.ui.space("contents").append(c);c=a.editable(c);c.detach=CKEDITOR.tools.override(c.detach,function(b){return function(){b.apply(this,arguments);this.remove()}});a.setData(a.getData(1),b);a.fire("contentDom")});a.dataProcessor.toHtml=function(b){return b};a.dataProcessor.toDataFormat=
 function(b){return b}}});Object.keys||(Object.keys=function(){var a=Object.prototype.hasOwnProperty,b=!{toString:null}.propertyIsEnumerable("toString"),c="toString toLocaleString valueOf hasOwnProperty isPrototypeOf propertyIsEnumerable constructor".split(" "),e=c.length;return function(d){if("object"!==typeof d&&("function"!==typeof d||null===d))throw new TypeError("Object.keys called on non-object");var g=[],f;for(f in d)a.call(d,f)&&g.push(f);if(b)for(f=0;f<e;f++)a.call(d,c[f])&&g.push(c[f]);return g}}());
 (function(){function a(b,c){this.cfg=c||{};this.hidden=!1;this.editorId=b;this.fullToolbarEditor=new ToolbarConfigurator.FullToolbarEditor;this.actualConfig=this.originalConfig=this.mainContainer=null;this.isEditableVisible=this.waitForReady=!1;this.toolbarContainer=null;this.toolbarButtons=[]}ToolbarConfigurator.AbstractToolbarModifier=a;a.prototype.setConfig=function(b){this._onInit(void 0,b,!0)};a.prototype.init=function(b){var c=this;this.mainContainer=new CKEDITOR.dom.element("div");if(null!==

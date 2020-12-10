@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.dialog.add("colordialog",function(w){function l(){h.getById(p).removeStyle("background-color");m.getContentElement("picker","selectedColor").setValue("");x()}function y(a){a=a.data.getTarget();var c;"td"==a.getName()&&(c=a.getChild(0).getHtml())&&(x(),e=a,e.setAttribute("aria-selected",!0),e.addClass("cke_colordialog_selected"),m.getContentElement("picker","selectedColor").setValue(c))}function x(){e&&(e.removeClass("cke_colordialog_selected"),e.removeAttribute("aria-selected"),e=null)}function D(a){a=
 a.replace(/^#/,"");for(var c=0,b=[];2>=c;c++)b[c]=parseInt(a.substr(2*c,2),16);return 165<=.2126*b[0]+.7152*b[1]+.0722*b[2]}function z(a){!a.name&&(a=new CKEDITOR.event(a));var c=!/mouse/.test(a.name),b=a.data.getTarget(),f;"td"==b.getName()&&(f=b.getChild(0).getHtml())&&(q(a),c?d=b:A=b,c&&b.addClass(D(f)?"cke_colordialog_focused_light":"cke_colordialog_focused_dark"),r(f))}function B(){d&&(d.removeClass("cke_colordialog_focused_light"),d.removeClass("cke_colordialog_focused_dark"));r(!1);d=null}
 function q(a){if(a=!/mouse/.test(a.name)&&d)a.removeClass("cke_colordialog_focused_light"),a.removeClass("cke_colordialog_focused_dark");d||A||r(!1)}function r(a){a?(h.getById(t).setStyle("background-color",a),h.getById(u).setHtml(a)):(h.getById(t).removeStyle("background-color"),h.getById(u).setHtml("\x26nbsp;"))}function E(a){var c=a.data,b=c.getTarget(),f=c.getKeystroke(),d="rtl"==w.lang.dir;switch(f){case 38:if(a=b.getParent().getPrevious())a=a.getChild([b.getIndex()]),a.focus();c.preventDefault();

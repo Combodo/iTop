@@ -1,22 +1,4 @@
-﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-var swfobject=function(){function w(){if(!u){try{var a=d.getElementsByTagName("body")[0].appendChild(d.createElement("span"));a.parentNode.removeChild(a)}catch(b){return}u=!0;for(var a=z.length,c=0;c<a;c++)z[c]()}}function M(a){u?a():z[z.length]=a}function N(a){if("undefined"!=typeof n.addEventListener)n.addEventListener("load",a,!1);else if("undefined"!=typeof d.addEventListener)d.addEventListener("load",a,!1);else if("undefined"!=typeof n.attachEvent)U(n,"onload",a);else if("function"==typeof n.onload){var b=
+﻿var swfobject=function(){function w(){if(!u){try{var a=d.getElementsByTagName("body")[0].appendChild(d.createElement("span"));a.parentNode.removeChild(a)}catch(b){return}u=!0;for(var a=z.length,c=0;c<a;c++)z[c]()}}function M(a){u?a():z[z.length]=a}function N(a){if("undefined"!=typeof n.addEventListener)n.addEventListener("load",a,!1);else if("undefined"!=typeof d.addEventListener)d.addEventListener("load",a,!1);else if("undefined"!=typeof n.attachEvent)U(n,"onload",a);else if("function"==typeof n.onload){var b=
 n.onload;n.onload=function(){b();a()}}else n.onload=a}function V(){var a=d.getElementsByTagName("body")[0],b=d.createElement("object");b.setAttribute("type","application/x-shockwave-flash");var c=a.appendChild(b);if(c){var f=0;(function(){if("undefined"!=typeof c.GetVariable){var g=c.GetVariable("$version");g&&(g=g.split(" ")[1].split(","),e.pv=[parseInt(g[0],10),parseInt(g[1],10),parseInt(g[2],10)])}else if(10>f){f++;setTimeout(arguments.callee,10);return}a.removeChild(b);c=null;E()})()}else E()}
 function E(){var a=r.length;if(0<a)for(var b=0;b<a;b++){var c=r[b].id,f=r[b].callbackFn,g={success:!1,id:c};if(0<e.pv[0]){var d=p(c);if(d)if(!A(r[b].swfVersion)||e.wk&&312>e.wk)if(r[b].expressInstall&&F()){g={};g.data=r[b].expressInstall;g.width=d.getAttribute("width")||"0";g.height=d.getAttribute("height")||"0";d.getAttribute("class")&&(g.styleclass=d.getAttribute("class"));d.getAttribute("align")&&(g.align=d.getAttribute("align"));for(var h={},d=d.getElementsByTagName("param"),k=d.length,l=0;l<
 k;l++)"movie"!=d[l].getAttribute("name").toLowerCase()&&(h[d[l].getAttribute("name")]=d[l].getAttribute("value"));G(g,h,c,f)}else W(d),f&&f(g);else v(c,!0),f&&(g.success=!0,g.ref=H(c),f(g))}else v(c,!0),f&&((c=H(c))&&"undefined"!=typeof c.SetVariable&&(g.success=!0,g.ref=c),f(g))}}function H(a){var b=null;(a=p(a))&&"OBJECT"==a.nodeName&&("undefined"!=typeof a.SetVariable?b=a:(a=a.getElementsByTagName("object")[0])&&(b=a));return b}function F(){return!B&&A("6.0.65")&&(e.win||e.mac)&&!(e.wk&&312>e.wk)}

@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 CKEDITOR.plugins.setLang("specialchar","da",{euro:"Euro-tegn",lsquo:"Venstre enkelt anførselstegn",rsquo:"Højre enkelt anførselstegn",ldquo:"Venstre dobbelt anførselstegn",rdquo:"Højre dobbelt anførselstegn",ndash:"Bindestreg",mdash:"Tankestreg",iexcl:"Omvendt udråbstegn",cent:"Cent-tegn",pound:"Pund-tegn",curren:"Valuta-tegn",yen:"Yen-tegn",brvbar:"Brudt streg",sect:"Paragraftegn",uml:"Umlaut",copy:"Copyright-tegn",ordf:"Feminin ordinal indikator",laquo:"Venstre dobbel citations-vinkel",not:"Negation",
 reg:"Registreret varemærke tegn",macr:"Macron",deg:"Grad-tegn",sup2:"Superscript to",sup3:"Superscript tre",acute:"Prim-tegn",micro:"Mikro-tegn",para:"Pilcrow-tegn",middot:"Punkt-tegn",cedil:"Cedille",sup1:"Superscript et",ordm:"Maskulin ordinal indikator",raquo:"Højre dobbel citations-vinkel",frac14:"En fjerdedel",frac12:"En halv",frac34:"En tredjedel",iquest:"Omvendt udråbstegn",Agrave:"Stort A med accent grave",Aacute:"Stort A med accent aigu",Acirc:"Stort A med cirkumfleks",Atilde:"Stort A med tilde",
 Auml:"Stort A med umlaut",Aring:"Stort Å",AElig:"Stort Æ",Ccedil:"Stort C med cedille",Egrave:"Stort E med accent grave",Eacute:"Stort E med accent aigu",Ecirc:"Stort E med cirkumfleks",Euml:"Stort E med umlaut",Igrave:"Stort I med accent grave",Iacute:"Stort I med accent aigu",Icirc:"Stort I med cirkumfleks",Iuml:"Stort I med umlaut",ETH:"Stort Ð (edd)",Ntilde:"Stort N med tilde",Ograve:"Stort O med accent grave",Oacute:"Stort O med accent aigu",Ocirc:"Stort O med cirkumfleks",Otilde:"Stort O med tilde",

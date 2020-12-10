@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 (function(){var u=function(d,k){function u(){var a=arguments,b=this.getContentElement("advanced","txtdlgGenStyle");b&&b.commit.apply(b,a);this.foreach(function(b){b.commit&&"txtdlgGenStyle"!=b.id&&b.commit.apply(b,a)})}function g(a){if(!v){v=1;var b=this.getDialog(),c=b.imageElement;if(c){this.commit(1,c);a=[].concat(a);for(var d=a.length,h,e=0;e<d;e++)(h=b.getContentElement.apply(b,a[e].split(":")))&&h.setup(1,c)}v=0}}var l=/^\s*(\d+)((px)|\%)?\s*$/i,y=/(^\s*(\d+)((px)|\%)?\s*$)|^$/i,q=/^\d+px$/,
 z=function(){var a=this.getValue(),b=this.getDialog(),c=a.match(l);c&&("%"==c[2]&&m(b,!1),a=c[1]);b.lockRatio&&(c=b.originalElement,"true"==c.getCustomData("isReady")&&("txtHeight"==this.id?(a&&"0"!=a&&(a=Math.round(a/c.$.height*c.$.width)),isNaN(a)||b.setValueOf("info","txtWidth",a)):(a&&"0"!=a&&(a=Math.round(a/c.$.width*c.$.height)),isNaN(a)||b.setValueOf("info","txtHeight",a))));e(b)},e=function(a){if(!a.originalElement||!a.preview)return 1;a.commitContent(4,a.preview);return 0},v,m=function(a,
 b){if(!a.getContentElement("info","ratioLock"))return null;var c=a.originalElement;if(!c)return null;if("check"==b){if(!a.userlockRatio&&"true"==c.getCustomData("isReady")){var d=a.getValueOf("info","txtWidth"),h=a.getValueOf("info","txtHeight"),c=c.$.width/c.$.height,e=d/h;a.lockRatio=!1;d||h?1==Math.round(c/e*100)/100&&(a.lockRatio=!0):a.lockRatio=!0}}else void 0!==b?a.lockRatio=b:(a.userlockRatio=1,a.lockRatio=!a.lockRatio);d=CKEDITOR.document.getById(r);a.lockRatio?d.removeClass("cke_btn_unlocked"):

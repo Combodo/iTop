@@ -1,20 +1,7 @@
 ﻿/*
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
+ Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+*/
 (function(){function w(a){for(var f=0,p=0,n=0,q,d=a.$.rows.length;n<d;n++){q=a.$.rows[n];for(var e=f=0,b,c=q.cells.length;e<c;e++)b=q.cells[e],f+=b.colSpan;f>p&&(p=f)}return p}function t(a){return function(){var f=this.getValue(),f=!!(CKEDITOR.dialog.validate.integer().call(this,f)&&0<f);f||(alert(a),this.select());return f}}function r(a,f){var p=function(d){return new CKEDITOR.dom.element(d,a.document)},r=a.editable(),q=a.plugins.dialogadvtab;return{title:a.lang.table.title,minWidth:310,minHeight:CKEDITOR.env.ie?
 310:280,getModel:function(d){return"tableProperties"!==this.dialog.getName()?null:(d=(d=d.getSelection())&&d.getRanges()[0])?d._getTableElement({table:1}):null},onLoad:function(){var d=this,a=d.getContentElement("advanced","advStyles");if(a)a.on("change",function(){var a=this.getStyle("width",""),c=d.getContentElement("info","txtWidth");c&&c.setValue(a,!0);a=this.getStyle("height","");(c=d.getContentElement("info","txtHeight"))&&c.setValue(a,!0)})},onShow:function(){var d=a.getSelection(),e=d.getRanges(),
 b,c=this.getContentElement("info","txtRows"),h=this.getContentElement("info","txtCols"),u=this.getContentElement("info","txtWidth"),l=this.getContentElement("info","txtHeight");"tableProperties"==f&&((d=d.getSelectedElement())&&d.is("table")?b=d:0<e.length&&(CKEDITOR.env.webkit&&e[0].shrink(CKEDITOR.NODE_ELEMENT),b=a.elementPath(e[0].getCommonAncestor(!0)).contains("table",1)),this._.selectedElement=b);b?(this.setupContent(b),c&&c.disable(),h&&h.disable()):(c&&c.enable(),h&&h.enable());u&&u.onChange();
