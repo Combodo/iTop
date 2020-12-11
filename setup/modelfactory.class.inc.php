@@ -486,6 +486,7 @@ class MFDictModule extends MFModule
 			// Directories to scan
 			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
 			{
+				/** @noinspection SlowArrayOperationsInLoopInspection */
 				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
 		}
@@ -943,18 +944,15 @@ class ModelFactory
 					}
 				}
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
 			}
 
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aLoadedModuleNames = array();
-			foreach (self::$aLoadedModules as $oModule)
-			{
-				$aLoadedModuleNames[] = $oModule->GetName();
+			foreach (self::$aLoadedModules as $oLoadedModule) {
+				$aLoadedModuleNames[] = $oLoadedModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
 					$aLoadedModuleNames));
