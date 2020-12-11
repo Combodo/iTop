@@ -52,7 +52,13 @@ class BlockRenderer
 	 */
 	public function __construct(iUIBlock $oBlock, array $aContextParams = [])
 	{
-		$aAdditionalPaths = array_merge(static::TWIG_ADDITIONAL_PATHS, [APPROOT.'env-'.utils::GetCurrentEnvironment()]);
+		$aAdditionalPaths = static::TWIG_ADDITIONAL_PATHS;
+
+		$sCurrentEnvPath = APPROOT.'env-'.utils::GetCurrentEnvironment();
+		if (file_exists($sCurrentEnvPath)) {
+			$aAdditionalPaths[] = $sCurrentEnvPath;
+		}
+
 		if (null === static::$oTwigEnv) {
 			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
 		}
