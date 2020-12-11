@@ -55,13 +55,15 @@ class DataTableSettings implements Serializable
         $aColumns = array();
         foreach ($this->aClassAliases as $sAlias => $sClass) {
             $aColumns[$sAlias] = array();
-            foreach ($this->aColumns[$sAlias] as $sAttCode => $aData) {
-                unset($aData['label']); // Don't save the display name
-                unset($aData['alias']); // Don't save the alias (redundant)
-                unset($aData['code']); // Don't save the code (redundant)
-                if ($aData['checked']) {
-                    $aColumns[$sAlias][$sAttCode] = $aData;
-                }
+            if (isset($this->aColumns[$sAlias])) {
+	            foreach ($this->aColumns[$sAlias] as $sAttCode => $aData) {
+		            unset($aData['label']); // Don't save the display name
+		            unset($aData['alias']); // Don't save the alias (redundant)
+		            unset($aData['code']); // Don't save the code (redundant)
+		            if ($aData['checked']) {
+			            $aColumns[$sAlias][$sAttCode] = $aData;
+		            }
+	            }
             }
         }
         return serialize(
