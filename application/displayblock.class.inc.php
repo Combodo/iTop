@@ -1862,7 +1862,7 @@ class MenuBlock extends DisplayBlock
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
 					$aActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open');"];
-					$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock(iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aActions));
+					$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock(iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param,$aActions, $sId));
 				}
 				break;
 
@@ -1873,7 +1873,7 @@ class MenuBlock extends DisplayBlock
 				break;
 
 		}
-		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aActions));
+		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aActions, $sId));
 
 		$aFavoriteActions = array();
 		$aCallSpec = array($sClass, 'GetShortcutActions');

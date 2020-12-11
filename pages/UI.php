@@ -252,7 +252,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 			$oUIBlock->AddDataAttribute('target', 'search_results');
 			//$oUIBlockForm->AddSubBlock($oUIBlock);
 			$oP->AddUiBlock($oUIBlockForm);
-			$oP->AddUiBlock($oUIBlock);
+			$oUIBlockForm->AddSubBlock($oUIBlock);
 		} else {
 			$oBlock->Display($oP, 1);
 		}

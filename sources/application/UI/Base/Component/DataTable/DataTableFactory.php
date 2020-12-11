@@ -355,6 +355,12 @@ class DataTableFactory
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['sListId'] = $sListId;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
+		if (isset($aExtraParams['selected_rows']) && !empty($aExtraParams['selected_rows'])){
+			$aOptions['sSelectedRows'] = json_encode($aExtraParams['selected_rows']);
+		} else {
+			$aOptions['sSelectedRows'] = '[]';
+		}
+
 
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");

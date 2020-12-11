@@ -41,4 +41,27 @@ function updateDataTableSelection(listId) {
         selectionContainer.append('<input type="hidden" name="storedSelection[]" value="' + value + '">');
     }
     selectionCount.val(currentSelection.length);
+    selectionCount.trigger('change');
+}
+function getMultipleSelectionParams(listId)
+{
+	var oRes = {};
+
+	oRes.selectionMode = '';
+	if ($('#'+listId+' [name=selectionMode]').length > 0)
+	{
+		oRes.selectionMode =  $('#'+listId+' [name=selectionMode]').val();
+	}
+
+	oRes.selectObject = [];
+	$('#'+listId+' [name^=selectObject]:checked').each(function() {
+		oRes.selectObject.push($(this).val());
+	});
+
+	oRes.storedSelection = [];
+	$('#'+listId+' [name^=storedSelection]').each(function() {
+		oRes.storedSelection.push($(this).val());
+	});
+
+	return oRes;
 }

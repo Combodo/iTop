@@ -49,6 +49,9 @@ class DataTable extends UIContentBlock
 	{
 		parent::__construct($sId);
 		$this->AddDeferredBlock(new DataTableConfig($this));
+		$this->aDisplayColumns = [];
+		$this->aOptions = [];
+		$this->aResultColumns = [];
 	}
 
 	/**

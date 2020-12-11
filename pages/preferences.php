@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -130,13 +131,17 @@ EOF
 	$sOQL = ApplicationMenu::GetFavoriteSiloQuery();
 	$oFilter = DBObjectSearch::FromOQL($sOQL);
 	$oBlock = new DisplayBlock($oFilter, 'list', false);
-	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, 1, [
+
+	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+
+	$sIdFavoriteOrganizations = 1;
+	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, $sIdFavoriteOrganizations, [
 		'menu' => false,
 		'selection_mode' => true,
 		'selection_type' => 'multiple',
-		'cssCount' => '.selectedCount',
 		'table_id' => 'user_prefs',
 		'surround_with_panel' => false,
+		'selected_rows'=>$aFavoriteOrgs
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
@@ -150,51 +155,18 @@ EOF
 	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
 	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 
-	$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 	if ($aFavoriteOrgs == null)
 	{
 		// All checked
 		$oP->add_ready_script(
 			<<<EOF
-	$('#1 .checkAll').prop('checked', true);
-	checkAllDataTable('datatable_1',true,'1');
+	$('#$sIdFavoriteOrganizations .checkAll').prop('checked', true);
+	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
 EOF
 );
 
 	}
-	else
-	{
-		$sChecked = implode('","', $aFavoriteOrgs);
-		$oP->add_ready_script(
-<<<EOF
-	var aChecked = ["$sChecked"];
-	if ($('#user_prefs table.pagination').length > 0)
-	{
-		// paginated display, restore the selection
-		var pager = $('#user_prefs form .pager');
-		$(':input[name=selectionMode]', pager).val('positive');
-		for (i=0; i<aChecked.length; i++)
-		{
-			pager.append('<input type="hidden" name="storedSelection[]" id="'+aChecked[i]+'" value="'+aChecked[i]+'"/>');
-		}
-		$('#user_prefs table.listResults').trigger('load_selection');
-		
-	}
-	else
-	{
-		$('#user_prefs form :checkbox[name^=selectObject]').each( function()
-			{
-				if ($.inArray($(this).val(), aChecked) > -1)
-				{
-					$(this).prop('checked', true);
-					$(this).trigger('change');
-				}
-			});
-	}
-EOF
-);
-	}
-	
+
 	$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -203,93 +175,35 @@ EOF
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oShortcutsBlock = new Panel(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
-	$oBMSearch = new DBObjectSearch('Shortcut');
-	$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
+	$oShortcutsBlock->sIdShortcuts = 'shortcut_list';
+	$oShortcutsFilter = new DBObjectSearch('Shortcut');
+	$oShortcutsFilter->AddCondition('user_id', UserRights::GetUserId(), '=');
 
-	$oBlock = new DisplayBlock($oBMSearch, 'list', false);
-	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, 'shortcut_list', [
+	$oBlock = new DisplayBlock($oShortcutsFilter, 'list', false);
+	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, $oShortcutsBlock->sIdShortcuts, [
 		'view_link' => false,
 		'menu' => false,
 		'toolkit_menu' => false,
 		'selection_mode' => true,
 		'selection_type' => 'multiple',
-		'cssCount' => '#shortcut_selection_count',
 		'table_id' => 'user_prefs_shortcuts',
 		'surround_with_panel' => false,
 	]));
-	$sShortcutsHtml = '<p>';
 
-	$oSet = new DBObjectSet($oBMSearch);
+	$oSet = new DBObjectSet($oShortcutsFilter);
 	if ($oSet->Count() > 0) {
-		$sButtons = '<img src="../images/tv-item-last.gif">';
-		$sButtons .= '<button id="shortcut_btn_rename">'.Dict::S('UI:Button:Rename').'</button>';
-		$sButtons .= '<button id="shortcut_btn_delete">'.Dict::S('UI:Button:Delete').'</button>';
+		$oShortcutsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
+		// - Rename button
+		$oShortcutsRenameButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false, "shortcut_btn_rename");
+		$oShortcutsToolBar->AddSubBlock($oShortcutsRenameButton);
+		// - Delete button
+		$oShortcutsDeleteButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false, "shortcut_btn_delete");
+		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
 
-		// Selection count updated by the pager, and used to enable buttons
-		$sShortcutsHtml .= '<input type="hidden" id="shortcut_selection_count"/>';
-		$sConfirmDelete = addslashes(Dict::S('UI:ShortcutDelete:Confirm'));
-	
-		$oP->add_ready_script(
-<<<EOF
-function OnShortcutBtnRename()
-{
-	var oParams = $('#datatable_shortcut_list').datatable('GetMultipleSelectionParams');
-	oParams.operation = 'shortcut_rename_dlg';
 
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
-		$('body').append(data);
-	});
-	return false;
-}
-
-function OnShortcutBtnDelete()
-{
-	if (confirm('$sConfirmDelete'))
-	{
-		var oParams = $('#datatable_shortcut_list').datatable('GetMultipleSelectionParams');
-		oParams.operation = 'shortcut_delete_go';
-
-		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
-			$('body').append(data);
-		});
-	}
-	return false;
-}
-
-function OnSelectionCountChange()
-{
-	var iCountSelected = $("#shortcut_selection_count").val();
-	if (iCountSelected == 0)
-	{
-		$('#shortcut_btn_rename').prop('disabled', true);
-		$('#shortcut_btn_delete').prop('disabled', true);
-	}
-	else if (iCountSelected == 1)
-	{
-		$('#shortcut_btn_rename').prop('disabled', false);
-		$('#shortcut_btn_delete').prop('disabled', false);
-	}
-	else
-	{
-		$('#shortcut_btn_rename').prop('disabled', true);
-		$('#shortcut_btn_delete').prop('disabled', false);
-	}
-}
-
-var oUpperCheckBox = $('#datatable_shortcut_list .checkAll').first();
-oUpperCheckBox.parent().width(oUpperCheckBox.width() + 2);
-
-$('#shortcut_list').append('<tr><td colspan="2">&nbsp;&nbsp;&nbsp;$sButtons</td></tr>');
-$('#shortcut_selection_count').bind('change', OnSelectionCountChange);
-$('#shortcut_btn_rename').bind('click', OnShortcutBtnRename);
-$('#shortcut_btn_delete').bind('click', OnShortcutBtnDelete);
-OnSelectionCountChange();
-EOF
-		);
 	} // if count > 0
-	$oShortcutsHtmlBlock = new Html($sShortcutsHtml);
-	$oShortcutsBlock->AddSubBlock($oShortcutsHtmlBlock);
 	$oContentLayout->AddMainBlock($oShortcutsBlock);
 	
 	//////////////////////////////////////////////////////////////////////////

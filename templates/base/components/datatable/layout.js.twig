@@ -1,7 +1,11 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
-{% set iPageSize = oUIBlock.GetOptions()["iPageSize"] %}
+{% if oUIBlock.GetOption("iPageSize") is not empty %}
+	{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
+{% else %}
+	{% set iPageSize = 10 %}
+{% endif %}
 
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
     $('#{{ oUIBlock.GetId() }}').DataTable().clear();
@@ -61,8 +65,8 @@ var oTable{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     drawCallback: function () {
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-            $(this).find('[name=selectAll]').checked();
-            $(table).DataTable().rows({page: 'current'}).select();
+            $(this).find('[name=selectAll]').prop('checked', true);
+            $(this).DataTable().rows({page: 'current'}).select();
         } else {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }

@@ -141,7 +141,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 			aTruncatedLists[divId] = undefined;
 			if (data.length > 0) {
 				$('#'+divId).html(data);
-				$('#'+divId+' .listResults').tableHover(); // hover tables
+				//$('#'+divId+' .listResults').tableHover(); // hover tables
 				$('#'+divId+' .listResults').each(function () {
 					var table = $(this);
 					var id = $(this).parent();
@@ -185,15 +185,17 @@ function TruncateList(divId, iLimit, sNewLabel, sLinkLabel) {
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 	// Check if the user is not editing the list properties right now
 	var bDialogOpen = false;
-	var oDataTable = $('#'+divId+' :itop-datatable');
+	//TODO 3.0.0 Datatable - to check
+	var oDataTable = $('#'+divId+' :ibo-datatable');
 	var bIsDataTable = false;
 	if (oDataTable.length > 0) {
-		bDialogOpen = oDataTable.datatable('IsDialogOpen');
+		bDialogOpen = ($('#datatable_dlg_'+divId+' :visible').length > 0);
+		//bDialogOpen = oDataTable.datatable('IsDialogOpen');
 		bIsDataTable = true;
 	}
 	if (!bDialogOpen) {
 		if (bIsDataTable) {
-			oDataTable.datatable('DoRefresh');
+			oDataTable.DataTable().ajax.reload();
 		}
 		else {
 			$('#'+divId).block();
@@ -454,8 +456,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).datatable('option', 'oColumns'),
-		iPageSize: $('#'+sDataTableName).datatable('option', 'iPageSize')
+		oColumns: $('#'+sDataTableName).DataTable().ajax.params()['columns'],
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']/numberCachePages
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 
@@ -592,7 +594,7 @@ function ExportRun(data) {
 				if (data.mime_type == 'text/html') {
 					$('#export_content').parent().html(data.text_result);
 					$('#export_text_result').show();
-					$('#export_text_result .listResults').tableHover();
+					//$('#export_text_result .listResults').tableHover();
 					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
 				}
 				else {

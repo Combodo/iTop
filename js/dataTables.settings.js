@@ -297,6 +297,7 @@ $(function()
 	},
 		IsDialogOpen: function()
 		{
+			//TODO 3.0.0 voir si on accede à cette fonction. il y a de grandes chances pour qu'elle ne soit plus utilisée
 			var oDlgOpen = $('#datatable_dlg_'+this.options.sListId+' :visible');
 			
 			return (oDlgOpen.length > 0);
@@ -304,28 +305,6 @@ $(function()
 		DoRefresh: function()
 		{
 			this._refresh();
-		},
-		GetMultipleSelectionParams: function()
-		{
-			var oRes = {};
-
-			oRes.selectionMode = '';
-			if (this.element.find(':input[name=selectionMode]').length > 0)
-			{
-				oRes.selectionMode = this.element.find(':input[name=selectionMode]').val();
-			}
-
-			oRes.selectObject = [];
-			this.element.find(':input[name^=selectObject]:checked').each(function() {
-				oRes.selectObject.push($(this).val());
-			});
-
-			oRes.storedSelection = [];
-			this.element.find(':input[name^=storedSelection]').each(function() {
-				oRes.storedSelection.push($(this).val());
-			});
-
-			return oRes;
 		}
 	});	
 });

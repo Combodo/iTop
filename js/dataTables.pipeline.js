@@ -1,10 +1,12 @@
 //
 // Pipelining function for DataTables. To be used to the `ajax` option of DataTables
 //
+var numberCachePages = 5;
+
 $.fn.dataTable.pipeline = function ( opts ) {
 	// Configuration options
 	var conf = $.extend( {
-		pages: 5,     // number of pages to cache
+		pages: numberCachePages,     // number of pages to cache
 		url: '',      // script url
 		data: null,   // function or object with parameters to send to the server
 	                  // matching how `ajax.data` works in DataTables

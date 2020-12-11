@@ -81,7 +81,7 @@ class SearchForm
 		// Simple search form
 		if (isset($aExtraParams['currentId']))
 		{
-			$sSearchFormId = $aExtraParams['currentId'];
+			$sSearchFormId = 'sf_'.$aExtraParams['currentId'];
 		}
 		else
 		{
