@@ -2158,14 +2158,13 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
-			if ($oExisting->getAttribute('_alteration') != 'removed')
-			{
+			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
 				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
 					$iLine, $sPath);
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
 		}
 		else
@@ -2205,18 +2204,15 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sPath, $iLine);
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
-		if ($sPrevFlag == 'removed')
-		{
+		if ($sPrevFlag == 'removed') {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = $oNode->getLineNo();
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
 				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
-		$oExisting->ReplaceWith($oNode);
-		if (!$this->IsInDefinition())
-		{
-			if ($sPrevFlag == '')
-			{
+		$oExisting->ReplaceWithSingleNode($oNode);
+		if (!$this->IsInDefinition()) {
+			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
 			$oNode->setAttribute('_alteration', $sPrevFlag);
@@ -2249,15 +2245,12 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed')
-			{
+			if ($sPrevFlag == 'removed') {
 				$sFlag = $bForce ? 'forced' : 'replaced';
-			}
-			else
-			{
+			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 		}
 		else
 		{
@@ -2288,8 +2281,7 @@ class MFElement extends Combodo\iTop\DesignElement
 
 			return $this->parentNode->IsClassNode();
 		}
-		else
-		{
+		else {
 			return false;
 		}
 	}
@@ -2299,13 +2291,11 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param MFElement $oNewNode The replacement
 	 */
-	protected function ReplaceWith($oNewNode)
+	protected function ReplaceWithSingleNode($oNewNode)
 	{
 		// Move the classes from the old node into the new one
-		if ($this->IsClassNode())
-		{
-			foreach ($this->GetNodes('class') as $oChild)
-			{
+		if ($this->IsClassNode()) {
+			foreach ($this->GetNodes('class') as $oChild) {
 				$oNewNode->appendChild($oChild);
 			}
 		}
