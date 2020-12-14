@@ -54,7 +54,7 @@ hr {
 CSS
 );
 
-$oMainTitle = new Html('<h1>Buttons examples</h1>');
+$oMainTitle = new Html('<h1>All UI blocks examples</h1>');
 $oPage->AddUiBlock($oMainTitle);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
@@ -107,7 +107,7 @@ $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAc
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
 $oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeIconLink('fas fa-thumbs-up', 'This is the tooltip content'));
+$oPageContentLayout->AddMainBlock(ButtonFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button'));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
