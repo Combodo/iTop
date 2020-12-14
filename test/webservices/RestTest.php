@@ -15,8 +15,11 @@ class RestTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
+	const MODE = [ 'JSONDATA_AS_STRING' => 0, 'JSONDATA_AS_FILE' => 1 , 'NO_JSONDATA' => 2 ];
+
 	private $sTmpFile = "";
-	private $bPassJsonDataAsFile = false;
+	/** @var int $iJsonDataMode */
+	private $sJsonDataMode;
 	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
@@ -52,16 +55,23 @@ class RestTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider BasicProvider
-	 * @param bool $bPassJsonDataAsFile
+	 * @param int $iJsonDataMode
 	 */
-	public function testCreateApi($bPassJsonDataAsFile)
+	public function testCreateApi($iJsonDataMode)
 	{
-		$this->bPassJsonDataAsFile = $bPassJsonDataAsFile;
+		$this->iJsonDataMode = $iJsonDataMode;
 
 		//create ticket
 		$description = date('dmY H:i:s');
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
+
+		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
+			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			return;
+		}
+
 		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
@@ -99,16 +109,23 @@ JSON;
 
 	/**
 	 * @dataProvider BasicProvider
-	 * @param bool $bPassJsonDataAsFile
+	 * @param int $iJsonDataMode
 	 */
-	public function testUpdateApi($bPassJsonDataAsFile)
+	public function testUpdateApi($iJsonDataMode)
 	{
-		$this->bPassJsonDataAsFile = $bPassJsonDataAsFile;
+		$this->iJsonDataMode = $iJsonDataMode;
 
 		//create ticket
 		$description = date('dmY H:i:s');
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
+
+		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
+			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			return;
+		}
+
 		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
@@ -130,17 +147,24 @@ JSON;
 	}
 	/**
 	 * @dataProvider BasicProvider
-	 * @param bool $bPassJsonDataAsFile
+	 * @param int $iJsonDataMode
 	 */
-	public function testDeleteApi($bPassJsonDataAsFile)
+	public function testDeleteApi($iJsonDataMode)
 	{
-		$this->bPassJsonDataAsFile = $bPassJsonDataAsFile;
+		$this->iJsonDataMode = $iJsonDataMode;
 
 		//create ticket
 		$description = date('dmY H:i:s');
 
 		$sOuputJson = $this->CreateTicketViaApi($description);
 		$aJson = json_decode($sOuputJson, true);
+
+		if ($this->iJsonDataMode === self::MODE['NO_JSONDATA']){
+			$this->assertContains("3", "".$aJson['code'], $sOuputJson);
+			$this->assertContains("Error: Missing parameter 'json_data'", "".$aJson['message'], $sOuputJson);
+			return;
+		}
+
 		$this->assertContains("0", "".$aJson['code'], $sOuputJson);
 		$sUserRequestKey = $this->array_key_first($aJson['objects']);
 		$this->assertContains('UserRequest::', $sUserRequestKey);
@@ -173,8 +197,9 @@ JSON;
 
 	public function BasicProvider(){
 		return [
-			'call rest call' => [ 'bCallApiViaFile' => false],
-			'pass json_data as file' => [ 'bCallApiViaFile' => true]
+			'call rest call' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_STRING']],
+			'pass json_data as file' => [ 'sJsonDataMode' => self::MODE['JSONDATA_AS_FILE']],
+			'no json data' => [ 'sJsonDataMode' => self::MODE['NO_JSONDATA']]
 		];
 	}
 
@@ -228,13 +253,13 @@ JSON;
 			'auth_pwd' => $this->sPassword,
 		];
 
-		if ($this->bPassJsonDataAsFile){
+		if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_STRING']){
 			$this->sTmpFile = tempnam(sys_get_temp_dir(), 'jsondata_');
 			file_put_contents($this->sTmpFile, $sJsonDataContent);
 
 			$oCurlFile = curl_file_create($this->sTmpFile);
 			$aPostFields['json_data'] = $oCurlFile;
-		}else{
+		}else if ($this->iJsonDataMode === self::MODE['JSONDATA_AS_FILE']){
 			$aPostFields['json_data'] = $sJsonDataContent;
 		}
 
