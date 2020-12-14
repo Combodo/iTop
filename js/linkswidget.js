@@ -31,7 +31,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.aRemoved = [];
 	this.aModified = {};
 	this.bDoSearch = bDoSearch; // false if the search is not launched
-	var me = this;
+	let me = this;
 
 	this.Init = function () {
 		// make sure that the form is clean
@@ -47,7 +47,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 		me.RegisterChange();
 
-		var oInput = $('#'+this.iInputId);
+		let oInput = $('#'+this.iInputId);
 		oInput.bind('update_value', function () {
 			$(this).val(me.GetUpdatedValue());
 		});
@@ -57,10 +57,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.RemoveSelected = function () {
-		var my_id = '#'+me.id;
+		let my_id = '#'+me.id;
 		$('#linkedset_'+me.id+' .selection:checked').each(function () {
 			$(my_id+'_row_'+this.value).remove();
-			var iLink = $(this).attr('data-link-id');
+			let iLink = $(this).attr('data-link-id');
 			if (iLink > 0)
 			{
 				me.aRemoved.push(iLink);
@@ -71,7 +71,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			}
 			else
 			{
-				var iUniqueId = $(this).attr('data-unique-id');
+				let iUniqueId = $(this).attr('data-unique-id');
 				if (iUniqueId < 0)
 				{
 					iUniqueId = -iUniqueId;
@@ -92,7 +92,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.OnSelectChange = function () {
-		var nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
+		let nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
 		if (nbChecked > 0)
 		{
 			$('#'+me.id+'_btnRemove').prop('disabled', false);
@@ -104,10 +104,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.AddObjects = function () {
-		var me = this;
+		let me = this;
 		$('#'+me.id+'_indicatorAdd').html('&nbsp;<img src="../images/indicator.gif"/>');
 		me.oWizardHelper.UpdateWizard();
-		var theMap = {
+		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.iInputId,
 			sSuffix: me.sSuffix,
@@ -120,7 +120,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		// Gather the already linked target objects
 		theMap.aAlreadyLinked = [];
 		$('#linkedset_'+me.id+' .selection:input').each(function (i) {
-			var iRemote = $(this).attr('data-remote-id');
+			let iRemote = $(this).attr('data-remote-id');
 			theMap.aAlreadyLinked.push(iRemote);
 		});
 
@@ -141,7 +141,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				else
 				{
 					$('#count_'+me.id).change(function () {
-						var c = this.value;
+						let c = this.value;
 						me.UpdateButtons(c);
 					});
 				}
@@ -152,7 +152,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.SearchObjectsToAdd = function () {
 		$('#count_'+me.id).change(function () {
-			var c = this.value;
+			let c = this.value;
 			me.UpdateButtons(c);
 		});
 		me.UpdateSizes(null, null);
@@ -163,7 +163,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.UpdateButtons = function (iCount) {
-		var okBtn = $('#btn_ok_'+me.id);
+		let okBtn = $('#btn_ok_'+me.id);
 		if (iCount > 0)
 		{
 			okBtn.prop('disabled', false);
@@ -175,7 +175,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.DoAddObjects = function () {
-		var theMap = {
+		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.iInputId,
 			sSuffix: me.sSuffix,
@@ -184,12 +184,12 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		};
 
 		// Gather the parameters from the search form
-		var context = $('#SearchResultsToAdd_'+me.id);
-		var selectionMode = $(':input[name=selectionMode]', context);
+		let context = $('#SearchResultsToAdd_'+me.id);
+		let selectionMode = $(':input[name=selectionMode]', context);
 		if (selectionMode.length > 0)
 		{
 			// Paginated table retrieve the mode and the exceptions
-			var sMode = selectionMode.val();
+			let sMode = selectionMode.val();
 			theMap['selectionMode'] = sMode;
 			$('#fs_SearchFormToAdd_'+me.id+' :input').each(
 				function (i) {
@@ -278,7 +278,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.AddLink = function (iAddedId, iRemote) {
 		// Assumption: this identifier will be higher than the previous one
 		me.iMaxAddedId = iAddedId;
-		var sFormPrefix = me.iInputId;
+		let sFormPrefix = me.iInputId;
 		oAdded = {};
 		oAdded['formPrefix'] = sFormPrefix;
 		oAdded['attr_'+sFormPrefix+this.sExtKeyToRemote] = iRemote;
@@ -291,25 +291,25 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.UpdateSizes = function (event, ui) {
-		var dlg = $('#dlg_'+me.id);
-		var searchForm = $('#SearchFormToAdd_'+me.id);
-		var results = $('#SearchResultsToAdd_'+me.id);
-		var padding_right = 0;
+		let dlg = $('#dlg_'+me.id);
+		let searchForm = $('#SearchFormToAdd_'+me.id);
+		let results = $('#SearchResultsToAdd_'+me.id);
+		let padding_right = 0;
 		if (dlg.css('padding-right'))
 		{
 			padding_right = parseInt(dlg.css('padding-right').replace('px', ''));
 		}
-		var padding_left = 0;
+		let padding_left = 0;
 		if (dlg.css('padding-left'))
 		{
 			padding_left = parseInt(dlg.css('padding-left').replace('px', ''));
 		}
-		var padding_top = 0;
+		let padding_top = 0;
 		if (dlg.css('padding-top'))
 		{
 			padding_top = parseInt(dlg.css('padding-top').replace('px', ''));
 		}
-		var padding_bottom = 0;
+		let padding_bottom = 0;
 		if (dlg.css('padding-bottom'))
 		{
 			padding_bottom = parseInt(dlg.css('padding-bottom').replace('px', ''));
@@ -324,26 +324,26 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.GetUpdatedValue = function () {
-		var sSelector = '#linkedset_'+me.id+' :input[name^=attr_'+me.id+']';
-		var aIndexes = [];
-		var aValues = [];
+		let sSelector = '#linkedset_'+me.id+' :input[name^=attr_'+me.id+']';
+		let aIndexes = [];
+		let aValues = [];
 		$(sSelector).each(function () {
-			var re = /\[([^\[]+)\]\[(.+)\]/;
-			var aMatches = [];
+			let re = /\[([^\[]+)\]\[(.+)\]/;
+			let aMatches = [];
 			if (aMatches = this.name.match(re))
 			{
-				var idx = aMatches[1];
-				var index = jQuery.inArray(idx, aIndexes);
+				let idx = aMatches[1];
+				let index = jQuery.inArray(idx, aIndexes);
 				if (index == -1)
 				{
 					aIndexes.push(idx);
 					index = jQuery.inArray(idx, aIndexes);
 					aValues[index] = {};
 				}
-				var value = $(this).val();
+				let value = $(this).val();
 				if (aMatches[2] == "id")
 				{
-					var iId = parseInt(aMatches[1], 10);
+					let iId = parseInt(aMatches[1], 10);
 					if (iId < 0)
 					{
 						aValues[index][me.sExtKeyToRemote] = -iId;
@@ -367,11 +367,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').off('change').on('change', function () {
 			if (!($(this).hasClass('selection')))
 			{
-				var oCheckbox = $(this).closest('tr').find('.selection');
-				var iLink = oCheckbox.attr('data-link-id');
-				var iUniqueId = oCheckbox.attr('data-unique-id');
-				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				var value = $(this).val();
+				let oCheckbox = $(this).closest('tr').find('.selection');
+				let iLink = oCheckbox.attr('data-link-id');
+				let iUniqueId = oCheckbox.attr('data-unique-id');
+				let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+				let value = $(this).val();
 				return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
 			}
 			return true;
@@ -386,11 +386,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	 * @param jQuery $oSourceObject object which fires the event
 	 */
 	this.OnValueChange = function (iLink, iUniqueId, sAttCode, value, $oSourceObject) {
-		var sFormPrefix = me.iInputId;
+		let sFormPrefix = me.iInputId;
 		if (iLink > 0)
 		{
 			// Modifying an existing link
-			var oModified = me.aModified[iLink];
+			let oModified = me.aModified[iLink];
 			if (oModified == undefined)
 			{
 				// Still not marked as modified
@@ -413,23 +413,23 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.OnFormSubmit = function () {
-		var oDiv = $('#linkedset_'+me.id);
+		let oDiv = $('#linkedset_'+me.id);
 
-		var sToBeDeleted = JSON.stringify(me.aRemoved);
+		let sToBeDeleted = JSON.stringify(me.aRemoved);
 		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbd">').val(sToBeDeleted).appendTo(oDiv);
 
 
-		var sToBeModified = JSON.stringify(me.aModified);
+		let sToBeModified = JSON.stringify(me.aModified);
 		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbm">').val(sToBeModified).appendTo(oDiv);
 
-		var aToBeCreated = [];
+		let aToBeCreated = [];
 		me.aAdded.forEach(function (oAdded) {
 			if (oAdded != null)
 			{
 				aToBeCreated.push(oAdded);
 			}
 		});
-		var sToBeCreated = JSON.stringify(aToBeCreated);
+		let sToBeCreated = JSON.stringify(aToBeCreated);
 		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbc">').val(sToBeCreated).appendTo(oDiv);
 
 		// Remove unused inputs

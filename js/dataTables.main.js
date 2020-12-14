@@ -34,15 +34,25 @@ function checkAllDataTable(tableId, value, listId) {
 function updateDataTableSelection(listId) {
     let selectionContainer = $('#'+listId+' [data-target="ibo-datatable--selection"]');
     let selectionCount = $('#'+listId+' [name="selectionCount"]');
+    let selectionMode = $('#'+listId+' [name=selectionMode]');
+
     selectionContainer.html('');
     let currentSelection = window['oSelectedItems'+listId];
     for(let i in currentSelection) {
         let value = currentSelection[i];
         selectionContainer.append('<input type="hidden" name="storedSelection[]" value="' + value + '">');
     }
-    selectionCount.val(currentSelection.length);
+
+    if (selectionMode === 'negative') {
+        let total =  window['oTable'+listId].page.info()["recordsTotal"];
+        selectionCount.val(total - currentSelection.length);
+    } else {
+        selectionCount.val(currentSelection.length);
+    }
+
     selectionCount.trigger('change');
 }
+
 function getMultipleSelectionParams(listId)
 {
 	var oRes = {};

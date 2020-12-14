@@ -663,7 +663,7 @@ JS
 				'table_inner_id' => "{$this->iId}_results",
 				'selection_mode' => true,
 				'selection_type' => 'single',
-				'cssCount' => '#count_'.$this->iId,
+				'cssCount' => '#count_'.$this->iId.'_results',
 			)
 		));
 		$sCancel = Dict::S('UI:Button:Cancel');
@@ -719,7 +719,7 @@ JS
 		$iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
 
 		$oBlock = new DisplayBlock($oFilter, 'list_search', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
-		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId.'_results', 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 
     /**

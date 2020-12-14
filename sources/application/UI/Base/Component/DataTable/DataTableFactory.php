@@ -347,6 +347,10 @@ class DataTableFactory
 			}
 		}
 
+		if (isset($aExtraParams['cssCount'])) {
+			$aOptions['sCountSelector'] = $aExtraParams['cssCount'];
+		}
+
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
