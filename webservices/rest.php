@@ -70,9 +70,12 @@ $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
+
+//read json_data parameter via as a string (standard behaviour)
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 
 if (empty($sJsonString)){
+	//N °3455: read json_data parameter via a file passed by http protocol
 	if(isset($_FILES['json_data']['tmp_name']))
 	{
 		$sTmpFilePath = $_FILES['json_data']['tmp_name'];
