@@ -49,7 +49,7 @@ abstract class Shortcut extends DBObject implements iDisplay
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'context')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array()); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form

@@ -303,15 +303,17 @@ class DataTableFactory
 				}
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
-						$aColumnDefinition[] = [
-							'description' => $aData['label'],
-							'object_class' => $sClassName,
-							'class_alias' => $sClassAlias,
-							'attribute_code' => $sAttCode,
-							'attribute_type' => '_key_',
-							'attribute_label' => $aData['alias'],
-							"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
-						];
+						if ($bViewLink) {
+							$aColumnDefinition[] = [
+								'description' => $aData['label'],
+								'object_class' => $sClassName,
+								'class_alias' => $sClassAlias,
+								'attribute_code' => $sAttCode,
+								'attribute_type' => '_key_',
+								'attribute_label' => $aData['alias'],
+								"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+							];
+						}
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
@@ -520,15 +522,17 @@ class DataTableFactory
 				}
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
-						$aColumnDefinition[] = [
-							'description' => $aData['label'],
-							'object_class' => $sClassName,
-							'class_alias' => $sClassAlias,
-							'attribute_code' => $sAttCode,
-							'attribute_type' => '_key_',
-							'attribute_label' => $aData['alias'],
-							"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
-						];
+						if ($bViewLink) {
+							$aColumnDefinition[] = [
+								'description' => $aData['label'],
+								'object_class' => $sClassName,
+								'class_alias' => $sClassAlias,
+								'attribute_code' => $sAttCode,
+								'attribute_type' => '_key_',
+								'attribute_label' => $aData['alias'],
+								"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+							];
+						}
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
