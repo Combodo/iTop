@@ -174,7 +174,7 @@ JSON;
 	public function BasicProvider(){
 		return [
 			'call rest call' => [ 'bCallApiViaFile' => false],
-			//'pass json_data as file' => [ 'bCallApiViaFile' => true]
+			'pass json_data as file' => [ 'bCallApiViaFile' => true]
 		];
 	}
 
