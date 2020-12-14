@@ -911,6 +911,7 @@ class DashletObjectList extends Dashlet
 		$aParams = array(
 			'menu' => $sShowMenu,
 			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
+			'surround_with_panel' => false,
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
