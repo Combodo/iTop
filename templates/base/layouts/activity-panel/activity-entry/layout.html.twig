@@ -7,7 +7,7 @@
 	<div class="ibo-activity-entry--medallion {% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}ibo-has-image{% endif %}" data-role="ibo-activity-entry--medallion" data-tooltip-content="{{ oUIBlock.GetAuthorFriendlyname() }}">
 		{% block iboActivityEntryMedallion %}
 			{% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}
-				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}" />
+				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}">
 			{% else %}
 				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials() }}</div>
 			{% endif %}

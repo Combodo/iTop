@@ -22,7 +22,7 @@
 				<div id="login-form-content">
 					{% block login_sso_buttons %}
 						<div id="login-sso-buttons">
-							{{ Macro.BlockExtension(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left"/>' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left">' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
 						</div>
 					{% endblock login_sso_buttons %}
 					{% block login_input %}
@@ -51,10 +51,10 @@
 						</div>
 					{% endblock login_form_footer %}
 				</div>
-				<input type="hidden" id="login_mode" name="login_mode" value="form" />
-				<input type="hidden" id="login_op" name="loginop" value="login" />
+				<input type="hidden" id="login_mode" name="login_mode" value="form">
+				<input type="hidden" id="login_op" name="loginop" value="login">
 				{% for sName, sValue in aPreviousPostedVars %}
-					<input type="hidden" name="{{ sName }}" value="{{ sValue }}" />
+					<input type="hidden" name="{{ sName }}" value="{{ sValue }}">
 				{% endfor %}
 			</form>
 		</div>

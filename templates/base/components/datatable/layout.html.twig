@@ -1,14 +1,14 @@
 {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
 
 {% if oUIBlock.GetOptions("select_mode") is not empty %}
-    <input type="hidden" name="selectionMode" value="positive"/>
-    <input type="hidden" name="selectionCount" value="0"/>
+    <input type="hidden" name="selectionMode" value="positive">
+    <input type="hidden" name="selectionCount" value="0">
     <div data-target="ibo-datatable--selection"></div>
     {% if oUIBlock.GetAjaxData("extra_params") is not empty %}
-        <input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData("extra_params")|raw|json_encode }}"/>
+        <input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData("extra_params")|raw|json_encode }}">
     {% endif %}
     {% if oUIBlock.GetAjaxData("filter") is not empty %}
-        <input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData("filter")|raw }}"/>
+        <input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData("filter")|raw }}">
     {% endif %}
 {% endif %}
 

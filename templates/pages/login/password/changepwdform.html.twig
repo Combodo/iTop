@@ -21,31 +21,31 @@
 				    {% block old_password %}
 					<div>
 						<label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="old_pwd" name="old_pwd" value="" />
+						<input type="password" id="old_pwd" name="old_pwd" value="">
 					</div>
 					{% endblock %}
 					{% block new_password %}
 					<div>
 						<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="new_pwd" name="new_pwd" value="" />
+						<input type="password" id="new_pwd" name="new_pwd" value="">
 						<span class="message"></span>
 					</div>
 					<div>
 						<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" />
+						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="">
 						<span class="message"></span>
 					</div>
 					{% endblock %}
 				</div>
 				<div id="login-submit" class="changepwd-submit">
 					<div>
-						<input class="login-submit-primary" type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" />
+						<input class="login-submit-primary" type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}">
 						<span class="message"></span>
 
-						<input class="login-submit-secondary" type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}" />
+						<input class="login-submit-secondary" type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}">
 					</div>
 				</div>
-			<input type="hidden" name="loginop" value="do_change_pwd" />
+			<input type="hidden" name="loginop" value="do_change_pwd">
 			</div>
 		</form>
 		</div>
