@@ -27,18 +27,38 @@ class InputFactory
 
 	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
 	{
-		$oInput = new Select();
+		$oInput = new Select($sId);
 		$oInput->SetName($sName);
 
+		if (is_null($sId)) {
+			$sId = $oInput->GetId();
+		}
 		$oInputWithLabel = new InputWithLabel($sLabel, $oInput, $sId);
-		
+
 		return $oInputWithLabel;
-	}	
+	}
+
+	public static function MakeForTextareaWithLabel(
+		string $sName, string $sLabel, ?string $sId = null, ?string $sValue = null,
+		?int $iCols = null, ?int $iRows = null
+	): InputWithLabel
+	{
+		$oTextArea = new TextArea($sValue, $sId, $iCols, $iRows);
+		$oTextArea->SetName($sName);
+
+		if (is_null($sId)) {
+			$sId = $oTextArea->GetId();
+		}
+		$oInputWithLabel = new InputWithLabel($sLabel, $oTextArea, $sId);
+
+		return $oInputWithLabel;
+	}
+
 	public static function MakeForSelect(string $sName, ?string $sId = null): Select
 	{
 		$oInput = new Select($sId);
 		$oInput->SetName($sName);
-		
+
 		return $oInput;
 	}
 

@@ -1,0 +1,8 @@
+{% block iboInputLabel %}
+{% endblock %}
+{% block iboInput %}
+	<textarea
+			id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}"
+			cols="{{ oUIBlock.GetCols() }}" rows="{{ oUIBlock.GetRows() }}"
+	>{{ oUIBlock.GetValue()|raw }}</textarea>
+{% endblock %}

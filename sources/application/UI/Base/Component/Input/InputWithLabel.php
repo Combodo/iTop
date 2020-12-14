@@ -16,38 +16,33 @@ class InputWithLabel extends UIBlock
 
 	/** @var string */
 	protected $sLabel;
-	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Input */
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput */
 	protected $oInput;
+	/** @var bool */
+	protected $bHasBr;
 
-	/**
-	 * InputWithLabel constructor.
-	 *
-	 * @param string $sLabel
-	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput
-	 */
-	public function __construct(string $sLabel, \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput, ?string $sId)
+	public function __construct(string $sLabel, AbstractInput $oInput, ?string $sId, ?bool $bHasBr = null)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
 		$this->oInput = $oInput;
+
+		if (is_null($bHasBr)) {
+			$this->bHasBr = ($oInput instanceof TextArea);
+		} else {
+			$this->bHasBr = $bHasBr;
+		}
 	}
 
-	/**
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Input
-	 */
-	public function GetInput(): \Combodo\iTop\Application\UI\Base\Component\Input\Input
+	public function GetInput(): AbstractInput
 	{
 		return $this->oInput;
 	}
 
-	/**
-	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput
-	 *
-	 * @return $this
-	 */
-	public function SetInput(\Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput): InputWithLabel
+	public function SetInput(AbstractInput $oInput): InputWithLabel
 	{
 		$this->oInput = $oInput;
+
 		return $this;
 	}
 
@@ -68,7 +63,12 @@ class InputWithLabel extends UIBlock
 	public function SetLabel(string $sLabel): InputWithLabel
 	{
 		$this->sLabel = $sLabel;
+
 		return $this;
 	}
 
+	public function HasBr(): bool
+	{
+		return $this->bHasBr;
+	}
 }

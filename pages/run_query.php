@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
@@ -138,12 +142,9 @@ try
 			foreach($oFilter->GetQueryParams() as $sParam => $foo)
 			{
 				$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
-				if (!is_null($value))
-				{
+				if (!is_null($value)) {
 					$aArgs[$sParam] = $value;
-				}
-				else
-				{
+				} else {
 					$aArgs[$sParam] = '';
 				}
 			}
@@ -152,9 +153,29 @@ try
 		}
 	}
 
-	$oP->add("<form method=\"post\">\n");
-	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
-	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".htmlentities($sExpression, ENT_QUOTES, 'UTF-8')."</textarea>\n");
+	$oQueryForm = new \Combodo\iTop\Application\UI\Base\Component\Form\Form();
+	$oP->AddUiBlock($oQueryForm);
+
+	$oHiddenParams = new Html($oAppContext->GetForForm());
+	$oQueryForm->AddSubBlock($oHiddenParams);
+
+	$oQueryTextarea = InputFactory::MakeForTextareaWithLabel(
+		'expression',
+		Dict::S('UI:RunQuery:ExpressionToEvaluate'),
+		'expression',
+		utils::HtmlEntities($sExpression),
+		120, 8
+	);
+	$oQueryForm->AddSubBlock($oQueryTextarea);
+
+	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
+		Dict::S('UI:Button:Evaluate'),
+		null,
+		null,
+		true
+	);
+	$oQueryForm->AddSubBlock($oQuerySubmit);
+
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
 	$oP->add_ready_script(<<<EOF
 $("#expression").select();
@@ -164,25 +185,18 @@ $("#expression").on("keydown", null, "ctrl+return", function() {
 EOF
 	);
 
-	if (count($aArgs) > 0)
-	{
+	if (count($aArgs) > 0) {
 		$oP->add("<div class=\"wizContainer\">\n");
 		$oP->add("<h3>Query arguments</h3>\n");
-		foreach($aArgs as $sParam => $sValue)
-		{
+		foreach ($aArgs as $sParam => $sValue) {
 			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
 		}
-		$oP->add("</div>\n"); 
+		$oP->add("</div>\n");
 	}
 
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\" title=\"".Dict::S('UI:Button:Evaluate:Title')."\">\n");
-	$oP->add($oAppContext->GetForForm());
-	$oP->add("</form>\n");
-
-	if ($oFilter)
-	{
+	if ($oFilter) {
 		$oP->add("<h3>Query results</h3>\n");
-		
+
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 'runquery');
 

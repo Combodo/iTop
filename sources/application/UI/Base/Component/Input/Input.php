@@ -7,14 +7,12 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 
-use Combodo\iTop\Application\UI\Base\UIBlock;
-
 /**
  * Class Input
  *
  * @package Combodo\iTop\Application\UI\Base\Component\Input
  */
-class Input extends UIBlock
+class Input extends AbstractInput
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-input';
@@ -24,67 +22,15 @@ class Input extends UIBlock
 
 	/** @var string */
 	protected $sType;
-	/** @var string */
-	protected $sName;
-	/** @var string */
-	protected $sValue;
 
-	/**
-	 * @return string
-	 */
 	public function GetType(): string
 	{
 		return $this->sType;
 	}
 
-	/**
-	 * @param string $sType
-	 *
-	 * @return Input
-	 */
 	public function SetType(string $sType): Input
 	{
 		$this->sType = $sType;
 		return $this;
 	}
-
-	/**
-	 * @return string
-	 */
-	public function GetName(): string
-	{
-		return $this->sName;
-	}
-
-	/**
-	 * @param string $sName
-	 *
-	 * @return Input
-	 */
-	public function SetName(string $sName): Input
-	{
-		$this->sName = $sName;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetValue(): string
-	{
-		return $this->sValue;
-	}
-
-	/**
-	 * @param string $sValue
-	 *
-	 * @return Input
-	 */
-	public function SetValue(string $sValue): Input
-	{
-		$this->sValue = $sValue;
-		return $this;
-	}
-
-
 }
