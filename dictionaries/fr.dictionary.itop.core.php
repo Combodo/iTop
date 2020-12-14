@@ -31,6 +31,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
+
 	'Core:AttributeDashboard' => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
@@ -503,10 +505,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'De',
-	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:reply_to' => 'Répondre à',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
+	'Class:ActionEmail/Attribute:from' => 'De (mél)',
+	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from_label' => 'De (libellé)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Le nom de l\'expéditeur sera inclus dans l\'entête du mél',
+	'Class:ActionEmail/Attribute:reply_to' => 'Répondre à (mél)',
+	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Répondre à (libellé)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Le nom du destinataire en cas de réponse sera inclus dans l\'entête du mél.',
 	'Class:ActionEmail/Attribute:to' => 'A',
 	'Class:ActionEmail/Attribute:to+' => '',
 	'Class:ActionEmail/Attribute:cc' => 'Copie',
@@ -1043,6 +1049,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Sous-classe de tâche asynchrone',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Statut',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Essais restants',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Code d\'erreur',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Error',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Dernier essai',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
 ));
 
 // Additional language entries not present in English dict
@@ -1054,3 +1070,41 @@ Dict::Add('FR FR', 'French', 'Français', array(
  'Core:Context=CRON+' => 'cron',
  'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:AbstractResource' => 'Ressource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceAdminMenu' => 'Menu Administration',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceRunQueriesMenu' => 'Menu Requête OQL',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceSystemMenu' => 'Menu System',
+	'Class:ResourceSystemMenu+' => '',
+));
+
+

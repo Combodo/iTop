@@ -65,6 +65,10 @@ class ExecAsyncTask implements iBackgroundProcess
  */
 abstract class AsyncTask extends DBObject
 {
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -77,7 +81,6 @@ abstract class AsyncTask extends DBObject
 			"db_table" => "priv_async_task",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 
@@ -285,11 +288,13 @@ abstract class AsyncTask extends DBObject
 
 	/**
 	 * Throws an exception (message and code)
+	 *
+	 * @return string
 	 */	 	
 	abstract public function DoProcess();
 
 	/**
-	 * Describes the error codes that DoProcess can return by the mean of exceptions	
+	 * Describes the error codes that DoProcess can return by the mean of exceptions
 	 */	
 	static public function EnumErrorCodes()
 	{
@@ -316,7 +321,6 @@ class AsyncSendEmail extends AsyncTask
 			"db_table" => "priv_async_send_email",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -352,6 +356,11 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->DBInsert();
 	}
 
+	/**
+	 * @inheritDoc
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function DoProcess()
 	{
 		$sMessage = $this->Get('message');

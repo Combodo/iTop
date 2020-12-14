@@ -1,4 +1,5 @@
 // jQuery UI style "widget" for selecting and sorting "fields"
+//@deprecated
 $(function()
 {
 	// the widget definition, where "itop" is the namespace,

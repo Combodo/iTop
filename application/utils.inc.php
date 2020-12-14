@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
 
@@ -45,6 +46,63 @@ class FileUploadException extends Exception
 class utils
 {
 	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
+	/**
+	 * @var string For XML / HTML node identifiers
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
+	/**
+	 * @var string For variables names
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const DEFAULT_SANITIZATION_FILTER = self::ENUM_SANITIZATION_FILTER_RAW_DATA;
+
+	/**
 	 * Cache when getting config from disk or set externally (using {@link SetConfig})
 	 * @internal
 	 * @var Config $oConfig
@@ -56,20 +114,19 @@ class utils
 	private static $m_aParamsFromFile = null;
 	private static $m_aParamSource = array();
 
+	private static $iNextId = 0;
+
 	protected static function LoadParamFile($sParamFile)
 	{
-		if (!file_exists($sParamFile))
-		{
+		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
-		if (!is_readable($sParamFile))
-		{
+		if (!is_readable($sParamFile)) {
 			throw new Exception("Could not load parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		$sParams = file_get_contents($sParamFile);
 
-		if (is_null(self::$m_aParamsFromFile))
-		{
+		if (is_null(self::$m_aParamsFromFile)) {
 			self::$m_aParamsFromFile = array();
 		}
 
@@ -274,40 +331,43 @@ class utils
 
 	/**
 	 * @param string|string[] $value
-	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
-	 *               element_identifier, transaction_id, parameter, raw_data
+	 * @param string $sSanitizationFilter one of utils::ENUM_SANITIZATION_* const
 	 *
 	 * @return string|string[]|bool boolean for :
 	 *   * the 'class' filter (true if valid, false otherwise)
-	 *   * if the filter fails (@see \filter_var())
+	 *   * if the filter fails ({@link \filter_var()} return value)
+	 *
+	 * @throws \CoreException
+	 *
+	 * @uses \filter_var()
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
+	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
 		switch ($sSanitizationFilter)
 		{
-			case 'integer':
+			case static::ENUM_SANITIZATION_FILTER_INTEGER:
 				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				break;
 
-			case 'class':
+			case static::ENUM_SANITIZATION_FILTER_CLASS:
 				$retValue = $value;
-				if (!MetaModel::IsValidClass($value))
-				{
-					$retValue = false;
+				if (($value != '') && !MetaModel::IsValidClass($value)) {
+					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
 
-			case 'string':
+			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
 				break;
 
-			case 'context_param':
-			case 'parameter':
-			case 'field_name':
-			case 'transaction_id':
+			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
+			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
+			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -325,7 +385,7 @@ class utils
 				{
 					switch ($sSanitizationFilter)
 					{
-						case 'transaction_id':
+						case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 							// same as parameter type but keep the dot character
 							// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
 							// it must be included at the regexp beginning otherwise you'll get an invalid character error
@@ -333,18 +393,18 @@ class utils
 								array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 							break;
 
-						case 'parameter':
+						case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
 							// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 							break;
 
-						case 'field_name':
+						case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 							break;
 
-						case 'context_param':
+						case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
 							break;
@@ -353,13 +413,16 @@ class utils
 				}
 				break;
 
-			// For XML / HTML node identifiers
-			case 'element_identifier':
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			default:
-			case 'raw_data':
+			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
 			// Do nothing
 		}
@@ -767,19 +830,22 @@ class utils
 		return new Config();
 	}
 
-	public static function InitTimeZone() {
-		$oConfig = self::GetConfig();
+	public static function InitTimeZone($oConfig = null)
+	{
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-
 		if (!empty($sItopTimeZone))
 		{
 			date_default_timezone_set($sItopTimeZone);
 		}
-		else
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
-		}
+		//		else
+		//		{
+		//			// Leave as is... up to the admin to set a value somewhere...
+		//			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		}
 	}
 
     /**
@@ -909,6 +975,28 @@ class utils
 	}
 
 	/**
+	 * Return the complete revision number of the application
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public static function GetAppRevisionNumber()
+	{
+		if (ITOP_REVISION == 'svn')
+		{
+			// This is NOT a version built using the build system, just display the main version
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		}
+
+		return $sRevisionNumber;
+	}
+
+	/**
 	 * Helper to handle the variety of HTTP servers
 	 * See N°286 (fixed in [896]), and N°634 (this fix)
 	 * 	 
@@ -941,16 +1029,11 @@ class utils
 
 	/**
 	 * Get the _SESSION variable for logging purpose
-	 * @return false|string
+	 * @return string
 	 */
 	public static function GetSessionLog()
 	{
-		ob_start();
-		print_r($_SESSION);
-		$sSessionLog = ob_get_contents();
-		ob_end_clean();
-
-		return $sSessionLog;
+		return print_r($_SESSION, true);
 	}
 
 	 static function DebugBacktrace($iLimit = 5)
@@ -994,19 +1077,19 @@ class utils
 			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
 		}
 
-		$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
-		$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
-		$sParamFile = self::GetParamSourceFile('auth_user');
-		if (is_null($sParamFile))
-		{
+		if (!isset($aArguments['auth_user'])) {
+			$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
 			$aArguments['auth_user'] = $sAuthUser;
+		}
+		if (!isset($aArguments['auth_pwd'])) {
+			$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
 			$aArguments['auth_pwd'] = $sAuthPwd;
 		}
-		else
-		{
+		if (!isset($aArguments['param_file'])) {
+			$sParamFile = self::ReadParam('param_file', '', 'raw_data');
 			$aArguments['param_file'] = $sParamFile;
 		}
-		
+
 		$aArgs = array();
 		foreach($aArguments as $sName => $value)
 		{
@@ -1088,13 +1171,32 @@ class utils
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
-	 * @param string $sTableId
-	 * @param string $sDataTableId
+	 * @param string|null $sTableId
+	 * @param string|null $sDataTableId
 	 *
-	 * @throws \Exception
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
+		$oPage->AddUiBlock(static::GetPopupMenuItemsBlock($iMenuId, $param, $aActions, $sDataTableId));
+	}
+
+	/**
+	 * Merge standard menu items with plugin provided menus items
+	 *
+	 * @param int $iMenuId
+	 * @param \DBObjectSet $param
+	 * @param array $aActions
+	 * @param string|null $sDataTableId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public static function GetPopupMenuItemsBlock($iMenuId, $param, &$aActions, $sDataTableId = null)
+	{
+		$oBlock = new UIContentBlock();
 		// 1st - add standard built-in menu items
 		// 
 		switch($iMenuId)
@@ -1108,9 +1210,9 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath('css/dragtable.css');
 
 			$aResult = array();
 			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
@@ -1143,12 +1245,12 @@ class utils
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath('css/dragtable.css');
+			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oBlock->AddCssFileRelPath('css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
@@ -1158,6 +1260,7 @@ class utils
 				new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")"),
 				new SeparatorPopupMenuItem(),
 				new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $sUrl.'&printable=1', '_blank'),
+				new JSPopupMenuItem('UI:Menu:SwitchTabMode', Dict::S('UI:Menu:SwitchTabMode'), "SwitchTabMode()"),
 			);
 			break;
 
@@ -1216,11 +1319,13 @@ class utils
 					
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
-						$oPage->add_linked_script($sLinkedScript);
+						$oBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
+
+		return $oBlock;
 	}
 
 	/**
@@ -1388,13 +1493,12 @@ class utils
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
 			$aHeaders = explode("\n", $sOptionnalHeaders);
+			// N°3267 - Webservices: Fix optional headers not being taken into account
+			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
 			foreach($aHeaders as $sHeaderString)
 			{
-				if(preg_match('/^([^:]): (.+)$/', $sHeaderString, $aMatches))
-				{
-					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
-				}
+				$aHTTPHeaders[] = trim($sHeaderString);
 			}
 			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 			$aOptions = array(
@@ -1626,7 +1730,7 @@ class utils
 		set_time_limit(0);
 		// Compiling SASS
 		$sCss = $oSass->compile($sSassContent);
-		set_time_limit($iCurrentMaxExecTime);
+		set_time_limit(intval($iCurrentMaxExecTime));
 
 		return $sCss;
 	}
@@ -2082,33 +2186,38 @@ class utils
 	 */
 	public static function GetCacheBusterTimestamp()
 	{
-		if(!defined('COMPILATION_TIMESTAMP'))
-		{
+		if (!defined('COMPILATION_TIMESTAMP')) {
 			return ITOP_VERSION;
 		}
+
 		return COMPILATION_TIMESTAMP;
 	}
 
 	/**
 	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
 	 */
-	public static function GetItopVersionWikiSyntax()
-	{
+	public static function GetItopVersionWikiSyntax() {
 		$sMinorVersion = self::GetItopMinorVersion();
+
 		return str_replace('.', '_', $sMinorVersion).'_0';
 	}
 
 	/**
+	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
+	 *
 	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
 	 * @throws \Exception
 	 */
-	public static function GetItopMinorVersion()
-	{
-		$sPatchVersion = self::GetItopPatchVersion();
+	public static function GetItopMinorVersion($sPatchVersion = null) {
+		if (is_null($sPatchVersion)) {
+			$sPatchVersion = self::GetItopPatchVersion();
+		}
 		$aExplodedVersion = explode('.', $sPatchVersion);
 
-		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
-		{
+		if (count($aExplodedVersion) < 2) {
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
 			throw new Exception('iTop version is wrongfully configured!');
 		}
 
@@ -2118,9 +2227,9 @@ class utils
 	/**
 	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
 	 */
-	public static function GetItopPatchVersion()
-	{
+	public static function GetItopPatchVersion() {
 		$aExplodedVersion = explode('-', ITOP_VERSION);
+
 		return $aExplodedVersion[0];
 	}
 
@@ -2151,6 +2260,18 @@ class utils
 	public static function IsDevelopmentEnvironment()
 	{
 		return ITOP_REVISION  === 'svn';
+	}
+
+	/**
+	 * Check if debug is enabled in the current environment.
+	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public static function IsDebugEnabled()
+	{
+		return utils::ReadParam('debug') === 'true';
 	}
 
 	/**
@@ -2316,12 +2437,17 @@ class utils
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
 
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace('<script', '&lt;script', $sHTML);
+	}
+
 	/**
 	 * @param \cmdbAbstractObject $oCmdbAbstract
 	 * @param \Exception $oException
 	 *
 	 * @throws \Exception
-	 * @since 2.7.2/ 2.8.0
+	 * @since 2.7.2/ 3.0.0
 	 */
 	public static function EnrichRaisedException($oCmdbAbstract, $oException)
 	{
@@ -2336,5 +2462,79 @@ class utils
 
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public static function IsEasterEggAllowed()
+	{
+		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
+
+	/**
+	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
+	 *
+	 * @return int The unique ID (in this page)
+	 */
+	public static function GetUniqueId()
+	{
+		return static::$iNextId++;
+	}
+
+	/**
+	 * Return the CKEditor config as an array
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetCkeditorPref()
+	{
+		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+		
+		$aDefaultConf = array(
+			'language'=> $sLanguage,
+			'contentsLanguage' => $sLanguage, 
+			'extraPlugins' => 'disabler,codesnippet,mentions',
+		);
+
+		// Mentions
+		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+		if(!empty($aMentionsAllowedClasses)) {
+			$aDefaultConf['mentions'] = [];
+
+			foreach($aMentionsAllowedClasses as $sMentionChar => $sMentionClass) {
+				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class='.$sMentionClass.'&needle={encodedQuery}';
+				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
+
+				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');"></span>
+HTML;
+				$sMentionItemTemplate = <<<HTML
+<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
+HTML;
+				$sMentionOutputTemplate = <<<HTML
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionChar}{friendlyname}</a>
+HTML;
+
+				$aDefaultConf['mentions'][] = [
+					'feed' => $sMentionEndpoint,
+					'marker' => $sMentionChar,
+					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+					'itemTemplate' => $sMentionItemTemplate,
+					'outputTemplate' => $sMentionOutputTemplate,
+					'throttle' => 500,
+				];
+			}
+		}
+		
+		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
+
+		
+		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
 }

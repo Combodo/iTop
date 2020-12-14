@@ -437,6 +437,13 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 					$sIcon = 'zip.png';
 					break;
 
+				case 'avi':
+				case 'mp4':
+				case 'mpeg':
+				case 'mpg':
+					$sIcon = 'movie.png';
+					break;
+
 				default:
 					$sIcon = 'document.png';
 					break;

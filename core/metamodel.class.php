@@ -127,6 +127,13 @@ abstract class MetaModel
 	protected static $m_sEnvironment = 'production';
 
 	/**
+	 * MetaModel constructor.
+	 */
+	public function __construct()
+	{
+	}
+
+	/**
 	 * @return array
 	 */
 	public static function GetClassFiles()
@@ -722,7 +729,51 @@ abstract class MetaModel
 			return array('%1$s', array($nameRawSpec));
 		}
 	}
-
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	final static public function GetComplementAttributeSpec($sClass)
+	{
+		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
+		{
+			return array($sClass, array());
+		}
+		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
+		if (is_array($nameRawSpec))
+		{
+			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
+			if (strlen($sFormat) == 0)
+			{
+				// Default to "%1$s %2$s..."
+				for($i = 1; $i <= count($nameRawSpec); $i++)
+				{
+					if (empty($sFormat))
+					{
+						$sFormat .= '%'.$i.'$s';
+					}
+					else
+					{
+						$sFormat .= ' %'.$i.'$s';
+					}
+				}
+			}
+			return array($sFormat, $nameRawSpec);
+		}
+		elseif (empty($nameRawSpec))
+		{
+			return array($sClass, array());
+		}
+		else
+		{
+			// string -> attcode
+			return array('%1$s', array($nameRawSpec));
+		}
+	}
 	/**
 	 * Get the friendly name expression for a given class
 	 *
@@ -802,12 +853,33 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return true if the $sClass has a state attribute defined.
+	 *
+	 * Note that having a state attribute does NOT mean having a lifecycle!
+	 * - A Person with active/inactive state won't have transitions and therefore no lifecycle
+	 * - A UserRequest will have transitions between its states and so a lifecycle
+	 *
+	 * @see self::HasLifecycle($sClass)
+	 * @param string $sClass Datamodel class to check
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function HasStateAttributeCode(string $sClass)
+	{
+		return !empty(self::GetStateAttributeCode($sClass));
+	}
+
+	/**
+	 * Return the code of the attribute carrying the state of the instance of the class
+	 *
 	 * @param string $sClass
 	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
-	final public static function GetStateAttributeCode($sClass)
+	final public static function GetStateAttributeCode(string $sClass)
 	{
 		self::_check_subclass($sClass);
 
@@ -821,7 +893,7 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	final public static function GetDefaultState($sClass)
+	final public static function GetDefaultState(string $sClass)
 	{
 		$sDefaultState = '';
 		$sStateAttrCode = self::GetStateAttributeCode($sClass);
@@ -831,6 +903,37 @@ abstract class MetaModel
 		}
 
 		return $sDefaultState;
+	}
+
+	/**
+	 * Return true if the $sClass has an image attribute defined
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function HasImageAttributeCode(string $sClass)
+	{
+		return !empty(self::GetImageAttributeCode($sClass));
+	}
+
+	/**
+	 * Return the code of the attribute carrying the image representing an instance of the class
+	 *
+	 * @param string $sClass Datamodel class to get the image attribute code for
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetImageAttributeCode(string $sClass)
+	{
+		self::_check_subclass($sClass);
+
+		// image_attcode isn't a mandatory class parameter, so it might not be in the $m_aClassParam array
+		return isset(self::$m_aClassParams[$sClass]["image_attcode"]) ? self::$m_aClassParams[$sClass]["image_attcode"] : '';
 	}
 
 	/**
@@ -844,20 +947,6 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		return self::$m_aClassParams[$sClass]["reconc_keys"];
-	}
-
-	/**
-	 * @param string $sClass
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 */
-	final public static function GetDisplayTemplate($sClass)
-	{
-		self::_check_subclass($sClass);
-
-		return array_key_exists("display_template",
-			self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["display_template"] : '';
 	}
 
 	/**
@@ -926,11 +1015,6 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
-		// Temporary implementation: later, we might be able to compute
-		// the dependencies, based on the attributes definition
-		// (allowed values and default values)
-
-		// Even non-writable attributes (like ExternalFields) can now have Prerequisites
 		return $oAtt->GetPrerequisiteAttributes();
 	}
 
@@ -1221,15 +1305,36 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Return an array of attributes codes for the $sClass. The list can be limited to some attribute types only.
+	 *
 	 * @param string $sClass
+	 * @param string[] $aDesiredAttTypes Array of AttributeDefinition classes to filter the list on
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 */
-	final public static function GetAttributesList($sClass)
+	final public static function GetAttributesList($sClass, $aDesiredAttTypes = [])
 	{
 		self::_check_subclass($sClass);
-		return array_keys(self::$m_aAttribDefs[$sClass]);
+
+		if(empty($aDesiredAttTypes))
+		{
+			return array_keys(self::$m_aAttribDefs[$sClass]);
+		}
+
+		$aMatchingAttCodes = [];
+		foreach(self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
+		{
+			foreach($aDesiredAttTypes as $sDesiredAttType)
+			{
+				if(is_a($oAttDef, $sDesiredAttType))
+				{
+					$aMatchingAttCodes[] = $sAttCode;
+				}
+			}
+		}
+
+		return $aMatchingAttCodes;
 	}
 
 	/**
@@ -1448,6 +1553,7 @@ abstract class MetaModel
 	{
 		$aLinkedSets = array();
 		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
+			// Note: Careful, this will only return SUB-classes, which does NOT include AttributeLinkedset itself! We might want to use "is_a()" instead.
 			if (is_subclass_of($oAtt, 'AttributeLinkedSet')) {
 				$aLinkedSets[$sAttCode] = $oAtt;
 			}
@@ -1493,6 +1599,27 @@ abstract class MetaModel
 		} else {
 			return null;
 		}
+	}
+
+	/** @var array Cache for caselog attributes of the classes */
+	protected static $m_aCaseLogsAttributesCache = [];
+
+	/**
+	 * Return an array of attribute codes for the caselogs attributes of $sClass
+	 *
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetCaseLogs(string $sClass)
+	{
+		if (!isset(static::$m_aCaseLogsAttributesCache[$sClass])) {
+			static::$m_aCaseLogsAttributesCache[$sClass] = self::GetAttributesList($sClass, ['AttributeCaseLog']);
+		}
+
+		return static::$m_aCaseLogsAttributesCache[$sClass];
 	}
 
 	/** @var array */
@@ -1800,7 +1927,7 @@ abstract class MetaModel
 	 * @param string $sClass
 	 * @param string $sListCode
 	 *
-	 * @return array
+	 * @return array list of attribute codes
 	 */
 	public static function GetZListItems($sClass, $sListCode)
 	{
@@ -1818,6 +1945,82 @@ abstract class MetaModel
 		} // nothing for the mother of all classes
 		// Dig recursively
 		return self::GetZListItems($sParentClass, $sListCode);
+	}
+
+	/**
+	 * @param string $sRemoteClass
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
+	 *
+	 * @since 3.0.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
+	{
+		$aAttCodesToPrint = [];
+
+		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode)
+		{
+			//TODO: check the state of the attribute: hidden or visible ?
+			if ($sFieldCode == 'finalclass')
+			{
+				continue;
+			}
+
+			$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sFieldCode);
+			$aAttCodesToPrint[] = $oRemoteAttDef;
+		}
+
+		return $aAttCodesToPrint;
+	}
+
+	/**
+	 * @param string $sClass left class
+	 * @param string $sAttCode AttributeLinkedSetIndirect attcode
+	 *
+	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
+	 *
+	 * @throws \CoreException
+	 * @since 3.0.0 N°2334
+	 */
+	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
+	{
+		$aAttCodesToPrint = [];
+
+		$oLinkedSetAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sLinkedClass = $oLinkedSetAttDef->GetLinkedClass();
+		$sExtKeyToRemote = $oLinkedSetAttDef->GetExtKeyToRemote();
+		$sExtKeyToMe = $oLinkedSetAttDef->GetExtKeyToMe();
+
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$sDefaultState = MetaModel::GetDefaultState($sClass);
+
+		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode)
+		{
+			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
+			if ($sStateAttCode == $sLnkAttCode)
+			{
+				// State attribute is always hidden from the UI
+				continue;
+			}
+			if (($sLnkAttCode == $sExtKeyToMe)
+				|| ($sLnkAttCode == $sExtKeyToRemote)
+				|| ($sLnkAttCode == 'finalclass'))
+			{
+				continue;
+			}
+			if (!($oLnkAttDef->IsWritable()))
+			{
+				continue;
+			}
+
+			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY))
+			{
+				$aAttCodesToPrint[] = $oLnkAttDef;
+			}
+		}
+
+		return $aAttCodesToPrint;
 	}
 
 	/**
@@ -1992,7 +2195,6 @@ abstract class MetaModel
 	 */
 	protected static function ComputeRelationQueries($sRelCode)
 	{
-		$bHasLegacy = false;
 		$aQueries = array();
 		foreach(self::GetClasses() as $sClass)
 		{
@@ -2078,157 +2280,7 @@ abstract class MetaModel
 					}
 				}
 			}
-
-			// Read legacy definitions
-			// The up/down queries have to be reconcilied, which can only be done later when all the classes have been browsed
-			//
-			// The keys used to store a query (up or down) into the array are built differently between the modern and legacy made data:
-			// Modern way: aQueries[sClass]['up'|'down'][sArrowId], where sArrowId is made of the source class + neighbour id (XML def)
-			// Legacy way: aQueries[sClass]['up'|'down'][sRemoteClass]
-			// The modern way does allow for several arrows between two classes
-			// The legacy way aims at simplifying the transformation (reconciliation between up and down)
-			if ($sRelCode == 'impacts')
-			{
-				$sRevertCode = 'depends on';
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRelCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['down'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['down'][$sRemoteClass]['sQueryDown'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['down'][$sRemoteClass] = $aQueries[$sParent]['down'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['down'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sClass,
-							'sFromClass' => $sClass,
-							'sToClass' => $sRemoteClass,
-							'sDirection' => 'down',
-							'sQueryDown' => $aLegacyEntry['sQuery'],
-							'sQueryUp' => null,
-							'sNeighbour' => $sRemoteClass // Normalize the neighbour id
-						);
-					}
-				}
-
-				$aLegacy = call_user_func_array(array($sClass, 'GetRelationQueries'), array($sRevertCode));
-				foreach($aLegacy as $sId => $aLegacyEntry)
-				{
-					$bHasLegacy = true;
-
-					$oFilter = DBObjectSearch::FromOQL($aLegacyEntry['sQuery']);
-					$sRemoteClass = $oFilter->GetClass();
-
-					// Determine wether the query is inherited from a parent or not
-					$bInherited = false;
-					foreach(self::EnumParentClasses($sClass) as $sParent)
-					{
-						if (!isset($aQueries[$sParent]['up'][$sRemoteClass]))
-						{
-							continue;
-						}
-						if ($aLegacyEntry['sQuery'] == $aQueries[$sParent]['up'][$sRemoteClass]['sQueryUp'])
-						{
-							$bInherited = true;
-							$aQueries[$sClass]['up'][$sRemoteClass] = $aQueries[$sParent]['up'][$sRemoteClass];
-							break;
-						}
-					}
-
-					if (!$bInherited)
-					{
-						$aQueries[$sClass]['up'][$sRemoteClass] = array(
-							'_legacy_' => true,
-							'sDefinedInClass' => $sRemoteClass,
-							'sFromClass' => $sRemoteClass,
-							'sToClass' => $sClass,
-							'sDirection' => 'both',
-							'sQueryDown' => null,
-							'sQueryUp' => $aLegacyEntry['sQuery'],
-							'sNeighbour' => $sClass// Normalize the neighbour id
-						);
-					}
-				}
-			}
-			//else
-			//{
-				// Cannot take the legacy system into account... simply ignore it
-			//}
 		} // foreach class
-
-		// Perform the up/down reconciliation for the legacy definitions
-		if ($bHasLegacy)
-		{
-			foreach(self::GetClasses() as $sClass)
-			{
-				// Foreach "up" legacy query, update its "down" counterpart
-				if (isset($aQueries[$sClass]['up']))
-				{
-					foreach($aQueries[$sClass]['up'] as $sNeighbourId => $aNeighbourData)
-					{
-						if (!array_key_exists('_legacy_', $aNeighbourData))
-						{
-							continue;
-						}
-						if (!$aNeighbourData['_legacy_'])
-						{
-							continue;
-						} // Skip modern definitions
-
-						$sLocalClass = $aNeighbourData['sToClass'];
-						foreach(self::EnumChildClasses($aNeighbourData['sFromClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-						{
-							if (isset($aQueries[$sRemoteClass]['down'][$sLocalClass]))
-							{
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sQueryUp'] = $aNeighbourData['sQueryUp'];
-								$aQueries[$sRemoteClass]['down'][$sLocalClass]['sDirection'] = 'both';
-							}
-							// Be silent in order to transparently support legacy data models where the counterpart query does not always exist
-							//else
-							//{
-							//	throw new Exception("Legacy definition of the relation '$sRelCode/$sRevertCode', defined on $sLocalClass (relation: $sRevertCode, inherited to $sClass), missing the counterpart query on class $sRemoteClass ($sRelCode)");
-							//}
-						}
-					}
-				}
-				// Foreach "down" legacy query, update its "up" counterpart (if any)
-				foreach($aQueries[$sClass]['down'] as $sNeighbourId => $aNeighbourData)
-				{
-					if (!$aNeighbourData['_legacy_'])
-					{
-						continue;
-					} // Skip modern definitions
-
-					$sLocalClass = $aNeighbourData['sFromClass'];
-					foreach(self::EnumChildClasses($aNeighbourData['sToClass'], ENUM_CHILD_CLASSES_ALL) as $sRemoteClass)
-					{
-						if (isset($aQueries[$sRemoteClass]['up'][$sLocalClass]))
-						{
-							$aQueries[$sRemoteClass]['up'][$sLocalClass]['sQueryDown'] = $aNeighbourData['sQueryDown'];
-						}
-					}
-				}
-			}
-		}
 
 		return $aQueries;
 	}
@@ -2347,6 +2399,22 @@ abstract class MetaModel
 		{
 			return self::$m_aStates[$sClass];
 		}
+		elseif (self::HasStateAttributeCode($sClass))
+		{
+			$sStateAttCode = self::GetStateAttributeCode($sClass);
+			$oAttDef = self::GetAttributeDef($sClass, $sStateAttCode);
+
+			$aStates = [];
+			foreach($oAttDef->GetAllowedValues() as $sStateCode => $sStateLabel)
+			{
+				$aStates[$sStateCode] = [
+					'attribute_inherit' => '',
+					'attribute_list' => [],
+				];
+			}
+
+			return $aStates;
+		}
 		else
 		{
 			return array();
@@ -2402,6 +2470,21 @@ abstract class MetaModel
 		{
 			return array();
 		}
+	}
+
+	/**
+	 * Return true if $sClass has a lifecycle, which means that it has a state attribute AND stimuli
+	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 * @see   self::HasStateAttributeCode($sClass)
+	 */
+	public static function HasLifecycle(string $sClass)
+	{
+		return self::HasStateAttributeCode($sClass) && !empty(self::EnumStimuli($sClass));
 	}
 
 	/**
@@ -2492,17 +2575,13 @@ abstract class MetaModel
 	public static function GetAttributeFlags($sClass, $sState, $sAttCode)
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aStates = MetaModel::EnumStates($sClass);
-			if (!array_key_exists($sState, $aStates))
-			{
+			if (!array_key_exists($sState, $aStates)) {
 				throw new CoreException("Invalid state '$sState' for class '$sClass', expecting a value in {".implode(', ', array_keys($aStates))."}");
 			}
 			$aCurrentState = $aStates[$sState];
-			if ((array_key_exists('attribute_list', $aCurrentState)) && (array_key_exists($sAttCode, $aCurrentState['attribute_list'])))
-			{
+			if ((array_key_exists('attribute_list', $aCurrentState)) && (array_key_exists($sAttCode, $aCurrentState['attribute_list']))) {
 				$iFlags = $aCurrentState['attribute_list'][$sAttCode];
 			}
 		}
@@ -2522,18 +2601,14 @@ abstract class MetaModel
 	public static function GetTransitionFlags($sClass, $sState, $sStimulus, $sAttCode)
 	{
 		$iFlags = 0; // By default (if no lifecycle) no flag at all
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aTransitions = MetaModel::EnumTransitions($sClass, $sState);
-			if (!array_key_exists($sStimulus, $aTransitions))
-			{
+			if (!array_key_exists($sStimulus, $aTransitions)) {
 				throw new CoreException("Invalid transition '$sStimulus' for class '$sClass', expecting a value in {".implode(', ', array_keys($aTransitions))."}");
 			}
 
 			$aCurrentTransition = $aTransitions[$sStimulus];
-			if ((array_key_exists('attribute_list', $aCurrentTransition)) && (array_key_exists($sAttCode, $aCurrentTransition['attribute_list'])))
-			{
+			if ((array_key_exists('attribute_list', $aCurrentTransition)) && (array_key_exists($sAttCode, $aCurrentTransition['attribute_list']))) {
 				$iFlags = $aCurrentTransition['attribute_list'][$sAttCode];
 			}
 		}
@@ -2612,37 +2687,30 @@ abstract class MetaModel
 	public static function GetInitialStateAttributeFlags($sClass, $sState, $sAttCode)
 	{
 		$iFlags = self::GetAttributeFlags($sClass, $sState, $sAttCode); // Be default set the same flags as the 'target' state
-		$sStateAttCode = self::GetStateAttributeCode($sClass);
-		if (!empty($sStateAttCode))
-		{
+		if (self::HasLifecycle($sClass)) {
 			$aStates = MetaModel::EnumInitialStates($sClass);
-			if (array_key_exists($sState, $aStates))
-			{
+			if (array_key_exists($sState, $aStates)) {
 				$bReadOnly = (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY);
 				$bHidden = (($iFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN);
-				foreach($aStates[$sState] as $sPrevState)
-				{
+				foreach($aStates[$sState] as $sPrevState) {
 					$iPrevFlags = self::GetAttributeFlags($sClass, $sPrevState, $sAttCode);
-					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN)
-					{
+					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN) {
 						$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
 					}
 					$bHidden = $bHidden && (($iPrevFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN); // if it is/was not hidden => then it's not
 				}
-				if ($bReadOnly)
-				{
+
+				if ($bReadOnly) {
 					$iFlags = $iFlags | OPT_ATT_READONLY;
 				}
-				else
-				{
+				else {
 					$iFlags = $iFlags & ~OPT_ATT_READONLY;
 				}
-				if ($bHidden)
-				{
+
+				if ($bHidden) {
 					$iFlags = $iFlags | OPT_ATT_HIDDEN;
 				}
-				else
-				{
+				else {
 					$iFlags = $iFlags & ~OPT_ATT_HIDDEN;
 				}
 			}
@@ -2778,10 +2846,10 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
+		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPageUIBlockExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
 		foreach($aInterfaces as $sInterface)
 		{
-			self::$m_aExtensionClasses[$sInterface] = array();
+			self::$m_aExtensionClassNames[$sInterface] = array();
 		}
 
 		foreach(get_declared_classes() as $sPHPClass)
@@ -2792,11 +2860,7 @@ abstract class MetaModel
 			{
 				if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable())
 				{
-					if (is_null($oExtensionInstance))
-					{
-						$oExtensionInstance = new $sPHPClass;
-					}
-					self::$m_aExtensionClasses[$sInterface][$sPHPClass] = $oExtensionInstance;
+					self::$m_aExtensionClassNames[$sInterface][$sPHPClass] = $sPHPClass;
 				}
 			}
 		}
@@ -2855,6 +2919,25 @@ abstract class MetaModel
 							$sObsolescence = self::$m_aClassParams[$sParent]['obsolescence_expression'];
 						}
 						self::$m_aClassParams[$sPHPClass]['obsolescence_expression'] = $sObsolescence;
+
+						// Inherit fields semantic
+						// - State attribute
+						$bParentHasStateAttribute = (isset(self::$m_aClassParams[$sParent]['state_attcode']) && !empty(self::$m_aClassParams[$sParent]['state_attcode']));
+						$bHasStateAttribute = (isset(self::$m_aClassParams[$sPHPClass]['state_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['state_attcode']));
+						if($bParentHasStateAttribute && !$bHasStateAttribute) {
+							// Set attribute code
+							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
+
+							// Set states
+							self::$m_aStates[$sPHPClass] = self::$m_aStates[$sParent];
+						}
+						// - Image attribute
+						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
+						$bHasImageAttribute = (isset(self::$m_aClassParams[$sPHPClass]['image_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['image_attcode']));
+						if($bParentHasImageAttribute && !$bHasImageAttribute) {
+							// Set attribute code
+							self::$m_aClassParams[$sPHPClass]['image_attcode'] = self::$m_aClassParams[$sParent]['image_attcode'];
+						}
 
 						foreach(MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
 						{
@@ -3262,18 +3345,6 @@ abstract class MetaModel
 		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
 	}
 
-	/**
-	 * To be overloaded by biz model declarations
-	 *
-	 * @param string $sRelCode
-	 *
-	 * @return array
-	 */
-	public static function GetRelationQueries($sRelCode)
-	{
-		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
-		return array();
-	}
 
 	/**
 	 * @param array $aParams
@@ -3283,11 +3354,12 @@ abstract class MetaModel
 	public static function Init_Params($aParams)
 	{
 		// Check mandatory params
+		// Warning: Do not put image_attcode as a mandatory attribute or it will break all PHP datamodel classes
 		$aMandatParams = array(
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
-			"name_attcode" => "define wich attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
-			"state_attcode" => "define wich attribute is representing the state (object lifecycle)",
+			"name_attcode" => "define which attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
+			"state_attcode" => "define which attribute is representing the state (object lifecycle)",
 			"reconc_keys" => "define the attributes that will 'almost uniquely' identify an object in batch processes",
 			"db_table" => "database table",
 			"db_key_field" => "database field which is the key",
@@ -4166,11 +4238,7 @@ abstract class MetaModel
 			}
 			if (count($aCurrentUser) > 0)
 			{
-				$oSearch = DBObjectSearch::FromOQL("SELECT User WHERE id = :id");
-				$oSearch->AllowAllData();
-				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetUserId()));
-				$oSet->OptimizeColumnLoad($aCurrentUser);
-				$oUser = $oSet->fetch();
+				$oUser = MetaModel::GetObject("User", UserRights::GetUserId(),true,true);
 				$aPlaceholders['current_user->object()'] = $oUser;
 				foreach ($aCurrentUser as $sField)
 				{
@@ -4179,10 +4247,7 @@ abstract class MetaModel
 			}
 			if (count($aCurrentContact) > 0)
 			{
-				$oSearch = DBObjectSearch::FromOQL("SELECT Contact WHERE id = :id");
-				$oSet = new DBObjectSet($oSearch, array(), array('id' => UserRights::GetContactId()));
-				$oSet->OptimizeColumnLoad(['Contact' => $aCurrentContact]);
-				$oUser = $oSet->fetch();
+				$oUser = MetaModel::GetObject("Person", UserRights::GetContactId(),true,true);
 				foreach ($aCurrentContact as $sField)
 				{
 					$aPlaceholders['current_contact->'.$sField] = $oUser->Get($sField);
@@ -5754,32 +5819,9 @@ abstract class MetaModel
 			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
 			{
-				// Check that the view is complete
-				//
-				// Note: checking the list of attributes is not enough because the columns can be stable while the SELECT is not stable
-				//       Example: new way to compute the friendly name
-				//       The correct comparison algorithm is to compare the queries,
-				//       by using "SHOW CREATE VIEW" (MySQL 5.0.1 required) or to look into INFORMATION_SCHEMA/views
-				//       both requiring some privileges
-				// Decision: to simplify, let's consider the views as being wrong anytime
-				// Rework the view
-				//
-				$oFilter = new DBObjectSearch($sClass, '');
-				$oFilter->AllowAllData();
-				$sSQL = $oFilter->MakeSelectQuery();
-				$aErrors[$sClass]['*'][] = "Redeclare view '$sView' (systematic - to support an eventual change in the friendly name computation)";
-				$aSugFix[$sClass]['*'][] = "ALTER VIEW `$sView` AS $sSQL";
-			}
-			else
-			{
-				// Create the view
-				//
-				$oFilter = new DBObjectSearch($sClass, '');
-				$oFilter->AllowAllData();
-				$sSQL = $oFilter->MakeSelectQuery();
-				$aErrors[$sClass]['*'][] = "Missing view for class: $sClass";
-				$aSugFix[$sClass]['*'][] = "DROP VIEW IF EXISTS `$sView`";
-				$aSugFix[$sClass]['*'][] = "CREATE VIEW `$sView` AS $sSQL";
+				// Remove deprecated views
+				$aErrors[$sClass]['*'][] = "Remove view '$sView' (deprecated, consider installing combodo-views if needed)";
+				$aSugFix[$sClass]['*'][] = "DROP VIEW `$sView`";
 			}
 		}
 		return array($aErrors, $aSugFix);
@@ -6321,6 +6363,7 @@ abstract class MetaModel
 
 		// N°2478 utils has his own private attribute
 		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
+		utils::InitTimeZone($oConfiguration);
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
@@ -6360,19 +6403,6 @@ abstract class MetaModel
 		DBSearch::EnableQueryTrace(self::$m_oConfig->GetLogQueries() || self::$m_oConfig->Get('log_kpi_record_oql'));
 		DBSearch::EnableQueryIndentation(self::$m_oConfig->Get('query_indentation_enabled'));
 		DBSearch::EnableOptimizeQuery(self::$m_oConfig->Get('query_optimization_enabled'));
-
-		// PHP timezone first...
-		//
-		$sPHPTimezone = self::$m_oConfig->Get('timezone');
-		if ($sPHPTimezone == '')
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			//$sPHPTimezone = date_default_timezone_get();
-		}
-		else
-		{
-			date_default_timezone_set($sPHPTimezone);
-		}
 
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
@@ -6417,7 +6447,7 @@ abstract class MetaModel
 			if (is_array($result))
 			{
 				// todo - verifier que toutes les classes mentionnees ici sont chargees dans InitClasses()
-				self::$m_aExtensionClasses = $result['m_aExtensionClasses'];
+				self::$m_aExtensionClassNames = $result['m_aExtensionClassNames'];
 				self::$m_Category2Class = $result['m_Category2Class'];
 				self::$m_aRootClasses = $result['m_aRootClasses'];
 				self::$m_aParentClasses = $result['m_aParentClasses'];
@@ -6454,7 +6484,7 @@ abstract class MetaModel
 				$oKPI = new ExecutionKPI();
 
 				$aCache = array();
-				$aCache['m_aExtensionClasses'] = self::$m_aExtensionClasses;
+				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
 				$aCache['m_aParentClasses'] = self::$m_aParentClasses; // array of ("classname" => array of "parentclass") 
@@ -6538,8 +6568,8 @@ abstract class MetaModel
 		return md5(APPROOT).'-'.self::$m_sEnvironment;
 	}
 
-	/** @var array */
-	protected static $m_aExtensionClasses = array();
+    /** @var array */
+    protected static $m_aExtensionClassNames = [];
 
 	/**
 	 * @param string $sToInclude
@@ -7186,97 +7216,9 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinkingClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 *
-	 */
-	public static function EnumLinksClasses()
-	{
-		// Returns a flat array of classes having at least two external keys
-		$aResult = array();
-		foreach(self::$m_aAttribDefs as $sSomeClass => $aClassAttributes)
-		{
-			$iExtKeyCount = 0;
-			foreach($aClassAttributes as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$iExtKeyCount++;
-				}
-			}
-			if ($iExtKeyCount >= 2)
-			{
-				$aResult[] = $sSomeClass;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
-	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
-	 * The only difference with EnumLinksClasses is the output format
-	 *
-	 * @see MetaModel::GetLinkClasses
-	 *
-	 *@param string $sClass
-	 *
-	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
-	 * @throws \CoreException
-	 *
-	 */
-	public static function EnumLinkingClasses($sClass = "")
-	{
-		// N-N links, array of sLinkClass => (array of sAttCode=>sClass)
-		$aResult = array();
-		foreach(self::EnumLinksClasses() as $sSomeClass)
-		{
-			$aTargets = array();
-			$bFoundClass = false;
-			foreach(self::ListAttributeDefs($sSomeClass) as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
-					continue;
-				}
-				if ($oAttDef->IsExternalKey())
-				{
-					$sRemoteClass = $oAttDef->GetTargetClass();
-					if (empty($sClass))
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-					elseif ($sClass == $sRemoteClass)
-					{
-						$bFoundClass = true;
-					}
-					else
-					{
-						$aTargets[$sAttCode] = $sRemoteClass;
-					}
-				}
-			}
-			if (empty($sClass) || $bFoundClass)
-			{
-				$aResult[$sSomeClass] = $aTargets;
-			}
-		}
-		return $aResult;
-	}
-
-	/**
 	 * Using GetLinkClasses is the recommended way to determine if a class is
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
-	 *
-	 * This function has two siblings that will be soon deprecated:
-	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
 	 *
 	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
@@ -7423,25 +7365,9 @@ abstract class MetaModel
 	 */
 	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{
-		if (!array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			return array();
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames);
 
-		if (is_null($sFilterInstanceOf))
-		{
-			return self::$m_aExtensionClasses[$sInterface];
-		}
-
-		$fFilterCallback = function ($instance) use ($sFilterInstanceOf)
-		{
-			return $instance instanceof $sFilterInstanceOf;
-		};
-
-		return array_filter(
-			self::$m_aExtensionClasses[$sInterface],
-			$fFilterCallback
-		);
+		return $pluginManager->EnumPlugins($sInterface, $sFilterInstanceOf);
 	}
 
 	/**
@@ -7452,16 +7378,9 @@ abstract class MetaModel
 	 */
 	public static function GetPlugins($sInterface, $sClassName)
 	{
-		$oInstance = null;
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface]))
-			{
-				return self::$m_aExtensionClasses[$sInterface][$sClassName];
-			}
-		}
+		$pluginManager = new PluginManager(self::$m_aExtensionClassNames);
 
-		return $oInstance;
+		return $pluginManager->GetPlugins($sInterface, $sClassName);
 	}
 
 	/**

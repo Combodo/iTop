@@ -212,9 +212,9 @@ function DisplayInconsistenciesReport($aResults)
 	header('Content-Description: File Transfer');
 	header('Content-Type: multipart/x-zip');
 	header('Content-Disposition: inline; filename="'.basename($sZipReport).'"');
-	header('Expires: 0');
 	header('Cache-Control: must-revalidate');
 	header('Pragma: public');
+	header('Expires: 0');
 	header('Content-Length: '.filesize($sZipReport));
 	readfile($sZipReport);
 	unlink($sZipReport);
@@ -461,7 +461,7 @@ try
 	$oP->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-db-tools/default.scss');
 
 	$oP->add(
-<<<EOF
+		<<<EOF
 <div class="page_header">
   	<h1>$sPageTitle</h1>
 </div>

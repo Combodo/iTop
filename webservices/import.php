@@ -30,9 +30,7 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/csvpage.class.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
+
 
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -212,6 +210,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {

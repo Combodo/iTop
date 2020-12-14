@@ -411,7 +411,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				// Use the 'below' operator by default
 				$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 				$oCriteria = $oSearch->GetCriteria();
-				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams());
+				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments() );
 				$oSearch->ResetCondition();
 				$sCondition = $oCriteria->Render($aArgs);
 			}

@@ -19,10 +19,8 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
@@ -86,8 +84,7 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
  */
 function DisplayLifecycle($oPage, $sClass)
 {
-	$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-	if (empty($sStateAttCode))
+	if (!MetaModel::HasLifecycle($sClass))
 	{
 		$oPage->p(Dict::S('UI:Schema:NoLifeCyle'));
 	}
@@ -247,32 +244,31 @@ function DisplayClassesList($oPage, $sContext)
 	$oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fas fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
-		<<<EOF
-        $("#search-model").result(function(e,f,g,h){
-		   	//$(this).trigger(jQuery.Event('input'));
+		<<<JS
+	function getListClass (request, response,aListe) {
+        var results = $.ui.autocomplete.filter(aListe, request.term);               
+        var top_suggestions = $.grep(results, function (n,i) {
+                                 return (n.label.substr(0, request.term.length).toLowerCase() == request.term.toLowerCase());
+                              });
+        response($.merge(top_suggestions,results));
+    }
+	 $("#search-model").autocomplete({
+	    source: function (request, response) {
+			getListClass (request, response,autocompleteClassLabelAndCode);  
+        },
+		select: function( event, ui ) {
 		   	var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
-			var code = '';
-		   	switch($("#displaySelector").val()){
-				case 'labelandcode':
-					var id = autocompleteClassLabelAndCode.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-				case 'label':
-					var id = autocompleteClassLabel.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-				case 'code':
-					var id = autocompleteClassCode.indexOf(g);
-					if(id != undefined)
-						code = autocompleteClassCode[id];
-				break;
-			}
-			if(code != '')
-				window.location = preUrl + code + sufUrl;
-		});
+			window.location = preUrl + ui.item.value + sufUrl;
+		},
+		focus: true
+	 })
+	.autocomplete( "instance" )._renderItem = function( ul, item ) {
+		  var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+		  var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+		  return $( "<li>" ).append( val ).appendTo( ul );
+	 };
+
 		$("#search-model").on('input', function() {
 			var search_result = [];
 			$("#ClassesList").find("li").each(function(){
@@ -293,11 +289,14 @@ function DisplayClassesList($oPage, $sContext)
 			$("#search-model").val("");
 			$("#search-model").trigger('input');
 		});
-EOF
+JS
 
 	);
 	// Get all the "root" classes for display
 	$aRootClasses = array();
+	$aClassLabelAndCodeAsJSON = [];
+	$aClassLabelAsJSON = array();
+	$aClassCodeAsJSON = array();
 	foreach (MetaModel::GetClasses() as $sClassName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
@@ -312,20 +311,19 @@ EOF
 
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
-		$sClassLabelAndCodeAsJSON = json_encode("$sLabelClassName ($sClassName)");
-		$sClassLabelAsJSON = json_encode($sLabelClassName);
-		$sClassCodeAsJSON = json_encode($sClassName);
-		// - Push to autocomplete
-		$oPage->add_script(
-			<<<EOF
-	autocompleteClassLabelAndCode.push($sClassLabelAndCodeAsJSON);
-	autocompleteClassLabel.push($sClassLabelAsJSON);
-	autocompleteClassCode.push($sClassCodeAsJSON);
-EOF
-		);
+		array_push ($aClassLabelAndCodeAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName ($sClassName)"]);
+		array_push ($aClassLabelAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName"]);
+		array_push ($aClassCodeAsJSON, ["value"=>$sClassName,"label"=>"$sClassName"]);
 	}
+	usort($aClassLabelAndCodeAsJSON, "Label_sort");
+	// - Push to autocomplete
+	$oPage->add_script("autocompleteClassLabelAndCode=".json_encode($aClassLabelAndCodeAsJSON)."; console.warn(autocompleteClassLabelAndCode);");
+	$oPage->add_script("autocompleteClassLabel=".json_encode($aClassLabelAsJSON).";");
+	$oPage->add_script("autocompleteClassCode=".json_encode($aClassCodeAsJSON).";");
+
 	// Sort them alphabetically on their display name
-	asort($aRootClasses);
+	asort($aClassLabelAndCodeAsJSON);
+	//usort($aRootClasses,"Label_sort");
 	foreach ($aRootClasses as $sClassName => $sDisplayName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
@@ -343,6 +341,9 @@ EOF
 	$oPage->add_ready_script('$("#ClassesList").treeview();');
 }
 
+function Label_sort($building_a, $building_b) {
+	return strnatcmp ($building_a["label"], $building_b["label"]);
+}
 
 /**
  * Helper for the list of classes related to the given class in a graphical way
@@ -849,20 +850,15 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	$aDetails = array();
 
 	$aOrigins = array();
-	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-	{
-		if ($oAttDef->IsExternalKey())
-		{
+	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+		if ($oAttDef->IsExternalKey()) {
 			$sValue = Dict::Format('UI:Schema:ExternalKey_To', MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
-			if (array_key_exists($sAttCode, $aForwardChangeTracking))
-			{
+			if (array_key_exists($sAttCode, $aForwardChangeTracking)) {
 				$oLinkSet = $aForwardChangeTracking[$sAttCode];
 				$sRemoteClass = $oLinkSet->GetHostClass();
 				$sValue = $sValue."<span title=\"Forward changes to $sRemoteClass\">*</span>";
 			}
-		}
-		elseif ($oAttDef->IsLinkSet())
-		{
+		} elseif ($oAttDef->IsLinkSet()) {
 			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
 		}
 		else
@@ -877,7 +873,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$aOrigins[$sOrigin] = true;
 		$sAllowedValues = "";
 		$sMoreInfo = "";
-		$sDefaultNullValue = '""';
+		$sDefaultNullValue = '';
 		$aCols = array();
 		foreach ($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
 		{
@@ -895,8 +891,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 				{
 					$sDefaultNullValue = json_encode($sDefaultNullValue);
 				}
-				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? json_encode(Dict::Format('UI:Schema:DefaultNullValue',
-					$sDefaultNullValue)) : '""');
+				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format('UI:Schema:DefaultNullValue',
+					$sDefaultNullValue) : '');
 			}
 			else
 			{
@@ -931,47 +927,27 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
 		{
 			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
-			$sAllowedValuesEscpd = json_encode($sAllowedValues);
+			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
 
 			$sFilterURL = urlencode($sAllowedValues);
-			$sAllowedValues = "<span id=\"values".$sAttrCode."\"><a href=\"run_query.php?expression=".$sFilterURL."\">⚵</a>".Dict::S('UI:Schema:Attribute/Filter')."</span>";
+			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'" class="fas fa-search"></a> '.Dict::S('UI:Schema:Attribute/Filter')."</span>";
 		}
 		else
 		{
 			$sAllowedValues = '';
 		}
-		$sAttrValueEscpd = json_encode($sValue);
-		$sAttrTypeDescEscpd = json_encode($sTypeDesc);
-		$sAttrOriginEscpd = json_encode($sOrigin);
+		$sAttrValueEscpd = utils::HtmlEntities($sValue);
+		$sAttrTypeDescEscpd = utils::HtmlEntities($sTypeDesc);
+		$sAttrOriginEscpd = utils::HtmlEntities($sOrigin);
+		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
 
 		$aDetails[] = array(
-			'code' => "<span id=\"attr".$sAttrCode."\"><span class=\"attrLabel\">".$oAttDef->GetLabel()."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$oAttDef->GetCode()."</span><span class=\"parenthesis\">)</span></span>",
-			'type' => "<span id=\"type".$sAttrCode."\"><span class=\"attrLabel\">".$sTypeDict."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sType."</span><span class=\"parenthesis\">)</span></span>",
-			'origincolor' => "<span class=\"originColor".$sOrigin."\"></span>",
+			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'"><span class="attrLabel">'.$oAttDef->GetLabel().'</span> <span class="parenthesis">(</span><span class="attrCode">'.$oAttDef->GetCode().'</span><span class="parenthesis">)</span></span>',
+			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'"><span class="attrLabel">'.$sTypeDict.'</span> <span class="parenthesis">(</span><span class="attrCode">'.$sType.'</span><span class="parenthesis">)</span></span>',
+			'origincolor' => '<span class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></span>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
 			'values' => $sAllowedValues,
-			'moreinfo' => "<span id=\"moreinfo".$sAttrCode."\"> $sMoreInfo</span>",
-		);
-		//tooltip construction
-		$oPage->add_ready_script(
-			<<<EOF
-            	if($sAttrValueEscpd != ''){
-		       		$('#attr$sAttrCode').qtip( { content: $sAttrValueEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-		       	}
-		       	if($sAttrTypeDescEscpd != ''){
-		      	  $('#type$sAttrCode').qtip( { content: $sAttrTypeDescEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if($sAttrOriginEscpd != ''){
-					$('#originColor$sAttrCode').parent().qtip( { content: $sAttrOriginEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if( !$sIsEnumValues && $sAllowedValuesEscpd != ''){
-					$('#values$sAttrCode').qtip( { content: $sAllowedValuesEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-				if($sDefaultNullValue != ''){
-					$('#moreinfo$sAttrCode').qtip( { content: $sDefaultNullValue, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
-				}
-EOF
-
+			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
 		);
 
 	}
@@ -1055,19 +1031,28 @@ function DisplayGranularityDisplayer($oPage)
 					$('.attrCode').show();
 					$('.attrLabel').show();
 					$('.parenthesis').show();
-					$("#search-model").autocomplete(autocompleteClassLabelAndCode, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassLabelAndCode);  
+				        }});
 				break;
 				case 'label':
 					$('.attrCode').hide();
 					$('.attrLabel').show();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassLabel, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({		 
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassLabel);  
+				        }});
 				break;
 				case 'code':
 					$('.attrCode').show();
 					$('.attrLabel').hide();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassCode, {scroll:true, matchContains:true});
+					$("#search-model").autocomplete({			 
+						source: function (request, response) {
+							getListClass (request, response,autocompleteClassCode);  
+				        }});
 				break;
 			}
 			SetUserPreference("datamodel_viewer_display_granularity", $('#displaySelector').val(), true);
@@ -1121,7 +1106,7 @@ $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
 
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '',
-	utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	'fas fa-book', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 $oPage->add_script(
 	<<<EOF
 	var autocompleteClassLabelAndCode = [];
@@ -1131,10 +1116,10 @@ EOF
 );
 
 $oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
-$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
+$oPage->add("<div class='data-model-viewer'> ");
 DisplayClassesList($oPage, $sContext);
 $oPage->add("</div>");
-$oPage->add("<div class='ui-layout-center data-model-viewer'>");
+$oPage->add("<div class='data-model-viewer'>");
 
 switch ($operation)
 {
@@ -1144,13 +1129,28 @@ switch ($operation)
 		if ($sClass != '')
 		{
 			$oPage->add_ready_script(
-				<<<EOF
+				<<<JS
 $('#search-model').val('$sClass');
-$('#search-model').trigger("input");
+var search_result = [];
+$("#ClassesList").find("li").each(function(){
+	if( ! ~$(this).children("a").text().toLowerCase().indexOf('$sClass'.toLowerCase())){
+		$(this).hide();
+	}
+	else{
+		search_result.push($(this));
+	}
+});
+search_result.forEach(function(e){
+	e.show();
+	e.find('ul > li').show();
+	e.parents().show();
+});
+//$('#search-model').trigger("input");
 
-EOF
+JS
 			);
 			DisplayClassDetails($oPage, $sClass, $sContext);
+
 			break;
 		}
 	default:
@@ -1158,21 +1158,23 @@ EOF
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
-//split the page in 2 panels
-$oPage->add_init_script(
-	<<<EOF
-		$('#dataModelSplitPane').layout({
-			west : {size: "20%", minSize : 200,paneSize : 600},
-			center : {
-				onresize_end : function(){
-					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
-				}
-			}
-		});
-		// Layout
-EOF
 
-);
+// TODO 3.0.0 Replace these layout.js call 
+////split the page in 2 panels
+//$oPage->add_init_script(
+//	<<<EOF
+//		$('#dataModelSplitPane').layout({
+//			west : {size: "20%", minSize : 200,paneSize : 600},
+//			center : {
+//				onresize_end : function(){
+//					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
+//				}
+//			}
+//		});
+//		// Layout
+//EOF
+//
+//);
 
 $oPage->output();
 ?>

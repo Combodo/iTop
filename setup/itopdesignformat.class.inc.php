@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+define('ITOP_DESIGN_LATEST_VERSION', '3.0');
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -87,9 +87,15 @@ class iTopDesignFormat
 		'1.7' => array(
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
+			'next' => '3.0',
+			'go_to_next' => 'From17To30',
+		),
+		'3.0' => array(
+			'previous' => '1.7',
+			'go_to_previous' => 'From30To17',
 			'next' => null,
 			'go_to_next' => null,
-		)
+		),
 	);
 
 	/**
@@ -742,18 +748,97 @@ class iTopDesignFormat
 	 */
 	protected function From17To16($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
-		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		// N°1283 - remove "in_new_window" option for WebPageMenuNode
 		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 2314 : remove "themes" nodes
+		// N°2314 - remove "themes" nodes
 		$sPath = "/itop_design/branding/themes";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// -- 2746 - remove attributes Enum Set
+		// N°2746 - remove attributes Enum Set
 		$sPath = "/itop_design/classes/class/class/fields/field[@xsi:type='AttributeEnumSet']";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * Upgrade the format from version 1.7 to 3.0
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To30($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3233 - Remove "display template" feature from MetaModel
+		$sPath = "/itop_design//class/properties/display_template";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3203 - Datamodel: Add semantic for image & state attributes
+		// - Move lifecycle attribute declaration to the semantic node
+		$oNodeList = $oXPath->query("/itop_design//class/lifecycle/attribute");
+		/** @var \DOMElement $oNode */
+		foreach ($oNodeList as $oNode) {
+			// Find semantic node or create it
+			$oPropertiesNode = $oXPath->query("../../properties", $oNode)->item(0);
+			$oFieldsSemanticNodeList = $oXPath->query("fields_semantic", $oPropertiesNode);
+			if ($oFieldsSemanticNodeList->length > 0) {
+				$oSemanticNode = $oFieldsSemanticNodeList->item(0);
+			}
+			else {
+				$oSemanticNode = $oPropertiesNode->ownerDocument->createElement("fields_semantic");
+				$oPropertiesNode->appendChild($oSemanticNode);
+			}
+
+			// Create state_attribute node
+			$oStateNode = $oSemanticNode->ownerDocument->createElement("state_attribute", $oNode->nodeValue);
+			$oSemanticNode->appendChild($oStateNode);
+
+			// Remove current node from lifecycle
+			$this->DeleteNode($oNode);
+		}
+	}
+
+	/**
+	 * Downgrade the format from version 3.0 to 1.7
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From30To17($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// N°3182 - Remove style node from MenuGroup
+		$sPath = "/itop_design/menus/menu[@xsi:type='MenuGroup']/style";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3185 - Remove main_logo_compact node from branding
+		$sPath = "/itop_design/branding/main_logo_compact";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°2982 - Speed up SCSS themes compilation during setup
+		$sPath = "/itop_design/branding/themes/theme/precompiled_stylesheet";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3203 - Datamodel: Add semantic for image & state attributes
+		// - Move state_attribute back to the lifecycle node if it has one
+		$oNodeList = $oXPath->query("/itop_design//class/properties/fields_semantic/state_attribute");
+		/** @var \DOMElement $oNode */
+		foreach ($oNodeList as $oNode) {
+			// Move node under lifecycle only if there is such a node
+			$oLifecycleNode = $oXPath->query("../../../lifecycle", $oNode)->item(0);
+			if($oLifecycleNode !== null)
+			{
+				// Create attribute node
+				$oAttributeNode = $oLifecycleNode->ownerDocument->createElement("attribute", $oNode->nodeValue);
+				$oLifecycleNode->appendChild($oAttributeNode);
+			}
+
+			// Remove current node from semantic in all cases
+			$this->DeleteNode($oNode);
+		}
+		// - Remove semantic node
+		$sPath = "/itop_design//class/properties/fields_semantic";
 		$this->RemoveNodeFromXPath($sPath);
 	}
 

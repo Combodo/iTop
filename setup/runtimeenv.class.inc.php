@@ -884,19 +884,19 @@ class RunTimeEnvironment
 	 */	
 	protected function log_error($sText)
 	{
-		SetupPage::log_error($sText);
+		SetupLog::Error($sText);
 	}
 	protected function log_warning($sText)
 	{
-		SetupPage::log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 	protected function log_info($sText)
 	{
-		SetupPage::log_info($sText);
+		SetupLog::Info($sText);
 	}
 	protected function log_ok($sText)
 	{
-		SetupPage::log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	/**
@@ -1088,7 +1088,7 @@ class RunTimeEnvironment
 	            isset($aAvailableModules[$sModuleId]['installer']) )
 	        {
 	            $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-	            SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+		        SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
 	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
 	            if (is_callable($aCallSpec))
 	            {
@@ -1110,8 +1110,8 @@ class RunTimeEnvironment
 	    
 	    CMDBObject::SetTrackInfo("Initialization");
 	    $oMyChange = CMDBObject::GetCurrentChange();
-	    
-	    SetupPage::log_info("starting data load session");
+
+		SetupLog::Info("starting data load session");
 	    $oDataLoader->StartSession($oMyChange);
 	    
 	    $aFiles = array();
@@ -1161,7 +1161,7 @@ class RunTimeEnvironment
 	    foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
+		    SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1169,13 +1169,13 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName, true);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    foreach($aFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName");
+		    SetupLog::Info("Loading file: $sFileName");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1183,11 +1183,11 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    $oDataLoader->EndSession();
-	    SetupPage::log_info("ending data load session");
+		SetupLog::Info("ending data load session");
 	}
 	
 	/**

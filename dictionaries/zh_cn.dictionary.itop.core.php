@@ -504,10 +504,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
-	'Class:ActionEmail/Attribute:from' => '发件人',
-	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to' => '回复到',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:from' => '发件人~~',
+	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => '回复到~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => '收件人',
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => '抄送',
@@ -1049,4 +1053,40 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Additional language entries not present in English dict
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
  'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AbstractResource' => '抽象资源',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceAdminMenu' => '资源管理菜单',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '',
 ));

@@ -437,16 +437,14 @@ abstract class Controller
 
 		if ($bFileTransfer)
 		{
-			header('Content-Description: File Transfer');
-			header('Content-Disposition: inline; filename="'.$sDownloadArchiveName);
+			header('Content-Disposition: attachment; filename="'.$sDownloadArchiveName.'"');
 		}
 
-		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
+		header('Expires: 0');
 
-		foreach ($aHeaders as $sKey => $sValue)
-		{
+		foreach ($aHeaders as $sKey => $sValue) {
 			header($sKey.': '.$sValue);
 		}
 
@@ -558,7 +556,7 @@ abstract class Controller
 		{
 			case 'html':
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
-				$this->m_oPage->add_header('X-Frame-Options: deny');
+				$this->m_oPage->add_xframe_options();
 				break;
 
 			case 'ajax':

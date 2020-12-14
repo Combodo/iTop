@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author	Stephan Rosenke <stephan.rosenke@itomig.de>, <martin.raenker@itomig.de>
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
@@ -504,10 +504,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testempfänger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Empfänger im Fall eines "Test"-Status',
-	'Class:ActionEmail/Attribute:from' => 'Von',
-	'Class:ActionEmail/Attribute:from+' => 'Wird im Email-Header mitgesendet',
-	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an',
+	'Class:ActionEmail/Attribute:from' => 'Von (E-Mail)',
+	'Class:ActionEmail/Attribute:from+' => 'Absenderad­res­se wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:from_label' => 'Von (Label)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Absendername wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an (E-Mail)',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Antworten an (Label)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wird im Email-Header mitgesendet',
 	'Class:ActionEmail/Attribute:to' => 'An',
 	'Class:ActionEmail/Attribute:to+' => 'Empfänger der Nachricht',
 	'Class:ActionEmail/Attribute:cc' => 'Kopie an',
@@ -1044,4 +1048,40 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final Class',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:AbstractResource' => 'Abstrakte Ressource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceAdminMenu' => 'Ressource "Admin Menü"',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceRunQueriesMenu' => 'Ressource "Abfrage Ausführen Menü"',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
+	'Class:ResourceSystemMenu+' => '',
 ));

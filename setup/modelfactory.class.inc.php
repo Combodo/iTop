@@ -256,18 +256,21 @@ class MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			if ($hDir = @opendir($sRootDir))
 			{
-				$aMatches = array();
-				if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				while (($sFile = readdir($hDir)) !== false)
 				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+					$aMatches = array();
+					if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
+						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+					{
+						$aDictionaries[] = $sRootDir.'/'.$sFile;
+					}
 				}
+				closedir($hDir);
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
@@ -461,23 +464,31 @@ class MFDictModule extends MFModule
 	}
 
 	/**
+	 * Scan for dictionary files recursively in $sDir
+	 *
 	 * @inheritDoc
 	 */
-	public function GetDictionaryFiles()
+	public function GetDictionaryFiles($sDir = null)
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		$sDictionaryFilePattern = '*dictionary.itop.*.php';
+
+		if($sDir === null)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			$sDir = $this->sRootDir;
+		}
+
+		if ($hDir = opendir($sDir))
+		{
+			// Matching files
+			$aDictionaries = glob($sDir.'/'.$sDictionaryFilePattern);
+
+			// Directories to scan
+			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
 			{
-				$aMatches = array();
-				if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
-				}
+				/** @noinspection SlowArrayOperationsInLoopInspection */
+				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
@@ -933,18 +944,15 @@ class ModelFactory
 					}
 				}
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
 			}
 
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aLoadedModuleNames = array();
-			foreach (self::$aLoadedModules as $oModule)
-			{
-				$aLoadedModuleNames[] = $oModule->GetName();
+			foreach (self::$aLoadedModules as $oLoadedModule) {
+				$aLoadedModuleNames[] = $oLoadedModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
 					$aLoadedModuleNames));
@@ -1187,7 +1195,6 @@ $sHeader
 	</properties>
 	<naming format=""><attributes/></naming>
 	<reconciliation><attributes/></reconciliation>
-	<display_template/>
 	<icon>$sIcon</icon>
 	</properties>
 	<fields/>
@@ -2149,14 +2156,13 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
-			if ($oExisting->getAttribute('_alteration') != 'removed')
-			{
+			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
 				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
 					$iLine, $sPath);
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
 		}
 		else
@@ -2196,18 +2202,15 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sPath, $iLine);
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
-		if ($sPrevFlag == 'removed')
-		{
+		if ($sPrevFlag == 'removed') {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = $oNode->getLineNo();
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
 				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
-		$oExisting->ReplaceWith($oNode);
-		if (!$this->IsInDefinition())
-		{
-			if ($sPrevFlag == '')
-			{
+		$oExisting->ReplaceWithSingleNode($oNode);
+		if (!$this->IsInDefinition()) {
+			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
 			$oNode->setAttribute('_alteration', $sPrevFlag);
@@ -2240,15 +2243,12 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed')
-			{
+			if ($sPrevFlag == 'removed') {
 				$sFlag = $bForce ? 'forced' : 'replaced';
-			}
-			else
-			{
+			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 		}
 		else
 		{
@@ -2279,8 +2279,7 @@ class MFElement extends Combodo\iTop\DesignElement
 
 			return $this->parentNode->IsClassNode();
 		}
-		else
-		{
+		else {
 			return false;
 		}
 	}
@@ -2290,13 +2289,11 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param MFElement $oNewNode The replacement
 	 */
-	protected function ReplaceWith($oNewNode)
+	protected function ReplaceWithSingleNode($oNewNode)
 	{
 		// Move the classes from the old node into the new one
-		if ($this->IsClassNode())
-		{
-			foreach ($this->GetNodes('class') as $oChild)
-			{
+		if ($this->IsClassNode()) {
+			foreach ($this->GetNodes('class') as $oChild) {
 				$oNewNode->appendChild($oChild);
 			}
 		}

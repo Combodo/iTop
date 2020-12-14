@@ -603,11 +603,11 @@ abstract class DBSearch
 			elseif (($iPos = strpos($sParam, '->')) !== false)
 			{
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aContextParams[$sParamName.'->object()']))
+				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName]))
 				{
 					$sAttCode = substr($sParam, $iPos + 2);
 					/** @var \DBObject $oObj */
-					$oObj = $aContextParams[$sParamName.'->object()'];
+					$oObj = isset($aContextParams[$sParamName.'->object()']) ? $aContextParams[$sParamName.'->object()'] : $aContextParams[$sParamName];
 					if ($oObj->IsModified())
 					{
 						if ($sAttCode == 'id')

@@ -189,7 +189,7 @@ class ApplicationInstaller
 		try
 		{
 			$fStart = microtime(true);
-			SetupPage::log_info("##### STEP {$sStep} start");
+			SetupLog::Info("##### STEP {$sStep} start");
 			$this->EnterReadOnlyMode();
 			switch ($sStep)
 			{
@@ -209,7 +209,7 @@ class ApplicationInstaller
 					$this->oParams->ToXML($oDoc, null, 'installation');
 					$sXML = $oDoc->saveXML();
 					$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
-					SetupPage::log_info("======= Installation starts =======\nParameters:\n$sSafeXml\n");
+					SetupLog::Info("======= Installation starts =======\nParameters:\n$sSafeXml\n");
 
 					// Save the response file as a stand-alone file as well
 					$sFileName = 'install-'.date('Y-m-d');
@@ -281,11 +281,11 @@ class ApplicationInstaller
 						if (function_exists('symlink'))
 						{
 							$bUseSymbolicLinks = true;
-							SetupPage::log_info("Using symbolic links instead of copying data model files (for developers only!)");
+							SetupLog::Info("Using symbolic links instead of copying data model files (for developers only!)");
 						}
 						else
 						{
-							SetupPage::log_info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
+							SetupLog::Info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
 						}
 					}
 
@@ -409,10 +409,10 @@ class ApplicationInstaller
 				'percentage-completed' => 100,
 			);
 
-			SetupPage::log_error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
+			SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
 			$idx = 0;
 			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
-			SetupPage::log("Call stack:");
+			SetupLog::Ok("Call stack:");
 			foreach ($e->getTrace() as $aTrace)
 			{
 				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
@@ -421,14 +421,14 @@ class ApplicationInstaller
 				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
 				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
 				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
-				SetupPage::log("#$idx $sFile($sLine): $sVerb(...)");
+				SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
 				$idx++;
 			}
 		}
 		finally
 		{
 			$fDuration = round(microtime(true) - $fStart, 2);
-			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
+			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 
 		return $aResult;
@@ -516,7 +516,7 @@ class ApplicationInstaller
 	
 	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = false)
 	{
-		SetupPage::log_info("Compiling data model.");
+		SetupLog::Info("Compiling data model.");
 
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -624,7 +624,7 @@ class ApplicationInstaller
 		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 		//$aCompilerLog = $oMFCompiler->GetLog();
 		//SetupPage::log_info(implode("\n", $aCompilerLog));
-		SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+		SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
 
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
 		SetupUtils::builddir($sCacheDir);
@@ -669,7 +669,7 @@ class ApplicationInstaller
 	 */
 	protected static function DoUpdateDBSchema($aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = '')
 	{
-		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
+		SetupLog::Info("Update Database Schema for environment '$sTargetEnvironment'.");
 		$sMode = $aParamValues['mode'];
 		$sDBPrefix = $aParamValues['db_prefix'];
 		$sDBName = $aParamValues['db_name'];
@@ -699,7 +699,7 @@ class ApplicationInstaller
 		// Starting 2.0, all table names must be lowercase
 		if ($sMode != 'install')
 		{
-			SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' into '{$sDBPrefix}priv_internaluser' (lowercase)"); 
+			SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' into '{$sDBPrefix}priv_internaluser' (lowercase)");
 			// This command will have no effect under Windows...
 			// and it has been written in two steps so as to make it work under windows!
 			CMDBSource::SelectDB($sDBName);
@@ -710,36 +710,36 @@ class ApplicationInstaller
 			}
 			catch (Exception $e)
 			{
-				SetupPage::log_info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)"); 
+				SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)");
 			}
 			
 			// let's remove the records in priv_change which have no counterpart in priv_changeop
-			SetupPage::log_info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records"); 
+			SetupLog::Info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records");
 			CMDBSource::SelectDB($sDBName);
 			try
 			{
 				$sTotalCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change`";
 				$iTotalCount = (int)CMDBSource::QueryToScalar($sTotalCount);
-				SetupPage::log_info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
+				SetupLog::Info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
 				
 				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
 				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
-				SetupPage::log_info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
+				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
 				if ($iOrphanCount > 0)
 				{
-					SetupPage::log_info("Removing the orphan records...");
+					SetupLog::Info("Removing the orphan records...");
 					$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
 					CMDBSource::Query($sCleanup);
-					SetupPage::log_info("Cleanup completed successfully.");
+					SetupLog::Info("Cleanup completed successfully.");
 				}
 				else
 				{
-					SetupPage::log_info("Ok, nothing to cleanup.");
+					SetupLog::Info("Ok, nothing to cleanup.");
 				}
 			}
 			catch (Exception $e)
 			{
-				SetupPage::log_info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage()); 
+				SetupLog::Info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage());
 			}
 			
 		}
@@ -772,7 +772,7 @@ class ApplicationInstaller
 			$iCount = (int)CMDBSource::QueryToScalar($sCount);
 			if ($iCount > 0)
 			{
-				SetupPage::log_info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)"); 
+				SetupLog::Info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)");
 				
 				// By default all uninitialized values are considered as 'interactive'
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'interactive' WHERE `origin` IS NULL";
@@ -802,17 +802,17 @@ class ApplicationInstaller
 
 				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)"; 
 				CMDBSource::Query($sInit);
-				
-				SetupPage::log_info("Initialization of '{$sDBPrefix}priv_change.origin' completed."); 
+
+				SetupLog::Info("Initialization of '{$sDBPrefix}priv_change.origin' completed.");
 			}
 			else
 			{
-				SetupPage::log_info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do."); 
+				SetupLog::Info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do.");
 			}
 		}
 		catch (Exception $e)
 		{
-			SetupPage::log_error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage()); 
+			SetupLog::Error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage());
 		}
 
 		// priv_async_task now has a 'status' field to distinguish between the various statuses rather than just relying on the date columns
@@ -824,27 +824,27 @@ class ApplicationInstaller
 			$iCount = (int)CMDBSource::QueryToScalar($sCount);
 			if ($iCount > 0)
 			{
-				SetupPage::log_info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)"); 
+				SetupLog::Info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)");
 				
 				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'planned' WHERE (`status` IS NULL) AND (`started` IS NULL)";
 				CMDBSource::Query($sInit);
 
 				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'error' WHERE (`status` IS NULL) AND (`started` IS NOT NULL)";
 				CMDBSource::Query($sInit);
-				
-				SetupPage::log_info("Initialization of '{$sDBPrefix}priv_async_task.status' completed."); 
+
+				SetupLog::Info("Initialization of '{$sDBPrefix}priv_async_task.status' completed.");
 			}
 			else
 			{
-				SetupPage::log_info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do."); 
+				SetupLog::Info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do.");
 			}
 		}
 		catch (Exception $e)
 		{
-			SetupPage::log_error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage()); 
+			SetupLog::Error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage());
 		}
 
-		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
+		SetupLog::Info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
 	}
 
 	/**
@@ -864,7 +864,7 @@ class ApplicationInstaller
 		$bOldAddon
 	)
 	{
-		SetupPage::log_info('After Database Creation');
+		SetupLog::Info('After Database Creation');
 
 		$sMode = $aParamValues['mode'];
 		$oConfig = new Config();
@@ -898,7 +898,7 @@ class ApplicationInstaller
 			}
 			else
 			{
-				SetupPage::log_info("Administrator account '$sAdminUser' created.");
+				SetupLog::Info("Administrator account '$sAdminUser' created.");
 			}
 		}
 		
@@ -913,7 +913,7 @@ class ApplicationInstaller
 	 */
 	protected static function CreateAdminAccount(Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
 	{
-		SetupPage::log_info('CreateAdminAccount');
+		SetupLog::Info('CreateAdminAccount');
 	
 		if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage))
 		{
@@ -1032,7 +1032,7 @@ class ApplicationInstaller
 		{
 			mkdir(APPCONF);
 			chmod(APPCONF, 0770); // RWX for owner and group, nothing for others
-			SetupPage::log_info("Created configuration directory: ".APPCONF);		
+			SetupLog::Info("Created configuration directory: ".APPCONF);
 		}
 
 		// Write the final configuration file
@@ -1056,11 +1056,11 @@ class SetupDBBackup extends DBBackup
 {
 	protected function LogInfo($sMsg)
 	{
-		SetupPage::log('Info - '.$sMsg);
+		SetupLog::Ok('Info - '.$sMsg);
 	}
 
 	protected function LogError($sMsg)
 	{
-		SetupPage::log('Error - '.$sMsg);
+		SetupLog::Ok('Error - '.$sMsg);
 	}
 }

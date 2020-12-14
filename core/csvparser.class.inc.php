@@ -135,7 +135,7 @@ class CSVParser
 		// More time for the next row
 		if ($this->m_iTimeLimitPerRow !== null)
 		{
-			set_time_limit($this->m_iTimeLimitPerRow);
+			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
 	}
 	protected function __AddCellTrimmed($c = null, $aFieldMap = null)
@@ -194,7 +194,7 @@ class CSVParser
 		{
 			// Give some time for the first row
 			$iTimeLimit = ini_get('max_execution_time');
-			set_time_limit($this->m_iTimeLimitPerRow);
+			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
 		for($i = 0; $i <= $iDataLength ; $i++)
 		{
@@ -255,7 +255,7 @@ class CSVParser
 		if ($iTimeLimit !== null)
 		{
 			// Restore the previous time limit
-			set_time_limit($iTimeLimit);
+			set_time_limit(intval($iTimeLimit));
 		}
 		return $this->m_aDataSet;
 	}

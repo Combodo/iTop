@@ -858,7 +858,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:FatalErrorMessage' => '致命错误, iTop 无法继续.',
 	'UI:Error_Details' => '错误: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop 用户管理 - 类映射',
 	'UI:PageTitle:ProfileProjections' => 'iTop 用户管理 - 角色映射',
 	'UI:UserManagement:Class' => '类',
 	'UI:UserManagement:Class+' => '对象的类',
@@ -867,8 +866,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:AnyObject' => '* 任何 *',
 	'UI:UserManagement:User' => '用户',
 	'UI:UserManagement:User+' => '与该映射相关的用户',
-	'UI:UserManagement:Profile' => '角色',
-	'UI:UserManagement:Profile+' => '映射被指定的角色',
 	'UI:UserManagement:Action:Read' => '读',
 	'UI:UserManagement:Action:Read+' => '读/显示 对象',
 	'UI:UserManagement:Action:Modify' => '修改',
@@ -908,7 +905,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ChangeManagementMenu:Title' => '变更概况',
 	'UI-ChangeManagementMenu-ChangesByType' => '按类别划分的变更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '按状态划分的变更',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => '按执行团队划分的变更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => '尚未分配的变更',
 
 	'UI:ConfigurationManagementMenu' => '配置管理',
@@ -958,7 +954,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '通知的配置', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
+	'UI:NotificationsMenu:Title' => '配置 通知',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在iTop 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
 <p><i><b>触发器</b></i> 定义了什么时候发送通知. iTop core 自带一些触发器, 另一些触发器可由扩展提供:
@@ -1171,7 +1167,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ColumnsAndSortOrder' => '列和排序顺序:',
 	'UI:UseDefaultSettings' => '使用默认配置',
 	'UI:UseSpecificSettings' => '使用下面的配置:',
-	'UI:Display_X_ItemsPerPage' => '每页显示 %1$s 个项目',
+	'UI:Display_X_ItemsPerPage_prefix' => '每页显示',
+	'UI:Display_X_ItemsPerPage_suffix' => '个项目',
 	'UI:UseSavetheSettings' => '保存设置',
 	'UI:OnlyForThisList' => '仅这个列表',
 	'UI:ForAllLists' => '默认所有列表',
@@ -1588,4 +1585,43 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:ResetCache' => '重置缓存',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自 %1$s 的消息',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => '在 %2$s 菜单中最多显示 %1$s 条消息.',
+));
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Menu:DataSources' => '同步数据源',
+	'Menu:DataSources+' => '所有同步数据源',
+	'Menu:WelcomeMenu' => '欢迎',
+	'Menu:WelcomeMenu+' => '欢迎使用iTop',
+	'Menu:WelcomeMenuPage' => '欢迎',
+	'Menu:WelcomeMenuPage+' => '欢迎使用iTop',
+	'Menu:AdminTools' => '管理工具',
+	'Menu:AdminTools+' => '管理工具',
+	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
+	'Menu:DataModelMenu' => '数据模型',
+	'Menu:DataModelMenu+' => '数据模型概况',
+	'Menu:ExportMenu' => '导出',
+	'Menu:ExportMenu+' => '以HTML, CSV 或XML 格式导出任何查询的结果',
+	'Menu:NotificationsMenu' => '通知',
+	'Menu:NotificationsMenu+' => '配置通知',
+	'Menu:AuditCategories' => '审计类别',
+	'Menu:AuditCategories+' => '审计类别',
+	'Menu:Notifications:Title' => '审计类别',
+	'Menu:RunQueriesMenu' => '运行查询',
+	'Menu:RunQueriesMenu+' => '运行任何查询',
+	'Menu:QueryMenu' => '查询手册',
+	'Menu:QueryMenu+' => '查询手册',
+	'Menu:UniversalSearchMenu' => '全局搜索',
+	'Menu:UniversalSearchMenu+' => '搜索所有...',
+	'Menu:UserManagementMenu' => '用户管理',
+	'Menu:UserManagementMenu+' => '用户管理',
+	'Menu:ProfilesMenu' => '角色',
+	'Menu:ProfilesMenu+' => '角色',
+	'Menu:ProfilesMenu:Title' => '角色',
+	'Menu:UserAccountsMenu' => '用户帐户',
+	'Menu:UserAccountsMenu+' => '用户帐户',
+	'Menu:UserAccountsMenu:Title' => '用户帐户',
+	'Menu:MyShortcuts' => '我的快捷方式',
+	'Menu:UserManagement' => '用户管理',
+	'Menu:Queries' => '查询',
+	'Menu:ConfigurationTools' => '配置',
 ));

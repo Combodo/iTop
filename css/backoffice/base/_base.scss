@@ -1,0 +1,67 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+$ibo-hyperlink-color: $ibo-color-primary-500 !default;
+$ibo-hyperlink-color--on-hover: $ibo-color-primary-600 !default;
+$ibo-hyperlink-color--on-active: $ibo-color-primary-700 !default;
+
+$ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
+
+$ibo-content-block--background-color: $ibo-color-white-100 !default;
+$ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
+
+/* CSS variables */
+:root{
+	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
+	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
+	--ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
+}
+
+/* Box sizing reset */
+*,
+*::before,
+*::after{
+	box-sizing: border-box;
+}
+
+/* Base font size (used by all typographies) */
+html{
+	font-size: 12px;
+}
+
+/* Hyperlinks reset, ensure that they are of the right color and without decoration everywhere (of course this can be overloaded in some components) */
+a{
+	color: var(--ibo-hyperlink-color);
+	text-decoration: none;
+
+	&:hover,
+	&:active,
+	&:visited{
+		text-decoration: none;
+	}
+	&:hover{
+		color: var(--ibo-hyperlink-color--on-hover);
+	}
+	&:active{
+		color: var(--ibo-hyperlink-color--on-active);
+	}
+}
+
+.ibo-svg-illustration--container>svg *[fill="#6c63ff"]{
+	fill: $ibo-svg-illustration--fill;
+}

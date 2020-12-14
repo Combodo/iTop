@@ -118,7 +118,7 @@ EOF;
 	{
 		$sKey = static::GetKey($sClass, $sAttCode);
 		$oExpr = DBObjectSearch::GetPolymorphicExpression($sClass, $sAttCode);
-		return "'".$sKey."' => '".serialize($oExpr)."',\n";
+		return var_export($sKey, true)." => ".var_export(serialize($oExpr), true).",\n"; // Beware, string values can contain quotes, backslashes, etc!
 	}
 
 	/**

@@ -1,0 +1,27 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{# Content Block #}
+{% apply spaceless %}
+    {% block iboContentBlockContainer %}
+
+        {% if oUIBlock.GetCSSClasses() or oUIBlock.GetDataAttributes() %}
+            <div id="{{ oUIBlock.GetId() }}"
+            {% if oUIBlock.GetCSSClasses() %}class="{{ oUIBlock.GetCSSClasses() }}"{% endif %}
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+            >
+        {% endif %}
+
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+
+        {% if oUIBlock.GetCSSClasses() %}
+            </div>
+        {% endif %}
+
+    {% endblock %}
+{% endapply %}

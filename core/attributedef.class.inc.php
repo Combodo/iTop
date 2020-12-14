@@ -31,13 +31,9 @@ require_once('ormlinkset.class.inc.php');
 require_once('ormset.class.inc.php');
 require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
-require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
 require_once('datetimeformat.class.inc.php');
-// This should be changed to a use when we go full-namespace
-require_once(APPROOT.'sources/form/validator/validator.class.inc.php');
-require_once(APPROOT.'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row
@@ -295,7 +291,7 @@ abstract class AttributeDefinition
 	 * @param \DBObject $oHostObject
 	 * @param $value Object error if any, null otherwise
 	 *
-	 * @return bool
+	 * @return bool|string true for no errors, false or error message otherwise
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
@@ -1030,10 +1026,17 @@ abstract class AttributeDefinition
 			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
 		}
 
+		// Description
+		$sAttDescription = $this->GetDescription();
+		if(!empty($sAttDescription))
+		{
+			$oFormField->SetDescription($this->GetDescription());
+		}
+
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
 		$oFormField->AddMetadata('attribute-type', get_class($this));
-		$oFormField->AddMetadata('attribute-label', utils::HtmlEntities($this->GetLabel()));
+		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
@@ -1050,7 +1053,7 @@ abstract class AttributeDefinition
 		// - Value raw
 		if ($this::IsScalar())
 		{
-			$oFormField->AddMetadata('value-raw', utils::HtmlEntities($oObject->Get($this->GetCode())));
+			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -1269,6 +1272,15 @@ abstract class AttributeDefinition
 	public function Fingerprint($value)
 	{
 		return (string)$value;
+	}
+
+	/*
+	 * return string
+	 */
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return data;";
+		return $sRenderFunction;
 	}
 }
 
@@ -2273,22 +2285,17 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		/** @var \AttributeExternalKey $oExtKeyToRemote */
 		$oExtKeyToRemote = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
 		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
-		{
-			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect)
-			{
+		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass())
-			{
+			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote())
-			{
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe())
-			{
+			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe()) {
 				continue;
 			}
 			$oRet = $oRemoteAttDef;
@@ -4994,6 +5001,7 @@ class AttributePhoneNumber extends AttributeString
 
 		return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
+
 }
 
 /**
@@ -6654,6 +6662,23 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return (int)$proposedValue;
 	}
 
+	public function GetPrerequisiteAttributes($sClass = null)
+	{
+		$aAttributes = parent::GetPrerequisiteAttributes($sClass);
+		$oExpression = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression())->GetCriteria();
+		foreach ($oExpression->GetParameters('this') as $sAttCode)
+		{
+			// Skip the id as it cannot change anyway
+			if ($sAttCode =='id') continue;
+
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
+		}
+		return $aAttributes;
+	}
+
 	public function GetMaximumComboLength()
 	{
 		return $this->GetOptional('max_combo_length', MetaModel::GetConfig()->Get('max_combo_length'));
@@ -6759,8 +6784,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_null($oHostObject))
-		{
+		if (!is_null($oHostObject)) {
 			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
 		}
 
@@ -7960,18 +7984,6 @@ class AttributeImage extends AttributeBlob
 	public function GetEditClass()
 	{
 		return "Image";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see AttributeBlob::MakeRealValue()
-	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
-	{
-		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
-
-		// The validation of the MIME Type is done by CheckFormat below
-		return $oDoc;
 	}
 
 	/**
@@ -10169,6 +10181,9 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 }
 
+/**
+ * @since 2.7.0 N°985
+ */
 class AttributeEnumSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
@@ -10308,6 +10323,7 @@ class AttributeEnumSet extends AttributeSet
 
 		return $sRes;
 	}
+
 
 	/**
 	 * @param ormSet $value
@@ -11590,7 +11606,17 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return $this->GetOptional("depends_on", array());
+		// Code duplicated with AttributeObsolescenceFlag
+		$aAttributes = $this->GetOptional("depends_on", array());
+		$oExpression = $this->GetOQLExpression();
+		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
+		{
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
+		}
+		return $aAttributes;
 	}
 
 	public static function IsScalar()
@@ -12822,7 +12848,17 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return $this->GetOptional("depends_on", array());
+		// Code duplicated with AttributeFriendlyName
+		$aAttributes = $this->GetOptional("depends_on", array());
+		$oExpression = $this->GetOQLExpression();
+		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
+		{
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
+		}
+		return $aAttributes;
 	}
 
 	public function IsDirectField()

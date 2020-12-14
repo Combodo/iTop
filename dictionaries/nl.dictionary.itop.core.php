@@ -511,10 +511,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
-	'Class:ActionEmail/Attribute:from' => 'Van',
+	'Class:ActionEmail/Attribute:from' => 'Van (e-mail)',
 	'Class:ActionEmail/Attribute:from+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
-	'Class:ActionEmail/Attribute:reply_to' => 'Antwoord',
+	'Class:ActionEmail/Attribute:from_label' => 'Van (label)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
+	'Class:ActionEmail/Attribute:reply_to' => 'Antwoord (e-mail)',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Antwoord (label)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
 	'Class:ActionEmail/Attribute:to' => 'Aan',
 	'Class:ActionEmail/Attribute:to+' => 'Bestemming van de e-mail',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
@@ -820,9 +824,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroAttribute/Attribute:update' => 'Update',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
 	'Class:SynchroAttribute/Attribute:update_policy' => 'Update Policy',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Gesloten',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Open',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Begin indien leeg',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Geblokkeerd',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Vrij',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Vul in indien leeg',
 	'Class:SynchroAttribute/Attribute:finalclass' => 'Klasse',
 	'Class:SynchroAttExtKey' => 'Synchro Attribuut (ExtKey)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliation-attribuut',
@@ -1051,4 +1055,40 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Uiteindelijke klasse',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:AbstractResource' => 'Abstracte Tool',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceAdminMenu' => 'Tool "Admin Menu"',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceRunQueriesMenu' => 'Tool "Voer query\'s uit" Menu',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
+	'Class:ResourceSystemMenu+' => '',
 ));

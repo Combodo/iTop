@@ -141,7 +141,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 			aTruncatedLists[divId] = undefined;
 			if (data.length > 0) {
 				$('#'+divId).html(data);
-				$('#'+divId+' .listResults').tableHover(); // hover tables
+				//$('#'+divId+' .listResults').tableHover(); // hover tables
 				$('#'+divId+' .listResults').each(function () {
 					var table = $(this);
 					var id = $(this).parent();
@@ -185,15 +185,17 @@ function TruncateList(divId, iLimit, sNewLabel, sLinkLabel) {
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 	// Check if the user is not editing the list properties right now
 	var bDialogOpen = false;
-	var oDataTable = $('#'+divId+' :itop-datatable');
+	//TODO 3.0.0 Datatable - to check
+	var oDataTable = $('#'+divId+' :ibo-datatable');
 	var bIsDataTable = false;
 	if (oDataTable.length > 0) {
-		bDialogOpen = oDataTable.datatable('IsDialogOpen');
+		bDialogOpen = ($('#datatable_dlg_'+divId+' :visible').length > 0);
+		//bDialogOpen = oDataTable.datatable('IsDialogOpen');
 		bIsDataTable = true;
 	}
 	if (!bDialogOpen) {
 		if (bIsDataTable) {
-			oDataTable.datatable('DoRefresh');
+			oDataTable.DataTable().ajax.reload();
 		}
 		else {
 			$('#'+divId).block();
@@ -211,7 +213,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 }
 
 function SaveGroupBySortOrder(sTableId, aValues) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	if (aValues.length != 0) {
 		$sValue = JSON.stringify(aValues);
@@ -222,7 +224,7 @@ function SaveGroupBySortOrder(sTableId, aValues) {
 }
 
 function LoadGroupBySortOrder(sTableId) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	var sValues = GetUserPreference(sPrefKey, null);
 	if (sValues != null) {
@@ -262,11 +264,11 @@ function UpdateFileName(id, sNewFileName) {
  * Reload a search form for the specified class
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sExtraParams) {
-	var oDiv = $('#ds_'+divId);
+	var oDiv = $('#'+divId).parent();
 	oDiv.block();
 	// deprecated in jQuery 1.8 
 	//var oFormEvents = $('#ds_'+divId+' form').data('events');
-	var oForm = $('#ds_'+divId+' form');
+	var oForm = $('#'+divId+' form');
 	var oFormEvents = $._data(oForm[0], "events");
 
 	// Save the submit handlers
@@ -276,11 +278,11 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			aSubmit [index] = {data: oFormEvents.submit[index].data, namespace: oFormEvents.submit[index].namespace, handler: oFormEvents.submit[index].handler};
 		}
 	}
-	sAction = $('#ds_'+divId+' form').attr('action');
+	sAction = $('#'+divId+' form').attr('action');
 
 	// Save the current values in the form
 	var oMap = {};
-	$('#ds_'+divId+" form :input[name!='']").each(function () {
+	$('#'+divId+" form :input[name!='']").each(function () {
 		oMap[this.name] = this.value;
 	});
 	oMap.operation = 'search_form';
@@ -454,8 +456,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).datatable('option', 'oColumns'),
-		iPageSize: $('#'+sDataTableName).datatable('option', 'iPageSize')
+		oColumns: $('#'+sDataTableName).DataTable().ajax.params()['columns'],
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']/numberCachePages
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 
@@ -592,7 +594,7 @@ function ExportRun(data) {
 				if (data.mime_type == 'text/html') {
 					$('#export_content').parent().html(data.text_result);
 					$('#export_text_result').show();
-					$('#export_text_result .listResults').tableHover();
+					//$('#export_text_result .listResults').tableHover();
 					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
 				}
 				else {
@@ -727,6 +729,53 @@ function Format() {
 }
 
 /**
+ * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
+ *
+ * @param oDOMElem DOM element to check
+ * @param bCompletely Should oDOMElem be completely visible for the function to return true?
+ * @param iThreshold Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
+ * @returns {boolean}
+ * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+ */
+function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0)
+{
+	const oRect = oDOMElem.getBoundingClientRect(),
+		fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
+		fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
+		efp = function (x, y)
+		{
+			return document.elementFromPoint(x, y)
+		};
+
+	// Return false if it's not in the viewport
+	if (oRect.right < 0 || oRect.bottom < 0
+		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight)
+	{
+		return false;
+	}
+
+	if (bCompletely === true)
+	{
+		// Return true if ALL of its four corners are visible
+		return (
+			oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
+			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
+			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
+			&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
+		);
+	} else
+	{
+		// Return true if ANY of its four corners are visible
+		return (
+			oDOMElem.contains(efp(oRect.left, oRect.top))
+			|| oDOMElem.contains(efp(oRect.right, oRect.top))
+			|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
+			|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
+		);
+	}
+}
+
+/**
  * Enable to access translation keys client side.
  * The called keys needs to be exported using \WebPage::add_dict_entry
  */
@@ -750,3 +799,108 @@ Dict.Format = function () {
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
 }
+
+// TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
+
+/**
+ * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.
+ *
+ * Note: All functions like those above should be moved in the corresponding toolbox to avoid name collision with other libs and scripts.
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoGlobalToolbox = {
+	// Instanciate tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
+	/**
+	 * Instanciate a tooltip on oElem from its data attributes
+	 *
+	 * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
+	 *
+	 * @param {Object} oElem The jQuery object representing the element
+	 * @param {boolean} bForce When set to true, tooltip will be instanciate even if one already exists, overwritting it.
+	 * @constructor
+	 */
+	InitTooltipFromMarkup: function(oElem, bForce = false)
+	{
+		const oOptions = {
+			allowHTML: true, // Always true so line breaks can work. Don't worry content will be sanitized.
+		};
+
+		// First, check if the tooltip isn't already instanciated
+		if((oElem.attr('data-tooltip-instanciated') === 'true') && (bForce === false))
+		{
+			return false;
+		}
+
+		// Content must be reworked before getting into the tooltip
+		// - Should we enable HTML content or keep text as is
+		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
+
+		// - Content should be sanitized unless the developer says otherwise
+		// Note: Condition is inversed on purpose. When the developer is instanciating a tooltip,
+		// we want him/her to explicitly declare that he/she wants the sanitizer to be skipped.
+		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
+		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
+
+		// - Sanitize content and make sure line breaks are kept
+		const oTmpContentElem = $('<div />').html(oElem.attr('data-tooltip-content'));
+		let sContent = '';
+		if(bEnableHTML)
+		{
+			sContent = oTmpContentElem.html();
+			if(bSanitizeContent)
+			{
+				sContent = sContent.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
+			}
+		}
+		else
+		{
+			sContent = oTmpContentElem.text();
+			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
+		}
+		oOptions['content'] = sContent;
+
+		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
+		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
+
+		const sShiftingOffset = oElem.attr('data-tooltip-shifting-offset');
+		const sDistanceOffset = oElem.attr('data-tooltip-distance-offset');
+		oOptions['offset'] = [
+			(sShiftingOffset === undefined) ? 0 : parseInt(sShiftingOffset),
+			(sDistanceOffset === undefined) ? 10 : parseInt(sDistanceOffset),
+		];
+
+		oOptions['animation'] = oElem.attr('data-tooltip-animation') ?? 'shift-away-subtle';
+
+		const sShowDelay = oElem.attr('data-tooltip-show-delay');
+		const sHideDelay = oElem.attr('data-tooltip-hide-delay');
+		oOptions['delay'] = [
+			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
+			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
+		];
+
+		tippy(oElem[0], oOptions);
+
+		// Mark tooltip as instanciated
+		oElem.attr('data-tooltip-instanciated', 'true');
+	},
+	/**
+	 * Instantiate all tooltips that are not already.
+	 * Useful after AJAX calls or dynamic content modification for examples.
+	 *
+	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
+	 * @constructor
+	 */
+	InitAllNonInstantiatedTooltips: function(oContainerElem = null)
+	{
+		if(oContainerElem === null)
+		{
+			oContainerElem = $('body');
+		}
+
+		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
+			CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+		});
+	}
+};

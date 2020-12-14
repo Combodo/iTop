@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.7.0',
+	'itop-tickets/3.0.0',
 	array(
 		// Identification
 		//
@@ -13,10 +13,10 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.4.0',
+			'itop-structure/2.7.1',
 		),
-		'mandatory' => true,
-		'visible' => false,
+		'mandatory' => false,
+		'visible' => true,
 		'installer' => 'TicketsInstaller',
 
 		// Components

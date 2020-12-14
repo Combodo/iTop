@@ -193,7 +193,7 @@ class XMLDataLoader
 		{
 			if (!MetaModel::IsValidClass($sClass))
 			{
-				SetupPage::log_error("Unknown class - $sClass");
+				SetupLog::Error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}
 
@@ -245,7 +245,7 @@ class XMLDataLoader
 							else
 							{
 								$sMsg = "Ext key not reconcilied - $sClass/$iSrcId - $sAttCode: '".$sQuery."' - found $iMatches matche(s)";
-								SetupPage::log_error($sMsg);
+								SetupLog::Error($sMsg);
 								$this->m_aErrors[] = $sMsg;
 								$iExtKey = 0;
 							}
@@ -291,7 +291,7 @@ class XMLDataLoader
 						{
 							// $res contains the error description
 							$sMsg = "Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oSubNode."' ; $res";
-							SetupPage::log_error($sMsg);
+							SetupLog::Error($sMsg);
 							$this->m_aErrors[] = $sMsg;
 						}
 						$oTargetObj->Set($sAttCode, $value);
@@ -378,7 +378,7 @@ class XMLDataLoader
 		}
 		catch(Exception $e)
 		{
-			SetupPage::log_error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
+			SetupLog::Error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
 			$this->m_aErrors[] = "An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
@@ -417,7 +417,7 @@ class XMLDataLoader
 						if ($iExtKey == 0)
 						{
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
-							SetupPage::log_warning($sMsg);
+							SetupLog::Warning($sMsg);
 							$this->m_aWarnings[] = $sMsg;
 							//echo "<pre>aKeys[".$sTargetClass."]:\n";
 							//print_r($this->m_aKeys[$sTargetClass]);

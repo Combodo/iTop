@@ -94,6 +94,7 @@ abstract class CMDBObject extends DBObject
 	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
 	protected static $m_sInfo = null; // null => the information is built in a standard way
+	protected static $m_sUserId = null; // null => the user doing the change is unknown
 	protected static $m_sOrigin = null; // null => the origin is 'interactive'
 
 	/**
@@ -155,6 +156,21 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
+	 * Provide information about the user doing the change
+	 *
+	 * @see static::SetTrackInfo
+	 * @see static::SetCurrentChange
+	 *
+	 * @param string $sId ID of the user doing the change, null if not done by a user (eg. background task)
+	 *
+	 * @since 3.0.0
+	 */
+	public static function SetTrackUserId($sId)
+	{
+		self::$m_sUserId = $sId;
+	}
+
+	/**
 	 * Provides information about the origin of the change
 	 *
 	 * @see SetTrackInfo
@@ -182,6 +198,25 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sInfo;
 		}
 	}
+
+	/**
+	 * Get the ID of the user doing the change (defaulting to null)
+	 *
+	 * @return string|null
+	 * @throws \OQLException
+	 * @since 3.0.0
+	 */
+	protected static function GetTrackUserId()
+	{
+		if (is_null(self::$m_sUserId))
+		{
+			return CMDBChange::GetCurrentUserId();
+		}
+		else
+		{
+			return self::$m_sUserId;
+		}
+	}
 	
 	/**
 	 * Get the 'origin' information (defaulting to 'interactive')
@@ -202,12 +237,21 @@ abstract class CMDBObject extends DBObject
 	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
 	 *
 	 * The CMDBChange is persisted so that it has a key > 0, and any new CMDBChangeOp can link to it
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	protected static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
+		self::$m_oCurrChange->Set("user_id", self::GetTrackUserId());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
 		self::$m_oCurrChange->DBInsert();
 	}
@@ -513,7 +557,14 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
 	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here	 	 
+	 * Anyhow, if the user has found a workaround... the security gets enforced here
+	 *
+	 * @deprecated 3.0.0 N°2591 will be removed in 3.1.0
+	 *
+	 * @param bool $bSkipStrongSecurity
+	 * @param int $iActionCode
+	 *
+	 * @throws \SecurityException
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{
@@ -536,83 +587,6 @@ abstract class CMDBObject extends DBObject
 				throw new SecurityException('You are not allowed to modify objects of class: '.$sClass);
 			}
 		}
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int|null
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBInsertTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$ret = $this->DBInsertTracked_Internal();
-		return $ret;
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsertNoReload} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBInsertTrackedNoReload(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$ret = $this->DBInsertTracked_Internal(true);
-		return $ret;
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} or {@link DBInsertNoReload} instead
-	 *
-	 * @param bool $bDoNotReload
-	 *
-	 * @return integer Identifier of the created object
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	protected function DBInsertTracked_Internal($bDoNotReload = false)
-	{
-		if ($bDoNotReload)
-		{
-			$ret = $this->DBInsertNoReload();
-		}
-		else
-		{
-			$ret = $this->DBInsert();
-		}
-		return $ret;
 	}
 
 	public function DBClone($newKey = null)
@@ -647,24 +621,6 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBUpdate} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 *
-	 * @return int|void
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \SecurityException
-	 */
-	public function DBUpdateTracked(CMDBChange $oChange, $bSkipStrongSecurity = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_MODIFY);
-		$this->DBUpdate();
-	}
 
 	/**
 	 * @param null $oDeletionPlan
@@ -682,31 +638,6 @@ abstract class CMDBObject extends DBObject
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
-	}
-
-	/**
-	 * @deprecated 2.7.0 N°2361 simply use {@link DBDelete} instead, that will automatically create and persist a CMDBChange object.
-	 *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
-	 *
-	 * @param \CMDBChange $oChange
-	 * @param null $bSkipStrongSecurity
-	 * @param null $oDeletionPlan
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DeleteException
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \SecurityException
-	 */
-	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->CheckUserRights($bSkipStrongSecurity, UR_ACTION_DELETE);
-		$this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
 	/**

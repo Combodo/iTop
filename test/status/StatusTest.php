@@ -15,12 +15,16 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @backupGlobals disabled
  */
 class StatusTest extends ItopTestCase {
+	public function setUp()
+	{
+		parent::setUp();
+	}
 
-    /**
+	/**
      * 
      */
     public function testStatusWrongUrl() {
-        $sPath = __DIR__ . '/status_wrong.php';
+        $sPath = APPROOT . '/status_wrong.php';
 
         exec("php $sPath", $aOutput, $iRet);
         $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
@@ -31,7 +35,7 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGood() {
-	    $sPath = __DIR__ . '/status.php';
+	    $sPath = APPROOT . '/webservices/status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
 	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
@@ -41,10 +45,10 @@ class StatusTest extends ItopTestCase {
      * 
      */
     public function testStatusGoodWithJson() {
-	    $sPath = __DIR__ . '/status.php';
+	    $sPath = APPROOT . '/webservices/status.php';
 
 	    exec("php $sPath", $aOutput, $iRet);
-	    $sAdditionnalInfo = "aOutput:\n" . var_export($aOutput, true);
+	    $sAdditionnalInfo = "aOutput:\n" . var_export($aOutput, true) . '.';
 
         //Check response
         $this->assertNotEmpty($aOutput[0], 'Empty response. ' . $sAdditionnalInfo);

@@ -467,6 +467,18 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                {
+                                        $aFields = $aShowFields[$sClass];
+                                        //Id is not a valid attribute to optimize
+                                        if (in_array('id', $aFields)) 
+                                        {
+                                            unset($aFields[array_search('id', $aFields)]);
+                                        }
+                                        $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
+                                        $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+                                }
+                                
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);

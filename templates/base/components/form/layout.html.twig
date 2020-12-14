@@ -1,0 +1,16 @@
+<form method="post" enctype="multipart/form-data" id="{{ oUIBlock.GetId() }}"
+        {% if oUIBlock.GetOnSubmitJsCode() %}
+            onSubmit="{{ oUIBlock.GetOnSubmitJsCode() }}"
+        {% endif %}
+        {% if oUIBlock.GetAction() %}
+            action="{{ oUIBlock.GetAction() }}"
+        {% endif %}
+>
+    {% apply spaceless %}
+        {% block iboContentBlockContainer %}
+            {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+                {{ render_block(oSubBlock, {aPage: aPage}) }}
+            {% endfor %}
+        {% endblock %}
+    {% endapply %}
+</form>

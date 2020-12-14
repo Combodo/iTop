@@ -35,6 +35,10 @@ require_once(APPROOT.'/core/email.class.inc.php');
  */
 abstract class Action extends cmdbAbstractObject
 {
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -47,7 +51,6 @@ abstract class Action extends cmdbAbstractObject
 			"db_table" => "priv_action",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -57,15 +60,32 @@ abstract class Action extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("trigger_list", array("linked_class"=>"lnkTriggerAction", "ext_key_to_me"=>"action_id", "ext_key_to_remote"=>"trigger_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
+		// - Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
+		// - Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
 		// Search criteria
-		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		// - Criteria of the std search form
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status'));
+		// - Criteria of the advanced search form
+//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
 	}
 
+	/**
+	 * Encapsulate the execution of the action and handle failure & logging
+	 *
+	 * @param \Trigger $oTrigger
+	 * @param array $aContextArgs
+	 *
+	 * @return mixed
+	 */
 	abstract public function DoExecute($oTrigger, $aContextArgs);
 
+	/**
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function IsActive()
 	{
 		switch($this->Get('status'))
@@ -79,6 +99,13 @@ abstract class Action extends cmdbAbstractObject
 		}
 	}
 
+	/**
+	 * Return true if the current action status is set on "test"
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function IsBeingTested()
 	{
 		switch($this->Get('status'))
@@ -99,6 +126,10 @@ abstract class Action extends cmdbAbstractObject
  */
 abstract class ActionNotification extends Action
 {
+	/**
+	 * @inheritDoc
+	 * @throws \CoreException
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -111,17 +142,20 @@ abstract class ActionNotification extends Action
 			"db_table" => "priv_action_notification",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
+		// - Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list'));
+		// - Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status'));
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		// - Criteria of the std search form
+//		MetaModel::Init_SetZListItems('standard_search', array('name'));
+		// - Criteria of the advanced search form
+//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
 	}
 }
 
@@ -132,6 +166,9 @@ abstract class ActionNotification extends Action
  */
 class ActionEmail extends ActionNotification
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -144,7 +181,6 @@ class ActionEmail extends ActionNotification
 			"db_table" => "priv_action_email",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -152,7 +188,9 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeEmailAddress("test_recipient", array("allowed_values"=>null, "sql"=>"test_recipient", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		MetaModel::Init_AddAttribute(new AttributeString("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("from_label", array("allowed_values"=>null, "sql"=>"from_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("reply_to", array("allowed_values"=>null, "sql"=>"reply_to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reply_to_label", array("allowed_values"=>null, "sql"=>"reply_to_label", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("cc", array("allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeOQL("bcc", array("allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
@@ -161,11 +199,15 @@ class ActionEmail extends ActionNotification
 		MetaModel::Init_AddAttribute(new AttributeEnum("importance", array("allowed_values"=>new ValueSetEnum('low,normal,high'), "sql"=>"importance", "default_value"=>'normal', "is_null_allowed"=>false, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'reply_to', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject')); // Attributes to be displayed for a list
+		// - Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'test_recipient', 'from', 'from_label', 'reply_to', 'reply_to_label', 'to', 'cc', 'bcc', 'subject', 'body', 'importance', 'trigger_list'));
+		// - Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('name', 'status', 'to', 'subject'));
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name','description', 'status', 'subject')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		// - Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', array('name','description', 'status', 'subject'));
+		// - Criteria of the advanced search form
+//		MetaModel::Init_SetZListItems('advanced_search', array('name'));
 	}
 
 	// count the recipients found
@@ -175,7 +217,18 @@ class ActionEmail extends ActionNotification
 	// executed in the background, while making sure that any issue would be reported clearly
 	protected $m_aMailErrors; //array of strings explaining the issue
 
-	// returns a the list of emails as a string, or a detailed error description
+	/**
+	 * Return a the list of emails as a string, or a detailed error description
+	 *
+	 * @param string $sRecipAttCode
+	 * @param array $aArgs
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
@@ -224,9 +277,7 @@ class ActionEmail extends ActionNotification
 	}
 
 	/**
-	 * @param \Trigger $oTrigger
-	 * @param array $aContextArgs
-	 *
+	 * @inheritDoc
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreWarning
@@ -306,6 +357,7 @@ class ActionEmail extends ActionNotification
 	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
@@ -316,15 +368,17 @@ class ActionEmail extends ActionNotification
 			$this->m_aMailErrors = array();
 			$bRes = false; // until we do succeed in sending the email
 	
-			// Determine recicipients
+			// Determine recipients
 			//
 			$sTo = $this->FindRecipients('to', $aContextArgs);
 			$sCC = $this->FindRecipients('cc', $aContextArgs);
 			$sBCC = $this->FindRecipients('bcc', $aContextArgs);
-	
+
 			$sFrom = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
+			$sFromLabel = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
 			$sReplyTo = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
-	
+			$sReplyToLabel = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
+
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
 			
@@ -347,7 +401,7 @@ class ActionEmail extends ActionNotification
 			if (isset($sTo))       $oLog->Set('to', $sTo);
 			if (isset($sCC))       $oLog->Set('cc', $sCC);
 			if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
-			if (isset($sFrom))     $oLog->Set('from', $sFrom);
+			if (isset($sFrom))     $oLog->Set('from', empty($sFromLabel) ? $sFrom : "$sFromLabel <$sFrom>");
 			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
 			if (isset($sBody))     $oLog->Set('body', $sBody);
 		}
@@ -367,15 +421,15 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "<li>TO: $sTo</li>\n";
 			$sTestBody .= "<li>CC: $sCC</li>\n";
 			$sTestBody .= "<li>BCC: $sBCC</li>\n";
-			$sTestBody .= "<li>From: $sFrom</li>\n";
-			$sTestBody .= "<li>Reply-To: $sReplyTo</li>\n";
+			$sTestBody .= empty($sFromLabel) ? "<li>From: $sFrom</li>\n": "<li>From: $sFromLabel &lt;$sFrom&gt;</li>\n";
+			$sTestBody .= empty($sReplyToLabel) ? "<li>Reply-To: $sReplyTo</li>\n": "<li>Reply-To: $sReplyToLabel &lt;$sReplyTo&gt;</li>\n";
 			$sTestBody .= "<li>References: $sReference</li>\n";
 			$sTestBody .= "</ul>\n";
 			$sTestBody .= "</p>\n";
 			$sTestBody .= "</div>\n";
 			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
-			$oEmail->SetRecipientFrom($sFrom);
+			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}
@@ -386,8 +440,8 @@ class ActionEmail extends ActionNotification
 			$oEmail->SetRecipientTO($sTo);
 			$oEmail->SetRecipientCC($sCC);
 			$oEmail->SetRecipientBCC($sBCC);
-			$oEmail->SetRecipientFrom($sFrom);
-			$oEmail->SetRecipientReplyTo($sReplyTo);
+			$oEmail->SetRecipientFrom($sFrom, $sFromLabel);
+			$oEmail->SetRecipientReplyTo($sReplyTo, $sReplyToLabel);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}
@@ -439,4 +493,3 @@ class ActionEmail extends ActionNotification
 		}
 	}
 }
-?>

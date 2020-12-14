@@ -37,4 +37,3 @@ require_once(APPROOT.'/application/utils.inc.php');
 class ApplicationException extends CoreException
 {
 }
-?>

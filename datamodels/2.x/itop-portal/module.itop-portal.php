@@ -20,7 +20,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal/2.7.0', array(
+	'itop-portal/3.0.0', array(
 	// Identification
 	'label' => 'Enhanced Customer Portal',
 	'category' => 'Portal',
@@ -38,8 +38,7 @@ SetupWebPage::AddModule(
 	'webservice' => array(
 	//'webservices.itop-portal.php',
 	),
-	'dictionary' => array(
-	),
+
 	'data.struct' => array(
 	//'data.struct.itop-portal.xml',
 	),

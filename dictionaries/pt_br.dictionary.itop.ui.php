@@ -128,7 +128,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:profile_list+' => 'Regras, permissões de direito para essa pessoa',
 	'Class:User/Attribute:allowed_org_list' => 'Organizações permitidas',
 	'Class:User/Attribute:allowed_org_list+' => 'O usuário está permitido ver as informações para a(s) organização(ões) abaixo. Se nenhuma organização for especificada, não há restrição.',
-	'Class:User/Attribute:status' => 'Status~~',
+	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'Se a conta de usuário está habilitada ou desabilitada.',
 	'Class:User/Attribute:status/Value:enabled' => 'Ativado',
 	'Class:User/Attribute:status/Value:disabled' => 'Desativado',
@@ -459,8 +459,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erro: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erro: arquivo de painel inválido',
 	'UI:Error:InvalidDashboard' => 'Erro: painel inválido',
-	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
-	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:MaintenanceMode' => 'A aplicação está em manutenção',
+	'UI:Error:MaintenanceTitle' => 'Manutenção',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -716,8 +716,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:Attributes' => 'Atributos',
 	'UI:Schema:AttributeCode' => 'Código atributo',
 	'UI:Schema:AttributeCode+' => 'Código interno do atributo',
-	'UI:Schema:Label' => 'Label',
-	'UI:Schema:Label+' => 'Label of the attribute',
+	'UI:Schema:Label' => 'Rótulo',
+	'UI:Schema:Label+' => 'Rótulo do atributo',
 	'UI:Schema:Type' => 'Tipo',
 
 	'UI:Schema:Type+' => 'Tipo dado do atributo',
@@ -763,10 +763,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:ClassFilter' => 'Classe:',
 	'UI:Schema:DisplayLabel' => 'Exibir:',
 	'UI:Schema:DisplaySelector/LabelAndCode' => 'Etiqueta e código',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Rótulo',
+	'UI:Schema:DisplaySelector/Code' => 'Código',
 	'UI:Schema:Attribute/Filter' => 'Filtro',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:DefaultNullValue' => 'Padrão nulo : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Tipo os 3 primeiro caracteres...',
 	'UI:Edit:TestQuery' => 'Testar consulta',
 	'UI:Combo:SelectValue' => '--- selecione um valor ---',
@@ -858,7 +858,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:FatalErrorMessage' => 'Erro fatal, o sistema não pode continuar.',
 	'UI:Error_Details' => 'Erro: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:PageTitle:ProfileProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:UserManagement:Class' => 'Classe',
 	'UI:UserManagement:Class+' => 'Classe de objetos',
@@ -867,8 +866,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:UserManagement:AnyObject' => '* qualquer *',
 	'UI:UserManagement:User' => 'Usuário',
 	'UI:UserManagement:User+' => 'Usuário(s) envolvido(s) na projeção',
-	'UI:UserManagement:Profile' => 'Perfis',
-	'UI:UserManagement:Profile+' => 'Perfil em que a projeção é especificado',
 	'UI:UserManagement:Action:Read' => 'Leitura',
 	'UI:UserManagement:Action:Read+' => 'Leitura/mostrar objetos',
 	'UI:UserManagement:Action:Modify' => 'Modificação',
@@ -908,7 +905,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ChangeManagementMenu:Title' => 'Visão geral',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Mudanças por tipo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Mudanças por status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Mudanças por grupo de trabalho',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Mudanças ainda não atribuídas',
 
 	'UI:ConfigurationManagementMenu' => 'Gerenciamento Configurações',
@@ -958,7 +954,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Menu:NotificationsMenu' => 'Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuração de Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuração de <span class="hilite">Notificações</span>',
+	'UI:NotificationsMenu:Title' => 'Configuração de Notificações',
 	'UI:NotificationsMenu:Help' => 'Ajuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>As Notificações são totalmente personalizáveis​​. Elas são baseadas em dois conjuntos de objetos: <i>Gatilhos e Ações</i>.</p>
 <p><i><b>Gatilhos</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1159,19 +1155,20 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:GoPrint' => 'Imprimir ...',
 	'UI:ExplainPrintable' => 'Clique no ícone %1$s para ocultar itens da impressão.<br/>Use o recurso "pré-visualização de impressão" do seu navegador para visualizar antes de imprimir.<br/>Nota: este cabeçalho e outros controles de ajuste não ser impresso.',
 	'UI:PrintResolution:FullSize' => 'Tamanho grande',
-	'UI:PrintResolution:A4Portrait' => 'A4 Portrait~~',
+	'UI:PrintResolution:A4Portrait' => 'Retrato A4',
 	'UI:PrintResolution:A4Landscape' => 'Paisagem A4',
 	'UI:PrintResolution:LetterPortrait' => 'Carta Retrato',
-	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:PrintResolution:LetterLandscape' => 'Carta Retrato',
+	'UI:Toggle:StandardDashboard' => 'Padrão',
+	'UI:Toggle:CustomDashboard' => 'Customizado',
 
 	'UI:ConfigureThisList' => 'Configurar esta lista...',
 	'UI:ListConfigurationTitle' => 'Listar configuração',
 	'UI:ColumnsAndSortOrder' => 'Colunas e ordem de classificação:',
 	'UI:UseDefaultSettings' => 'Use a configuração padrão',
 	'UI:UseSpecificSettings' => 'Use as seguintes configurações:',
-	'UI:Display_X_ItemsPerPage' => 'Mostrar %1$s itens por página',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Mostrar',
+	'UI:Display_X_ItemsPerPage_suffix' => 'itens por página',
 	'UI:UseSavetheSettings' => 'Salvar configurações',
 	'UI:OnlyForThisList' => 'Somente para esta lista',
 	'UI:ForAllLists' => 'Para todas as listas',
@@ -1320,25 +1317,25 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-12' => 'Dezembro',
 
 	// Short version for the DatePicker
-	'DayOfWeek-Sunday-Min' => 'Su~~',
-	'DayOfWeek-Monday-Min' => 'Mo~~',
-	'DayOfWeek-Tuesday-Min' => 'Tu~~',
-	'DayOfWeek-Wednesday-Min' => 'Nós',
-	'DayOfWeek-Thursday-Min' => 'Th~~',
-	'DayOfWeek-Friday-Min' => 'Fr~~',
-	'DayOfWeek-Saturday-Min' => 'Sa~~',
-	'Month-01-Short' => 'Jan~~',
-	'Month-02-Short' => 'Feb~~',
-	'Month-03-Short' => 'Mar~~',
-	'Month-04-Short' => 'Apr~~',
-	'Month-05-Short' => 'May~~',
-	'Month-06-Short' => 'Jun~~',
-	'Month-07-Short' => 'Jul~~',
-	'Month-08-Short' => 'Aug~~',
-	'Month-09-Short' => 'Sep~~',
-	'Month-10-Short' => 'Oct~~',
-	'Month-11-Short' => 'Nov~~',
-	'Month-12-Short' => 'Dec~~',
+	'DayOfWeek-Sunday-Min' => 'D',
+	'DayOfWeek-Monday-Min' => 'S',
+	'DayOfWeek-Tuesday-Min' => 'T',
+	'DayOfWeek-Wednesday-Min' => 'Q',
+	'DayOfWeek-Thursday-Min' => 'Q',
+	'DayOfWeek-Friday-Min' => 'S',
+	'DayOfWeek-Saturday-Min' => 'S',
+	'Month-01-Short' => 'Jan',
+	'Month-02-Short' => 'Fev',
+	'Month-03-Short' => 'Mar',
+	'Month-04-Short' => 'Abr',
+	'Month-05-Short' => 'Mai',
+	'Month-06-Short' => 'Jun',
+	'Month-07-Short' => 'Jul',
+	'Month-08-Short' => 'Ago',
+	'Month-09-Short' => 'Set',
+	'Month-10-Short' => 'Out',
+	'Month-11-Short' => 'Nov',
+	'Month-12-Short' => 'Dez',
 	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Criar um atalho...',
@@ -1374,22 +1371,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CSVImport:DateAndTimeFormats' => 'Formato de data e hora',
 	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Formato padrão: %1$s (por exemplo, %2$s)',
 	'UI:CSVImport:CustomDateTimeFormat' => 'Formato personalizado: %1$s',
-	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Available placeholders:<table>
-<tr><td>Y</td><td>year (4 digits, e.g. 2016)</td></tr>
-<tr><td>y</td><td>year (2 digits, e.g. 16 for 2016)</td></tr>
-<tr><td>m</td><td>month (2 digits, e.g. 01..12)</td></tr>
-<tr><td>n</td><td>month (1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>d</td><td>day (2 digits, e.g. 01..31)</td></tr>
-<tr><td>j</td><td>day (1 or 2 digits no leading zero, e.g. 1..31)</td></tr>
-<tr><td>H</td><td>hour (24 hour, 2 digits, e.g. 00..23)</td></tr>
-<tr><td>h</td><td>hour (12 hour, 2 digits, e.g. 01..12)</td></tr>
-<tr><td>G</td><td>hour (24 hour, 1 or 2 digits no leading zero, e.g. 0..23)</td></tr>
-<tr><td>g</td><td>hour (12 hour, 1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>a</td><td>hour, am or pm (lowercase)</td></tr>
-<tr><td>A</td><td>hour, AM or PM (uppercase)</td></tr>
-<tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
-<tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
-</table>~~',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Placeholders disponíveis:<table>
+<tr><td>Y</td><td>ano (4 dígitos, ex. 2016)</td></tr>
+<tr><td>y</td><td>ano (2 dígitos, ex. 16 para 2016)</td></tr>
+<tr><td>m</td><td>mês (2 dígitos, ex. 01..12)</td></tr>
+<tr><td>n</td><td>mês (1 ou 2 dígitos sem zeros a esquerda, ex. 1..12)</td></tr>
+<tr><td>d</td><td>dia (2 dígitos, ex. 01..31)</td></tr>
+<tr><td>j</td><td>dia (1 ou 2 dígitos sem zeros a esquerda, ex. 1..31)</td></tr>
+<tr><td>H</td><td>hora (24 hour, 2 dígitos, ex. 00..23)</td></tr>
+<tr><td>h</td><td>hora (12 hour, 2 dígitos, ex. 01..12)</td></tr>
+<tr><td>G</td><td>hora (24 hour, 1 ou 2 dígitos sem zeros a esquerda, ex. 0..23)</td></tr>
+<tr><td>g</td><td>hora (12 hour, 1 ou 2 dígitos sem zeros a esquerda, ex. 1..12)</td></tr>
+<tr><td>a</td><td>hora, am ou pm (minúsculo)</td></tr>
+<tr><td>A</td><td>hora, AM ou PM (maiúsculo)</td></tr>
+<tr><td>i</td><td>minutos (2 dígitos, ex. 00..59)</td></tr>
+<tr><td>s</td><td>segundos (2 dígitos, ex. 00..59)</td></tr>
+</table>',
 
 	'UI:Button:Remove' => 'Excluir',
 	'UI:AddAnExisting_Class' => 'Adicionar objetos do tipo %1$s...',
@@ -1403,25 +1400,25 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:InstallationOptions' => 'Opções de instalação',
 	'UI:About:ManualExtensionSource' => 'Extensão',
 	'UI:About:Extension_Version' => 'Versão: %1$s',
-	'UI:About:RemoteExtensionSource' => 'Data~~',
+	'UI:About:RemoteExtensionSource' => 'Dado',
 
 	'UI:DisconnectedDlgMessage' => 'Você está desconectado. Você deve se identificar para continuar usando o aplicativo.',
 	'UI:DisconnectedDlgTitle' => 'Atenção!',
 	'UI:LoginAgain' => 'Login novamente',
 	'UI:StayOnThePage' => 'Fique nessa página',
 
-	'ExcelExporter:ExportMenu' => 'Excel Export...~~',
-	'ExcelExporter:ExportDialogTitle' => 'Excel Export~~',
-	'ExcelExporter:ExportButton' => 'Export~~',
-	'ExcelExporter:DownloadButton' => 'Download %1$s~~',
-	'ExcelExporter:RetrievingData' => 'Recuperando dados ...',
-	'ExcelExporter:BuildingExcelFile' => 'Construindo o arquivo do Excel ...',
+	'ExcelExporter:ExportMenu' => 'Exportar para Excel...',
+	'ExcelExporter:ExportDialogTitle' => 'Exportar para Excel',
+	'ExcelExporter:ExportButton' => 'Exportar',
+	'ExcelExporter:DownloadButton' => 'Download %1$s',
+	'ExcelExporter:RetrievingData' => 'Recuperando dados...',
+	'ExcelExporter:BuildingExcelFile' => 'Construindo o arquivo do Excel...',
 	'ExcelExporter:Done' => 'Feito.',
 	'ExcelExport:AutoDownload' => 'Inicie o download automaticamente quando a exportação estiver pronta',
 	'ExcelExport:PreparingExport' => 'Preparando a exportação ...',
 	'ExcelExport:Statistics' => 'Estatísticas',
 	'portal:legacy_portal' => 'Portal do usuário final',
-	'portal:backoffice' => 'iTop Back-Office User Interface~~',
+	'portal:backoffice' => 'Interface de usuário back-office do iTop',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'O objeto está bloqueado, pois está sendo modificado por %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'O objeto está sendo modificado por %1$s. Suas modificações não podem ser enviadas, pois seriam sobrescritas.',
@@ -1430,10 +1427,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ConcurrentLockKilled' => 'O bloqueio impedindo modificações no objeto atual foi deletado.',
 	'UI:Menu:KillConcurrentLock' => 'Matar o bloqueio de modificação simultânea!',
 
-	'UI:Menu:ExportPDF' => 'Exportar como PDF ...',
+	'UI:Menu:ExportPDF' => 'Exportar como PDF...',
 	'UI:Menu:PrintableVersion' => 'Versão para impressão',
 
-	'UI:BrowseInlineImages' => 'Navegue pelas imagens ...',
+	'UI:BrowseInlineImages' => 'Navegue pelas imagens...',
 	'UI:UploadInlineImageLegend' => 'Carregar uma nova imagem',
 	'UI:SelectInlineImageToUpload' => 'Selecione a imagem para enviar',
 	'UI:AvailableInlineImagesLegend' => 'Imagens disponíveis',
@@ -1449,7 +1446,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'O envio automático foi desativado para esta classe',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Baseado nas suas preferências, dados obsoletos estão escondidos',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adicione algum critério na caixa de pesquisa ou clique no botão de pesquisa para visualizar os objetos.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adicionar novos critérios',
 	// - Add new criteria button
@@ -1510,7 +1507,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Está vazio',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Não está vazio',
-	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Iguais',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Entre',
 	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contém',
@@ -1518,23 +1515,23 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Termina com',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. Regular ',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Iguais',  // => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Maior',  // => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Maior',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menos',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menos / igual a',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menor',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menor / igual a',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente',  // => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 
 	// - Other translations
-	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
-	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
-	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
-	'UI:Search:Value:Autocomplete:Wait' => 'Please wait...~~',
-	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
-	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
-	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
+	'UI:Search:Value:Filter:Placeholder' => 'Filtrar...',
+	'UI:Search:Value:Search:Placeholder' => 'Buscar...',
+	'UI:Search:Value:Autocomplete:StartTyping' => 'Comece a digitar valores possíveis.',
+	'UI:Search:Value:Autocomplete:Wait' => 'Aguarde...',
+	'UI:Search:Value:Autocomplete:NoResult' => 'Sem resultados.',
+	'UI:Search:Value:Toggler:CheckAllNone' => 'Marcar todos / nenhum',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Marcar todos / nenhum visiveis',
 
 	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'De',
@@ -1568,8 +1565,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Expression:Unit:Short:MONTH' => 'm',
 	'Expression:Unit:Short:YEAR' => 'a',
 
-	'Expression:Unit:Long:DAY' => 'day(s)~~',
-	'Expression:Unit:Long:HOUR' => 'hour(s)~~',
+	'Expression:Unit:Long:DAY' => 'dia(s)',
+	'Expression:Unit:Long:HOUR' => 'hora(s)~~',
 	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
 
 	'Expression:Verb:NOW' => 'agora',
@@ -1588,4 +1585,43 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:ResetCache' => 'Redefinir cache',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Mostrar mensagens de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Exibir até %1$s mensagens no menu %2$s.',
+));
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Menu:DataSources' => 'Fontes de dados de sincronização',
+	'Menu:DataSources+' => 'Todas fontes de dados de sincronização',
+	'Menu:WelcomeMenu' => 'Bem-vindo ao iTop',
+	'Menu:WelcomeMenu+' => 'Bem-vindo ao iTop',
+	'Menu:WelcomeMenuPage' => 'Bem-vindo ao iTop',
+	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao iTop',
+	'Menu:AdminTools' => 'Ferramentas Administrativas',
+	'Menu:AdminTools+' => 'Ferramentas Administrativas',
+	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador',
+	'Menu:DataModelMenu' => 'Modelo Dados',
+	'Menu:DataModelMenu+' => 'Visão geral do Modelo Dados',
+	'Menu:ExportMenu' => 'Exportar',
+	'Menu:ExportMenu+' => 'Exportar o resultado de qualquer consulta em HTML, CSV ou XML',
+	'Menu:NotificationsMenu' => 'Notificações',
+	'Menu:NotificationsMenu+' => 'Configuração de Notificações',
+	'Menu:AuditCategories' => 'Categoria Auditorias',
+	'Menu:AuditCategories+' => 'Categoria Auditorias',
+	'Menu:Notifications:Title' => 'Categoria Auditorias',
+	'Menu:RunQueriesMenu' => 'Executar consultas',
+	'Menu:RunQueriesMenu+' => 'Executar qualquer consulta',
+	'Menu:QueryMenu' => 'Consulta  definida',
+	'Menu:QueryMenu+' => 'Consulta  definida',
+	'Menu:UniversalSearchMenu' => 'Pesquisa Universal',
+	'Menu:UniversalSearchMenu+' => 'Pesquisar por nada...',
+	'Menu:UserManagementMenu' => 'Gerenciamento Usuários',
+	'Menu:UserManagementMenu+' => 'Gerenciamento Usuários',
+	'Menu:ProfilesMenu' => 'Perfis',
+	'Menu:ProfilesMenu+' => 'Perfis',
+	'Menu:ProfilesMenu:Title' => 'Perfis',
+	'Menu:UserAccountsMenu' => 'Contas usuários',
+	'Menu:UserAccountsMenu+' => 'Contas usuários',
+	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
+	'Menu:MyShortcuts' => 'Meus atalhos',
+	'Menu:UserManagement' => 'Gerenciamento de usuários',
+	'Menu:Queries' => 'Consultas',
+	'Menu:ConfigurationTools' => 'Configuração',
 ));

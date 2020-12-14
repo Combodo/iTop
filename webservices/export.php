@@ -29,6 +29,11 @@ require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
+
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+
+
 try
 {
 	// Do this before loging, in order to allow setting user credentials from within the file
@@ -37,12 +42,15 @@ try
 catch(Exception $e)
 {
 	echo "Error: ".$e->GetMessage()."<br/>\n";
-	exit -2;
+	exit(EXIT_CODE_FATAL);
 }
 
 if (utils::IsModeCLI()) 
 {
-	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data'); 
+	$oP = new CLIPage("iTop - Export");
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
+
+	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data'); 
 
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) 
@@ -51,10 +59,9 @@ if (utils::IsModeCLI())
 	} 
 	else 
 	{ 
-		$oP = new CLIPage("iTop - Export"); 
-		$oP->p("Access restricted or wrong credentials ('$sAuthUser')"); 
+		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output(); 
-		exit -1; 
+		exit(EXIT_CODE_ERROR);
 	}
 } 
 else 
@@ -74,7 +81,7 @@ if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
 	$oP = new CLIPage("iTop - Export");
 	$oP->p("The user account is not authorized to access the archives");
 	$oP->output();
-	exit -1;
+	exit(EXIT_CODE_ERROR);
 }
 
 $bLocalize = (utils::ReadParam('no_localize', 0) != 1);
@@ -189,47 +196,55 @@ if (!empty($sExpression))
 			switch($sFormat)
 			{
 				case 'html':
-				$oP = new NiceWebPage("iTop - Export");
-				$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
-				
-				// Integration within MS-Excel web queries + HTTPS + IIS:
-				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
-				// Then the fix is to force the reset of header values Pragma and Cache-control 
-				header("Pragma:", true);
-				header("Cache-control:", true);
+					$oP = new NiceWebPage("iTop - Export");
+					$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
+					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 
-				// The HTML output is made for pages located in the /pages/ folder
-				// since this page is in a different folder, let's adjust the HTML 'base' attribute
-				// to make the relative hyperlinks in the page work
-				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$oP->set_base($sUrl.'pages/');
+					// Integration within MS-Excel web queries + HTTPS + IIS:
+					// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+					// Then the fix is to force the reset of header values Pragma and Cache-control
+					header("Cache-control:", true);
+					header("Pragma:", true);
 
-				if(count($aFields) > 0)
-				{
-					$iSearch = array_search('id', $aFields);
-					if ($iSearch !== false)
-					{
-						$bViewLink = true;
-						unset($aFields[$iSearch]);
+					// The HTML output is made for pages located in the /pages/ folder
+					// since this page is in a different folder, let's adjust the HTML 'base' attribute
+					// to make the relative hyperlinks in the page work
+					$sUrl = utils::GetAbsoluteUrlAppRoot();
+					$oP->set_base($sUrl.'pages/');
+
+					if (count($aFields) > 0) {
+						$iSearch = array_search('id', $aFields);
+						if ($iSearch !== false) {
+							$bViewLink = true;
+							unset($aFields[$iSearch]);
+						} else {
+							$bViewLink = false;
+						}
+						$sFields = implode(',', $aFields);
+						$aExtraParams = array(
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
+							'localize_values' => $bLocalize,
+							'zlist' => false,
+							'extra_fields' => $sFields,
+							'view_link' => $bViewLink,
+						);
+					} else {
+						$aExtraParams = array(
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
+							'localize_values' => $bLocalize,
+							'zlist' => 'details',
+						);
 					}
-					else
-					{
-						$bViewLink = false;
-					}
-					$sFields = implode(',', $aFields);
-					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => false, 'extra_fields' => $sFields, 'view_link' => $bViewLink);
-				}
-				else
-				{
-					$aExtraParams = array('menu' => false, 'toolkit_menu' => false, 'display_limit' => false, 'localize_values' => $bLocalize, 'zlist' => 'details');
-				}
 
-				$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
-				$oResultBlock->Display($oP, 'expresult');
-				break;
-				
+					$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
+					$oResultBlock->Display($oP, 'expresult');
+					break;
+
 				case 'csv':
 				$oP = new CSVPage("iTop - Export");
 				$sFields = implode(',', $aFields);
@@ -336,17 +351,14 @@ if (!$oP)
 	$oP->p("Parameters:");
 	$oP->p(" * expression: an OQL expression (URL encoded if needed)");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
-	if (Utils::IsModeCLI())
-	{
+	if (Utils::IsModeCLI()) {
 		$oP->p(" * with_archive: (optional, defaults to 0) if set to 1 then the result set will include archived objects");
-	}
-	else
-	{
+	} else {
 		$oP->p(" * with_archive: (optional, defaults to the current mode) if set to 1 then the result set will include archived objects");
 	}
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of 'html', 'spreadsheet', 'csv', 'xlsx' or 'xml'");
-	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a coma");
+	$oP->p(" * fields: (optional, no effect on XML format) list of fields (attribute codes, or alias.attcode) separated by a comma");
 	$oP->p(" * fields_advanced: (optional, no effect on XML/HTML formats ; ignored is fields is specified) If set to 1, the default list of fields will include the external keys and their reconciliation keys");
 	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");
 }

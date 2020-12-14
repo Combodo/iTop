@@ -15,19 +15,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
-// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.7.2";
-$approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
+$approot-relative: "../../../../" !default; // relative to env-***/branding/themes/***/main.css
 
 // Base colors
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              #444 !default;
-$gray:                   #777 !default;
-$gray-light:             #808080 !default;
-$gray-lighter:           #ddd !default;
-$gray-extra-light:       #F1F1F1 !default;
+$gray-base: #000 !default;
+$gray-darker: lighten($gray-base, 13.5%) !default; // #222
+$gray-dark: #444 !default;
+$gray: #777 !default;
+$gray-light: #808080 !default;
+$gray-lighter: #ddd !default;
+$gray-extra-light: #F1F1F1 !default;
 
 $white:					#FFFFFF !default;
 
@@ -65,7 +62,15 @@ $complement-light: #d6e8ef !default;
 $frame-background-color: $gray-extra-light !default;
 $text-color: #000 !default;
 $box-radius: 0px !default;
-$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
+
+$box-shadow-lightest: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
+$box-shadow-lighter: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !default;
+$box-shadow-light: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22) !default;
+$box-shadow-regular: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !default;
+$box-shadow-strong: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23) !default;
+$box-shadow-stronger: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22) !default;
+$box-shadow-strongest: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22) !default;
+
 $body-background-color : $white !default;
 
 $hyperlink-color: $complement-color !default;
@@ -124,11 +129,11 @@ $main-menu-background-color: $gray-extra-light !default;
 $hover-background-color: #fde17c !default;
 $border-highlight-color: $brand-primary-dark !default;
 $highlight-item-color: $white !default;
-$content-color: #eeeeee !default; 
-$default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
+$content-color: #eeeeee !default;
+$default-font-family: "Monorale";
 $icons-filter: hue-rotate(0deg) !default;
 
-%font-awesome-prerequisites{
+%font-awesome-prerequisites {
 	font-family: 'Font Awesome 5 Free';
 	font-weight: 600;
 }

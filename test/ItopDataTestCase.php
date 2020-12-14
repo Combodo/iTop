@@ -73,7 +73,7 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		//require_once(APPROOT.'/application/startup.inc.php');
+		require_once(APPROOT.'/application/startup.inc.php');
 
 		require_once(APPROOT.'application/utils.inc.php');
 
@@ -408,8 +408,12 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
 	{
+		if (empty($sPassword)){
+			$sPassword = $sLogin;
+		}
+
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
@@ -417,11 +421,34 @@ class ItopDataTestCase extends ItopTestCase
 		$oUser = $this->createObject('UserLocal', array(
 			'contactid' => 2,
 			'login' => $sLogin,
-			'password' => $sLogin,
+			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => $oSet,
 		));
 		$this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
+
+		return $oUser;
+	}
+
+	/**
+	 * @param \DBObject $oUser
+	 * @param int $iProfileId
+	 *
+	 * @return \DBObject
+	 * @throws Exception
+	 */
+	protected function AddProfileToUser($oUser, $iProfileId)
+	{
+		$oUserProfile = new URP_UserProfile();
+		$oUserProfile->Set('profileid', $iProfileId);
+		$oUserProfile->Set('reason', 'UNIT Tests');
+		/** @var DBObjectSet $oSet */
+		$oSet = $oUser->Get('profile_list');
+		$oSet->AddObject($oUserProfile);
+		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+			'profile_list' => $oSet,
+		));
+		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
 
 		return $oUser;
 	}
@@ -713,7 +740,7 @@ class ItopDataTestCase extends ItopTestCase
 			$iId = $oLnk->Get('functionalci_id');
 			if (!empty($aWaitedCIList))
 			{
-				$this->assertTrue(array_key_exists($iId, $aWaitedCIList));
+				$this->assertArrayHasKey($iId, $aWaitedCIList);
 				$this->assertEquals($aWaitedCIList[$iId], $oLnk->Get('impact_code'));
 			}
 		}
@@ -737,7 +764,7 @@ class ItopDataTestCase extends ItopTestCase
 			$iId = $oLnk->Get('contact_id');
 			if (!empty($aWaitedContactList))
 			{
-				$this->assertTrue(array_key_exists($iId, $aWaitedContactList));
+				$this->assertArrayHasKey($iId, $aWaitedContactList);
 				foreach ($aWaitedContactList[$iId] as $sAttCode => $oValue)
 				{
 					if (MetaModel::IsValidAttCode(get_class($oTicket), $sAttCode))
@@ -756,5 +783,29 @@ class ItopDataTestCase extends ItopTestCase
 		$this->iTestOrgId = $oOrg->GetKey();
 	}
 
-
+	/**
+	 *  Assert that a series of operations will trigger a given number of MySL queries
+	 *
+	 * @param $iExpectedCount  Number of MySQL queries that should be executed
+	 * @param callable $oFunction Operations to perform
+	 *
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	protected static function assertDBQueryCount($iExpectedCount, callable $oFunction)
+	{
+		$iInitialCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$oFunction();
+		$iFinalCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
+		$iCount = $iFinalCount - 1 - $iInitialCount;
+		if ($iCount != $iExpectedCount)
+		{
+			static::fail("Expected $iExpectedCount queries. $iCount have been executed.");
+		}
+		else
+		{
+			// Otherwise PHP Unit will consider that no assertion has been made
+			static::assertTrue(true);
+		}
+	}
 }

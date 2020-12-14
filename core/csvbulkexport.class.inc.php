@@ -301,7 +301,7 @@ EOF
 		}
 		while($aRow = $oSet->FetchAssoc())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$aData = array();
 			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
 			{
@@ -339,7 +339,7 @@ EOF
 		// Restore original date & time formats
 		AttributeDateTime::SetFormat($oPrevDateTimeFormat);
 		AttributeDate::SetFormat($oPrevDateFormat);
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
 		if ($this->aStatusInfo['total'] == 0)
 		{

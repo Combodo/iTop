@@ -1,0 +1,48 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-edits-entry--short-description--text-color: inherit !default;
+$ibo-edits-entry--long-description-toggler-icon--margin-left: 12px !default;
+$ibo-edits-entry--long-description--margin-top: 8px !default;
+
+/* CSS rules */
+/* - Long description */
+a.ibo-edits-entry--short-description {
+	color: $ibo-edits-entry--short-description--text-color;
+}
+.ibo-edits-entry--long-description-toggler-icon{
+	margin-left: $ibo-edits-entry--long-description-toggler-icon--margin-left;
+	transition: all 0.2s ease-in-out;
+}
+.ibo-edits-entry--long-description{
+	display: none;
+	margin-top: $ibo-edits-entry--long-description--margin-top;
+	list-style: inside;
+}
+/* - Long desc. opened */
+.ibo-edits-entry{
+	&.ibo-is-opened{
+		.ibo-edits-entry--long-description-toggler-icon{
+			transform: rotateX(180deg);
+		}
+		.ibo-edits-entry--long-description{
+			display: block;
+		}
+	}
+}

@@ -837,7 +837,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:FatalErrorMessage' => 'Критическая ошибка, iTop не может продолжать работу.',
 	'UI:Error_Details' => 'Ошибка: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop управление пользователями - проектирование классов',
 	'UI:PageTitle:ProfileProjections' => 'iTop управление пользователями - проектирование профилей',
 	'UI:UserManagement:Class' => 'Классs',
 	'UI:UserManagement:Class+' => 'Класс объектов',
@@ -846,8 +845,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:AnyObject' => '* любой *',
 	'UI:UserManagement:User' => 'Пользователь',
 	'UI:UserManagement:User+' => 'Пользователь учавствует',
-	'UI:UserManagement:Profile' => 'Профиль',
-	'UI:UserManagement:Profile+' => 'Профиль, указанный в проектировании',
 	'UI:UserManagement:Action:Read' => 'Чтение',
 	'UI:UserManagement:Action:Read+' => 'Чтение/отображение объектов',
 	'UI:UserManagement:Action:Modify' => 'Изменить',
@@ -887,7 +884,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ChangeManagementMenu:Title' => 'Обзор изменений',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Изменения по типу',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Изменения по статутсу',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Изменения по рабочей группе',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Не назначенные изменения',
 
 	'UI:ConfigurationManagementMenu' => 'Управление конфигурациями',
@@ -937,7 +933,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
+	'UI:NotificationsMenu:Title' => 'Конфигурация Уведомлений',
 	'UI:NotificationsMenu:Help' => 'Помощь',
 	'UI:NotificationsMenu:HelpContent' => '<p>В iTop полностью настраиваемые уведомления, которые основаны на двух наборах объектов: <i>триггерах и действиях</i>.</p>
 <p><i><b>Триггеры</b></i> определяют, когда необходимо выполнить действия. Базовые триггеры доступны как часть ядра iTop, другие триггеры добавляются дополнительными расширениями:
@@ -1149,7 +1145,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ColumnsAndSortOrder' => 'Колонки и порядок сортировки:',
 	'UI:UseDefaultSettings' => 'Использовать настройки по умолчанию',
 	'UI:UseSpecificSettings' => 'Использовать эти настройки:',
-	'UI:Display_X_ItemsPerPage' => 'Показывать %1$s элементов на странице',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Показывать',
+	'UI:Display_X_ItemsPerPage_suffix' => 'элементов на странице',
 	'UI:UseSavetheSettings' => 'Сохранить настройки',
 	'UI:OnlyForThisList' => 'Только для текущего списка',
 	'UI:ForAllLists' => 'Для всех списков',
@@ -1566,4 +1563,43 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
+));
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Menu:DataSources' => 'Синхронизация данных',
+	'Menu:DataSources+' => 'Синхронизация данных',
+	'Menu:WelcomeMenu' => 'Добро пожаловать',
+	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop',
+	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
+	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop',
+	'Menu:AdminTools' => 'Инструменты администратора',
+	'Menu:AdminTools+' => 'Инструменты администратора',
+	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора',
+	'Menu:DataModelMenu' => 'Модель данных',
+	'Menu:DataModelMenu+' => 'Обзор модели данных',
+	'Menu:ExportMenu' => 'Экспорт',
+	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML',
+	'Menu:NotificationsMenu' => 'Уведомления',
+	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений',
+	'Menu:AuditCategories' => 'Категории аудита',
+	'Menu:AuditCategories+' => 'Категории аудита',
+	'Menu:Notifications:Title' => 'Категории аудита',
+	'Menu:RunQueriesMenu' => 'Выполнение запросов',
+	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов',
+	'Menu:QueryMenu' => 'Книга запросов',
+	'Menu:QueryMenu+' => 'Книга запросов',
+	'Menu:UniversalSearchMenu' => 'Универсальный поиск',
+	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...',
+	'Menu:UserManagementMenu' => 'Управление пользователями',
+	'Menu:UserManagementMenu+' => 'Управление пользователями',
+	'Menu:ProfilesMenu' => 'Профили',
+	'Menu:ProfilesMenu+' => 'Профили пользователей',
+	'Menu:ProfilesMenu:Title' => 'Профили пользователей',
+	'Menu:UserAccountsMenu' => 'Учетные записи',
+	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей',
+	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
+	'Menu:MyShortcuts' => 'Избранное',
+	'Menu:UserManagement' => 'Управление пользователями',
+	'Menu:Queries' => 'Запросы OQL',
+	'Menu:ConfigurationTools' => 'Конфигурация',
 ));

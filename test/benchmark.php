@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -781,15 +780,16 @@ try
 		break;
 
 		case 'create_structure':
-		$oP->no_cache();
-		$iPlannedContacts = Utils::ReadParam('plannedcontacts');
-		$iPlannedContracts = Utils::ReadParam('plannedcontracts');
+			$oP->no_cache();
+			$oP->add_xframe_options('DENY');
+			$iPlannedContacts = Utils::ReadParam('plannedcontacts');
+			$iPlannedContracts = Utils::ReadParam('plannedcontracts');
 
-		$oDataCreation = new BenchmarkDataCreation();
-		$oDataCreation->PlanStructure($iPlannedContacts, $iPlannedContracts);
-		$oDataCreation->ShowPlans($oP);
-		$oDataCreation->ShowForm($oP, 'create_structure_go');
-		break;
+			$oDataCreation = new BenchmarkDataCreation();
+			$oDataCreation->PlanStructure($iPlannedContacts, $iPlannedContracts);
+			$oDataCreation->ShowPlans($oP);
+			$oDataCreation->ShowForm($oP, 'create_structure_go');
+			break;
 
 		case 'create_structure_go':
 		$oP->no_cache();

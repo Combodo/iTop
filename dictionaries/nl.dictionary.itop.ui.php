@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  * 
  * @author Hipska (2018)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
  * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -873,8 +873,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:AnyObject' => '* elk *',
 	'UI:UserManagement:User' => 'Gebruiker',
 	'UI:UserManagement:User+' => 'Gebruiker bezig met de projectie',
-	'UI:UserManagement:Profile' => 'Profiel',
-	'UI:UserManagement:Profile+' => 'Profiel waarin de projectie is opgegeven',
 	'UI:UserManagement:Action:Read' => 'Lezen',
 	'UI:UserManagement:Action:Read+' => 'Lezen/weergeven van objecten',
 	'UI:UserManagement:Action:Modify' => 'Aanpassen',
@@ -914,7 +912,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ChangeManagementMenu:Title' => 'Overzicht changes',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes aan de hand van soort',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes aan de hand van soort status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes aan de hand van werkgroep',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Nog niet toegewezen Changes',
 
 	'UI:ConfigurationManagementMenu' => 'Configuratie Management',
@@ -964,7 +961,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Menu:NotificationsMenu' => 'Meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuratie van <span class="hilite">Meldingen</span>',
+	'UI:NotificationsMenu:Title' => 'Configuratie van Meldingen',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
 <p><i><b>Triggers</b></i> bepalen wanneer er een melding is. Er zijn verschillende triggers als onderdeel van '.ITOP_APPLICATION_SHORT.' core, maar andere kunnen door middel van uitbreidingen worden toegevoegd.
@@ -1180,7 +1177,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ColumnsAndSortOrder' => 'Kolommen en sorteervolgorde:',
 	'UI:UseDefaultSettings' => 'Gebruik de standaard instellingen',
 	'UI:UseSpecificSettings' => 'Gebruik de volgende instellingen:',
-	'UI:Display_X_ItemsPerPage' => 'Geef %1$s items per pagina weer',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Geef',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per pagina weer',
 	'UI:UseSavetheSettings' => 'Sla de instellingen op',
 	'UI:OnlyForThisList' => 'Alleen voor deze lijst',
 	'UI:ForAllLists' => 'Standaard voor alle lijsten',
@@ -1597,4 +1595,43 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:ResetCache' => 'Maak cache leeg',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
+));
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Menu:DataSources' => 'Synchronisatie-databronnen',
+	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
+	'Menu:WelcomeMenu' => 'Welkom',
+	'Menu:WelcomeMenu+' => 'Welkom in iTop',
+	'Menu:WelcomeMenuPage' => 'Welkom',
+	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
+	'Menu:AdminTools' => 'Admintools',
+	'Menu:AdminTools+' => 'Beheertools',
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',
+	'Menu:DataModelMenu' => 'Datamodel',
+	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',
+	'Menu:NotificationsMenu' => 'Meldingen',
+	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',
+	'Menu:AuditCategories' => 'Auditcategorieën',
+	'Menu:AuditCategories+' => 'Auditcategorieën',
+	'Menu:Notifications:Title' => 'Auditcategorieën',
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',
+	'Menu:RunQueriesMenu+' => 'Voer een query uit',
+	'Menu:QueryMenu' => 'Favoriete query\'s',
+	'Menu:QueryMenu+' => 'Favoriete query\'s',
+	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',
+	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',
+	'Menu:UserManagementMenu' => 'Gebruikersbeheer',
+	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',
+	'Menu:ProfilesMenu' => 'Profielen',
+	'Menu:ProfilesMenu+' => 'Profielen',
+	'Menu:ProfilesMenu:Title' => 'Profielen',
+	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
+	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
+	'Menu:UserManagement' => 'Gebruikersbeheer',
+	'Menu:Queries' => 'Query\'s',
+	'Menu:ConfigurationTools' => 'Configuratie',
 ));

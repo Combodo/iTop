@@ -106,17 +106,21 @@ EOF
 			switch($oCheckResult->iSeverity)
 			{
 				case CheckResult::ERROR:
-				$aErrors[] = $oCheckResult->sLabel;
-				$this->bCanMoveForward = false;
-				break;
+					$aErrors[] = $oCheckResult->sLabel;
+					$this->bCanMoveForward = false;
+					break;
 
 				case CheckResult::WARNING:
-				$aWarnings[] = $oCheckResult->sLabel;
-				break;
+					$aWarnings[] = $oCheckResult->sLabel;
+					break;
 
 				case CheckResult::INFO:
-				$aInfo[] = $oCheckResult->sLabel;
-				break;
+					$aInfo[] = $oCheckResult->sLabel;
+					break;
+
+				case CheckResult::TRACE:
+					SetupLog::Ok($oCheckResult->sLabel);
+					break;
 			}
 		}
 		$sStyle = 'style="display:none;max-height:196px;overflow:auto;"';
@@ -287,16 +291,18 @@ HTML
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
 		$bCanBackup = true;
 		$sMySQLDumpMessage = '';
-		foreach($aBackupChecks as $oCheck)
-		{
-			if ($oCheck->iSeverity == CheckResult::ERROR)
-			{
-				$bCanBackup = false;
-				$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
-			}
-			else
-			{
-				$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
+		foreach ($aBackupChecks as $oCheck) {
+			switch ($oCheck->iSeverity) {
+				case CheckResult::ERROR:
+					$bCanBackup = false;
+					$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
+					break;
+				case CheckResult::TRACE:
+					SetupLog::Ok($oCheck->sLabel);
+					break;
+				default:
+					$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
+					break;
 			}
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
@@ -526,33 +532,18 @@ EOF
 
 		$oPage->add("<h2>Information about the upgrade from version $sInstalledVersion to ".ITOP_VERSION_FULL."</h2>");
 
-		if ($sInstalledVersion == ITOP_VERSION_FULL)
-		{
+		if ($sInstalledVersion == ITOP_VERSION_FULL) {
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
 		}
 		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
 
-		if ($sInstalledDataModelVersion == '$ITOP_VERSION$.$WCREV$')
-		{
-			// Special case for upgrading some  development versions (temporary)
-			$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
-			$sInstalledDataModelVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
-		}
-		else
-		{
-			$sCompatibleDMDir = SetupUtils::GetCompatibleDataModelDir($sInstalledDataModelVersion);
-		}
-
-		if ($sCompatibleDMDir === false)
-		{
+		$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
+		if ($sCompatibleDMDir === false) {
 			// No compatible version exists... cannot upgrade. Either it is too old, or too new (downgrade !)
 			$this->bCanMoveForward = false;
-			$oPage->p("The current version of ".ITOP_APPLICATION." (".ITOP_VERSION_FULL.") does not seem to be compatible with the installed version ($sInstalledVersion).");
-			$oPage->p("The upgrade cannot continue, sorry.");
-		}
-		else
-		{
+			$oPage->p("No datamodel directory found.");
+		} else {
 			$sUpgradeDMVersion = SetupUtils::GetDataModelVersion($sCompatibleDMDir);
 			$sPreviousSourceDir = isset($aInstalledInfo['source_dir']) ? $aInstalledInfo['source_dir'] : 'modules';
 			$aChanges = false;
@@ -716,7 +707,7 @@ class WizStepLicense extends WizardStep
         $aLicenses = SetupUtils::GetLicenses();
 		$oPage->add_style(
 <<<EOF
-fieldset {
+fieldset ul{
 	max-height: 18em;
 	overflow: auto;
 }
@@ -1033,38 +1024,48 @@ EOF
 		);
 	}
 
-	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
-	{
-		switch($sCode)
-		{
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters) {
+		switch ($sCode) {
 			case 'check_graphviz':
-			$sGraphvizPath = $aParameters['graphviz_path'];
-			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
-			$sMessage = json_encode($oCheck->sLabel);
-			switch($oCheck->iSeverity)
-			{
-				case CheckResult::INFO:
-				$sStatus = 'ok';
-				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+				$sGraphvizPath = $aParameters['graphviz_path'];
+				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
-				break;
+				// N°2214 logging TRACE results
+				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
+				foreach ($aTraceCheck as $oTraceCheck) {
+					SetupLog::Ok($oTraceCheck->sLabel);
+				}
 
-				default:
-				case CheckResult::ERROR:
-				case CheckResult::WARNING:
-				$sStatus = 'ko';
-				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
-				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
+				foreach ($aNonTraceCheck as $oCheck) {
+					switch ($oCheck->iSeverity) {
+						case CheckResult::INFO:
+							$sStatus = 'ok';
+							$sInfoExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
 
-			}
-			$oPage->add_ready_script(
-<<<EOF
+							break;
+
+						default:
+						case CheckResult::ERROR:
+						case CheckResult::WARNING:
+						$sStatus = 'ko';
+						$sErrorExplanation = $oCheck->sLabel;
+						$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+						break;
+					}
+
+					if ($oCheck->iSeverity !== CheckResult::TRACE) {
+						$oPage->add_ready_script(
+							<<<JS
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');
-EOF
-			);
-			break;
+JS
+						);
+					}
+				}
+
+				break;
 		}
 	}
 
@@ -1167,32 +1168,39 @@ EOF
 		switch($sCode)
 		{
 			case 'check_graphviz':
-			$sGraphvizPath = $aParameters['graphviz_path'];
-			$oCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
-			$sMessage = json_encode($oCheck->sLabel);
-			switch($oCheck->iSeverity)
-			{
-				case CheckResult::INFO:
-				$sStatus = 'ok';
-				$sInfoExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Graphviz\' dot found';
-				$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+				$sGraphvizPath = $aParameters['graphviz_path'];
+				$aCheck = SetupUtils::CheckGraphviz($sGraphvizPath);
 
-				break;
+				// N°2214 logging TRACE results
+				$aTraceCheck = CheckResult::FilterCheckResultArray($aCheck, [CheckResult::TRACE]);
+				foreach ($aTraceCheck as $oTraceCheck) {
+					SetupLog::Ok($oTraceCheck->sLabel);
+				}
 
-				default:
-				case CheckResult::ERROR:
-				case CheckResult::WARNING:
-				$sStatus = 'ko';
-				$sErrorExplanation = (json_encode($oCheck->sLabel) !== false) ? $oCheck->sLabel : 'Could not find Graphviz\' dot';
-				$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+				$aNonTraceCheck = array_diff($aCheck, $aTraceCheck);
+				foreach ($aNonTraceCheck as $oCheck) {
+					switch ($oCheck->iSeverity) {
+						case CheckResult::INFO:
+							$sStatus = 'ok';
+							$sInfoExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-valid">'.$sInfoExplanation.'</div>');
+							break;
 
-			}
-			$oPage->add_ready_script(
-<<<EOF
+						default:
+						case CheckResult::ERROR:
+						case CheckResult::WARNING:
+							$sStatus = 'ko';
+							$sErrorExplanation = $oCheck->sLabel;
+							$sMessage = json_encode('<div class="message message-error">'.$sErrorExplanation.'</div>');
+							break;
+					}
+					$oPage->add_ready_script(
+						<<<JS
 	$("#graphviz_status").html($sMessage);
 	$('#btn_next').attr('data-graphviz', '$sStatus');
-EOF
-			);
+JS
+					);
+				}
 			break;
 		}
 	}

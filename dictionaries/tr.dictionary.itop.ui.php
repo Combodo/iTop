@@ -86,7 +86,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Query/Attribute:description' => 'Description~~',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
 	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Query~~',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Expression~~',
@@ -859,7 +859,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:FatalErrorMessage' => 'Kritik Hata, iTop devam edemiyor.',
 	'UI:Error_Details' => 'Hata: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop Kullanıcı Yönetimi - sınıf koruması',
 	'UI:PageTitle:ProfileProjections' => 'iTop Kullanıcı Yönetimi - profil koruması',
 	'UI:UserManagement:Class' => 'Sınıf',
 	'UI:UserManagement:Class+' => 'Nesnin sınıfı',
@@ -868,8 +867,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:AnyObject' => '* herhangi *',
 	'UI:UserManagement:User' => 'Kullanıcı',
 	'UI:UserManagement:User+' => 'User involved in the projection',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profile in which the projection is specified',
 	'UI:UserManagement:Action:Read' => 'Oku',
 	'UI:UserManagement:Action:Read+' => 'Nesneyi görüntüle',
 	'UI:UserManagement:Action:Modify' => 'Güncelle',
@@ -909,7 +906,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ChangeManagementMenu:Title' => 'Değişiklik Özeti',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Değişiklik tipine göre',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Değişiklik durumuna göre',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'İş grubuna değişiklikler',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Atanmamış Değişiklikler',
 
 	'UI:ConfigurationManagementMenu' => 'Konfigürasyon Yönetimi',
@@ -959,7 +955,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
+	'UI:NotificationsMenu:Title' => 'Uyarıların yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1589,4 +1585,43 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Menu:DataSources' => 'Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
+	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
+	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:AdminTools' => 'Yönetim Araçları',
+	'Menu:AdminTools+' => 'Yönetim Araçları',
+	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
+	'Menu:DataModelMenu' => 'Veri Modeli',
+	'Menu:DataModelMenu+' => 'Veri Modeli Özeti',
+	'Menu:ExportMenu' => 'Dışarı ver',
+	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar',
+	'Menu:NotificationsMenu' => 'Uyarılar',
+	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
+	'Menu:AuditCategories' => 'Denetleme Kategorileri',
+	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
+	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Genel sorgu',
+	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
+	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
+	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',
+	'Menu:ProfilesMenu' => 'Profiller',
+	'Menu:ProfilesMenu+' => 'Profiller',
+	'Menu:ProfilesMenu:Title' => 'Profiller',
+	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

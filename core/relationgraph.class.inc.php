@@ -472,7 +472,7 @@ class RelationGraph extends SimpleGraph
 					{
 						do
 						{
-							set_time_limit($iLoopTimeLimit);
+							set_time_limit(intval($iLoopTimeLimit));
 
 							$sObjectRef = 	RelationObjectNode::MakeId($oRelatedObj);
 							$oRelatedNode = $this->GetNode($sObjectRef);
@@ -501,7 +501,7 @@ class RelationGraph extends SimpleGraph
 						while ($oRelatedObj = $oObjSet->Fetch());
 					}
 				}
-				set_time_limit($iPreviousTimeLimit);
+				set_time_limit(intval($iPreviousTimeLimit));
 			}
 		}
 	}

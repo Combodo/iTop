@@ -847,7 +847,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:FatalErrorMessage' => 'Fatal fejl, iTop kan ikke fortsætte.',
 	'UI:Error_Details' => 'Fejl: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop bruger styring - klasse projection',
 	'UI:PageTitle:ProfileProjections' => 'iTop bruger styring - profil projection',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => '',
@@ -856,8 +855,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:UserManagement:AnyObject' => '* enhver *',
 	'UI:UserManagement:User' => 'Bruger',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Læs',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Ændring',
@@ -897,7 +894,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ChangeManagementMenu:Title' => 'Changes Overblik',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes efter type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes efter status',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes efter workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes endnu ikke tildelt',
 
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
@@ -947,7 +943,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 	'Menu:NotificationsMenu' => 'Notifikationer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguration af <span class="hilite">Notifikationer</span>~~',
+	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I iTop er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1160,7 +1156,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ColumnsAndSortOrder' => 'Kolonner og sortering:',
 	'UI:UseDefaultSettings' => 'Brug de anbefalede indstillinger',
 	'UI:UseSpecificSettings' => 'Brug følgende indstillinger:',
-	'UI:Display_X_ItemsPerPage' => 'Vis %1$s emner per side',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Vis',
+	'UI:Display_X_ItemsPerPage_suffix' => 'emner per side',
 	'UI:UseSavetheSettings' => 'Gem indstillinger',
 	'UI:OnlyForThisList' => 'Kun for denne liste',
 	'UI:ForAllLists' => 'For alle lister',
@@ -1577,4 +1574,43 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Menu:DataSources' => 'Synkroniserings Data Kilder',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:WelcomeMenu' => 'Velkomen',
+	'Menu:WelcomeMenu+' => 'Velkommen til iTop',
+	'Menu:WelcomeMenuPage' => 'Velkomen',
+	'Menu:WelcomeMenuPage+' => 'Velkommen til iTop',
+	'Menu:AdminTools' => 'Admin værktøjer',
+	'Menu:AdminTools+' => 'Administration tools~~',
+	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
+	'Menu:DataModelMenu' => 'Data Model~~',
+	'Menu:DataModelMenu+' => 'Overview of the Data Model~~',
+	'Menu:ExportMenu' => 'Export~~',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
+	'Menu:NotificationsMenu' => 'Notifikationer',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
+	'Menu:AuditCategories' => 'Audit Kategorier',
+	'Menu:AuditCategories+' => 'Audit Categories~~',
+	'Menu:Notifications:Title' => 'Audit Kategorier',
+	'Menu:RunQueriesMenu' => 'Kør forespørgsler',
+	'Menu:RunQueriesMenu+' => 'Run any query~~',
+	'Menu:QueryMenu' => 'Query parlør',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Universal Søgning',
+	'Menu:UniversalSearchMenu+' => 'Search for anything...~~',
+	'Menu:UserManagementMenu' => 'Bruger styring',
+	'Menu:UserManagementMenu+' => 'User management~~',
+	'Menu:ProfilesMenu' => 'Profiler',
+	'Menu:ProfilesMenu+' => 'Profiles~~',
+	'Menu:ProfilesMenu:Title' => 'Profiler',
+	'Menu:UserAccountsMenu' => 'Bruger konti',
+	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
+	'Menu:MyShortcuts' => 'Mine Genveje',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

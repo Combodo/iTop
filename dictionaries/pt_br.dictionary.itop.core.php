@@ -52,7 +52,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeCaseLog' => 'Log',
 	'Core:AttributeCaseLog+' => '',
 
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum' => 'Enum Computado',
 	'Core:AttributeMetaEnum+' => '',
 
 	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
@@ -204,12 +204,12 @@ Operadores:<br/>
 	'Core:AttributeTag' => 'Etiquetas',
 	'Core:AttributeTag+' => 'Etiquetas',
 	
-	'Core:Context=REST/JSON' => 'REST~~',
-	'Core:Context=Synchro' => 'Synchro~~',
-	'Core:Context=Setup' => 'Setup~~',
-	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'cron~~',
-	'Core:Context=GUI:Portal' => 'Portal~~',
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Setup' => 'Setup',
+	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=CRON' => 'cron',
+	'Core:Context=GUI:Portal' => 'Portal',
 ));
 
 
@@ -505,10 +505,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testar destinatário',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatário em caso o estado está definido como "Teste"',
-	'Class:ActionEmail/Attribute:from' => 'De',
-	'Class:ActionEmail/Attribute:from+' => 'Será enviado para o cabeçalho de email',
-	'Class:ActionEmail/Attribute:reply_to' => 'Responder para',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviado para o cabeçalho de email',
+	'Class:ActionEmail/Attribute:from' => 'De~~',
+	'Class:ActionEmail/Attribute:from+' => 'Será enviado para o cabeçalho de email~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Responder para~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviado para o cabeçalho de email~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Para',
 	'Class:ActionEmail/Attribute:to+' => 'Destinatário para o email',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
@@ -542,8 +546,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é ativado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => 'Contexto',
+	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o gatilho ser ativado',
 ));
 
 //
@@ -633,8 +637,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnThresholdReached' => 'Gatilho (na entrada)',
-	'Class:TriggerOnThresholdReached+' => 'Gatilho no cronômetro limite atingido',
+	'Class:TriggerOnThresholdReached' => 'Gatilho (na atingimento de limite)',
+	'Class:TriggerOnThresholdReached+' => 'Gatilho de limite do cronômetro atingido',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronômetro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Entrada',
@@ -956,12 +960,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: TagSetFieldData
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData' => '%2$s para classe %1$s',
 	'Class:TagSetFieldData+' => '',
 
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
+	'Class:TagSetFieldData/Attribute:code' => 'Código',
 	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Deve conter pelo menos 3 caracteres alfanuméricos',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
+	'Class:TagSetFieldData/Attribute:label' => 'Rótulo',
 	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
 	'Class:TagSetFieldData/Attribute:description+' => 'Descrição',
@@ -1050,4 +1054,40 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Additional language entries not present in English dict
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
  'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:AbstractResource' => 'Recurso abstrato',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceAdminMenu' => 'Recurso Admin Menu',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceRunQueriesMenu' => 'Menu de consultas de execução de recursos',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

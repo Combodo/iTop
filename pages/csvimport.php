@@ -22,18 +22,16 @@ try
 	ini_set('memory_limit', '256M');
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-	
+
 	require_once(APPROOT.'/application/startup.inc.php');
-	
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$iStep = utils::ReadParam('step', 1);
 	
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
-	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', 'fas fa-file-import', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
@@ -1280,23 +1278,20 @@ EOF
 	function Welcome(iTopWebPage $oPage)
 	{
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
-		if (!empty($sSynchroScope))
-		{
+		if (!empty($sSynchroScope)) {
 			$oSearch = DBObjectSearch::FromOQL($sSynchroScope);
 			$sClassName = $oSearch->GetClass();
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
 			DisplaySynchroBanner($oPage, $sClassName, $iCount);
 			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
-		}
-		else
-		{
+		} else {
 			$aSynchroUpdate = null;
 		}
-		
+
 		$oPage->add("<div><p><h1>".Dict::S('UI:Title:BulkImport+')."</h1></p></div>\n");
-		$oPage->AddTabContainer('tabs1');	
-	
+		$oPage->AddTabContainer('tabs1');
+
 		$sSeparator = utils::ReadParam('separator', '', false, 'raw_data');
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
 		$bHeaderLine = utils::ReadParam('header_line', true);
@@ -1305,7 +1300,7 @@ EOF
 		$sEncoding = utils::ReadParam('encoding', '');
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
-		
+
 		if ($sEncoding == '')
 		{
 			$sEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');

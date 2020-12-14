@@ -15,17 +15,70 @@ use utils;
 use WebPage;
 
 
+/**
+ * Class TwigHelper
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\TwigBase\Twig
+ * @since 2.7.0
+ */
 class TwigHelper
 {
-	public static function GetTwigEnvironment($sViewPath)
+	/**
+	 * @var string ENUM_FILE_TYPE_HTML
+	 * @since 3.0.0
+	 */
+	public const ENUM_FILE_TYPE_HTML = 'html';
+	/**
+	 * @var string ENUM_FILE_TYPE_JS
+	 * @since 3.0.0
+	 */
+	public const ENUM_FILE_TYPE_JS = 'js';
+	/**
+	 * @var string ENUM_FILE_TYPE_CSS
+	 * @since 3.0.0
+	 */
+	public const ENUM_FILE_TYPE_CSS = 'css';
+	/**
+	 * @var string ENUM_FILE_TYPE_SVG
+	 * @since 3.0.0
+	 */
+	public const ENUM_FILE_TYPE_SVG = 'svg';
+
+	/**
+	 * @var string DEFAULT_FILE_TYPE
+	 * @since 3.0.0
+	 */
+	public const DEFAULT_FILE_TYPE = self::ENUM_FILE_TYPE_HTML;
+
+	/**
+	 * Return a TWIG environment instance looking for templates under $sViewPath.
+	 * This is not a singleton as we might want to use several instances with different base path.
+	 *
+	 * @param string $sViewPath
+	 * @param array $aAdditionalPaths
+	 *
+	 * @return \Twig_Environment
+	 * @throws \Twig\Error\LoaderError
+	 */
+	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
+		foreach ($aAdditionalPaths as $sAdditionalPath)
+		{
+			$oLoader->addPath($sAdditionalPath);
+		}
+		
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
-		$sLocalPath = utils::LocalPath($sViewPath);
-		$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
-		$sCachePath = utils::GetCachePath().$sLocalPath;
-		$oTwig->setCache($sCachePath);
+		if (!utils::IsDevelopmentEnvironment())
+		{
+			// Disable the cache in development environment
+			$sLocalPath = utils::LocalPath($sViewPath);
+			$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
+			$sCachePath = utils::GetCachePath().'twig/'.$sLocalPath;
+			$oTwig->setCache($sCachePath);
+		}
 
 		return $oTwig;
 	}
@@ -43,7 +96,7 @@ class TwigHelper
 	 * @throws \Exception
 	 * @api
 	 */
-	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
+	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oPage->add(self::RenderTemplate($oTwig, $aParams, $sTemplateName, $sDefaultType));
@@ -53,13 +106,16 @@ class TwigHelper
 
 	/**
 	 * @param \Twig\Environment $oTwig
-	 * @param $aParams
-	 * @param $sName
-	 * @param $sTemplateFileExtension
+	 * @param array $aParams
+	 * @param string $sName
+	 * @param string $sTemplateFileExtension
 	 *
 	 * @return string
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
-	private static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension)
+	public static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension = self::DEFAULT_FILE_TYPE)
 	{
 		try
 		{

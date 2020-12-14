@@ -124,6 +124,13 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 
 function OnSubmit(sFormId)
 {
+	if($('#'+sFormId).attr('data-form-state') === 'onsubmit')
+	{
+		return false;
+	}
+	
+	$('#'+sFormId).attr('data-form-state','onsubmit');
+
 	window.bInSubmit=true; // This is a submit, make sure that when the page gets unloaded we don't cancel the action
 
 	if ($('#'+sFormId).data('force_submit')) {
@@ -134,6 +141,7 @@ function OnSubmit(sFormId)
 	if (!bResult)
 	{
 		window.bInSubmit = false; // Submit is/will be canceled
+		$('#'+sFormId).attr('data-form-state', 'default');
 	}
 	return bResult;
 }
@@ -192,7 +200,7 @@ function activateFirstTabWithError(sFormId) {
 		if ($fieldsWithError.length > 0)
 		{
 			$tabsContainer.tabs("option", "active", index);
-			return;
+			return false;
 		}
 	});
 }
@@ -202,7 +210,8 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	if (bValid)
 	{
 		// Visual feedback - none when it's Ok
-		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		$('#field_'+sFieldId+' .ibo-input-wrapper').removeClass('is-error')
+		$('#v_'+sFieldId).html('');
 		$('#'+sFieldId+'[data-validate*="dependencies"]').trigger('change.dependencies').removeAttr('data-validate');
 	}
 	else
@@ -215,9 +224,16 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
 
-		if ($('#v_'+sFieldId+' img').length == 0)
+		if($('#field_'+sFieldId+' .ibo-input-wrapper').attr('data-validation') === 'untouched') {
+			$('#field_'+sFieldId+' .ibo-input-wrapper').removeAttr('data-validation');
+		}
+		else{
+			$('#field_'+sFieldId+' .ibo-input-wrapper').addClass('is-error');
+		}
+		
+		if ($('#v_'+sFieldId).text() == '')
 		{
-			$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
+			$('#v_'+sFieldId).html(sExplain);
 		}
 		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
 		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
@@ -226,7 +242,9 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 
 			$('#v_'+sFieldId).tooltip({
 				items: 'span',
-				tooltipClass: 'form_field_error',
+				classes: {
+					"ui-tooltip": "form_field_error"
+				},
 				content: function() {
 					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
 				}
@@ -370,26 +388,6 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
 	}
 }
-
-/*
-function UpdateDependentFields(aFieldNames)
-{
-	//console.log('UpdateDependentFields:');
-	//console.log(aFieldNames);
-	index = 0;
-	oWizardHelper.ResetQuery();
-	oWizardHelper.UpdateWizard();
-	while(index < aFieldNames.length )
-	{
-		sAttCode = aFieldNames[index];
-		sFieldId = oWizardHelper.GetFieldId(sAttCode);
-		$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
-		oWizardHelper.RequestAllowedValues(sAttCode);
-		index++;
-	}
-	oWizardHelper.AjaxQueryServer();
-}
-*/
 
 function ResetPwd(id)
 {
@@ -543,6 +541,7 @@ function UpdateDuration(iId)
 }
 
 // Called when filling an autocomplete field
+//deprecated in 2.8
 function OnAutoComplete(id, event, data, formatted)
 {
 	if (data)

@@ -72,7 +72,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Query/Attribute:description' => 'Description~~',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
 	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Query~~',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Expression~~',
@@ -845,7 +845,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:FatalErrorMessage' => 'Fatális hiba, iTop nem tudja a működését folytatni',
 	'UI:Error_Details' => 'Hiba: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop felhasználó menedzsmet - osztály nézet',
 	'UI:PageTitle:ProfileProjections' => 'iTop felhasználó menedzsmet - profil nézet',
 	'UI:UserManagement:Class' => 'Osztály',
 	'UI:UserManagement:Class+' => '',
@@ -854,8 +853,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:AnyObject' => '* any *',
 	'UI:UserManagement:User' => 'Felhasználó',
 	'UI:UserManagement:User+' => '',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => '',
 	'UI:UserManagement:Action:Read' => 'Olvas',
 	'UI:UserManagement:Action:Read+' => '',
 	'UI:UserManagement:Action:Modify' => 'Módosít',
@@ -895,7 +892,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ChangeManagementMenu:Title' => 'Változás áttekintése',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Változások típusok szerint',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Változások státusz szerint',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Változások csoportok szerint',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Még nem kiosztott változások',
 
 	'UI:ConfigurationManagementMenu' => 'Konfiguráció menedzsment',
@@ -945,7 +941,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'Menu:NotificationsMenu' => 'Értesítések', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Értesítések</span> beállítása',
+	'UI:NotificationsMenu:Title' => 'Értesítések beállítása',
 	'UI:NotificationsMenu:Help' => 'Segítség',
 	'UI:NotificationsMenu:HelpContent' => '<p>Az iTop alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>kiváltó okok és akciók</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
@@ -1574,4 +1570,43 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Menu:DataSources' => 'Szinkronizált adatforrások',
+	'Menu:DataSources+' => '',
+	'Menu:WelcomeMenu' => 'Üdvözlöm',
+	'Menu:WelcomeMenu+' => '',
+	'Menu:WelcomeMenuPage' => 'Üdvözlöm',
+	'Menu:WelcomeMenuPage+' => '',
+	'Menu:AdminTools' => 'Adminisztrációs eszközök',
+	'Menu:AdminTools+' => '',
+	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.',
+	'Menu:DataModelMenu' => 'Adatmodell',
+	'Menu:DataModelMenu+' => '',
+	'Menu:ExportMenu' => 'Export',
+	'Menu:ExportMenu+' => '',
+	'Menu:NotificationsMenu' => 'Értesítések',
+	'Menu:NotificationsMenu+' => '',
+	'Menu:AuditCategories' => 'Audit kategóriák',
+	'Menu:AuditCategories+' => '',
+	'Menu:Notifications:Title' => 'Audit kategóriák',
+	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',
+	'Menu:RunQueriesMenu+' => '',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:UniversalSearchMenu' => 'Univerzális keresés',
+	'Menu:UniversalSearchMenu+' => '',
+	'Menu:UserManagementMenu' => 'Felhasználó menedzsment',
+	'Menu:UserManagementMenu+' => '',
+	'Menu:ProfilesMenu' => 'Profilok',
+	'Menu:ProfilesMenu+' => '',
+	'Menu:ProfilesMenu:Title' => 'Profilok',
+	'Menu:UserAccountsMenu' => 'Felhasználói fiókok',
+	'Menu:UserAccountsMenu+' => '',
+	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
+	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));

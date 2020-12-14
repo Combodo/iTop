@@ -31,7 +31,7 @@ class ExpressionHelper {
 	 *
 	 * @uses \DBSearch::AllowAllData()
 	 *
-	 * @since 2.7.2 2.8.0 N°3324
+	 * @since 2.7.2 3.0.0 N°3324
 	 */
 	public static function ExpressionAllowAllDataCallback($oExpression, $bAllowAllData) {
 		if (!($oExpression instanceof NestedQueryExpression)) {
@@ -42,6 +42,9 @@ class ExpressionHelper {
 	}
 }
 
+class NotYetEvaluatedExpression extends CoreException
+{
+}
 
 /**
  * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
@@ -128,6 +131,47 @@ abstract class Expression {
 	 * @throws \MissingQueryArgument
 	 */
 	abstract public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false);
+
+	/**
+	 * Collect parameters, i.e. :parameter
+	 *
+	 * @param null $sParentFilter
+	 *
+	 * @return array
+	 */
+	public function GetParameters($sParentFilter = null)
+	{
+		$aParameters = array();
+		$unused = $this->RenderExpression(false, $aParameters, true);
+
+		if (!is_null($sParentFilter)) $sParentFilter .= '->';
+
+		$aRet = array();
+		foreach($aParameters as $sParameter => $unused)
+		{
+			if (is_null($sParentFilter))
+			{
+				$aRet[] = $sParameter;
+			}
+			else
+			{
+				if (substr($sParameter, 0, strlen($sParentFilter)) == $sParentFilter)
+				{
+					$aRet[] = substr($sParameter, strlen($sParentFilter));
+				}
+			}
+		}
+		return $aRet;
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 *
+	 * @param array $aArgs
+	 *
+	 * @throws \Exception if terms cannot be evaluated as scalars
+	 */
+	abstract public function Evaluate(array $aArgs);
 
 	/**
 	 * Recursively renders the expression as a structure (array) suitable for a JSON export
@@ -345,6 +389,16 @@ class SQLExpression extends Expression
 		return $this->m_sSQL;
 	}
 
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		throw new Exception('a nested query cannot be evaluated');
+	}
+
 	// recursive rendering
 	public function toJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
@@ -490,6 +544,149 @@ class BinaryExpression extends Expression
 		$sLeft = $this->GetLeftExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		$sRight = $this->GetRightExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @return mixed
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		$mLeft = $this->GetLeftExpr()->Evaluate($aArgs);
+		$mRight = $this->GetRightExpr()->Evaluate($aArgs);
+
+		$sOperator = $this->GetOperator();
+		$sType = null;
+		switch($sOperator)
+		{
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				$sType = 'maths';
+				break;
+			case '=':
+			case '!=':
+			case '<>':
+				$sType = 'comp';
+				break;
+			case '>':
+			case '>=':
+			case '<':
+			case '<=':
+				$sType = 'numcomp';
+				break;
+			case 'OR':
+			case 'AND':
+				$sType = 'logical';
+				break;
+			case 'LIKE':
+				$sType = 'like';
+				break;
+			default:
+				throw new Exception("Operator '$sOperator' not yet supported");
+		}
+		switch ($sType){
+			case 'logical':
+				$bLeft = static::CastToBool($mLeft);
+				$bRight = static::CastToBool($mRight);
+				switch ($sOperator)
+				{
+					case 'OR':
+						$result = (int)($bLeft || $bRight);
+						break;
+					case 'AND':
+						$result = (int)($bLeft && $bRight);
+						break;
+					default:
+						throw new Exception("Logic: unknown operator '$sOperator'");
+				}
+				break;
+
+			case 'maths':
+				$iLeft = (int) $mLeft;
+				$iRight = (int) $mRight;
+				switch ($sOperator)
+				{
+					case '+' : $result = $iLeft + $iRight; break;
+					case '-' : $result = $iLeft - $iRight; break;
+					case '*' : $result = $iLeft * $iRight; break;
+					case '/' : $result = $iLeft / $iRight; break;
+					default:
+						throw new Exception("Logic: unknown operator '$sOperator'");
+				}
+				break;
+			case 'comp':
+				$left = $mLeft;
+				$right = $mRight;
+				switch ($sOperator)
+				{
+					case '=' : $result = ($left == $right); break;
+					case '!=' : $result = ($left != $right); break;
+					case '<>' : $result = ($left != $right); break;
+					default:
+						throw new Exception("Logic: unknown operator '$sOperator'");
+				}
+				break;
+			case 'numcomp':
+				$iLeft = static::ComparableValue($mLeft);
+				$iRight = static::ComparableValue($mRight);
+				switch ($sOperator)
+				{
+					case '=' : $result = ($iLeft == $iRight); break;
+					case '>' : $result = ($iLeft > $iRight); break;
+					case '<' : $result = ($iLeft < $iRight); break;
+					case '>=' : $result = ($iLeft >= $iRight); break;
+					case '<=' : $result = ($iLeft <= $iRight); break;
+					case '!=' : $result = ($iLeft != $iRight); break;
+					case '<>' : $result = ($iLeft != $iRight); break;
+					default:
+						throw new Exception("Logic: unknown operator '$sOperator'");
+				}
+				break;
+			case 'like':
+				$sEscaped = preg_quote($mRight, '/');
+				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
+				$result = (int) preg_match("/$sEscaped/i", $mLeft);
+				break;
+		}
+		return $result;
+	}
+
+	static protected function CastToBool($mValue)
+	{
+		if (is_string($mValue))
+		{
+			if (is_numeric($mValue))
+			{
+				return abs($mValue) > 0;
+			}
+			return false;
+		}
+		return (bool)$mValue;
+	}
+	static protected function ComparableValue($mixed)
+	{
+		if (is_string($mixed))
+		{
+			$oDate = new \DateTime($mixed);
+			if (($oDate->format('Y-m-d') == $mixed) || ($oDate->format('Y-m-d H:i:s') == $mixed))
+			{
+				$iRet = $oDate->format('U');
+			}
+			else
+			{
+				$iRet = (int) $mixed;
+			}
+		}
+		else
+		{
+			$iRet = $mixed;
+		}
+
+		return $iRet;
 	}
 
 	/**
@@ -894,6 +1091,16 @@ class MatchExpression extends BinaryExpression
 		return $sRet;
 	}
 
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		throw new Exception('evaluation of MATCHES not implemented yet');
+	}
+
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		/** @var \FieldExpression $oLeft */
@@ -930,6 +1137,16 @@ class UnaryExpression extends Expression
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		return CMDBSource::Quote($this->m_value);
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		return $this->m_value;
 	}
 
 	/**
@@ -1076,6 +1293,16 @@ class ScalarExpression extends UnaryExpression
 			$sRet = CMDBSource::Quote($this->m_value);
 		}
 		return $sRet;
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		return $this->m_value;
 	}
 
 	/**
@@ -1387,6 +1614,21 @@ class FieldExpression extends UnaryExpression
 	}
 
 	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		$sKey = empty($this->m_sParent) ? $this->m_sName : "{$this->m_sParent}.{$this->m_sName}";
+		if (!array_key_exists($sKey, $aArgs))
+		{
+			throw new Exception("Missing field '$sKey' from context");
+		}
+		return $aArgs[$sKey];
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * @see Expression::ToJSON()
 	 */
@@ -1441,7 +1683,8 @@ class FieldExpression extends UnaryExpression
 
 	public function ListRequiredFields()
 	{
-		return array($this->m_sParent.'.'.$this->m_sName);
+		$sField = empty($this->m_sParent) ? $this->m_sName : "{$this->m_sParent}.{$this->m_sName}";
+		return array($sField);
 	}
 
 	public function CollectUsedParents(&$aTable)
@@ -1823,6 +2066,16 @@ class VariableExpression extends UnaryExpression
 	}
 
 	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		throw new Exception('not implemented yet');
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * @see Expression::ToJSON()
 	 */
@@ -1960,6 +2213,16 @@ class ListExpression extends Expression
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		throw new Exception('list expression not yet supported');
 	}
 
 	/**
@@ -2177,6 +2440,16 @@ class NestedQueryExpression extends Expression
 		}
 	}
 
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		throw new Exception('a nested query cannot be evaluated');
+	}
+
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
@@ -2277,6 +2550,252 @@ class FunctionExpression extends Expression
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		switch($this->m_sVerb)
+		{
+			case 'CONCAT':
+				$sRet = '';
+				foreach ($this->m_aArgs as $iPos => $oExpr)
+				{
+					$item = $oExpr->Evaluate($aArgs);
+					if (is_null($item)) return null;
+					$sRet .= $item;
+				}
+				return $sRet;
+
+			case 'CONCAT_WS':
+				if (count($this->m_aArgs) < 3)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires at least 3 arguments");
+				}
+				$sSeparator = $this->m_aArgs[0]->Evaluate($aArgs);
+				foreach ($this->m_aArgs as $iPos => $oExpr)
+				{
+					if ($iPos == 0) continue;
+					$item = $oExpr->Evaluate($aArgs);
+					if (is_null($item)) return null;
+					$aStrings[] = $item;
+				}
+				$sRet = implode($sSeparator, $aStrings);
+				return $sRet;
+
+			case 'SUBSTR':
+				if (count($this->m_aArgs) < 2)
+				{
+					 throw new \Exception("Function {$this->m_sVerb} requires at least 2 arguments");
+				}
+				$sString = $this->m_aArgs[0]->Evaluate($aArgs);
+				$iRawPos = $this->m_aArgs[1]->Evaluate($aArgs);
+				$iPos = $iRawPos > 0 ?
+					$iRawPos - 1// 0-based in PHP (1-based in SQL)
+					: $iRawPos; // Negative
+				if (count($this->m_aArgs) == 2)
+				{
+					// Up to the end of the string
+					$sRet = substr($sString, $iPos);
+				}
+				else
+				{
+					// Length specified
+					$iLen = $this->m_aArgs[2]->Evaluate($aArgs);
+					$sRet = substr($sString, $iPos, $iLen);
+				}
+				return $sRet;
+
+			case 'TRIM':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$sRet = trim($this->m_aArgs[0]->Evaluate($aArgs));
+				return $sRet;
+
+			case 'INET_ATON':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$sRet = ip2long($this->m_aArgs[0]->Evaluate($aArgs));
+				return $sRet;
+
+			case 'INET_NTOA':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$sRet = long2ip($this->m_aArgs[0]->Evaluate($aArgs));
+				return $sRet;
+
+			case 'ISNULL':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$sRet = is_null($this->m_aArgs[0]->Evaluate($aArgs));
+				return $sRet;
+
+			case 'COALESCE':
+				if (count($this->m_aArgs) < 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires at least 1 argument");
+				}
+				$ret = null;
+				foreach($this->m_aArgs as $iPos => $oExpr)
+				{
+					$ret = $oExpr->Evaluate($aArgs);
+					if (!is_null($ret)) break;
+				}
+				return $ret;
+
+			case 'IF':
+				if (count($this->m_aArgs) != 3)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 3 arguments");
+				}
+				$bCond = $this->m_aArgs[0]->Evaluate($aArgs);
+				if ($bCond)
+				{
+					$ret = $this->m_aArgs[1]->Evaluate($aArgs);
+				}
+				else
+				{
+					$ret = $this->m_aArgs[2]->Evaluate($aArgs);
+				}
+				return $ret;
+
+			case 'ELT':
+				if (count($this->m_aArgs) < 2)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires at least 2 arguments");
+				}
+				// First argument is the 1-based position
+				$iPosition = (int) $this->m_aArgs[0]->Evaluate($aArgs);
+				if (($iPosition == 0) || ($iPosition >= count($this->m_aArgs)))
+				{
+					// Out of range
+					$ret = null;
+				}
+				else
+				{
+					$ret = $this->m_aArgs[$iPosition]->Evaluate($aArgs);
+				}
+				return $ret;
+
+			case 'DATE':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$sRet = date('Y-m-d', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
+				return $sRet;
+
+			case 'YEAR':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$iRet = (int) date('Y', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
+				return $iRet;
+
+			case 'MONTH':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$iRet = (int) date('m', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
+				return $iRet;
+
+			case 'DAY':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$iRet = (int) date('d', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
+				return $iRet;
+
+			case 'DATE_FORMAT':
+				if (count($this->m_aArgs) != 2)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
+				}
+				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
+				$sFormat = $this->m_aArgs[1]->Evaluate($aArgs);
+				$sFormat = str_replace(
+					array('%y', '%x', '%w', '%W', '%v', '%T', '%S', '%r', '%p', '%M', '%l', '%k', '%I', '%h', '%b', '%a', '%D', '%c', '%e', '%Y', '%d', '%m', '%H', '%i', '%s'),
+					array('y', 'o', 'w', 'l', 'W', 'H:i:s', 's', 'h:i:s A', 'A', 'F', 'g', 'H', 'h', 'h','M', 'D', 'jS', 'n', 'j', 'Y', 'd', 'm', 'H', 'i', 's'),
+					$sFormat);
+				if (preg_match('/%j/', $sFormat))
+				{
+					$sFormat = str_replace('%j', date_format($oDate, 'z') + 1, $sFormat);
+				}
+				if (preg_match('/%[fUuVX]/', $sFormat))
+				{
+					throw new NotYetEvaluatedExpression("Expression ".$this->RenderExpression().' cannot be evaluated (known limitation)');
+				}
+				$sRet = date_format($oDate, $sFormat);
+				return $sRet;
+
+			case 'TO_DAYS':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
+				$oZero = new DateTime('1582-01-01');
+				$iRet = (int) $oDate->diff($oZero)->format('%a') + 577815;
+				return $iRet;
+
+			case 'FROM_DAYS':
+				if (count($this->m_aArgs) != 1)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
+				}
+				$iSince1582 = $this->m_aArgs[0]->Evaluate($aArgs) - 577814;
+				$oDate = new DateTime("1582-01-01 +$iSince1582 days");
+				$sRet = $oDate->format('Y-m-d');
+				return $sRet;
+
+			case 'NOW':
+				$sRet = date('Y-m-d H:i:s');
+				return $sRet;
+
+			case 'CURRENT_DATE':
+				$sRet = date('Y-m-d');
+				return $sRet;
+
+			case 'DATE_ADD':
+				if (count($this->m_aArgs) != 2)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
+				}
+				$sStartDate = $this->m_aArgs[0]->Evaluate($aArgs);
+				$sInterval = $this->m_aArgs[1]->Evaluate($aArgs);
+				$oDate = new DateTime("$sStartDate +$sInterval");
+				$sRet = $oDate->format('Y-m-d H:i:s');
+				return $sRet;
+
+			case 'DATE_SUB':
+				if (count($this->m_aArgs) != 2)
+				{
+					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
+				}
+				$sStartDate = $this->m_aArgs[0]->Evaluate($aArgs);
+				$sInterval = $this->m_aArgs[1]->Evaluate($aArgs);
+				$oDate = new DateTime("$sStartDate -$sInterval");
+				$sRet = $oDate->format('Y-m-d H:i:s');
+				return $sRet;
+
+			default:
+				throw new Exception("Function {$this->m_sVerb} cannot be evaluated -unhandled yet");
+		}
 	}
 
 	/**
@@ -2606,6 +3125,17 @@ class IntervalExpression extends Expression
 	}
 
 	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		$iValue = $this->m_oValue->Evaluate($aArgs);
+		return "$iValue {$this->m_sUnit}";
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * @see Expression::ToJSON()
 	 */
@@ -2721,6 +3251,21 @@ class CharConcatExpression extends Expression
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		return "CAST(CONCAT(".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		$sRet = '';
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$sRet .= $oExpr->Evaluate($aArgs);
+		}
+		return $sRet;
 	}
 
 	/**
@@ -2862,6 +3407,21 @@ class CharConcatWSExpression extends CharConcatExpression
 		}
 		$sSep = CMDBSource::Quote($this->m_separator);
 		return "CAST(CONCAT_WS($sSep, ".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	/**
+	 * Evaluate the value of the expression
+	 * @param array $aArgs
+	 * @throws \Exception if terms cannot be evaluated as scalars
+*/
+	public function Evaluate(array $aArgs)
+	{
+		$aRes = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aRes .= $oExpr->Evaluate($aArgs);
+		}
+		return implode($this->m_separator, $aRes);
 	}
 
 	public function Browse(Closure $callback)

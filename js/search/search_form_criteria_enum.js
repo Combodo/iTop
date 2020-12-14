@@ -695,7 +695,7 @@ $(function()
 					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
 					var bInitChecked = bSelected;
 					var bInitHidden = bSelected;
-					var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
+					var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden,oResponse[skey].obsolescence_flag,oResponse[skey].additional_field);
 					oValueElem.appendTo(oDynamicListElem);
 				}
 			}
@@ -719,11 +719,12 @@ $(function()
                 {
                     var sValue = oResponse[skey].value;
                     var sLabel = oResponse[skey].label;
+
                     // Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
                     var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
                     var bInitChecked = bSelected;
                     var bInitHidden = bSelected;
-                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
+                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden,oResponse[skey].obsolescence_flag,oResponse[skey].additional_field);
                     oValueElem.appendTo(oDynamicListElem);
                 }
             }
@@ -914,9 +915,17 @@ $(function()
 			return aSortable;
 		},
 		// - Make a jQuery element for a list item
-		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden)
+		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 		{
 			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
+			if (bObsolete == 1)	{
+				sEscapedLabel = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+sEscapedLabel;
+			}
+
+			if (sAdditionalField != undefined )	{
+				sEscapedLabel = sEscapedLabel+'<br><i>'+sAdditionalField+'</i>';
+			}
+
 			var oItemElem = $('<div></div>')
 				.addClass('sfc_opc_mc_item')
 				.attr('data-value-code', sValue)

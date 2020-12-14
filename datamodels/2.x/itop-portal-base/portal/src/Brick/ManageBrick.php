@@ -326,6 +326,10 @@ class ManageBrick extends PortalBrick
 		return $this->sTileMode;
 	}
 
+	public function GetDecorationCssClass()
+	{
+		return static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
+	}
 	/**
 	 * Sets the tile mode (display)
 	 *

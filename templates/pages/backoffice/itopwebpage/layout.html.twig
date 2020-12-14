@@ -1,0 +1,26 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
+
+{% block iboPageBodyHtml %}
+	{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
+	<div id="ibo-page-container">
+		<div id="ibo-top-container">
+			{{ include('pages/backoffice/extension-blocks/banner.html.twig') }}
+			{{ render_block(aLayouts.oTopBar, {aPage: aPage}) }}
+		</div>
+		{{ render_block(aLayouts.oPageContent, {aPage: aPage, aLayouts: aLayouts}) }}
+
+		{# TODO: Remove this when modal development is done #}
+		<div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
+		<div style="display:none" title="ex2" id="ex2">Please wait...</div>
+		<div style="display:none" title="dialog" id="ModalDlg"></div>
+		<div style="display:none" id="ajax_content"></div>
+	</div>
+{% endblock %}
+
+{% block iboPageJsInlineOnInit %}
+	{% for sJsInline in aPage.aJsInlineOnInit %}
+		{{ sJsInline|raw }}
+	{% endfor %}
+{% endblock %}

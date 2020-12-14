@@ -32,7 +32,6 @@
  * @copyright   Copyright (C) 2016-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class ContextTag
 {
 	const TAG_PORTAL = 'GUI:Portal';

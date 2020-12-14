@@ -898,7 +898,9 @@ $(function()
 					return sTooltipContent;
 				},
 				items: '.popupMenuTarget',
-				tooltipClass: 'tooltip-simple-graph',
+				classes: {
+					'ui-tooltip': 'tooltip-simple-graph'
+				},
 				position: {
 					using: function( position, feedback ) { 
 						$(this).css( position );  

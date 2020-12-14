@@ -32,6 +32,12 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 
+
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+
+
+
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
@@ -39,15 +45,15 @@ function ReportErrorAndExit($sErrorMessage)
 		$oP = new CLIPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit(-1);
+		exit(EXIT_CODE_ERROR);
 	}
 	else
 	{
 		$oP = new WebPage("iTop - Export");
-		$oP->add_header('X-Frame-Options: deny');
+		$oP->add_xframe_options();
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit(-1);
+		exit(EXIT_CODE_ERROR);
 	}
 }
 
@@ -59,16 +65,15 @@ function ReportErrorAndUsage($sErrorMessage)
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit(-1);
+		exit(EXIT_CODE_ERROR);
 	}
-	else
-	{
+	else {
 		$oP = new WebPage("iTop - Export");
-		$oP->add_header('X-Frame-Options: deny');
+		$oP->add_xframe_options();
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit(-1);
+		exit(EXIT_CODE_ERROR);
 	}
 }
 
@@ -371,7 +376,7 @@ EOF
 	else
 	{
 		$oP = new iTopWebPage('iTop Export');
-		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', 'fas fa-file-export', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 	}
 	
 	if ($sExpression === null)
@@ -567,6 +572,8 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 /////////////////////////////////////////////////////////////////////////////
 if (utils::IsModeCLI())
 {
+	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('iTop - Export'));
+
 	try
 	{
 		// Do this before loging, in order to allow setting user credentials from within the file
@@ -575,7 +582,7 @@ if (utils::IsModeCLI())
 	catch(Exception $e)
 	{
 		echo "Error: ".$e->GetMessage()."<br/>\n";
-		exit(-2);
+		exit(EXIT_CODE_FATAL);
 	}
 	
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
@@ -728,19 +735,17 @@ try
 		if ($sMimeType == 'text/html')
 		{
 			// Note: Using NiceWebPage only for HTML export as it includes JS scripts & files, which makes no sense in other export formats. More over, it breaks Excel spreadsheet import.
-			if($oExporter instanceof HTMLBulkExport)
-			{
+			if($oExporter instanceof HTMLBulkExport) {
 				$oP = new NiceWebPage('iTop export');
-				$oP->add_header('X-Frame-Options: deny');
+				$oP->add_xframe_options();
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 			}
-			else
-			{
+			else {
 				$oP = new WebPage('iTop export');
-				$oP->add_header('X-Frame-Options: deny');
-                $oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
+				$oP->add_xframe_options();
+				$oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
 		}
@@ -760,10 +765,9 @@ catch (BulkExportMissingParameterException $e)
 	Usage($oP);
 	$oP->output();
 }
-catch (Exception $e)
-{
+catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
-	$oP->add_header('X-Frame-Options: deny');
+	$oP->add_xframe_options();
 	$oP->add('Error: '.$e->getMessage());
 	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
 	$oP->output();
