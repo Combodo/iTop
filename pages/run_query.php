@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -106,8 +107,7 @@ ShowExamples($oP, $sExpression);
 
 try
 {
-	if ($sEncoding == 'crypted')
-	{
+	if ($sEncoding == 'crypted') {
 		// Translate $sExpression into a oql expression
 		$sClearText = base64_decode($sExpression);
 		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
@@ -206,23 +206,19 @@ EOF
 		$sPageId = "ui-search-".$oFilter->GetClass();
 		$sLabel = MetaModel::GetName($oFilter->GetClass());
 		$aArgs = array();
-		foreach (array_merge($_POST, $_GET) as $sKey => $value)
-		{
-			if (is_array($value))
-			{
+		foreach (array_merge($_POST, $_GET) as $sKey => $value) {
+			if (is_array($value)) {
 				$aItems = array();
-				foreach($value as $sItemKey => $sItemValue)
-				{
+				foreach ($value as $sItemKey => $sItemValue) {
 					$aArgs[] = $sKey.'['.$sItemKey.']='.urlencode($sItemValue);
 				}
-			}
-			else
-			{
+			} else {
 				$aArgs[] = $sKey.'='.urlencode($value);
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
+			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oP->p('');
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
@@ -235,19 +231,16 @@ EOF
 		// Avoid adding all the fields for counts or "group by" requests
 		$aCountAttToLoad = array();
 		$sMainClass = null;
-		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
-		{
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
 			$aCountAttToLoad[$sClassAlias] = array();
-			if (empty($sMainClass))
-			{
+			if (empty($sMainClass)) {
 				$sMainClass = $sClass;
 			}
 		}
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
-		{
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
 			// OQL Developed for Count
 			$oP->p('');
 			$oP->p(Dict::S('UI:RunQuery:DevelopedOQLCount'));
@@ -255,7 +248,7 @@ EOF
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
 			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
 		}
-		
+
 		// SQL Count
 		$oP->p('');
 		$oP->p(Dict::S('UI:RunQuery:ResultSQLCount'));
@@ -304,21 +297,21 @@ EOF
 				{
 					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
 				}
-			}
-			else
-			{
+			} else {
 				$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
 			}
-		}
-		else
-		{
+		} else {
 			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 		}
 	}
 }
-catch(Exception $e)
-{
-	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
+catch (Exception $e) {
+	$oErrorAlert = AlertFactory::MakeForFailure(
+		Dict::Format('UI:RunQuery:Error', $e->getMessage()),
+		'<pre>'.$e->getTraceAsString().'</pre>'
+	);
+	$oErrorAlert->SetOpenedByDefault(false);
+	$oP->AddUiBlock($oErrorAlert);
 }
 
 $oP->output();
