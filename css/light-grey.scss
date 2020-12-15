@@ -2318,17 +2318,6 @@
 		display: none;
 	}
 
-	.editor_magnifier {
-		/* !important so it overrides the .cke_reset_all style */
-		background-position: center center !important;
-		background-repeat: no-repeat !important;
-		background-size: 100% !important;
-	}
-
-	.editor_magnifier:hover {
-		background-color: #CCC;
-	}
-
 	.caselog_header {
 		padding: 3px;
 		border-top: 1px solid #fff;

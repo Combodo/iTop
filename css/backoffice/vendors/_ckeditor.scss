@@ -3,6 +3,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-vendors-ckeditor--toolbar-fullscreen-button--background-color--on-hover: #CCC !default;
+$ibo-vendors-ckeditor--toolbar-fullscreen-button--width: 12px !default;
+$ibo-vendors-ckeditor--toolbar-fullscreen-button--height: 11px !default;
+$ibo-vendors-ckeditor--toolbar-fullscreen-button--border: 1px #A6A6A6 solid !default;
+
 $ibo-vendors-highlightjs--padding: 0.9rem !default;
 $ibo-vendors-highlightjs--border-radius: $ibo-border-radius-300 !default;
 
@@ -16,6 +21,27 @@ $ibo-vendors-ckeditor--autocomplete-item-image--background-color: $ibo-color-gre
 $ibo-vendors-ckeditor--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
 
 $ibo-vendors-ckeditor--autocomplete-item-title--text-color: #3A3A3A !default;
+
+/* Fullscreen button (Combodo custom) */
+.ibo-vendors-ckeditor--toolbar-fullscreen-button {
+	display: none;
+}
+.cke_toolbox_collapser.cke_toolbox_collapser_min ~ .ibo-vendors-ckeditor--toolbar-fullscreen-button {
+	display: block;
+	width: $ibo-vendors-ckeditor--toolbar-fullscreen-button--width;
+	height: $ibo-vendors-ckeditor--toolbar-fullscreen-button--height;
+	border: $ibo-vendors-ckeditor--toolbar-fullscreen-button--border;
+	cursor: pointer;
+
+	/* !important so it overrides the .cke_reset_all style */
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	background-size: 100% !important;
+
+	&:hover {
+		background-color: $ibo-vendors-ckeditor--toolbar-fullscreen-button--background-color--on-hover;
+	}
+}
 
 /* Highlight JS */
 .hljs {
