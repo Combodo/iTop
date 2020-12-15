@@ -84,6 +84,8 @@ class Alert extends UIBlock
 	protected $sContent;
 	/** @var string $sColor */
 	protected $sColor;
+	/** @var bool */
+	protected $bIsOpenedByDefault;
 
 	/**
 	 * Alert constructor.
@@ -92,12 +94,16 @@ class Alert extends UIBlock
 	 * @param string $sContent
 	 * @param string $sColor
 	 * @param string|null $sId
+	 * @param bool|null $bIsOpenedByDefault
 	 */
-	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
+	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null,
+		?bool $bIsOpenedByDefault = true
+	)
 	{
 		$this->sTitle = $sTitle;
 		$this->sContent = $sContent;
 		$this->sColor = $sColor;
+		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 		parent::__construct($sId);
 	}
 
@@ -148,7 +154,7 @@ class Alert extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetColor()
+	public function GetColor(): string
 	{
 		return $this->sColor;
 	}
@@ -160,6 +166,18 @@ class Alert extends UIBlock
 	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
+
+		return $this;
+	}
+
+	public function IsOpenedByDefault()
+	{
+		return $this->bIsOpenedByDefault;
+	}
+
+	public function SetOpenedByDefault(bool $bIsOpenedByDefault): Alert
+	{
+		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 
 		return $this;
 	}
