@@ -1073,7 +1073,7 @@ class BulkChange
 				}
 			}
 		}
-		set_time_limit(itval($iPreviousTimeLimit));
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
 		//
