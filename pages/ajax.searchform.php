@@ -97,7 +97,6 @@ try
 	}
 
 	$aExtraParams['display_limit'] = true;
-	$aExtraParams['truncated'] = true;
 
 	if (isset($sListId))
 	{

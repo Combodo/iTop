@@ -58,17 +58,23 @@ class DisplayBlock
 	 * @param \DBSearch $oFilter list of cmdbObjects to be displayed into the block
 	 * @param string $sStyle one of :
 	 *        <ul>
-	 *           <li>list : produces a table listing the objects</li>
+	 *           <li>actions : </li>
+	 *           <li>chart : </li>
+	 *           <li>chart_ajax : </li>
 	 *           <li>count : produces a paragraphs with a sentence saying 'cont' objects found</li>
-	 *           <li>bare_details : displays just the details of the attributes of the object  (best if only one)</li>
-	 *           <li>details : display the full details of each object found using its template (best if only one)</li>
 	 *           <li>csv : displays a textarea with the CSV export of the list of objects</li>
-	 *           <li>modify : displays the form to modify an object (best if only one)</li>
+	 *           <li>join : </li>
+	 *           <li>links : </li>
+	 *           <li>list : produces a table listing the objects</li>
+	 *           <li>list_search : </li>
 	 *           <li>search : displays a search form with the criteria of the filter set</li>
+	 *           <li>summary : </li>
 	 *        </ul>
 	 * @param bool $bAsynchronous
 	 * @param array $aParams
 	 * @param \DBObjectSet $oSet
+	 *
+	 * @throws \ApplicationException
 	 */
 	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
@@ -86,6 +92,116 @@ class DisplayBlock
 		{
 			// User defined
 			$this->m_bShowObsoleteData = utils::ShowObsoleteData();
+		}
+	}
+
+	/**
+	 * @param string $sStyle
+	 *
+	 * @return string[]
+	 */
+	protected function GetAllowedParams(string $sStyle): array
+	{
+		$aAllowedParams = [
+			'actions' => [
+				'context_filter',	/** int if != 0 filter with user context */
+			],
+			'chart' => [
+				'chart_type',       /** string 'pie' or 'bars'  */
+				'group_by',         /** string group by att code */
+				'group_by_expr',    /** string group by expression */
+				'group_by_label',   /** string aggregation column name */
+				'aggregation_function',     /** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
+				'aggregation_attribute',    /** string att code used for aggregation */
+				'limit',            /** int limit the chart results */
+				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
+				'order_direction',  /** string order direction 'asc' or 'desc' */
+				'chart_title',      /** string title */
+			],
+			'chart_ajax' => [
+				'chart_type',       /** string 'pie' or 'bars'  */
+				'group_by',         /** string group by att code */
+				'group_by_expr',    /** string group by expression */
+				'group_by_label',   /** string aggregation column name */
+				'aggregation_function',     /** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
+				'aggregation_attribute',    /** string att code used for aggregation */
+				'limit',            /** int limit the chart results */
+				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
+				'order_direction',  /** string order direction 'asc' or 'desc' */
+			],
+			'count' => [
+				'group_by',         /** string group by att code */
+				'group_by_expr',    /** string group by expression */
+				'group_by_label',   /** string aggregation column name */
+				'aggregation_function',     /** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
+				'aggregation_attribute',    /** string att code used for aggregation */
+				'limit',            /** int limit the chart results */
+				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
+				'order_direction',  /** string order direction 'asc' or 'desc' */
+			],
+			'csv' => [],
+			'join' => array_merge([
+				'display_aliases',  /** string comma separated list of class aliases to display */
+				'group_by',         /** string group by att code */
+			], DataTableFactory::GetAllowedParams()),
+			'links' => DataTableFactory::GetAllowedParams(),
+			'list' => array_merge([
+				'update_history',   /** bool add breadcrumb entry */
+			], DataTableFactory::GetAllowedParams()),
+			'list_search' => array_merge([
+				'update_history',   /** bool add breadcrumb entry */
+			], DataTableFactory::GetAllowedParams()),
+			'search' => array_merge([
+				'baseClass',        /** string search root class */
+				'open',             /** bool open the search panel by default */
+				'result_list_outer_selector',   /** string js selector of the search result display */
+				'search_header_force_dropdown', /** string Search class selection dropdown html code */
+				'action',           /** string search URL */
+				'table_inner_id',   /** string html id of the results table */
+			], DataTableFactory::GetAllowedParams()),
+			'summary' => [
+				'status[block]',        /** string object 'status' att code */
+				'status_codes[block]',  /** string comma separated list of object states */
+				'title[block]',         /** string title */
+				'label[block]',         /** string label */
+				'context_filter',	    /** int if != 0 filter with user context */
+			],
+		];
+
+		$aAllowedGeneralParams = [
+			'show_obsolete_data',   /** bool display obsolete data */
+			'currentId',            /** string current block id overridden by $sId argument */
+			'query_params',   	    /** array query parameters */
+			'this->id',             /** int Id of the current object */
+			'this->class',          /** string class of the current object */
+			'order_by',             /** string comma separated list of attCodes */
+			'auto_reload',          /** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
+			'c[menu]',              /** string current navigation menu */
+			'c[org_id]',            /** int current filtered organization */
+			'dashboard_div_id',     /** string dashboard html div id */
+		];
+
+		if (isset($aAllowedParams[$sStyle])) {
+			return array_merge($aAllowedGeneralParams, $aAllowedParams[$sStyle]);
+		}
+
+		return $aAllowedGeneralParams;
+	}
+
+	/**
+	 * @param string $sStyle
+	 * @param array $aParams
+	 *
+	 * @throws \ApplicationException
+	 */
+	protected function CheckParams(string $sStyle, array $aParams)
+	{
+		$aAllowedParams = $this->GetAllowedParams($sStyle);
+
+		foreach (array_keys($aParams) as $sParamName) {
+			if (!in_array($sParamName, $aAllowedParams)) {
+				throw new ApplicationException("Unknown parameter $sParamName for DisplayBlock $sStyle");
+			}
 		}
 	}
 	
@@ -327,6 +443,7 @@ HTML;
 	{
 		$sHtml = '';
 		$oBlock = null;
+		$this->CheckParams($this->m_sStyle, $aExtraParams);
 		// Add the extra params into the filter if they make sense for such a filter
 		$bDoSearch = utils::ReadParam('dosearch', false);
 		$aQueryParams = array();
@@ -821,6 +938,19 @@ JS
 
 
 		return $oBlock;
+	}
+
+	/**
+	 * @param array $aExtraParams
+	 *
+	 * @return string[]
+	 */
+	protected function  GetAllowedActionsParams(array $aExtraParams)
+	{
+		return [
+			'context_filter', /** int if != 0 filter with user context */
+			'query_params', /** array query parameters */
+		];
 	}
 
 	/**

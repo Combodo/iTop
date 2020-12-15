@@ -183,7 +183,6 @@ class SearchForm
 		$sStyle = "ibo-search-form";
 		$sStyle .= ($bOpen == 'true') ? '' : ' closed';
 		$sStyle .= ($bAutoSubmit === true) ? '' : ' no_auto_submit';
-//(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [],Panel::ENUM_COLOR_CYAN, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses("ibo-search-form-panel display_block");
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
@@ -258,15 +257,6 @@ class SearchForm
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
 
-		if (isset($aExtraParams['result_list_outer_selector']))
-		{
-			$sDataConfigListSelector = $aExtraParams['result_list_outer_selector'];
-		}
-		else
-		{
-			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
-		}
-
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
 		if ($sDebug == 'true')
 		{
@@ -286,7 +276,7 @@ class SearchForm
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
-			'data_config_list_selector' => "#{$sDataConfigListSelector}",
+			'data_config_list_selector' => "#{$aExtraParams['result_list_outer_selector']}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
 			'auto_submit' => $bAutoSubmit,

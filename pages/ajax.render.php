@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -659,7 +657,6 @@ try
 				$oKPI = new ExecutionKPI();
 				$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
 				$aExtraParams['display_limit'] = true;
-				$aExtraParams['truncated'] = true;
 				$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}
