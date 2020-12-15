@@ -73,7 +73,8 @@ class UIExtKeyWidget
 
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 	static public function DisplayFromAttCode(
-		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs,
+		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
+		$aArgs = [],
 		$bSearchMode = false
 	)
 	{
@@ -81,18 +82,14 @@ class UIExtKeyWidget
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
 		$bAllowTargetCreation = $oAttDef->AllowTargetCreation();
-		if (!$bSearchMode)
-		{
+		if (!$bSearchMode) {
 			$sDisplayStyle = $oAttDef->GetDisplayStyle();
-		}
-		else
-		{
+		} else {
 			$sDisplayStyle = 'select'; // In search mode, always use a drop-down list
 		}
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
-		if(!$bSearchMode)
-		{
-			switch($sDisplayStyle)
+		if (!$bSearchMode) {
+			switch ($sDisplayStyle)
 			{
 				case 'radio':
 				case 'radio_horizontal':
@@ -725,25 +722,26 @@ JS
     /**
      * Search for objects to be selected
      *
-     * @param WebPage  $oP        The page used for the output (usually an AjaxWebPage)
-     * @param string   $sFilter   The OQL expression used to define/limit limit the scope of possible values
-     * @param DBObject $oObj      The current object for the OQL context
-     * @param string   $sContains The text of the autocomplete to filter the results
-     * @param string   $sOutputFormat
-     * @param null     $sOperation for the values @see ValueSetObjects->LoadValues()
+     * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
+     * @param string $sFilter The OQL expression used to define/limit limit the scope of possible values
+     * @param DBObject $oObj The current object for the OQL context
+     * @param string $sContains The text of the autocomplete to filter the results
+     * @param string $sOutputFormat
+     * @param null $sOperation for the values @see ValueSetObjects->LoadValues()
      *
      * @throws CoreException
      * @throws OQLException
      */
-	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
+	public function AutoComplete(
+		WebPage $oP, $sFilter, $oObj = null, $sContains = '', $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
+	)
 	{
-		if (is_null($sFilter))
-		{
+		if (is_null($sFilter)) {
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 
-        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
-        $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
+		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
+		$iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
 		$iMax = 150;
 		$oValuesSet->SetLimit($iMax);
