@@ -481,8 +481,6 @@ JS
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
-
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');

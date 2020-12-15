@@ -147,6 +147,8 @@ class DisplayBlock
 			'links' => DataTableFactory::GetAllowedParams(),
 			'list' => array_merge([
 				'update_history',   /** bool add breadcrumb entry */
+				'default',          /** array of default attribute values */
+				'menu_actions_target',  /** string html link target */
 			], DataTableFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',   /** bool add breadcrumb entry */
