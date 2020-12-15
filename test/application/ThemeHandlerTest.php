@@ -312,9 +312,9 @@ JSON;
 
 	public function CompileThemesProviderEmptyArray()
 	{
-		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
-		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":[]}';
-		$aEmptyVars='{"variables":[],"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
+		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":[]}';
+		$aEmptyVars='{"variables":[],"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
 		return [
 			"empty imports" => [$aEmptyImports],
 			"empty styles" => [$aEmptyStyleSheets],
@@ -327,14 +327,14 @@ JSON;
 	 */
 	public function CompileThemesProvider()
 	{
-		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
-		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/jqueryui.scss","main":"..\/css\/light-grey.scss"}}';
-		$sImportFilePath = '/branding/css/css-variables.scss';
+		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$sImportFilePath = '/branding/css/DO_NOT_CHANGE.css-variables.scss';
 		$sVarChangedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_varchanged.css";
 		$sStylesheetMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";
 		$sImageMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_imagemodified.css";
 		$sImportModifiedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_importmodified.css";
-		$sStylesheetFilePath = '/branding/css/light-grey.scss';
+		$sStylesheetFilePath = '/branding/css/DO_NOT_CHANGE.light-grey.scss';
 		$sImageFilePath = 'test/application/theme-handler/copied/testimages/images/green-header.gif';
 		return [
 			"setup context: variables list modified without any file touched" => [$sModifiedVariableThemeParameterJson, 1,false,false,false,$sImportFilePath, $sVarChangedMainCssPath],
@@ -386,7 +386,7 @@ JSON;
 		$this->recurse_copy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
 
 		//change approot-relative in css-variable to use absolute path
-		$sCssVarPath = $this->sTmpDir."/branding/css/css-variables.scss";
+		$sCssVarPath = $this->sTmpDir."/branding/css/DO_NOT_CHANGE.css-variables.scss";
 		$sBeforeReplacementCssVariableMd5sum = md5_file($sCssVarPath);
 		echo 'BEFORE :'.$sBeforeReplacementCssVariableMd5sum.' '.$sCssVarPath.' ';
 		$sCssVariableContent = file_get_contents($sCssVarPath);
@@ -583,7 +583,7 @@ SCSS;
 	public function testGetIncludedImages()
 	{
 		$aStylesheetFile=glob($this->sTmpDir."/branding/css/*.scss");
-		$aStylesheetFile[]=$this->sTmpDir."/branding/css/ui-lightness/jqueryui.scss";
+		$aStylesheetFile[]=$this->sTmpDir."/branding/css/ui-lightness/DO_NOT_CHANGE.jqueryui.scss";
 		$expectJsonFilePath = APPROOT.'test/application/theme-handler/expected/themes/basque-red/theme-parameters.json';
 		$expectedThemeParamJson = file_get_contents($expectJsonFilePath);
 		$aThemeParametersVariables = json_decode($expectedThemeParamJson, true);
