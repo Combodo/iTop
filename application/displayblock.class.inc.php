@@ -200,7 +200,9 @@ class DisplayBlock
 
 		foreach (array_keys($aParams) as $sParamName) {
 			if (!in_array($sParamName, $aAllowedParams)) {
-				throw new ApplicationException("Unknown parameter $sParamName for DisplayBlock $sStyle");
+				if (utils::IsDevelopmentEnvironment()) {
+					throw new ApplicationException("Unknown parameter $sParamName for DisplayBlock $sStyle");
+				}
 			}
 		}
 	}
