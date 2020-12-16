@@ -851,11 +851,13 @@ class utils
     /**
      * Returns the absolute URL to the application root path
      *
+     * @param bool $bTrustProxy
+     *
      * @return string The absolute URL to the application root, without the first slash
      *
      * @throws \Exception
      */
-	public static function GetAbsoluteUrlAppRoot()
+	public static function GetAbsoluteUrlAppRoot($bTrustProxy=false)
 	{
 		static $sUrl = null;
 		if ($sUrl === null)
@@ -863,7 +865,7 @@ class utils
 			$sUrl = self::GetConfig()->Get('app_root_url');
 			if ($sUrl == '')
 			{
-				$sUrl = self::GetDefaultUrlAppRoot();
+				$sUrl = self::GetDefaultUrlAppRoot($bTrustProxy);
 			}
 			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
@@ -887,15 +889,17 @@ class utils
 	 * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the
 	 * app_root_url conf parameter is not defined.
 	 *
+	 * @param bool $bTrustProxy
+	 * 
 	 * @return string
 	 *
 	 * @throws \Exception
      */
-    public static function GetDefaultUrlAppRoot()
+    public static function GetDefaultUrlAppRoot($bTrustProxy=false)
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = self::IsConnectionSecure() ? 'https' : 'http';
+		$sProtocol = self::IsConnectionSecure($bTrustProxy) ? 'https' : 'http';
 		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
 		if ($sProtocol == 'http')
 		{
@@ -1003,15 +1007,28 @@ class utils
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
 	 * Others might leave it unset (no array entry)	 
+	 *
+	 * @param bool $bTrustProxy
+	 *
+	 * @return bool
 	 */	 	
-	public static function IsConnectionSecure()
+	public static function IsConnectionSecure($bTrustProxy=false)
 	{
 		$bSecured = false;
 
-		if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $bTrustProxy)
 		{
-			$bSecured = true;
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 		}
+		elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && $bTrustProxy)
+		{
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
+		}
+		elseif (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
+		{
+			$bSecured = (strcasecmp($_SERVER['HTTPS'], 'off') !== 0);
+		}
+
 		return $bSecured;
 	}
 
