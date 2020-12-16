@@ -35,6 +35,7 @@ $(function()
 					close_button: '[data-role="ibo-alert--close-button"]',
 					minimize_button: '[data-role="ibo-alert--minimize-button"]',
 					maximize_button: '[data-role="ibo-alert--maximize-button"]',
+					title: '[data-role="ibo-alert--title"]',
 				},
 
 			// the constructor
@@ -58,6 +59,9 @@ $(function()
 				this.element.find(this.js_selectors.maximize_button).on('click', function (oEvent) {
 					me._onMaximizeButtonClick(oEvent);
 				});
+				this.element.find(this.js_selectors.title).on('click', function (oEvent) {
+					me._onToggleVisibility(oEvent);
+				});
 			},
 			_onCloseButtonClick: function (oEvent) {
 				this.element.hide();
@@ -68,5 +72,8 @@ $(function()
 			_onMaximizeButtonClick: function (oEvent) {
 				this.element.addClass(this.css_classes.opened);
 			},
+			_onToggleVisibility: function (oEvent) {
+				this.element.toggleClass(this.css_classes.opened);
+			}
 		})
 });

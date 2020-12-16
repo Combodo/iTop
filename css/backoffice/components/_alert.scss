@@ -92,6 +92,7 @@ $ibo-alert-colors: (
 	
 	.ibo-alert--title {
 		padding-bottom: $ibo-alert--title--padding-bottom;
+		cursor: pointer;
 
 		@extend %ibo-font-ral-bol-150;
 	}
