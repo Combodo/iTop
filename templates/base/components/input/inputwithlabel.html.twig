@@ -1,5 +1,4 @@
 {% block iboInputLabel %}
 	<label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() }}</label>
-	{% if oUIBlock.HasBr() %}<br>{% endif %}
 	{{ render_block(oUIBlock.GetInput()) }}
 {% endblock %}

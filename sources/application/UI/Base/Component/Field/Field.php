@@ -20,12 +20,19 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 class Field extends UIBlock
 {
 	// Overloaded constants
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public const BLOCK_CODE = 'ibo-field';
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/field/layout';
 
-	/** @var array Array of various parameters of the field. This should be exploded in dedicated properties instead of a grey array. */
+	public const ENUM_FIELD_LAYOUT_SMALL = 'small';
+	public const ENUM_FIELD_LAYOUT_LARGE = 'large';
+
+	/**
+	 * @var array Array of various parameters of the field.
+	 *            This should be exploded in dedicated properties instead of a grey array.
+	 *            See in the corresponding Twig file for keys to use
+	 */
 	protected $aParams;
 
 	public function __construct(array $aParams, ?string $sId = null)

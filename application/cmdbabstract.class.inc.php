@@ -954,7 +954,10 @@ EOF
 							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
 
 							// - How the field should be rendered
-							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+							$val['layout'] =
+								(in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField()))
+									? Field::ENUM_FIELD_LAYOUT_LARGE
+									: Field::ENUM_FIELD_LAYOUT_SMALL;
 
 							// - For simple fields, we get the raw (stored) value as well
 							$bExcludeRawValue = false;

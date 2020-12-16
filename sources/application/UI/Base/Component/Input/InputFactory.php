@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 
+use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOption;
 
@@ -25,6 +26,15 @@ class InputFactory
 		return $oInput;
 	}
 
+	/**
+	 * If you need to have a real field with a label, you might use a {@link Field} component instead
+	 *
+	 * @param string $sName
+	 * @param string $sLabel
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
+	 */
 	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
 	{
 		$oInput = new Select($sId);
@@ -34,22 +44,6 @@ class InputFactory
 			$sId = $oInput->GetId();
 		}
 		$oInputWithLabel = new InputWithLabel($sLabel, $oInput, $sId);
-
-		return $oInputWithLabel;
-	}
-
-	public static function MakeForTextareaWithLabel(
-		string $sName, string $sLabel, ?string $sId = null, ?string $sValue = null,
-		?int $iCols = null, ?int $iRows = null
-	): InputWithLabel
-	{
-		$oTextArea = new TextArea($sValue, $sId, $iCols, $iRows);
-		$oTextArea->SetName($sName);
-
-		if (is_null($sId)) {
-			$sId = $oTextArea->GetId();
-		}
-		$oInputWithLabel = new InputWithLabel($sLabel, $oTextArea, $sId);
 
 		return $oInputWithLabel;
 	}

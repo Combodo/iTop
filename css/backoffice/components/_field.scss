@@ -22,7 +22,8 @@ $ibo-field--label--description--color: $ibo-color-grey-700 !default;
   display: inherit;
 
   .ibo-field--label {
-    display: inherit;
+	  display: inherit;
+	  max-width: none;
   }
 }
 
