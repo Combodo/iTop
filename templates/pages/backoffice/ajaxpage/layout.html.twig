@@ -11,7 +11,12 @@
 		{% for sJsInline in aPage.aJsInlineLive %}
 			{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
 			<script type="text/javascript">
-			{{ sJsInline|raw }}
+				{{ sJsInline|raw }}
+			</script>
+		{% endfor %}
+		{% for sJsInline in aPage.aJsInlineOnInit %}
+			<script type="text/javascript">
+				{{ sJsInline|raw }}
 			</script>
 		{% endfor %}
 	{% endblock %}

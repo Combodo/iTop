@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use utils;
+use WebPage;
 
 /**
  * Class BlockRenderer
@@ -71,6 +72,7 @@ class BlockRenderer
 	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
+	 * @param \WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
@@ -79,12 +81,58 @@ class BlockRenderer
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
 	 */
-	public static function RenderBlockTemplates(iUIBlock $oBlock, array $aContextParams = [])
+	public static function RenderBlockTemplate(WebPage $oPage, iUIBlock $oBlock, array $aContextParams = []): string
 	{
-		$oSelf = new static($oBlock, $aContextParams);
+		static::RenderCssJsInPage($oPage, $oBlock, $aContextParams);
+		static::RenderDeferredBlocks($oPage, $oBlock);
 
+		$oSelf = new static($oBlock, $aContextParams);
 		return $oSelf->RenderHtml();
+	}
+
+	protected static function RenderDeferredBlocks(WebPage $oPage, iUIBlock $oBlock)
+	{
+		foreach ($oBlock->GetDeferredBlocks() as $oDeferredBlock) {
+			$oPage->AddDeferredBlock($oDeferredBlock);
+		}
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			static::RenderDeferredBlocks( $oPage, $oSubBlock);
+		}
+	}
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 * @param array $aContextParams
+	 *
+	 * @throws \Exception
+	 */
+	public static function RenderCssJsInPage(WebPage $oPage, iUIBlock $oBlock, array $aContextParams = []): void
+	{
+		// CSS files
+		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_stylesheet($sFileAbsUrl);
+		}
+		// JS files
+		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
+			$oPage->add_linked_script($sFileAbsUrl);
+		}
+		static::RenderCssJsTemplatesRecursively($oPage, $oBlock, $aContextParams);
+	}
+
+	protected static function RenderCssJsTemplatesRecursively(WebPage $oPage, iUIBlock $oBlock, array $aContextParams = []): void
+	{
+		$oBlockRenderer = new static($oBlock, $aContextParams);
+		$oPage->add_init_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
+		$oPage->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
+		$oPage->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
+		$oPage->add_style($oBlockRenderer->RenderCssInline());
+
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			static::RenderCssJsTemplatesRecursively( $oPage, $oSubBlock, $aContextParams);
+		}
 	}
 
 	/** @var \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock */

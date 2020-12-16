@@ -1126,7 +1126,7 @@ EOF
 				}
 				if ($oDashlet->IsRedrawNeeded()) {
 					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
-					$sHtml = BlockRenderer::RenderBlockTemplates($oBlock);
+					$sHtml = BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
 					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
 				if ($oDashlet->IsFormRedrawNeeded()) {

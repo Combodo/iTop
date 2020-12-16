@@ -26,6 +26,8 @@
 
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
+use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');
@@ -342,17 +344,12 @@ JS
 	/**
 	 * Display the table with the form for editing all the links at once
 	 *
-	 * @param WebPage $oP The web page used for the output
 	 * @param array $aConfig The table's header configuration
 	 * @param array $aData The tabular data to be displayed
 	 *
-	 * @return string Html fragment representing the form table
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
+	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
+	protected function GetFormTableBlock($aConfig, $aData)
 	{
 		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
 
@@ -362,9 +359,7 @@ JS
 			$oTable->AddRow($oRow);
 		}
 
-		$sHtml = BlockRenderer::RenderBlockTemplates($oTable);
-
-		return $sHtml;
+		return $oTable;
 	}
 
 
@@ -384,24 +379,26 @@ JS
 	 */
 	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
-		$sHtmlValue = '';
-		$sHtmlValue .= "<div id=\"linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtmlValue .= "<input type=\"hidden\" id=\"{$sFormPrefix}{$this->m_iInputId}\">\n";
+		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
+
+		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", "ibo-block-indirect-links--edit");
+
+		$oBlock->sLinkedSetId = $sLinkedSetId;
+		$oBlock->sClass = $this->m_sClass;
+		$oBlock->sAttCode = $this->m_sAttCode;
+		$oBlock->iInputId = $this->m_iInputId;
+		$oBlock->sNameSuffix = $this->m_sNameSuffix;
+		$oBlock->bDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
+		$oBlock->oWizHelper = 'oWizardHelper'.$sFormPrefix;
+		$oBlock->sExtKeyToRemote = $this->m_sExtKeyToRemote;
+		// Don't automatically launch the search if the table is huge
+		$oBlock->bJSDoSearch = utils::IsHighCardinality($this->m_sRemoteClass) ? 'false' : 'true';
+		$oBlock->sFormPrefix = $sFormPrefix;
+		$oBlock->sRemoteClass = $this->m_sRemoteClass;
+
 		$oValue->Rewind();
 		$aForm = array();
 		$iAddedId = -1; // Unique id for new links
-
-		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
-		// Don't automatically launch the search if the table is huge
-		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
-		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
-		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script(<<<JS
-oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
-oWidget{$this->m_iInputId}.Init();
-JS
-		);
-
 		while ($oCurrentLink = $oValue->Fetch())
 		{
 			// We try to retrieve the remote object as usual
@@ -429,15 +426,11 @@ JS
             }
             $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
-		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
-		// To prevent adding forms inside the main form
+		$oBlock->AddSubBlock($this->GetFormTableBlock($this->m_aTableConfig, $aForm));
 
-		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
-		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
-		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
-		$sHtmlValue .= "</div>\n";
-		$oPage->add_at_the_end("<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\"></div>"); // To prevent adding forms inside the main form
-        return $sHtmlValue;
+		$oBlock->AddControls();
+
+        return BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
 	}
 
 	/**
@@ -498,38 +491,32 @@ JS
 			$aPrefillFormParam['dest_class'] = $this->m_sRemoteClass;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
-		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+
+		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
+
+		$oBlock = new BlockObjectPickerDialog();
+		$oPage->AddUiBlock($oBlock);
+
+		$oBlock->sLinkedSetId = $sLinkedSetId;
+		$oBlock->iInputId = $this->m_iInputId;
+		$oBlock->sLinkedClassName = MetaModel::GetName($this->m_sLinkedClass);
+		$oBlock->sClassName = MetaModel::GetName($this->m_sClass);
+
+		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
+		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
 			array(
 				'menu' => false,
-				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_id' => "add_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'result_list_outer_selector' => "SearchResultsToAdd_{$sLinkedSetId}",
+				'table_id' => "add_{$sLinkedSetId}",
+				'table_inner_id' => "ResultsToAdd_{$sLinkedSetId}",
 				'selection_mode' => true,
 				'json' => $sJson,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sAlreadyLinkedExpression,
 			)));
-		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
-		$sCancel = Dict::S('UI:Button:Cancel');
-		$sAdd = Dict::S('UI:Button:Add');
 
-		$oPage->add(<<<HTML
-<form id="ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}">
-    <div id="SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
-        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
-    </div>
-    <input type="hidden" id="count_{$this->m_sAttCode}{$this->m_sNameSuffix}" value="0"/>
-    <input type="button" value="{$sCancel}" onClick="$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');">&nbsp;&nbsp;
-    <input id="btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}" disabled="disabled" type="button" onclick="return oWidget{$this->m_iInputId}.DoAddObjects(this.id);" value="{$sAdd}">
-</form>
-HTML
-		);
-
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass), MetaModel::GetName($this->m_sClass)))."' , autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
+		$oBlock->AddForm();
 	}
 
 	/**

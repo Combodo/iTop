@@ -18,6 +18,8 @@ use Combodo\iTop\Renderer\BlockRenderer;
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ *
+ * @deprecated since 3.0.0 use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable
  */
 
 class DataTable
@@ -369,7 +371,7 @@ EOF;
 		}
 
 		$oPage->RenderInlineScriptsAndCSSRecursively($oBlock);
-		return BlockRenderer::RenderBlockTemplates($oBlock);
+		return BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
 	}
 
 	/**

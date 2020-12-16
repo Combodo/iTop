@@ -18,9 +18,3 @@
 		<div style="display:none" id="ajax_content"></div>
 	</div>
 {% endblock %}
-
-{% block iboPageJsInlineOnInit %}
-	{% for sJsInline in aPage.aJsInlineOnInit %}
-		{{ sJsInline|raw }}
-	{% endfor %}
-{% endblock %}

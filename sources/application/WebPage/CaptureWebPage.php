@@ -26,12 +26,9 @@
 
 class CaptureWebPage extends WebPage
 {
-	protected $aReadyScripts;
-
 	function __construct()
 	{
 		parent::__construct('capture web page');
-		$this->aReadyScripts = array();
 	}
 
 	public function GetHtml()
@@ -52,7 +49,7 @@ class CaptureWebPage extends WebPage
 
 	public function GetReadyJS()
 	{
-		return "\$(document).ready(function() {\n".implode("\n", $this->aReadyScripts)."\n});";
+		return "\$(document).ready(function() {\n".implode("\n", $this->a_init_scripts).implode("\n", $this->a_ready_scripts)."\n});";
 	}
 
 	public function GetCSS()
@@ -73,11 +70,6 @@ class CaptureWebPage extends WebPage
 	public function output()
 	{
 		throw new Exception(__method__.' should not be called');
-	}
-
-	public function add_ready_script($sScript)
-	{
-		$this->aReadyScripts[] = $sScript;
 	}
 }
 

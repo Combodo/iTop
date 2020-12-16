@@ -53,6 +53,8 @@ class WebPage implements Page
 	protected $s_content;
 	protected $s_deferred_content;
 	protected $a_scripts;
+	protected $a_init_scripts;
+	protected $a_ready_scripts;
 	protected $a_dict_entries;
 	protected $a_dict_entries_prefixes;
 	protected $a_styles;
@@ -75,6 +77,8 @@ class WebPage implements Page
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
 
+
+
 	/**
 	 * @var bool|string|string[]
 	 */
@@ -92,6 +96,8 @@ class WebPage implements Page
 		$this->s_content = "";
 		$this->s_deferred_content = '';
 		$this->a_scripts = array();
+		$this->a_init_scripts = array();
+		$this->a_ready_scripts = array();
 		$this->a_dict_entries = array();
 		$this->a_dict_entries_prefixes = array();
 		$this->a_styles = array();
@@ -174,7 +180,7 @@ class WebPage implements Page
 	 */
 	public function add_at_the_end($s_html, $sId = null)
 	{
-		$this->oContentLayout->AddDeferredBlock(new Html($s_html, $sId));
+		$this->AddDeferredBlock(new Html($s_html, $sId));
 	}
 
 	/**
@@ -232,8 +238,6 @@ class WebPage implements Page
 	 */
 	public function GetTable($aConfig, $aData, $aParams = array())
 	{
-		$oAppContext = new ApplicationContext();
-
 		static $iNbTables = 0;
 		$iNbTables++;
 		$sHtml = "";
@@ -328,6 +332,20 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Add a UIBlock in the page at the end by dispatching its parts in the right places (CSS, JS, HTML)
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock block added
+	 * @since 3.0.0
+	 */
+	public function AddDeferredBlock(iUIBlock $oBlock): ?iUIBlock
+	{
+		$this->oContentLayout->AddDeferredBlock($oBlock);
+		return $oBlock;
+	}
+
+	/**
 	 * Add some Javascript to the header of the page
 	 *
 	 * @param string $s_script
@@ -340,13 +358,29 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 *
+	 * @param string $sScript
+	 *
+	 * @return void
+	 */
+	public function add_init_script($sScript)
+	{
+		if (!empty(trim($sScript))) {
+			$this->a_init_scripts[] = $sScript;
+		}
+	}
+
+	/**
 	 * Add some Javascript to the header of the page
 	 *
-	 * @param $s_script
+	 * @param $sScript
 	 */
-	public function add_ready_script($s_script)
+	public function add_ready_script($sScript)
 	{
-		// Do nothing silently... this is not supported by this type of page...
+		if (!empty(trim($sScript))) {
+			$this->a_ready_scripts[] = $sScript;
+		}
 	}
 
 	/**
@@ -721,31 +755,6 @@ class WebPage implements Page
 		return $sOutput;
 	}
 
-	/**
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
-	 *
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
-	{
-		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
-
-		$this->add_style($oBlockRenderer->RenderCssInline());
-
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-
-		foreach ($oBlock->GetDeferredBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-	}
-
 	public function GetDeferredBlocks(iUIBlock $oBlock): array
 	{
 		$aDeferredBlocks = $oBlock->GetDeferredBlocks();
@@ -775,17 +784,7 @@ class WebPage implements Page
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
-		// CSS files
-		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_stylesheet($sFileAbsUrl);
-		}
-		// JS files
-		foreach ($this->oContentLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_script($sFileAbsUrl);
-		}
-
-		// Inline Templates
-		$this->RenderInlineScriptsAndCSSRecursively($this->oContentLayout);
+		BlockRenderer::RenderCssJsInPage($this, $this->oContentLayout);
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
@@ -799,6 +798,9 @@ class WebPage implements Page
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
+			'aJsInlineOnDomReady' => $this->a_ready_scripts,
+			'aJsInlineOnInit' => $this->a_init_scripts,
+
 			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
 			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),

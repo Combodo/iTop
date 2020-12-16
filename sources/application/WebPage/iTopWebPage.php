@@ -48,7 +48,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
 
 	private $m_aMessages;
-	private $m_aInitScript = array();
 
 	/** @var \TabManager */
 	protected $m_oTabs;
@@ -820,27 +819,6 @@ EOF;
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
-	 *
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
-	{
-		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_init_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
-		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
-		$this->add_style($oBlockRenderer->RenderCssInline());
-
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-	}
-
-	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
@@ -913,16 +891,7 @@ EOF;
 				continue;
 			}
 
-			// CSS files
-			foreach ($oLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-				$this->add_linked_stylesheet($sFileAbsUrl);
-			}
-			// JS files
-			foreach ($oLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-				$this->add_linked_script($sFileAbsUrl);
-			}
-
-			$this->RenderInlineScriptsAndCSSRecursively($oLayout);
+			BlockRenderer::RenderCssJsInPage($this, $oLayout);
 		}
 
 		// Components
@@ -935,8 +904,8 @@ EOF;
 				'aCssFiles' => $this->a_linked_stylesheets,
 				'aCssInline' => $this->a_styles,
 				'aJsFiles' => $this->a_linked_scripts,
-				'aJsInlineOnInit' => $this->m_aInitScript,
-				'aJsInlineOnDomReady' => $this->m_aReadyScripts,
+				'aJsInlineOnInit' => $this->a_init_scripts,
+				'aJsInlineOnDomReady' => $this->a_ready_scripts,
 				'aJsInlineLive' => $this->a_scripts,
 				// TODO 3.0.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
@@ -1370,19 +1339,6 @@ EOF
 		);
 	}
 
-	/**
-	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
-	 *
-	 * @param string $sScript
-	 *
-	 * @return void
-	 */
-	public function add_init_script($sScript)
-	{
-		if (!empty(trim($sScript))) {
-			$this->m_aInitScript[] = $sScript;
-		}
-	}
 
 	/**
 	 * @return TopBar

@@ -169,7 +169,8 @@ class Extension
 		// Usage in twig: {{ render_block(oBlock) }}
 		/** @since 3.0.0 */
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock, $aContextParams = []){
-			return BlockRenderer::RenderBlockTemplates($oBlock, $aContextParams);
+			$oRenderer = new BlockRenderer($oBlock, $aContextParams);
+			return $oRenderer->RenderHtml();
 		}, ['is_safe' => ['html']]));
 	}
 

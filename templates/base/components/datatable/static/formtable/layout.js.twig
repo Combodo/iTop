@@ -1,6 +1,8 @@
 $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
-        emptyTable: {{ 'UI:Message:EmptyList:UseAdd'|dict_s }}
+        emptyTable: "{{ 'UI:Message:EmptyList:UseAdd'|dict_s }}"
     },
-    search:false
+    paging: false,
+    filter: false,
+    search: false
 });

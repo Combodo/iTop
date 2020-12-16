@@ -152,6 +152,10 @@ class DisplayBlock
 			], DataTableFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',   /** bool add breadcrumb entry */
+				'result_list_outer_selector',   /** string js selector of the search result display */
+				'table_inner_id',   /** string html id of the results table */
+				'json',             /** string  */
+				'hidden_criteria',  /** string search criteria not visible */
 			], DataTableFactory::GetAllowedParams()),
 			'search' => array_merge([
 				'baseClass',        /** string search root class */

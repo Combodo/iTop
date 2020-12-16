@@ -66,9 +66,17 @@
         {# TODO 3.0.0: How to do this in native JS? #}
         $(document).ready(function () {
             {% block iboPageJsInlineOnInit %}
+                {% for sJsInline in aPage.aJsInlineOnInit %}
+                    {{ sJsInline|raw }}
+                {% endfor %}
             {% endblock %}
 
             {% block iboPageJsInlineOnDomReady %}
+                setTimeout(function () {
+                    {% for sJsInline in aPage.aJsInlineOnDomReady %}
+                    {{ sJsInline|raw }}
+                    {% endfor %}
+                }, 50);
             {% endblock %}
         });
     </script>
