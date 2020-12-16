@@ -35,7 +35,12 @@ class TextArea extends AbstractInput
 		return $this->iCols;
 	}
 
-	public function SetCols(int $iCols): TextArea
+	/**
+	 * @param int $iCols
+	 *
+	 * @return $this
+	 */
+	public function SetCols(int $iCols)
 	{
 		$this->iCols = $iCols;
 
@@ -47,7 +52,12 @@ class TextArea extends AbstractInput
 		return $this->iRows;
 	}
 
-	public function SetRows(int $iRows): TextArea
+	/**
+	 * @param int $iRows
+	 *
+	 * @return $this
+	 */
+	public function SetRows(int $iRows)
 	{
 		$this->iRows = $iRows;
 

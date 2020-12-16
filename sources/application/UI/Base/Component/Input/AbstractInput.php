@@ -24,7 +24,12 @@ class AbstractInput extends UIBlock
 		return $this->sName;
 	}
 
-	public function SetName(string $sName): AbstractInput
+	/**
+	 * @param string $sName
+	 *
+	 * @return $this
+	 */
+	public function SetName(string $sName)
 	{
 		$this->sName = $sName;
 
@@ -36,7 +41,12 @@ class AbstractInput extends UIBlock
 		return $this->sValue;
 	}
 
-	public function SetValue(?string $sValue): AbstractInput
+	/**
+	 * @param string|null $sValue
+	 *
+	 * @return $this
+	 */
+	public function SetValue(?string $sValue)
 	{
 		$this->sValue = $sValue;
 

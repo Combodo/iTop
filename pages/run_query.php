@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
 
@@ -153,7 +154,7 @@ try
 		}
 	}
 
-	$oQueryForm = new \Combodo\iTop\Application\UI\Base\Component\Form\Form();
+	$oQueryForm = new Form();
 	$oP->AddUiBlock($oQueryForm);
 
 	$oHiddenParams = new Html($oAppContext->GetForForm());

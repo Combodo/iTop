@@ -28,9 +28,15 @@ class Input extends AbstractInput
 		return $this->sType;
 	}
 
-	public function SetType(string $sType): Input
+	/**
+	 * @param string $sType
+	 *
+	 * @return $this
+	 */
+	public function SetType(string $sType)
 	{
 		$this->sType = $sType;
+
 		return $this;
 	}
 }
