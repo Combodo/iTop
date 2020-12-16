@@ -183,6 +183,11 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 	pre{
 		white-space: pre-wrap;
 	}
+	/* Avoid table to overflow outside the entry (see N°2127) */
+	table{
+		table-layout: fixed;
+		width: 100%;
+	}
 
 	/* Specific hyperlink color */
 	a{

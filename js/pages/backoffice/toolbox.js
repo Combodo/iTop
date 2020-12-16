@@ -65,23 +65,23 @@ function SwitchTabMode()
  */
 const CombodoBackofficeToolbox = {
 	/**
-	 * Set the oElem in fullscreen mode, meaning that it will take all the screen and be above everything else.
+	 * Make the oElem enter the fullscreen mode, meaning that it will take all the screen and be above everything else.
 	 *
 	 * @param {object} oElem The jQuery object of the element
 	 * @constructor
 	 */
-	SetElementToFullscreenMode: function(oElem) {
+	EnterFullscreenForElement: function(oElem) {
 		oElem.parents().addClass('ibo-has-fullscreen-descendant');
 		oElem.addClass('ibo-is-fullscreen');
 	},
 	/**
-	 * Remove the oElem from fullscreen mode.
+	 * Make the oElem exit the fullscreen mode.
 	 * If none passed, all fullscreen elements will be removed from it
 	 *
 	 * @param {object|null} oElem The jQuery object of the element
 	 * @constructor
 	 */
-	RemoveElementFromFullscreenMode: function(oElem = null) {
+	ExitFullscreenForElement: function(oElem = null) {
 		// If no element passed, remove any element from fullscreen mode
 		if(oElem === null) {
 			$(document).find('.ibo-has-fullscreen-descendant').removeClass('ibo-has-fullscreen-descendant');
@@ -91,6 +91,20 @@ const CombodoBackofficeToolbox = {
 			oElem.parents().removeClass('ibo-has-fullscreen-descendant');
 			oElem.removeClass('ibo-is-fullscreen');
 		}
+	},
+	/**
+	 * Make the oElem enter or exit the fullscreen mode depending on it's current state.
+	 *
+	 * @param {object} oElem The jQuery object of the element
+	 * @constructor
+	 */
+	ToggleFullscreenForElement: function(oElem) {
+		if(oElem.hasClass('ibo-is-fullscreen')) {
+			this.ExitFullscreenForElement(oElem);
+		}
+		else {
+			this.EnterFullscreenForElement(oElem);
+		}
 	}
 };
 
@@ -99,5 +113,33 @@ $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
 	$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
 		CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+	});
+
+	// Enable fullscreen togglers based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
+	$('[data-fullscreen-toggler-target]:not([data-fullscreen-toggler-instanciated="true"])').each(function(){
+		const sTargetSelector = $(this).attr('data-fullscreen-toggler-target');
+		let oTargetElem = null;
+
+		// Check if target selector is a jQuery expression, meaning that it needs to be evaluated (eg. $(this).closest('[data-role="ibo-xxx"]'))
+		if(sTargetSelector.indexOf('$') !== -1) {
+			oTargetElem = eval(sTargetSelector);
+		}
+		// Otherwise it should be a simple selector (eg. #abc, .def)
+		else {
+			oTargetElem = $(document).find(sTargetSelector);
+		}
+
+		// Still no target element found, abort
+		if((oTargetElem === null) || (oTargetElem.length === 0)) {
+			return false;
+		}
+
+		// If target selector return one element, it's the good target
+		oTargetElem.on('click', function(oEvent){
+			// Prevent anchor default behavior
+			oEvent.preventDefault();
+
+			CombodoBackofficeToolbox.ToggleFullscreenForElement(oTargetElem);
+		});
 	});
 });

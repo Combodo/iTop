@@ -3,6 +3,7 @@
  * license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/* SCSS variables */
 $ibo-field--sibling-spacing: 16px !default;
 $ibo-field--value--color: $ibo-color-grey-700 !default;
 
@@ -10,6 +11,23 @@ $ibo-field--label--description--content: "?" !default;
 $ibo-field--label--description--padding-left: 4px !default;
 $ibo-field--label--description--color: $ibo-color-grey-600 !default;
 
+$ibo-field--background-color--is-fullscreen: $ibo-color-white-100 !default;
+
+$ibo-field--label--width--is-fullscreen: 100% !default;
+$ibo-field--label--padding-x--is-fullscreen: 8px !default;
+$ibo-field--label--padding-y--is-fullscreen: 4px !default;
+$ibo-field--label--background-color--is-fullscreen: $ibo-color-grey-100 !default;
+$ibo-field--label--border-bottom--is-fullscreen: 1px solid $ibo-color-grey-400 !default;
+
+$ibo-field--fullscreen-toggler--size: 20px !default;
+$ibo-field--fullscreen-toggler--border-radius: $ibo-border-radius-500 !default;
+$ibo-field--fullscreen-toggler--background-color--on-hover: $ibo-color-white-200 !default;
+
+$ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fullscreen !default;
+$ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
+$ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
+
+/* SCSS rules */
 .ibo-field {
   @extend %ibo-font-ral-nor-150;
 
@@ -22,11 +40,14 @@ $ibo-field--label--description--color: $ibo-color-grey-600 !default;
   display: inherit;
 
   .ibo-field--label {
-	  display: inherit;
-	  max-width: none;
+    position: relative; /* Necessary for fullscreen toggler */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: initial;
+    width: 100%;
   }
 }
-
 .ibo-field-small {
   display: table;
   width: 100%;
@@ -34,6 +55,7 @@ $ibo-field--label--description--color: $ibo-color-grey-600 !default;
   .ibo-field--label {
     display: table-cell;
     vertical-align: top;
+    padding-right: 10px;
   }
 }
 
@@ -41,7 +63,6 @@ $ibo-field--label--description--color: $ibo-color-grey-600 !default;
   min-width: 100px;
   max-width: 145px;
   width: 30%;
-  padding-right: 10px;
 
   > .ibo-has-description {
     &::after {
@@ -55,9 +76,51 @@ $ibo-field--label--description--color: $ibo-color-grey-600 !default;
     }
   }
 }
+.ibo-field--fullscreen-toggler {
+  width: $ibo-field--fullscreen-toggler--size;
+  height: $ibo-field--fullscreen-toggler--size;
+  border-radius: $ibo-field--fullscreen-toggler--border-radius;
+  cursor: pointer;
 
+  @extend %ibo-hyperlink-inherited-colors;
+  @extend %ibo-fully-centered-content;
+  @extend %ibo-font-ral-nor-100;
+
+  &:hover {
+    background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
+  }
+}
 .ibo-field--value {
   display: table;
   width: 100%;
   color: $ibo-field--value--color;
+
+  /* Hack to force a table to fit its container without overflow (see N°2127) */
+  /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
+  .HTML {
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+}
+
+/* Fullscreen mode */
+.ibo-field-large {
+  &.ibo-is-fullscreen {
+    background-color: $ibo-field--background-color--is-fullscreen;
+
+    .ibo-field--label {
+      position: fixed;
+      width: $ibo-field--label--width--is-fullscreen;
+      min-width: initial;
+      max-width: initial;
+      padding: $ibo-field--label--padding-y--is-fullscreen $ibo-field--label--padding-x--is-fullscreen;
+      background-color: $ibo-field--label--background-color--is-fullscreen;
+      border-bottom: $ibo-field--label--border-bottom--is-fullscreen;
+    }
+    .ibo-field--value {
+      padding: $ibo-field--value--padding-top--is-fullscreen $ibo-field--value--padding-x--is-fullscreen $ibo-field--value--padding-bottom--is-fullscreen $ibo-field--value--padding-x--is-fullscreen;
+    }
+  }
 }

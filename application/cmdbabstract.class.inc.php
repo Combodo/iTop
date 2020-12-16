@@ -3196,7 +3196,22 @@ EOF
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 		{
-			// The field is visible in the current state of the object
+			// First prepare the label
+			// - Attribute description
+			$sDescription = $oAttDef->GetDescription();
+			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+
+			// - Fullscreen toggler for large fields
+			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
+			$sFullscreenTogglerHTML = (false === in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? '' : <<<HTML
+<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler" data-tooltip-content="{$sFullscreenTogglerTooltip}" data-fullscreen-toggler-target="$(this).closest('[data-role=\'ibo-field\']')"><span class="fas fa-fw fa-expand-arrows-alt"></span></a>
+HTML;
+
+			$sLabelAsHtml = '<span '.$sDescriptionHTMLAttributes.' >'.MetaModel::GetLabel($sClass, $sAttCode).'</span>'.$sFullscreenTogglerHTML;
+
+			// Then prepare the value
+			// - The field is visible in the current state of the object
 			if ($sStateAttCode == $sAttCode)
 			{
 				// Special display for the 'state' attribute itself
@@ -3229,16 +3244,12 @@ EOF
 					$sDisplayValue = $this->GetAsHTML($sAttCode);
 				}
 			}
+			$sValueAsHtml = $sDisplayValue;
 
-			// Attribute description
-			$sDescription = $oAttDef->GetDescription();
-			$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
-
-			$retVal = array(
-				'label' => '<span '.$sDescriptionHTMLTag.' >'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
-				'value' => $sDisplayValue,
-			);
+			$retVal = [
+				'label' => $sLabelAsHtml,
+				'value' => $sValueAsHtml,
+			];
 		}
 
 		return $retVal;
