@@ -31,6 +31,7 @@ use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
@@ -891,7 +892,7 @@ EOF;
 				continue;
 			}
 
-			BlockRenderer::RenderCssJsInPage($this, $oLayout);
+			ConsoleBlockRenderer::AddCssJsToPage($this, $oLayout);
 		}
 
 		// Components

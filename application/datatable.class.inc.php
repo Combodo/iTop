@@ -1,6 +1,6 @@
 <?php
 
-use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 /**
  * Copyright (C) 2013-2020 Combodo SARL
@@ -352,26 +352,26 @@ EOF;
 	 * @param $aExtraParams
 	 *
 	 * @return string
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function GetActionsMenu(WebPage $oPage, $aExtraParams)
 	{
 		$oMenuBlock = new MenuBlock($this->oSet->GetFilter(), 'list');
-
 		$oBlock = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $this->iListId);
-		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$oPage->add_linked_stylesheet($sFileAbsUrl);
-		}
-		// JS files
-		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$oPage->add_linked_script($sFileAbsUrl);
-		}
 
-		$oPage->RenderInlineScriptsAndCSSRecursively($oBlock);
-		return BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
+		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
 
 	/**

@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 
 /**
@@ -784,7 +785,7 @@ class WebPage implements Page
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
-		BlockRenderer::RenderCssJsInPage($this, $this->oContentLayout);
+		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [

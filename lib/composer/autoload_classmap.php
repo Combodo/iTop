@@ -296,6 +296,7 @@ return array(
     'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\BsSetFieldRenderer' => $baseDir . '/sources/Renderer/Bootstrap/FieldRenderer/BsSetFieldRenderer.php',
     'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\BsSimpleFieldRenderer' => $baseDir . '/sources/Renderer/Bootstrap/FieldRenderer/BsSimpleFieldRenderer.php',
     'Combodo\\iTop\\Renderer\\Bootstrap\\FieldRenderer\\BsSubFormFieldRenderer' => $baseDir . '/sources/Renderer/Bootstrap/FieldRenderer/BsSubFormFieldRenderer.php',
+    'Combodo\\iTop\\Renderer\\Console\\ConsoleBlockRenderer' => $baseDir . '/sources/Renderer/Console/ConsoleBlockRenderer.php',
     'Combodo\\iTop\\Renderer\\Console\\ConsoleFormRenderer' => $baseDir . '/sources/Renderer/Console/ConsoleFormRenderer.php',
     'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\ConsoleSelectObjectFieldRenderer' => $baseDir . '/sources/Renderer/Console/FieldRenderer/ConsoleSelectObjectFieldRenderer.php',
     'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\ConsoleSimpleFieldRenderer' => $baseDir . '/sources/Renderer/Console/FieldRenderer/ConsoleSimpleFieldRenderer.php',

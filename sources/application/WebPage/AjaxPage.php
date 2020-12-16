@@ -8,6 +8,7 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -147,7 +148,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			header($s_header);
 		}
 
-		BlockRenderer::RenderCssJsInPage($this, $this->oContentLayout);
+		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Render the blocks
 		// Additional UI widgets to be activated inside the ajax fragment

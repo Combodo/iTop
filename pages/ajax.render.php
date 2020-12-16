@@ -19,7 +19,7 @@
 
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
-use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
@@ -1126,7 +1126,7 @@ EOF
 				}
 				if ($oDashlet->IsRedrawNeeded()) {
 					$oBlock = $oDashlet->DoRender($oPage, true, false, $aExtraParams);
-					$sHtml = BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
+					$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
 				if ($oDashlet->IsFormRedrawNeeded()) {

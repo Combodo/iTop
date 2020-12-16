@@ -28,7 +28,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
-use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 require_once(APPROOT.'application/displayblock.class.inc.php');
 
@@ -374,10 +374,16 @@ JS
 	 *
 	 * @return string The HTML fragment to be inserted into the page
 	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
 	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
+	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj): string
 	{
 		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
 
@@ -430,7 +436,7 @@ JS
 
 		$oBlock->AddControls();
 
-        return BlockRenderer::RenderBlockTemplate($oPage, $oBlock);
+        return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
 
 	/**
