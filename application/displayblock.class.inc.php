@@ -160,6 +160,8 @@ class DisplayBlock
 				'search_header_force_dropdown', /** string Search class selection dropdown html code */
 				'action',           /** string search URL */
 				'table_inner_id',   /** string html id of the results table */
+				'json',             /** string  */
+				'hidden_criteria',  /** string search criteria not visible */
 			], DataTableFactory::GetAllowedParams()),
 			'summary' => [
 				'status[block]',        /** string object 'status' att code */
@@ -198,13 +200,14 @@ class DisplayBlock
 	 */
 	protected function CheckParams(string $sStyle, array $aParams)
 	{
+		if (!utils::IsDevelopmentEnvironment()) {
+			return;
+		}
 		$aAllowedParams = $this->GetAllowedParams($sStyle);
 
 		foreach (array_keys($aParams) as $sParamName) {
 			if (!in_array($sParamName, $aAllowedParams)) {
-				if (utils::IsDevelopmentEnvironment()) {
-					throw new ApplicationException("Unknown parameter $sParamName for DisplayBlock $sStyle");
-				}
+				throw new ApplicationException("Unknown parameter $sParamName for DisplayBlock $sStyle");
 			}
 		}
 	}
