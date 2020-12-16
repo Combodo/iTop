@@ -175,7 +175,12 @@ class Alert extends UIBlock
 		return $this->bIsOpenedByDefault;
 	}
 
-	public function SetOpenedByDefault(bool $bIsOpenedByDefault): Alert
+	/**
+	 * @param bool $bIsOpenedByDefault
+	 *
+	 * @return $this
+	 */
+	public function SetOpenedByDefault(bool $bIsOpenedByDefault)
 	{
 		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 
