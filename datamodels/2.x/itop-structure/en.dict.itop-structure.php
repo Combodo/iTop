@@ -152,7 +152,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:phone' => 'Phone',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Notification',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'No automation. It must be tested explicitly in Notification OQL',
 	'Class:Contact/Attribute:notify/Value:no' => 'no',
 	'Class:Contact/Attribute:notify/Value:no+' => 'no',
 	'Class:Contact/Attribute:notify/Value:yes' => 'yes',
