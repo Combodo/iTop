@@ -46,6 +46,7 @@ body.ibo-has-fullscreen-descendant{
 	width: 100vw;
 	height: 100vh;
 	overflow: auto;
+	z-index: 9000;
 }
 
 %ibo-fully-centered-content{
