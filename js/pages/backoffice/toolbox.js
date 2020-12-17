@@ -134,8 +134,7 @@ $(document).ready(function(){
 			return false;
 		}
 
-		// If target selector return one element, it's the good target
-		oTargetElem.on('click', function(oEvent){
+		$(this).on('click', function(oEvent){
 			// Prevent anchor default behavior
 			oEvent.preventDefault();
 
