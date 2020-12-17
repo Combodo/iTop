@@ -33,6 +33,7 @@ $(function()
 				is_opened: 'ibo-is-opened',
 				is_closed: 'ibo-is-closed',
 				is_active: 'ibo-is-active',
+				is_visible: 'ibo-is-visible',
 				is_hidden: 'ibo-is-hidden',
 			},
 			js_selectors:
@@ -46,6 +47,7 @@ $(function()
 				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
 				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
 				entry: '[data-role="ibo-activity-entry"]',
+				entry_medallion: '[data-role="ibo-activity-entry--medallion"]',
 				entry_main_information: '[data-role="ibo-activity-entry--main-information"]',
 				entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
 				edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
@@ -249,6 +251,7 @@ $(function()
 			{
 				const me = this;
 
+				// For each filter, show/hide corresponding entries
 				this.element.find(this.js_selectors.activity_tab_filter).each(function(){
 					const aTargetEntryTypes = $(this).attr('data-target-entry-types').split(' ');
 					const sCallbackMethod = ($(this).prop('checked')) ? '_ShowEntries' : '_HideEntries';
@@ -257,6 +260,12 @@ $(function()
 					{
 						me[sCallbackMethod](aTargetEntryTypes[iIdx]);
 					}
+				});
+
+				// Show only the last visible entry's medallion of a group (can be done through CSS yet 😕)
+				this.element.find(this.js_selectors.entry_group).each(function(){
+					$(this).find(me.js_selectors.entry_medallion).removeClass(me.css_classes.is_visible);
+					$(this).find(me.js_selectors.entry + ':visible:last').find(me.js_selectors.entry_medallion).addClass(me.css_classes.is_visible);
 				});
 			},
 			_ShowAllEntries: function()

@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+.ibo-is-visible{
+	display: inherit !important; /* Note: !important is necessary as it needs to overload any standard rules */
+	visibility: visible !important;
+}
 .ibo-is-hidden{
 	display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
 }
