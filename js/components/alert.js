@@ -52,13 +52,13 @@ $(function()
 					me._onCloseButtonClick(oEvent);
 				});
 				this.element.find(this.js_selectors.collapse_toggler).on('click', function (oEvent) {
-					me._onToggleCollapse(oEvent);
+					me._onCollapseTogglerClick(oEvent);
 				});
 			},
 			_onCloseButtonClick: function (oEvent) {
 				this.element.hide();
 			},
-			_onToggleCollapse: function (oEvent) {
+			_onCollapseTogglerClick: function (oEvent) {
 				this.element.toggleClass(this.css_classes.opened);
 			}
 		})
