@@ -33,9 +33,7 @@ $(function()
 			js_selectors:
 				{
 					close_button: '[data-role="ibo-alert--close-button"]',
-					minimize_button: '[data-role="ibo-alert--minimize-button"]',
-					maximize_button: '[data-role="ibo-alert--maximize-button"]',
-					title: '[data-role="ibo-alert--title"]',
+					collapse_toggler: '[data-role="ibo-alert--collapse-toggler"]',
 				},
 
 			// the constructor
@@ -53,26 +51,14 @@ $(function()
 				this.element.find(this.js_selectors.close_button).on('click', function (oEvent) {
 					me._onCloseButtonClick(oEvent);
 				});
-				this.element.find(this.js_selectors.minimize_button).on('click', function (oEvent) {
-					me._onMinimizeButtonClick(oEvent);
-				});
-				this.element.find(this.js_selectors.maximize_button).on('click', function (oEvent) {
-					me._onMaximizeButtonClick(oEvent);
-				});
-				this.element.find(this.js_selectors.title).on('click', function (oEvent) {
-					me._onToggleVisibility(oEvent);
+				this.element.find(this.js_selectors.collapse_toggler).on('click', function (oEvent) {
+					me._onToggleCollapse(oEvent);
 				});
 			},
 			_onCloseButtonClick: function (oEvent) {
 				this.element.hide();
 			},
-			_onMinimizeButtonClick: function (oEvent) {
-				this.element.removeClass(this.css_classes.opened);
-			},
-			_onMaximizeButtonClick: function (oEvent) {
-				this.element.addClass(this.css_classes.opened);
-			},
-			_onToggleVisibility: function (oEvent) {
+			_onToggleCollapse: function (oEvent) {
 				this.element.toggleClass(this.css_classes.opened);
 			}
 		})
