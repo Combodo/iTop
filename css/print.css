@@ -176,7 +176,10 @@ div.explain-printable {
 	content: "\f070";
 }
 
-.no-print-preview {
+.printable-content .ibo-field--fullscreen-toggler,
+.printable-content .ibo-activity-panel--expand-icon,
+.printable-content .ibo-activity-panel--collapse-icon,
+.printable-content .ibo-activity-panel--body--add-caselog-entry--toggler{
 	display: none;
 }
 

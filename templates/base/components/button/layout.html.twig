@@ -1,5 +1,5 @@
 <button id="{{ oUIBlock.GetId() }}"
-        class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClass() }} no-print-preview"
+        class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClass() }}"
         {% if oUIBlock.GetDataAttributes() %}
                 {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                         data-{{ sName }}="{{ sValue }}"
