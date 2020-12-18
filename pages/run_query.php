@@ -20,10 +20,10 @@
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
-use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -163,13 +163,12 @@ try
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
 	$oQueryTextArea = new TextArea(utils::HtmlEntities($sExpression), 'expression', 120, 8);
-	$oQueryTextAreaRenderer = new BlockRenderer($oQueryTextArea);
 	$oQueryTextArea->SetName('expression');
-	$oQueryField = new Field([
-		'layout' => Field::ENUM_FIELD_LAYOUT_LARGE,
-		'label' => Dict::S('UI:RunQuery:ExpressionToEvaluate'),
-		'value' => $oQueryTextAreaRenderer->RenderHtml(),
-	]);
+	$oQueryField = FieldFactory::MakeFromObject(
+		Dict::S('UI:RunQuery:ExpressionToEvaluate'),
+		$oQueryTextArea,
+		Field::ENUM_FIELD_LAYOUT_LARGE
+	);
 	$oQueryForm->AddSubBlock($oQueryField);
 
 	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(

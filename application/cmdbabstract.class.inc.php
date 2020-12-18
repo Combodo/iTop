@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
@@ -970,8 +971,7 @@ EOF
 							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
 							// The field is visible, add it to the current column
-							$aDetails[] = $val;
-							$oField = new Field($val);
+							$oField = FieldFactory::MakeFromParams($val);
 							if ($sFieldsetName[0] != '_') {
 								$oFieldSet->AddSubBlock($oField);
 							} else {
@@ -979,11 +979,6 @@ EOF
 							}
 						}
 					}
-//					if ($sFieldsetName[0] != '_') {
-//						$oFieldSet->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
-//					} else {
-//						$oColumn->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
-//					}
 				}
 			}
 		}
