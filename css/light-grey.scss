@@ -3371,41 +3371,7 @@
 		margin-right: 1em;
 	}
 
-	div.explain-printable {
-		border: 5px solid $complement-color;
-		background: $complement-light;
-		color: $text-color;
-		padding: 10px;
-		margin: 0;
-		font-size: 12px;
-	}
 
-	.hideable-chapter {
-		cursor: pointer;
-	}
-
-	#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
-		padding-left: 20px;
-		background: url($approot-relative + "images/eye-open-555.png?v=" + $version) 2px center no-repeat;
-	}
-
-	#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
-		text-decoration: line-through;
-		background: url($approot-relative + "images/eye-closed-555.png?v=" + $version) 2px center no-repeat;
-	}
-
-	.printable-version legend {
-		padding-left: 26px;
-		background: $complement-color url($approot-relative + "images/eye-open-fff.png?v=" + $version) 8px center no-repeat;
-	}
-
-	.printable-version .strikethrough legend {
-		background: $complement-color url($approot-relative + "images/eye-closed-fff.png?v=" + $version) 8px center no-repeat;
-	}
-
-	.printable-version fieldset.strikethrough span {
-		display: none;
-	}
 
 	h2.printable-tab-title {
 		border-bottom: 2px solid;

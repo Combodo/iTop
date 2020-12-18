@@ -108,6 +108,20 @@ const CombodoBackofficeToolbox = {
 	}
 };
 
+// For disabling the CKEditor at init time when the corresponding textarea is disabled !
+CKEDITOR.plugins.add( 'disabler',
+	{
+		init : function( editor )
+		{
+			editor.on( 'instanceReady', function(e)
+			{
+				e.removeListener();
+				$('#'+ editor.name).trigger('update');
+			});
+		}
+
+	});
+
 // Processing
 $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)

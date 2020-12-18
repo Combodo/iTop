@@ -34,6 +34,7 @@ class PageContentWithSideContent extends PageContent {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-page-content-with-side-content';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/page-content/with-side-content';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/layouts/page-content/with-side-content';
 
 	// Specific constants
 	public const ENUM_CONTENT_AREA_SIDE = 'side';

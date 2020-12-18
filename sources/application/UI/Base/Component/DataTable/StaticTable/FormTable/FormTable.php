@@ -31,7 +31,7 @@ class FormTable extends StaticTable
 
 	public function __construct(string $sRef, string $sContainerCSSClass = '')
 	{
-		parent::__construct("dt_{$sRef}", $sContainerCSSClass);
+		parent::__construct($sRef, $sContainerCSSClass);
 		$this->SetRef($sRef);
 		$this->aRows = [];
 	}

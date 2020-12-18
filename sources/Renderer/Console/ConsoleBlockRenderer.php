@@ -71,9 +71,9 @@ class ConsoleBlockRenderer extends BlockRenderer
 	protected static function AddCssJsTemplatesToPageRecursively(WebPage $oPage, iUIBlock $oBlock, array $aContextParams = []): void
 	{
 		$oBlockRenderer = new static($oBlock, $aContextParams);
-		$oPage->add_init_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
-		$oPage->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
-		$oPage->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
+		$oPage->add_init_script($oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_ON_INIT));
+		$oPage->add_script($oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_LIVE));
+		$oPage->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_ON_READY));
 		$oPage->add_style($oBlockRenderer->RenderCssInline());
 
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {

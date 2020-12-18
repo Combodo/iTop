@@ -1,79 +1,133 @@
 @CHARSET "UTF-8";
-.not-printable { display:none; }
-span.ui-layout-resizer { display: none; }
-#header-logo { display: none; }
-#logo { display: none; }
-div.header-menu { display:none; }
-div.footer { display:none; }
-#top-bar { display: none; }
-#inner_menu { display: none; }
-div.actions_button { display:none; }
-div.itop_popup { display:none; }
-a.tab { display:none; }
-div.itop-tab { border: #ccc 1px solid; margin-top: 1em; padding-bottom:1em; }
-#combodo_logo { display:none; }
-div.graph_config { display:none; }
-h2.printable-tab-title {
-	page-break-after: avoid;
-}
-h1 {
-	page-break-after: avoid;
-}
-div#tabbedContent_0 { border:none; }
-p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover, p a:visited, .ui-widget-content td a:visited, td a, td a:visited, td a:hover {
-	padding-left: 0;
-	background: transparent;
-}
-body {
-	margin:10px;
-}
-@page {
-	margin: 1cm;
-}
+@media print {
+	.not-printable {
+		display: none;
+	}
 
-.printable-tab {
-	-webkit-region-break-inside: avoid;
-	page-break-inside: avoid;
-}
-.printable-version legend {
-	padding-left: 8px;
-	background-image: none;
-}
+	span.ui-layout-resizer {
+		display: none;
+	}
 
-/**
-	 *	PRINT Stylesheet
-	 * 
-	 *	First 'neutralize' all the positioning/overflow CSS added by Layout
-	 *	Then change or add cosmetic styles (borders, padding) for printing
-	 *
-	 *	MUST use "!important" for all size, position, margin & overflow rules,
-	 *	so these will 'override' styles applied to the elements by Layout
-	 */
+	#header-logo {
+		display: none;
+	}
 
+	#logo {
+		display: none;
+	}
+
+	div.header-menu {
+		display: none;
+	}
+
+	div.footer {
+		display: none;
+	}
+
+	#top-bar {
+		display: none;
+	}
+
+	#inner_menu {
+		display: none;
+	}
+
+	div.actions_button {
+		display: none;
+	}
+
+	div.itop_popup {
+		display: none;
+	}
+
+	a.tab {
+		display: none;
+	}
+
+	div.itop-tab {
+		border: #ccc 1px solid;
+		margin-top: 1em;
+		padding-bottom: 1em;
+	}
+
+	#combodo_logo {
+		display: none;
+	}
+
+	div.graph_config {
+		display: none;
+	}
+
+	h2.printable-tab-title {
+		page-break-after: avoid;
+	}
+
+	h1 {
+		page-break-after: avoid;
+	}
+
+	div#tabbedContent_0 {
+		border: none;
+	}
+
+	p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover, p a:visited, .ui-widget-content td a:visited, td a, td a:visited, td a:hover {
+		padding-left: 0;
+		background: transparent;
+	}
+
+	body {
+		margin: 10px;
+	}
+
+	@page {
+		margin: 1cm;
+	}
+
+	.printable-tab {
+		-webkit-region-break-inside: avoid;
+		page-break-inside: avoid;
+	}
+
+	.printable-version legend {
+		padding-left: 8px;
+		background-image: none;
+	}
+
+	/**
+		 *	PRINT Stylesheet
+		 *
+		 *	First 'neutralize' all the positioning/overflow CSS added by Layout
+		 *	Then change or add cosmetic styles (borders, padding) for printing
+		 *
+		 *	MUST use "!important" for all size, position, margin & overflow rules,
+		 *	so these will 'override' styles applied to the elements by Layout
+		 */
 	html, body {
 		/* NEUTRALIZE 'layout container' styles */
-		overflow:	visible 	!important;
-		width:		auto		!important;
-		height:		auto		!important;
-		position:	static		!important;
+		overflow: visible !important;
+		width: auto !important;
+		height: auto !important;
+		position: static !important;
 	}
-	.ui-layout-pane ,
-	.ui-layout-resizer ,
+
+	.ui-layout-pane,
+	.ui-layout-resizer,
 	.ui-layout-toggler {
 		/* NEUTRALIZE 'layout element' styles */
-		display:	none		!important; /* hide ALL by default */
-		position:	relative	!important;
-		top:		auto		!important;
-		bottom:		auto		!important;
-		left:		auto		!important;
-		right:		auto		!important;
-		width:		auto		!important;
-		height:		auto		!important;
-		overflow:	visible		!important;
+		display: none !important; /* hide ALL by default */
+		position: relative !important;
+		top: auto !important;
+		bottom: auto !important;
+		left: auto !important;
+		right: auto !important;
+		width: auto !important;
+		height: auto !important;
+		overflow: visible !important;
 	}
+
 	/* SHOW ONLY the panes you want */
 	.ui-layout-pane-center {
-		display:	block		!important;
+		display: block !important;
 		left: 0 !important;
 		right: 0 !important;
 		/* OPTIONAL: change cosmetic styles as desired
@@ -82,3 +136,65 @@ body {
 		background:	transparent	!important;
 		*/
 	}
+}
+
+div.explain-printable {
+	border: 5px solid #f8f9fa;
+	background: #ffffff;
+	color: #000000;
+	padding: 10px;
+	margin: 0;
+	font-size: 12px;
+}
+
+.hideable-chapter {
+	cursor: pointer;
+}
+.ibo-block-print--tablist{
+	background-color: #e1e7ec;
+	position: relative;
+	display: flex;
+	align-items: stretch;
+	height: 2em;
+}
+#hiddeable_chapters .ibo-block-print--tab span::before {
+
+	padding-left: 10px;
+	padding-right: 5px;
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f06e";
+}
+
+#hiddeable_chapters .ibo-block-print--tab.strikethrough span {
+	text-decoration: line-through;
+}
+
+#hiddeable_chapters .ibo-block-print--tab.strikethrough span::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f070";
+}
+
+.no-print-preview {
+	display: none;
+}
+
+.itop_popup{
+	display: none;
+}
+
+.printable-content legend::before {
+	padding-right: 10px;
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f06e";
+}
+.printable-content .strikethrough legend::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f070";
+}
+.printable-content fieldset.strikethrough span {
+	display: none;
+}

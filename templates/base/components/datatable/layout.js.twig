@@ -137,7 +137,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         pages: 5 // number of pages to cache
     }),
     initComplete: function () {
-	    if (this.api().page.info().pages === 1) {
+	    if (this.api().page.info().pages < 2) {
             this.parent().find('.dataTables_paginate').hide();
             this.parent().find('.dataTables_length').hide();
         }

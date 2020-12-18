@@ -18,14 +18,14 @@
  */
 
 // Display DataTable
-Dict::Add('EN US', 'English', 'English', array(
-	'UI:Datatables:Language:Processing' => 'Please wait...',
-	'UI:Datatables:Language:LengthMenu' => 'Showing _MENU_ out of',
-	'UI:Datatables:Language:ZeroRecords' => 'No result',
-	'UI:Datatables:Language:Info' => '_TOTAL_ items',
-	'UI:Datatables:Language:InfoEmpty' => 'No information',
-	'UI:Datatables:Language:EmptyTable' => 'No data available in this table',
-	'UI:Datatables:Language:DisplayLength:All' => 'All',
-	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort',
-	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort',
+Dict::Add('FR FR', 'French', 'Français', array(
+	'UI:Datatables:Language:Processing' => 'Patientez ...',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ parmi ',
+	'UI:Datatables:Language:ZeroRecords' => 'Pas de résultat',
+	'UI:Datatables:Language:Info' => '_TOTAL_ résultat(s)',
+	'UI:Datatables:Language:InfoEmpty' => 'Pas d\'information',
+	'UI:Datatables:Language:EmptyTable' => 'Pas de résultat',
+	'UI:Datatables:Language:DisplayLength:All' => 'Tous',
+	'UI:Datatables:Language:Sort:Ascending' => 'tri croissant',
+	'UI:Datatables:Language:Sort:Descending' => 'tri décroissant',
 ));

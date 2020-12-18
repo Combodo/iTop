@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar;
 use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\UI\Printable\BlockPrintHeader\BlockPrintHeader;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
@@ -155,6 +156,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		if (!$this->IsPrintableVersion())
 		{
 			$this->PrepareLayout();
+		} else{
+			$oPrintHeader = $this->OutputPrintable();
+			$this->AddUiBlock($oPrintHeader);
 		}
 	}
 
@@ -490,21 +494,11 @@ JS
 		
 		var oUserPreferences = $sUserPrefs;
 
-		// For disabling the CKEditor at init time when the corresponding textarea is disabled !
-		CKEDITOR.plugins.add( 'disabler',
-		{
-			init : function( editor )
-			{
-				editor.on( 'instanceReady', function(e)
-				{
-					e.removeListener();
-					$('#'+ editor.name).trigger('update');
-				});
-			}
-			
-		});
+
 JS
 		);
+
+
 	}
 
 
@@ -578,8 +572,11 @@ JS
 	 */
 	public function SetContentLayout(PageContent $oLayout)
 	{
+		$oPrevContentLayout=$this->oContentLayout;
 		$this->oContentLayout = $oLayout;
-
+		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock){
+			$this->AddUiBlock($oBlock);
+		}
 		return $this;
 	}
 
@@ -834,6 +831,7 @@ EOF;
 		$sAbsoluteUrlAppRoot = addslashes($this->m_sRootUrl);
 		$sFaviconUrl = $this->GetFaviconAbsoluteUrl();
 		$sMetadataLanguage = $this->GetLanguageForMetadata();
+		$oPrintHeader = null;
 
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
@@ -853,6 +851,8 @@ EOF;
 				'sCharset' => static::PAGES_CHARSET,
 				'sLang' => $sMetadataLanguage,
 			],
+			'oPrintHeader' => $oPrintHeader,
+			'isPrintable' => $this->IsPrintableVersion(),
 		];
 
 		// Base tag
@@ -876,13 +876,13 @@ EOF;
 		];
 		// - Prepare navigation menu
 		$aData['aLayouts']['oNavigationMenu'] = $this->GetNavigationMenuLayout();
+		$aData['aDeferredBlocks']['oNavigationMenu'] = $this->GetDeferredBlocks($this->GetNavigationMenuLayout());
 		// - Prepare top bar
 		$aData['aLayouts']['oTopBar'] = $this->GetTopBarLayout();
+		$aData['aDeferredBlocks']['oTopBar'] = $this->GetDeferredBlocks($this->GetTopBarLayout());
 		// - Prepare content
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
-		$aData['aDeferredBlocks'] = array_merge($this->GetDeferredBlocks($this->GetContentLayout()),
-			$this->GetDeferredBlocks($this->GetNavigationMenuLayout()),
-			$this->GetDeferredBlocks($this->GetTopBarLayout()));
+		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 
 		// - Retrieve layouts linked files
 		//   Note: Adding them now instead of in the template allow us to remove duplicates and lower the browser parsing time
@@ -892,7 +892,7 @@ EOF;
 				continue;
 			}
 
-			ConsoleBlockRenderer::AddCssJsToPage($this, $oLayout);
+			ConsoleBlockRenderer::AddCssJsToPage($this, $oLayout, $aData);
 		}
 
 		// Components
@@ -924,9 +924,12 @@ EOF;
 			}
 		}
 
+
 		// Render final TWIG into global HTML
 		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
+
+
 		$oKpi->ComputeAndReport('TWIG rendering');
 
 		// Echo global HTML
@@ -974,166 +977,9 @@ EOF
 		// TODO 3.0.0: Is this for the "Debug" popup? We should do a helper to display a popup in various cases (welcome message for example)
 		$s_captured_output = $this->ob_get_clean_safe();
 
-		// TODO 3.0.0: Stylesheet for printing instead of having all those "IsPrintableVersion()" ifs
-		// TODO 3.0.0: Careful! In the print view, we can actually choose which part to print or not, so it's not just a print stylesheet...
-		// special stylesheet for printing, hides the navigation gadgets
-		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 
-		if ($this->GetOutputFormat() == 'html')
-		{
-//			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
-
-//			if (!$this->IsPrintableVersion())
-//			{
-//				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
-//			}
-
-
-			// TODO 3.0.0: Should we still do this init vs ready separation?
-//			$this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
-			if ($this->IsPrintableVersion())
-			{
-				$this->add_ready_script(
-					<<<EOF
-var sHiddeableChapters = '<div class="light ui-tabs ui-widget ui-widget-content ui-corner-all">';
-sHiddeableChapters += '<ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">';
-for (sId in oHiddeableChapters)
-{
-	sHiddeableChapters += '<li tabindex="-1" role="tab" class="ui-state-default ui-corner-top hideable-chapter" chapter-id="'+sId+'"><span class="tab ui-tabs-anchor">' + oHiddeableChapters[sId] + '</span></li>';
-	//alert(oHiddeableChapters[sId]);
-}
-sHiddeableChapters += '</ul></div>';
-$('#hiddeable_chapters').html(sHiddeableChapters);
-$('.hideable-chapter').click(function(){
-	var sChapterId = $(this).attr('chapter-id');
-	$('#'+sChapterId).toggle();
-	$(this).toggleClass('strikethrough');
-});
-$('fieldset').each(function() {
-	var jLegend = $(this).find('legend');
-	jLegend.remove();
-	$(this).wrapInner('<span></span>').prepend(jLegend);
-});
-$('legend').css('cursor', 'pointer').click(function(){
-		$(this).parent('fieldset').toggleClass('not-printable strikethrough');
-	});
-EOF
-				);
-			}
-
-		}
-
-		$sBodyClass = "";
-		if ($this->IsPrintableVersion())
-		{
-			$sBodyClass = 'printable-version';
-		}
-//		$sHtml .= "<body class=\"$sBodyClass\" data-gui-type=\"backoffice\">\n";
-		if ($this->IsPrintableVersion())
-		{
-			$sHtml .= "<div class=\"explain-printable not-printable\">";
-			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable',
-					'<img src="../../../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
-			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
-			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES,
-					self::PAGES_CHARSET).'</button>';
-			$sHtml .= '&nbsp;';
-			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES,
-					self::PAGES_CHARSET).'</button>';
-			$sHtml .= '&nbsp;';
-
-			$sDefaultResolution = '27.7cm';
-			$aResolutionChoices = array(
-				'100%' => Dict::S('UI:PrintResolution:FullSize'),
-				'19cm' => Dict::S('UI:PrintResolution:A4Portrait'),
-				'27.7cm' => Dict::S('UI:PrintResolution:A4Landscape'),
-				'19.6cm' => Dict::S('UI:PrintResolution:LetterPortrait'),
-				'25.9cm' => Dict::S('UI:PrintResolution:LetterLandscape'),
-			);
-			$sHtml .=
-				<<<EOF
-<select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
-EOF;
-			foreach ($aResolutionChoices as $sValue => $sText)
-			{
-				$sHtml .= '<option value="'.$sValue.'" '.(($sValue === $sDefaultResolution) ? 'selected' : '').'>'.$sText.'</option>';
-			}
-			$sHtml .= "</select>";
-
-			$sHtml .= "</div>";
-			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
-		}
-
-		// TODO 3.0.0
-//		// Render the text of the global search form
-//		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, self::PAGES_CHARSET);
-//		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
-//		$sDefaultPlaceHolder = Dict::S("UI:YourSearch");
-
-		if ($this->IsPrintableVersion()) {
-			$sHtml .= ' <!-- Beginning of page content -->';
-			$sHtml .= utils::FilterXSS($this->s_content);
-			$sHtml .= ' <!-- End of page content -->';
-		} elseif ($this->GetOutputFormat() == 'html') {
-
-			// Add the captured output
-			if (trim($s_captured_output) != "") {
-				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".utils::FilterXSS($s_captured_output)."</div></div>\n";
-			}
-//			$sHtml .= "<div id=\"at_the_end\">".utils::FilterXSS($this->s_deferred_content)."</div>";
-//			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
-//			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
-//			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
-		} else {
-			$sHtml .= utils::FilterXSS($this->s_content);
-		}
-
-		if ($this->IsPrintableVersion())
-		{
-			$sHtml .= '</div>';
-		}
-
-
-		if ($this->GetOutputFormat() == 'html')
-		{
-//			$oKpi = new ExecutionKPI();
-//			echo $sHtml;
-//			$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-		}
-		else
-		{
-			// TODO 3.0.0: Check with ITOMIG if we can remove this
-			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
-			{
-				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
-				// The last trace we got is in R-007989. Do not remove this without checking before with the concerned parties if it is still used!
-				if (@is_readable(APPROOT.'lib/MPDF/mpdf.php'))
-				{
-					require_once(APPROOT.'lib/MPDF/mpdf.php');
-					/** @noinspection PhpUndefinedClassInspection Check above comment */
-					$oMPDF = new mPDF('c');
-					$oMPDF->mirroMargins = false;
-					if ($this->a_base['href'] != '')
-					{
-						$oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
-					}
-					$oMPDF->showWatermarkText = true;
-					if ($this->GetOutputOption('pdf', 'template_path'))
-					{
-						$oMPDF->setImportUse(); // Allow templates
-						$oMPDF->SetDocTemplate($this->GetOutputOption('pdf', 'template_path'), 1);
-					}
-					$oMPDF->WriteHTML($sHtml);
-					$sOutputName = $this->s_title.'.pdf';
-					if ($this->GetOutputOption('pdf', 'output_name'))
-					{
-						$sOutputName = $this->GetOutputOption('pdf', 'output_name');
-					}
-					$oMPDF->Output($sOutputName, 'I');
-				}
-			}
-		}
 	}
+
 
 	/**
 	 * @inheritDoc
@@ -1358,6 +1204,16 @@ EOF
 	{
 		$this->oTopBarLayout = $oTopBarLayout;
 		return $this;
+	}
+
+	/**
+	 *
+	 * @return BlockPrintHeader
+	 */
+	protected function OutputPrintable(): BlockPrintHeader
+	{
+		$oBlock= new BlockPrintHeader();
+		return $oBlock;
 	}
 
 

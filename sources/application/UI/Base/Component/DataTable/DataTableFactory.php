@@ -33,6 +33,7 @@ use WebPage;
  */
 class DataTableFactory
 {
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sListId
@@ -758,7 +759,8 @@ class DataTableFactory
 
 	public Static function MakeForForm(string $sRef, array $aColumns): FormTable
 	{
-		$oTable = new FormTable($sRef);
+		$oTable = new FormTable("datatable_".$sRef);
+		$oTable->SetRef($sRef);
 		$oTable->SetColumns($aColumns);
 
 		return $oTable;

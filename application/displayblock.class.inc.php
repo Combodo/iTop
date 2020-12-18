@@ -187,6 +187,8 @@ class DisplayBlock
 			'auto_reload',          /** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
 			'c[menu]',              /** string current navigation menu */
 			'c[org_id]',            /** int current filtered organization */
+			'c[menu',               /** string workaround due to extraparams in menunode */
+			'c[org_id',             /** int workaround due to extraparams in menunode */
 			'dashboard_div_id',     /** string dashboard html div id */
 		];
 

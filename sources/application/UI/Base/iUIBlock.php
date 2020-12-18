@@ -30,9 +30,9 @@ use Combodo\iTop\Application\UI\Base\UIException;
  * @since   3.0.0
  */
 interface iUIBlock {
-	public const JS_TYPE_ON_INIT = "js";
-	public const JS_TYPE_LIVE = "live.js";
-	public const JS_TYPE_ON_READY = "ready.js";
+	public const ENUM_JS_TYPE_ON_INIT = "js";
+	public const ENUM_JS_TYPE_LIVE = "live.js";
+	public const ENUM_JS_TYPE_ON_READY = "ready.js";
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the global template (HTML, JS, CSS) to use or null if it's not provided. Should not be used to often as JS/CSS files would be duplicated making the browser parsing time way longer.
 	 *
@@ -50,7 +50,7 @@ interface iUIBlock {
 	/**
 	 * Return the relative path (from <ITOP>/templates/) of the JS template to use or null if there is no inline JS to render
 	 *
-	 * @param string $sType javascript type only JS_TYPE_ON_INIT / JS_TYPE_ON_READY / JS_TYPE_LIVE
+	 * @param string $sType javascript type only ENUM_JS_TYPE_ON_INIT / ENUM_JS_TYPE_ON_READY / ENUM_JS_TYPE_LIVE
 	 *
 	 * @return string|null
 	 */

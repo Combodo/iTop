@@ -137,12 +137,12 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param $sFilter
+	 * @param string $sFilter
 	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function SearchAndRefresh($sFilter): array
+	public static function SearchAndRefresh(string $sFilter): array
 	{
 		$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$aExtraParams = array();
@@ -167,10 +167,10 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param $sEncoding
-	 * @param $sFilter
+	 * @param string $sEncoding
+	 * @param string $sFilter
 	 *
-	 * @return mixed
+	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -180,7 +180,7 @@ class AjaxRenderController
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function Search($sEncoding, $sFilter)
+	public static function Search(string $sEncoding, string $sFilter):array
 	{
 		$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$aExtraParams = array();

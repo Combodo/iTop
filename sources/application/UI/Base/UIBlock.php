@@ -94,9 +94,9 @@ abstract class UIBlock implements iUIBlock
 		$this->aJsFilesRelPath = static::DEFAULT_JS_FILES_REL_PATH;
 		$this->aCssFilesRelPath = static::DEFAULT_CSS_FILES_REL_PATH;
 		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
+		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
 		$this->aDataAttributes = [];
@@ -121,7 +121,7 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 */
 	public function GetJsTemplateRelPath(string $sType) {
-		if ($sType != self::JS_TYPE_LIVE && $sType != self::JS_TYPE_ON_INIT &&  $sType != self::JS_TYPE_ON_READY){
+		if (!in_array($sType, [self::ENUM_JS_TYPE_LIVE, self::ENUM_JS_TYPE_ON_INIT, self::ENUM_JS_TYPE_ON_READY])) {
 			throw new UIException($this, "Type of javascript $sType not supported");
 		}
 		return $this->aJsTemplateRelPath[$sType];
