@@ -136,6 +136,10 @@ class Extension
 			})
 		);
 
+		// var_export can be used for example to transform a PHP boolean to 'true' or 'false' strings
+		// @see https://www.php.net/manual/fr/function.var-export.php
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('var_export', 'var_export'));
+
 
 		// Function to check our current environment
 		// Usage in twig:   {% if is_development_environment() %}
