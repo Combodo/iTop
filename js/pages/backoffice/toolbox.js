@@ -148,11 +148,28 @@ $(document).ready(function(){
 			return false;
 		}
 
+		// Toggle fullscreen on toggler click
 		$(this).on('click', function(oEvent){
 			// Prevent anchor default behavior
 			oEvent.preventDefault();
 
 			CombodoBackofficeToolbox.ToggleFullscreenForElement(oTargetElem);
 		});
+		// Exit fullscreen on "Esc" key hit when focus is in either the toggler or the target
+		// - Toggler
+		$(this).on('keyup', function(oEvent){
+			if((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-toggler-instanciated'))) {
+				CombodoBackofficeToolbox.ExitFullscreenForElement(oTargetElem);
+			}
+		});
+		// - Target
+		oTargetElem.on('keyup', function(oEvent){
+			if((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-target'))) {
+				CombodoBackofficeToolbox.ExitFullscreenForElement(oTargetElem);
+			}
+		});
+
+		oTargetElem.attr('data-fullscreen-target', 'true');
+		$(this).attr('data-fullscreen-toggler-instanciated', 'true');
 	});
 });
