@@ -19,8 +19,10 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
@@ -33,6 +35,10 @@ require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
 
+/**
+ * @param WebPage $oP
+ * @param string $sExpression
+ */
 function ShowExamples($oP, $sExpression)
 {
 	$bUsingExample = false;
@@ -82,16 +88,22 @@ function ShowExamples($oP, $sExpression)
 		}
 	}
 	$aDisplayConfig = array();
-	$aDisplayConfig['desc'] = array('label' => Dict::S('UI:RunQuery:HeaderPurpose'), 'description' => Dict::S('UI:RunQuery:HeaderPurpose+'));
-	$aDisplayConfig['oql'] = array('label' => Dict::S('UI:RunQuery:HeaderOQLExpression'), 'description' => Dict::S('UI:RunQuery:HeaderOQLExpression+'));
+	$aDisplayConfig['desc'] = array(
+		'label' => Dict::S('UI:RunQuery:HeaderPurpose'),
+		'description' => Dict::S('UI:RunQuery:HeaderPurpose+'),
+	);
+	$aDisplayConfig['oql'] = array(
+		'label' => Dict::S('UI:RunQuery:HeaderOQLExpression'),
+		'description' => Dict::S('UI:RunQuery:HeaderOQLExpression+'),
+	);
 	$aDisplayConfig['go'] = array('label' => '', 'description' => '');
 
-	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData)
-	{
+	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$oP->StartCollapsibleSection($sTopic, $bShowOpened);
-		$oP->table($aDisplayConfig, $aQueriesDisplayData);
-		$oP->EndCollapsibleSection();
+		$sTopicHtml = $oP->GetTable($aDisplayConfig, $aQueriesDisplayData);
+		$oTopicSection = new CollapsibleSection($sTopic, [new Html($sTopicHtml)]);
+		$oTopicSection->SetOpenedByDefault($bShowOpened);
+		$oP->AddUiBlock($oTopicSection);
 	}
 }
 
@@ -222,10 +234,16 @@ EOF
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
 			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-		$oP->p('');
-		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
-		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
-		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').htmlentities($oFilter->serialize(), ENT_QUOTES, 'UTF-8'));
+
+		$aMoreInfoBlocks = [];
+
+		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
+		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->ToOQL()).'</pre>'));
+		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
+
+		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
+		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->serialize()).'</pre>'));
+		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
 		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
@@ -244,36 +262,36 @@ EOF
 
 		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
 			// OQL Developed for Count
-			$oP->p('');
-			$oP->p(Dict::S('UI:RunQuery:DevelopedOQLCount'));
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
-			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+			$oCountDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQLCount'));
+			$oCountDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$aMoreInfoBlocks[] = $oCountDevelopedQuerySet;
 		}
 
 		// SQL Count
-		$oP->p('');
-		$oP->p(Dict::S('UI:RunQuery:ResultSQLCount'));
 		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
-		$oP->p("<pre>$sSQL</pre>");
+		$oCountResultQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQLCount'));
+		$oCountResultQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
-		{
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
 			// OQL Developed
-			$oP->p('');
-			$oP->p(Dict::S('UI:RunQuery:DevelopedOQL'));
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
-			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+			$oOqlDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQL'));
+			$oOqlDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$aMoreInfoBlocks[] = $oOqlDevelopedQuerySet;
 		}
 
 		// SQL
-		$oP->p('');
-		$oP->p(Dict::S('UI:RunQuery:ResultSQL'));
 		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
-		$oP->p("<pre>$sSQL</pre>");
+		$oSqlQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQL'));
+		$oSqlQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
-		$oP->EndCollapsibleSection();
+		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
+		$oP->AddUiBlock($oMoreInfoSection);
 	}
 	elseif ($sSyntaxError)
 	{

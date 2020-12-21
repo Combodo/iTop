@@ -1,0 +1,102 @@
+/*!
+ * Copyright (C) 2013-2020 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-collapsible-section--margin-top: 3rem;
+$ibo-collapsible-section--title--color: $ibo-color-grey-900 !default;
+$ibo-collapsible-section--body--background-color: $ibo-color-white-100 !default;
+
+$ibo-collapsible-section--highlight--height: 8px !default;
+
+$ibo-collapsible-section--maximize-minimize-button--right: 5px !default;
+
+
+$ibo-collapsible-section--body--padding-bottom: 16px !default;
+$ibo-collapsible-section--body--padding-top: $ibo-collapsible-section--body--padding-bottom + $ibo-collapsible-section--highlight--height !default;
+$ibo-collapsible-section--body--padding-x: 16px !default;
+$ibo-collapsible-section--body--border-radius: $ibo-border-radius-500 !default;
+$ibo-collapsible-section--body--border-size: 1px !default;
+$ibo-collapsible-section--body--border-color: $ibo-color-grey-400 !default;
+
+
+/* Rules */
+.ibo-collapsible-section {
+	margin: $ibo-collapsible-section--margin-top auto;
+}
+
+.ibo-collapsible-section--header {
+	display: flex;
+	align-items: stretch;
+}
+
+.ibo-collapsible-section {
+	&.ibo-is-opened {
+		.ibo-collapsible-section--minimize-button {
+			display: block;
+		}
+
+		.ibo-collapsible-section--maximize-button {
+			display: none;
+		}
+	}
+
+	&:not(.ibo-is-opened) {
+		.ibo-collapsible-section--minimize-button {
+			display: none;
+		}
+
+		.ibo-collapsible-section--maximize-button {
+			display: block;
+		}
+
+		.ibo-collapsible-section--body {
+			display: none;
+		}
+	}
+
+	.ibo-collapsible-section--header {
+		cursor: pointer;
+
+		&:hover i {
+			opacity: 0.8;
+		}
+
+		.ibo-collapsible-section--action-button {
+			&.ibo-collapsible-section--maximize-button, &.ibo-collapsible-section--minimize-button {
+				margin-right: $ibo-collapsible-section--maximize-minimize-button--right;
+			}
+		}
+
+		.ibo-collapsible-section--title {
+			color: $ibo-collapsible-section--title--color;
+			@extend %ibo-font-ral-med-250;
+			flex-grow: 1;
+		}
+	}
+
+	.ibo-collapsible-section--body {
+		position: relative;
+		padding: $ibo-collapsible-section--body--padding-top $ibo-collapsible-section--body--padding-x $ibo-collapsible-section--body--padding-bottom;
+		background-color: $ibo-collapsible-section--body--background-color;
+		border: solid $ibo-collapsible-section--body--border-size $ibo-collapsible-section--body--border-color;
+		border-radius: $ibo-collapsible-section--body--border-radius;
+		overflow: hidden; /* To force highlight color to be cropped by the border radius */
+
+		@extend %ibo-font-ral-nor-200;
+	}
+}

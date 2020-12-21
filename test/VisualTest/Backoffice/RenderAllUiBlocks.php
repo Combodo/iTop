@@ -24,6 +24,7 @@ namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -155,5 +156,14 @@ $oPageContentLayout->AddMainBlock($oPanel);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+
+/////////
+// Collapsible Section
+/////////
+$oCollapsibleSectionTitle = new Html('<h2 id="title-panels">Collapsible Sections examples</h2>');
+$oPage->AddUiBlock($oCollapsibleSectionTitle);
+
+$oCollapsibleSection = new CollapsibleSection('Section title', [new Html("This the section content !")]);
+$oPage->AddUiBlock($oCollapsibleSection);
 
 $oPage->output();
