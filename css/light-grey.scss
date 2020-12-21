@@ -1985,12 +1985,6 @@
 		text-align: center;
 	}
 
-	div#logo div {
-		height: 88px;
-		width: 244px;
-		background: url($approot-relative + "images/itop-logo-2.png?v=" + $version) left no-repeat;
-	}
-
 	#left-pane .ui-layout-north {
 		overflow: hidden;
 	}
@@ -2168,12 +2162,6 @@
 	span.ui-icon {
 		float: left;
 		margin: 0 2px;
-	}
-
-	.ui-layout-button-pin-down {
-		background: url($approot-relative + "images/splitter-bkg.png?v=" + $version) transparent;
-		width: 16px;
-		background-position: -144px -144px;
 	}
 
 	.ui-layout-resizer-west-open {
