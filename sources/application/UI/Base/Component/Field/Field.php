@@ -31,17 +31,17 @@ class Field extends UIBlock
 	/** @var string */
 	protected $sAttLabel;
 	/** @var bool */
-	protected $bIsHidden;
+	protected $bIsHidden = false;
 	/** @var bool */
-	protected $bIsReadOnly;
+	protected $bIsReadOnly = false;
 	/** @var bool */
-	protected $bIsMandatory;
+	protected $bIsMandatory = false;
 	/** @var bool */
-	protected $bMustChange;
+	protected $bMustChange = false;
 	/** @var bool */
-	protected $bMustPrompt;
+	protected $bMustPrompt = false;
 	/** @var bool */
-	protected $bIsSlave;
+	protected $bIsSlave = false;
 	/** @var string */
 	protected $sValueRaw;
 	/** @var string */

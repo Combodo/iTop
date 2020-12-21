@@ -58,7 +58,7 @@ class FieldFactory
 
 	private static function UpdateFlagsFieldFromParams($oField, $sMethodName, $iParamsFlags, $iConstant): void
 	{
-		$oField->$sMethodName(($iParamsFlags & $iConstant) === $iConstant);
+		$oField->$sMethodName((($iParamsFlags & $iConstant) === $iConstant));
 	}
 
 	public static function MakeFromObject(string $sLabel, AbstractInput $oInput, ?string $sLayout = null)
