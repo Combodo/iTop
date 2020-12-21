@@ -3550,16 +3550,6 @@
 					text-decoration: none;
 					color: $breadcrumb-highlight-color;
 				}
-
-				&::after {
-					content: '';
-					position: absolute;
-					background-image: url($approot-relative + "images/breadcrumb-separator.png?v=" + $version);
-					background-repeat: no-repeat;
-					width: 8px;
-					height: 16px;
-					margin-left: 5px;
-				}
 			}
 
 			&:last-child a::after {
