@@ -99,18 +99,22 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
 		$this->add_xframe_options();
-		// TODO 3.0.0: Add only what's necessary
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.multiselect.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+		if (!$this->IsPrintableVersion())
+		{
+			$this->PrepareLayout();
+		} else{
+			$oPrintHeader = $this->OutputPrintable();
+			$this->AddUiBlock($oPrintHeader);
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedScripts(): void
+	{
+		parent::InitializeLinkedScripts();
 
 		// TODO 3.0.0: Add only what's necessary
 		// jquery.layout : not used anymore in the whole console but only in some pages (datamodel viewer, dashboard edit, ...)
@@ -143,6 +147,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeDictEntries(): void
+	{
+		parent::InitializeDictEntries();
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -151,15 +164,28 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entries('UI:Search:');
 		$this->add_dict_entry('UI:UndefinedObject');
 		$this->add_dict_entries('Enum:Undefined');
+	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedStylesheets(): void
+	{
+		parent::InitializeLinkedStylesheets();
 
-		if (!$this->IsPrintableVersion())
-		{
-			$this->PrepareLayout();
-		} else{
-			$oPrintHeader = $this->OutputPrintable();
-			$this->AddUiBlock($oPrintHeader);
-		}
+		// TODO 3.0.0: Add only what's necessary
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.multiselect.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 	}
 
 	/**

@@ -53,13 +53,21 @@ class WebPage implements Page
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
+	/** @var array Scripts to be put in the page's header */
 	protected $a_scripts;
+	/** @var array Scripts to be executed when the DOM is ready (typical JQuery use), right before "ready scripts" */
 	protected $a_init_scripts;
+	/** @var array Scripts to be executed when the DOM is ready, with a slight delay, after the "init scripts" */
 	protected $a_ready_scripts;
-	protected $a_dict_entries;
-	protected $a_dict_entries_prefixes;
-	protected $a_styles;
+	/** @var array Scripts linked (externals) to the page through URIs */
 	protected $a_linked_scripts;
+	/** @var array Specific dictionnary entries to be used client side */
+	protected $a_dict_entries;
+	/** @var array Sub-sets of dictionary entries (based on the given prefix) for the client side */
+	protected $a_dict_entries_prefixes;
+	/** @var array Inline style to put in the page's header */
+	protected $a_styles;
+	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
 	protected $a_headers;
 	protected $a_base;
@@ -96,14 +104,13 @@ class WebPage implements Page
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
-		$this->a_scripts = array();
-		$this->a_init_scripts = array();
-		$this->a_ready_scripts = array();
-		$this->a_dict_entries = array();
-		$this->a_dict_entries_prefixes = array();
-		$this->a_styles = array();
-		$this->a_linked_scripts = array();
-		$this->a_linked_stylesheets = array();
+		$this->InitializeScripts();
+		$this->InitializeInitScripts();
+		$this->InitializeReadyScripts();
+		$this->InitializeLinkedScripts();
+		$this->InitializeDictEntries();
+		$this->InitializeStyles();
+		$this->InitializeLinkedStylesheets();
 		$this->a_headers = array();
 		$this->a_base = array('href' => '', 'target' => '');
 		$this->iNextId = 0;
@@ -347,8 +354,33 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Empty all base JS in the page's header
+	 *
+	 * @see \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyScripts(): void
+	{
+		$this->a_scripts = [];
+	}
+
+	/**
+	 * Initialize base JS in the page's header
+	 *
+	 * @see \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeScripts(): void
+	{
+		$this->EmptyScripts();
+	}
+
+	/**
 	 * Add some Javascript to the header of the page
 	 *
+	 * @see \WebPage::$a_scripts
 	 * @param string $s_script
 	 */
 	public function add_script($s_script)
@@ -359,8 +391,33 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Empty all base init. scripts for the page
+	 *
+	 * @see \WebPage::$a_init_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyInitScripts(): void
+	{
+		$this->a_init_scripts = [];
+	}
+
+	/**
+	 * Initialize base init. scripts for the page
+	 *
+	 * @see \WebPage::$a_init_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeInitScripts(): void
+	{
+		$this->EmptyInitScripts();
+	}
+
+	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
 	 *
+	 * @see \WebPage::$a_init_scripts
 	 * @param string $sScript
 	 *
 	 * @return void
@@ -373,8 +430,33 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page
+	 * Empty all base ready scripts for the page
 	 *
+	 * @see \WebPage::$a_ready_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyReadyScripts(): void
+	{
+		$this->a_ready_scripts = [];
+	}
+
+	/**
+	 * Initialize base ready scripts for the page
+	 *
+	 * @see \WebPage::$a_reset_init_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeReadyScripts(): void
+	{
+		$this->EmptyReadyScripts();
+	}
+
+	/**
+	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
+	 *
+	 * @see \WebPage::$a_ready_scripts
 	 * @param $sScript
 	 */
 	public function add_ready_script($sScript)
@@ -385,10 +467,77 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Empty all base linked scripts for the page
+	 *
+	 * @see \WebPage::$a_linked_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyLinkedScripts(): void
+	{
+		$this->a_linked_scripts = [];
+	}
+
+	/**
+	 * Initialize base linked scripts for the page
+	 *
+	 * @see \WebPage::$a_linked_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedScripts(): void
+	{
+		$this->EmptyLinkedScripts();
+	}
+
+	/**
+	 * Add a script (as an include, i.e. link) to the header of the page.<br>
+	 * Handles duplicates : calling twice with the same script will add the script only once
+	 *
+	 * @see \WebPage::$a_linked_scripts
+	 * @param string $s_linked_script
+	 * @return void
+	 */
+	public function add_linked_script($s_linked_script)
+	{
+		if (!empty(trim($s_linked_script))) {
+			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		}
+	}
+
+	/**
+	 * Empty both dict. entries and dict. entries prefixes for the page
+	 *
+	 * @see \WebPage::$a_dict_entries
+	 * @see \WebPage::$dict_a_dict_entries_prefixes
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyDictEntries(): void
+	{
+		$this->a_dict_entries = [];
+		$this->a_dict_entries_prefixes = [];
+	}
+
+	/**
+	 * Initialize both dict. entries and dict. entries prefixes for the page
+	 *
+	 * @see \WebPage::$a_dict_entries
+	 * @see \WebPage::$dict_a_dict_entries_prefixes
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeDictEntries(): void
+	{
+		$this->EmptyDictEntries();
+	}
+
+	/**
 	 * Allow a dictionnary entry to be used client side with Dict.S()
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
+	 * @see \WebPage::$a_dict_entries
 	 * @see \WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
@@ -402,6 +551,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entriesPrefix translation label prefix (eg 'UI:Button:' to add all keys beginning with this)
 	 *
+	 * @see \WebPage::::$dict_a_dict_entries_prefixes
 	 * @see \WebPage::add_dict_entry()
 	 * @see utils.js
 	 */
@@ -438,6 +588,29 @@ class WebPage implements Page
 		return $sJSFile;
 	}
 
+	/**
+	 * Empty all inline styles for the page
+	 *
+	 * @see \WebPage::$a_styles
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyStyles(): void
+	{
+		$this->a_styles = [];
+	}
+
+	/**
+	 * Initialize inline styles for the page
+	 *
+	 * @see \WebPage::$a_styles
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeStyles(): void
+	{
+		$this->EmptyStyles();
+	}
 
 	/**
 	 * Add some CSS definitions to the header of the page
@@ -452,17 +625,27 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a script (as an include, i.e. link) to the header of the page.<br>
-	 * Handles duplicates : calling twice with the same script will add the script only once
+	 * Empty all linked stylesheets for the page
 	 *
-	 * @param string $s_linked_script
+	 * @see \WebPage::$a_linked_stylesheets
 	 * @return void
+	 * @since 3.0.0
 	 */
-	public function add_linked_script($s_linked_script)
+	protected function EmptyLinkedStylesheets(): void
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
-		}
+		$this->a_linked_stylesheets = [];
+	}
+
+	/**
+	 * Initialize linked stylesheets for the page
+	 *
+	 * @see \WebPage::$a_linked_stylesheets
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedStylesheets(): void
+	{
+		$this->EmptyLinkedStylesheets();
 	}
 
 	/**

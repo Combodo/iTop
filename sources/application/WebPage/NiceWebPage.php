@@ -27,57 +27,23 @@ class NiceWebPage extends WebPage
 
 	public function __construct($s_title, $bPrintable = false)
 	{
-		parent::__construct($s_title, $bPrintable);
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
-		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
-		{
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
-		} else {
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
-		}
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
-		//TODO deprecated in 3.0.0
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
-		// table sorting
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
-	    //TODO end deprecated in 3.0.0
-
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler_history.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_tag_set.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
-
-	    $this->add_dict_entries('UI:Combo');
-	    $this->LoadTheme();
-
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
+		parent::__construct($s_title, $bPrintable);
+
+	    $this->LoadTheme();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeScripts(): void
+	{
+		parent::InitializeScripts();
+
 		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
 		$sAbsURLModulesRoot = addslashes($this->GetAbsoluteUrlModulesRoot());
 		$sEnvironment = addslashes(utils::GetCurrentEnvironment());
-
 		$sAppContext = addslashes($this->GetApplicationContext());
 
 		$this->add_script(
@@ -124,8 +90,71 @@ function AddAppContext(sURL)
 EOF
 		);
 	}
-	
-    public function SetRootUrl($sRootUrl)
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedScripts(): void
+	{
+		parent::InitializeLinkedScripts();
+
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
+		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
+		{
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev.js');
+		} else {
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
+		}
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
+		//TODO deprecated in 3.0.0
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
+		// table sorting
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
+		//TODO end deprecated in 3.0.0
+
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler_history.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_tag_set.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	protected function InitializeDictEntries(): void
+	{
+		parent::InitializeDictEntries();
+
+		$this->add_dict_entries('UI:Combo');
+	}
+
+
+	public function SetRootUrl($sRootUrl)
     {
     	$this->m_sRootUrl = $sRootUrl;
     }
