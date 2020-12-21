@@ -237,9 +237,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:NormalChange' => 'Normale Change',
 	'Class:NormalChange+' => '',
-	'Class:NormalChange/Attribute:acceptance_date' => 'Datum goedkeuring',
+	'Class:NormalChange/Attribute:acceptance_date' => 'Datum acceptatie',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
-	'Class:NormalChange/Attribute:acceptance_comment' => 'Commentaar goedkeuring',
+	'Class:NormalChange/Attribute:acceptance_comment' => 'Commentaar acceptatie',
 	'Class:NormalChange/Attribute:acceptance_comment+' => '',
 	'Class:NormalChange/Stimulus:ev_validate' => 'Valideer',
 	'Class:NormalChange/Stimulus:ev_validate+' => '',
