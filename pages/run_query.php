@@ -20,8 +20,6 @@
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
-use Combodo\iTop\Application\UI\Base\Component\Field\Field;
-use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -174,14 +172,11 @@ try
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
+	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
+	$oQueryForm->AddSubBlock($oQueryTitle);
 	$oQueryTextArea = new TextArea(utils::HtmlEntities($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->SetName('expression');
-	$oQueryField = FieldFactory::MakeFromObject(
-		Dict::S('UI:RunQuery:ExpressionToEvaluate'),
-		$oQueryTextArea,
-		Field::ENUM_FIELD_LAYOUT_LARGE
-	);
-	$oQueryForm->AddSubBlock($oQueryField);
+	$oQueryForm->AddSubBlock($oQueryTextArea);
 
 	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
 		Dict::S('UI:Button:Evaluate'),
@@ -202,7 +197,7 @@ EOF
 
 	if (count($aArgs) > 0) {
 		$oP->add("<div class=\"wizContainer\">\n");
-		$oP->add("<h3>Query arguments</h3>\n");
+		$oP->add("<h2>Query arguments</h2>\n");
 		foreach ($aArgs as $sParam => $sValue) {
 			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
 		}
@@ -210,7 +205,7 @@ EOF
 	}
 
 	if ($oFilter) {
-		$oP->add("<h3>Query results</h3>\n");
+		$oP->add("<h2>Query results</h2>\n");
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 'runquery');
