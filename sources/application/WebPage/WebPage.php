@@ -1103,6 +1103,8 @@ class WebPage implements Page
 
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * Adds init scripts for the collapsible sections
 	 */
 	protected function outputCollapsibleSectionInit()
@@ -1134,9 +1136,12 @@ EOD
 	}
 
 	/**
-	 * @param string $sSectionLabel
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @param bool $bOpenedByDefault
 	 * @param string $sSectionStateStorageBusinessKey
+	 *
+	 * @param string $sSectionLabel
 	 *
 	 * @throws \Exception
 	 */
@@ -1146,11 +1151,14 @@ EOD
 	}
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @param string $sSectionLabel
 	 * @param bool $bOpenedByDefault
 	 * @param string $sSectionStateStorageBusinessKey
 	 *
 	 * @return string
+	 *
 	 * @throws \Exception
 	 */
 	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
@@ -1172,12 +1180,17 @@ EOD
 		return $sHtml;
 	}
 
+	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 */
 	public function EndCollapsibleSection()
 	{
 		$this->add($this->GetEndCollapsibleSection());
 	}
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @return string
 	 */
 	public function GetEndCollapsibleSection()
