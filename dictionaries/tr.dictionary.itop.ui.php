@@ -699,7 +699,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu: %1$s',
+	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => 'iTop objects schema',

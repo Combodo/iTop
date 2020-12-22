@@ -686,7 +686,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Generierte OQL für Zählung',
 	'UI:RunQuery:ResultSQLCount' => 'Resultierendes SQL für Zählung',
 	'UI:RunQuery:ResultSQL' => 'Resultierendes SQL',
-	'UI:RunQuery:Error' => 'Ein Fehler trat während der Abfrage auf: %1$s auf.',
+	'UI:RunQuery:Error' => 'Ein Fehler trat während der Abfrage auf',
 	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
 	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von iTop, variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
 	'UI:Schema:Title' => 'iTop Objekte-Schema',

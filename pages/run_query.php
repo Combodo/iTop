@@ -292,37 +292,40 @@ EOF
 
 		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
 		$oP->AddUiBlock($oMoreInfoSection);
-	}
-	elseif ($sSyntaxError)
-	{
-		if ($e instanceof OqlException)
-		{
+	} elseif ($sSyntaxError) {
+		if ($e instanceof OqlException) {
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
-			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0)
-			{
+			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0) {
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
 
-				if (strlen($sSuggestedWord) > 0)
-				{
-					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
+				if (strlen($sSuggestedWord) > 0) {
+					$sSyntaxErrorText = $e->GetIssue().'<br><em>'.$sWrongWord.'</em>';
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
-					$oP->p("Suggesting: $sFixedExpressionHtml");
-					$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
-				}
-				else
-				{
-					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+					$sSyntaxErrorText .= $oP->GetP("Suggesting: $sFixedExpressionHtml");
+					$sEscapedExpression = utils::HtmlEntities(addslashes($sFixedExpression));
+					$sSyntaxErrorText .= $oP->GetP(<<<HTML
+<button onClick="$('textarea[name=expression]')
+	.val('$sEscapedExpression')
+	.focus();">Use this query</button>
+HTML
+					);
+				} else {
+					$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
 				}
 			} else {
-				$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
+				$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
 			}
 		} else {
-			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
+			$sSyntaxErrorText = $oP->GetP($e->getMessage());
 		}
+
+		$oSyntaxErrorPanel = AlertFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $sSyntaxErrorText);
+		$oSyntaxErrorPanel->SetOpenedByDefault(true);
+		$oP->AddUiBlock($oSyntaxErrorPanel);
 	}
 }
 catch (Exception $e) {
