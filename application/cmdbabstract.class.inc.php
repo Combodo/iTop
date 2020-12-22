@@ -237,18 +237,18 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param \WebPage  $oPage
+	 * @param bool      $bEditMode
+	 * @param string    $sMode      Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
 	 *
+	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
-	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -301,7 +301,7 @@ EOF
 			}
 		}
 
-		if (!$oPage->IsPrintableVersion())
+		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW))
 		{
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
@@ -989,8 +989,11 @@ EOF
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool     $bEditMode
+	 * @param string   $sMode       Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
 	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
@@ -998,13 +1001,11 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
-	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
-		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
 		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
@@ -1013,7 +1014,7 @@ HTML
 		);
 
 		/** @var \iTopWebPage $oPage */
-		$this->DisplayBareHeader($oPage, $bEditMode);
+		$this->DisplayBareHeader($oPage, $bEditMode, $sMode);
 		// Object's details
 		// TODO 3.0.0: Complete the factory and use it in the different methods (DisplayModifyForm, DisplayTransitionForm), see N°3518
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
@@ -2852,8 +2853,9 @@ EOF
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param string $sStimulus
-	 * @param null $aPrefillFormParam
+	 * @param string   $sStimulus
+	 * @param null     $aPrefillFormParam
+	 * @param bool     $bDisplayBareProperties Whether to display the object details or not
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -2863,12 +2865,14 @@ EOF
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+		$iTransactionId = utils::GetNewTransactionId();
 
 		$aTransitions = $this->EnumTransitions();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
@@ -2906,17 +2910,6 @@ EOF
 		$sCurrentState = $this->GetState();
 		$sTargetState = $aTransitions[$sStimulus]['target_state'];
 
-		$oPage->set_title($sActionLabel);
-		$oPage->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
-	<div class="page_header">
-		<h1>$sActionLabel - <span class="hilite">{$this->GetName()}</span></h1>
-	</div>
-	<h1>$sActionDetails</h1>
-HTML
-		);
-
 		$aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		if ($aPrefillFormParam != null)
 		{
@@ -2924,19 +2917,12 @@ HTML
 			$this->PrefillForm('state_change', $aPrefillFormParam);
 			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
 		}
-		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
-		{
-			// bottom: Displays the ticket details BEFORE the actions
-			$oPage->add('<div class="ui-widget-content">');
-			$this->DisplayBareProperties($oPage);
-			$oPage->add('</div>');
-		}
-		$oPage->add("<div class=\"wizContainer\">\n");
-		$oPage->add("<form id=\"apply_stimulus\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
+
 		$aDetails = array();
 		$iFieldIndex = 0;
-		$aFieldsMap = array();
+		$aFieldsMap = [
+			'id' => 'id',
+		];
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
@@ -3039,37 +3025,70 @@ HTML
 			}
 		}
 
-		$oPage->add('<table><tr><td>');
-		$oPage->details($aDetails);
-		$oPage->add('</td></tr></table>');
-		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"".$this->GetKey()."\" id=\"id\">\n");
-		$aFieldsMap['id'] = 'id';
-		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-		$iTransactionId = utils::GetNewTransactionId();
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".$iTransactionId."\">\n");
-		if ($sOwnershipToken !== null)
-		{
-			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken,
-					ENT_QUOTES, 'UTF-8')."\">\n");
-		}
-		$oAppContext = new ApplicationContext();
-		$oPage->add($oAppContext->GetForForm());
-		$oPage->add("<button type=\"button\" class=\"action cancel\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().", '', '$sOwnershipToken')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
-		$oPage->add("</form>\n");
+		$oPage->set_title($sActionLabel);
 		$oPage->add(<<<HTML
-	</div>
-</div><!-- End of object-details -->
+<!-- Beginning of object-transition -->
+<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
 HTML
 		);
+
+		// Page title and subtitles
+		$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
+		if(!empty($sActionDetails)) {
+			$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionDetails));
+		}
+
+		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
+		// Display object detail above if buttons must be displayed on the bottom
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
+		{
+			// bottom: Displays the ticket details BEFORE the actions
+			$this->DisplayDetails($oPage, false, $sMode);
+		}
+
+		$oFormContainer = new UIContentBlock(null, 'ibo-wizard-container');
+		$oPage->AddUiBlock($oFormContainer);
+		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
+		$oFormContainer->AddSubBlock($oForm);
+
+		$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
+			->AddSubBlock(InputFactory::MakeForHidden('id', $this->GetKey(), 'id'))
+			->AddSubBlock(InputFactory::MakeForHidden('class', $sClass))
+			->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_stimulus'))
+			->AddSubBlock(InputFactory::MakeForHidden('stimulus', $sStimulus))
+			->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+		if ($sOwnershipToken !== null)
+		{
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+		}
+
+		// Note: Remove the table is we want fields to occupy the whole width of the container
+		$oForm->AddHtml('<table><tr><td>');
+		$oForm->AddHtml($oPage->GetDetails($aDetails));
+		$oForm->AddHtml('</td></tr></table>');
+
+		$oAppContext = new ApplicationContext();
+		$oForm->AddHtml($oAppContext->GetForForm());
+
+		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+		$oForm->AddSubBlock($oCancelButton);
+
+		$oSubmitButton = ButtonFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+		$oForm->AddSubBlock($oSubmitButton);
+
+		$oPage->add(<<<HTML
+<!-- End of object-transition -->
+</div>
+HTML
+		);
+
+		// Display object detail below if buttons must be displayed on the top
 		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
-			$oPage->add('<div class="ui-widget-content">');
-			$this->DisplayBareProperties($oPage);
-			$oPage->add('</div>');
+			$this->DisplayDetails($oPage, false, $sMode);
 		}
 
 		$iFieldsCount = count($aFieldsMap);

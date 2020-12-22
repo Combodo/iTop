@@ -801,18 +801,18 @@ class WebPage implements Page
 			// - Value raw
 			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
-			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
+			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
 			// By Rom, for csv import, proposed to show several values for column selection
 			if (is_array($aAttrib['value']))
 			{
-				$sHtml .= "<div class=\"field_value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
+				$sHtml .= "<div class=\"ibo-field--value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
 			}
 			else
 			{
-				$sHtml .= "<div class=\"field_value\">".$aAttrib['value']."</div>\n";
+				$sHtml .= "<div class=\"ibo-field--value\">".$aAttrib['value']."</div>\n";
 			}
 			// Checking if we should add comments & infos
 			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '';
