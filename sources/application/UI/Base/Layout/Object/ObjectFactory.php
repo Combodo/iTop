@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\Object;
 
 
+use cmdbAbstractObject;
 use DBObject;
 
 /**
@@ -17,13 +18,19 @@ use DBObject;
  * @package Combodo\iTop\Application\UI\Base\Layout\Object
  * @since   3.0.0
  */
-class ObjectFactory {
+class ObjectFactory
+{
 	/**
 	 * Make a standard object details layout.
 	 *
+	 * @param \DBObject   $oObject
+	 * @param string|null $sMode
+	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\Object\ObjectDetails
+	 * @throws \CoreException
 	 */
-	public static function MakeDetails(DBObject $oObject) {
-		return new ObjectDetails($oObject);
+	public static function MakeDetails(DBObject $oObject, ?string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
+	{
+		return new ObjectDetails($oObject, $sMode);
 	}
 }

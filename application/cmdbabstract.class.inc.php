@@ -1008,14 +1008,14 @@ EOF
 
 		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
-<div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
 HTML
 		);
 
 		/** @var \iTopWebPage $oPage */
 		$this->DisplayBareHeader($oPage, $bEditMode);
 		// Object's details
-		// TODO 3.0.0: Complete the factory
+		// TODO 3.0.0: Complete the factory and use it in the different methods (DisplayModifyForm, DisplayTransitionForm), see N°3518
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 		$oPage->AddUiBlock($oObjectDetails);
 

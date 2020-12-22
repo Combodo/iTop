@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use DBObject;
 
 /**
@@ -60,7 +61,9 @@ class PageContentFactory
 		$oLayout = new PageContentWithSideContent();
 
 		// Add object details layout
-		// TODO 3.0.0
+		// TODO 3.0.0 see N°3518
+		//$oObjectDetails = ObjectFactory::MakeDetails($oObject, $sMode);
+		//$oLayout->AddMainBlock($oObjectDetails);
 
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject, $sMode);

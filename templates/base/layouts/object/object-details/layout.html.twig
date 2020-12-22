@@ -2,9 +2,21 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% extends 'base/components/panel/layout.html.twig' %}
 
-{% block iboPanelHeader %}
-    <div class="ibo-panel--medallion">{% block iboPanelMedallion %}{% endblock %}</div>
-    {{ parent() }}
+{% block iboPanelMetaData %}
+    data-object-class="{{ oUIBlock.GetClassName() }}"
+    data-object-id="{{ oUIBlock.GetObjectId() }}"
+    data-object-mode="{{ oUIBlock.GetObjectMode() }}"
+{% endblock %}
+
+{% block iboPanelHeaderLeft %}
+    <div class="ibo-object-details--medallion">
+        {% block iboObjectDetailsMedallion %}
+        {% endblock %}
+    </div>
+    <div>
+        {{ parent() }}
+        <div class="ibo-object-details--status" data-role="ibo-object-details--status"></div>
+    </div>
 {% endblock %}
 
 {% block iboPanelTitle %}{{ oUIBlock.GetTitle() }}{% endblock %}
