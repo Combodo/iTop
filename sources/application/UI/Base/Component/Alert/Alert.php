@@ -81,6 +81,8 @@ class Alert extends UIBlock
 	public const DEFAULT_IS_CLOSABLE = true;
 	/** @var bool Default value for static::$bIsCollapsible */
 	public const DEFAULT_IS_COLLAPSIBLE = true;
+	/** @var bool Default value for static::$bIsOpenedByDefault */
+	public const DEFAULT_IS_OPENED_BY_DEFAULT = true;
 
 	/** @var string $sTitle */
 	protected $sTitle;
@@ -92,7 +94,7 @@ class Alert extends UIBlock
 	protected $bIsClosable;
 	/** @var bool Whether the alert can be collapsed or not */
 	protected $bIsCollapsible;
-	/** @var bool */
+	/** @var bool Whether the alert is opened by default or not, only works when $bIsCollapsible set to true */
 	protected $bIsOpenedByDefault;
 
 	/**
@@ -102,18 +104,15 @@ class Alert extends UIBlock
 	 * @param string $sContent
 	 * @param string $sColor
 	 * @param string|null $sId
-	 * @param bool|null $bIsOpenedByDefault
 	 */
-	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null,
-		?bool $bIsOpenedByDefault = true
-	)
+	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->sContent = $sContent;
 		$this->sColor = $sColor;
 		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
 		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
-		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
+		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
 		parent::__construct($sId);
 	}
 
