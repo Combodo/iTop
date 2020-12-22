@@ -1,11 +1,20 @@
 <div id="{{ oUIBlock.GetId() }}"
      class="ibo-alert ibo-is-{{ oUIBlock.GetColor() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}">
-	<div class="ibo-alert--action-button ibo-alert--maximize-button" data-role="ibo-alert--collapse-toggler"><i
-				class="fas fa-caret-down"></i></div>
-	<div class="ibo-alert--action-button ibo-alert--minimize-button" data-role="ibo-alert--collapse-toggler"><i
-				class="fas fa-caret-up"></i>
-	</div>
-	<div class="ibo-alert--action-button ibo-alert--close-button" data-role="ibo-alert--close-button"><i class="fas fa-times"></i></div>
-	<div class="ibo-alert--title" data-role="ibo-alert--collapse-toggler">{{ oUIBlock.GetTitle() }}</div>
+	{% if oUIBlock.IsCollapsible() %}
+		<div class="ibo-alert--action-button ibo-alert--maximize-button" data-role="ibo-alert--collapse-toggler">
+			<i class="fas fa-caret-down"></i>
+		</div>
+		<div class="ibo-alert--action-button ibo-alert--minimize-button" data-role="ibo-alert--collapse-toggler">
+			<i class="fas fa-caret-up"></i>
+		</div>
+	{% endif %}
+	{% if oUIBlock.IsClosable() %}
+		<div class="ibo-alert--action-button ibo-alert--close-button" data-role="ibo-alert--close-button">
+			<i class="fas fa-times"></i>
+		</div>
+	{% endif %}
+	<div class="ibo-alert--title"
+	     {% if oUIBlock.IsCollapsible() %}data-role="ibo-alert--collapse-toggler"{% endif %}
+	>{{ oUIBlock.GetTitle() }}</div>
 	<div class="ibo-alert--body">{{ oUIBlock.GetContent()|raw }}</div>
 </div>

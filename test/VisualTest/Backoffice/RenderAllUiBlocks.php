@@ -78,6 +78,10 @@ $oPageContentLayout->AddMainBlock(AlertFactory::MakeForDanger('Alert for danger'
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeForFailure('Alert for failure', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color', $sContent));
+$oAlertNonClosable = AlertFactory::MakeNeutral('Alert not closable, not collapsable', $sContent)
+	->SetIsClosable(false)
+	->SetIsCollapsible(false);
+$oPageContentLayout->AddMainBlock($oAlertNonClosable);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

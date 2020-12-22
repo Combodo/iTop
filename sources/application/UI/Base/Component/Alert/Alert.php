@@ -77,6 +77,10 @@ class Alert extends UIBlock
 
 	/** @var string DEFAULT_COLOR */
 	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var bool Default value for static::$bIsClosable */
+	public const DEFAULT_IS_CLOSABLE = true;
+	/** @var bool Default value for static::$bIsCollapsible */
+	public const DEFAULT_IS_COLLAPSIBLE = true;
 
 	/** @var string $sTitle */
 	protected $sTitle;
@@ -84,6 +88,10 @@ class Alert extends UIBlock
 	protected $sContent;
 	/** @var string $sColor */
 	protected $sColor;
+	/** @var bool Whether the alert can be closed or not */
+	protected $bIsClosable;
+	/** @var bool Whether the alert can be collapsed or not */
+	protected $bIsCollapsible;
 	/** @var bool */
 	protected $bIsOpenedByDefault;
 
@@ -103,6 +111,8 @@ class Alert extends UIBlock
 		$this->sTitle = $sTitle;
 		$this->sContent = $sContent;
 		$this->sColor = $sColor;
+		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
+		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
 		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 		parent::__construct($sId);
 	}
@@ -170,9 +180,61 @@ class Alert extends UIBlock
 		return $this;
 	}
 
-	public function IsOpenedByDefault()
+	/**
+	 * @see self::$bIsClosable
+	 * @return bool
+	 */
+	public function IsClosable(): bool
 	{
-		return $this->bIsOpenedByDefault;
+		return $this->bIsClosable;
+	}
+
+	/**
+	 * @see self::$bIsClosable
+	 * @param bool $bIsClosable
+	 *
+	 * @return $this
+	 */
+	public function SetIsClosable(bool $bIsClosable)
+	{
+		$this->bIsClosable = $bIsClosable;
+
+		return $this;
+	}
+
+	/**
+	 * @see self::$bIsCollapsible
+	 * @return bool
+	 */
+	public function IsCollapsible(): bool
+	{
+		return $this->bIsCollapsible;
+	}
+
+	/**
+	 * @see self::$bIsCollapsible
+	 * @param bool $bIsCollapsible
+	 *
+	 * @return $this
+	 */
+	public function SetIsCollapsible(bool $bIsCollapsible)
+	{
+		$this->bIsCollapsible = $bIsCollapsible;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsOpenedByDefault(): bool
+	{
+		if($this->IsCollapsible()) {
+			return $this->bIsOpenedByDefault;
+		}
+		else {
+			return true;
+		}
 	}
 
 	/**
