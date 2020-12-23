@@ -356,7 +356,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS in the page's header
 	 *
-	 * @see \WebPage::$a_scripts
+	 * @uses \WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -368,7 +368,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS in the page's header
 	 *
-	 * @see \WebPage::$a_scripts
+	 * @uses \WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -380,7 +380,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to the header of the page
 	 *
-	 * @see \WebPage::$a_scripts
+	 * @uses \WebPage::$a_scripts
 	 * @param string $s_script
 	 */
 	public function add_script($s_script)
@@ -393,7 +393,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base init. scripts for the page
 	 *
-	 * @see \WebPage::$a_init_scripts
+	 * @uses \WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -405,7 +405,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base init. scripts for the page
 	 *
-	 * @see \WebPage::$a_init_scripts
+	 * @uses \WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -417,7 +417,7 @@ class WebPage implements Page
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
 	 *
-	 * @see \WebPage::$a_init_scripts
+	 * @uses \WebPage::$a_init_scripts
 	 * @param string $sScript
 	 *
 	 * @return void
@@ -432,7 +432,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base ready scripts for the page
 	 *
-	 * @see \WebPage::$a_ready_scripts
+	 * @uses \WebPage::$a_ready_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -444,7 +444,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base ready scripts for the page
 	 *
-	 * @see \WebPage::$a_reset_init_scripts
+	 * @uses \WebPage::$a_reset_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -456,7 +456,7 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
 	 *
-	 * @see \WebPage::$a_ready_scripts
+	 * @uses \WebPage::$a_ready_scripts
 	 * @param $sScript
 	 */
 	public function add_ready_script($sScript)
@@ -469,7 +469,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base linked scripts for the page
 	 *
-	 * @see \WebPage::$a_linked_scripts
+	 * @uses \WebPage::$a_linked_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -481,7 +481,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base linked scripts for the page
 	 *
-	 * @see \WebPage::$a_linked_scripts
+	 * @uses \WebPage::$a_linked_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -494,7 +494,7 @@ class WebPage implements Page
 	 * Add a script (as an include, i.e. link) to the header of the page.<br>
 	 * Handles duplicates : calling twice with the same script will add the script only once
 	 *
-	 * @see \WebPage::$a_linked_scripts
+	 * @uses \WebPage::$a_linked_scripts
 	 * @param string $s_linked_script
 	 * @return void
 	 */
@@ -508,8 +508,8 @@ class WebPage implements Page
 	/**
 	 * Empty both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @see \WebPage::$a_dict_entries
-	 * @see \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses \WebPage::$a_dict_entries
+	 * @uses \WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -522,8 +522,8 @@ class WebPage implements Page
 	/**
 	 * Initialize both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @see \WebPage::$a_dict_entries
-	 * @see \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses \WebPage::$a_dict_entries
+	 * @uses \WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -537,7 +537,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
-	 * @see \WebPage::$a_dict_entries
+	 * @uses \WebPage::$a_dict_entries
 	 * @see \WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
@@ -591,7 +591,7 @@ class WebPage implements Page
 	/**
 	 * Empty all inline styles for the page
 	 *
-	 * @see \WebPage::$a_styles
+	 * @uses \WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -603,7 +603,7 @@ class WebPage implements Page
 	/**
 	 * Initialize inline styles for the page
 	 *
-	 * @see \WebPage::$a_styles
+	 * @uses \WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -627,7 +627,7 @@ class WebPage implements Page
 	/**
 	 * Empty all linked stylesheets for the page
 	 *
-	 * @see \WebPage::$a_linked_stylesheets
+	 * @uses \WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -639,7 +639,7 @@ class WebPage implements Page
 	/**
 	 * Initialize linked stylesheets for the page
 	 *
-	 * @see \WebPage::$a_linked_stylesheets
+	 * @uses \WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
