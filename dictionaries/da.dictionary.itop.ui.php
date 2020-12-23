@@ -412,8 +412,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Søg',
-	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s ',
-	'UI:SearchFor_Class' => 'Søg efter objekter af typen %1$s ',
+	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s~~',
+	'UI:SearchFor_Class' => 'Søg efter objekter af typen %1$s',
 	'UI:NoObjectToDisplay' => 'Ingen objekter at vise.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter objekt_id er obligatorisk når link_attr er specificeret. Tjek definitionen af display skabelonen.',

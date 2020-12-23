@@ -410,7 +410,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Keresés',
-	'UI:ClickToCreateNew' => 'Új %1$s létrehozása',
+	'UI:ClickToCreateNew' => 'Új %1$s létrehozása~~',
 	'UI:SearchFor_Class' => '%1$s objektumok keresése',
 	'UI:NoObjectToDisplay' => 'Nincs megjeleníthető objektum',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',

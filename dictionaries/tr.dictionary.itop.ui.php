@@ -424,7 +424,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Ara',
-	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
+	'UI:ClickToCreateNew' => 'Yeni %1$s yarat~~',
 	'UI:SearchFor_Class' => '%1$s Arama',
 	'UI:NoObjectToDisplay' => 'Görüntülenecek nesne bulunamadı.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',

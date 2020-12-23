@@ -410,7 +410,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => '検索（トグル↓↑)',
-	'UI:ClickToCreateNew' => '新規 %1$s を作成',
+	'UI:ClickToCreateNew' => '新規 %1$s を作成~~',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
 	'UI:NoObjectToDisplay' => '表示するオブジェクトはありません。',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',

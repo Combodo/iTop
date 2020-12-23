@@ -410,7 +410,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Vyhľadávanie',
-	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s',
+	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s~~',
 	'UI:SearchFor_Class' => 'Vyhľadávanie pre %1$s objekty',
 	'UI:NoObjectToDisplay' => 'Žiadny objekt na zobrazenie.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',

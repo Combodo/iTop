@@ -425,7 +425,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Hledání',
-	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
+	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
 	'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
 	'UI:NoObjectToDisplay' => 'Žádný objekt k zobrazení.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',

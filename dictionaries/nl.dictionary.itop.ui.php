@@ -429,7 +429,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Zoek',
-	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
+	'UI:ClickToCreateNew' => 'Maak een %1$s aan~~',
 	'UI:SearchFor_Class' => 'Zoek naar %1$s objecten',
 	'UI:NoObjectToDisplay' => 'Geen object om weer te geven.',
 	'UI:Error:SaveFailed' => 'Het object kan niet bewaard worden:',

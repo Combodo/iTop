@@ -423,7 +423,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => '搜索',
-	'UI:ClickToCreateNew' => '新建 %1$s',
+	'UI:ClickToCreateNew' => '新建 %1$s~~',
 	'UI:SearchFor_Class' => '搜索 %1$s ',
 	'UI:NoObjectToDisplay' => '没有可显示的对象.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
