@@ -423,7 +423,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Pesquisar',
-	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
+	'UI:ClickToCreateNew' => 'Criar um(a) %1$s',
 	'UI:SearchFor_Class' => 'Pesquisar por objeto(s) %1$s',
 	'UI:NoObjectToDisplay' => 'Nenhum objeto encontrado.',
 	'UI:Error:SaveFailed' => 'O objeto não pode ser salvo:',

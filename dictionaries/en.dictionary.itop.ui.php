@@ -434,7 +434,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Treeview:ExpandAll' => 'Expand All',
 
 	'UI:SearchToggle' => 'Search',
-	'UI:ClickToCreateNew' => 'Create a new %1$s',
+	'UI:ClickToCreateNew' => 'Create a %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
 	'UI:NoObjectToDisplay' => 'No object to display.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :',

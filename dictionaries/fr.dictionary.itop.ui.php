@@ -414,7 +414,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Treeview:ExpandAll' => 'Tout déplier',
 
 	'UI:SearchToggle' => 'Recherche',
-	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
+	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
 	'UI:Error:SaveFailed' => 'L\'objet ne peut pas être sauvé : ',
