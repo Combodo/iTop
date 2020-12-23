@@ -19,6 +19,7 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -671,6 +672,7 @@ JS
 		$sBannerHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
 			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
@@ -693,6 +695,7 @@ JS
 		$oBanner = new UIContentBlock();
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
 			$oBlock =  $oExtensionInstance->GetBannerBlock();
@@ -717,63 +720,8 @@ JS
 	{
 		$sHeaderHtml = '';
 
-		//TODO: NB the whole section needs to be refactored
-
-		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
-		{
-			// TODO 3.0.0: Don't forget this dude!
-			$sHeaderHtml .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
-		}
-
-		// TODO 3.0.0: Don't forget this!
-		if (utils::IsArchiveMode())
-		{
-			$sIcon = '<span class="fas fa-lock fa-1x"></span>';
-			$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
-		}
-
-		// TODO 3.0.0: Move this in the Header method
-		$sRestrictions = '';
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-		{
-			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-			{
-				$sRestrictions = Dict::S('UI:AccessRO-All');
-			}
-		}
-		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
-		{
-			$sRestrictions = Dict::S('UI:AccessRO-Users');
-		}
-		if (strlen($sRestrictions) > 0)
-		{
-			$sIcon =
-				<<<EOF
-<span class="fa-stack fa-sm">
-  <i class="fas fa-pencil-alt fa-flip-horizontal fa-stack-1x"></i>
-  <i class="fas fa-ban fa-stack-2x text-danger"></i>
-</span>
-EOF;
-
-			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-			if (strlen($sAdminMessage) > 0)
-			{
-				$sRestrictions .= '&nbsp;'.$sAdminMessage;
-			}
-			$this->AddApplicationMessage($sRestrictions, $sIcon);
-		}
-
-		// TODO 3.0.0: Move this in the header method
-		$sApplicationMessages = '';
-		foreach ($this->m_aMessages as $aMessage)
-		{
-			$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
-			$sHtmlMessage = $aMessage['message'];
-			$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, self::PAGES_CHARSET).'"' : '';
-			$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
-		}
-
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
 		{
 			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
@@ -782,10 +730,71 @@ EOF;
 		return $sHeaderHtml;
 	}
 
+	/**
+	 * Render the header UIBlock which can come from both iTop itself and from extensions
+	 *
+	 * @see \iPageUIExtension::GetHeaderHtml()
+	 * @internal
+	 *
+	 * @return iUIBlock
+	 * @since 3.0.0
+	 */
 	protected function RenderHeaderBlock()
 	{
 		$oHeader = new UIContentBlock();
+
+		// Log KPIs
+		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()){
+			$oKPIAlert = AlertFactory::MakeForInformation('KPIs', ExecutionKPI::GetDescription())
+				->SetIsClosable(false)
+				->SetIsCollapsible(false);
+			$oHeader->AddSubBlock($oKPIAlert);
+		}
+
+		// Archive mode
+		if (utils::IsArchiveMode()) {
+			$oArchiveAlert = AlertFactory::MakeForInformation(Dict::S('UI:ArchiveMode:Banner'), '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false);
+			$oHeader->AddSubBlock($oArchiveAlert);
+		}
+
+		// Access mode
+		$sRestrictionMessage ='';
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
+			$sRestrictionMessage = Dict::S('UI:AccessRO-All');
+		}
+		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE)) {
+			$sRestrictionMessage = Dict::S('UI:AccessRO-Users');
+		}
+
+		if (!empty($sRestrictionMessage)) {
+			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
+			$sRestrictionTitle = empty($sAdminMessage) ? '' : $sAdminMessage;
+
+			$oRestrictionAlert = AlertFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
+				->SetIsClosable(false)
+				->SetIsCollapsible(false);
+			$oHeader->AddSubBlock($oRestrictionAlert);
+		}
+
+		// Misc. app. messages
+		foreach ($this->m_aMessages as $aMessage)
+		{
+			$sMessageForHtml = $aMessage['message'];
+			if($aMessage['tip']) {
+				$sTooltipForHtml = utils::HtmlEntities($aMessage['tip']);
+				$sMessageForHtml = <<<HTML
+<div data-tooltip-content="$sTooltipForHtml">$sMessageForHtml</div>
+HTML;
+			}
+			// Note: Message icon has been ignored during 3.0 migration. If we want them back, we should find a proper way to integrate them, not just putting an <img /> tag
+			$oAppMessageAlert = AlertFactory::MakeForInformation('', $sMessageForHtml);
+			$oHeader->AddSubBlock($oAppMessageAlert);
+		}
+
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
 			$oBlock = $oExtensionInstance->GetNorthPaneBlock();
@@ -811,6 +820,7 @@ EOF;
 		$sFooterHtml = '';
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
@@ -832,6 +842,7 @@ EOF;
 		$oFooter = new UIContentBlock();
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
+		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
 			$oBlock = $oExtensionInstance->GetSouthPaneBlock();
 			if ($oBlock) {
