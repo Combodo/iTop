@@ -1097,25 +1097,25 @@ interface iPageUIExtension
 interface iPageUIBlockExtension
 {
 	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetBannerBlock();
+
+	/**
 	 * Add content to the header of the page
 	 *
-	 * @return iUIBlock The Block to add into the page
+	 * @return iUIBlock|null The Block to add into the page
 	 */
-	public function GetNorthPaneBlock();
+	public function GetHeaderBlock();
 
 	/**
 	 * Add content to the footer of the page
 	 *
-	 * @return iUIBlock The Block to add into the page
+	 * @return iUIBlock|null The Block to add into the page
 	 */
-	public function GetSouthPaneBlock();
-
-	/**
-	 * Add content to the "admin banner"
-	 *
-	 * @return iUIBlock The Block to add into the page
-	 */
-	public function GetBannerBlock();
+	public function GetFooterBlock();
 }
 
 /**
@@ -1166,27 +1166,26 @@ abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetNorthPaneBlock()
-	{
-		return null;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetSouthPaneBlock()
-	{
-		return null;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function GetBannerBlock()
 	{
 		return null;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHeaderBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetFooterBlock()
+	{
+		return null;
+	}
 }
 
 /**

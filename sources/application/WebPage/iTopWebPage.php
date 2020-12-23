@@ -797,7 +797,7 @@ HTML;
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
 		{
-			$oBlock = $oExtensionInstance->GetNorthPaneBlock();
+			$oBlock = $oExtensionInstance->GetHeaderBlock();
 			if ($oBlock) {
 				$oHeader->AddSubBlock($oBlock);
 			}
@@ -844,7 +844,7 @@ HTML;
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the \iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
-			$oBlock = $oExtensionInstance->GetSouthPaneBlock();
+			$oBlock = $oExtensionInstance->GetFooterBlock();
 			if ($oBlock) {
 				$oFooter->AddSubBlock($oBlock);
 			}
