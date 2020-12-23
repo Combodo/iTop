@@ -1136,6 +1136,7 @@ JS
 		$oBlock->bCreateNew = false;
 		$oBlock->sLinkTarget = '';
 		$oBlock->sClass = '';
+		$oBlock->sClassLabel = '';
 		$oBlock->sParams = '';
 		$oBlock->sDefault = '';
 		$oBlock->sEventAttachedData = '';
@@ -1171,6 +1172,7 @@ JS
 			} else {
 				$oBlock->bEmptySet = true;
 				$oBlock->sClass = $this->m_oFilter->GetClass();
+				$oBlock->sClassLabel = MetaModel::GetName($oBlock->sClass);
 				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
 				if ($bDisplayMenu) {
 					if ((UserRights::IsActionAllowed($oBlock->sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {

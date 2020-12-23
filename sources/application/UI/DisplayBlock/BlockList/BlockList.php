@@ -32,6 +32,8 @@ class BlockList extends UIContentBlock
 	/** @var string */
 	public $sClass = '';
 	/** @var string */
+	public $sClassLabel = '';
+	/** @var string */
 	public $sParams = '';
 	/** @var string */
 	public $sDefault = '';
