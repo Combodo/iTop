@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Alert;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class Alert
@@ -96,6 +97,10 @@ class Alert extends UIBlock
 	protected $bIsCollapsible;
 	/** @var bool Whether the alert is opened by default or not, only works when $bIsCollapsible set to true */
 	protected $bIsOpenedByDefault;
+	/** @var boolean if true will store collapsible state */
+	protected $bIsSaveCollapsibleStateEnabled = false;
+	/** @var string localStorage key used to store collapsible state */
+	protected $sSectionStateStorageKey;
 
 	/**
 	 * Alert constructor.
@@ -114,6 +119,20 @@ class Alert extends UIBlock
 		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
 		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
 		parent::__construct($sId);
+	}
+
+	/**
+	 * @param $sSectionStateStorageKey
+	 *
+	 * @return self
+	 */
+	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
+	{
+		$this->bIsSaveCollapsibleStateEnabled = true;
+		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
+		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+
+		return $this;
 	}
 
 	/**
@@ -246,5 +265,15 @@ class Alert extends UIBlock
 		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 
 		return $this;
+	}
+
+	public function IsSaveCollapsibleStateEnabled(): bool
+	{
+		return $this->bIsSaveCollapsibleStateEnabled;
+	}
+
+	public function GetSessionCollapsibleStateStorageKey(): string
+	{
+		return $this->sSectionStateStorageKey;
 	}
 }

@@ -1,1 +1,7 @@
 $('#{{ oUIBlock.GetId() }}').alert();
+{% if oUIBlock.IsSaveCollapsibleStateEnabled() %}
+$('#{{ oUIBlock.GetId() }}').alert("instance").enableSaveCollapsibleState(
+		{{ oUIBlock.IsOpenedByDefault() }},
+		'{{ oUIBlock.GetSessionCollapsibleStateStorageKey() }}'
+);
+{% endif %}

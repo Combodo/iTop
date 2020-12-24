@@ -25,7 +25,10 @@ $(function()
 		{
 			// default options
 			options:
-				{},
+				{
+					hasCollapsibleStateSavingEnabled: false,
+					collapsibleStateStorageKey: null,
+				},
 			css_classes:
 				{
 					opened: 'ibo-is-opened',
@@ -60,6 +63,26 @@ $(function()
 			},
 			_onCollapseTogglerClick: function (oEvent) {
 				this.element.toggleClass(this.css_classes.opened);
+
+				if (this.options.hasCollapsibleStateSavingEnabled) {
+					localStorage.setItem(
+						this.options.collapsibleStateStorageKey,
+						this.element.hasClass(this.css_classes.opened)
+					);
+				}
+			},
+			enableSaveCollapsibleState: function (bOpenedByDefault, sSectionStateStorageKey) {
+				this.options.hasCollapsibleStateSavingEnabled = true;
+				this.options.collapsibleStateStorageKey = sSectionStateStorageKey;
+
+				let bStoredSectionState = JSON.parse(localStorage.getItem(sSectionStateStorageKey));
+				let bIsSectionOpenedInitially = (bStoredSectionState == null) ? bOpenedByDefault : bStoredSectionState;
+
+				if (bIsSectionOpenedInitially) {
+					this.element.addClass(this.css_classes.opened);
+				} else {
+					this.element.removeClass(this.css_classes.opened);
+				}
 			}
 		})
 });

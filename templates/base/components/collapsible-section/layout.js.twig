@@ -1,1 +1,7 @@
 $('#{{ oUIBlock.GetId() }}').collapsibleSection();
+{% if oUIBlock.IsSaveCollapsibleStateEnabled() %}
+$('#{{ oUIBlock.GetId() }}').collapsibleSection("instance").enableSaveCollapsibleState(
+		{{ oUIBlock.IsOpenedByDefault()|var_export }},
+		'{{ oUIBlock.GetSessionCollapsibleStateStorageKey() }}'
+);
+{% endif %}

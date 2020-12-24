@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\CollapsibleSection;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
+use utils;
 
 /**
  * @package Combodo\iTop\Application\UI\Base\Component\CollapsibleSection
@@ -43,6 +44,10 @@ class CollapsibleSection extends UIContentBlock
 	protected $bIsOpenedByDefault = false;
 	/** @var string */
 	private $sTitle;
+	/** @var boolean if true will store collapsible state */
+	protected $bIsSaveCollapsibleStateEnabled = false;
+	/** @var string localStorage key used to store collapsible state */
+	protected $sSectionStateStorageKey;
 
 	public function __construct(string $sTitle, array $aSubBlocks = [], ?string $sId = null)
 	{
@@ -51,6 +56,19 @@ class CollapsibleSection extends UIContentBlock
 		$this->aSubBlocks = $aSubBlocks;
 	}
 
+	/**
+	 * @param $sSectionStateStorageKey
+	 *
+	 * @return self
+	 */
+	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
+	{
+		$this->bIsSaveCollapsibleStateEnabled = true;
+		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
+		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+
+		return $this;
+	}
 
 	public function IsOpenedByDefault()
 	{
@@ -72,5 +90,15 @@ class CollapsibleSection extends UIContentBlock
 	public function GetTitle()
 	{
 		return $this->sTitle;
+	}
+
+	public function IsSaveCollapsibleStateEnabled(): bool
+	{
+		return $this->bIsSaveCollapsibleStateEnabled;
+	}
+
+	public function GetSessionCollapsibleStateStorageKey(): string
+	{
+		return $this->sSectionStateStorageKey;
 	}
 }

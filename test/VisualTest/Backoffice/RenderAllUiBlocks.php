@@ -82,6 +82,9 @@ $oAlertNonClosable = AlertFactory::MakeNeutral('Alert not closable, not collapsa
 	->SetIsClosable(false)
 	->SetIsCollapsible(false);
 $oPageContentLayout->AddMainBlock($oAlertNonClosable);
+$oAlertSaveCollapsibleState = AlertFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
+	->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
+$oPageContentLayout->AddMainBlock($oAlertSaveCollapsibleState);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
@@ -167,7 +170,12 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 $oCollapsibleSectionTitle = new Html('<h2 id="title-panels">Collapsible Sections examples</h2>');
 $oPage->AddUiBlock($oCollapsibleSectionTitle);
 
-$oCollapsibleSection = new CollapsibleSection('Section title', [new Html("This the section content !")]);
+$sSectionContent = 'This is the section content !';
+$oCollapsibleSection = new CollapsibleSection('Section title', [new Html($sSectionContent)]);
 $oPage->AddUiBlock($oCollapsibleSection);
+
+$oCollapsibleSectionSaveState = new CollapsibleSection('Section save state', [new Html($sSectionContent)]);
+$oCollapsibleSectionSaveState->EnableSaveCollapsibleState('RenderAllUiBlocks-collapsible-section');
+$oPage->AddUiBlock($oCollapsibleSectionSaveState);
 
 $oPage->output();
