@@ -62,20 +62,24 @@ function DisplayPreferences($oP)
 	$oMiscSettingsBlock = new Panel(Dict::S('UI:FavoriteOtherSettings'), array(), 'grey', 'ibo-misc-settings');
 
 	$oMiscSettingsStartForm = new Html('<form method="post" onsubmit="return ValidateOtherSettings()">');
-	
+
 	$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
-	$sMiscSettingsHtml = '';
-	$sMiscSettingsHtml .= '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage', '<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>';
 
 	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data',
 			MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
-	$sSelected = $bShow ? ' checked="checked"' : '';
-	$sDisabled = utils::IsArchiveMode() ? 'disabled="disabled"' : '';
-	$sMiscSettingsHtml .=
-		'<p>'
-		.'<input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"'.$sSelected.$sDisabled.'>'
-		.'<label for="show_obsolete_data" title="'.Dict::S('UI:Favorites:ShowObsoleteData+').'">'.Dict::S('UI:Favorites:ShowObsoleteData').'</label>'
-		.'</p>';
+	$sObsoleteSelected = $bShow ? ' checked="checked"' : '';
+	$sObsoleteDisabled = utils::IsArchiveMode() ? 'disabled="disabled"' : '';
+
+
+	$sMiscSettingsHtml = '';
+	$sMiscSettingsHtml .= '<p>'.Dict::Format('UI:Favorites:Default_X_ItemsPerPage',
+			'<input id="default_page_size" name="default_page_size" type="text" size="3" value="'.$iDefaultPageSize.'"/><span id="v_default_page_size"></span>').'</p>';
+	$sObsoleteLabel = Dict::S('UI:Favorites:ShowObsoleteData');
+	$sObsoleteLabelPlus = Dict::S('UI:Favorites:ShowObsoleteData+');
+	$sMiscSettingsHtml .= <<<HTML
+<p><input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"{$sObsoleteSelected}{$sObsoleteDisabled}
+>&nbsp;<label for="show_obsolete_data" title="{$sObsoleteLabelPlus}">{$sObsoleteLabel}</label></p>
+HTML;
 	$sMiscSettingsHtml .= $oAppContext->GetForForm();
 	$oMiscSettingsHtml = new Html($sMiscSettingsHtml);
 
@@ -96,7 +100,7 @@ function DisplayPreferences($oP)
 	$oContentLayout->AddMainBlock($oMiscSettingsBlock);
 
 	$oP->add_script(
-		<<<EOF
+		<<<JS
 function ValidateOtherSettings()
 {
 	var sPageLength = $('#default_page_size').val();
@@ -114,7 +118,7 @@ function ValidateOtherSettings()
 		return false;
 	}
 }
-EOF
+JS
 	);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -159,11 +163,11 @@ EOF
 	{
 		// All checked
 		$oP->add_ready_script(
-			<<<EOF
+			<<<JS
 	$('#$sIdFavoriteOrganizations .checkAll').prop('checked', true);
 	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
-EOF
-);
+JS
+		);
 
 	}
 
@@ -196,14 +200,14 @@ EOF
 		$oShortcutsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
 		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
 		// - Rename button
-		$oShortcutsRenameButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false, "shortcut_btn_rename");
+		$oShortcutsRenameButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,
+			"shortcut_btn_rename");
 		$oShortcutsToolBar->AddSubBlock($oShortcutsRenameButton);
 		// - Delete button
-		$oShortcutsDeleteButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false, "shortcut_btn_delete");
+		$oShortcutsDeleteButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false,
+			"shortcut_btn_delete");
 		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
-
-
-	} // if count > 0
+	}
 	$oContentLayout->AddMainBlock($oShortcutsBlock);
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -211,7 +215,6 @@ EOF
 	// Newsroom
 	//
 	//////////////////////////////////////////////////////////////////////////
-	
 	$iCountProviders = 0;
 	$oUser = UserRights::GetUserObject();
 	$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
@@ -241,8 +244,6 @@ EOF
 		/**
 		 * @var iNewsroomProvider[] $aProviders
 		 */
-		$aProviderParams = array();
-		$iCountProviders = 0;
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
 		foreach($aProviders as $oProvider)
 		{
@@ -434,36 +435,28 @@ $iStep = utils::ReadParam('step', 1);
 
 $oPage = new iTopWebPage(Dict::S('UI:Preferences'));
 $oPage->DisableBreadCrumb();
-$sOperation = utils::ReadParam('operation', ''); 
-	
-try
-{
-	/** @var iPreferencesExtension $oLoginExtensionInstance */
+$sOperation = utils::ReadParam('operation', '');
+
+try {
 	$bOperationUsed = false;
-	foreach(MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
-	{
-		if ($oPreferencesExtensionInstance->ApplyPreferences($oPage, $sOperation))
-		{
+	/** @var iPreferencesExtension $oLoginExtensionInstance */
+	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance) {
+		if ($oPreferencesExtensionInstance->ApplyPreferences($oPage, $sOperation)) {
 			$bOperationUsed = true;
 			break;
 		}
 	}
 
-	if (!$bOperationUsed)
-	{
-		switch ($sOperation)
-		{
+	if (!$bOperationUsed) {
+		switch ($sOperation) {
 			case 'apply':
 				$oFilter = DBObjectSearch::FromOQL('SELECT Organization');
 				$sSelectionMode = utils::ReadParam('selectionMode', '');
 				$aExceptions = utils::ReadParam('storedSelection', array());
-				if (($sSelectionMode == 'negative') && (count($aExceptions) == 0))
-				{
+				if (($sSelectionMode == 'negative') && (count($aExceptions) == 0)) {
 					// All Orgs selected
 					appUserPreferences::SetPref('favorite_orgs', null);
-				}
-				else
-				{
+				} else {
 					// Some organizations selected... store them
 					$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
 					appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
