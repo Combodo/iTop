@@ -18,7 +18,8 @@
  */
 
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
@@ -32,14 +33,19 @@ ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
-$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell',
+	iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oP->SetContentLayout($oPageContentLayout);
 
 $sAlertTitle = Dict::S('UI:NotificationsMenu:Title');
 $sAlertContent = Dict::S('UI:NotificationsMenu:HelpContent');
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForInformation($sAlertTitle, $sAlertContent));
+$oConfigurationHelp = new CollapsibleSection($sAlertTitle, [new Html($sAlertContent)]);
+$oConfigurationHelp
+	->SetOpenedByDefault(true)
+	->EnableSaveCollapsibleState('notifications-home');
+$oPageContentLayout->AddMainBlock($oConfigurationHelp);
 
 $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
