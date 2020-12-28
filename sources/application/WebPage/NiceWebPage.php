@@ -217,20 +217,6 @@ EOF
 	}
 
 	/**
-	 * Outputs (via some echo) the complete HTML page by assembling all its elements
-	 */
-    public function output()
-    {
-		//$this->set_base($this->m_sRootUrl.'pages/');
-        if (count($this->a_ready_scripts)>0)
-        {
-			$this->add_script("\$(document).ready(function() {\n".implode("\n", $this->a_ready_scripts)."\n});");
-		}
-		parent::output();
-	}
-
-
-	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
