@@ -471,7 +471,7 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 	var aFields = [];
 	if (sDataTableId != '') {
 		var sDataTableName = 'datatable_'+sDataTableId;
-		var oColumns = $('#'+sDataTableName).datatable('option', 'oColumns');
+		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
 			for (var k in oColumns[j]) {
 				if (oColumns[j][k].checked) {
