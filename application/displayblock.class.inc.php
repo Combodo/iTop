@@ -170,6 +170,7 @@ class DisplayBlock
 				'table_inner_id',   /** string html id of the results table */
 				'json',             /** string  */
 				'hidden_criteria',  /** string search criteria not visible */
+				'class',            /** string class searched */
 			], DataTableFactory::GetAllowedParams()),
 			'summary' => [
 				'status[block]',        /** string object 'status' att code */
