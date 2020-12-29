@@ -157,6 +157,8 @@ class DisplayBlock
 				'table_inner_id',   /** string html id of the results table */
 				'json',             /** string  */
 				'hidden_criteria',  /** string search criteria not visible */
+				'baseClass',        /** string base class */
+				'action',           /** string */
 			], DataTableFactory::GetAllowedParams()),
 			'search' => array_merge([
 				'baseClass',        /** string search root class */
