@@ -159,6 +159,7 @@ class DisplayBlock
 				'hidden_criteria',  /** string search criteria not visible */
 				'baseClass',        /** string base class */
 				'action',           /** string */
+				'open',             /** bool open by default the search */
 			], DataTableFactory::GetAllowedParams()),
 			'search' => array_merge([
 				'baseClass',        /** string search root class */
