@@ -8,7 +8,7 @@
 		<button class="ibo-button ibo-is-regular ibo-is-primary action" onclick="window.print()">{{'UI:Button:GoPrint'| dict_s}}</button>&#160;&#160;
 		<button class="ibo-button ibo-is-regular ibo-is-secondary cancel" onclick="window.close()">{{ 'UI:Button:Cancel'| dict_s}}</button>&#160;&#160;
 
-		<select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
+		<select name="text" onchange='$(".printable-content").width(this.value);'>
 			<option value='100%'>{{ 'UI:PrintResolution:FullSize'|dict_s }}</option>
 			<option value='19cm'>{{ 'UI:PrintResolution:A4Portrait'|dict_s }}</option>
 			<option value='27.7cm' selected>{{ 'UI:PrintResolution:A4Landscape'|dict_s }}</option>
