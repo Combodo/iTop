@@ -255,6 +255,19 @@
           <field id="trigger_id_finalclass_recall" xsi:type="AttributeExternalField"/>
         </fields>
       </class>
+      <class id="TagSetFieldData" _delta="define">
+        <parent>cmdbAbstractObject</parent>
+        <properties>
+          <category>bizmodel</category>
+        </properties>
+        <fields>
+          <field id="code" xsi:type="AttributeString"/>
+          <field id="label" xsi:type="AttributeString"/>
+          <field id="description" xsi:type="AttributeHTML"/>
+          <field id="obj_class" xsi:type="AttributeString"/>
+          <field id="obj_attcode" xsi:type="AttributeString"/>
+        </fields>
+      </class>
     </classes>
   </meta>
 </itop_design>
