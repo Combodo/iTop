@@ -134,6 +134,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 		}
 		try
 		{
+			$oP->p("Working on ".utils::HtmlEntities($oSynchroDataSource->Get('name'))." (id=".utils::HtmlEntities($iSDS).")...");
 			$oSynchroExec = new SynchroExecution($oSynchroDataSource);
 			$oStatLog = $oSynchroExec->Process();
 			if ($bSimulate)
