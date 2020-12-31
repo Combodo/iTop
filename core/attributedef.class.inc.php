@@ -5188,6 +5188,10 @@ class AttributeEnum extends AttributeString
 		{
 			$aValues = array();
 		}
+
+		// Preserve the values already present in the database to ease migrations
+		$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB()));
+
 		if (count($aValues) > 0)
 		{
 			// The syntax used here do matters
@@ -5204,6 +5208,28 @@ class AttributeEnum extends AttributeString
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
+	}
+
+	/**
+	 * Get the list of the actual 'enum' values present in the database
+	 * @return string[]
+	 */
+	protected function GetActualValuesInDB()
+	{
+	    $sHostClass = $this->GetHostClass();
+	    $sDBTable = MetaModel::DBGetTable($sHostClass, $this->GetCode());
+	    $sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+	    $aValuesInDB = CMDBSource::QueryToArray($sSQL);
+	    $aValues = array();
+	    foreach($aValuesInDB as $aRow)
+	    {
+	        if ($aRow['value'] !== null)
+	        {
+	           $aValues[] = $aRow['value'];
+	        }
+	    }
+	    IssueLog::Info('actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
+	    return CMDBSource::Quote($aValues);
 	}
 
 	protected function GetSQLColSpec()
