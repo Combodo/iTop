@@ -40,16 +40,86 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<always_load_in_tables>true</always_load_in_tables>
 					<values>
-						<value id="new">new</value>
-						<value id="waiting_for_approval">waiting_for_approval</value>
-						<value id="approved">approved</value>
-						<value id="rejected">rejected</value>
-						<value id="assigned">assigned</value>
-						<value id="pending">pending</value>
-						<value id="escalated_tto">escalated_tto</value>
-						<value id="escalated_ttr">escalated_ttr</value>
-						<value id="resolved">resolved</value>
-						<value id="closed">closed</value>
+						<value id="new">
+							<enum_code>new</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="waiting_for_approval">
+							<enum_code>waiting_for_approval</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="approved">
+							<enum_code>approved</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="rejected">
+							<enum_code>rejected</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="assigned">
+							<enum_code>assigned</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="pending">
+							<enum_code>pending</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="escalated_tto">
+							<enum_code>escalated_tto</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="escalated_ttr">
+							<enum_code>escalated_ttr</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="resolved">
+							<enum_code>resolved</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="closed">
+							<enum_code>closed</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>new</default_value>
@@ -57,7 +127,14 @@
 				</field>
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="service_request">service_request</value>
+						<value id="service_request">
+							<enum_code>service_request</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>request_type</sql>
 					<default_value>service_request</default_value>
@@ -66,9 +143,30 @@
 				</field>
 				<field id="impact" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
+						<value id="1">
+							<enum_code>1</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="2">
+							<enum_code>2</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="3">
+							<enum_code>3</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>impact</sql>
 					<default_value>1</default_value>
@@ -77,10 +175,38 @@
 				</field>
 				<field id="priority" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<enum_code>1</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="2">
+							<enum_code>2</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="3">
+							<enum_code>3</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="4">
+							<enum_code>4</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<dependencies>
 						<attribute id="impact"/>
@@ -92,10 +218,38 @@
 				</field>
 				<field id="urgency" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<enum_code>1</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="2">
+							<enum_code>2</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="3">
+							<enum_code>3</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="4">
+							<enum_code>4</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>urgency</sql>
 					<default_value>4</default_value>
@@ -103,9 +257,30 @@
 				</field>
 				<field id="origin" xsi:type="AttributeEnum">
 					<values>
-						<value id="mail">mail</value>
-						<value id="phone">phone</value>
-						<value id="portal">portal</value>
+						<value id="mail">
+							<enum_code>mail</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="phone">
+							<enum_code>phone</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="portal">
+							<enum_code>portal</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>origin</sql>
 					<default_value>phone</default_value>
@@ -160,8 +335,22 @@
 				</field>
 				<field id="escalation_flag" xsi:type="AttributeEnum">
 					<values>
-						<value id="yes">yes</value>
-						<value id="no">no</value>
+						<value id="yes">
+							<enum_code>yes</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="no">
+							<enum_code>no</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>escalation_flag</sql>
 					<default_value>no</default_value>
@@ -297,10 +486,31 @@
 				</field>
 				<field id="resolution_code" xsi:type="AttributeEnum">
 					<values>
-						<value id="assistance">assistance</value>
-						<value id="other">other</value>
+						<value id="assistance">
+							<enum_code>assistance</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="other">
+							<enum_code>other</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 						<value id="software patch">software patch</value>
-						<value id="training">training</value>
+						<value id="training">
+							<enum_code>training</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 						<value id="hardware repair">hardware repair</value>
 						<value id="system update">system update</value>
 						<value id="bug fixed">bug fixed</value>
@@ -378,10 +588,38 @@
 				</field>
 				<field id="user_satisfaction" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<enum_code>1</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="2">
+							<enum_code>2</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="3">
+							<enum_code>3</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="4">
+							<enum_code>4</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>user_satisfaction</sql>
 					<default_value>1</default_value>

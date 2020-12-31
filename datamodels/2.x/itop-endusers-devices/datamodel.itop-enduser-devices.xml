@@ -837,8 +837,22 @@
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <values>
-            <value id="laptop">laptop</value>
-            <value id="desktop">desktop</value>
+            <value id="laptop">
+              <enum_code>laptop</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="desktop">
+              <enum_code>desktop</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>type</sql>
           <default_value/>

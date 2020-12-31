@@ -17,10 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeFactory;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -5169,12 +5171,29 @@ class AttributeEnum extends AttributeString
 	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
-		//return array_merge(parent::ListExpectedParams(), array());
+		//return array_merge(parent::ListExpectedParams(), array('styled_values'));
 	}
 
 	public function GetEditClass()
 	{
 		return "String";
+	}
+
+	/**
+	 * @param string|null $sValue
+	 *
+	 * @return \ormStyle
+	 */
+	protected function GetStyle(?string $sValue): ormStyle
+	{
+		if ($this->IsParam('styled_values')) {
+			$aStyles = $this->Get('styled_values');
+			if (array_key_exists($sValue, $aStyles)) {
+				return $aStyles[$sValue];
+			}
+		}
+
+		return new ormStyle();
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -5315,9 +5334,13 @@ class AttributeEnum extends AttributeString
 		if ($bLocalize)
 		{
 			$sLabel = $this->GetValueLabel($sValue);
-			$sDescription = $this->GetValueDescription($sValue);
+			// $sDescription = $this->GetValueDescription($sValue);
+			$oStyle = $this->GetStyle($sValue);
 			// later, we could imagine a detailed description in the title
-			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			// $sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			$oBadge = FieldBadgeFactory::MakeForField($sLabel, $oStyle);
+			$oRenderer = new BlockRenderer($oBadge);
+			$sRes = $oRenderer->RenderHtml();
 		}
 		else
 		{

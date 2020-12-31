@@ -1,0 +1,17 @@
+/*!
+ * copyright   Copyright (C) 2010-2020 Combodo SARL
+ * license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-field-badge--margin: 0 !default;
+$ibo-field-badge--padding: 4px 10px !default;
+$ibo-field-badge--border-radius: $ibo-border-radius-300 !default;
+
+.ibo-field-badge {
+  @extend %ibo-font-ral-med-100;
+
+  margin: $ibo-field-badge--margin;
+  padding: $ibo-field-badge--padding;
+  border-radius: $ibo-field-badge--border-radius;
+  display: inline-block;
+}

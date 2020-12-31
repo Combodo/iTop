@@ -53,9 +53,30 @@
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
 					<values>
-						<value id="ongoing">ongoing</value>
-						<value id="resolved">resolved</value>
-						<value id="closed">closed</value>
+						<value id="ongoing">
+							<enum_code>ongoing</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="resolved">
+							<enum_code>resolved</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="closed">
+							<enum_code>closed</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>operational_status</sql>
 					<default_value>ongoing</default_value>
@@ -408,9 +429,30 @@
 				</field>
 				<field id="role_code" xsi:type="AttributeEnum">
 					<values>
-						<value id="manual">manual</value>
-						<value id="computed">computed</value>
-						<value id="do_not_notify">do_not_notify</value>
+						<value id="manual">
+							<enum_code>manual</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="computed">
+							<enum_code>computed</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="do_not_notify">
+							<enum_code>do_not_notify</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>impact_code</sql>
 					<default_value>manual</default_value>
@@ -494,8 +536,22 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="open">open</value>
-						<value id="closed">closed</value>
+						<value id="open">
+							<enum_code>open</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="closed">
+							<enum_code>closed</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>open</default_value>

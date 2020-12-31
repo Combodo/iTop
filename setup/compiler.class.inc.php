@@ -1338,15 +1338,23 @@ EOF
 				{
 					$oValues = $oField->GetUniqueElement('values');
 					$oValueNodes = $oValues->getElementsByTagName('value');
-					$aValues = array();
+					$aValues = [];
+					$aStyledValues = [];
 					foreach($oValueNodes as $oValue)
 					{
-						//	new style... $aValues[] = self::QuoteForPHP($oValue->textContent);
-						$aValues[] = $oValue->textContent;
+						// New in 3.0 the format of values changed
+						$sCode = $this->GetMandatoryPropString($oValue, 'enum_code');
+						$oStyleNode = $oValue->getElementsByTagName('style')->item(0);
+						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
+						$aValues[] = $sCode;
+						$aStyledValues[] = "$sCode => new ormStyle($sMainColor, $sComplementaryColor, $sDecorationClasses)";
 					}
-					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
+					$sStyledValues = "[".implode(',', $aStyledValues)."]";
+					$aParameters['styled_values'] = "$sStyledValues";
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');

@@ -32,16 +32,17 @@ class ExpressionTest extends ItopDataTestCase
 
 	public function ListParametersProvider()
 	{
-		return array(
-			array('1', array()),
-			array(':id = 2', array(':id')),
-			array('expiration_date < DATE_SUB(NOW(), INTERVAL :expiration_days DAY)', array(':expiration_days')),
-			array('id IN (SELECT Organization WHERE :id = 2)', array(':id')),
-			array('id IN (:id, 2)', array(':id')),
-			array("B.name LIKE :name", array(':name')),
-			array("name REGEXP :regexp", array(':regexp')),
-			array(" t.agent_id = :current_contact_id", array(':current_contact_id')),
-			array("INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(:ip) < INET_ATON('10.22.32.255')", array(':ip')),
-		);
+		return [
+			['1', []],
+			[':id = 2', [':id']],
+			['expiration_date < DATE_SUB(NOW(), INTERVAL :expiration_days DAY)', [':expiration_days']],
+			['id IN (SELECT Organization WHERE :id = 2)', [':id']],
+			['id IN (:id, 2)', [':id']],
+			["B.name LIKE :name", [':name']],
+			["name REGEXP :regexp", [':regexp']],
+			[" t.agent_id = :current_contact_id", [':current_contact_id']],
+			["INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(:ip) < INET_ATON('10.22.32.255')", [':ip']],
+			["((`UserRequest`.`status` IN ('closed','rejected','resolved')))", []]
+		];
 	}
 }

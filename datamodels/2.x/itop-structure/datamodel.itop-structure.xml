@@ -48,8 +48,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <enum_code>active</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <enum_code>inactive</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -207,8 +221,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <enum_code>active</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <enum_code>inactive</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -378,8 +406,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <enum_code>active</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <enum_code>inactive</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -408,8 +450,22 @@
         </field>
         <field id="notify" xsi:type="AttributeEnum">
           <values>
-            <value id="yes">yes</value>
-            <value id="no">no</value>
+            <value id="yes">
+              <enum_code>yes</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="no">
+              <enum_code>no</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>notify</sql>
           <default_value>yes</default_value>
@@ -1162,9 +1218,30 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="draft">draft</value>
-            <value id="published">published</value>
-            <value id="obsolete">obsolete</value>
+            <value id="draft">
+              <enum_code>draft</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="published">
+              <enum_code>published</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="obsolete">
+              <enum_code>obsolete</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value/>

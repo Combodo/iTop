@@ -797,6 +797,28 @@ class iTopDesignFormat
 			// Remove current node from lifecycle
 			$this->DeleteNode($oNode);
 		}
+
+		// New Enum values format
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		foreach ($oNodeList as $oNode)
+		{
+			$oNode->textContent = '';
+
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
+			$oNode->appendChild($oCodeNode);
+
+			$oStyleNode = $oNode->ownerDocument->createElement("style");
+			$oNode->appendChild($oStyleNode);
+
+			$oMainColorNode = $oNode->ownerDocument->createElement("main_color", "#2B6CB0");
+			$oStyleNode->appendChild($oMainColorNode);
+
+			$oComplementaryColorNode = $oNode->ownerDocument->createElement("complementary_color", "#FFFFFF");
+			$oStyleNode->appendChild($oComplementaryColorNode);
+
+			$oDecorationClassesNode = $oNode->ownerDocument->createElement("decoration_classes");
+			$oStyleNode->appendChild($oDecorationClassesNode);
+		}
 	}
 
 	/**
@@ -840,6 +862,18 @@ class iTopDesignFormat
 		// - Remove semantic node
 		$sPath = "/itop_design//class/properties/fields_semantic";
 		$this->RemoveNodeFromXPath($sPath);
+
+		// New Enum values format
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		foreach ($oNodeList as $oNode)
+		{
+			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$oNode->textContent = $oCodeNode->textContent;
+			$this->DeleteNode($oCodeNode);
+			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+			$this->DeleteNode($oStyleNode);
+		}
+
 	}
 
 	/**

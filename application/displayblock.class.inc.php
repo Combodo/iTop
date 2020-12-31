@@ -919,9 +919,8 @@ JS
 			}
 
 			foreach ($aStates as $sStateValue) {
-				$sHtmlValue = $aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
-				$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
-
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+				$aStateLabels[$sStateValue] = $oAttDef->GetAsPlainText($sStateValue);
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;

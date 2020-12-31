@@ -3227,37 +3227,29 @@ HTML;
 
 			// Then prepare the value
 			// - The field is visible in the current state of the object
-			if ($sStateAttCode == $sAttCode)
+			if ($oAttDef->GetEditClass() == 'Document')
 			{
-				// Special display for the 'state' attribute itself
-				$sDisplayValue = $this->GetStateLabel();
-			}
-			else
-			{
-				if ($oAttDef->GetEditClass() == 'Document')
+				$oDocument = $this->Get($sAttCode);
+				if (!$oDocument->IsEmpty())
 				{
-					$oDocument = $this->Get($sAttCode);
-					if (!$oDocument->IsEmpty())
-					{
-						$sDisplayValue = $this->GetAsHTML($sAttCode);
-						$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-								$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-						$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-								$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					}
-					else
-					{
-						$sDisplayValue ='';
-					}
-				}
-				elseif ($oAttDef instanceof AttributeDashboard)
-				{
-					$sDisplayValue = '';
+					$sDisplayValue = $this->GetAsHTML($sAttCode);
+					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
+							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
+							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 				}
 				else
 				{
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
+					$sDisplayValue ='';
 				}
+			}
+			elseif ($oAttDef instanceof AttributeDashboard)
+			{
+				$sDisplayValue = '';
+			}
+			else
+			{
+				$sDisplayValue = $this->GetAsHTML($sAttCode);
 			}
 			$sValueAsHtml = $sDisplayValue;
 

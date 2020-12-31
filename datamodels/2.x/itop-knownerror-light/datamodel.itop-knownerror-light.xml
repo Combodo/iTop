@@ -79,10 +79,38 @@
         </field>
         <field id="domain" xsi:type="AttributeEnum">
           <values>
-            <value id="Network">Network</value>
-            <value id="Server">Server</value>
-            <value id="Application">Application</value>
-            <value id="Desktop">Desktop</value>
+            <value id="Network">
+              <enum_code>Network</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="Server">
+              <enum_code>Server</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="Application">
+              <enum_code>Application</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="Desktop">
+              <enum_code>Desktop</enum_code>
+              <style>
+                <main_color>#2B6CB0</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>domain</sql>
           <default_value>Application</default_value>

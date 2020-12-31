@@ -37,6 +37,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 	/**
 	 * UIContentBlock constructor.
+	 * Generates a <div> only if $sContainerClass if not empty or block has data attributes
 	 *
 	 * @param string|null $sName
 	 * @param string $sContainerClass

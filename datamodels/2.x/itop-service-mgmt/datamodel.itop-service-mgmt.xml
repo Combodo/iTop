@@ -129,8 +129,22 @@
 				</field>
 				<field id="cost_currency" xsi:type="AttributeEnum">
 					<values>
-						<value id="dollars">dollars</value>
-						<value id="euros">euros</value>
+						<value id="dollars">
+							<enum_code>dollars</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="euros">
+							<enum_code>euros</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>cost_currency</sql>
 					<default_value/>
@@ -169,9 +183,30 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="production">production</value>
-						<value id="implementation">implementation</value>
-						<value id="obsolete">obsolete</value>
+						<value id="production">
+							<enum_code>production</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="implementation">
+							<enum_code>implementation</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="obsolete">
+							<enum_code>obsolete</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value/>
@@ -1026,9 +1061,30 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="production">production</value>
-						<value id="implementation">implementation</value>
-						<value id="obsolete">obsolete</value>
+						<value id="production">
+							<enum_code>production</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="implementation">
+							<enum_code>implementation</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="obsolete">
+							<enum_code>obsolete</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value/>
@@ -1383,8 +1439,22 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="incident">incident</value>
-						<value id="service_request">service_request</value>
+						<value id="incident">
+							<enum_code>incident</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="service_request">
+							<enum_code>service_request</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>request_type</sql>
 					<default_value>incident</default_value>
@@ -1393,9 +1463,30 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="production">production</value>
-						<value id="implementation">implementation</value>
-						<value id="obsolete">obsolete</value>
+						<value id="production">
+							<enum_code>production</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="implementation">
+							<enum_code>implementation</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="obsolete">
+							<enum_code>obsolete</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value/>
@@ -1651,10 +1742,38 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="priority" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<enum_code>1</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="2">
+							<enum_code>2</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="3">
+							<enum_code>3</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="4">
+							<enum_code>4</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>priority</sql>
 					<default_value/>
@@ -1663,8 +1782,22 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="service_request">service_request</value>
-						<value id="incident">incident</value>
+						<value id="service_request">
+							<enum_code>service_request</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="incident">
+							<enum_code>incident</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>request_type</sql>
 					<default_value/>
@@ -1673,8 +1806,22 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="metric" xsi:type="AttributeEnum">
 					<values>
-						<value id="tto">tto</value>
-						<value id="ttr">ttr</value>
+						<value id="tto">
+							<enum_code>tto</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="ttr">
+							<enum_code>ttr</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>metric</sql>
 					<default_value/>
@@ -1688,8 +1835,22 @@ public function PrefillSearchForm(&$aContextParam)
 				</field>
 				<field id="unit" xsi:type="AttributeEnum">
 					<values>
-						<value id="hours">hours</value>
-						<value id="minutes">minutes</value>
+						<value id="hours">
+							<enum_code>hours</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="minutes">
+							<enum_code>minutes</enum_code>
+							<style>
+								<main_color>#2B6CB0</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>unit</sql>
 					<default_value/>

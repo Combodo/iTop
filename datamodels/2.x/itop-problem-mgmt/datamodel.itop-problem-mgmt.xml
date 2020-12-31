@@ -39,10 +39,38 @@
             <fields>
                 <field id="status" xsi:type="AttributeEnum">
                     <values>
-                        <value id="new">new</value>
-                        <value id="assigned">assigned</value>
-                        <value id="resolved">resolved</value>
-                        <value id="closed">closed</value>
+                        <value id="new">
+                            <enum_code>new</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="assigned">
+                            <enum_code>assigned</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="resolved">
+                            <enum_code>resolved</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="closed">
+                            <enum_code>closed</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>status</sql>
                     <default_value>new</default_value>
@@ -86,9 +114,30 @@
                 </field>
                 <field id="impact" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
+                        <value id="1">
+                            <enum_code>1</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="2">
+                            <enum_code>2</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="3">
+                            <enum_code>3</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>impact</sql>
                     <default_value>1</default_value>
@@ -97,10 +146,38 @@
                 </field>
                 <field id="urgency" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <enum_code>1</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="2">
+                            <enum_code>2</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="3">
+                            <enum_code>3</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="4">
+                            <enum_code>4</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>urgency</sql>
                     <default_value>1</default_value>
@@ -109,10 +186,38 @@
                 </field>
                 <field id="priority" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <enum_code>1</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="2">
+                            <enum_code>2</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="3">
+                            <enum_code>3</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="4">
+                            <enum_code>4</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>priority</sql>
                     <default_value>1</default_value>

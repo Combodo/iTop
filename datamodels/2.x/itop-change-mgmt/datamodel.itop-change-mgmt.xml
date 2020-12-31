@@ -39,12 +39,54 @@
             <fields>
                 <field id="status" xsi:type="AttributeEnum">
                     <values>
-                        <value id="new">new</value>
-                        <value id="assigned">assigned</value>
-                        <value id="planned">planned</value>
-                        <value id="approved">approved</value>
-                        <value id="closed">closed</value>
-                        <value id="rejected">rejected</value>
+                        <value id="new">
+                            <enum_code>new</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="assigned">
+                            <enum_code>assigned</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="planned">
+                            <enum_code>planned</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="approved">
+                            <enum_code>approved</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="closed">
+                            <enum_code>closed</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="rejected">
+                            <enum_code>rejected</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>status</sql>
                     <default_value>new</default_value>
@@ -52,12 +94,54 @@
                 </field>
                 <field id="category" xsi:type="AttributeEnum">
                     <values>
-                        <value id="hardware">hardware</value>
-                        <value id="software">software</value>
-                        <value id="system">system</value>
-                        <value id="network">network</value>
-                        <value id="application">application</value>
-                        <value id="other">other</value>
+                        <value id="hardware">
+                            <enum_code>hardware</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="software">
+                            <enum_code>software</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="system">
+                            <enum_code>system</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="network">
+                            <enum_code>network</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="application">
+                            <enum_code>application</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="other">
+                            <enum_code>other</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>category</sql>
                     <default_value>hardware</default_value>
@@ -108,8 +192,22 @@
                 </field>
                 <field id="outage" xsi:type="AttributeEnum">
                     <values>
-                        <value id="yes">yes</value>
-                        <value id="no">no</value>
+                        <value id="yes">
+                            <enum_code>yes</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="no">
+                            <enum_code>no</enum_code>
+                            <style>
+                                <main_color>#2B6CB0</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
                     <sql>outage</sql>
                     <default_value>no</default_value>
