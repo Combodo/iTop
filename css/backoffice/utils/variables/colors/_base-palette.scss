@@ -17,18 +17,18 @@
  */
 
 /* base color palettes */
-$ibo-color-white-100: hsl(0, 0%, 100%) !default;
+$ibo-color-white-100: hsla(0, 0%, 100%, 1) !default;
 $ibo-color-white-200: hsla(0, 0%, 94.9%, 1) !default;
 $ibo-color-transparent: hsla(0, 0%, 100%, 0) !default;
 
 $ibo-color-grey-50: hsla(240, 20%, 99%, 1) !default;
 $ibo-color-grey-100: hsla(210, 16.7%, 97.6%, 1) !default;
-$ibo-color-grey-200: hsl(207, 22%, 90%) !default;
+$ibo-color-grey-200: hsla(207, 22.4%, 90.4%, 1) !default;
 $ibo-color-grey-300: hsla(210, 23.5%, 86.7%, 1) !default;
 $ibo-color-grey-400: hsla(208, 17.2%, 82.9%, 1) !default;
 $ibo-color-grey-500: hsla(209, 23.7%, 74.3%, 1) !default;
 $ibo-color-grey-600: hsla(215, 16.6%, 63.3%, 1) !default;
-$ibo-color-grey-700: hsl(214, 11%, 49%) !default;
+$ibo-color-grey-700: hsla(214, 11.3%, 48.6%, 1) !default;
 $ibo-color-grey-800: hsla(215, 16.9%, 30.2%, 1) !default;
 $ibo-color-grey-900: hsla(215, 22.4%, 16.7%, 1) !default;
 
@@ -50,7 +50,7 @@ $ibo-color-blue-400: hsla(205, 79.3%, 65.9%, 1) !default;
 $ibo-color-blue-500: hsla(207, 72.6%, 57.1%, 1) !default;
 $ibo-color-blue-600: hsla(209, 61.6%, 50%, 1) !default;
 $ibo-color-blue-700: hsla(211, 60.7%, 42.9%, 1) !default;
-$ibo-color-blue-800: hsl(213, 49%, 34%) !default;
+$ibo-color-blue-800: hsla(213, 49.4%, 34.1%, 1) !default;
 $ibo-color-blue-900: hsla(215, 41.3%, 28%, 1) !default;
 
 $ibo-color-cyan-100: hsla(186, 61.2%, 86.9%, 1) !default;
@@ -69,14 +69,14 @@ $ibo-color-green-300: hsla(88, 50%, 67.1%, 1) !default;
 $ibo-color-green-400: hsla(88, 50.2%, 59.8%, 1) !default;
 $ibo-color-green-500: hsla(88, 50.2%, 52.7%, 1) !default;
 $ibo-color-green-600: hsla(89, 46.1%, 48%, 1) !default;
-$ibo-color-green-700: hsl(92, 48%, 42%) !default;
+$ibo-color-green-700: hsla(92, 47.9%, 42.2%, 1) !default;
 $ibo-color-green-800: hsla(95, 49.5%, 36.5%, 1) !default;
 $ibo-color-green-900: hsla(103, 55.6%, 26.5%, 1) !default;
 
 $ibo-color-orange-100: hsla(40, 100%, 97.1%, 1) !default;
 $ibo-color-orange-200: hsla(39, 96.4%, 89%, 1) !default;
 $ibo-color-orange-300: hsla(38, 93.2%, 76.9%, 1) !default;
-$ibo-color-orange-400: hsl(33, 90%, 65%) !default;
+$ibo-color-orange-400: hsla(33, 89.9%, 64.9%, 1) !default;
 $ibo-color-orange-500: hsla(28, 82.9%, 51.8%, 1) !default;
 $ibo-color-orange-600: hsla(24, 74.7%, 49.6%, 1) !default;
 $ibo-color-orange-700: hsla(20, 70.7%, 44.1%, 1) !default;
@@ -99,7 +99,7 @@ $ibo-color-pink-300: hsla(339, 90%, 85%, 1) !default;
 $ibo-color-pink-400: hsla(336, 86%, 75%, 1) !default;
 $ibo-color-pink-500: hsla(331, 79%, 66%, 1) !default;
 $ibo-color-pink-600: hsla(329, 64%, 54%, 1) !default;
-$ibo-color-pink-700: hsl(325, 57%, 46%) !default;
+$ibo-color-pink-700: hsla(325, 57%, 46%, 1) !default;
 $ibo-color-pink-800: hsla(322, 60%, 37%, 1) !default;
 $ibo-color-pink-900: hsla(318, 51%, 29%, 1) !default;
 
