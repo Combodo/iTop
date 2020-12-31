@@ -1796,6 +1796,10 @@ class FieldExpression extends UnaryExpression
 				$sRes = Dict::S('UI:UndefinedObject');
 			}
 		}
+		elseif ($oAttDef instanceof AttributeEnum)
+		{
+			$sRes = $oAttDef->GetAsPlainText($sValue);
+		}
 		if(is_null($sRes))
 		{
 			$sRes = $oAttDef->GetAsHtml($sValue);
