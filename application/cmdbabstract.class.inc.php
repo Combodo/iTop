@@ -863,7 +863,7 @@ EOF
 								if ($oAttDef->IsWritable()) {
 									if (($sStateAttCode === $sAttCode) && (MetaModel::HasLifecycle($sClass))) {
 										// State attribute is always read-only from the UI
-										$sHTMLValue = $this->GetStateLabel();
+										$sHTMLValue = $this->GetAsHTML($sAttCode);
 										$val = array(
 											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
 											'value' => $sHTMLValue,
@@ -3227,28 +3227,20 @@ HTML;
 
 			// Then prepare the value
 			// - The field is visible in the current state of the object
-			if ($oAttDef->GetEditClass() == 'Document')
-			{
+			if ($oAttDef->GetEditClass() == 'Document') {
 				$oDocument = $this->Get($sAttCode);
-				if (!$oDocument->IsEmpty())
-				{
+				if (!$oDocument->IsEmpty()) {
 					$sDisplayValue = $this->GetAsHTML($sAttCode);
 					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
 							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
 							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				} else {
+					$sDisplayValue = '';
 				}
-				else
-				{
-					$sDisplayValue ='';
-				}
-			}
-			elseif ($oAttDef instanceof AttributeDashboard)
-			{
+			} elseif ($oAttDef instanceof AttributeDashboard) {
 				$sDisplayValue = '';
-			}
-			else
-			{
+			} else {
 				$sDisplayValue = $this->GetAsHTML($sAttCode);
 			}
 			$sValueAsHtml = $sDisplayValue;

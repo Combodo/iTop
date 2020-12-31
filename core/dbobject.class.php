@@ -1582,7 +1582,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the label of the current state
+     * Get the label (raw text) of the current state
+     * helper for MetaModel::GetStateLabel()
      * 
      * @api
      * 
