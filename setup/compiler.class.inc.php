@@ -1348,7 +1348,7 @@ EOF
 						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
 						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
 						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-						$aValues[] = $sCode;
+						$aValues[] = self::RemoveSurroundingQuotes($sCode);
 						$aStyledValues[] = "$sCode => new ormStyle($sMainColor, $sComplementaryColor, $sDecorationClasses)";
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
@@ -3259,5 +3259,15 @@ XML;
 
 EOF;
 		$this->WriteFile($sResultFile, $sFileHeader.$sCompiledCode);
+	}
+
+	private static function RemoveSurroundingQuotes($sValue)
+	{
+		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
+		{
+			$sValue = substr($sValue, 1, -1);
+		}
+
+		return $sValue;
 	}
 }
