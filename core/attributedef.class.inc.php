@@ -12689,7 +12689,7 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForJSON($value)
 	{
-		return null;
+		return $value->GetValues();
 	}
 
 	/**
