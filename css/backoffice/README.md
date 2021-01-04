@@ -53,6 +53,7 @@ css/backoffice/
 |   ...                  # Etc…
 |
 |
+`- _shame.scss           # Shame file, should contain all the ugly hacks (https://sass-guidelin.es/#shame-file)
 `– main.scss             # Main Sass file
 ```
 
@@ -69,3 +70,4 @@ To avoid common errors, files should be imported in the final file in the follow
 - Layout
 - Pages
 - Themes
+- Shame file
