@@ -1379,8 +1379,10 @@ CSS;
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-					$sStyledValues = "[".implode(',', $aStyledValues)."]";
-					$aParameters['styled_values'] = "$sStyledValues";
+					if (count($aStyledValues) > 0) {
+						$sStyledValues = "[".implode(',', $aStyledValues)."]";
+						$aParameters['styled_values'] = "$sStyledValues";
+					}
 					$oStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oStyleNode) {
 						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
@@ -1440,8 +1442,10 @@ CSS;
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
-					$sStyledValues = "[".implode(',', $aStyledValues)."]";
-					$aParameters['styled_values'] = "$sStyledValues";
+					if (count($aStyledValues) > 0) {
+						$sStyledValues = "[".implode(',', $aStyledValues)."]";
+						$aParameters['styled_values'] = "$sStyledValues";
+					}
 					$oStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oStyleNode) {
 						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');

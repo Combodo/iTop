@@ -7518,8 +7518,7 @@ abstract class MetaModel
 			$sKey = self::DBGetKey($sClass);
 			$sRootKey = self::DBGetKey($sRootClass);
 			$sRootField = self::DBGetClassField($sRootClass);
-			if ($sTable != $sRootTable)
-			{
+			if ($sTable != $sRootTable) {
 				// Copy the finalclass of the root table
 				$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
 				$aRequests[] = $sRequest;
@@ -7527,6 +7526,26 @@ abstract class MetaModel
 		}
 
 		return $aRequests;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param string $sValue
+	 *
+	 * @return \ormStyle|null
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
+	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
+	{
+		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+		if (!$oAttDef instanceof AttributeEnum) {
+			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");
+		}
+
+		/** @var AttributeEnum $oAttDef */
+		return $oAttDef->GetStyle($sValue);
 	}
 }
 

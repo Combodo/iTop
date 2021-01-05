@@ -5184,7 +5184,7 @@ class AttributeEnum extends AttributeString
 	 *
 	 * @return \ormStyle|null
 	 */
-	protected function GetStyle(?string $sValue): ?ormStyle
+	public function GetStyle(?string $sValue): ?ormStyle
 	{
 		if ($this->IsParam('styled_values')) {
 			$aStyles = $this->Get('styled_values');

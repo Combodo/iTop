@@ -4,6 +4,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
 use MetaModel;
 
 /**
@@ -255,8 +256,7 @@ class MetaModelTest extends ItopDataTestCase
 		$m_PluginManager->GetPlugins($interface, $className);
 		$pluginInstance = $m_PluginManager->GetPlugins($interface, $className);
 
-		if (sizeof($expectedResults)==0)
-		{
+		if (sizeof($expectedResults) == 0) {
 			$this->assertNull($pluginInstance);
 			return;
 		}
@@ -265,16 +265,56 @@ class MetaModelTest extends ItopDataTestCase
 		$this->assertTrue(is_a($pluginInstance, $expectedResults[0]));
 	}
 
-	public function getPluginsProvider(){
+	public function getPluginsProvider()
+	{
 		$aInterfaces = [
-			"empty conf" => [ 0, [], [], [], 'Wizzard', Gryffindor::class],
-			"simple instance retrieval" => [ 1, [Gryffindor::class], [ 'Wizzard' => [ Gryffindor::class]], [], 'Wizzard', Gryffindor::class],
-			"check instanceof parameter" => [ 1, [Gryffindor::class], [ 'Wizzard' => [ Gryffindor::class, Slytherin::class]], [], 'Wizzard', Gryffindor::class],
-			"try to retrieve a non instanciable object" => [ 1, [Gryffindor::class], [ 'Wizzard' => [ Gryffindor::class, Muggle::class]], [], 'Wizzard', Gryffindor::class ],
+			"empty conf" => [0, [], [], [], 'Wizzard', Gryffindor::class],
+			"simple instance retrieval" => [1, [Gryffindor::class], ['Wizzard' => [Gryffindor::class]], [], 'Wizzard', Gryffindor::class],
+			"check instanceof parameter" => [1, [Gryffindor::class], ['Wizzard' => [Gryffindor::class, Slytherin::class]], [], 'Wizzard', Gryffindor::class],
+			"try to retrieve a non instanciable object" => [1, [Gryffindor::class], ['Wizzard' => [Gryffindor::class, Muggle::class]], [], 'Wizzard', Gryffindor::class],
 		];
 		return $aInterfaces;
 	}
 
+
+	/**
+	 * @dataProvider GetEnumStyleProvider
+	 */
+	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass)
+	{
+		$oStyle = MetaModel::GetEnumStyle($sClass, $sAttCode, $sValue);
+
+		if (is_null($sAwaitedCSSClass)) {
+			self::assertNull($oStyle);
+			return;
+		}
+
+		self::assertInstanceOf('ormStyle', $oStyle);
+
+		self::assertEquals($sAwaitedCSSClass, $oStyle->GetStyleClass());
+	}
+
+	public function GetEnumStyleProvider()
+	{
+		return [
+			'status-new' => ['UserRequest', 'status', 'new', 'ibo-enum--UserRequest-status-new'],
+			'status-default' => ['UserRequest', 'status', '', 'ibo-enum--UserRequest-status'],
+			'urgency' => ['UserRequest', 'origin', 'mail', null],
+		];
+	}
+
+	public function testGetEnumStyleException()
+	{
+		try {
+			MetaModel::GetEnumStyle('Contact', 'name', '');
+		} catch (CoreException $e) {
+			self::assertContains('AttributeEnum', $e->getMessage());
+			return;
+		}
+
+		// Should not get here
+		assertTrue(false);
+	}
 }
 
 abstract class Wizzard
