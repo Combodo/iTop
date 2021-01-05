@@ -60,27 +60,12 @@
           <values>
             <value id="manual">
               <enum_code>manual</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="computed">
               <enum_code>computed</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="not_impacted">
               <enum_code>not_impacted</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
           </values>
           <sql>impact_code</sql>

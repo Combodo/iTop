@@ -51,7 +51,7 @@
             <value id="active">
               <enum_code>active</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
                 <decoration_classes/>
               </style>
@@ -59,8 +59,8 @@
             <value id="inactive">
               <enum_code>inactive</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -224,7 +224,7 @@
             <value id="active">
               <enum_code>active</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
                 <decoration_classes/>
               </style>
@@ -232,8 +232,8 @@
             <value id="inactive">
               <enum_code>inactive</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -409,7 +409,7 @@
             <value id="active">
               <enum_code>active</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
                 <decoration_classes/>
               </style>
@@ -417,8 +417,8 @@
             <value id="inactive">
               <enum_code>inactive</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -452,19 +452,9 @@
           <values>
             <value id="yes">
               <enum_code>yes</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="no">
               <enum_code>no</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
           </values>
           <sql>notify</sql>
@@ -1220,27 +1210,12 @@
           <values>
             <value id="draft">
               <enum_code>draft</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="published">
               <enum_code>published</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="obsolete">
               <enum_code>obsolete</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
           </values>
           <sql>status</sql>

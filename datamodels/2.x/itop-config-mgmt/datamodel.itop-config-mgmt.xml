@@ -50,27 +50,12 @@
 					<values>
 						<value id="high">
 							<enum_code>high</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="medium">
 							<enum_code>medium</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="low">
 							<enum_code>low</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>business_criticity</sql>
@@ -321,35 +306,15 @@
 					<values>
 						<value id="production">
 							<enum_code>production</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="implementation">
 							<enum_code>implementation</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="stock">
 							<enum_code>stock</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="obsolete">
 							<enum_code>obsolete</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1605,7 +1570,7 @@
 						<value id="active">
 							<enum_code>active</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
 								<decoration_classes/>
 							</style>
@@ -1613,8 +1578,8 @@
 						<value id="inactive">
 							<enum_code>inactive</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1755,7 +1720,7 @@
 						<value id="active">
 							<enum_code>active</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
 								<decoration_classes/>
 							</style>
@@ -1763,8 +1728,8 @@
 						<value id="inactive">
 							<enum_code>inactive</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1921,7 +1886,7 @@
 						<value id="active">
 							<enum_code>active</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
 								<decoration_classes/>
 							</style>
@@ -1929,8 +1894,8 @@
 						<value id="inactive">
 							<enum_code>inactive</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -3037,43 +3002,18 @@
 					<values>
 						<value id="Middleware">
 							<enum_code>Middleware</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="DBServer">
 							<enum_code>DBServer</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="PCSoftware">
 							<enum_code>PCSoftware</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="OtherSoftware">
 							<enum_code>OtherSoftware</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="WebServer">
 							<enum_code>WebServer</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -3518,19 +3458,9 @@
 					<values>
 						<value id="yes">
 							<enum_code>yes</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="no">
 							<enum_code>no</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>perpetual</sql>
@@ -4206,147 +4136,57 @@
 					<values>
 						<value id="NetworkDevice">
 							<enum_code>NetworkDevice</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Server">
 							<enum_code>Server</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="SANSwitch">
 							<enum_code>SANSwitch</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="StorageSystem">
 							<enum_code>StorageSystem</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Rack">
 							<enum_code>Rack</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Enclosure">
 							<enum_code>Enclosure</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="PC">
 							<enum_code>PC</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Tablet">
 							<enum_code>Tablet</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Phone">
 							<enum_code>Phone</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="MobilePhone">
 							<enum_code>MobilePhone</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Printer">
 							<enum_code>Printer</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="DiskArray">
 							<enum_code>DiskArray</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="NAS">
 							<enum_code>NAS</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="TapeLibrary">
 							<enum_code>TapeLibrary</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="IPPhone">
 							<enum_code>IPPhone</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="Peripheral">
 							<enum_code>Peripheral</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="PowerSource">
 							<enum_code>PowerSource</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="PDU">
 							<enum_code>PDU</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -5879,19 +5719,9 @@
 					<values>
 						<value id="uplink">
 							<enum_code>uplink</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="downlink">
 							<enum_code>downlink</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -6289,27 +6119,12 @@
 					<values>
 						<value id="production">
 							<enum_code>production</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="implementation">
 							<enum_code>implementation</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="obsolete">
 							<enum_code>obsolete</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>

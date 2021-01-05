@@ -131,19 +131,9 @@
 					<values>
 						<value id="dollars">
 							<enum_code>dollars</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="euros">
 							<enum_code>euros</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>cost_currency</sql>
@@ -185,27 +175,12 @@
 					<values>
 						<value id="production">
 							<enum_code>production</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="implementation">
 							<enum_code>implementation</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="obsolete">
 							<enum_code>obsolete</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1063,27 +1038,12 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="production">
 							<enum_code>production</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="implementation">
 							<enum_code>implementation</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="obsolete">
 							<enum_code>obsolete</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1441,19 +1401,9 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="incident">
 							<enum_code>incident</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="service_request">
 							<enum_code>service_request</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>request_type</sql>
@@ -1465,27 +1415,12 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="production">
 							<enum_code>production</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="implementation">
 							<enum_code>implementation</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="obsolete">
 							<enum_code>obsolete</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1744,35 +1679,15 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="1">
 							<enum_code>1</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="2">
 							<enum_code>2</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="3">
 							<enum_code>3</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="4">
 							<enum_code>4</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>priority</sql>
@@ -1784,19 +1699,9 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="service_request">
 							<enum_code>service_request</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="incident">
 							<enum_code>incident</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>request_type</sql>
@@ -1808,19 +1713,9 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="tto">
 							<enum_code>tto</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="ttr">
 							<enum_code>ttr</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>metric</sql>
@@ -1837,19 +1732,9 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="hours">
 							<enum_code>hours</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="minutes">
 							<enum_code>minutes</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>unit</sql>

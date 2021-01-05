@@ -800,24 +800,20 @@ class iTopDesignFormat
 
 		// New Enum values format
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
-		foreach ($oNodeList as $oNode)
-		{
+		foreach ($oNodeList as $oNode) {
 			$oNode->textContent = '';
 
 			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
 			$oNode->appendChild($oCodeNode);
+		}
 
-			$oStyleNode = $oNode->ownerDocument->createElement("style");
-			$oNode->appendChild($oStyleNode);
+		// MetaEnum
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$oNode->textContent = '';
 
-			$oMainColorNode = $oNode->ownerDocument->createElement("main_color", "#2B6CB0");
-			$oStyleNode->appendChild($oMainColorNode);
-
-			$oComplementaryColorNode = $oNode->ownerDocument->createElement("complementary_color", "#FFFFFF");
-			$oStyleNode->appendChild($oComplementaryColorNode);
-
-			$oDecorationClassesNode = $oNode->ownerDocument->createElement("decoration_classes");
-			$oStyleNode->appendChild($oDecorationClassesNode);
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
+			$oNode->appendChild($oCodeNode);
 		}
 	}
 
@@ -865,8 +861,7 @@ class iTopDesignFormat
 
 		// New Enum values format
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
-		foreach ($oNodeList as $oNode)
-		{
+		foreach ($oNodeList as $oNode) {
 			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
 			$oNode->textContent = $oCodeNode->textContent;
 			$this->DeleteNode($oCodeNode);
@@ -874,6 +869,21 @@ class iTopDesignFormat
 			$this->DeleteNode($oStyleNode);
 		}
 
+		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/default_style";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// MetaEnum
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$oNode->textContent = $oCodeNode->textContent;
+			$this->DeleteNode($oCodeNode);
+			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+			$this->DeleteNode($oStyleNode);
+		}
+
+		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/default_style";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	/**

@@ -43,7 +43,7 @@
 						<value id="new">
 							<enum_code>new</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#2C5382</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
 								<decoration_classes/>
 							</style>
@@ -51,31 +51,31 @@
 						<value id="waiting_for_approval">
 							<enum_code>waiting_for_approval</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#F6AE55</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-hourglass-half</decoration_classes>
 							</style>
 						</value>
 						<value id="approved">
 							<enum_code>approved</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-user-check</decoration_classes>
 							</style>
 						</value>
 						<value id="rejected">
 							<enum_code>rejected</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#B83280</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-user-times</decoration_classes>
 							</style>
 						</value>
 						<value id="assigned">
 							<enum_code>assigned</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#2C5382</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
 								<decoration_classes/>
 							</style>
@@ -83,44 +83,49 @@
 						<value id="pending">
 							<enum_code>pending</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#F6AE55</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-hourglass-half</decoration_classes>
 							</style>
 						</value>
 						<value id="escalated_tto">
 							<enum_code>escalated_tto</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#B83280</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-fire</decoration_classes>
 							</style>
 						</value>
 						<value id="escalated_ttr">
 							<enum_code>escalated_ttr</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#B83280</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-fire</decoration_classes>
 							</style>
 						</value>
 						<value id="resolved">
 							<enum_code>resolved</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-check</decoration_classes>
 							</style>
 						</value>
 						<value id="closed">
 							<enum_code>closed</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 					</values>
+					<default_style>
+						<main_color>#2B6CB0</main_color>
+						<complementary_color>#FFFFFF</complementary_color>
+						<decoration_classes/>
+					</default_style>
 					<sql>status</sql>
 					<default_value>new</default_value>
 					<is_null_allowed>false</is_null_allowed>
@@ -129,11 +134,6 @@
 					<values>
 						<value id="service_request">
 							<enum_code>service_request</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>request_type</sql>
@@ -145,27 +145,12 @@
 					<values>
 						<value id="1">
 							<enum_code>1</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="2">
 							<enum_code>2</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="3">
 							<enum_code>3</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>impact</sql>
@@ -177,35 +162,15 @@
 					<values>
 						<value id="1">
 							<enum_code>1</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="2">
 							<enum_code>2</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="3">
 							<enum_code>3</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="4">
 							<enum_code>4</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<dependencies>
@@ -220,35 +185,15 @@
 					<values>
 						<value id="1">
 							<enum_code>1</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="2">
 							<enum_code>2</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="3">
 							<enum_code>3</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="4">
 							<enum_code>4</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>urgency</sql>
@@ -259,27 +204,12 @@
 					<values>
 						<value id="mail">
 							<enum_code>mail</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="phone">
 							<enum_code>phone</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="portal">
 							<enum_code>portal</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>origin</sql>
@@ -287,7 +217,9 @@
 					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="approver_id" xsi:type="AttributeExternalKey">
-					<filter><![CDATA[SELECT Person WHERE org_id= :this->org_id]]></filter>
+					<filter><![CDATA[
+						SELECT Person WHERE org_id= :this->org_id
+						]]></filter>
 					<dependencies>
 						<attribute id="org_id"/>
 					</dependencies>
@@ -337,19 +269,9 @@
 					<values>
 						<value id="yes">
 							<enum_code>yes</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="no">
 							<enum_code>no</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>escalation_flag</sql>
@@ -488,28 +410,13 @@
 					<values>
 						<value id="assistance">
 							<enum_code>assistance</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="other">
 							<enum_code>other</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="software patch">software patch</value>
 						<value id="training">
 							<enum_code>training</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="hardware repair">hardware repair</value>
 						<value id="system update">system update</value>
@@ -590,35 +497,15 @@
 					<values>
 						<value id="1">
 							<enum_code>1</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="2">
 							<enum_code>2</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="3">
 							<enum_code>3</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="4">
 							<enum_code>4</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>user_satisfaction</sql>

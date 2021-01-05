@@ -5182,9 +5182,9 @@ class AttributeEnum extends AttributeString
 	/**
 	 * @param string|null $sValue
 	 *
-	 * @return \ormStyle
+	 * @return \ormStyle|null
 	 */
-	protected function GetStyle(?string $sValue): ormStyle
+	protected function GetStyle(?string $sValue): ?ormStyle
 	{
 		if ($this->IsParam('styled_values')) {
 			$aStyles = $this->Get('styled_values');
@@ -5193,7 +5193,11 @@ class AttributeEnum extends AttributeString
 			}
 		}
 
-		return new ormStyle();
+		if ($this->IsParam('default_style')) {
+			return $this->Get('default_style');
+		}
+
+		return null;
 	}
 
 	protected function GetSQLCol($bFullSpec = false)

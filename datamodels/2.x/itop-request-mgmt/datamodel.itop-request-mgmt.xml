@@ -129,19 +129,9 @@
                     <values>
                         <value id="incident">
                             <enum_code>incident</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="service_request">
                             <enum_code>service_request</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>request_type</sql>
@@ -153,27 +143,12 @@
                     <values>
                         <value id="1">
                             <enum_code>1</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="2">
                             <enum_code>2</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="3">
                             <enum_code>3</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>impact</sql>
@@ -186,15 +161,15 @@
                         <value id="1">
                             <enum_code>1</enum_code>
                             <style>
-                                <main_color>#2B6CB0</main_color>
+                                <main_color>#C53030</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
+                                <decoration_classes>fas fa-fire</decoration_classes>
                             </style>
                         </value>
                         <value id="2">
                             <enum_code>2</enum_code>
                             <style>
-                                <main_color>#2B6CB0</main_color>
+                                <main_color>#C05621</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
                                 <decoration_classes/>
                             </style>
@@ -202,7 +177,7 @@
                         <value id="3">
                             <enum_code>3</enum_code>
                             <style>
-                                <main_color>#2B6CB0</main_color>
+                                <main_color>#2B6BB0</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
                                 <decoration_classes/>
                             </style>
@@ -210,12 +185,17 @@
                         <value id="4">
                             <enum_code>4</enum_code>
                             <style>
-                                <main_color>#2B6CB0</main_color>
+                                <main_color>#6E7A8A</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
                                 <decoration_classes/>
                             </style>
                         </value>
                     </values>
+                    <default_style>
+                        <main_color>#2B6CB0</main_color>
+                        <complementary_color>#FFFFFF</complementary_color>
+                        <decoration_classes/>
+                    </default_style>
                     <dependencies>
                         <attribute id="impact"/>
                         <attribute id="urgency"/>
@@ -228,35 +208,15 @@
                     <values>
                         <value id="1">
                             <enum_code>1</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="2">
                             <enum_code>2</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="3">
                             <enum_code>3</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="4">
                             <enum_code>4</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>urgency</sql>
@@ -267,35 +227,15 @@
                     <values>
                         <value id="mail">
                             <enum_code>mail</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="phone">
                             <enum_code>phone</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="portal">
                             <enum_code>portal</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="monitoring">
                             <enum_code>monitoring</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>origin</sql>
@@ -360,19 +300,9 @@
                     <values>
                         <value id="yes">
                             <enum_code>yes</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="no">
                             <enum_code>no</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>escalation_flag</sql>
@@ -510,59 +440,24 @@
                     <values>
                         <value id="assistance">
                             <enum_code>assistance</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="other">
                             <enum_code>other</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="software patch">
                             <enum_code>software patch</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="training">
                             <enum_code>training</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="hardware repair">
                             <enum_code>hardware repair</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="system update">
                             <enum_code>system update</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="bug fixed">
                             <enum_code>bug fixed</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>resolution_code</sql>
@@ -636,35 +531,15 @@
                     <values>
                         <value id="1">
                             <enum_code>1</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="2">
                             <enum_code>2</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="3">
                             <enum_code>3</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                         <value id="4">
                             <enum_code>4</enum_code>
-                            <style>
-                                <main_color>#2B6CB0</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
-                                <decoration_classes/>
-                            </style>
                         </value>
                     </values>
                     <sql>user_satisfaction</sql>

@@ -21,6 +21,6 @@ class FieldBadge extends UIContentBlock
 
 	public function __construct(string $sName = null, string $sContainerClass = '')
 	{
-		parent::__construct($sName, $sContainerClass.' ibo-field-badge');
+		parent::__construct($sName, $sContainerClass);
 	}
 }

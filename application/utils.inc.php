@@ -1480,7 +1480,7 @@ class utils
 	 */
 	public static function GetSafeId($sId)
 	{
-		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
+		return str_replace(array(':', '[', ']', '+', '-', ' '), '_', $sId);
 	}
 	
 	/**

@@ -55,29 +55,29 @@
 					<values>
 						<value id="ongoing">
 							<enum_code>ongoing</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="resolved">
 							<enum_code>resolved</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
+								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
+								<decoration_classes>fas fa-check</decoration_classes>
 							</style>
 						</value>
 						<value id="closed">
 							<enum_code>closed</enum_code>
 							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 					</values>
+					<default_style>
+						<main_color>#2B6CB0</main_color>
+						<complementary_color>#FFFFFF</complementary_color>
+						<decoration_classes/>
+					</default_style>
 					<sql>operational_status</sql>
 					<default_value>ongoing</default_value>
 					<mappings>
@@ -431,27 +431,12 @@
 					<values>
 						<value id="manual">
 							<enum_code>manual</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="computed">
 							<enum_code>computed</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="do_not_notify">
 							<enum_code>do_not_notify</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>impact_code</sql>
@@ -538,19 +523,9 @@
 					<values>
 						<value id="open">
 							<enum_code>open</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 						<value id="closed">
 							<enum_code>closed</enum_code>
-							<style>
-								<main_color>#2B6CB0</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
-								<decoration_classes/>
-							</style>
 						</value>
 					</values>
 					<sql>status</sql>

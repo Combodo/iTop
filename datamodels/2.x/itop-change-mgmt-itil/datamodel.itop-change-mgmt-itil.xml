@@ -43,15 +43,15 @@
             <value id="approved">approved
               <enum_code>approved</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
+                <decoration_classes>fas fa-user-check</decoration_classes>
               </style>
             </value>
             <value id="assigned">assigned
               <enum_code>assigned</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#2C5382</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
                 <decoration_classes/>
               </style>
@@ -59,31 +59,21 @@
             <value id="closed">
               <enum_code>closed</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="implemented">
               <enum_code>implemented</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="monitored">
               <enum_code>monitored</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="new">
               <enum_code>new</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#2C5382</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
                 <decoration_classes/>
               </style>
@@ -91,36 +81,41 @@
             <value id="notapproved">
               <enum_code>notapproved</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#B83280</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
+                <decoration_classes>fas fa-user-times</decoration_classes>
               </style>
             </value>
             <value id="plannedscheduled">
               <enum_code>plannedscheduled</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#F6AE55</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
+                <decoration_classes>fas fa-hourglass-half</decoration_classes>
               </style>
             </value>
             <value id="rejected">
               <enum_code>rejected</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#B83280</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
+                <decoration_classes>fas fa-user-times</decoration_classes>
               </style>
             </value>
             <value id="validated">
               <enum_code>validated</enum_code>
               <style>
-                <main_color>#2B6CB0</main_color>
+                <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
+                <decoration_classes>fas fa-check</decoration_classes>
               </style>
             </value>
           </values>
+          <default_style>
+            <main_color>#2B6CB0</main_color>
+            <complementary_color>#FFFFFF</complementary_color>
+            <decoration_classes/>
+          </default_style>
           <sql>status</sql>
           <default_value>new</default_value>
           <is_null_allowed>true</is_null_allowed>
@@ -218,19 +213,9 @@
           <values>
             <value id="yes">
               <enum_code>yes</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="no">
               <enum_code>no</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
           </values>
           <sql>outage</sql>
@@ -243,7 +228,9 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="parent_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
+          <filter><![CDATA[
+            SELECT Change WHERE id != :this->id
+            ]]></filter>
           <sql>parent_id</sql>
           <target_class>Change</target_class>
           <is_null_allowed>true</is_null_allowed>

@@ -11,6 +11,10 @@ class ormStyle
 	protected $sMainColor;
 	/** @var string */
 	protected $sComplementaryColor;
+	/** @var string CSS class with color and background-color */
+	protected $sStyleClass;
+	/** @var string CSS class with only color */
+	protected $sAltStyleClass;
 	/** @var string */
 	protected $sDecorationClasses;
 	/** @var string */
@@ -19,15 +23,19 @@ class ormStyle
 	/**
 	 * ormStyle constructor.
 	 *
+	 * @param string $sStyleClass
+	 * @param string $sAltStyleClass
 	 * @param string $sMainColor
 	 * @param string $sComplementaryColor
 	 * @param string $sDecorationClasses
 	 * @param string $sIcon
 	 */
-	public function __construct(string $sMainColor = '#2B6CB0', string $sComplementaryColor = '#FFFFFF', string $sDecorationClasses = '', string $sIcon = '')
+	public function __construct(string $sStyleClass = '', string $sAltStyleClass = '', string $sMainColor = '#2B6CB0', string $sComplementaryColor = '#FFFFFF', string $sDecorationClasses = '', string $sIcon = '')
 	{
 		$this->sMainColor = $sMainColor;
 		$this->sComplementaryColor = $sComplementaryColor;
+		$this->sStyleClass = $sStyleClass;
+		$this->sAltStyleClass = $sAltStyleClass;
 		$this->sDecorationClasses = $sDecorationClasses;
 		$this->sIcon = $sIcon;
 	}
@@ -43,9 +51,9 @@ class ormStyle
 	/**
 	 * @param string $sMainColor
 	 *
-	 * @return ormStyle
+	 * @return $this
 	 */
-	public function SetMainColor(string $sMainColor): ormStyle
+	public function SetMainColor(string $sMainColor)
 	{
 		$this->sMainColor = $sMainColor;
 		return $this;
@@ -62,11 +70,49 @@ class ormStyle
 	/**
 	 * @param string $sComplementaryColor
 	 *
-	 * @return ormStyle
+	 * @return $this
 	 */
-	public function SetComplementaryColor(string $sComplementaryColor): ormStyle
+	public function SetComplementaryColor(string $sComplementaryColor)
 	{
 		$this->sComplementaryColor = $sComplementaryColor;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetStyleClass(): string
+	{
+		return $this->sStyleClass;
+	}
+
+	/**
+	 * @param string $sStyleClass
+	 *
+	 * @return $this
+	 */
+	public function SetStyleClass(string $sStyleClass)
+	{
+		$this->sStyleClass = $sStyleClass;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetAltStyleClass(): string
+	{
+		return $this->sAltStyleClass;
+	}
+
+	/**
+	 * @param string $sAltStyleClass
+	 *
+	 * @return $this
+	 */
+	public function SetAltStyleClass(string $sAltStyleClass)
+	{
+		$this->sAltStyleClass = $sAltStyleClass;
 		return $this;
 	}
 
@@ -81,9 +127,9 @@ class ormStyle
 	/**
 	 * @param string $sDecorationClasses
 	 *
-	 * @return ormStyle
+	 * @return $this
 	 */
-	public function SetDecorationClasses(string $sDecorationClasses): ormStyle
+	public function SetDecorationClasses(string $sDecorationClasses)
 	{
 		$this->sDecorationClasses = $sDecorationClasses;
 		return $this;
@@ -100,9 +146,9 @@ class ormStyle
 	/**
 	 * @param string $sIcon
 	 *
-	 * @return ormStyle
+	 * @return $this
 	 */
-	public function SetIcon(string $sIcon): ormStyle
+	public function SetIcon(string $sIcon)
 	{
 		$this->sIcon = $sIcon;
 		return $this;

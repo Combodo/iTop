@@ -312,6 +312,10 @@ class MFCompiler
 				}
 			}
 
+
+			/** array of strings containing dynamic CSS class definitions */
+			$aClassesCss = [];
+
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
 			if ($iClassCount == 0)
@@ -327,7 +331,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $aClassesCss);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -982,15 +986,17 @@ EOF
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
+	 * @param array $aClassesCss Contains dynamic CSS class definitions
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, &$aClassesCss)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
 		$sPHP = '';
+		$sCss = ''; // Contains dynamic CSS class definitions
 	
 		// Class caracteristics
 		//
@@ -1353,15 +1359,47 @@ EOF
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
 							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+							$sSafeCode = utils::GetSafeId($sCode);
+							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
+							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
 							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
 							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle($sMainColor, $sComplementaryColor, $sDecorationClasses)";
+							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+							$sCss .= <<<CSS
+.$sEnumClass {
+	color: $sComplementaryColor;
+	background-color: $sMainColor;
+}
+.$sEnumClassAlt {
+	color: $sMainColor;
+}
+
+CSS;
 						}
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$sStyledValues = "[".implode(',', $aStyledValues)."]";
 					$aParameters['styled_values'] = "$sStyledValues";
+					$oStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oStyleNode) {
+						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
+						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
+						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
+						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+						$sCss .= <<<CSS
+.$sEnumClass {
+	color: $sComplementaryColor;
+	background-color: $sMainColor;
+}
+.$sEnumClassAlt {
+	color: $sMainColor;
+}
+
+CSS;
+					}
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
@@ -1382,15 +1420,47 @@ EOF
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
 							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+							$sSafeCode = utils::GetSafeId($sCode);
+							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
+							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
 							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
 							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle($sMainColor, $sComplementaryColor, $sDecorationClasses)";
+							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+							$sCss .= <<<CSS
+.$sEnumClass {
+	color: $sComplementaryColor;
+	background-color: $sMainColor;
+}
+.$sEnumClassAlt {
+	color: $sMainColor;
+}
+
+CSS;
 						}
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
 					$sStyledValues = "[".implode(',', $aStyledValues)."]";
 					$aParameters['styled_values'] = "$sStyledValues";
+					$oStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oStyleNode) {
+						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
+						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
+						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
+						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+						$sCss .= <<<CSS
+.$sEnumClass {
+	color: $sComplementaryColor;
+	background-color: $sMainColor;
+}
+.$sEnumClassAlt {
+	color: $sMainColor;
+}
+
+CSS;
+					}
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
@@ -2104,6 +2174,8 @@ EOF
 			}
 		}
 
+		$aClassesCss[] = $sCss;
+
 		return $sPHP;
 	}
 
@@ -2801,6 +2873,7 @@ EOF;
 				copy($sPrecompiledFile, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
 				touch($sThemeDir.'/main.css', 1577836800 /* 2020-01-01 00:00:00 */);
+
 			}
 			else if ($sPrecompiledFile != '')
 			{

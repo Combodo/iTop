@@ -36,35 +36,15 @@
           <values>
             <value id="production">
               <enum_code>production</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="implementation">
               <enum_code>implementation</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="stock">
               <enum_code>stock</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
             <value id="obsolete">
               <enum_code>obsolete</enum_code>
-              <style>
-                <main_color>#2B6CB0</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
-                <decoration_classes/>
-              </style>
             </value>
           </values>
           <sql>status</sql>
