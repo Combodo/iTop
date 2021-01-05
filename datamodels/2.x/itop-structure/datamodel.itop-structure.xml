@@ -1822,31 +1822,26 @@
   </menus>
   <branding>
     <themes>
-      <theme id="light-grey" _delta="define">
+      <theme id="fullmoon" _delta="define">
         <variables>
         </variables>
         <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
         </imports>
         <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
         </stylesheets>
-        <precompiled_stylesheet>itop-structure/precompiled-themes/light-grey/main.css</precompiled_stylesheet>
       </theme>
       <theme id="test-red" _delta="define">
         <variables>
-          <variable id="backoffice-environment-banner-background-color">#C53030</variable>
-          <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
-          <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+          <variable id="ibo-page-banner-background-color">$ibo-color-red-600</variable>
+          <variable id="ibo-page-banner-text-color">$ibo-color-red-100</variable>
+          <variable id="ibo-page-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
         </imports>
         <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
-          <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
         </stylesheets>
         <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>

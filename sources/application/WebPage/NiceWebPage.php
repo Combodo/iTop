@@ -233,6 +233,5 @@ EOF
 				APPROOT.'css/backoffice/',
 			)
 		);
-		$this->add_saas($sCssRelPath);
 	}
 }

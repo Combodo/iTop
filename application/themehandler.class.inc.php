@@ -43,15 +43,13 @@ class ThemeHandler
 	public static function GetDefaultThemeInformation()
 	{
 		return [
-			'name' => 'light-grey',
+			'name' => 'fullmoon',
 			'parameters' => [
 				'variables' => [],
 				'imports' => [
-					'css-variables' => '../css/css-variables.scss',
 				],
 				'stylesheets' => [
-					'jqueryui' => '../css/ui-lightness/jqueryui.scss',
-					'main' => '../css/light-grey.scss',
+					'main' => '../css/backoffice/main.scss',
 				],
 			],
 		];

@@ -1293,7 +1293,7 @@ class Config
 		'backoffice_default_theme' => [
 			'type' => 'string',
 			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
-			'default' => 'light-grey',
+			'default' => 'fullmoon',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,

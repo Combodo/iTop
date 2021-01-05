@@ -815,6 +815,24 @@ class iTopDesignFormat
 			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
 			$oNode->appendChild($oCodeNode);
 		}
+		
+		// N°3516 Remove legacy backoffice theme
+		// Remove completely light-grey theme
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
+		
+		// Update test-red theme
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/imports/import[@id="css-variables"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="jqueryui"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="main"]');
+
+		$sTestRedBannerBackgroundColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]';
+		$this->SetNodeAttribute($sTestRedBannerBackgroundColorPath, 'id', 'ibo-page-banner-background-color');
+		
+		$sTestRedBannerTextColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]';
+		$this->SetNodeAttribute($sTestRedBannerTextColorPath, 'id', 'ibo-page-banner-text-color');
+		
+		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]';
+		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'ibo-page-banner-text-content');
 	}
 
 	/**
@@ -884,8 +902,51 @@ class iTopDesignFormat
 
 		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/default_style";
 		$this->RemoveNodeFromXPath($sPath);
+		
+		// N°3516 Bring back legacy themes
+		// Update test-red theme
+		$sTestRedBannerBackgroundColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-background-color"]';
+		$this->SetNodeAttribute($sTestRedBannerBackgroundColorPath, 'id', 'backoffice-environment-banner-background-color');
+
+		$sTestRedBannerTextColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-color"]';
+		$this->SetNodeAttribute($sTestRedBannerTextColorPath, 'id', 'backoffice-environment-banner-text-color');
+
+		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-content"]';
+		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'backoffice-environment-banner-text-content');
 	}
 
+	/**
+	 *
+	 * Replace those weird setAttribute calls on DOMNode above 🤷
+	 *
+	 * @param string $sPath
+	 * @param string $sAttributeName
+	 * @param string $sAttributeValue
+	 *
+	 * @return void
+	 *
+	 * @since 3.0.0
+	 */
+	private function SetNodeAttribute($sPath, $sAttributeName, $sAttributeValue)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		$oNodeList = $oXPath->query($sPath);
+		foreach ($oNodeList as $oNode)
+		{
+			if($oNode->attributes)
+			{
+				foreach ($oNode->attributes as $oAttribute)
+				{
+					if($oAttribute->nodeName === $sAttributeName)
+					{
+						$oAttribute->nodeValue = $sAttributeValue;
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * @param string $sPath
 	 *

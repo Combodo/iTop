@@ -2803,6 +2803,7 @@ EOF;
 		// - The SCSS from modules
 		$aImportsPaths = array(
 			APPROOT.'css/',
+			APPROOT.'css/backoffice/main.scss',
 			$sTempTargetDir.'/',
 		);
 
