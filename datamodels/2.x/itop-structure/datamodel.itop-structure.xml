@@ -1843,7 +1843,6 @@
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
           <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
         </stylesheets>
-        <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
   </branding>
