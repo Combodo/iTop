@@ -367,6 +367,8 @@ class DataTableFactory
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
 		}
+		$aExtraParams['table_id']=$sTableId;
+		$aExtraParams['list_id']=$sListId;
 
 
 		$oDataTable->SetOptions($aOptions);
@@ -612,12 +614,12 @@ class DataTableFactory
 	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
 	{
 		$aOptions = [];
-		$sTableId=$aExtraParams["table_id"];
+		$sTableId = $aExtraParams["table_id"];
 		$sListId = $aExtraParams["list_id"];
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
 
-		if ($sSelectMode!=""){
+		if ($sSelectMode != ""){
 			$aColumnDefinition["width"] = "auto";
 			$aColumnDefinition["searchable"] = false;
 			$aColumnDefinition["sortable"] = false;

@@ -15,7 +15,7 @@ $(function()
 			iPageSize: -1,
 			oClassAliases: {},
 			sTableId : null,
-			oExtraParams: {},
+			oData: {},
 			sRenderUrl: 'index.php',
 			oRenderParameters: {},
 			oDefaultSettings: {},
@@ -71,7 +71,6 @@ $(function()
 			var me = this;
 			this.element.block();
 
-			$('#'+me.options.sListId).DataTable().ajax.reload();
 			$.post(this.options.sRenderUrl, oParams, function(data) {
 				// Nasty workaround to clear the pager's state for paginated lists !!!
 				// See jquery.tablesorter.pager.js / saveParams / restoreParams

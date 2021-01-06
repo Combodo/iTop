@@ -37,7 +37,7 @@ class DataTable extends UIContentBlock
 
 	protected $aOptions;//list of specific options for display datatable
 	protected $sAjaxUrl;
-	protected $sAjaxData;
+	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
 
@@ -75,8 +75,8 @@ class DataTable extends UIContentBlock
 	 */
 	public function GetAjaxData(string $sName)
 	{
-		if (isset($this->sAjaxData[$sName])) {
-			return $this->sAjaxData[$sName];
+		if (isset($this->aAjaxData[$sName])) {
+			return $this->aAjaxData[$sName];
 		}
 		return '';
 	}
@@ -86,15 +86,15 @@ class DataTable extends UIContentBlock
 	 */
 	public function GetJsonAjaxData(): string
 	{
-		return json_encode($this->sAjaxData);
+		return json_encode($this->aAjaxData);
 	}
 
 	/**
 	 * @param mixed $sAjaxData
 	 */
-	public function SetAjaxData(array $sAjaxData): void
+	public function SetAjaxData(array $aAjaxData): void
 	{
-		$this->sAjaxData = $sAjaxData;
+		$this->aAjaxData = $aAjaxData;
 	}
 
 	/**
@@ -158,7 +158,4 @@ class DataTable extends UIContentBlock
 	{
 		$this->aOptions = $aOptions;
 	}
-
-
-
 }
