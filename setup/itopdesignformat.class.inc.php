@@ -801,17 +801,18 @@ class iTopDesignFormat
 		// New Enum values format
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
 		foreach ($oNodeList as $oNode) {
-			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
-			$oNode->appendChild($oCodeNode);
+			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
+			$oNode->appendChild($oCodeNode);
 		}
 
 		// MetaEnum
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
 		foreach ($oNodeList as $oNode) {
+			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
-
-			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $oNode->textContent);
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}
 		
