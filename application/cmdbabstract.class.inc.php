@@ -75,6 +75,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_OBJECT_MODE_CREATE = 'create';
 	/** @var string ENUM_OBJECT_MODE_STIMULUS */
 	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+	/** @var string ENUM_OBJECT_MODE_PRINT */
+	public const ENUM_OBJECT_MODE_PRINT = 'print';
 	/**
 	 * @var string DEFAULT_OBJECT_MODE
 	 * @since 3.0.0

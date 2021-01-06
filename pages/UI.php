@@ -481,7 +481,7 @@ try
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion()?cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT:cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
 				}				
 			}

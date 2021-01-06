@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 @media print {
+	html {
+		font-size: 10px;
+		break-after:auto;
+	}
 	.not-printable {
 		display: none;
 	}
@@ -136,8 +140,24 @@
 		background:	transparent	!important;
 		*/
 	}
+	/* To force the printing of the background color */
+	.ibo-activity-panel--tab-title-decoration, .ibo-activity-entry--main-information:before {
+		-webkit-print-color-adjust: exact;
+	}
+	/* for firefox only : in not present print only the first page*/
+	#ibo-page-container{
+		overflow: inherit;
+	}
 }
 
+
+html {
+	font-size: 10px;
+}
+#ibo-page-container #ibo-top-bar, #ibo-page-container #ibo-main-content {
+	padding-left: 0px;
+	padding-right: 0px;
+}
 div.explain-printable {
 	border: 5px solid #f8f9fa;
 	background: #ffffff;
@@ -146,7 +166,10 @@ div.explain-printable {
 	margin: 0;
 	font-size: 12px;
 }
+div.explain-printable button{
+	font-size: 12px;
 
+}
 .hideable-chapter {
 	cursor: pointer;
 }
@@ -155,10 +178,15 @@ div.explain-printable {
 	position: relative;
 	display: flex;
 	align-items: stretch;
-	height: 2em;
+	flex-wrap: wrap;
+	row-gap: 1em;
+	column-gap: 0.2em;
+	margin-bottom: 0.5em;
+	margin-top: 0.5em;
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
 }
 #hiddeable_chapters .ibo-block-print--tab span::before {
-
 	padding-left: 10px;
 	padding-right: 5px;
 	font-family: "Font Awesome 5 Free";
@@ -184,17 +212,31 @@ div.explain-printable {
 	display: none;
 }
 
-.printable-content legend::before {
+.printable-content legend::before,
+.printable-content .ibo-activity-panel--tab-toolbar-action::before{
 	padding-right: 10px;
 	font-family: "Font Awesome 5 Free";
 	font-weight: 900;
 	content: "\f06e";
 }
-.printable-content .strikethrough legend::before {
+.printable-content .strikethrough legend::before,
+.printable-content .strikethrough.ibo-activity-panel--tab-toolbar-action::before{
 	font-family: "Font Awesome 5 Free";
 	font-weight: 900;
 	content: "\f070";
 }
 .printable-content fieldset.strikethrough span {
 	display: none;
+}
+
+.printable-content .ibo-activity-panel{
+	width: 100%;
+	padding: 24px 24px 16px 16px;
+	background-color: white;
+}
+
+.printable-content #ibo-side-content {
+	margin-left: 16px;
+	margin-right: 16px;
+	background-color: var(--ibo-body-background-color);
 }
