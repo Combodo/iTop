@@ -31,6 +31,7 @@
  *
  * @since 3.0.0 N°3253
  */
+$bBypassMaintenance = true; // Reset maintenance mode in case of problem
 require_once('../approot.inc.php');
 
 
