@@ -7153,7 +7153,7 @@ class AttributeExternalField extends AttributeDefinition
 			return $sLabel;
 		}
 
-		if ($this->IsFriendlyName())
+		if ($this->IsFriendlyName() && ($this->Get("target_attcode") === "friendlyname"))
 		{
 			// This will be used even if we are pointing to a friendlyname in a distance > 1
 			// For example we can link to a magic friendlyname (like org_id_friendlyname)
