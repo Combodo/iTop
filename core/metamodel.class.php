@@ -454,8 +454,10 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		$sIcon = '';
-		if (array_key_exists('icon', self::$m_aClassParams[$sClass])) {
-			$sIcon = self::$m_aClassParams[$sClass]['icon'];
+		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
+			/** @var ormStyle $oStyle */
+			$oStyle = self::$m_aClassParams[$sClass]['style'];
+			$sIcon = $oStyle->GetIcon();
 		}
 		if (strlen($sIcon) == 0) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
@@ -469,6 +471,29 @@ abstract class MetaModel
 		}
 
 		return $sIcon;
+	}
+
+	/**
+	 * @param string $sClass
+	 *
+	 * @return ormStyle|null
+	 * @throws \CoreException
+	 *
+	 * @since 3.0
+	 */
+	final public static function GetClassStyle($sClass)
+	{
+		self::_check_subclass($sClass);
+
+		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
+			return self::$m_aClassParams[$sClass]['style'];
+		}
+		$sParentClass = self::GetParentPersistentClass($sClass);
+		if (strlen($sParentClass) > 0) {
+			return self::GetClassStyle($sParentClass);
+		}
+
+		return null;
 	}
 
 	/**

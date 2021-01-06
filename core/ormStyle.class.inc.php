@@ -1,10 +1,14 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
+/**
+ * Class ormStyle
+ *
+ * @since 3.0
+ */
 class ormStyle
 {
 	/** @var string */
@@ -25,12 +29,12 @@ class ormStyle
 	 *
 	 * @param string $sStyleClass
 	 * @param string $sAltStyleClass
-	 * @param string $sMainColor
-	 * @param string $sComplementaryColor
-	 * @param string $sDecorationClasses
-	 * @param string $sIcon
+	 * @param string|null $sMainColor
+	 * @param string|null $sComplementaryColor
+	 * @param string|null $sDecorationClasses
+	 * @param string|null $sIcon
 	 */
-	public function __construct(string $sStyleClass = '', string $sAltStyleClass = '', string $sMainColor = '#2B6CB0', string $sComplementaryColor = '#FFFFFF', string $sDecorationClasses = '', string $sIcon = '')
+	public function __construct(string $sStyleClass, string $sAltStyleClass, string $sMainColor = null, string $sComplementaryColor = null, string $sDecorationClasses = null, string $sIcon = null)
 	{
 		$this->sMainColor = $sMainColor;
 		$this->sComplementaryColor = $sComplementaryColor;
@@ -43,17 +47,17 @@ class ormStyle
 	/**
 	 * @return string
 	 */
-	public function GetMainColor(): string
+	public function GetMainColor(): ?string
 	{
 		return $this->sMainColor;
 	}
 
 	/**
-	 * @param string $sMainColor
+	 * @param string|null $sMainColor
 	 *
 	 * @return $this
 	 */
-	public function SetMainColor(string $sMainColor)
+	public function SetMainColor(?string $sMainColor)
 	{
 		$this->sMainColor = $sMainColor;
 		return $this;
@@ -62,17 +66,17 @@ class ormStyle
 	/**
 	 * @return string
 	 */
-	public function GetComplementaryColor(): string
+	public function GetComplementaryColor(): ?string
 	{
 		return $this->sComplementaryColor;
 	}
 
 	/**
-	 * @param string $sComplementaryColor
+	 * @param string|null $sComplementaryColor
 	 *
 	 * @return $this
 	 */
-	public function SetComplementaryColor(string $sComplementaryColor)
+	public function SetComplementaryColor(?string $sComplementaryColor)
 	{
 		$this->sComplementaryColor = $sComplementaryColor;
 		return $this;
@@ -119,17 +123,17 @@ class ormStyle
 	/**
 	 * @return string
 	 */
-	public function GetDecorationClasses(): string
+	public function GetDecorationClasses(): ?string
 	{
 		return $this->sDecorationClasses;
 	}
 
 	/**
-	 * @param string $sDecorationClasses
+	 * @param string|null $sDecorationClasses
 	 *
 	 * @return $this
 	 */
-	public function SetDecorationClasses(string $sDecorationClasses)
+	public function SetDecorationClasses(?string $sDecorationClasses)
 	{
 		$this->sDecorationClasses = $sDecorationClasses;
 		return $this;
@@ -138,17 +142,17 @@ class ormStyle
 	/**
 	 * @return string
 	 */
-	public function GetIcon(): string
+	public function GetIcon(): ?string
 	{
 		return $this->sIcon;
 	}
 
 	/**
-	 * @param string $sIcon
+	 * @param string|null $sIcon
 	 *
 	 * @return $this
 	 */
-	public function SetIcon(string $sIcon)
+	public function SetIcon(?string $sIcon)
 	{
 		$this->sIcon = $sIcon;
 		return $this;

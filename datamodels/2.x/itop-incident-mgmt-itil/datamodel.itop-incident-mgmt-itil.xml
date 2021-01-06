@@ -21,10 +21,12 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-                <fields_semantic>
-                    <state_attribute>status</state_attribute>
-                </fields_semantic>
-				<icon>images/incident.png</icon>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
+				<style>
+					<icon>images/incident.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ref"/>
@@ -480,17 +482,23 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-						<icon>images/incident-deadline.png</icon>
+						<style>
+							<icon>images/incident-deadline.png</icon>
+						</style>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-						<icon>images/incident-escalated.png</icon>
+						<style>
+							<icon>images/incident-escalated.png</icon>
+						</style>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-						<icon>images/incident-closed.png</icon>
+						<style>
+							<icon>images/incident-closed.png</icon>
+						</style>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1940,9 +1948,19 @@
 						<down>
 							<items type="array">
 								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
+									<oql><![CDATA[
+										SELECT FCI, I
+										FROM FunctionalCI AS FCI
+												 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+												 JOIN Incident AS I ON L.ticket_id = I.id
+										WHERE (I.status NOT IN ('closed', 'resolved'))
+										  AND (L.impact_code != 'not_impacted')
+										  AND (I.id != :this->id)
+										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									<style>
+										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -1954,9 +1972,19 @@
 						<down>
 							<items type="array">
 								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
+									<oql><![CDATA[
+										SELECT FCI, I
+										FROM FunctionalCI AS FCI
+												 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+												 JOIN Incident AS I ON L.ticket_id = I.id
+										WHERE (I.status NOT IN ('closed', 'resolved'))
+										  AND (L.impact_code != 'not_impacted')
+										  AND (I.id != :this->id)
+										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									<style>
+										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -1968,9 +1996,19 @@
 						<down>
 							<items type="array">
 								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted') AND (I.id != :this->id)]]></oql>
+									<oql><![CDATA[
+										SELECT FCI, I
+										FROM FunctionalCI AS FCI
+												 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+												 JOIN Incident AS I ON L.ticket_id = I.id
+										WHERE (I.status NOT IN ('closed', 'resolved'))
+										  AND (L.impact_code != 'not_impacted')
+										  AND (I.id != :this->id)
+										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									<style>
+										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -1986,9 +2024,18 @@
 						<down>
 							<items type="array">
 								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
+									<oql><![CDATA[
+										SELECT FCI, I
+										FROM FunctionalCI AS FCI
+												 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+												 JOIN Incident AS I ON L.ticket_id = I.id
+										WHERE (I.status NOT IN ('closed', 'resolved'))
+										  AND (L.impact_code != 'not_impacted')
+										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									<style>
+										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -1996,9 +2043,18 @@
 						<up>
 							<items type="array">
 								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, I FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Incident AS I ON L.ticket_id = I.id WHERE (I.status NOT IN ('closed', 'resolved')) AND (L.impact_code != 'not_impacted')]]></oql>
+									<oql><![CDATA[
+										SELECT FCI, I
+										FROM FunctionalCI AS FCI
+												 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+												 JOIN Incident AS I ON L.ticket_id = I.id
+										WHERE (I.status NOT IN ('closed', 'resolved'))
+										  AND (L.impact_code != 'not_impacted')
+										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									<style>
+										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+									</style>
 									<default>yes</default>
 								</item>
 							</items>

@@ -15,7 +15,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/rack.png</icon>
+        <style>
+          <icon>images/rack.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -197,7 +199,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/enclosure.png</icon>
+        <style>
+          <icon>images/enclosure.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -386,7 +390,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/power-connection.png</icon>
+        <style>
+          <icon>images/power-connection.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -552,7 +558,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/power-connection.png</icon>
+        <style>
+          <icon>images/power-connection.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -711,7 +719,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/pdu.png</icon>
+        <style>
+          <icon>images/pdu.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>

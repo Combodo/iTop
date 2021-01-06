@@ -1051,7 +1051,7 @@ EOF
 
 			// State attribute (for XML v1.7- the lifecycle/attribute node should have been migrated in this one)
 			$oStateAttribute = $oFieldsSemantic->GetOptionalElement('state_attribute');
-			if($oStateAttribute) {
+			if ($oStateAttribute) {
 				$sStateAttCode = $oStateAttribute->GetText();
 			}
 		}
@@ -1059,61 +1059,62 @@ EOF
 		$aClassParams['state_attcode'] = "'$sStateAttCode'";
 
 		// Reconcialiation
-		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation'))
-		{
+		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation')) {
 			$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
 			$aReconcAttCodes = array();
-			foreach($oReconcAttributes as $oAttribute)
-			{
+			foreach ($oReconcAttributes as $oAttribute) {
 				$aReconcAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			if (empty($aReconcAttCodes))
-            {
-                $sReconcKeys = "array()";
-            }
-            else
-            {
-                $sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
-            }
-		}
-		else
-		{
+			if (empty($aReconcAttCodes)) {
+				$sReconcKeys = "array()";
+			} else {
+				$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+			}
+		} else {
 			$sReconcKeys = "array()";
 		}
 		$aClassParams['reconc_keys'] = $sReconcKeys;
-	
+
 		$aClassParams['db_table'] = $this->GetPropString($oProperties, 'db_table', '');
 		$aClassParams['db_key_field'] = $this->GetPropString($oProperties, 'db_key_field', 'id');
 
-		if (array_key_exists($sClass, $this->aRootClasses))
-		{
+		if (array_key_exists($sClass, $this->aRootClasses)) {
 			$sDefaultFinalClass = 'finalclass';
-		}
-		else
-		{
+		} else {
 			$sDefaultFinalClass = '';
 		}
 		$aClassParams['db_finalclass_field'] = $this->GetPropString($oProperties, 'db_final_class_field', $sDefaultFinalClass);
-	
+
 		$this->CompileFiles($oProperties, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
-		if (($sIcon = $oProperties->GetChildText('icon')) && (strlen($sIcon) > 0))
-		{
-			$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-			$aClassParams['icon'] = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+
+		// Style
+		if ($oStyle = $oProperties->GetOptionalElement('style')) {
+			$sMainColor = $oStyle->GetChildText('main_color');
+			$sComplementaryColor = $oStyle->GetChildText('complementary_color');
+//			$bHasMainColor = (strlen($sMainColor) > 0);
+//			$bHasComplementaryColor = (strlen($sComplementaryColor) > 0);
+//			if ($bHasMainColor xor $bHasComplementaryColor) {
+//				throw new DOMFormatException("Tags 'main_color' and 'complementary_color' must be set or empty together in node 'style' of class $sClass");
+//			}
+			$sStyleCSSClass = "ibo-class-style--$sClass";
+			$sStyleCSSAltClass = "ibo-class-style-alt--$sClass";
+			if (($sIcon = $oStyle->GetChildText('icon')) && (strlen($sIcon) > 0)) {
+				$sIcon = $sModuleRelativeDir.'/'.$sIcon;
+				$sIcon = ", utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+			}
+			$aClassParams['style'] = "new ormStyle('$sStyleCSSClass', '$sStyleCSSAltClass', '$sMainColor', '$sComplementaryColor', null $sIcon)";
 		}
 
+
 		$oOrder = $oProperties->GetOptionalElement('order');
-		if ($oOrder)
-		{
+		if ($oOrder) {
 			$oColumnsNode = $oOrder->GetUniqueElement('columns');
 			$oColumns = $oColumnsNode->getElementsByTagName('column');
 			$aSortColumns = array();
-			foreach($oColumns as $oColumn)
-			{
+			foreach ($oColumns as $oColumn) {
 				$aSortColumns[] = "'".$oColumn->getAttribute('id')."' => ".(($oColumn->getAttribute('ascending') == 'true') ? 'true' : 'false');
 			}
-			if (count($aSortColumns) > 0)
-			{
+			if (count($aSortColumns) > 0) {
 				$aClassParams['order_by_default'] = "array(".implode(", ", $aSortColumns).")";
 			}
 		}

@@ -21,10 +21,13 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-                <fields_semantic>
-                    <state_attribute>status</state_attribute>
-                </fields_semantic>
-				<icon>images/user-request.png</icon>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
+				<style>
+					<icon>images/user-request.png</icon>
+					<main_color>red</main_color>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ref"/>
@@ -523,17 +526,23 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-						<icon>images/user-request-deadline.png</icon>
+						<style>
+							<icon>images/user-request-deadline.png</icon>
+						</style>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-						<icon>images/user-request-escalated.png</icon>
+						<style>
+							<icon>images/user-request-escalated.png</icon>
+						</style>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-						<icon>images/user-request-closed.png</icon>
+						<style>
+							<icon>images/user-request-closed.png</icon>
+						</style>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1858,19 +1867,21 @@
                               </dashlets>
                             </cell>
 							<cell id="1" _delta="define">
-                              <rank>10</rank>
-                              <dashlets>
-                                <dashlet id="9" xsi:type="DashletHeaderDynamic">
-                                  <rank>0</rank>
-                                  <title>Organization:Overview:UserRequests</title>
-                                  <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-                                  <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
-                                  <group_by>status</group_by>
-                                  <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-                                </dashlet>
-                              </dashlets>
-                            </cell>
+								<rank>10</rank>
+								<dashlets>
+									<dashlet id="9" xsi:type="DashletHeaderDynamic">
+										<rank>0</rank>
+										<title>Organization:Overview:UserRequests</title>
+										<style>
+											<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+										</style>
+										<subtitle>Menu:UserRequest:OpenRequests</subtitle>
+										<query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+										<group_by>status</group_by>
+										<values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+									</dashlet>
+								</dashlets>
+							</cell>
 							<cell id="3" _delta="define">
                               <rank>30</rank>
                               <dashlets>
@@ -1910,7 +1921,9 @@
 							<dashlet id="11" xsi:type="DashletHeaderDynamic">
 								<rank>0</rank>
 								<title>Menu:RequestManagement</title>
-								<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+								<style>
+									<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+								</style>
 								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 								<query>SELECT UserRequest WHERE status != "closed"</query>
 								<group_by>status</group_by>

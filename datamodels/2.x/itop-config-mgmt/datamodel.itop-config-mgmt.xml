@@ -15,7 +15,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -265,7 +267,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -510,7 +514,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -676,7 +682,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -960,7 +968,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/switch.png</icon>
+				<style>
+					<icon>images/switch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1233,7 +1243,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1536,7 +1548,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/solution.png</icon>
+				<style>
+					<icon>images/solution.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1694,7 +1708,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/business-process.png</icon>
+				<style>
+					<icon>images/business-process.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1822,7 +1838,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2016,7 +2034,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/middleware.png</icon>
+				<style>
+					<icon>images/middleware.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2143,7 +2163,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/database.png</icon>
+				<style>
+					<icon>images/database.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2270,7 +2292,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/webserver.png</icon>
+				<style>
+					<icon>images/webserver.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2397,7 +2421,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2503,7 +2529,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2608,7 +2636,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/middleware.png</icon>
+				<style>
+					<icon>images/middleware.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2725,7 +2755,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/database-schema.png</icon>
+				<style>
+					<icon>images/database-schema.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2840,7 +2872,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/webapp.png</icon>
+				<style>
+					<icon>images/webapp.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2965,7 +2999,9 @@
 						<attribute id="version"/>
 					</attributes>
 				</naming>
-				<icon>images/software.png</icon>
+				<style>
+					<icon>images/software.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3131,7 +3167,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3217,7 +3255,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3304,7 +3344,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3391,7 +3433,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3575,7 +3619,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3712,7 +3758,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4867,7 +4915,9 @@
 						<attribute id="ip_mask"/>
 					</attributes>
 				</naming>
-				<icon>images/subnet.png</icon>
+				<style>
+					<icon>images/subnet.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ip"/>
@@ -5061,7 +5111,9 @@
 						<attribute id="vlan_tag"/>
 					</attributes>
 				</naming>
-				<icon>images/vlan.png</icon>
+				<style>
+					<icon>images/vlan.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="vlan_tag"/>
@@ -5263,7 +5315,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -5324,7 +5378,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -5467,7 +5523,9 @@
 						<attribute id="connectableci_name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -6097,7 +6155,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/group.png</icon>
+				<style>
+					<icon>images/group.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -6495,7 +6555,9 @@
 							<dashlet id="1" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:AllDevices</title>
-								<icon>itop-config-mgmt/images/server.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/server.png</icon>
+								</style>
 								<subtitle>Menu_ConfigManagement_AllDevices</subtitle>
 							</dashlet>
 							<dashlet id="2" xsi:type="DashletBadge">
@@ -6514,7 +6576,9 @@
 							<dashlet id="4" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:SWAndApps</title>
-								<icon>itop-config-mgmt/images/application.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/application.png</icon>
+								</style>
 							</dashlet>
 							<dashlet id="5" xsi:type="DashletBadge">
 								<rank>1</rank>
@@ -6564,7 +6628,9 @@
 							<dashlet id="15" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:Misc</title>
-								<icon>itop-config-mgmt/images/subnet.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/subnet.png</icon>
+								</style>
 							</dashlet>
 							<dashlet id="16" xsi:type="DashletBadge">
 								<rank>1</rank>

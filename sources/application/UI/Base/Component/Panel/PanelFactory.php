@@ -19,6 +19,9 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Panel;
 
+use MetaModel;
+use ormStyle;
+
 /**
  * Class PanelFactory
  *
@@ -163,8 +166,7 @@ class PanelFactory
 	public static function MakeForClass(string $sClass, string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		// TODO 3.0.0: Change this to class color when done
-		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
+		self::SetClassColor($sClass, $oPanel);
 
 		return $oPanel;
 	}
@@ -184,5 +186,25 @@ class PanelFactory
 		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
 
 		return $oPanel;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param \Combodo\iTop\Application\UI\Base\Component\Panel\Panel $oPanel
+	 *
+	 * @throws \CoreException
+	 */
+	public static function SetClassColor(string $sClass, Panel $oPanel): void
+	{
+		/** @var ormStyle $oStyle */
+		$sColor = null;
+		$oStyle = MetaModel::GetClassStyle($sClass);
+		if ($oStyle) {
+			$sColor = $oStyle->GetMainColor();
+		}
+		if (strlen($sColor) == 0) {
+			$sColor = Panel::ENUM_COLOR_BLUE;
+		}
+		$oPanel->SetColor($sColor);
 	}
 }

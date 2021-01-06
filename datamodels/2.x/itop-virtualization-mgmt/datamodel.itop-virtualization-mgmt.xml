@@ -269,14 +269,16 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/hypervisor.png</icon>
+        <style>
+          <icon>images/hypervisor.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
-			<attribute id="server_id"/>
-			<attribute id="farm_id"/>
+            <attribute id="server_id"/>
+            <attribute id="farm_id"/>
           </attributes>
         </reconciliation>
         <obsolescence>
@@ -416,7 +418,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/cluster.png</icon>
+        <style>
+          <icon>images/cluster.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -541,7 +545,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/virtualmachine.png</icon>
+        <style>
+          <icon>images/virtualmachine.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -551,7 +557,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition><![CDATA[status='obsolete']]></condition>
+          <condition><![CDATA[status='obsolete']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -773,7 +779,9 @@
             <attribute id="virtualmachine_name"/>
           </attributes>
         </naming>
-        <icon>images/interface.png</icon>
+        <style>
+          <icon>images/interface.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -782,7 +790,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition>virtualmachine_id_obsolescence_flag</condition>
+          <condition>virtualmachine_id_obsolescence_flag</condition>
         </obsolescence>
       </properties>
       <fields>
@@ -893,7 +901,9 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+                <style>
+                  <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+                </style>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

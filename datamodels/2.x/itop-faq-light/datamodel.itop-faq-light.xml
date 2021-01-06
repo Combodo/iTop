@@ -15,7 +15,9 @@
             <attribute id="title"/>
           </attributes>
         </naming>
-        <icon>images/faq.png</icon>
+        <style>
+          <icon>images/faq.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="title"/>

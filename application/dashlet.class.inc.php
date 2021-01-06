@@ -903,10 +903,10 @@ class DashletObjectList extends Dashlet
 	{
 		$sTitle = $this->aProperties['title'];
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
-
-		$oPanel = PanelFactory::MakeNeutral(Dict::S($sTitle));
-
 		$oFilter = $this->GetDBSearch($aExtraParams);
+		$sClass = $oFilter->GetClass();
+		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
+
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
 			'menu' => $sShowMenu,
@@ -1241,7 +1241,7 @@ abstract class DashletGroupBy extends Dashlet
 				break;
 		}
 
-		$oPanel = PanelFactory::MakeNeutral(Dict::S($sTitle));
+		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
@@ -2054,6 +2054,8 @@ class DashletHeaderDynamic extends Dashlet
 			$aQueryParams = array();
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
+		$sClass = $oFilter->GetClass();
+		PanelFactory::SetClassColor($sClass, $oPanel);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));

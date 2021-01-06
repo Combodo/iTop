@@ -18,7 +18,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/known-error.png</icon>
+        <style>
+          <icon>images/known-error.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="org_id"/>

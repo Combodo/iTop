@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\Controller;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
+use AttributeEnum;
 use AttributeExternalKey;
 use AttributeImage;
 use AttributeSet;
@@ -47,7 +48,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
-use VariableExpression;
 
 /**
  * Class ManageBrickController
@@ -716,15 +716,14 @@ class ManageBrickController extends BrickController
 							/** @var \AttributeTagSet $oAttDef */
 							$sValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
 							$sSortValue = implode(' ', $aCodes);
-						}
-						elseif ($oAttDef instanceof AttributeSet)
-						{
+						} elseif ($oAttDef instanceof AttributeSet) {
 							$oAttDef->SetDisplayLink(false);
 							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 							$sSortValue = "".$oCurrentRow->Get($sItemAttr);
-						}
-						else
-						{
+						} elseif ($oAttDef instanceof AttributeEnum) {
+							$sValue = $oAttDef->GetAsPlainText($oCurrentRow->Get($sItemAttr));
+							$sSortValue = $oCurrentRow->Get($sItemAttr);
+						} else {
 							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 							$sSortValue = $oCurrentRow->Get($sItemAttr);
 						}

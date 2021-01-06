@@ -15,6 +15,19 @@ class UIHelper
 {
 	public static function GetColorFromStatus(string $sClass, ?string $sStateCode): string
 	{
+		// Example on how to get the color for the current status of a class
+//		$sStatusColor = 'neutral';
+//		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+//		if (strlen($sStateAttCode) == 0) {
+//			return $sStatusColor;
+//		}
+//
+//		$oStyle = MetaModel::GetEnumStyle($sClass, $sStateAttCode, $sStateCode);
+//		if ($oStyle) {
+//			$sStatusColor = $oStyle->GetMainColor();
+//		}
+//		return $sStatusColor;
+
 		$sRootClass = MetaModel::GetRootClass($sClass);
 		switch ($sRootClass) {
 			case 'Ticket':

@@ -20,19 +20,21 @@ class FieldBadgeFactory
 	 */
 	public static function MakeForField(string $sValue, ?ormStyle $oStyle)
 	{
+		$oBadge = null;
 		if ($oStyle) {
 			$sStyleClass = $oStyle->GetStyleClass();
 			$sPrimaryColor = $oStyle->GetMainColor();
-			$oBadge = new FieldBadge(null, $sStyleClass.' ibo-field-badge');
 			$sComplementaryColor = $oStyle->GetComplementaryColor();
-			$sDecorationClasses = $oStyle->GetDecorationClasses();
-			if ($sDecorationClasses != '') {
-				$oBadge->AddHtml("<i class=\"$sDecorationClasses\"></i>&nbsp;");
-			}
-			$oBadge->AddHtml("<span>$sValue</span>");
-			// Add custom style
-			// TODO 3.0 To be removed when compilation supports generated CSS
-			$oBadge->AddHtml(<<<HTML
+			if (!is_null($sPrimaryColor) && !is_null($sComplementaryColor)) {
+				$oBadge = new FieldBadge(null, $sStyleClass.' ibo-field-badge');
+				$sDecorationClasses = $oStyle->GetDecorationClasses();
+				if (!is_null($sDecorationClasses)) {
+					$oBadge->AddHtml("<i class=\"$sDecorationClasses\"></i>&nbsp;");
+				}
+				$oBadge->AddHtml("<span>$sValue</span>");
+				// Add custom style
+				// TODO 3.0 To be removed when compilation supports generated CSS
+				$oBadge->AddHtml(<<<HTML
 <style>
 .$sStyleClass {
 		color: $sComplementaryColor;
@@ -40,8 +42,10 @@ class FieldBadgeFactory
 	}
 </style>
 HTML
-			);
-		} else {
+				);
+			}
+		}
+		if (!$oBadge) {
 			$oBadge = new FieldBadge();
 			$oBadge->AddHtml("<span>$sValue</span>");
 		}

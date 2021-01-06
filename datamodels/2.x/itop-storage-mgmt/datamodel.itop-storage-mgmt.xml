@@ -15,7 +15,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/storageArea.png</icon>
+        <style>
+          <icon>images/storageArea.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -264,7 +266,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/switch-san.png</icon>
+        <style>
+          <icon>images/switch-san.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -510,7 +514,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/tapelibrary.png</icon>
+        <style>
+          <icon>images/tapelibrary.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -756,7 +762,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/nas.png</icon>
+        <style>
+          <icon>images/nas.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1002,7 +1010,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/tape.png</icon>
+        <style>
+          <icon>images/tape.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="tapelibrary_id"/>
@@ -1094,7 +1104,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/filesystem.png</icon>
+        <style>
+          <icon>images/filesystem.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="nas_id"/>
@@ -1201,7 +1213,9 @@
             <attribute id="datacenterdevice_name"/>
           </attributes>
         </naming>
-        <icon>images/fc-interface.png</icon>
+        <style>
+          <icon>images/fc-interface.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1309,7 +1323,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/volume.png</icon>
+        <style>
+          <icon>images/volume.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="lun_id"/>

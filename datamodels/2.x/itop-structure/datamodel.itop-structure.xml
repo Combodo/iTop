@@ -21,10 +21,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/building.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/building.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -94,7 +96,9 @@
                   <dashlet id="11" xsi:type="DashletHeaderDynamic">
                     <rank>0</rank>
                     <title>Organization:Overview:FunctionalCIs</title>
-                    <icon>itop-config-mgmt/images/server.png</icon>
+                    <style>
+                      <icon>itop-config-mgmt/images/server.png</icon>
+                    </style>
                     <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
                     <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
                     <group_by>finalclass</group_by>
@@ -198,10 +202,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/location.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/location.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -381,10 +387,14 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/team.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/team.png</icon>
+          <main_color>green</main_color>
+          <complementary_color>white</complementary_color>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -569,10 +579,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<image_attribute>picture</image_attribute>
-		</fields_semantic>
-        <icon>images/person.png</icon>
+        <fields_semantic>
+          <image_attribute>picture</image_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/person.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -889,7 +901,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/team.png</icon>
+        <style>
+          <icon>images/team.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1154,10 +1168,12 @@
         <naming>
           <attributes/>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/document.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1312,7 +1328,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1425,7 +1443,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1519,7 +1539,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1743,7 +1765,9 @@
               <dashlet id="1" xsi:type="DashletHeaderDynamic">
                 <rank>1</rank>
                 <title>Menu:Contact</title>
-                <icon>itop-structure/images/team.png</icon>
+                <style>
+                  <icon>itop-structure/images/team.png</icon>
+                </style>
                 <subtitle>Menu:Contact:Count</subtitle>
                 <query>SELECT Contact</query>
                 <group_by>status</group_by>
@@ -1797,7 +1821,9 @@
               <dashlet id="1" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Typology</title>
-                <icon>itop-structure/images/typology.png</icon>
+                <style>
+                  <icon>itop-structure/images/typology.png</icon>
+                </style>
               </dashlet>
               <dashlet id="9" xsi:type="DashletBadge">
                 <rank>8</rank>

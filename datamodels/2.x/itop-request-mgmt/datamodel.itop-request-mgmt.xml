@@ -24,7 +24,10 @@
                 <fields_semantic>
                     <state_attribute>status</state_attribute>
                 </fields_semantic>
-                <icon>images/user-request.png</icon>
+                <style>
+                    <icon>images/user-request.png</icon>
+                    <main_color>red</main_color>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="ref"/>
@@ -562,17 +565,23 @@
                     <item id="warning">
                         <rank>1</rank>
                         <color>HIGHLIGHT_CLASS_WARNING</color>
-                        <icon>images/user-request-deadline.png</icon>
+                        <style>
+                            <icon>images/user-request-deadline.png</icon>
+                        </style>
                     </item>
                     <item id="critical">
                         <rank>2</rank>
                         <color>HIGHLIGHT_CLASS_CRITICAL</color>
-                        <icon>images/user-request-escalated.png</icon>
+                        <style>
+                            <icon>images/user-request-escalated.png</icon>
+                        </style>
                     </item>
                     <item id="closed">
                         <rank>3</rank>
                         <color>HIGHLIGHT_CLASS_NONE</color>
-                        <icon>images/user-request-closed.png</icon>
+                        <style>
+                            <icon>images/user-request-closed.png</icon>
+                        </style>
                     </item>
                 </highlight_scale>
                 <stimuli>
@@ -1910,18 +1919,20 @@
                               </dashlets>
                             </cell>
                             <cell id="1" _delta="define">
-                              <rank>10</rank>
-                              <dashlets>
-                                <dashlet id="9" xsi:type="DashletHeaderDynamic">
-                                  <rank>0</rank>
-                                  <title>Organization:Overview:UserRequests</title>
-                                  <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-                                  <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
-                                  <group_by>status</group_by>
-                                  <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-                                </dashlet>
-                              </dashlets>
+                                <rank>10</rank>
+                                <dashlets>
+                                    <dashlet id="9" xsi:type="DashletHeaderDynamic">
+                                        <rank>0</rank>
+                                        <title>Organization:Overview:UserRequests</title>
+                                        <style>
+                                            <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                        </style>
+                                        <subtitle>Menu:UserRequest:OpenRequests</subtitle>
+                                        <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+                                        <group_by>status</group_by>
+                                        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+                                    </dashlet>
+                                </dashlets>
                             </cell>
                             <cell id="3" _delta="define">
                               <rank>30</rank>
@@ -1962,7 +1973,9 @@
                             <dashlet id="9" xsi:type="DashletHeaderDynamic">
                                 <rank>0</rank>
                                 <title>Menu:RequestManagement</title>
-                                <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                <style>
+                                    <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                </style>
                                 <subtitle>Menu:UserRequest:OpenRequests</subtitle>
                                 <query>SELECT UserRequest WHERE status != "closed"</query>
                                 <group_by>status</group_by>
@@ -2125,9 +2138,20 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                          AND (R.id != :this->id)
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <style>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    </style>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -2140,9 +2164,20 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                          AND (R.id != :this->id)
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <style>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    </style>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -2159,9 +2194,19 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <style>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    </style>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -2170,9 +2215,19 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <style>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    </style>
                                     <default>yes</default>
                                 </item>
                             </items>

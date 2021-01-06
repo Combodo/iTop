@@ -24,7 +24,9 @@
                 <fields_semantic>
                     <state_attribute>status</state_attribute>
                 </fields_semantic>
-                <icon>images/problem.png</icon>
+                <style>
+                    <icon>images/problem.png</icon>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="ref"/>
