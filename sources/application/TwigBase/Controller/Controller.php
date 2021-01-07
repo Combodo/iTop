@@ -27,6 +27,7 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
+use WebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
@@ -38,6 +39,11 @@ use ZipArchive;
 
 abstract class Controller
 {
+	const PAGE_TYPE_HTML = 'html';
+	const PAGE_TYPE_BASIC_HTML = 'basic_html';
+	const PAGE_TYPE_AJAX = 'ajax';
+	const PAGE_TYPE_SETUP = 'setup';
+
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
@@ -554,16 +560,20 @@ abstract class Controller
 	{
 		switch ($sPageType)
 		{
-			case 'html':
+			case self::PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
 				$this->m_oPage->add_xframe_options();
 				break;
 
-			case 'ajax':
+			case self::PAGE_TYPE_BASIC_HTML:
+				$this->m_oPage = new WebPage($this->GetOperationTitle());
+				break;
+
+			case SELF::PAGE_TYPE_AJAX:
 				$this->m_oPage = new ajax_page($this->GetOperationTitle());
 				break;
 
-			case 'setup':
+			case self::PAGE_TYPE_SETUP:
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
