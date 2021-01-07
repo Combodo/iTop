@@ -6,7 +6,6 @@ function checkAllDataTable(tableId, value, listId) {
         selectionMode = 'negative';
     }
     window['oSelectedItems' + listId] = [];
-    updateDataTableSelection(listId);
     // Mark all the displayed items as check or unchecked depending on the value
     tableSelector.find(':checkbox[name^=selectObj]:not([disabled])').each(function () {
         let currentCheckbox = $(this);
@@ -22,11 +21,10 @@ function checkAllDataTable(tableId, value, listId) {
 
     if (value) {
         tableSelector.DataTable().rows().select();
-        $('#btn_ok_'+tableId).prop('disabled', false);
     } else {
         tableSelector.DataTable().rows({page: 'current'}).deselect();
-        $('#btn_ok_'+tableId).prop('disabled', true);
     }
+	updateDataTableSelection(listId);
 
     return true;
 }
@@ -34,7 +32,7 @@ function checkAllDataTable(tableId, value, listId) {
 function updateDataTableSelection(listId) {
     let selectionContainer = $('#'+listId+' [data-target="ibo-datatable--selection"]');
     let selectionCount = $('#'+listId+' [name="selectionCount"]');
-    let selectionMode = $('#'+listId+' [name=selectionMode]');
+    let selectionMode = $('#'+listId+' [name=selectionMode]').val();
 
     selectionContainer.html('');
     let currentSelection = window['oSelectedItems'+listId];
