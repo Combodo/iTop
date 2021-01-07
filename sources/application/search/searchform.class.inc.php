@@ -187,7 +187,7 @@ class SearchForm
 		$oUiSearchBlock->SetCSSClasses("ibo-search-form-panel display_block");
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
 		$sHtml = "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
-		if ($bShowObsoleteData)
+		if (!$bShowObsoleteData)
 		{
 			$sHtml .= "<span class=\"pull-right\">";
 			$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
