@@ -615,12 +615,12 @@ class Config
 		],
 		'cas_include_path' => [
 			'type' => 'string',
-			'description' => 'The path where to find the phpCAS library',
+			'description' => 'Deprecated',
 			// examples... not used (nor 'description')
-			'default' => '/usr/share/php',
-			'value' => '/usr/share/php',
+			'default' => '',
+			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		],
 		'cas_version' => [
 			'type' => 'string',
