@@ -485,7 +485,7 @@ class SearchForm
 				$aAllowedValues = array();
 				while ($oObject = $oSet->Fetch())
 				{
-					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
+					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName(), "obsolescence_flag"=>$oObject->IsObsolete()?"1":"0", "additional_field" => "je sais pas"];
 				}
 				return array('values' => $aAllowedValues);
 			}
@@ -522,8 +522,7 @@ class SearchForm
 				}
 			}
 		}
-
-		$aAllowedValues = $oAttrDef->GetAllowedValues();
+		$aAllowedValues = $oAttrDef->GetAllowedValuesForSelect();
 
 		return array('values' => $aAllowedValues);
 	}

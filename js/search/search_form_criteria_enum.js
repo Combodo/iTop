@@ -226,7 +226,8 @@ $(function()
 			{
 				var sValCode = aSortedValues[i][0];
 				var sValLabel = aSortedValues[i][1];
-				var oValueElem = this._makeListItemElement(sValLabel, sValCode);
+				//_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
+				var oValueElem = this._makeListItemElement(sValLabel, sValCode, false, false, aSortedValues[i][2], aSortedValues[i][3]);
 				oValueElem.appendTo(oDynamicListElem);
 
 				if (this._isSelectedValues(sValCode))
@@ -895,16 +896,20 @@ $(function()
 				// eg. {2: "IT Department", 3: "Demo"} in regular mode
 				else
 				{
-					aSortable.push([sKey, oSource[sKey]]);
+					if(oSource[sKey]["label"]) {
+						aSortable.push([sKey, oSource[sKey]["label"], oSource[sKey]["obsolescence_flag"], oSource[sKey]["additional_field"]]);
+					} else {
+						aSortable.push([sKey, oSource[sKey]]);
+					}
 				}
 			}
 
 			aSortable.sort(function(a, b) {
-				if(a[1] < b[1])
+				if(a[1].toLowerCase() < b[1].toLowerCase())
 				{
 					return -1;
 				}
-				else if(a[1] > b[1])
+				else if(a[1].toLowerCase() > b[1].toLowerCase())
 				{
 					return 1;
 				}

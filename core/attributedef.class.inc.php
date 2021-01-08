@@ -1114,13 +1114,13 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * @param array $aArgs
-	 * @param string $sContains
-	 *
-	 * @return array|null
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
+ * @param array $aArgs
+ * @param string $sContains
+ *
+ * @return array|null
+ * @throws \CoreException
+ * @throws \OQLException
+ */
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -1130,6 +1130,20 @@ abstract class AttributeDefinition
 		}
 
 		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	/**
+	 * GetAllowedValuesForSelect is the same as GetAllowedValues except for field with obsolescence flag
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		return $this->GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -6642,6 +6656,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
 	}
+
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		//$this->GetValuesDef();
+		$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
+		return $oValSetDef->GetValuesForAutocomplete($aArgs, $sContains);
+	}
+
 
 	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
