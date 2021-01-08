@@ -101,10 +101,7 @@ class ormPassword
 		{
 			//unknown, assume it's a legacy password
 			$sHashedPwd = $this->ComputeHash($sClearTextPassword);
-			if ($this->m_sHashed == $sHashedPwd)
-			{
-				$bResult = true;
-			}
+			$bResult = ($this->m_sHashed == $sHashedPwd);
 		}
 		else
 		{
