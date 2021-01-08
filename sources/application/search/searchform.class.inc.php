@@ -485,7 +485,7 @@ class SearchForm
 				$aAllowedValues = array();
 				while ($oObject = $oSet->Fetch())
 				{
-					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName(), "obsolescence_flag"=>$oObject->IsObsolete()?"1":"0", "additional_field" => "je sais pas"];
+					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName()];
 				}
 				return array('values' => $aAllowedValues);
 			}
