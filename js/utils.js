@@ -186,16 +186,17 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 	// Check if the user is not editing the list properties right now
 	var bDialogOpen = false;
 	//TODO 3.0.0 Datatable - to check
-	var oDataTable = $('#'+divId+' :ibo-datatable');
+	var oDataTable = $('#'+divId+' .ibo-datatable');
 	var bIsDataTable = false;
 	if (oDataTable.length > 0) {
-		bDialogOpen = ($('#datatable_dlg_'+divId+' :visible').length > 0);
+		bDialogOpen = ($('#datatable_dlg_datatable_'+divId+' :visible').length > 0);
 		//bDialogOpen = oDataTable.datatable('IsDialogOpen');
 		bIsDataTable = true;
 	}
 	if (!bDialogOpen) {
 		if (bIsDataTable) {
-			oDataTable.DataTable().ajax.reload();
+			oDataTable.DataTable().clearPipeline();
+			oDataTable.DataTable().ajax.reload(null, false);
 		}
 		else {
 			$('#'+divId).block();
