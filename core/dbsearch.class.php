@@ -91,7 +91,7 @@ abstract class DBSearch
 	protected function Init()
 	{
 		$this->m_bArchiveMode = utils::IsArchiveMode();
-		$this->m_bShowObsoleteData = true;
+		$this->m_bShowObsoleteData = utils::ShowObsoleteData();
 	}
 
 	/**
