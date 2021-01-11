@@ -615,7 +615,7 @@ class Config
 		],
 		'cas_include_path' => [
 			'type' => 'string',
-			'description' => 'Deprecated',
+			'description' => 'Deprecated, the lib is now included with iTop',
 			// examples... not used (nor 'description')
 			'default' => '',
 			'value' => '',
