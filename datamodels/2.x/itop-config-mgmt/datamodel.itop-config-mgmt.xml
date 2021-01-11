@@ -51,13 +51,13 @@
 				<field id="business_criticity" xsi:type="AttributeEnum">
 					<values>
 						<value id="high">
-							<enum_code>high</enum_code>
+							<code>high</code>
 						</value>
 						<value id="medium">
-							<enum_code>medium</enum_code>
+							<code>medium</code>
 						</value>
 						<value id="low">
-							<enum_code>low</enum_code>
+							<code>low</code>
 						</value>
 					</values>
 					<sql>business_criticity</sql>
@@ -309,16 +309,16 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="production">
-							<enum_code>production</enum_code>
+							<code>production</code>
 						</value>
 						<value id="implementation">
-							<enum_code>implementation</enum_code>
+							<code>implementation</code>
 						</value>
 						<value id="stock">
-							<enum_code>stock</enum_code>
+							<code>stock</code>
 						</value>
 						<value id="obsolete">
-							<enum_code>obsolete</enum_code>
+							<code>obsolete</code>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1582,7 +1582,7 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="active">
-							<enum_code>active</enum_code>
+							<code>active</code>
 							<style>
 								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
@@ -1590,7 +1590,7 @@
 							</style>
 						</value>
 						<value id="inactive">
-							<enum_code>inactive</enum_code>
+							<code>inactive</code>
 							<style>
 								<main_color>#E1E7EC</main_color>
 								<complementary_color>#6E7A8A</complementary_color>
@@ -1734,7 +1734,7 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="active">
-							<enum_code>active</enum_code>
+							<code>active</code>
 							<style>
 								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
@@ -1742,7 +1742,7 @@
 							</style>
 						</value>
 						<value id="inactive">
-							<enum_code>inactive</enum_code>
+							<code>inactive</code>
 							<style>
 								<main_color>#E1E7EC</main_color>
 								<complementary_color>#6E7A8A</complementary_color>
@@ -1902,7 +1902,7 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="active">
-							<enum_code>active</enum_code>
+							<code>active</code>
 							<style>
 								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
@@ -1910,7 +1910,7 @@
 							</style>
 						</value>
 						<value id="inactive">
-							<enum_code>inactive</enum_code>
+							<code>inactive</code>
 							<style>
 								<main_color>#E1E7EC</main_color>
 								<complementary_color>#6E7A8A</complementary_color>
@@ -3037,19 +3037,19 @@
 				<field id="type" xsi:type="AttributeEnum">
 					<values>
 						<value id="Middleware">
-							<enum_code>Middleware</enum_code>
+							<code>Middleware</code>
 						</value>
 						<value id="DBServer">
-							<enum_code>DBServer</enum_code>
+							<code>DBServer</code>
 						</value>
 						<value id="PCSoftware">
-							<enum_code>PCSoftware</enum_code>
+							<code>PCSoftware</code>
 						</value>
 						<value id="OtherSoftware">
-							<enum_code>OtherSoftware</enum_code>
+							<code>OtherSoftware</code>
 						</value>
 						<value id="WebServer">
-							<enum_code>WebServer</enum_code>
+							<code>WebServer</code>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -3501,10 +3501,10 @@
 				<field id="perpetual" xsi:type="AttributeEnum">
 					<values>
 						<value id="yes">
-							<enum_code>yes</enum_code>
+							<code>yes</code>
 						</value>
 						<value id="no">
-							<enum_code>no</enum_code>
+							<code>no</code>
 						</value>
 					</values>
 					<sql>perpetual</sql>
@@ -4183,58 +4183,58 @@
 				<field id="type" xsi:type="AttributeEnum">
 					<values>
 						<value id="NetworkDevice">
-							<enum_code>NetworkDevice</enum_code>
+							<code>NetworkDevice</code>
 						</value>
 						<value id="Server">
-							<enum_code>Server</enum_code>
+							<code>Server</code>
 						</value>
 						<value id="SANSwitch">
-							<enum_code>SANSwitch</enum_code>
+							<code>SANSwitch</code>
 						</value>
 						<value id="StorageSystem">
-							<enum_code>StorageSystem</enum_code>
+							<code>StorageSystem</code>
 						</value>
 						<value id="Rack">
-							<enum_code>Rack</enum_code>
+							<code>Rack</code>
 						</value>
 						<value id="Enclosure">
-							<enum_code>Enclosure</enum_code>
+							<code>Enclosure</code>
 						</value>
 						<value id="PC">
-							<enum_code>PC</enum_code>
+							<code>PC</code>
 						</value>
 						<value id="Tablet">
-							<enum_code>Tablet</enum_code>
+							<code>Tablet</code>
 						</value>
 						<value id="Phone">
-							<enum_code>Phone</enum_code>
+							<code>Phone</code>
 						</value>
 						<value id="MobilePhone">
-							<enum_code>MobilePhone</enum_code>
+							<code>MobilePhone</code>
 						</value>
 						<value id="Printer">
-							<enum_code>Printer</enum_code>
+							<code>Printer</code>
 						</value>
 						<value id="DiskArray">
-							<enum_code>DiskArray</enum_code>
+							<code>DiskArray</code>
 						</value>
 						<value id="NAS">
-							<enum_code>NAS</enum_code>
+							<code>NAS</code>
 						</value>
 						<value id="TapeLibrary">
-							<enum_code>TapeLibrary</enum_code>
+							<code>TapeLibrary</code>
 						</value>
 						<value id="IPPhone">
-							<enum_code>IPPhone</enum_code>
+							<code>IPPhone</code>
 						</value>
 						<value id="Peripheral">
-							<enum_code>Peripheral</enum_code>
+							<code>Peripheral</code>
 						</value>
 						<value id="PowerSource">
-							<enum_code>PowerSource</enum_code>
+							<code>PowerSource</code>
 						</value>
 						<value id="PDU">
-							<enum_code>PDU</enum_code>
+							<code>PDU</code>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -5776,10 +5776,10 @@
 				<field id="connection_type" xsi:type="AttributeEnum">
 					<values>
 						<value id="uplink">
-							<enum_code>uplink</enum_code>
+							<code>uplink</code>
 						</value>
 						<value id="downlink">
-							<enum_code>downlink</enum_code>
+							<code>downlink</code>
 						</value>
 					</values>
 					<sql>type</sql>
@@ -6178,13 +6178,13 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="production">
-							<enum_code>production</enum_code>
+							<code>production</code>
 						</value>
 						<value id="implementation">
-							<enum_code>implementation</enum_code>
+							<code>implementation</code>
 						</value>
 						<value id="obsolete">
-							<enum_code>obsolete</enum_code>
+							<code>obsolete</code>
 						</value>
 					</values>
 					<sql>status</sql>

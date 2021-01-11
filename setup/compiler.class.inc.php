@@ -1355,7 +1355,7 @@ EOF
 					foreach($oValueNodes as $oValue)
 					{
 						// New in 3.0 the format of values changed
-						$sCode = $this->GetMandatoryPropString($oValue, 'enum_code', false);
+						$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
@@ -1415,10 +1415,9 @@ CSS;
 					$oValueNodes = $oValues->getElementsByTagName('value');
 					$aValues = [];
 					$aStyledValues = [];
-					foreach($oValueNodes as $oValue)
-					{
+					foreach($oValueNodes as $oValue) {
 						// New in 3.0 the format of values changed
-						$sCode = $this->GetMandatoryPropString($oValue, 'enum_code', false);
+						$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {

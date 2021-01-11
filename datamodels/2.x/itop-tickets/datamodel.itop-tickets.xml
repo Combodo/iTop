@@ -54,10 +54,10 @@
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
 					<values>
 						<value id="ongoing">
-							<enum_code>ongoing</enum_code>
+							<code>ongoing</code>
 						</value>
 						<value id="resolved">
-							<enum_code>resolved</enum_code>
+							<code>resolved</code>
 							<style>
 								<main_color>#689F38</main_color>
 								<complementary_color>#FFFFFF</complementary_color>
@@ -65,7 +65,7 @@
 							</style>
 						</value>
 						<value id="closed">
-							<enum_code>closed</enum_code>
+							<code>closed</code>
 							<style>
 								<main_color>#E1E7EC</main_color>
 								<complementary_color>#6E7A8A</complementary_color>
@@ -430,13 +430,13 @@
 				<field id="role_code" xsi:type="AttributeEnum">
 					<values>
 						<value id="manual">
-							<enum_code>manual</enum_code>
+							<code>manual</code>
 						</value>
 						<value id="computed">
-							<enum_code>computed</enum_code>
+							<code>computed</code>
 						</value>
 						<value id="do_not_notify">
-							<enum_code>do_not_notify</enum_code>
+							<code>do_not_notify</code>
 						</value>
 					</values>
 					<sql>impact_code</sql>
@@ -524,10 +524,10 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="open">
-							<enum_code>open</enum_code>
+							<code>open</code>
 						</value>
 						<value id="closed">
-							<enum_code>closed</enum_code>
+							<code>closed</code>
 						</value>
 					</values>
 					<sql>status</sql>

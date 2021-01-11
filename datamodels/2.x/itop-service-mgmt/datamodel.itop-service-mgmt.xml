@@ -132,10 +132,10 @@
 				<field id="cost_currency" xsi:type="AttributeEnum">
 					<values>
 						<value id="dollars">
-							<enum_code>dollars</enum_code>
+							<code>dollars</code>
 						</value>
 						<value id="euros">
-							<enum_code>euros</enum_code>
+							<code>euros</code>
 						</value>
 					</values>
 					<sql>cost_currency</sql>
@@ -176,13 +176,13 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="production">
-							<enum_code>production</enum_code>
+							<code>production</code>
 						</value>
 						<value id="implementation">
-							<enum_code>implementation</enum_code>
+							<code>implementation</code>
 						</value>
 						<value id="obsolete">
-							<enum_code>obsolete</enum_code>
+							<code>obsolete</code>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1047,13 +1047,13 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="production">
-							<enum_code>production</enum_code>
+							<code>production</code>
 						</value>
 						<value id="implementation">
-							<enum_code>implementation</enum_code>
+							<code>implementation</code>
 						</value>
 						<value id="obsolete">
-							<enum_code>obsolete</enum_code>
+							<code>obsolete</code>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1412,10 +1412,10 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
 						<value id="incident">
-							<enum_code>incident</enum_code>
+							<code>incident</code>
 						</value>
 						<value id="service_request">
-							<enum_code>service_request</enum_code>
+							<code>service_request</code>
 						</value>
 					</values>
 					<sql>request_type</sql>
@@ -1426,13 +1426,13 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
 						<value id="production">
-							<enum_code>production</enum_code>
+							<code>production</code>
 						</value>
 						<value id="implementation">
-							<enum_code>implementation</enum_code>
+							<code>implementation</code>
 						</value>
 						<value id="obsolete">
-							<enum_code>obsolete</enum_code>
+							<code>obsolete</code>
 						</value>
 					</values>
 					<sql>status</sql>
@@ -1694,16 +1694,16 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="priority" xsi:type="AttributeEnum">
 					<values>
 						<value id="1">
-							<enum_code>1</enum_code>
+							<code>1</code>
 						</value>
 						<value id="2">
-							<enum_code>2</enum_code>
+							<code>2</code>
 						</value>
 						<value id="3">
-							<enum_code>3</enum_code>
+							<code>3</code>
 						</value>
 						<value id="4">
-							<enum_code>4</enum_code>
+							<code>4</code>
 						</value>
 					</values>
 					<sql>priority</sql>
@@ -1714,10 +1714,10 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
 						<value id="service_request">
-							<enum_code>service_request</enum_code>
+							<code>service_request</code>
 						</value>
 						<value id="incident">
-							<enum_code>incident</enum_code>
+							<code>incident</code>
 						</value>
 					</values>
 					<sql>request_type</sql>
@@ -1728,10 +1728,10 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="metric" xsi:type="AttributeEnum">
 					<values>
 						<value id="tto">
-							<enum_code>tto</enum_code>
+							<code>tto</code>
 						</value>
 						<value id="ttr">
-							<enum_code>ttr</enum_code>
+							<code>ttr</code>
 						</value>
 					</values>
 					<sql>metric</sql>
@@ -1747,10 +1747,10 @@ public function PrefillSearchForm(&$aContextParam)
 				<field id="unit" xsi:type="AttributeEnum">
 					<values>
 						<value id="hours">
-							<enum_code>hours</enum_code>
+							<code>hours</code>
 						</value>
 						<value id="minutes">
-							<enum_code>minutes</enum_code>
+							<code>minutes</code>
 						</value>
 					</values>
 					<sql>unit</sql>

@@ -43,7 +43,7 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="approved">approved
-              <enum_code>approved</enum_code>
+              <code>approved</code>
               <style>
                 <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -51,7 +51,7 @@
               </style>
             </value>
             <value id="assigned">assigned
-              <enum_code>assigned</enum_code>
+              <code>assigned</code>
               <style>
                 <main_color>#2C5382</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -59,7 +59,7 @@
               </style>
             </value>
             <value id="closed">
-              <enum_code>closed</enum_code>
+              <code>closed</code>
               <style>
                 <main_color>#E1E7EC</main_color>
                 <complementary_color>#6E7A8A</complementary_color>
@@ -67,13 +67,13 @@
               </style>
             </value>
             <value id="implemented">
-              <enum_code>implemented</enum_code>
+              <code>implemented</code>
             </value>
             <value id="monitored">
-              <enum_code>monitored</enum_code>
+              <code>monitored</code>
             </value>
             <value id="new">
-              <enum_code>new</enum_code>
+              <code>new</code>
               <style>
                 <main_color>#2C5382</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -81,7 +81,7 @@
               </style>
             </value>
             <value id="notapproved">
-              <enum_code>notapproved</enum_code>
+              <code>notapproved</code>
               <style>
                 <main_color>#B83280</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -89,7 +89,7 @@
               </style>
             </value>
             <value id="plannedscheduled">
-              <enum_code>plannedscheduled</enum_code>
+              <code>plannedscheduled</code>
               <style>
                 <main_color>#F6AE55</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -97,7 +97,7 @@
               </style>
             </value>
             <value id="rejected">
-              <enum_code>rejected</enum_code>
+              <code>rejected</code>
               <style>
                 <main_color>#B83280</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -105,7 +105,7 @@
               </style>
             </value>
             <value id="validated">
-              <enum_code>validated</enum_code>
+              <code>validated</code>
               <style>
                 <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -214,10 +214,10 @@
         <field id="outage" xsi:type="AttributeEnum">
           <values>
             <value id="yes">
-              <enum_code>yes</enum_code>
+              <code>yes</code>
             </value>
             <value id="no">
-              <enum_code>no</enum_code>
+              <code>no</code>
             </value>
           </values>
           <sql>outage</sql>

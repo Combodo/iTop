@@ -35,16 +35,16 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="production">
-              <enum_code>production</enum_code>
+              <code>production</code>
             </value>
             <value id="implementation">
-              <enum_code>implementation</enum_code>
+              <code>implementation</code>
             </value>
             <value id="stock">
-              <enum_code>stock</enum_code>
+              <code>stock</code>
             </value>
             <value id="obsolete">
-              <enum_code>obsolete</enum_code>
+              <code>obsolete</code>
             </value>
           </values>
           <sql>status</sql>

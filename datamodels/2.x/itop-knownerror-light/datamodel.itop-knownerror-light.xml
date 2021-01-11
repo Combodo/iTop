@@ -82,16 +82,16 @@
         <field id="domain" xsi:type="AttributeEnum">
           <values>
             <value id="Network">
-              <enum_code>Network</enum_code>
+              <code>Network</code>
             </value>
             <value id="Server">
-              <enum_code>Server</enum_code>
+              <code>Server</code>
             </value>
             <value id="Application">
-              <enum_code>Application</enum_code>
+              <code>Application</code>
             </value>
             <value id="Desktop">
-              <enum_code>Desktop</enum_code>
+              <code>Desktop</code>
             </value>
           </values>
           <sql>domain</sql>

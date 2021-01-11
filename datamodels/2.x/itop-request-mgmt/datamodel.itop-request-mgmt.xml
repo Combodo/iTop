@@ -44,7 +44,7 @@
                     <always_load_in_tables>true</always_load_in_tables>
                     <values>
                         <value id="new">
-                            <enum_code>new</enum_code>
+                            <code>new</code>
                             <style>
                                 <main_color>#2C5382</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -52,7 +52,7 @@
                             </style>
                         </value>
                         <value id="waiting_for_approval">
-                            <enum_code>waiting_for_approval</enum_code>
+                            <code>waiting_for_approval</code>
                             <style>
                                 <main_color>#F6AE55</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -60,7 +60,7 @@
                             </style>
                         </value>
                         <value id="approved">
-                            <enum_code>approved</enum_code>
+                            <code>approved</code>
                             <style>
                                 <main_color>#689F38</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -68,7 +68,7 @@
                             </style>
                         </value>
                         <value id="rejected">
-                            <enum_code>rejected</enum_code>
+                            <code>rejected</code>
                             <style>
                                 <main_color>#B83280</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -76,7 +76,7 @@
                             </style>
                         </value>
                         <value id="assigned">
-                            <enum_code>assigned</enum_code>
+                            <code>assigned</code>
                             <style>
                                 <main_color>#2C5382</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -84,7 +84,7 @@
                             </style>
                         </value>
                         <value id="pending">
-                            <enum_code>pending</enum_code>
+                            <code>pending</code>
                             <style>
                                 <main_color>#F6AE55</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -92,7 +92,7 @@
                             </style>
                         </value>
                         <value id="escalated_tto">
-                            <enum_code>escalated_tto</enum_code>
+                            <code>escalated_tto</code>
                             <style>
                                 <main_color>#B83280</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -100,7 +100,7 @@
                             </style>
                         </value>
                         <value id="escalated_ttr">
-                            <enum_code>escalated_ttr</enum_code>
+                            <code>escalated_ttr</code>
                             <style>
                                 <main_color>#B83280</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -108,7 +108,7 @@
                             </style>
                         </value>
                         <value id="resolved">
-                            <enum_code>resolved</enum_code>
+                            <code>resolved</code>
                             <style>
                                 <main_color>#689F38</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -116,7 +116,7 @@
                             </style>
                         </value>
                         <value id="closed">
-                            <enum_code>closed</enum_code>
+                            <code>closed</code>
                             <style>
                                 <main_color>#E1E7EC</main_color>
                                 <complementary_color>#6E7A8A</complementary_color>
@@ -136,10 +136,10 @@
                 <field id="request_type" xsi:type="AttributeEnum">
                     <values>
                         <value id="incident">
-                            <enum_code>incident</enum_code>
+                            <code>incident</code>
                         </value>
                         <value id="service_request">
-                            <enum_code>service_request</enum_code>
+                            <code>service_request</code>
                         </value>
                     </values>
                     <sql>request_type</sql>
@@ -150,13 +150,13 @@
                 <field id="impact" xsi:type="AttributeEnum">
                     <values>
                         <value id="1">
-                            <enum_code>1</enum_code>
+                            <code>1</code>
                         </value>
                         <value id="2">
-                            <enum_code>2</enum_code>
+                            <code>2</code>
                         </value>
                         <value id="3">
-                            <enum_code>3</enum_code>
+                            <code>3</code>
                         </value>
                     </values>
                     <sql>impact</sql>
@@ -167,7 +167,7 @@
                 <field id="priority" xsi:type="AttributeEnum">
                     <values>
                         <value id="1">
-                            <enum_code>1</enum_code>
+                            <code>1</code>
                             <style>
                                 <main_color>#C53030</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -175,7 +175,7 @@
                             </style>
                         </value>
                         <value id="2">
-                            <enum_code>2</enum_code>
+                            <code>2</code>
                             <style>
                                 <main_color>#C05621</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -183,7 +183,7 @@
                             </style>
                         </value>
                         <value id="3">
-                            <enum_code>3</enum_code>
+                            <code>3</code>
                             <style>
                                 <main_color>#2B6BB0</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -191,7 +191,7 @@
                             </style>
                         </value>
                         <value id="4">
-                            <enum_code>4</enum_code>
+                            <code>4</code>
                             <style>
                                 <main_color>#6E7A8A</main_color>
                                 <complementary_color>#FFFFFF</complementary_color>
@@ -215,16 +215,16 @@
                 <field id="urgency" xsi:type="AttributeEnum">
                     <values>
                         <value id="1">
-                            <enum_code>1</enum_code>
+                            <code>1</code>
                         </value>
                         <value id="2">
-                            <enum_code>2</enum_code>
+                            <code>2</code>
                         </value>
                         <value id="3">
-                            <enum_code>3</enum_code>
+                            <code>3</code>
                         </value>
                         <value id="4">
-                            <enum_code>4</enum_code>
+                            <code>4</code>
                         </value>
                     </values>
                     <sql>urgency</sql>
@@ -234,16 +234,16 @@
                 <field id="origin" xsi:type="AttributeEnum">
                     <values>
                         <value id="mail">
-                            <enum_code>mail</enum_code>
+                            <code>mail</code>
                         </value>
                         <value id="phone">
-                            <enum_code>phone</enum_code>
+                            <code>phone</code>
                         </value>
                         <value id="portal">
-                            <enum_code>portal</enum_code>
+                            <code>portal</code>
                         </value>
                         <value id="monitoring">
-                            <enum_code>monitoring</enum_code>
+                            <code>monitoring</code>
                         </value>
                     </values>
                     <sql>origin</sql>
@@ -307,10 +307,10 @@
                 <field id="escalation_flag" xsi:type="AttributeEnum">
                     <values>
                         <value id="yes">
-                            <enum_code>yes</enum_code>
+                            <code>yes</code>
                         </value>
                         <value id="no">
-                            <enum_code>no</enum_code>
+                            <code>no</code>
                         </value>
                     </values>
                     <sql>escalation_flag</sql>
@@ -447,25 +447,25 @@
                 <field id="resolution_code" xsi:type="AttributeEnum">
                     <values>
                         <value id="assistance">
-                            <enum_code>assistance</enum_code>
+                            <code>assistance</code>
                         </value>
                         <value id="other">
-                            <enum_code>other</enum_code>
+                            <code>other</code>
                         </value>
                         <value id="software patch">
-                            <enum_code>software patch</enum_code>
+                            <code>software patch</code>
                         </value>
                         <value id="training">
-                            <enum_code>training</enum_code>
+                            <code>training</code>
                         </value>
                         <value id="hardware repair">
-                            <enum_code>hardware repair</enum_code>
+                            <code>hardware repair</code>
                         </value>
                         <value id="system update">
-                            <enum_code>system update</enum_code>
+                            <code>system update</code>
                         </value>
                         <value id="bug fixed">
-                            <enum_code>bug fixed</enum_code>
+                            <code>bug fixed</code>
                         </value>
                     </values>
                     <sql>resolution_code</sql>
@@ -538,16 +538,16 @@
                 <field id="user_satisfaction" xsi:type="AttributeEnum">
                     <values>
                         <value id="1">
-                            <enum_code>1</enum_code>
+                            <code>1</code>
                         </value>
                         <value id="2">
-                            <enum_code>2</enum_code>
+                            <code>2</code>
                         </value>
                         <value id="3">
-                            <enum_code>3</enum_code>
+                            <code>3</code>
                         </value>
                         <value id="4">
-                            <enum_code>4</enum_code>
+                            <code>4</code>
                         </value>
                     </values>
                     <sql>user_satisfaction</sql>

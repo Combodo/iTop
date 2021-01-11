@@ -850,10 +850,10 @@
         <field id="type" xsi:type="AttributeEnum">
           <values>
             <value id="laptop">
-              <enum_code>laptop</enum_code>
+              <code>laptop</code>
             </value>
             <value id="desktop">
-              <enum_code>desktop</enum_code>
+              <code>desktop</code>
             </value>
           </values>
           <sql>type</sql>

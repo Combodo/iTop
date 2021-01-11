@@ -59,13 +59,13 @@
         <field id="impact_code" xsi:type="AttributeEnum">
           <values>
             <value id="manual">
-              <enum_code>manual</enum_code>
+              <code>manual</code>
             </value>
             <value id="computed">
-              <enum_code>computed</enum_code>
+              <code>computed</code>
             </value>
             <value id="not_impacted">
-              <enum_code>not_impacted</enum_code>
+              <code>not_impacted</code>
             </value>
           </values>
           <sql>impact_code</sql>

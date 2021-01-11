@@ -51,7 +51,7 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="active">
-              <enum_code>active</enum_code>
+              <code>active</code>
               <style>
                 <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -59,7 +59,7 @@
               </style>
             </value>
             <value id="inactive">
-              <enum_code>inactive</enum_code>
+              <code>inactive</code>
               <style>
                 <main_color>#E1E7EC</main_color>
                 <complementary_color>#6E7A8A</complementary_color>
@@ -228,7 +228,7 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="active">
-              <enum_code>active</enum_code>
+              <code>active</code>
               <style>
                 <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -236,7 +236,7 @@
               </style>
             </value>
             <value id="inactive">
-              <enum_code>inactive</enum_code>
+              <code>inactive</code>
               <style>
                 <main_color>#E1E7EC</main_color>
                 <complementary_color>#6E7A8A</complementary_color>
@@ -417,7 +417,7 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="active">
-              <enum_code>active</enum_code>
+              <code>active</code>
               <style>
                 <main_color>#689F38</main_color>
                 <complementary_color>#FFFFFF</complementary_color>
@@ -425,7 +425,7 @@
               </style>
             </value>
             <value id="inactive">
-              <enum_code>inactive</enum_code>
+              <code>inactive</code>
               <style>
                 <main_color>#E1E7EC</main_color>
                 <complementary_color>#6E7A8A</complementary_color>
@@ -461,10 +461,10 @@
         <field id="notify" xsi:type="AttributeEnum">
           <values>
             <value id="yes">
-              <enum_code>yes</enum_code>
+              <code>yes</code>
             </value>
             <value id="no">
-              <enum_code>no</enum_code>
+              <code>no</code>
             </value>
           </values>
           <sql>notify</sql>
@@ -1225,13 +1225,13 @@
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="draft">
-              <enum_code>draft</enum_code>
+              <code>draft</code>
             </value>
             <value id="published">
-              <enum_code>published</enum_code>
+              <code>published</code>
             </value>
             <value id="obsolete">
-              <enum_code>obsolete</enum_code>
+              <code>obsolete</code>
             </value>
           </values>
           <sql>status</sql>
