@@ -803,7 +803,7 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
-			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
+			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}
 
@@ -812,7 +812,7 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
-			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
+			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
 			$oNode->appendChild($oCodeNode);
 		}
 		
@@ -895,7 +895,7 @@ class iTopDesignFormat
 		// New Enum values format
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
 		foreach ($oNodeList as $oNode) {
-			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
 			$sCode = $oCodeNode->textContent;
 			$this->DeleteNode($oCodeNode);
 			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
@@ -911,7 +911,7 @@ class iTopDesignFormat
 		// MetaEnum
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
 		foreach ($oNodeList as $oNode) {
-			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
 			$sCode = $oCodeNode->textContent;
 			$this->DeleteNode($oCodeNode);
 			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
