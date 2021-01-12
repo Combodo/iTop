@@ -214,7 +214,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 	//search block
 	$oBlockForm = null;
 	if ($bSearchForm) {
-		$aParams = array('open' => $bSearchFormOpen, 'table_id' => '1');
+		$aParams = array('open' => $bSearchFormOpen, 'table_id' => 'result_1');
 		if (!empty($sBaseClass)) {
 			$aParams['baseClass'] = $sBaseClass;
 		}
@@ -245,7 +245,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 				$sTableId = 'result_1';
 			}
 			$aExtraParams['table_id'] = $sTableId;
-			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1');
+			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1',$aExtraParams);
 			//add result block
 			$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
 			$oUIBlock->AddCSSClasses("display_block sf_results_area");

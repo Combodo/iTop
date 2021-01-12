@@ -804,7 +804,7 @@ try
 			$sSelectionMode = utils::ReadParam('selection_mode', null,false,'raw_data');
 			$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null,false,'raw_data');
 			$scssCount = utils::ReadParam('css_count', null,false,'raw_data');
-			$sTableInnerId = utils::ReadParam('table_inner_id', null,false,'raw_data');
+			$sTableInnerId = utils::ReadParam('table_inner_id', $sTableId,false,'raw_data');
 
 			$oFilter = new DBObjectSearch($sClass);
 			$oSet = new CMDBObjectSet($oFilter);

@@ -309,6 +309,10 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 	{
 		oMap.table_inner_id = sExtraParams['table_inner_id'];
 	}
+	else{
+		oMap.table_inner_id = sTableId;
+	}
+
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, oMap,
 		function (data) {
 			oDiv.empty();
