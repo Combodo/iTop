@@ -98,8 +98,8 @@ function ShowExamples($oP, $sExpression)
 
 	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$sTopicHtml = $oP->GetTable($aDisplayConfig, $aQueriesDisplayData);
-		$oTopicSection = new CollapsibleSection($sTopic, [new Html($sTopicHtml)]);
+		$oTopic = $oP->GetTableBlock($aDisplayConfig, $aQueriesDisplayData);
+		$oTopicSection = new CollapsibleSection($sTopic, [$oTopic]);
 		$oTopicSection->SetOpenedByDefault($bShowOpened);
 		$oP->AddUiBlock($oTopicSection);
 	}

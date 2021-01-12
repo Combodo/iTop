@@ -21,7 +21,7 @@ class FormTable extends StaticTable
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-formtable';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtable/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtable/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtable/layout';
 
 	/** @var string */
 	private $sRef;

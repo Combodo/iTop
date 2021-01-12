@@ -18,7 +18,7 @@ class StaticTable extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'lib/datatables/js/jquery.dataTables.min.js',
 		'lib/datatables/js/dataTables.bootstrap.min.js',

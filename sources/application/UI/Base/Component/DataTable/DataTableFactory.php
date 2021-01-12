@@ -11,6 +11,7 @@ use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
@@ -759,11 +760,16 @@ class DataTableFactory
 		return $oBlock;
 	}
 
-	public Static function MakeForForm(string $sRef, array $aColumns): FormTable
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = []): FormTable
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
 		$oTable->SetColumns($aColumns);
+
+		foreach ($aData as $iRowId => $aRow) {
+			$oRow = new FormTableRow($sRef, $aColumns, $aRow, $iRowId);
+			$oTable->AddRow($oRow);
+		}
 
 		return $oTable;
 	}

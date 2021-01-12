@@ -351,15 +351,7 @@ JS
 	 */
 	protected function GetFormTableBlock($aConfig, $aData)
 	{
-		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
-
-		foreach ($aData as $iRowId => $aRow)
-		{
-			$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aRow, $iRowId);
-			$oTable->AddRow($oRow);
-		}
-
-		return $oTable;
+		return DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
 	}
 
 
