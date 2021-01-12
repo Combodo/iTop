@@ -461,28 +461,14 @@ JS
 		// TODO 3.0.0: To preserve
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 
-		/*
-		 * Not used since the sorting of the tables is always performed server-side
-		AttributeDateTime::InitTableSorter($this, 'custom_date_time');
-		AttributeDate::InitTableSorter($this, 'custom_date');
-		*/
+		// user pref for client side
+		// see GetUserPreference() in utils.js
+		$sUserPrefs = appUserPreferences::GetAsJSON();
+		$this->add_script("var oUserPreferences = $sUserPrefs;");
 
 		// TODO 3.0.0: What is this for?
-		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 			<<<JS
-//		// for JQuery history
-//		function history_callback(hash)
-//		{
-//			// do stuff that loads page content based on hash variable
-//			var aMatches = /^tab_(.*)$/.exec(hash);
-//			if (aMatches != null)
-//			{
-//				var tab = $('#'+hash);
-//				tab.parents('div[id^=tabbedContent]:first').tabs('select', aMatches[1]);
-//			}
-//		}
-
 		function goBack()
 		{
 			window.history.back();
@@ -518,10 +504,6 @@ JS
 				$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
 			}
 		}
-		
-		var oUserPreferences = $sUserPrefs;
-
-
 JS
 		);
 

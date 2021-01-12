@@ -41,9 +41,10 @@ $(function () {
 			_create: function () {
 				this._bindEvents();
 
-				let bStoredSectionState = JSON.parse(localStorage.getItem(this.options.collapsibleStateStorageKey));
-				let bIsSectionOpenedInitially = (bStoredSectionState == null) ? this.options.bOpenedByDefault : bStoredSectionState;
-
+				let bIsSectionOpenedInitially = GetUserPreferenceAsBoolean(
+					this.options.collapsibleStateStorageKey,
+					this.options.bOpenedByDefault
+				);
 				if (bIsSectionOpenedInitially) {
 					this.element.addClass(this.css_classes.opened);
 				} else {
@@ -65,9 +66,10 @@ $(function () {
 				this.element.toggleClass(this.css_classes.opened);
 
 				if (this.options.collapsibleStateStorageKey) {
-					localStorage.setItem(
+					SetUserPreference(
 						this.options.collapsibleStateStorageKey,
-						this.element.hasClass(this.css_classes.opened)
+						this.element.hasClass(this.css_classes.opened),
+						true
 					);
 				}
 			}

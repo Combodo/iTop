@@ -21,7 +21,6 @@ namespace Combodo\iTop\Application\UI\Base\Component\Alert;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
-use utils;
 
 /**
  * Class Alert
@@ -129,8 +128,7 @@ class Alert extends UIBlock
 	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
 	{
 		$this->bIsSaveCollapsibleStateEnabled = true;
-		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
-		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+		$this->sSectionStateStorageKey = $sSectionStateStorageKey;
 
 		return $this;
 	}

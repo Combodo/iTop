@@ -29,10 +29,13 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
+use LoginWebPage;
 use utils;
 
 require_once '../../../approot.inc.php';
 require_once APPROOT.'application/startup.inc.php';
+
+LoginWebPage::DoLogin(); // Dependency for collapsible element with state saved, to get user pref
 
 $oPage = new iTopWebPage('Render all UI blocks');
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();

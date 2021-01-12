@@ -346,15 +346,39 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 
 /**
  * Get user specific preferences
- * depends on a global variable oUserPreferences created/filled by the iTopWebPage
  * that acts as a local -write through- cache
+ * @borrows global variable oUserPreferences created/filled by the iTopWebPage if login method was called
  */
 function GetUserPreference(sPreferenceCode, sDefaultValue) {
 	var value = sDefaultValue;
-	if ((typeof(oUserPreferences) !== 'undefined') && (typeof(oUserPreferences[sPreferenceCode]) !== 'undefined')) {
+	if ((typeof (oUserPreferences) !== 'undefined') && (typeof (oUserPreferences[sPreferenceCode]) !== 'undefined')) {
 		value = oUserPreferences[sPreferenceCode];
 	}
 	return value;
+}
+
+/**
+ * @param {string} sPreferenceCode
+ * @param {boolean} bDefaultValue
+ * @returns {boolean}
+ * @since 3.0.0
+ */
+function GetUserPreferenceAsBoolean(sPreferenceCode, bDefaultValue) {
+	let sVal = GetUserPreference(sPreferenceCode, bDefaultValue);
+	try {
+		sVal = sVal.toLowerCase();
+	} catch (error) {
+		// nothing : this may be the boolean default value !
+	}
+
+	if (sVal === "true") {
+		return true;
+	}
+	if (sVal === "false") {
+		return false;
+	}
+
+	return bDefaultValue;
 }
 
 /**

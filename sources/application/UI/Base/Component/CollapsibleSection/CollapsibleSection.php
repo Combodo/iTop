@@ -22,7 +22,6 @@ namespace Combodo\iTop\Application\UI\Base\Component\CollapsibleSection;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
-use utils;
 
 /**
  * @package Combodo\iTop\Application\UI\Base\Component\CollapsibleSection
@@ -64,8 +63,7 @@ class CollapsibleSection extends UIContentBlock
 	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
 	{
 		$this->bIsSaveCollapsibleStateEnabled = true;
-		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
-		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+		$this->sSectionStateStorageKey = $sSectionStateStorageKey;
 
 		return $this;
 	}
