@@ -417,13 +417,21 @@
 						<value id="other">
 							<code>other</code>
 						</value>
-						<value id="software patch">software patch</value>
+						<value id="software patch">
+							<code>software patch</code>
+						</value>
 						<value id="training">
 							<code>training</code>
 						</value>
-						<value id="hardware repair">hardware repair</value>
-						<value id="system update">system update</value>
-						<value id="bug fixed">bug fixed</value>
+						<value id="hardware repair">
+							<code>hardware repair</code>
+						</value>
+						<value id="system update">
+							<code>system update</code>
+						</value>
+						<value id="bug fixed">
+							<code>bug fixed</code>
+						</value>
 					</values>
 					<sql>resolution_code</sql>
 					<default_value>assistance</default_value>
