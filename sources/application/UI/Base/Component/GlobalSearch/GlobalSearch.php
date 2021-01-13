@@ -64,7 +64,7 @@ class GlobalSearch extends UIBlock
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
 		$this->SetLastQueries($aLastQueries);
-		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
 	}
 
 	/**
