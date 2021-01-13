@@ -399,6 +399,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	protected function DisplayStatusTab(WebPage $oPage)
 	{
 		$oPage->SetCurrentTab('Core:SynchroStatus');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/synchro_status.js');
 
 		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
 		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/,
@@ -437,7 +438,7 @@ class SynchroDataSource extends cmdbAbstractObject
 				$oPage->p('<h2>'.Dict::Format('Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings', $sAllReplicas, $sAllErrors,
 						$sAllWarnings).'</h2>');
 			}
-
+            $oPage->add('<div id="synchro_status_widget"></div>');
 			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
 
 			// List all the log entries for the user to select
@@ -446,16 +447,26 @@ class SynchroDataSource extends cmdbAbstractObject
 			$oPage->add('<select size="25" onChange="UpdateSynoptics(this.value);">');
 			$sSelected = ' selected'; // First log is selected by default
 			$sScript = "var aSynchroLog = {\n";
+			$aAllLog = array();
 			while ($oLog = $oSetSynchroLog->Fetch())
 			{
 				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->GetEditValue('start_date'));
 				$oPage->add('<option value="'.$oLog->GetKey().'" '.$sSelected.'>'.$sLogTitle.'</option>');
 				$sSelected = ''; // only the first log is selected by default
 				$aData = $this->ProcessLog($oLog);
+				$aAllLogs[] = $aData;
 				$sScript .= '"'.$oLog->GetKey().'": '.json_encode($aData).",\n";
 			}
 			$sScript .= "end: 'Done'";
 			$sScript .= "};\n";
+			
+			$sJSAllLogs = json_encode($aAllLogs);
+			$oPage->add_ready_script(
+<<<JS
+			$('#synchro_status_widget').synchro_status({data: $sJSAllLogs});
+JS
+			);
+			
 			$sScript .= <<<JS
 	var sLastLog = '$iLastLog';
 	function ToggleSynoptics(sId, bShow)
@@ -599,8 +610,11 @@ EOF
 	protected function ProcessLog($oLastLog)
 	{
 		$aData = array(
-			'obj_deleted' => $oLastLog->Get('stats_nb_obj_deleted'),
-			'obj_obsoleted' => $oLastLog->Get('stats_nb_obj_obsoleted'),
+		    'start_date' => $oLastLog->Get('start_date'),
+		    'end_date' => $oLastLog->Get('end_date'),
+		    'status' => $oLastLog->Get('status'),
+		    'obj_deleted' => $oLastLog->Get('stats_nb_obj_deleted'),
+		    'obj_obsoleted' => $oLastLog->Get('stats_nb_obj_obsoleted'),
 			'obj_disappeared_errors' => $oLastLog->Get('stats_nb_obj_obsoleted_errors') + $oLastLog->Get('stats_nb_obj_deleted_errors'),
 			'obj_disappeared_no_action' => $oLastLog->Get('stats_nb_replica_disappeared_no_action'),
 			'obj_updated' => $oLastLog->Get('stats_nb_obj_updated'),
