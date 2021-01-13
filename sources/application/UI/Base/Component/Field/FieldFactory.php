@@ -71,4 +71,20 @@ class FieldFactory
 
 		return $oField;
 	}
+
+	public static function MakeLarge(string $sLabel, $sValueHtml)
+	{
+		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
+		return $oField;
+	}
+
+	public static function MakeSmall(string $sLabel, $sValueHtml)
+	{
+		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
+		return $oField;
+	}
+
+
 }

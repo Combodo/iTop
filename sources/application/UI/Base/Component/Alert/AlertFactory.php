@@ -48,12 +48,14 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeForInformation(string $sTitle, string $sContent)
+	public static function MakeForInformation(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_INFORMATION);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_INFORMATION, $sId);
+
 	}
 
 	/**

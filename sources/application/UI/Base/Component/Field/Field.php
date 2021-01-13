@@ -46,6 +46,8 @@ class Field extends UIBlock
 	protected $sValueRaw;
 	/** @var string */
 	protected $sLabel;
+	/** @var string */
+	protected $sValueId;
 	/**
 	 * Could be Input, but we have legacy code that needs to set raw HTML !
 	 *
@@ -60,6 +62,7 @@ class Field extends UIBlock
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
 		$this->oValue = $oValue;
+		$this->sValueId = null;
 	}
 
 	/**
@@ -341,4 +344,24 @@ class Field extends UIBlock
 
 		return $this;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetValueId(): ?string
+	{
+		return $this->sValueId;
+	}
+
+	/**
+	 * @param string|null $sValueId
+	 *
+	 * @return $this
+	 */
+	public function SetValueId(?string $sValueId)
+	{
+		$this->sValueId = $sValueId;
+		return $this;
+	}
+
 }

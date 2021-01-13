@@ -16,17 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-.ibo-center-container--with-side-content{
+.ibo-center-container--with-side-content {
 	display: flex;
 	align-items: stretch;
 
-	#ibo-main-content{
+	#ibo-main-content {
 		flex-grow: 1; /* To occupy maximum width, side content will handle its width */
 		overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part. */
 	}
 }
 
-#ibo-side-content{
+.ibo-v-spacer {
+	padding-top: 1em;
+}
+
+#ibo-side-content {
 	background-color: $ibo-content-block--background-color;
 	border-left: $ibo-content-block--border;
 }

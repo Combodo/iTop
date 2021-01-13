@@ -19,7 +19,7 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use ajax_page;
+use AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
@@ -560,13 +560,14 @@ abstract class Controller
 				break;
 
 			case 'ajax':
-				$this->m_oPage = new ajax_page($this->GetOperationTitle());
+				$this->m_oPage = new AjaxPage($this->GetOperationTitle());
 				break;
 
 			case 'setup':
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
+		$this->m_oTwig->addGlobal('UIBlockParent', [$this->m_oPage]);
 	}
 
 	/**

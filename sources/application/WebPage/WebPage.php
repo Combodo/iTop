@@ -345,6 +345,11 @@ class WebPage implements Page
 		return $oBlock;
 	}
 
+	public function AddSubBlock(?iUIBlock $oBlock): ?iUIBlock
+	{
+		return $this->AddUiBlock($oBlock);
+	}
+
 	/**
 	 * Add a UIBlock in the page at the end by dispatching its parts in the right places (CSS, JS, HTML)
 	 *

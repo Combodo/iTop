@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
+use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
 use IssueLog;
 use Twig\Environment;
 use Twig_Environment;
@@ -64,21 +65,21 @@ class TwigHelper
 	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
-		foreach ($aAdditionalPaths as $sAdditionalPath)
-		{
+		foreach ($aAdditionalPaths as $sAdditionalPath) {
 			$oLoader->addPath($sAdditionalPath);
 		}
-		
+
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
-		if (!utils::IsDevelopmentEnvironment())
-		{
+		if (!utils::IsDevelopmentEnvironment()) {
 			// Disable the cache in development environment
 			$sLocalPath = utils::LocalPath($sViewPath);
 			$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
 			$sCachePath = utils::GetCachePath().'twig/'.$sLocalPath;
 			$oTwig->setCache($sCachePath);
 		}
+
+		$oTwig->addExtension(new UIBlockExtension());
 
 		return $oTwig;
 	}
@@ -117,18 +118,12 @@ class TwigHelper
 	 */
 	public static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension = self::DEFAULT_FILE_TYPE)
 	{
-		try
-		{
+		try {
 			return $oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
-		}
-		catch (Twig_Error $e)
-		{
-			if (!utils::StartsWith($e->getMessage(), 'Unable to find template'))
-			{
+		} catch (Twig_Error $e) {
+			if (!utils::StartsWith($e->getMessage(), 'Unable to find template')) {
 				IssueLog::Error($e->getMessage());
-			}
-			else
-			{
+			} else {
 				IssueLog::Debug($e->getMessage());
 			}
 		}
