@@ -401,4 +401,44 @@ class OQLTest extends ItopDataTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider bug3618Provider
+	 * @doesNotPerformAssertions
+	 */
+	public function testBug3618($sOQL, $sExplanation)
+	{
+		$this->markTestSkipped();
+		return;
+		if (is_string($sExplanation)) {
+			$this->debug($sExplanation);
+		}
+
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$oSet = new \CMDBObjectSet($oSearch);
+		$oSet->CountWithLimit(1);
+	}
+
+	public function bug3618Provider()
+	{
+		return [
+			'ok' => [
+				'sOql' => "SELECT UserRequest WHERE private_log LIKE '%FOO : %'
+							
+							UNION
+							
+							SELECT Ticket WHERE private_log LIKE '%BAR : %'",
+				'sExplanation' => null,
+			],
+
+			'KO: different number of columns' => [
+				'sOql' => "SELECT UserRequest WHERE private_log LIKE '%FOO : %'
+									
+							UNION
+									
+							SELECT Ticket  ",
+				'sExplanation' => 'The UNION is composed by two SELECT stmt, the 1st one has two columns the second one has only one column: BOOM!',
+			],
+		];
+	}
+
 }
