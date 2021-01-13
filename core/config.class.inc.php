@@ -1178,6 +1178,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'global_search.show_history' => [
+			'type' => 'bool',
+			'description' => 'Whether or not to display the elements in the history',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'global_search.max_history_results' => [
 			'type' => 'integer',
 			'description' => 'Max. number of elements in the history.',

@@ -23,4 +23,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...',
 	'UI:Component:GlobalSearch:Recents:Title' => 'Recents',
 	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled',
 ));

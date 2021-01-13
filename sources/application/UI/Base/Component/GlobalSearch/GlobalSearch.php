@@ -48,6 +48,8 @@ class GlobalSearch extends UIBlock
 	protected $sEndpoint;
 	/** @var array $aLastQueries */
 	protected $aLastQueries;
+	/** @var bool $bShowHistory Whether or not to display the elements in the history */
+	protected $bShowHistory;
 	/** @var int $iMaxHistoryResults Max. number of elements in the history */
 	protected $iMaxHistoryResults;
 
@@ -64,6 +66,7 @@ class GlobalSearch extends UIBlock
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
 		$this->SetLastQueries($aLastQueries);
+		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('global_search.show_history');
 		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
 	}
 
@@ -117,6 +120,15 @@ class GlobalSearch extends UIBlock
 	public function GetLastQueries()
 	{
 		return $this->aLastQueries;
+	}
+
+	/**
+	 * @see $bShowHistory
+	 * @return bool
+	 */
+	public function GetShowHistory(): bool
+	{
+		return $this->bShowHistory;
 	}
 
 	/**
