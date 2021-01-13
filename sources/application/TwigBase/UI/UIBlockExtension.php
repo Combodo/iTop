@@ -8,10 +8,12 @@
 namespace Combodo\iTop\Application\TwigBase\UI;
 
 
+use Combodo\iTop\Application\TwigBase\UI\Component\UIAlertParser;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIContentBlockParser;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIFieldParser;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIFieldSetParser;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIHtmlParser;
+use Combodo\iTop\Application\TwigBase\UI\Component\UITitleParser;
 use Twig\Extension\AbstractExtension;
 
 class UIBlockExtension extends AbstractExtension
@@ -23,6 +25,8 @@ class UIBlockExtension extends AbstractExtension
 			new UIContentBlockParser(),
 			new UIFieldSetParser(),
 			new UIFieldParser(),
+			new UIAlertParser(),
+			new UITitleParser(),
 		];
 	}
 }

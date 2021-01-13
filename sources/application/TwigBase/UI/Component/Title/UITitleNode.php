@@ -13,11 +13,11 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
 
-class UIFieldNode extends Node
+class UITitleNode extends Node
 {
-	public function __construct($sType, $oParams, $oBody, $lineno = 0, $tag = null)
+	public function __construct($sType, $oParams, $lineno = 0, $tag = null)
 	{
-		parent::__construct(['body' => $oBody], ['type' => $sType, 'params' => $oParams], $lineno, $tag);
+		parent::__construct([], ['type' => $sType, 'params' => $oParams], $lineno, $tag);
 	}
 
 	public function compile(Compiler $compiler)
@@ -32,17 +32,11 @@ class UIFieldNode extends Node
 
 		$sType = $this->getAttribute('type');
 		switch ($sType) {
-			case 'Small':
-			case 'Large':
+			case 'ForPage':
 				$compiler
-					->write("\$sLabel = \$aParams['label'] ?? '';\n")
-					->write("\$sValueId = \$aParams['value_id'] ?? null;\n")
-					->write("ob_start();\n")
-					->subcompile($this->getNode('body'))
-					->write("\$sValue = ob_get_contents();\n")
-					->write("ob_end_clean();\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\FieldFactory::Make{$sType}(\$sLabel, \$sValue);\n")
-					->write("\${$sBlockVar}->SetValueId(\$sValueId);\n");
+					->write("\$sTitle = \$aParams['title'] ?? '';\n")
+					->write("\$sId = \$aParams['id'] ?? null;\n")
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleFactory::Make{$sType}(\$sTitle, \$sId);\n");
 				break;
 			// TODO 3.0 add other Factory methods
 

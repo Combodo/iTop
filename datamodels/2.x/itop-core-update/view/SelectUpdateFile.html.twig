@@ -3,9 +3,9 @@
 {% apply spaceless %}
 
 {% UIContentBlock "" "ibo-update-core" %}
-{% UIHtml %}
-    <div class="page_header"><h1 class="ibo-title--text title is-size-3">{{ 'iTopUpdate:UI:PageTitle'|dict_s }}</h1></div>
-{% EndUIHtml %}
+
+{% UITitle ForPage {'title':'iTopUpdate:UI:PageTitle'|dict_s} %}
+
 {% UIHtml %}
     <div class="ibo-v-spacer">&nbsp;</div>
 {% EndUIHtml %}
@@ -13,13 +13,9 @@
 {% UIContentBlock "" "display_block display-files" %}
 {% UIFieldSet {'legend':'iTopUpdate:UI:Status'|dict_s} %}
 
-{% UIHtml %}
-    <div id="header-requirements" class="ibo-alert ibo-is-information ibo-is-opened">
-        <div class="ibo-alert--body">
-            <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
-        </div>
-    </div>
-{% EndUIHtml %}
+{% UIAlert ForInformation {'title':'', 'id':'header-requirements'} %}
+    <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
+{% EndUIAlert %}
 
     {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
 

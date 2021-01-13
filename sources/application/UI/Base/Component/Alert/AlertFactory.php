@@ -35,12 +35,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeNeutral(string $sTitle, string $sContent)
+	public static function MakeNeutral(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_NEUTRAL);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_NEUTRAL, $sId);
 	}
 
 	/**
@@ -63,12 +64,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeForSuccess(string $sTitle, string $sContent)
+	public static function MakeForSuccess(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SUCCESS);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SUCCESS, $sId);
 	}
 
 	/**
@@ -76,12 +78,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeForWarning(string $sTitle, string $sContent)
+	public static function MakeForWarning(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_WARNING);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_WARNING, $sId);
 	}
 
 	/**
@@ -89,12 +92,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeForDanger(string $sTitle, string $sContent)
+	public static function MakeForDanger(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_DANGER);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_DANGER, $sId);
 	}
 
 	/**
@@ -102,12 +106,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeForFailure(string $sTitle, string $sContent)
+	public static function MakeForFailure(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_FAILURE);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_FAILURE, $sId);
 	}
 
 	/**
@@ -115,12 +120,13 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeWithBrandingPrimaryColor(string $sTitle, string $sContent)
+	public static function MakeWithBrandingPrimaryColor(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_PRIMARY);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_PRIMARY, $sId);
 	}
 
 	/**
@@ -128,11 +134,12 @@ class AlertFactory
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent The raw HTML content, must be already sanitized
+	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
-	public static function MakeWithBrandingSecondaryColor(string $sTitle, string $sContent)
+	public static function MakeWithBrandingSecondaryColor(string $sTitle, string $sContent, ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SECONDARY);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SECONDARY, $sId);
 	}
 }

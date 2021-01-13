@@ -13,7 +13,7 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
 
-class UIFieldNode extends Node
+class UIAlertNode extends Node
 {
 	public function __construct($sType, $oParams, $oBody, $lineno = 0, $tag = null)
 	{
@@ -28,21 +28,26 @@ class UIFieldNode extends Node
 			->addDebugInfo($this)
 			->write("\$aParams = ")
 			->subcompile($oParams)
-			->raw(";\n");
+			->raw(";\n")
+			->write("\$sTitle = \$aParams['title'] ?? '';\n")
+			->write("\$sId = \$aParams['id'] ?? null;\n")
+			->write("ob_start();\n")
+			->subcompile($this->getNode('body'))
+			->write("\$sContent = ob_get_contents();\n")
+			->write("ob_end_clean();\n");
 
 		$sType = $this->getAttribute('type');
 		switch ($sType) {
-			case 'Small':
-			case 'Large':
+			case 'ForInformation':
+			case 'Neutral':
+			case 'ForSuccess':
+			case 'ForWarning':
+			case 'ForDanger':
+			case 'ForFailure':
+			case 'WithBrandingPrimaryColor':
+			case 'WithBrandingSecondaryColor':
 				$compiler
-					->write("\$sLabel = \$aParams['label'] ?? '';\n")
-					->write("\$sValueId = \$aParams['value_id'] ?? null;\n")
-					->write("ob_start();\n")
-					->subcompile($this->getNode('body'))
-					->write("\$sValue = ob_get_contents();\n")
-					->write("ob_end_clean();\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\FieldFactory::Make{$sType}(\$sLabel, \$sValue);\n")
-					->write("\${$sBlockVar}->SetValueId(\$sValueId);\n");
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\AlertFactory::Make{$sType}(\$sTitle, \$sContent, \$sId);\n");
 				break;
 			// TODO 3.0 add other Factory methods
 
