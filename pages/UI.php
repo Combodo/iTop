@@ -574,7 +574,7 @@ try
 
 		case 'full_text': // Global "google-like" search
 			$oP->DisableBreadCrumb();
-			$sQuery = trim(utils::ReadPostedParam('query', '', 'raw_data'));
+			$sQuery = trim(utils::ReadParam('text', '', false, 'raw_data'));
 			$iTune = utils::ReadParam('tune', 0);
 			if (empty($sQuery))
 			{

@@ -42,7 +42,7 @@ class GlobalSearch extends UIBlock
 		'js/components/global-search.js',
 	];
 
-	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php?operation=full_text';
+	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php';
 
 	/** @var string $sEndpoint Absolute endpoint URL of the search form */
 	protected $sEndpoint;
