@@ -698,7 +698,7 @@ class WebPage implements Page
 	/**
 	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
 	 *
-	 * @since 2.7.2-2 3.0.0 N°3416
+	 * @since 2.7.3 3.0.0 N°3416
 	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
 	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
