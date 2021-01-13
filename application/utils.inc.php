@@ -1638,19 +1638,47 @@ class utils
 	}
 
 	/**
-	 * Helper to encapsulation iTop's htmlentities
+	 * @see  utils::EscapeHtml to escape only characters with special meaning in HTML
+	 *
 	 * @param string $sValue
-	 * @return string
+	 *
+	 * @return string ⚠ Warning : will escape any non us-ascii char !
+	 *
+	 * @link https://www.php.net/manual/fr/function.htmlentities.php
+	 * @uses \htmlentities()
 	 */
 	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-	}	
-	
+	}
+
+	/**
+	 * @param string $sValue
+	 *
+	 * @return string passed value with only characters having a special meaning in HTML escaped as entities
+	 *    Since 3.0.0 we were using for this {@link HtmlEntities} but it was overkill and leads to double escaping !
+	 *
+	 * @uses \htmlspecialchars()
+	 * @link https://www.php.net/manual/fr/function.htmlspecialchars.php
+	 * @since 3.0.0 N°3623
+	 */
+	public static function EscapeHtml($sValue)
+	{
+		return htmlspecialchars(
+			$sValue,
+			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
+			WebPage::PAGES_CHARSET,
+			false
+		);
+	}
+
 	/**
 	 * Helper to encapsulation iTop's html_entity_decode
+	 *
 	 * @param string $sValue
+	 *
 	 * @return string
+	 * @uses \html_entity_decode()
 	 * @since 2.7.0
 	 */
 	public static function HtmlEntityDecode($sValue)

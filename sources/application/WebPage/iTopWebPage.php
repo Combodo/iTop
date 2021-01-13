@@ -630,8 +630,8 @@ JS
 			$aNewEntry = [
 				'id' => $this->sBreadCrumbEntryId,
 				'url' => $this->sBreadCrumbEntryUrl,
-				'label' => utils::HtmlEntities($this->sBreadCrumbEntryLabel),
-				'description' => utils::HtmlEntities($this->sBreadCrumbEntryDescription),
+				'label' => utils::EscapeHtml($this->sBreadCrumbEntryLabel),
+				'description' => utils::EscapeHtml($this->sBreadCrumbEntryDescription),
 				'icon' => $this->sBreadCrumbEntryIcon,
 				'icon_type' => $this->sBreadCrumbEntryIconType,
 			];

@@ -79,8 +79,8 @@ function ShowExamples($oP, $sExpression)
 			}
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription, ENT_QUOTES, 'UTF-8')."</div>",
-				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql, ENT_QUOTES, 'UTF-8')."</div>",
+				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
 				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
 			);
 		}
@@ -174,7 +174,7 @@ try
 
 	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
 	$oQueryForm->AddSubBlock($oQueryTitle);
-	$oQueryTextArea = new TextArea(utils::HtmlEntities($sExpression), 'expression', 120, 8);
+	$oQueryTextArea = new TextArea(utils::EscapeHtml($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->SetName('expression');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
@@ -233,11 +233,11 @@ EOF
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->ToOQL()).'</pre>'));
+		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->ToOQL()).'</pre>'));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->serialize()).'</pre>'));
+		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->serialize()).'</pre>'));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
@@ -302,7 +302,7 @@ EOF
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
 					$sSyntaxErrorText .= $oP->GetP("Suggesting: $sFixedExpressionHtml");
-					$sEscapedExpression = utils::HtmlEntities(addslashes($sFixedExpression));
+					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
 					$sSyntaxErrorText .= $oP->GetP(<<<HTML
 <button onClick="$('textarea[name=expression]')
 	.val('$sEscapedExpression')
