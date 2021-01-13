@@ -286,6 +286,7 @@ EOF
 		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
 		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
+		$oMoreInfoSection->EnableSaveCollapsibleState('run_query__more-info');
 		$oP->AddUiBlock($oMoreInfoSection);
 	} elseif ($sSyntaxError) {
 		if ($e instanceof OqlException) {
