@@ -7241,32 +7241,38 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Using GetLinkClasses is the recommended way to determine if a class is
-	 * actually an N-N relation because it is based on the decision made by the
-	 * designer the data model
+	 * Return true if $sClass is a n:n class from the DM.
+	 * This is the recommended way to determine if a class is actually a n:n relation because it is based on the decision made by the designer in the datamodel
 	 *
+	 * @param string $sClass
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public static function IsLinkClass($sClass): bool
+	{
+		return (isset(self::$m_aClassParams[$sClass]["is_link"]) && self::$m_aClassParams[$sClass]["is_link"]);
+	}
+
+	/**
+	 * Return an array n:n classes with their external keys / target classes.
+	 *
+	 * @uses self::IsLinkClass()
 	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
 	 */
-	public static function GetLinkClasses()
+	public static function GetLinkClasses(): array
 	{
 		$aRet = array();
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (isset(self::$m_aClassParams[$sClass]["is_link"]))
-			{
-				if (self::$m_aClassParams[$sClass]["is_link"])
-				{
-					$aExtKeys = array();
-					foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-					{
-						if ($oAttDef->IsExternalKey())
-						{
-							$aExtKeys[$sAttCode] = $oAttDef->GetTargetClass();
-						}
+		foreach(self::GetClasses() as $sClass) {
+			if (self::IsLinkClass($sClass)) {
+				$aExtKeys = array();
+				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+					if ($oAttDef->IsExternalKey()) {
+						$aExtKeys[$sAttCode] = $oAttDef->GetTargetClass();
 					}
-					$aRet[$sClass] = $aExtKeys;
 				}
+				$aRet[$sClass] = $aExtKeys;
 			}
 		}
 
