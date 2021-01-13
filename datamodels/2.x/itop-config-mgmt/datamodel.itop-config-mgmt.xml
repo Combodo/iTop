@@ -6555,9 +6555,7 @@
 							<dashlet id="1" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:AllDevices</title>
-								<style>
 									<icon>itop-config-mgmt/images/server.png</icon>
-								</style>
 								<subtitle>Menu_ConfigManagement_AllDevices</subtitle>
 							</dashlet>
 							<dashlet id="2" xsi:type="DashletBadge">
@@ -6576,9 +6574,7 @@
 							<dashlet id="4" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:SWAndApps</title>
-								<style>
 									<icon>itop-config-mgmt/images/application.png</icon>
-								</style>
 							</dashlet>
 							<dashlet id="5" xsi:type="DashletBadge">
 								<rank>1</rank>
@@ -6628,9 +6624,7 @@
 							<dashlet id="15" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:Misc</title>
-								<style>
 									<icon>itop-config-mgmt/images/subnet.png</icon>
-								</style>
 							</dashlet>
 							<dashlet id="16" xsi:type="DashletBadge">
 								<rank>1</rank>

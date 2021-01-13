@@ -10,19 +10,15 @@ $.ajax({
         "operation": "CanUpdateCore"
     },
     dataType: "json",
-    success: function(data)
-    {
+    success: function (data) {
         var oRequirements = $("#header-requirements");
         var oCanCoreUpdate = $("#can-core-update");
         oCanCoreUpdate.html(data.sMessage);
-        oRequirements.removeClass("message_info");
-        if (data.bStatus)
-        {
-            oRequirements.addClass("message_ok");
-        }
-        else
-        {
-            oRequirements.addClass("message_error");
+        oRequirements.removeClass("ibo-is-information");
+        if (data.bStatus) {
+            oRequirements.addClass("ibo-is-success");
+        } else {
+            oRequirements.addClass("ibo-is-failure");
         }
     }
 });

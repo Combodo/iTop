@@ -482,23 +482,17 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-						<style>
 							<icon>images/incident-deadline.png</icon>
-						</style>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-						<style>
 							<icon>images/incident-escalated.png</icon>
-						</style>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-						<style>
 							<icon>images/incident-closed.png</icon>
-						</style>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1958,9 +1952,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<style>
 										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
-									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -1982,9 +1974,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<style>
 										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
-									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -2006,9 +1996,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<style>
 										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
-									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -2033,9 +2021,7 @@
 										  AND (L.impact_code != 'not_impacted')
 										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<style>
 										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
-									</style>
 									<default>yes</default>
 								</item>
 							</items>
@@ -2052,9 +2038,7 @@
 										  AND (L.impact_code != 'not_impacted')
 										]]></oql>
 									<dict>Tickets:Related:OpenIncidents</dict>
-									<style>
 										<icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
-									</style>
 									<default>yes</default>
 								</item>
 							</items>

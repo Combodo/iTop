@@ -279,23 +279,17 @@
           <item id="approved">
             <rank>1</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-            <style>
               <icon>images/change-approved.png</icon>
-            </style>
           </item>
           <item id="rejected">
             <rank>2</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-            <style>
               <icon>images/change-rejected.png</icon>
-            </style>
           </item>
           <item id="closed">
             <rank>3</rank>
             <color>HIGHLIGHT_CLASS_NONE</color>
-            <style>
               <icon>images/change-closed.png</icon>
-            </style>
           </item>
         </highlight_scale>
         <stimuli>
@@ -4665,9 +4659,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
-                  </style>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4682,9 +4674,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-done.png</icon>
-                  </style>
                 </item>
               </items>
             </down>
@@ -4706,9 +4696,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
-                  </style>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4723,9 +4711,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-done.png</icon>
-                  </style>
                 </item>
               </items>
             </down>
@@ -4747,9 +4733,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
-                  </style>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4764,9 +4748,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-done.png</icon>
-                  </style>
                 </item>
               </items>
             </down>
@@ -4791,9 +4773,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
-                  </style>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4807,9 +4787,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-done.png</icon>
-                  </style>
                 </item>
               </items>
             </down>
@@ -4826,9 +4804,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
-                  </style>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4842,9 +4818,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <style>
                     <icon>itop-change-mgmt-itil/images/change-done.png</icon>
-                  </style>
                 </item>
               </items>
             </up>

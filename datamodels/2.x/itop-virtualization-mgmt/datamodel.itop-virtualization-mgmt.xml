@@ -901,9 +901,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                <style>
                   <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
-                </style>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>
