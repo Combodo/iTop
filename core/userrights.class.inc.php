@@ -71,6 +71,23 @@ abstract class UserRightsAddOnAPI
 	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = array()); // returns a filter object
 
 	/**
+	 * Used to build select queries showing only objects visible for the given user, can return:
+	 * false => continue the normal processing (GetSelectFilter will then be called for certain categories of classes)
+	 * true => no restriction applies to this class (takes precedence over GetSelectFilter)
+	 * DBSearch => filter to apply
+	 *
+	 * @param string $sLogin
+	 * @param string $sClass
+	 * @param array $aSettings
+	 *
+	 * @return bool|DBSearch
+	 */
+	public function GetSelectFilterEx($sLogin, $sClass, $aSettings = array())
+	{
+		return false;
+	}// returns true, false or a filter object
+	
+	/**
 	 * @param \User $oUser
 	 * @param string $sClass
 	 * @param int $iActionCode
@@ -1399,14 +1416,23 @@ class UserRights
 
 		try
 		{
-			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
+			$filter = self::$m_oAddOn->GetSelectFilterEx(self::$m_oUser, $sClass, $aSettings);
+
+			if ($filter === false)
 			{
-				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
+				// Check Bug 1436 for details
+				if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
+				{
+					return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
+				}
+				else
+				{
+					return true;
+				}
 			}
 			else
 			{
-				return true;
+				return $filter;
 			}
 		} catch (Exception $e)
 		{

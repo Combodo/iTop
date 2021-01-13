@@ -1314,6 +1314,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'strict_admin_delegation' => [
+			'type' => 'bool',
+			'description' => 'If set to true, the Administrator profile and the administrator accounts will be hidden from non-admin users.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 

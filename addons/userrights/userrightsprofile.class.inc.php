@@ -593,6 +593,51 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		}
 		return $aRet;
 	}
+	public function GetSelectFilterEx($sLogin, $sClass, $aSettings = array())
+	{
+		static $bRecursive = false;
+
+		if (MetaModel::GetConfig()->Get('strict_admin_delegation'))
+		{
+			// Hide the Administrator profile to non administrators
+			if ($sClass == 'URP_Profiles')
+			{
+				// The two lines below do not work... (exception: missing parameter 'name' !! in the parameters of the query)
+				//$oFilter  = new DBObjectSearch($sClass);
+				//$oFilter->AddCondition('name', 'Administrator', '!=');
+				// So let's use an OQL
+				$oFilter = DBSearch::FromOQL("SELECT URP_Profiles WHERE name != 'Administrator'");
+				return $oFilter;
+			}
+			// Hide the Administrator accounts to non-administrators
+			if (!$bRecursive && (($sClass == 'User') || is_subclass_of($sClass, 'User')))
+			{
+				// The query on the line below does not work... it generate an infinite recursion loop
+				// SELECT User WHERE id NOT IN (SELECT User AS U JOIN URP_UserProfile AS L ON L.userid = U.id WHERE L.profile = 'Administrator')
+				// So let's do it in two passes
+				$bRecursive = true;
+				$oSearch = DBSearch::FromOQL("SELECT User AS U JOIN URP_UserProfile AS L ON L.userid = U.id WHERE L.profile = 'Administrator'");
+				$oSet = new DBObjectSet($oSearch);
+				if ($oSet->Count() > 0)
+				{
+					$oSet->OptimizeColumnLoad(array('User' => array('login')));
+					$aAdminIds = array();
+					while($oUser = $oSet->Fetch())
+					{
+						$aAdminIds[] = $oUser->GetKey();
+					}
+					$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE id NOT IN (".implode(',', $aAdminIds).")");
+					$bRecursive = false;
+					return $oFilter;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
 	{
