@@ -23,4 +23,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled',
 ));
