@@ -72,7 +72,7 @@ class QuickCreate extends UIBlock
 	public function __construct(array $aLastClasses = [], ?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->aAvailableClasses = UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true);
+		$this->aAvailableClasses = $this->FilterAvailableClasses(UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true));
 		$this->aLastClasses = $aLastClasses;
 		$this->iMaxAutocompleteResults = (int) MetaModel::GetConfig()->Get('quick_create.max_autocomplete_results');
 		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('quick_create.show_history');
@@ -87,6 +87,30 @@ class QuickCreate extends UIBlock
 	public function GetAvailableClasses()
 	{
 		return $this->aAvailableClasses;
+	}
+
+	/**
+	 * Return the $aClasses array of DM classes minus the classes that should not be proposed in the autocomplete:
+	 * - n:n classes
+	 *
+	 * @param array $aClasses
+	 *
+	 * @return array
+	 */
+	protected function FilterAvailableClasses(array $aClasses): array
+	{
+		$aFilteredClasses = [];
+
+		foreach ($aClasses as $sClassName => $sClassLabel){
+			// Skip n:n classes
+			if(MetaModel::IsLinkClass($sClassName)) {
+				continue;
+			}
+
+			$aFilteredClasses[$sClassName] = $sClassLabel;
+		}
+
+		return $aFilteredClasses;
 	}
 
 	/**
