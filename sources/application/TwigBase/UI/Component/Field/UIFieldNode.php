@@ -22,7 +22,7 @@ class UIFieldNode extends Node
 
 	public function compile(Compiler $compiler)
 	{
-		$sBlockVar = UIBlockHelper::GetBlockVarName('oFieldSet');
+		$sBlockVar = UIBlockHelper::GetBlockVarName('oField');
 		$oParams = $this->getAttribute('params');
 		$compiler
 			->addDebugInfo($this)

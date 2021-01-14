@@ -9,6 +9,8 @@ namespace Combodo\iTop\CoreUpdate\Controller;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
+use DBObjectSearch;
+use DBObjectSet;
 use Dict;
 use Exception;
 use SetupUtils;
@@ -16,21 +18,24 @@ use utils;
 
 class UpdateController extends Controller
 {
-    public function OperationSelectUpdateFile()
+	public function OperationSelectUpdateFile()
 	{
 		$sTransactionId = utils::GetNewTransactionId();
-		$aParams = array();
+		$aParams = [];
 		$aParams['sTransactionId'] = $sTransactionId;
-        $aParams['aPreviousInstall'] = $this->GetPreviousInstallations();
-        $aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true'));
-        $aParams['iDiskFreeSpace'] = disk_free_space(APPROOT);
-        $aParams['sDiskFreeSpace'] = utils::BytesToFriendlyFormat($aParams['iDiskFreeSpace']);
+		//$aParams['aPreviousInstall'] = $this->GetPreviousInstallations();
+		$aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php', array('maintenance' => 'true'));
+		$aParams['iDiskFreeSpace'] = disk_free_space(APPROOT);
+		$aParams['sDiskFreeSpace'] = utils::BytesToFriendlyFormat($aParams['iDiskFreeSpace']);
 		$aParams['iFileUploadMaxSize'] = $this->GetFileUploadMaxSize();
 		$aParams['sFileUploadMaxSize'] = utils::BytesToFriendlyFormat($aParams['iFileUploadMaxSize']);
 		$aParams['sPostMaxSize'] = ini_get('post_max_size');
 		$aParams['sUploadMaxSize'] = ini_get('upload_max_filesize');
+		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE parent_id=0 AND name!="datamodel"');
+		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
+		$aParams['oSet'] = $oSet;
 
-        $this->DisplayPage($aParams);
+		$this->DisplayPage($aParams);
 	}
 
 	/**

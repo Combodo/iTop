@@ -13,7 +13,7 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
 
-class UITitleNode extends Node
+class UIDataTableNode extends Node
 {
 	public function __construct($sType, $oParams, $lineno = 0, $tag = null)
 	{
@@ -22,29 +22,27 @@ class UITitleNode extends Node
 
 	public function compile(Compiler $compiler)
 	{
-		$sBlockVar = UIBlockHelper::GetBlockVarName('oTitle');
+		$sBlockVar = UIBlockHelper::GetBlockVarName('oDataTable');
 		$oParams = $this->getAttribute('params');
+		$sType = $this->getAttribute('type');
 		$compiler
 			->addDebugInfo($this)
 			->write("\$aParams = ")
 			->subcompile($oParams)
 			->raw(";\n");
 
-		$sType = $this->getAttribute('type');
 		switch ($sType) {
-			case 'ForPage':
+			case 'ForResult':
 				$compiler
-					->write("\$sTitle = \$aParams['title'] ?? '';\n")
-					->write("\$sId = \$aParams['id'] ?? null;\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleFactory::Make{$sType}(\$sTitle, \$sId);\n");
+					->write("\$sListId = \$aParams['list_id'] ?? '';\n")
+					->write("\$oSet = \$aParams['object_set'] ?? null;\n")
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableFactory::Make{$sType}(\$context['UIBlockParent'][0], \$sListId, \$oSet);\n")
+					->write(UIBlockHelper::AddToParentBlock($sBlockVar));
 				break;
 			// TODO 3.0 add other Factory methods
 
 			default:
 				throw new SyntaxError(sprintf('%s: Bad type "%s" for %s at line %d', $this->getTemplateName(), $sType, $this->tag, $this->lineno), $this->lineno, $this->getSourceContext());
-
 		}
-		$compiler->write(UIBlockHelper::AddToParentBlock($sBlockVar));
-
 	}
 }

@@ -16,7 +16,11 @@
 	 data-value-raw="{{ aParams.value_raw }}"
 >
 	<div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}</div>
-	<div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>{{ render_block(oUIBlock.GetValue()) }}</div>
+	<div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>
+		{% for oSubBlock in oUIBlock.GetSubBlocks() %}
+			{{ render_block(oSubBlock, {aPage: aPage}) }}
+		{% endfor %}
+	</div>
 	{% if (oUIBlock.GetComments() is not null) %}
 		{{ oUIBlock.GetComments() }}
 	{% endif %}

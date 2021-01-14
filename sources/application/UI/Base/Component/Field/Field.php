@@ -7,12 +7,13 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
  * @since 3.0.0
  */
-class Field extends UIBlock
+class Field extends UIContentBlock
 {
 	/** @inheritdoc */
 	public const BLOCK_CODE = 'ibo-field';
@@ -48,21 +49,18 @@ class Field extends UIBlock
 	protected $sLabel;
 	/** @var string */
 	protected $sValueId;
-	/**
-	 * Could be Input, but we have legacy code that needs to set raw HTML !
-	 *
-	 * @var UIBlock
-	 */
-	protected $oValue;
+
 	/** @var string */
 	protected $sComments;
 
-	public function __construct(string $sLabel, UIBlock $oValue, ?string $sId = null)
+	public function __construct(string $sLabel, UIBlock $oValue = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
-		$this->oValue = $oValue;
 		$this->sValueId = null;
+		if (!is_null($oValue)) {
+			$this->AddSubBlock($oValue);
+		}
 	}
 
 	/**

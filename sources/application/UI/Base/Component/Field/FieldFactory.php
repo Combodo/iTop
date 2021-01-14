@@ -8,7 +8,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
  * @since 3.0.0
@@ -61,7 +61,7 @@ class FieldFactory
 		$oField->$sMethodName((($iParamsFlags & $iConstant) === $iConstant));
 	}
 
-	public static function MakeFromObject(string $sLabel, AbstractInput $oInput, ?string $sLayout = null)
+	public static function MakeFromObject(string $sLabel, UIBlock $oInput, ?string $sLayout = null)
 	{
 		$oField = new Field($sLabel, $oInput);
 

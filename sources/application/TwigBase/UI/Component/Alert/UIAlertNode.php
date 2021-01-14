@@ -22,7 +22,7 @@ class UIAlertNode extends Node
 
 	public function compile(Compiler $compiler)
 	{
-		$sBlockVar = UIBlockHelper::GetBlockVarName('oFieldSet');
+		$sBlockVar = UIBlockHelper::GetBlockVarName('oAlert');
 		$oParams = $this->getAttribute('params');
 		$compiler
 			->addDebugInfo($this)
