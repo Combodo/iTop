@@ -63,7 +63,7 @@ class CollapsibleSection extends UIContentBlock
 	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
 	{
 		$this->bIsSaveCollapsibleStateEnabled = true;
-		$this->sSectionStateStorageKey = $sSectionStateStorageKey;
+		$this->sSectionStateStorageKey = 'UI-Collapsible__'.$sSectionStateStorageKey;
 
 		return $this;
 	}

@@ -44,7 +44,7 @@ $sAlertContent = Dict::S('UI:NotificationsMenu:HelpContent');
 $oConfigurationHelp = new CollapsibleSection($sAlertTitle, [new Html($sAlertContent)]);
 $oConfigurationHelp
 	->SetOpenedByDefault(true)
-	->EnableSaveCollapsibleState('notifications-home');
+	->EnableSaveCollapsibleState('notifications__home');
 $oPageContentLayout->AddMainBlock($oConfigurationHelp);
 
 $oP->AddTabContainer('Tabs_0');
