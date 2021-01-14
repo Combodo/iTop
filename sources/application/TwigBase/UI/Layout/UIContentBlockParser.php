@@ -22,20 +22,14 @@ class UIContentBlockParser extends AbstractTokenParser
 		$iLineno = $token->getLine();
 		$oStream = $this->parser->getStream();
 
-		$sName = null;
-		if ($oStream->test(Token::STRING_TYPE)) {
-			$sName = $oStream->expect(Token::STRING_TYPE)->getValue();
-		}
-		$sContainerClass = '';
-		if ($oStream->test(Token::STRING_TYPE)) {
-			$sContainerClass = $oStream->expect(Token::STRING_TYPE)->getValue();
-		}
+		$oParams = $this->parser->getExpressionParser()->parseExpression();
+
 		$oStream->expect(Token::BLOCK_END_TYPE);
 
 		$oBody = $this->parser->subparse([$this, 'decideForEnd'], true);
 		$oStream->expect(Token::BLOCK_END_TYPE);
 
-		return new UIContentBlockNode($sName, $sContainerClass, $oBody, $iLineno, $this->getTag());
+		return new UIContentBlockNode($oParams, $oBody, $iLineno, $this->getTag());
 	}
 
 	/**

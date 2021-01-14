@@ -12,7 +12,7 @@ class UIBlockHelper
 {
 	public static function PushParentBlock($sBlockVarName)
 	{
-		return "\$context['UIBlockParent'][] = \${$sBlockVarName};\n";
+		return "array_push(\$context['UIBlockParent'], \${$sBlockVarName});\n";
 	}
 
 	public static function PopParentBlock()
