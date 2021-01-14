@@ -27,6 +27,29 @@ class InputFactory
 	}
 
 	/**
+	 * @see Field component that is better adapter when dealing with a standard iTop form
+	 *
+	 * @param string $sLabel
+	 * @param string $sInputName
+	 * @param string|null $sInputValue
+	 * @param string|null $sInputId
+	 * @param string $sInputType
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
+	 */
+	public static function MakeForInputWithLabel(
+		string $sLabel, string $sInputName, ?string $sInputValue = null,
+		?string $sInputId = null, string $sInputType = 'type'
+	): InputWithLabel
+	{
+		$oInput = new Input($sInputId);
+		$oInput->SetType($sInputType);
+		$oInput->SetValue($sInputValue);
+
+		return static::MakeInputWithLabel($sInputName, $sLabel, $oInput, $sInputId);
+	}
+
+	/**
 	 * If you need to have a real field with a label, you might use a {@link Field} component instead
 	 *
 	 * @param string $sName
@@ -38,14 +61,19 @@ class InputFactory
 	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
 	{
 		$oInput = new Select($sId);
+
+		return static::MakeInputWithLabel($sName, $sLabel, $oInput, $sId);
+	}
+
+	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
+	{
 		$oInput->SetName($sName);
 
 		if (is_null($sId)) {
 			$sId = $oInput->GetId();
 		}
-		$oInputWithLabel = new InputWithLabel($sLabel, $oInput, $sId);
 
-		return $oInputWithLabel;
+		return new InputWithLabel($sLabel, $oInput, $sId);
 	}
 
 	public static function MakeForSelect(string $sName, ?string $sId = null): Select

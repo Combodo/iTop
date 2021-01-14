@@ -23,7 +23,9 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -172,19 +174,12 @@ try
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
+	//--- Query textarea
 	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
 	$oQueryForm->AddSubBlock($oQueryTitle);
 	$oQueryTextArea = new TextArea(utils::EscapeHtml($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->SetName('expression');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
-
-	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
-		Dict::S('UI:Button:Evaluate'),
-		null,
-		null,
-		true
-	);
-	$oQueryForm->AddSubBlock($oQuerySubmit);
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
 	$oP->add_ready_script(<<<EOF
@@ -196,15 +191,31 @@ EOF
 	);
 
 	if (count($aArgs) > 0) {
-		$oP->add("<div class=\"wizContainer\">\n");
-		$oP->add("<h2>Query arguments</h2>\n");
+		//--- Query arguments
+		$oQueryArgsContainer = PanelFactory::MakeForInformation('Query arguments')
+			->SetCSSClasses('wizContainer');
+		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
-			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
+			$oArgInput = InputFactory::MakeForInputWithLabel(
+				$sParam,
+				'arg_'.$sParam,
+				$sValue
+			);
+			$oQueryArgsContainer->AddSubBlock($oArgInput);
 		}
-		$oP->add("</div>\n");
 	}
 
+	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
+		Dict::S('UI:Button:Evaluate'),
+		null,
+		null,
+		true
+	);
+	$oQueryForm->AddSubBlock($oQuerySubmit);
+
+
 	if ($oFilter) {
+		//--- Query filter
 		$oP->add("<h2>Query results</h2>\n");
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
@@ -230,6 +241,7 @@ EOF
 			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
+		//--- More info
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
