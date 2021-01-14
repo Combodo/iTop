@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
@@ -83,6 +84,8 @@ function ShowExamples($oP, $sExpression)
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
 				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
 				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				//TODO 3.0.0 : buttons are not styled properly yet...
+				// This whole "query examples" may be migrated to TWIG using iTop Twig tags ?
 				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
 			);
 		}
@@ -301,6 +304,9 @@ EOF
 		$oMoreInfoSection->EnableSaveCollapsibleState('run_query__more-info');
 		$oP->AddUiBlock($oMoreInfoSection);
 	} elseif ($sSyntaxError) {
+		$oSyntaxErrorPanel = PanelFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'));
+		$oP->AddUiBlock($oSyntaxErrorPanel);
+
 		if ($e instanceof OqlException) {
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
@@ -313,27 +319,27 @@ EOF
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
-					$sSyntaxErrorText .= $oP->GetP("Suggesting: $sFixedExpressionHtml");
+					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
+					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
+
 					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
-					$sSyntaxErrorText .= $oP->GetP(<<<HTML
-<button onClick="$('textarea[name=expression]')
-	.val('$sEscapedExpression')
-	.focus();">Use this query</button>
-HTML
+					$oUseSuggestedQueryButton = ButtonFactory::MakeForDestructiveAction('Use this query');
+					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
+let \$oQueryTextarea = $('textarea[name=expression]');
+\$oQueryTextarea.val('$sEscapedExpression').focus();
+\$oQueryTextarea.closest('form').submit();
+JS
 					);
+					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
-					$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
+					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getHtmlDesc()));
 				}
 			} else {
-				$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
+				$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getHtmlDesc()));
 			}
 		} else {
-			$sSyntaxErrorText = $oP->GetP($e->getMessage());
+			$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getMessage()));
 		}
-
-		$oSyntaxErrorPanel = AlertFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $sSyntaxErrorText);
-		$oSyntaxErrorPanel->SetOpenedByDefault(true);
-		$oP->AddUiBlock($oSyntaxErrorPanel);
 	}
 }
 catch (Exception $e) {

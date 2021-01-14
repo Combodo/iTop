@@ -179,6 +179,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\GlobalSearch\\GlobalSearchFactory' => $baseDir . '/sources/application/UI/Base/Component/GlobalSearch/GlobalSearchFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\GlobalSearch\\GlobalSearchHelper' => $baseDir . '/sources/application/UI/Base/Component/GlobalSearch/GlobalSearchHelper.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html' => $baseDir . '/sources/application/UI/Base/Component/Html/Html.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\HtmlFactory' => $baseDir . '/sources/application/UI/Base/Component/Html/HtmlFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\AbstractInput' => $baseDir . '/sources/application/UI/Base/Component/Input/AbstractInput.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input' => $baseDir . '/sources/application/UI/Base/Component/Input/Input.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory' => $baseDir . '/sources/application/UI/Base/Component/Input/InputFactory.php',

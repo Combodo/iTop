@@ -409,6 +409,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\GlobalSearch\\GlobalSearchFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/GlobalSearch/GlobalSearchFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\GlobalSearch\\GlobalSearchHelper' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/GlobalSearch/GlobalSearchHelper.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Html/Html.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\HtmlFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Html/HtmlFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\AbstractInput' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/AbstractInput.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/Input.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/InputFactory.php',
