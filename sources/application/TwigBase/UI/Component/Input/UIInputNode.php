@@ -37,7 +37,7 @@ class UIInputNode extends Node
 					->write("\$sName = \$aParams['name'] ?? '';\n")
 					->write("\$sValue = \$aParams['value'] ?? '';\n")
 					->write("\$sId = \$aParams['id'] ?? null;\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory::Make{$sFactoryType}(\$sName, \$sValue, \$sId);\n");
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory::MakeForHidden(\$sName, \$sValue, \$sId);\n");
 				break;
 
 			case 'Standard':
@@ -46,7 +46,7 @@ class UIInputNode extends Node
 					->write("\$sName = \$aParams['name'] ?? '';\n")
 					->write("\$sValue = \$aParams['value'] ?? '';\n")
 					->write("\$sId = \$aParams['id'] ?? null;\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory::Make{$sFactoryType}(\$sType, \$sName, \$sValue, \$sId);\n")
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory::MakeStandard(\$sType, \$sName, \$sValue, \$sId);\n")
 					->write("if (\$aParams['checked'] ?? false) {\n")
 					->indent()
 					->write("\${$sBlockVar}->SetChecked(true);\n")
@@ -54,20 +54,6 @@ class UIInputNode extends Node
 					->write("}\n");
 				break;
 
-			case 'WithLabel':
-				$compiler
-					->write("\$sLabel = \$aParams['label'] ?? '';\n")
-					->write("\$sType = \$aParams['type'] ?? '';\n")
-					->write("\$sName = \$aParams['name'] ?? '';\n")
-					->write("\$sValue = \$aParams['value'] ?? '';\n")
-					->write("\$sId = \$aParams['id'] ?? null;\n")
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputFactory::Make{$sFactoryType}(\$sType, \$sLabel, \$sName, \$sValue, \$sId);\n")
-					->write("if (\$aParams['checked'] ?? false) {\n")
-					->indent()
-					->write("\${$sBlockVar}->GetInput()->SetChecked(true);\n")
-					->outdent()
-					->write("}\n");
-				break;
 			// TODO 3.0 add other Factory methods
 
 			default:

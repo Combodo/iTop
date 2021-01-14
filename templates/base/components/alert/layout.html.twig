@@ -14,11 +14,13 @@
 		</div>
 	{% endif %}
 	{% if oUIBlock.GetTitle() is not empty %}
-		<div class="ibo-alert--title"
-		     {% if oUIBlock.IsCollapsible() %}data-role="ibo-alert--collapse-toggler"{% endif %}
-		>{{ oUIBlock.GetTitle() }}</div>
+		<div class="ibo-alert--title" {% if oUIBlock.IsCollapsible() %}data-role="ibo-alert--collapse-toggler"{% endif %}>{{ oUIBlock.GetTitle() }}</div>
 	{% endif %}
-	{% if oUIBlock.GetContent() is not empty %}
-		<div class="ibo-alert--body">{{ oUIBlock.GetContent()|raw }}</div>
+	{% if oUIBlock.GetSubBlocks() is not empty %}
+		<div class="ibo-alert--body">
+			{% for oSubBlock in oUIBlock.GetSubBlocks() %}
+				{{ render_block(oSubBlock, {aPage: aPage}) }}
+			{% endfor %}
+		</div>
 	{% endif %}
 </div>

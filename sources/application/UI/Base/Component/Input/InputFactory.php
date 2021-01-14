@@ -37,21 +37,6 @@ class InputFactory
 		return $oInput;
 	}
 
-	public static function MakeWithLabel(string $sType, string $sLabel, string $sName, string $sValue, ?string $sId = null): InputWithLabel
-	{
-		$oInput = new Input($sId);
-
-		$oInput->SetType($sType)
-			->SetName($sName)
-			->SetValue($sValue);
-
-		if (is_null($sId)) {
-			$sId = $oInput->GetId();
-		}
-
-		return new InputWithLabel($sLabel, $oInput, $sId);
-	}
-
 	/**
 	 * @see Field component that is better adapter when dealing with a standard iTop form
 	 *

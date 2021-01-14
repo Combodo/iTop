@@ -30,11 +30,8 @@ class UIAlertNode extends Node
 			->subcompile($oParams)
 			->raw(";\n")
 			->write("\$sTitle = \$aParams['title'] ?? '';\n")
-			->write("\$sId = \$aParams['id'] ?? null;\n")
-			->write("ob_start();\n")
-			->subcompile($this->getNode('body'))
-			->write("\$sContent = ob_get_contents();\n")
-			->write("ob_end_clean();\n");
+			->write("\$sContent = \$aParams['content'] ?? '';\n")
+			->write("\$sId = \$aParams['id'] ?? null;\n");
 
 		$sType = $this->getAttribute('type');
 		switch ($sType) {
@@ -47,7 +44,17 @@ class UIAlertNode extends Node
 			case 'WithBrandingPrimaryColor':
 			case 'WithBrandingSecondaryColor':
 				$compiler
-					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\AlertFactory::Make{$sType}(\$sTitle, \$sContent, \$sId);\n");
+					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\AlertFactory::Make{$sType}(\$sTitle, \$sContent, \$sId);\n")
+					->write("if (!\$aParams['is_collapsible'] ?? true) {\n")
+					->indent()
+					->write("\${$sBlockVar}->SetIsCollapsible(false);\n")
+					->outdent()
+					->write("}\n")
+					->write("if (!\$aParams['is_closable'] ?? true) {\n")
+					->indent()
+					->write("\${$sBlockVar}->SetIsClosable(false);\n")
+					->outdent()
+					->write("}\n");
 				break;
 			// TODO 3.0 add other Factory methods
 
@@ -55,7 +62,11 @@ class UIAlertNode extends Node
 				throw new SyntaxError(sprintf('%s: Bad type "%s" for %s at line %d', $this->getTemplateName(), $sType, $this->tag, $this->lineno), $this->lineno, $this->getSourceContext());
 
 		}
-		$compiler->write(UIBlockHelper::AddToParentBlock($sBlockVar));
 
+		$compiler
+			->write(UIBlockHelper::AddToParentBlock($sBlockVar))
+			->write(UIBlockHelper::PushParentBlock($sBlockVar))
+			->subcompile($this->getNode('body'))
+			->write(UIBlockHelper::PopParentBlock());
 	}
 }

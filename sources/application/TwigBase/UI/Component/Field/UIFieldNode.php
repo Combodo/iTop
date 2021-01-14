@@ -36,11 +36,8 @@ class UIFieldNode extends Node
 			case 'Large':
 				$compiler
 					->write("\$sLabel = \$aParams['label'] ?? '';\n")
+					->write("\$sValue = \$aParams['value'] ?? '';\n")
 					->write("\$sValueId = \$aParams['value_id'] ?? null;\n")
-					->write("ob_start();\n")
-					->subcompile($this->getNode('body'))
-					->write("\$sValue = ob_get_contents();\n")
-					->write("ob_end_clean();\n")
 					->write("\${$sBlockVar} = Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\FieldFactory::Make{$sType}(\$sLabel, \$sValue);\n")
 					->write("\${$sBlockVar}->SetValueId(\$sValueId);\n");
 				break;
@@ -50,7 +47,11 @@ class UIFieldNode extends Node
 				throw new SyntaxError(sprintf('%s: Bad type "%s" for %s at line %d', $this->getTemplateName(), $sType, $this->tag, $this->lineno), $this->lineno, $this->getSourceContext());
 
 		}
-		$compiler->write(UIBlockHelper::AddToParentBlock($sBlockVar));
 
+		$compiler
+			->write(UIBlockHelper::AddToParentBlock($sBlockVar))
+			->write(UIBlockHelper::PushParentBlock($sBlockVar))
+			->subcompile($this->getNode('body'))
+			->write(UIBlockHelper::PopParentBlock());
 	}
 }

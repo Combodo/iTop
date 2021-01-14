@@ -13,26 +13,42 @@
 {% UIContentBlock {'container_class':'display_block display-files'} %}
 {% UIFieldSet {'legend':'iTopUpdate:UI:Status'|dict_s} %}
 
-{% UIAlert ForInformation {'title':'', 'id':'header-requirements'} %}
+{% UIAlert ForInformation {'title':'', 'id':'header-requirements', 'is_collapsible':false, 'is_closable':false} %}
+{% UIHtml %}
     <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
+{% EndUIHtml %}
 {% EndUIAlert %}
 
     {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
 
 {% UIField Small {'label':'iTopUpdate:UI:CurrentVersion'|dict_s} %}
+{% UIHtml %}
     {{ sVersion }}
+{% EndUIHtml %}
 {% EndUIField %}
+
 {% UIField Small {'label':'iTopUpdate:UI:DiskFreeSpace'|dict_s} %}
+{% UIHtml %}
     {{ sDiskFreeSpace }}
+{% EndUIHtml %}
 {% EndUIField %}
+
 {% UIField Small {'label':'iTopUpdate:UI:ItopDiskSpace'|dict_s, 'value_id':'itop-disk-space'} %}
+{% UIHtml %}
     <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i>
+{% EndUIHtml %}
 {% EndUIField %}
+
 {% UIField Small {'label':'iTopUpdate:UI:DBDiskSpace'|dict_s, 'value_id':'db-disk-space'} %}
+{% UIHtml %}
     <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i>
+{% EndUIHtml %}
 {% EndUIField %}
+
 {% UIField Small {'label':'iTopUpdate:UI:FileUploadMaxSize'|dict_s} %}
+{% UIHtml %}
     {{ sFileUploadMaxSize }}
+{% EndUIHtml %}
 {% EndUIField %}
 
 {% EndUIFieldSet %}
@@ -57,7 +73,7 @@
 {% EndUIHtml %}
 
 {% UIContentBlock {'container_class':'upload_container'} %}
-{% UIInput WithLabel {'type':'file', 'id':'file', 'name':'file'} %}
+{% UIInput Standard {'type':'file', 'id':'file', 'name':'file'} %}
 {% EndUIContentBlock %}
 
 {% UIHtml %}
@@ -72,9 +88,10 @@
 {% UIInput Standard {'type':'checkbox', 'id':'doFilesArchive', 'name':'doFilesArchive', 'value':'1', 'checked':true} %}
 {% EndUIField %}
 
-    {# </div> #}
-    {# <p><input id="check-update" type="submit" value="{{ 'iTopUpdate:UI:CheckUpdate'|dict_s }}" disabled="disabled"/> <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i></p> #}
-    {# </form> #}
+{% UIHtml %}
+    <p><input id="check-update" type="submit" value="{{ 'iTopUpdate:UI:CheckUpdate'|dict_s }}" disabled="disabled"/> <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i></p>
+{% EndUIHtml %}
+
 {% EndUIForm %}
 
 {% EndUIFieldSet %}
