@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 /**
  * @package Combodo\iTop\Application\UI\Base\Component\Input
  */
-class AbstractInput extends UIBlock
+abstract class AbstractInput extends UIBlock
 {
 	/** @var string */
 	protected $sName;
