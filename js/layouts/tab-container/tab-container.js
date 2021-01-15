@@ -27,7 +27,8 @@ $(function()
             css_classes:
             {
             	is_hidden: 'ibo-is-hidden',
-	            is_scrollable: 'ibo-is-scrollable'
+	            is_scrollable: 'ibo-is-scrollable',
+	            tab_container: 'ibo-tab-container',
             },
             js_selectors:
             {
@@ -44,7 +45,7 @@ $(function()
             _create: function()
             {
 	            var me = this;
-	            this.element.addClass('ibo-tab-container');
+	            this.element.addClass(this.css_classes.tab_container);
 
                 // Ugly patch for a change in the behavior of jQuery UI:
                 // Before jQuery UI 1.9, tabs were always considered as "local" (opposed to Ajax)
@@ -77,7 +78,7 @@ $(function()
             },
 	        _addTabsWidget: function(aParams)
 	        {
-	        	if(this.element.hasClass('ibo-is-scrollable')){
+	        	if(this.element.hasClass(this.css_classes.is_scrollable)){
 			        this.element.scrollabletabs(aParams);
 		        } else {
 			        this.element.tabs(aParams);
@@ -87,7 +88,7 @@ $(function()
             // revert other modifications here
             _destroy: function()
             {
-                this.element.removeClass('ibo-tab-container');
+                this.element.removeClass(this.css_classes.tab_container);
             },
             _bindEvents: function()
             {
