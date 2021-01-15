@@ -4272,10 +4272,10 @@ abstract class MetaModel
 			}
 			if (count($aCurrentContact) > 0)
 			{
-				$oUser = MetaModel::GetObject("Person", UserRights::GetContactId(),true,true);
-				foreach ($aCurrentContact as $sField)
-				{
-					$aPlaceholders['current_contact->'.$sField] = $oUser->Get($sField);
+				$oPerson = MetaModel::GetObject("Person", UserRights::GetContactId(), true, true);
+				$aPlaceholders['current_contact->object()'] = $oPerson;
+				foreach ($aCurrentContact as $sField) {
+					$aPlaceholders['current_contact->'.$sField] = $oPerson->Get($sField);
 				}
 			}
 		}
