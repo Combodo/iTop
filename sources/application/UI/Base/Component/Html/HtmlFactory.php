@@ -26,7 +26,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Html;
  */
 class HtmlFactory
 {
-	public static function MakeP(string $sContent): Html
+	public static function MakeParagraph(string $sContent): Html
 	{
 		return new Html('<p>'.$sContent.'</p>');
 	}

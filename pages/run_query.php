@@ -332,13 +332,13 @@ JS
 					);
 					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
-					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getHtmlDesc()));
+					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 				}
 			} else {
-				$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getHtmlDesc()));
+				$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 			}
 		} else {
-			$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeP($e->getMessage()));
+			$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getMessage()));
 		}
 	}
 }
