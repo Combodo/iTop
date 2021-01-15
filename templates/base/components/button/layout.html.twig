@@ -10,6 +10,7 @@
         value="{{ oUIBlock.GetValue() }}"
         {% if oUIBlock.IsDisabled() is same as(true) %} disabled {% endif %}
         {% if oUIBlock.GetTooltip() is not empty %} data-tooltip-content="{{ oUIBlock.GetTooltip() }}" {% endif %}
+        {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
         <span class="ibo-button--icon {{ oUIBlock.GetIconClass() }}"></span>

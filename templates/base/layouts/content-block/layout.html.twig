@@ -2,9 +2,11 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {# Content Block #}
 {% apply spaceless %}
-    {% block iboContentBlockContainer %}
 
-        {% if oUIBlock.GetCSSClasses() or oUIBlock.GetDataAttributes() %}
+    {% set bHasDiv = (oUIBlock.GetCSSClasses() or oUIBlock.GetDataAttributes()) %}
+
+    {% block iboContentBlockContainer %}
+        {% if bHasDiv %}
             <div id="{{ oUIBlock.GetId() }}"
             {% if oUIBlock.GetCSSClasses() %}class="{{ oUIBlock.GetCSSClasses() }}"{% endif %}
             {% if oUIBlock.GetDataAttributes() %}
@@ -12,6 +14,7 @@
                     data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
             {% endif %}
+            {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}
             >
         {% endif %}
 
@@ -19,7 +22,7 @@
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
 
-        {% if oUIBlock.GetCSSClasses() %}
+        {% if bHasDiv %}
             </div>
         {% endif %}
 

@@ -1,7 +1,7 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
-    <div class="ibo-dashlet-header-static">
+    <div class="ibo-dashlet-header-static" id="{{ oUIBlock.GetId() }}" {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}>
         <div class="ibo-dashlet-header-static--body">
             {% if oUIBlock.GetIconUrl() is not empty %}
                 <div class="ibo-dashlet-header-static--icon-container">

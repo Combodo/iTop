@@ -45,7 +45,7 @@ abstract class UIBlock implements iUIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = null;
 	/** @var array JS_FILES_REL_PATH Relative paths (from <ITOP>/) to the JS files */
 	public const DEFAULT_JS_FILES_REL_PATH = [];
-	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template on dom ready*/
+	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template on dom ready */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template not deferred */
 	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = null;
@@ -55,6 +55,8 @@ abstract class UIBlock implements iUIBlock
 	public const DEFAULT_CSS_FILES_REL_PATH = [];
 	/** @var string|null CSS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the CSS template */
 	public const DEFAULT_CSS_TEMPLATE_REL_PATH = null;
+	/** @var bool Default value for $bIsHidden */
+	public const DEFAULT_IS_HIDDEN = false;
 
 	/** @var string ENUM_BLOCK_FILES_TYPE_JS */
 	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
@@ -80,8 +82,10 @@ abstract class UIBlock implements iUIBlock
 	protected $aJsFilesRelPath;
 	/** @var array */
 	protected $aCssFilesRelPath;
-	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>")  */
+	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>") */
 	protected $aDataAttributes;
+	/** @var bool show or hide the current block */
+	protected $bIsHidden;
 
 	/**
 	 * UIBlock constructor.
@@ -100,6 +104,7 @@ abstract class UIBlock implements iUIBlock
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
 		$this->aDataAttributes = [];
+		$this->bIsHidden = static::DEFAULT_IS_HIDDEN;
 	}
 
 	/**
@@ -351,6 +356,25 @@ abstract class UIBlock implements iUIBlock
 	public function AddDataAttribute(string $sName, string $sValue)
 	{
 		$this->aDataAttributes[$sName] = $sValue;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsHidden(): bool
+	{
+		return $this->bIsHidden;
+	}
+
+	/**
+	 * @param bool $bIsHidden
+	 *
+	 * @return $this
+	 */
+	public function SetIsHidden(bool $bIsHidden)
+	{
+		$this->bIsHidden = $bIsHidden;
 		return $this;
 	}
 }

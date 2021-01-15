@@ -1,8 +1,8 @@
 {% if oUIBlock.GetSubBlocks() %}
-<fieldset class="ibo-fieldset">
-    <legend class="ibo-fieldset-legend">{{ oUIBlock.GetLegend() }}</legend>
-    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
-        {{ render_block(oSubBlock, {aPage: aPage}) }}
-    {% endfor %}
-</fieldset>
+    <fieldset class="ibo-fieldset" id="{{ oUIBlock.GetId() }}" {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}>
+        <legend class="ibo-fieldset-legend">{{ oUIBlock.GetLegend() }}</legend>
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </fieldset>
 {% endif %}

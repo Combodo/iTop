@@ -32,8 +32,6 @@ class Field extends UIContentBlock
 	/** @var string */
 	protected $sAttLabel;
 	/** @var bool */
-	protected $bIsHidden = false;
-	/** @var bool */
 	protected $bIsReadOnly = false;
 	/** @var bool */
 	protected $bIsMandatory = false;
@@ -139,26 +137,6 @@ class Field extends UIContentBlock
 	public function SetAttLabel(string $sAttLabel): Field
 	{
 		$this->sAttLabel = $sAttLabel;
-
-		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function IsHidden(): bool
-	{
-		return $this->bIsHidden;
-	}
-
-	/**
-	 * @param bool $bIsHidden
-	 *
-	 * @return Field
-	 */
-	public function SetIsHidden(bool $bIsHidden)
-	{
-		$this->bIsHidden = $bIsHidden;
 
 		return $this;
 	}

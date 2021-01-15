@@ -84,8 +84,6 @@ class Alert extends UIContentBlock
 	public const DEFAULT_IS_COLLAPSIBLE = true;
 	/** @var bool Default value for static::$bIsOpenedByDefault */
 	public const DEFAULT_IS_OPENED_BY_DEFAULT = true;
-	/** @var bool Default value for static::$bIsHidden */
-	public const DEFAULT_IS_HIDDEN = false;
 
 	/** @var string $sTitle */
 	protected $sTitle;
@@ -95,8 +93,6 @@ class Alert extends UIContentBlock
 	protected $bIsClosable;
 	/** @var bool Whether the alert can be collapsed or not */
 	protected $bIsCollapsible;
-	/** @var bool Whether the alert is hidden or not */
-	protected $bIsHidden;
 	/** @var bool Whether the alert is opened by default or not, only works when $bIsCollapsible set to true */
 	protected $bIsOpenedByDefault;
 	/** @var boolean if true will store collapsible state */
@@ -120,7 +116,6 @@ class Alert extends UIContentBlock
 		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
 		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
 		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
-		$this->bIsHidden = static::DEFAULT_IS_HIDDEN;
 		if (!empty($sContent)) {
 			$this->AddSubBlock(new Html($sContent));
 		}
@@ -280,25 +275,4 @@ class Alert extends UIContentBlock
 	{
 		return $this->sSectionStateStorageKey;
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function IsHidden(): bool
-	{
-		return $this->bIsHidden;
-	}
-
-	/**
-	 * @param bool $bIsHidden
-	 *
-	 * @return $this
-	 */
-	public function SetIsHidden(bool $bIsHidden)
-	{
-		$this->bIsHidden = $bIsHidden;
-		return $this;
-	}
-
-
 }

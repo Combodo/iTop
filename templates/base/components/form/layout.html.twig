@@ -5,6 +5,7 @@
         {% if oUIBlock.GetAction() %}
             action="{{ oUIBlock.GetAction() }}"
         {% endif %}
+        {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}
 >
     {% apply spaceless %}
         {% block iboContentBlockContainer %}

@@ -1,10 +1,11 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-collapsible-section {{ oUIBlock.GetCSSClasses() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}">
+	 class="ibo-collapsible-section {{ oUIBlock.GetCSSClasses() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}"
+	 {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}>
 	<div class="ibo-collapsible-section--header" data-role="ibo-collapsible-section--collapse-toggler">
 		<div class="ibo-collapsible-section--action-button ibo-collapsible-section--maximize-button"><i
-			 class="fas fa-caret-down"></i></div>
+					class="fas fa-caret-down"></i></div>
 		<div class="ibo-collapsible-section--action-button ibo-collapsible-section--minimize-button"><i
-			 class="fas fa-caret-up"></i>
+					class="fas fa-caret-up"></i>
 		</div>
 		<div class="ibo-collapsible-section--title">{{ oUIBlock.GetTitle() }}</div>
 	</div>
