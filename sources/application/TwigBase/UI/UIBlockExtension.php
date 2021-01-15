@@ -11,37 +11,75 @@ namespace Combodo\iTop\Application\TwigBase\UI;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIHtmlParser;
 use Exception;
 use ReflectionClass;
+use SetupUtils;
 use Twig\Extension\AbstractExtension;
+use utils;
 
 class UIBlockExtension extends AbstractExtension
 {
-	private static $aFactoryClasses = null;
-
 	public function getTokenParsers()
 	{
 		$aParsers = [new UIHtmlParser()];
 
-		$aClassMap = include APPROOT.'lib/composer/autoload_classmap.php';
-		if (is_null(self::$aFactoryClasses)) {
-			self::$aFactoryClasses = [];
-			$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
-			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
-				if (strpos($sPHPClass, 'UIBlockFactory') !== false) {
+		$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
+		$aFactoryClasses = self::GetClassForInterface($sInterface);
+
+		foreach ($aFactoryClasses as $sFactoryClass) {
+			$aParsers[] = new UIBlockParser($sFactoryClass);
+		}
+
+		return $aParsers;
+	}
+
+	public static function GetClassForInterface($sInterface)
+	{
+		$aFactoryClasses = [];
+
+		if (!utils::IsDevelopmentEnvironment()) {
+			// Try to read from cache
+			$aFilePath = explode("\\", $sInterface);
+			$sInterfaceName = end($aFilePath);
+			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
+			if (is_file($sCacheFileName)) {
+				$aFactoryClasses = include $sCacheFileName;
+			}
+		}
+
+		if (empty($aFactoryClasses)) {
+			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
+			// guess all the autoload class maps from the extensions
+			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
+
+			$aClassMap = [];
+			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				$aTmpClassMap = include $sAutoloadFile;
+				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+			$aClassMap = array_keys($aClassMap);
+			// Add already loaded classes
+			$aCurrentClasses = get_declared_classes();
+			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
+
+			foreach ($aClassMap as $sPHPClass) {
+				if (strpos($sPHPClass, 'UIBlockFactory')) {
 					try {
 						$oRefClass = new ReflectionClass($sPHPClass);
 						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
-							self::$aFactoryClasses[] = $sPHPClass;
+							$aFactoryClasses[] = $sPHPClass;
 						}
 					} catch (Exception $e) {
 					}
 				}
 			}
+
+			if (!utils::IsDevelopmentEnvironment()) {
+				// Save to cache
+				$sCacheContent = "<?php\n\nreturn ".var_export($aFactoryClasses, true).";";
+				SetupUtils::builddir(dirname($sCacheFileName));
+				file_put_contents($sCacheFileName, $sCacheContent);
+			}
 		}
 
-		foreach (self::$aFactoryClasses as $sFactoryClass) {
-			$aParsers[] = new UIBlockParser($sFactoryClass);
-		}
-
-		return $aParsers;
+		return $aFactoryClasses;
 	}
 }
