@@ -1,5 +1,6 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-alert ibo-is-{{ oUIBlock.GetColor() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}">
+	 class="ibo-alert ibo-is-{{ oUIBlock.GetColor() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}"
+	 {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}>
 	{% if oUIBlock.IsCollapsible() %}
 		<div class="ibo-alert--action-button ibo-alert--maximize-button" data-role="ibo-alert--collapse-toggler">
 			<i class="fas fa-caret-down"></i>

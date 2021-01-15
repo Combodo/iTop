@@ -211,6 +211,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreate' => $baseDir . '/sources/application/UI/Base/Component/QuickCreate/QuickCreate.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreateFactory' => $baseDir . '/sources/application/UI/Base/Component/QuickCreate/QuickCreateFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreateHelper' => $baseDir . '/sources/application/UI/Base/Component/QuickCreate/QuickCreateHelper.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\Spinner' => $baseDir . '/sources/application/UI/Base/Component/Spinner/Spinner.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\SpinnerUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Spinner/SpinnerUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title' => $baseDir . '/sources/application/UI/Base/Component/Title/Title.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleForObjectDetails' => $baseDir . '/sources/application/UI/Base/Component/Title/TitleForObjectDetails.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Title/TitleUIBlockFactory.php',

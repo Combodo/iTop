@@ -20,7 +20,7 @@ class Input extends AbstractInput
 
 	public const INPUT_HIDDEN = 'hidden';
 
-	protected $bChecked = false;
+	protected $bIsChecked = false;
 
 	/** @var string */
 	protected $sType;
@@ -47,9 +47,9 @@ class Input extends AbstractInput
 	 *
 	 * @return $this
 	 */
-	public function SetChecked($bChecked)
+	public function SetIsChecked($bIsChecked)
 	{
-		$this->bChecked = $bChecked;
+		$this->bIsChecked = $bIsChecked;
 		return $this;
 	}
 
@@ -58,6 +58,6 @@ class Input extends AbstractInput
 	 */
 	public function IsChecked()
 	{
-		return $this->bChecked;
+		return $this->bIsChecked;
 	}
 }

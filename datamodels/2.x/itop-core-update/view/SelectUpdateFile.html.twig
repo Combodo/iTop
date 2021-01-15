@@ -14,9 +14,12 @@
 {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
 
 {% UIAlert ForInformation {'sId':'header-requirements', 'IsCollapsible':false, 'IsClosable':false} %}
+{% UIContentBlock Standard {'sContainerClass':'ibo-update-core-header-requirements', 'sId':'can-core-update'} %}
 {% UIHtml %}
-    <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
+    {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
 {% EndUIHtml %}
+{% UISpinner Standard {} %}
+{% EndUIContentBlock %}
 {% EndUIAlert %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s} %}
@@ -32,15 +35,11 @@
 {% EndUIField %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:ItopDiskSpace'|dict_s, 'ValueId':'itop-disk-space'} %}
-{% UIHtml %}
-    <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i>
-{% EndUIHtml %}
+{% UISpinner Standard {} %}
 {% EndUIField %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:DBDiskSpace'|dict_s, 'ValueId':'db-disk-space'} %}
-{% UIHtml %}
-    <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i>
-{% EndUIHtml %}
+{% UISpinner Standard {} %}
 {% EndUIField %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:FileUploadMaxSize'|dict_s} %}
@@ -56,41 +55,45 @@
 {% UIInput ForHidden {'sName':'operation', 'sValue':'ConfirmUpdate'} %}
 {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
 
+{% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}
+{% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
 {% UIHtml %}
-    <div id="header-file-size" class="header_message message_error" style="display: none">
-        <div>
-            <span>{{ 'iTopUpdate:Error:FileUploadMaxSizeTooStandard'|dict_s }}</span>
-        </div>
-        <div>
-            <span>{{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}</span>
-        </div>
-        <div>
-            <span>{{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}</span>
-        </div>
-    </div>
+    {{ 'iTopUpdate:Error:FileUploadMaxSizeTooStandard'|dict_s }}
 {% EndUIHtml %}
+{% EndUIContentBlock %}
+{% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
+{% UIHtml %}
+    {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}
+{% EndUIHtml %}
+{% EndUIContentBlock %}
+{% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
+{% UIHtml %}
+    {{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}
+{% EndUIHtml %}
+{% EndUIContentBlock %}
+{% EndUIAlert %}
 
 {% UIContentBlock Standard {'sContainerClass':'upload_container'} %}
 {% UIInput Standard {'sType':'file', 'sId':'file', 'sName':'file', 'sValue':''} %}
 {% EndUIContentBlock %}
 
+{% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
 {% UIHtml %}
-    <div id="dobackup-warning" class="header_message message_info" style="display: none">{{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}</div>
+    {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
 {% EndUIHtml %}
+{% EndUIAlert %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:DoBackup:Label'|dict_s, 'sLayout':'large'} %}
-{% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'Checked':true} %}
+{% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true} %}
 {% EndUIField %}
 
 {% UIField Standard {'sLabel':'iTopUpdate:UI:DoFilesArchive'|dict_s, 'sLayout':'large'} %}
-{% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'Checked':true} %}
+{% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true} %}
 {% EndUIField %}
 
 {% UIContentBlock Standard {'sContainerClass':'ibo_check_update_submit'} %}
 {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:CheckUpdate'|dict_s, 'sId':'check-update', 'bIsSubmit':true, 'IsDisabled':true} %}
-{% UIHtml %}
-    <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
-{% EndUIHtml %}
+{% UISpinner Standard {'sId':'submit-wait', 'IsHidden':true} %}
 {% EndUIContentBlock %}
 
 {% EndUIForm %}
@@ -103,7 +106,6 @@
 
 {% EndUIFieldSet %}
 {% EndUIContentBlock %}
-
 
 {% EndUIContentBlock %}
 {% endapply %}
