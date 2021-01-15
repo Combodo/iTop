@@ -104,11 +104,6 @@ $ibo-navigation-menu--drawer--padding-y: 32px !default;
 $ibo-navigation-menu--drawer--background-color: $ibo-color-grey-100 !default;
 $ibo-navigation-menu--drawer--border-right: 1px solid $ibo-color-grey-300 !default;
 
-$ibo-navigation-menu--menu-filter--width: $ibo-navigation-menu--drawer--width - $ibo-navigation-menu--drawer--padding-x * 2 !default;
-$ibo-navigation-menu--menu-filter--margin-bottom: 50px !default;
-$ibo-navigation-menu--menu-filter-input--padding-right: 64px !default;
-$ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
-
 /* TODO: Refactor this into the standard field input */
 $ibo-navigation-menu--menu-filter-input--padding-x: 10px !default;
 $ibo-navigation-menu--menu-filter-input--padding-y: 8px !default;
@@ -118,6 +113,14 @@ $ibo-navigation-menu--menu-filter-input--text-color: $ibo-color-grey-900 !defaul
 $ibo-navigation-menu--menu-filter-input--background-color: $ibo-color-white-100 !default;
 $ibo-navigation-menu--menu-filter-input--border: 1px solid $ibo-color-grey-300 !default;
 $ibo-navigation-menu--menu-filter-input--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-navigation-menu--menu-filter--width: $ibo-navigation-menu--drawer--width - $ibo-navigation-menu--drawer--padding-x * 2 !default;
+$ibo-navigation-menu--menu-filter--margin-bottom: 50px !default;
+$ibo-navigation-menu--menu-filter-input--padding-right: 76px !default;
+$ibo-navigation-menu--menu-filter-clear--top: $ibo-navigation-menu--menu-filter-input--padding-y !default;
+$ibo-navigation-menu--menu-filter-clear--right: $ibo-navigation-menu--menu-filter-input--padding-right - 16px !default;
+$ibo-navigation-menu--menu-filter-clear--padding: 3px 3px !default;
+$ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
 
 $ibo-navigation-menu--menu-groups--margin-top: $ibo-navigation-menu--drawer--padding-y + $ibo-navigation-menu--menu-filter--margin-bottom !default;
 
@@ -263,6 +266,9 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 		}
 	}
 	&.ibo-is-filtered{
+		.ibo-navigation-menu--menu-filter-clear{
+			display: block;
+		}
 		.ibo-navigation-menu--menu-nodes{
 			margin-bottom: $ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered;
 
@@ -418,7 +424,7 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 		.ibo-input-select--action-button--hierarchy{
 			margin-left: $ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right;
 		}
-		
+
 		.ibo-input-select-autocomplete{
 			padding-right: $ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left;
 			~ .ibo-input-select--action-button--search{
@@ -540,6 +546,12 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 }
 .ibo-navigation-menu--menu-filter-clear{
 	display: none;
+	position: absolute;
+	top: $ibo-navigation-menu--menu-filter-clear--top;
+	right: $ibo-navigation-menu--menu-filter-clear--right;
+	padding: $ibo-navigation-menu--menu-filter-clear--padding; /* Used to help the user click on it as the icon itself is small */
+	@extend %ibo-font-ral-bol-50;
+	@extend %ibo-hyperlink-inherited-colors;
 }
 .ibo-navigation-menu--menu-filter-hotkey{
 	position: absolute;
@@ -550,6 +562,16 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 	color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
 	padding: 2px 4px;
 	@extend %ibo-font-ral-nor-50;
+}
+.ibo-navigation-menu---menu-filter-hint{
+	display: none; /* TODO 3.0.0: Wait for MVC TWIG feature to be complete, then move this to an alert block */
+	margin-top: 8px;
+	@extend %ibo-font-ral-ita-50;
+}
+.ibo-navigation-menu--menu-filter-hint-close{
+	position: absolute;
+	right: 2px;
+	@extend %ibo-hyperlink-inherited-colors;
 }
 
 .ibo-navigation-menu--menu--placeholder{
@@ -564,6 +586,7 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 	margin: $ibo-navigation-menu--menu--placeholder-image--svg--margin;
 }
 .ibo-navigation-menu--menu--placeholder-hint{
+	margin-top: $ibo-navigation-menu--menu--placeholder-hint--margin-top;
 	text-align: center;
 }
 
