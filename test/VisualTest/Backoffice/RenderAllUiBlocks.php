@@ -26,7 +26,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 use LoginWebPage;
@@ -132,35 +132,35 @@ $aSubBlocks = [
 	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'),
 ];
 
-$oPanel = PanelFactory::MakeNeutral('Neutral panel');
+$oPanel = PanelUIBlockFactory::MakeNeutral('Neutral panel');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForInformation('Panel for information');
+$oPanel = PanelUIBlockFactory::MakeForInformation('Panel for information');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForSuccess('Panel for success');
+$oPanel = PanelUIBlockFactory::MakeForSuccess('Panel for success');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForWarning('Panel for warning');
+$oPanel = PanelUIBlockFactory::MakeForWarning('Panel for warning');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForDanger('Panel for danger');
+$oPanel = PanelUIBlockFactory::MakeForDanger('Panel for danger');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeForFailure('Panel for failure');
+$oPanel = PanelUIBlockFactory::MakeForFailure('Panel for failure');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeWithBrandingPrimaryColor('Panel with branding primary color');
+$oPanel = PanelUIBlockFactory::MakeWithBrandingPrimaryColor('Panel with branding primary color');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
-$oPanel = PanelFactory::MakeWithBrandingSecondaryColor('Panel with branding secondary color');
+$oPanel = PanelUIBlockFactory::MakeWithBrandingSecondaryColor('Panel with branding secondary color');
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 

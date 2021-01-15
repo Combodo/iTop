@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
@@ -5349,14 +5349,13 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if ($bLocalize)
-		{
+		if ($bLocalize) {
 			$sLabel = $this->GetValueLabel($sValue);
 			// $sDescription = $this->GetValueDescription($sValue);
 			$oStyle = $this->GetStyle($sValue);
 			// later, we could imagine a detailed description in the title
 			// $sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
-			$oBadge = FieldBadgeFactory::MakeForField($sLabel, $oStyle);
+			$oBadge = FieldBadgeUIBlockFactory::MakeForField($sLabel, $oStyle);
 			$oRenderer = new BlockRenderer($oBadge);
 			$sRes = $oRenderer->RenderHtml();
 		}

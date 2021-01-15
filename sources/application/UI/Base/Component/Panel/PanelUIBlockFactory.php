@@ -19,11 +19,12 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Panel;
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use MetaModel;
 use ormStyle;
 
 /**
- * Class PanelFactory
+ * Class PanelUIBlockFactory
  *
  * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
@@ -32,8 +33,11 @@ use ormStyle;
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-panels to see live examples
  */
-class PanelFactory
+class PanelUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIPanel';
+	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\Panel";
+	
 	/**
 	 * Make a basis Panel component
 	 *

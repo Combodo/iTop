@@ -21,7 +21,7 @@
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
@@ -1006,7 +1006,7 @@ EOF
 	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
 		if(is_null($oParentBlock)) {
-			$oParentBlock = PanelFactory::MakeNeutral('');
+			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');
 			$this->AddUiBlock($oParentBlock);
 		}
 

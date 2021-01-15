@@ -19,7 +19,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -905,7 +905,7 @@ class DashletObjectList extends Dashlet
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$sClass = $oFilter->GetClass();
-		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
@@ -1241,7 +1241,7 @@ abstract class DashletGroupBy extends Dashlet
 				break;
 		}
 
-		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
@@ -2043,7 +2043,7 @@ class DashletHeaderDynamic extends Dashlet
 			);
 		}
 
-		$oPanel = PanelFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
+		$oPanel = PanelUIBlockFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
 
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
@@ -2055,7 +2055,7 @@ class DashletHeaderDynamic extends Dashlet
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$sClass = $oFilter->GetClass();
-		PanelFactory::SetClassColor($sClass, $oPanel);
+		PanelUIBlockFactory::SetClassColor($sClass, $oPanel);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));

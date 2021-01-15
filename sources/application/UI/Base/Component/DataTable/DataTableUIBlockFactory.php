@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -114,7 +114,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$oContainer = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
