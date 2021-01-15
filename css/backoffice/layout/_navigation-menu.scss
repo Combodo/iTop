@@ -523,6 +523,7 @@ $ibo-navigation-menu--menu-counter-color: $ibo-navigation-menu--menu-node--backg
 /* - Menu filter */
 .ibo-navigation-menu--menu-filter{
 	position: fixed;
+	z-index: 1; /* To be hover the menu groups and all their contents */
 	width: $ibo-navigation-menu--menu-filter--width;
 }
 .ibo-navigation-menu--menu-filter-input{
