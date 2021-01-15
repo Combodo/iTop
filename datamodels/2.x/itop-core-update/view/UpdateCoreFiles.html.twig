@@ -1,74 +1,81 @@
 {# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<div class="display_block display-files">
-    <fieldset id="installation_progress">
-        <legend>{{ 'iTopUpdate:UI:Progress'|dict_s }}</legend>
+{% apply spaceless %}
 
-        <div id="progress_content">
-            <p class="center">
-                <span id="setup_msg">{{ 'iTopUpdate:UI:SetupMessage:Ready'|dict_s }}</span>
-            </p>
-            <div id="progress">0%</div>
-        </div>
-    </fieldset>
+    {% UIContentBlock Standard {'sContainerClass':'ibo-update-core display_block display-files'} %}
 
-    <fieldset>
-        <legend>{{ 'iTopUpdate:UI:Status'|dict_s }}</legend>
-
-        <p id="new_version" style="display: none;">{{ 'iTopUpdate:UI:NewVersion'|dict_s }}</p>
-        <div id="current_version" class="message message-info">
-            <span id="current-version">{{ sCurrentVersion }}</span>
-        </div>
-
-        {% if bDoBackup %}
-            <div id="do_backup_done" style="display: none;">
-                <p>{{ 'iTopUpdate:UI:WithDBBackup'|dict_s }}</p>
-                <div class="message message-valid">
-                    {{ sBackupFile }}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Progress'|dict_s, 'sId':'installation_progress'} %}
+            {% UIHtml %}
+                {#  Todo 3.0 Add Progress bar UIBlock  #}
+                <div id="progress_content">
+                    <p class="center">
+                        <span id="setup_msg">{{ 'iTopUpdate:UI:SetupMessage:Ready'|dict_s }}</span>
+                    </p>
+                    <div id="progress">0%</div>
                 </div>
-            </div>
-        {% endif %}
-        {% if bDoFilesArchive %}
-            <div id="do_files_archive_done" style="display: none;">
-                <p>{{ 'iTopUpdate:UI:WithFilesBackup'|dict_s }}</p>
-                <div class="message message-valid">
-                    {{ sItopArchive }}
-                </div>
-            </div>
-        {% endif %}
-    </fieldset>
+            {% EndUIHtml %}
+        {% EndUIFieldSet %}
 
-    <fieldset>
-        <div id="setup_error_outer" class="message message-error" style="display: none;">
-            <div>
-                <span id="setup_error"></span>
-            </div>
-            {% if bDoFilesArchive %}
-                <div>
-                    <span>{{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}</span>
-                </div>
-            {% endif %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
+            {% UIField Large {'sId':'new_version', 'sLabel':'iTopUpdate:UI:NewVersion'|dict_s, 'ValueId':'db-disk-space', 'IsHidden':true} %}{% EndUIField %}
+            {% UIAlert ForInformation {'sId':'current_version', 'IsCollapsible':false, 'IsClosable':false} %}
+                {% UIContentBlock Standard {'sId':'current-version','sContainerClass':'ibo-update-core--current-version'} %}
+                    {% UIHtml %}
+                        {{ sCurrentVersion }}
+                    {% EndUIHtml %}
+                {% EndUIContentBlock %}
+            {% EndUIAlert %}
+
             {% if bDoBackup %}
-                <div>
-                    <span>{{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}</span>
-                </div>
+                {% UIContentBlock Standard {'sId':'do_backup_done','sContainerClass':'ibo-update-core--backup-done', 'IsHidden':true} %}
+                    {% UIField Standard {'sLabel':'iTopUpdate:UI:WithDBBackup'|dict_s, 'sLayout':'large'} %}
+                        {% UIAlert ForInformation {'sContent':sBackupFile} %}{% EndUIAlert %}
+                    {% EndUIField %}
+                {% EndUIContentBlock %}
             {% endif %}
-            <div>
-                <span>{{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}</span>
-            </div>
-        </div>
 
-        <div id="run_setup" style="display: none;">
-            <form enctype="multipart/form-data" method="post" class="form-inline">
-                <input type="hidden" name="operation" value="RunSetup"/>
-                <input type="hidden" name="authent" value="{{ sSetupToken }}">
-                <input id="run_setup" type="submit" value="{{ 'iTopUpdate:UI:RunSetup'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"/>
-            </form>
-        </div>
+            {% if bDoFilesArchive %}
+                {% UIContentBlock Standard {'sId':'do_files_archive_done','sContainerClass':'ibo-update-core--archive-done', 'IsHidden':true} %}
+                    {% UIField Large {'sLabel':''iTopUpdate:UI:WithFilesBackup'|dict_s', 'sValueHtml':''} %}{% EndUIField %}
+                    {% UIAlert ForSuccess {'sContent':sItopArchive} %}{% EndUIAlert %}
+                {% EndUIContentBlock %}
+            {% endif %}
+        {% EndUIFieldSet %}
 
-        <form enctype="multipart/form-data" method="post" class="form-inline">
-            <input id="setup_continue" type="submit" value="{{ 'iTopUpdate:UI:Continue'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" disabled/>
-        </form>
-    </fieldset>
-</div>
+        {% UIFieldSet Standard {'sLegend':''} %}
+
+            {% UIAlert ForFailure {'sId':'setup_error_outer', 'sContent':'', 'IsCollapsible':false, 'IsClosable':false, 'IsHidden':true} %}
+                {% UIContentBlock Standard {'sId':'setup_error','sContainerClass':'ibo-update-core--error'} %}{% EndUIContentBlock %}
+                {% if bDoFilesArchive %}
+                    {% UIHtml %}
+                        {{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}
+                    {% EndUIHtml %}
+                {% endif %}
+                {% if bDoBackup %}
+                    {% UIHtml %}
+                        {{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}
+                    {% EndUIHtml %}
+                {% endif %}
+                {% UIHtml %}
+                    {{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}
+                {% EndUIHtml %}
+            {% EndUIAlert %}
+
+            {% UIContentBlock Standard {'sId':'run_setup','sContainerClass':'ibo-update-core--run-setup', 'IsHidden':true} %}
+                {% UIForm Standard {'CSSClasses':'form-inline'} %}
+                    {% UIInput ForHidden {'sName':'operation', 'sValue':'RunSetup'} %}
+                    {% UIInput ForHidden {'sName':'authent', 'sValue':sSetupToken} %}
+                    {% UIInput ForHidden {'sName':'', 'sValue':''} %}
+                    {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:RunSetup'|dict_s, 'sId':'run_setup', 'bIsSubmit':true, 'IsDisabled':false} %}
+                {% EndUIForm %}
+            {% EndUIContentBlock %}
+
+            {% UIForm Standard {'CSSClasses':'form-inline'} %}
+                {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Continue'|dict_s, 'sId':'setup_continue', 'bIsSubmit':true, 'IsDisabled':false} %}
+            {% EndUIForm %}
+
+        {% EndUIFieldSet %}
+
+    {% EndUIContentBlock %}
+{% endapply %}
