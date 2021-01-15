@@ -39,10 +39,10 @@ use ZipArchive;
 
 abstract class Controller
 {
-	const PAGE_TYPE_HTML = 'html';
-	const PAGE_TYPE_BASIC_HTML = 'basic_html';
-	const PAGE_TYPE_AJAX = 'ajax';
-	const PAGE_TYPE_SETUP = 'setup';
+	const ENUM_PAGE_TYPE_HTML = 'html';
+	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
+	const ENUM_PAGE_TYPE_AJAX = 'ajax';
+	const ENUM_PAGE_TYPE_SETUP = 'setup';
 
 	/** @var \Twig\Environment */
 	private $m_oTwig;
@@ -560,20 +560,20 @@ abstract class Controller
 	{
 		switch ($sPageType)
 		{
-			case self::PAGE_TYPE_HTML:
+			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
 				$this->m_oPage->add_xframe_options();
 				break;
 
-			case self::PAGE_TYPE_BASIC_HTML:
+			case self::ENUM_PAGE_TYPE_BASIC_HTML:
 				$this->m_oPage = new WebPage($this->GetOperationTitle());
 				break;
 
-			case SELF::PAGE_TYPE_AJAX:
+			case self::ENUM_PAGE_TYPE_AJAX:
 				$this->m_oPage = new ajax_page($this->GetOperationTitle());
 				break;
 
-			case self::PAGE_TYPE_SETUP:
+			case self::ENUM_PAGE_TYPE_SETUP:
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
