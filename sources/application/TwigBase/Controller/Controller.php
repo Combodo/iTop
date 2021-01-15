@@ -65,6 +65,10 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
+	/** @var string */
+	private $m_sAccessTokenConfigParamId = null;
+	/** @var string */
+	private $m_sAccessAuthorizedNetworkConfigParamId = null;
 
 
 	/**
@@ -216,6 +220,25 @@ abstract class Controller
 	}
 
 	/**
+	 * Check if page access is allowed to remote network
+	 * @throws \Exception
+	 */
+	private function checkNetworkAccess()
+	{
+		if (!empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
+			$sExecModule = utils::ReadParam('exec_module', "");
+			$sAllowedNetworkRegexpPattern = MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId);
+			$sRemoteIpAddress = $_SERVER['REMOTE_ADDR'];
+
+			if (!preg_match("/$sAllowedNetworkRegexpPattern/", $sRemoteIpAddress)){
+				$sMsg = "'$sExecModule' page is not authorized to '$sRemoteIpAddress' ip address. only to '$sAllowedNetworkRegexpPattern' networks.";
+				IssueLog::Error($sMsg);
+				throw new Exception("Unauthorized network");
+			}
+		}
+	}
+
+	/**
 	 * @throws \Exception
 	 */
 	private function CheckAccess()
@@ -225,7 +248,21 @@ abstract class Controller
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
 		}
 
-		LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		$this->checkNetworkAccess();
+
+		if (!empty($this->m_sAccessTokenConfigParamId)){
+			//token mode without login required
+			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
+			$sExecModule = utils::ReadParam('exec_module', "");
+			if ($sPassedToken !== MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId)){
+				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
+				IssueLog::Error($sMsg);
+				throw new Exception("Invalid token");
+			}
+		} else {
+			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		}
+
 		if (!empty($this->m_sMenuId))
 		{
 			ApplicationMenu::CheckMenuIdEnabled($this->m_sMenuId);
@@ -262,6 +299,47 @@ abstract class Controller
 	}
 
 	/**
+	 * Used to ensure iTop security without logging-in by passing a token.
+	 * This security mechanism is applied to current extension main page when :
+	 *  - '$m_sAccessTokenConfigParamId' is configured under $MyModuleSettings section.
+	 *
+	 * Main page will be allowed as long as
+	 *  - there is an HTTP  parameter with the name '$m_sAccessTokenConfigParamId' parameter
+	 *  - '$m_sAccessTokenConfigParamId' HTTP parameter value matches the value stored in iTop configuration.
+	 *
+	 * Example:
+	 * Let's assume $m_sAccessTokenConfigParamId='access_token' with iTop $MyModuleSettings below configuration:
+	 *      'combodo-shadok' => array ( 'access_token' => 'gabuzomeu')
+	 * 'combodo-shadok' extension main page is rendered only with HTTP requests containing '&access_token=gabuzomeu'
+	 * Otherwise an HTTP error code 500 will be returned.
+	 *
+	 * @param string $m_sAccessTokenConfigParamId
+	 */
+	public function setAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
+	{
+		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
+	}
+
+	/**
+	 * Used to ensure iTop security by serving HTTP page to a specific subset of remote networks (white list mode).
+	 * This security mechanism is applied to current extension when :
+	 *  - '$m_sAccessAuthorizedNetworkConfigParamId' is configured under $MyModuleSettings section.
+	 *
+	 * Extension page will be allowed as long as iTop '$m_sAccessAuthorizedNetworkConfigParamId' regexp configuration value matches $_SERVER['REMOTE_ADDR'] IP address.
+	 *
+	 * Example:
+	 * Let's assume $m_sAccessAuthorizedNetworkConfigParamId='allowed_networks' with iTop $MyModuleSettings below configuration:
+	 *      'combodo-shadok' => array ( 'allowed_networks' => '10\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+	 * 'combodo-shadok' extension main page is rendered only for HTTP client under 10.X.X.X networks.
+	 * Otherwise an HTTP error code 500 will be returned.
+	 *
+	 */
+	public function setAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
+	{
+		$this->m_sAccessAuthorizedNetworkConfigParamId = trim($m_sAccessAuthorizedNetworkConfigParamId) ?? "";
+	}
+
+	/**
 	 * Set the Id of the menu to check for user access rights
 	 *
 	 * @api
@@ -272,6 +350,8 @@ abstract class Controller
 	{
 		$this->m_sMenuId = $sMenuId;
 	}
+
+
 
 	/**
 	 * Set the default operation when no 'operation' parameter is given on URL
