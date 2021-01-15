@@ -41,7 +41,8 @@ class TabContainer extends UIContentBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/tab-container/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/tab-container/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/layouts/tab-container.js'
+		'js/layouts/tab-container/tab-container.js',
+		'js/layouts/tab-container/scrollable-tabs.js'
 	];
 
 	// Specific constants
@@ -51,6 +52,9 @@ class TabContainer extends UIContentBlock
 	public const ENUM_LAYOUT_VERTICAL = 'vertical';
 	/** @var string */
 	public const DEFAULT_LAYOUT = self::ENUM_LAYOUT_HORIZONTAL;
+	/** @var bool */
+	public const DEFAULT_SCROLLABLE = false;
+
 
 	/** @var string $sName */
 	private $sName;
@@ -58,6 +62,8 @@ class TabContainer extends UIContentBlock
 	private $sPrefix;
 	/** @var string $sLayout Layout of the tabs (horizontal, vertical, ...), see static::ENUM_LAYOUT_XXX */
 	private $sLayout;
+	/** @var bool $bIsScrollable Define if we can scroll through tabs */
+	private $bIsScrollable;
 
 	/**
 	 * TabContainer constructor.
@@ -80,6 +86,8 @@ class TabContainer extends UIContentBlock
 		$this->sName = $sName;
 		$this->sPrefix = $sPrefix;
 		$this->sLayout = appUserPreferences::GetPref('tab_layout', static::DEFAULT_LAYOUT);
+		$this->bIsScrollable = appUserPreferences::GetPref('tab_scrollable', static::DEFAULT_SCROLLABLE);
+
 	}
 
 	/**
@@ -182,5 +190,22 @@ class TabContainer extends UIContentBlock
 	 */
 	public function GetLayout(): string {
 		return $this->sLayout;
+	}
+
+	/**
+	 * @param bool $bIsScrollable
+	 * @return $this
+	 */
+	public function SetIsScrollable($bIsScrollable) {
+		$this->bIsScrollable = $bIsScrollable;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetIsScrollable(): bool {
+		return $this->bIsScrollable;
 	}
 }

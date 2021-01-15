@@ -140,6 +140,7 @@ EOF
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ScrollMagic.min.js');
 	}
 
 	/**

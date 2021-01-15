@@ -323,6 +323,34 @@ JS
 
 	//////////////////////////////////////////////////////////////////////////
 	//
+	// Tabs preferences
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	$oTabsBlock = new Panel(Dict::S('UI:Tabs:Preferences'), array(), 'grey', 'ibo-tabs');
+
+	$oTabsForm = new Form();
+	$oTabsForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_tab_config'));
+
+	$sTabsScrollableValue = appUserPreferences::GetPref('tab_scrollable', false);;
+	$oTabsScrollable = InputFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Tabs:Scrollable:Label'));
+	$oTabsScrollable->GetInput()->AddOption(InputFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
+	$oTabsScrollable->GetInput()->AddOption(InputFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
+	$oTabsForm->AddSubBlock($oTabsScrollable);
+
+	// - Cancel button
+	$oTabsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oTabsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	$oTabsForm->AddSubBlock($oTabsCancelButton);
+	// - Submit button
+	$oTabsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oTabsForm->AddSubBlock($oTabsSubmitButton);
+
+	$oTabsBlock->AddSubBlock($oTabsForm);
+	$oContentLayout->AddMainBlock($oTabsBlock);
+	
+	//////////////////////////////////////////////////////////////////////////
+	//
 	// User picture placeholder
 	//
 	//////////////////////////////////////////////////////////////////////////
@@ -471,6 +499,10 @@ try {
 				
 				appUserPreferences::SetPref('richtext_config', json_encode($aRichTextConfig));
 				DisplayPreferences($oPage);
+				break;
+			case 'apply_tab_config':
+				$bScrollable= utils::ReadParam('tab_scrollable', 'false') === 'true';
+				appUserPreferences::SetPref('tab_scrollable', $bScrollable);
 				break;
 			case 'apply_language':
 				$sLangCode = utils::ReadParam('language', 'EN US');

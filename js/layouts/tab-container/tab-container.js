@@ -27,6 +27,7 @@ $(function()
             css_classes:
             {
             	is_hidden: 'ibo-is-hidden',
+	            is_scrollable: 'ibo-is-scrollable'
             },
             js_selectors:
             {
@@ -42,7 +43,8 @@ $(function()
             // the constructor
             _create: function()
             {
-                this.element.addClass('ibo-tab-container');
+	            var me = this;
+	            this.element.addClass('ibo-tab-container');
 
                 // Ugly patch for a change in the behavior of jQuery UI:
                 // Before jQuery UI 1.9, tabs were always considered as "local" (opposed to Ajax)
@@ -65,13 +67,22 @@ $(function()
                     // that the tabs aren't changed on click, and any custom event name can be
                     // specified. Note that if you define a callback for the 'select' event, it
                     // will be executed for the selected tab whenever the hash changes.
-                    this.element.tabs({event: 'change'});
+                    this._addTabsWidget({event: 'change'});
                 } else {
-                    this.element.tabs();
+                    this._addTabsWidget();
                 }
 
+	         
                 this._bindEvents();
             },
+	        _addTabsWidget: function(aParams)
+	        {
+	        	if(this.element.hasClass('ibo-is-scrollable')){
+			        this.element.scrollabletabs(aParams);
+		        } else {
+			        this.element.tabs(aParams);
+		        }
+	        },
             // events bound via _bind are removed automatically
             // revert other modifications here
             _destroy: function()
@@ -86,6 +97,9 @@ $(function()
                 this.element.on('tabsactivate', function(oEvent, oUI){
                     me._onTabActivated(oUI);
                 });
+	            this.element.on('tabscrolled', function(oEvent, oUI){
+		            me._onTabActivated(oUI);
+	            });
                 // Bind an event to window.onhashchange that, when the history state changes,
                 // iterates over all tab widgets, changing the current tab as necessary.
                 $(window).on('hashchange', function(){
