@@ -121,6 +121,13 @@ $ibo-navigation-menu--menu-filter-clear--right: $ibo-navigation-menu--menu-filte
 $ibo-navigation-menu--menu-filter-clear--padding: 3px 3px !default;
 $ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
 
+$ibo-navigation-menu--menu-filter-hint--margin-top: 16px !default;
+$ibo-navigation-menu--menu-filter-hint--padding-right: 12px !default;
+$ibo-navigation-menu--menu-filter-hint--text-color: $ibo-color-grey-700 !default;
+$ibo-navigation-menu--menu-filter-hint-close--top: 1px !default;
+$ibo-navigation-menu--menu-filter-hint-close--right: 2px !default;
+
+
 $ibo-navigation-menu--menu-groups--margin-top: 50px !default;
 
 $ibo-navigation-menu--menu--placeholder--width: 100% !default;
@@ -568,14 +575,17 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	padding: 2px 4px;
 	@extend %ibo-font-ral-nor-50;
 }
-.ibo-navigation-menu---menu-filter-hint{
-	display: none; /* TODO 3.0.0: Wait for MVC TWIG feature to be complete, then move this to an alert block */
-	margin-top: 8px;
+.ibo-navigation-menu--menu-filter-hint{
+	position: relative;
+	margin-top: $ibo-navigation-menu--menu-filter-hint--margin-top;
+	padding-right: $ibo-navigation-menu--menu-filter-hint--padding-right;
+	color: $ibo-navigation-menu--menu-filter-hint--text-color;
 	@extend %ibo-font-ral-ita-50;
 }
 .ibo-navigation-menu--menu-filter-hint-close{
 	position: absolute;
-	right: 2px;
+	top: $ibo-navigation-menu--menu-filter-hint-close--top;
+	right: $ibo-navigation-menu--menu-filter-hint-close--right;
 	@extend %ibo-hyperlink-inherited-colors;
 }
 

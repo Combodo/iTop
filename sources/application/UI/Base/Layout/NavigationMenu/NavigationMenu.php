@@ -55,6 +55,10 @@ class NavigationMenu extends UIBlock
 		'js/forms-json-utils.js',
 	];
 
+	// Specific constants
+	/** @var bool DEFAULT_SHOW_MENU_FILTER_HINT */
+	public const DEFAULT_SHOW_MENU_FILTER_HINT = true;
+
 	/** @var string $sAppRevisionNumber */
 	protected $sAppRevisionNumber;
 	/** @var string $sAppSquareIconUrl */
@@ -75,6 +79,8 @@ class NavigationMenu extends UIBlock
 	private $oNewsroomMenu;
 	/** @var bool $bIsExpanded */
 	protected $bIsExpanded;
+	/** @var bool Whether the hint on how the menu filter works shoudl be displayed or not */
+	protected $bShowMenuFilterHint;
 
 	/**
 	 * NavigationMenu constructor.
@@ -105,6 +111,7 @@ class NavigationMenu extends UIBlock
 		$this->oNewsroomMenu = $oNewsroomMenu;
 
 		$this->ComputeExpandedState();
+		$this->ComputeMenuFilterHintState();
 		$this->ComputeUserData();
 		$this->ComputeSiloSelection();
 	}
@@ -172,6 +179,7 @@ class NavigationMenu extends UIBlock
 	{
 		return $this->oUserMenu;
 	}
+
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenu
 	 */
@@ -188,6 +196,15 @@ class NavigationMenu extends UIBlock
 	public function IsExpanded()
 	{
 		return $this->bIsExpanded;
+	}
+
+	/**
+	 * @uses $bShowMenuFilterHint
+	 * @return bool
+	 */
+	public function HasMenuFilterHint(): bool
+	{
+		return $this->bShowMenuFilterHint;
 	}
 
 	/**
@@ -304,6 +321,20 @@ JS;
 		$this->bIsExpanded = $bIsExpanded;
 
 		return $this;
+	}
+
+	/**
+	 * Compute if the menu filter hint should be displayed or not
+	 *
+	 * @see $bShowMenuFilterHint
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	protected function ComputeMenuFilterHintState(): void
+	{
+		$this->bShowMenuFilterHint = (true === appUserPreferences::GetPref('navigation_menu_filter_hint', static::DEFAULT_SHOW_MENU_FILTER_HINT));
 	}
 
 	/**
