@@ -299,6 +299,7 @@ $(function()
 
 				// Show matching menu node
 				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').each(function () {
+					// Note: We don't filter on data-role="ibo-navigation-menu--menu-node-label" on purpose so we can also filter the counters
 					const sNodeValue = me._formatValueForFilterComparison($(this).children('[data-role="ibo-navigation-menu--menu-node-title"]:first').text());
 					let bMatches = true;
 
