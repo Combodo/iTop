@@ -329,20 +329,20 @@ JS
 	$oTabsBlock = new Panel(Dict::S('UI:Tabs:Preferences'), array(), 'grey', 'ibo-tabs');
 
 	$oTabsForm = new Form();
-	$oTabsForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_tab_config'));
+	$oTabsForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_tab_config'));
 
 	$sTabsScrollableValue = appUserPreferences::GetPref('tab_scrollable', false);;
-	$oTabsScrollable = InputFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Tabs:Scrollable:Label'));
-	$oTabsScrollable->GetInput()->AddOption(InputFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
-	$oTabsScrollable->GetInput()->AddOption(InputFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
+	$oTabsScrollable = InputUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Tabs:Scrollable:Label'));
+	$oTabsScrollable->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
+	$oTabsScrollable->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
 	$oTabsForm->AddSubBlock($oTabsScrollable);
 
 	// - Cancel button
-	$oTabsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oTabsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oTabsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	$oTabsForm->AddSubBlock($oTabsCancelButton);
 	// - Submit button
-	$oTabsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oTabsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oTabsForm->AddSubBlock($oTabsSubmitButton);
 
 	$oTabsBlock->AddSubBlock($oTabsForm);

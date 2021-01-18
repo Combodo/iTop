@@ -208,7 +208,7 @@ EOF
 		}
 	}
 
-	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
+	$oQuerySubmit = ButtonUIBlockFactory::MakeForPrimaryAction(
 		Dict::S('UI:Button:Evaluate'),
 		null,
 		null,
@@ -323,7 +323,7 @@ EOF
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 
 					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
-					$oUseSuggestedQueryButton = ButtonFactory::MakeForDestructiveAction('Use this query');
+					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
 					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
 let \$oQueryTextarea = $('textarea[name=expression]');
 \$oQueryTextarea.val('$sEscapedExpression').focus();
