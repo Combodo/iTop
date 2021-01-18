@@ -61,11 +61,11 @@ class NavigationMenu extends UIBlock
 
 	/** @var string $sAppRevisionNumber */
 	protected $sAppRevisionNumber;
-	/** @var string $sAppSquareIconUrl */
+	/** @var string Logo to display when the menu is collapsed */
 	protected $sAppSquareIconUrl;
-	/** @var string $sAppFullIconUrl */
+	/** @var string Logo to display when the menu is expanded */
 	protected $sAppFullIconUrl;
-	/** @var string $sAppIconLink */
+	/** @var string URL of the link on both $AppXXXIconUrl */
 	protected $sAppIconLink;
 	/** @var array $aSiloSelection */
 	protected $aSiloSelection;
@@ -110,6 +110,7 @@ class NavigationMenu extends UIBlock
 		$this->oUserMenu = $oUserMenu;
 		$this->oNewsroomMenu = $oNewsroomMenu;
 
+		$this->ComputeAppIconLink();
 		$this->ComputeExpandedState();
 		$this->ComputeMenuFilterHintState();
 		$this->ComputeUserData();
@@ -125,6 +126,7 @@ class NavigationMenu extends UIBlock
 	}
 
 	/**
+	 * @uses $sAppSquareIconUrl
 	 * @return string
 	 */
 	public function GetAppSquareIconUrl()
@@ -133,6 +135,7 @@ class NavigationMenu extends UIBlock
 	}
 
 	/**
+	 * @uses $sAppFullIconUrl
 	 * @return string
 	 */
 	public function GetAppFullIconUrl()
@@ -141,6 +144,7 @@ class NavigationMenu extends UIBlock
 	}
 
 	/**
+	 * @uses $sAppIconLink
 	 * @return string
 	 */
 	public function GetAppIconLink()
@@ -221,6 +225,24 @@ class NavigationMenu extends UIBlock
 	public function IsNewsroomEnabled()
 	{
 		return MetaModel::GetConfig()->Get('newsroom_enabled');
+	}
+
+	/**
+	 * @uses $sAppIconLink
+	 * @return void
+	 */
+	public function ComputeAppIconLink(): void
+	{
+		$sPropCode = 'app_icon_url';
+
+		// Try if a custom URL was set in the configuration file
+		if(MetaModel::GetConfig()->IsCustomValue($sPropCode)) {
+			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_icon_url');
+		}
+		// Otherwise use the home page
+		else {
+			$this->sAppIconLink = MetaModel::GetConfig()->Get('app_root_url');
+		}
 	}
 
 	/**
