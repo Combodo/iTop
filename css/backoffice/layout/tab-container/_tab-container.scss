@@ -33,6 +33,11 @@ $ibo-tab-container--extra-tab-toggler--text-color: $ibo-color-grey-700 !default;
 $ibo-tab-container--extra-tab-toggler--text-color--on-hover: $ibo-color-blue-800 !default;
 $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-grey-200 !default;
 
+$ibo-tab-container--tab-container--label--text-color: $ibo-color-grey-600 !default;
+$ibo-tab-container--tab-container--label--spacing: 20px !default;
+$ibo-tab-container--tab-container--label--margin-bottom: 20px !default;
+$ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
+
 /* Rules */
 .ibo-tab-container--tabs-list {
 	position: relative;
@@ -109,4 +114,34 @@ $ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-gr
 
 .ibo-tab-container--tab-container{
 	padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
+}
+
+.ibo-tab-container--tab-container--label{
+	margin-bottom: $ibo-tab-container--tab-container--label--margin-bottom;
+	overflow-x: hidden;
+	> span{
+		position: relative;
+		padding-left: $ibo-tab-container--tab-container--label--spacing;
+		margin-left: $ibo-tab-container--tab-container--label--span--margin-left;
+		color: $ibo-tab-container--tab-container--label--text-color;
+		
+		@extend %ibo-font-ral-med-250;
+	}
+	> span::before, 
+	> span::after{
+		content: "";
+		display: inline-block;
+		position: absolute;
+		top: 50%;
+		height: 1px;
+		width: 2000px;
+		border-top: 2px solid $ibo-tab-container--tab-container--label--text-color;
+	}
+	> span::before{
+		right: 100%;
+	}
+	> span::after{
+		left: 100%;
+		margin-left: $ibo-tab-container--tab-container--label--spacing;
+	}
 }

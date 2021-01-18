@@ -47,6 +47,9 @@
 		            {% for oTab in oUIBlock.GetSubBlocks() %}
 	                    {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
 		                    <div id="tab_{{ oTab.GetId()|sanitize_identifier }}" class="ibo-tab-container--tab-container">
+			                    {% if oUIBlock.GetIsScrollable() %}
+			                        <div class="ibo-tab-container--tab-container--label"><span>{{ oTab.GetTitle() }}</span></div>
+			                    {% endif %}
 			                    {{ render_block(oTab, {aPage: aPage}) }}
 		                    </div>
 		                {% endif %}
