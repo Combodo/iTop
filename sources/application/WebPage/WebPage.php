@@ -18,7 +18,7 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
@@ -239,7 +239,7 @@ class WebPage implements Page
 
 	public function GetTableBlock($aColumns, $aData)
 	{
-		return DataTableFactory::MakeForForm(uniqid('form_', true), $aColumns, $aData);
+		return DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aColumns, $aData);
 	}
 
 	/**

@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
@@ -351,7 +351,7 @@ JS
 	 */
 	protected function GetFormTableBlock($aConfig, $aData)
 	{
-		return DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
+		return DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
 	}
 
 

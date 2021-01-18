@@ -7,9 +7,9 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
 
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
@@ -42,15 +42,15 @@ class BlockObjectPickerDialog extends UIContentBlock
 		$oForm->AddSubBlock($oBlock);
 		$oBlock->AddHtml("<p>{$sEmptyList}</p>");
 
-		$oForm->AddSubBlock(InputFactory::MakeForHidden("count_{$this->sLinkedSetId}", '0', "count_{$this->sLinkedSetId}"));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("count_{$this->sLinkedSetId}", '0', "count_{$this->sLinkedSetId}"));
 
 		$oToolbar = new Toolbar(null, 'ibo-datatable--selection-validation-buttons-toolbar');
 		$this->AddSubBlock($oToolbar);
-		$oRemoveButton = ButtonFactory::MakeForSecondaryAction($sCancel, null, null, false);
+		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction($sCancel, null, null, false);
 		$oRemoveButton->SetOnClickJsCode("$('#dlg_{$this->sLinkedSetId}').dialog('close');");
 		$oToolbar->AddSubBlock($oRemoveButton);
 
-		$oAddButton = ButtonFactory::MakeForSecondaryAction($sAdd, null, null, false, "btn_ok_{$this->sLinkedSetId}");
+		$oAddButton = ButtonUIBlockFactory::MakeForSecondaryAction($sAdd, null, null, false, "btn_ok_{$this->sLinkedSetId}");
 		$oAddButton->SetIsDisabled(true)
 			->SetOnClickJsCode("return oWidget{$this->iInputId}.DoAddObjects(this.id);");
 		$oToolbar->AddSubBlock($oAddButton);

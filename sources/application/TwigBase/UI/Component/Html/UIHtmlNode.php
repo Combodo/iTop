@@ -7,7 +7,6 @@
 
 namespace Combodo\iTop\Application\TwigBase\UI\Component;
 
-use Combodo\iTop\Application\TwigBase\UI\UIBlockHelper;
 use Twig\Compiler;
 use Twig\Node\Node;
 
@@ -26,6 +25,6 @@ class UIHtmlNode extends Node
 			->subcompile($this->getNode('body'))
 			->write("\$sHtml = ob_get_contents();\n")
 			->write("ob_end_clean();\n")
-			->write(UIBlockHelper::GetParentBlock()."->AddSubBlock(new Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html(\$sHtml));\n");
+			->write("end(\$context['UIBlockParent'])->AddSubBlock(new Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html(\$sHtml));\n");
 	}
 }

@@ -18,18 +18,18 @@
  */
 
 use Combodo\iTop\Application\Search\SearchForm;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
-use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
@@ -268,7 +268,7 @@ EOF
 						$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
 					}
 					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
-					$aMessages[] = AlertFactory::MakeForDanger('', Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName));
+					$aMessages[] = AlertUIBlockFactory::MakeForDanger('', Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName));
 				}
 			}
 			$sMessageKey = get_class($this).'::'.$this->GetKey();
@@ -281,16 +281,16 @@ EOF
 						$aRanks[] = $aMessageData['rank'];
 						switch ($aMessageData['severity']) {
 							case 'info':
-								$aMessages[] = AlertFactory::MakeForInformation('', $aMessageData['message']);
+								$aMessages[] = AlertUIBlockFactory::MakeForInformation('', $aMessageData['message']);
 								break;
 							case 'ok':
-								$aMessages[] = AlertFactory::MakeForSuccess('', $aMessageData['message']);
+								$aMessages[] = AlertUIBlockFactory::MakeForSuccess('', $aMessageData['message']);
 								break;
 							case 'warning':
-								$aMessages[] = AlertFactory::MakeForWarning('', $aMessageData['message']);
+								$aMessages[] = AlertUIBlockFactory::MakeForWarning('', $aMessageData['message']);
 								break;
 							case 'error':
-								$aMessages[] = AlertFactory::MakeForDanger('', $aMessageData['message']);
+								$aMessages[] = AlertUIBlockFactory::MakeForDanger('', $aMessageData['message']);
 								break;
 						}
 					}
@@ -424,7 +424,7 @@ EOF
 //			$sTags = '';
 //		}
 
-		$oPage->AddUiBlock(TitleFactory::MakeForObjectDetails($this));
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
 	}
 
 	/**
@@ -973,7 +973,7 @@ EOF
 							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
 							// The field is visible, add it to the current column
-							$oField = FieldFactory::MakeFromParams($val);
+							$oField = FieldUIBlockFactory::MakeFromParams($val);
 							if ($sFieldsetName[0] != '_') {
 								$oFieldSet->AddSubBlock($oField);
 							} else {
@@ -1140,7 +1140,7 @@ HTML
 			$iListId = $aExtraParams['currentId'];
 		}
 
-		return DataTableFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
+		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
 	/**
 	 * @param \WebPage $oPage
@@ -1886,7 +1886,7 @@ HTML
 						// predefined queries N°3227
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
-						$oPredefQueryButton = ButtonFactory::MakeIconLink(
+						$oPredefQueryButton = ButtonUIBlockFactory::MakeIconLink(
 							'fas fa-search',
 							$sSearchQueryLbl,
 							null,
@@ -1926,7 +1926,7 @@ JS
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
 						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
-						$oTestQueryButton = ButtonFactory::MakeIconLink(
+						$oTestQueryButton = ButtonUIBlockFactory::MakeIconLink(
 							'fas fa-play',
 							$sTestQueryLbl,
 							null,
@@ -2489,7 +2489,7 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
 
-			//$oContentBlock->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
+			//$oContentBlock->AddSubBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
 
 //			$oPage->add(<<<HTML
 //<!-- Beginning of object-details -->
@@ -2551,15 +2551,15 @@ JS
 
 		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sOperation));
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sOperation));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 
 		// Add transaction ID
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
@@ -2570,7 +2570,7 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
 
-			$oForm->AddSubBlock(TitleFactory::MakeForObjectDetails($this));
+			$oForm->AddSubBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
 
 			// TODO 3.0.0: Refactor DisplayBareHeader and call it here
 		}
@@ -2589,10 +2589,10 @@ CSS
 		$oToolbarTop = new Toolbar();
 		$oToolbarTop->SetCSSClasses('ibo-toolbar ibo-toolbar-top');
 
-		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oCancelButton->AddCSSClasses('action cancel');
 		$oToolbarTop->AddSubBlock($oCancelButton);
-		$oApplyButton = ButtonFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
+		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
 		$oApplyButton->AddCSSClasses('action');
 		$oToolbarTop->AddSubBlock($oApplyButton);
 
@@ -2606,7 +2606,7 @@ CSS
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
-						$oButton = ButtonFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
+						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClasses('action');
 						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
 						$oToolbarTop->AddSubBlock($oButton);
@@ -2699,15 +2699,15 @@ EOF
 		}
 
 		$oPage->SetCurrentTab('');
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $sClass));
-		$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 		foreach ($aExtraParams as $sName => $value) {
 			if (is_scalar($value)) {
-				$oForm->AddSubBlock(InputFactory::MakeForHidden($sName, $value));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sName, $value));
 			}
 		}
 		if ($sOwnershipToken !== null) {
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 		}
 		$oPage->add($oAppContext->GetForForm());
 		if ($sButtonsPosition != 'top') {
@@ -3035,15 +3035,14 @@ HTML
 		);
 
 		// Page title and subtitles
-		$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
-		if(!empty($sActionDetails)) {
-			$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionDetails));
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
+		if (!empty($sActionDetails)) {
+			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
 		}
 
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		// Display object detail above if buttons must be displayed on the bottom
-		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
-		{
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties) {
 			// bottom: Displays the ticket details BEFORE the actions
 			$this->DisplayDetails($oPage, false, $sMode);
 		}
@@ -3054,15 +3053,14 @@ HTML
 		$oFormContainer->AddSubBlock($oForm);
 
 		$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
-			->AddSubBlock(InputFactory::MakeForHidden('id', $this->GetKey(), 'id'))
-			->AddSubBlock(InputFactory::MakeForHidden('class', $sClass))
-			->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_stimulus'))
-			->AddSubBlock(InputFactory::MakeForHidden('stimulus', $sStimulus))
-			->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $this->GetKey(), 'id'))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_stimulus'))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
-		if ($sOwnershipToken !== null)
-		{
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+		if ($sOwnershipToken !== null) {
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 		}
 
 		// Note: Remove the table is we want fields to occupy the whole width of the container
@@ -3073,11 +3071,11 @@ HTML
 		$oAppContext = new ApplicationContext();
 		$oForm->AddHtml($oAppContext->GetForForm());
 
-		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
 		$oForm->AddSubBlock($oCancelButton);
 
-		$oSubmitButton = ButtonFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+		$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
 		$oForm->AddSubBlock($oSubmitButton);
 
 		$oPage->add(<<<HTML

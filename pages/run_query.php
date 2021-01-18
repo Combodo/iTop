@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -343,7 +343,7 @@ JS
 	}
 }
 catch (Exception $e) {
-	$oErrorAlert = AlertFactory::MakeForFailure(
+	$oErrorAlert = AlertUIBlockFactory::MakeForFailure(
 		Dict::Format('UI:RunQuery:Error', $e->getMessage()),
 		'<pre>'.$e->getTraceAsString().'</pre>'
 	);

@@ -568,6 +568,7 @@ abstract class Controller
 				break;
 		}
 		$this->m_oTwig->addGlobal('UIBlockParent', [$this->m_oPage]);
+		$this->m_oTwig->addGlobal('oPage', $this->m_oPage);
 	}
 
 	/**

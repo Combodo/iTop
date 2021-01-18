@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
@@ -60,7 +60,7 @@ class CaseLogEntryFormFactory
 	 */
 	protected static function PrepareCancelButton(): Button
 	{
-		return ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		return ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 	}
 
 	/**
@@ -68,7 +68,7 @@ class CaseLogEntryFormFactory
 	 */
 	protected static function PrepareSendButton(): Button
 	{
-		$oButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'send', 'send');
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'send', 'send');
 		$oButton->SetIconClass('fas fa-paper-plane');
 
 		return $oButton;

@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -236,7 +236,7 @@ class ApplicationContext
 	{
 		$oContext = new UIContentBlock();
 		foreach ($this->aValues as $sName => $sValue) {
-			$oContext->AddSubBlock(InputFactory::MakeForHidden('c[$sName]', utils::HtmlEntities($sValue)));
+			$oContext->AddSubBlock(InputUIBlockFactory::MakeForHidden('c[$sName]', utils::HtmlEntities($sValue)));
 		}
 		return $oContext;
 	}

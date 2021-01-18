@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
@@ -288,18 +288,18 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 
 	$oForm = new Form();
 	$oForm->SetAction('./UI.php');
-	$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', $sNextOperation));
-	$oForm->AddSubBlock(InputFactory::MakeForHidden('class', $oFilter->GetClass()));
-	$oForm->AddSubBlock(InputFactory::MakeForHidden('filter', utils::HtmlEntities($oFilter->Serialize())));
-	$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sNextOperation));
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $oFilter->GetClass()));
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', utils::HtmlEntities($oFilter->Serialize())));
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 	foreach ($aExtraFormParams as $sName => $sValue) {
-		$oForm->AddSubBlock(InputFactory::MakeForHidden($sName, $sValue));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sName, $sValue));
 	}
 	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
-	$oForm->AddSubBlock(ButtonFactory::MakeNeutral(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
-	$oForm->AddSubBlock(ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
+	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
+	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
 
 	$oP->AddUiBlock($oForm);
 	$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");

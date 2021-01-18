@@ -8,12 +8,15 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOption;
 
-class InputFactory
+class InputUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIInput';
+	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input";
 
 	public static function MakeForHidden(string $sName, string $sValue, ?string $sId = null): Input
 	{

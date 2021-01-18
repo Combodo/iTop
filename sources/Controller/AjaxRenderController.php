@@ -11,8 +11,8 @@ use ApplicationMenu;
 use AttributeLinkedSet;
 use BulkExport;
 use BulkExportException;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -161,7 +161,7 @@ class AjaxRenderController
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
-		$aResult = DataTableFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
+		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
 
 		return $aResult;
 	}

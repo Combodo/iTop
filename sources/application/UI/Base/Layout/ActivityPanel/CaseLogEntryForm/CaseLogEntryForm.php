@@ -62,11 +62,11 @@ class CaseLogEntryForm extends UIContentBlock
 	/**
 	 * CaseLogEntryForm constructor.
 	 *
-	 * @param null $sName
+	 * @param null $sId
 	 */
-	public function __construct($sName = null)
+	public function __construct($sId = null)
 	{
-		parent::__construct($sName);
+		parent::__construct($sId);
 		$this->sSubmitMode = static::DEFAULT_SUBMIT_MODE;
 		$this->sContainerTabType = static::DEFAULT_CONTAINER_TAB_TYPE;
 		$this->SetTextInput(new RichText());

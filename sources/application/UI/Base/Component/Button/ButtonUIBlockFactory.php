@@ -19,8 +19,10 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+
 /**
- * Class ButtonFactory
+ * Class ButtonUIBlockFactory
  *
  * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
@@ -29,8 +31,11 @@ namespace Combodo\iTop\Application\UI\Base\Component\Button;
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-buttons to see live examples
  */
-class ButtonFactory
+class ButtonUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIButton';
+	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\Button";
+
 	//---------------------------------------------
 	// Regular action buttons, mostly used in forms
 	//---------------------------------------------
@@ -273,8 +278,7 @@ class ButtonFactory
 	public static function MakeLinkNeutral(
 		string $sURL, ?string $sLabel = null, ?string $sIconClasses = null, ?string $sName = null, ?string $sTarget = null,
 		?string $sId = null
-	): Button
-	{
+	): Button {
 		$sType = empty($sIconClasses) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
 		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, $sType, null, $sName, false, $sId);
 
@@ -305,8 +309,7 @@ class ButtonFactory
 	public static function MakeIconLink(
 		string $sIconClasses, string $sTooltipText, ?string $sURL = null, ?string $sName = null, ?string $sTarget = null,
 		?string $sId = null
-	)
-	{
+	) {
 		$oButton = static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
 		$oButton->SetIconClass($sIconClasses);
 		$oButton->SetTooltip($sTooltipText);

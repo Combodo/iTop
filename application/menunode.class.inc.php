@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -1131,7 +1131,7 @@ class OQLMenuNode extends MenuNode
 
 		//$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
 		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
-		$oTitle = TitleFactory::MakeForPage($sTitle);
+		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
 		$oPage->AddUiBlock($oTitle);
 
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
@@ -1139,7 +1139,7 @@ class OQLMenuNode extends MenuNode
 		$oBlock->Display($oPage, $sUsageId);
 
 		$oPage->add("</div>");
-		
+
 		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage)) {
 			// Breadcrumb
 			//$iCount = $oBlock->GetDisplayedCount();

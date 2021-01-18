@@ -33,7 +33,7 @@ use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use CoreException;
@@ -201,22 +201,19 @@ class SearchForm
 		$oUiSearchBlock->AddToolbarBlock(new Html($sHtml));
 
 
-
-		$oFormSearch=new Form("fs_".$sSearchFormId);
+		$oFormSearch = new Form("fs_".$sSearchFormId);
 		$oFormSearch->SetAction($sAction)
 			->AddCSSClasses($sStyle);
 		$oUiSearchBlock->AddSubBlock($oFormSearch);
-		$oFormSearch->AddSubBlock(InputFactory::MakeForHidden("class", $sClassName));
-		$oFormSearch->AddHtml( "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>");//class sf_message header_message
+		$oFormSearch->AddSubBlock(InputUIBlockFactory::MakeForHidden("class", $sClassName));
+		$oFormSearch->AddHtml("<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>");//class sf_message header_message
 
-		$oCriterionBlock = new UIContentBlock("fs_{$sSearchFormId}_criterion_outer","sf_criterion_area ibo-criterion-area");
+		$oCriterionBlock = new UIContentBlock("fs_{$sSearchFormId}_criterion_outer", "sf_criterion_area ibo-criterion-area");
 		$oFormSearch->AddSubBlock($oCriterionBlock);
 
-		if (isset($aExtraParams['query_params']))
-		{
+		if (isset($aExtraParams['query_params'])) {
 			$aArgs = $aExtraParams['query_params'];
-		}
-		else
+		} else
 		{
 			$aArgs = array();
 		}

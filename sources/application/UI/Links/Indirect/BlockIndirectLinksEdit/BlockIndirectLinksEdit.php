@@ -7,8 +7,8 @@
 namespace Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit;
 
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
@@ -52,15 +52,15 @@ class BlockIndirectLinksEdit extends UIContentBlock
 
 	public function AddControls()
 	{
-		$this->AddSubBlock(InputFactory::MakeForHidden("{$this->sFormPrefix}{$this->iInputId}", '', "{$this->sFormPrefix}{$this->iInputId}"));
+		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$this->sFormPrefix}{$this->iInputId}", '', "{$this->sFormPrefix}{$this->iInputId}"));
 
 		$oToolbar = new Toolbar(null, 'ibo-datatable--selection-validation-buttons-toolbar');
 		$this->AddSubBlock($oToolbar);
-		$oRemoveButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:RemoveLinkedObjectsOf_Class'), null, null, false, "{$this->sLinkedSetId}_btnRemove");
+		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:RemoveLinkedObjectsOf_Class'), null, null, false, "{$this->sLinkedSetId}_btnRemove");
 		$oRemoveButton->SetOnClickJsCode("oWidget{$this->iInputId}.RemoveSelected();");
 		$oToolbar->AddSubBlock($oRemoveButton);
 
-		$oAddButton = ButtonFactory::MakeForSecondaryAction(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->sRemoteClass)), null, null, false, "{$this->sLinkedSetId}_btnAdd");
+		$oAddButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->sRemoteClass)), null, null, false, "{$this->sLinkedSetId}_btnAdd");
 		$oAddButton->SetOnClickJsCode("oWidget{$this->iInputId}.AddObjects();");
 		$oToolbar->AddSubBlock($oAddButton);
 

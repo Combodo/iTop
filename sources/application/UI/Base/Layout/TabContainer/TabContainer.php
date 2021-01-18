@@ -68,22 +68,22 @@ class TabContainer extends UIContentBlock
 	/**
 	 * TabContainer constructor.
 	 *
-	 * @param string $sName
+	 * @param string $sId
 	 * @param string $sPrefix
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function __construct($sName, $sPrefix)
+	public function __construct($sId, $sPrefix)
 	{
 		$sId = null;
-		if (!empty($sName) || !empty($sPrefix)) {
-			$sId = "{$sName}".((!empty($sPrefix)) ? "-{$sPrefix}" : "");
+		if (!empty($sId) || !empty($sPrefix)) {
+			$sId = "{$sId}".((!empty($sPrefix)) ? "-{$sPrefix}" : "");
 		}
 		parent::__construct($sId);
 
-		$this->sName = $sName;
+		$this->sName = $sId;
 		$this->sPrefix = $sPrefix;
 		$this->sLayout = appUserPreferences::GetPref('tab_layout', static::DEFAULT_LAYOUT);
 		$this->bIsScrollable = appUserPreferences::GetPref('tab_scrollable', static::DEFAULT_SCROLLABLE);

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 
@@ -1089,7 +1089,7 @@ JS
 		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
 		$sName = 'UI:Dashboard:Actions';
 		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
-		$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+		$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
 		$oActionButton->AddCSSClasses("ibo-top-bar--toolbar-dashboard-menu-toggler");
 
 		$oToolbar->AddSubBlock($oActionButton);

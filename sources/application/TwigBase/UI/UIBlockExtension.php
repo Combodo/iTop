@@ -8,31 +8,40 @@
 namespace Combodo\iTop\Application\TwigBase\UI;
 
 
-use Combodo\iTop\Application\TwigBase\UI\Component\UIAlertParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIContentBlockParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIDataTableParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIFieldParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIFieldSetParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIFormParser;
 use Combodo\iTop\Application\TwigBase\UI\Component\UIHtmlParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UIInputParser;
-use Combodo\iTop\Application\TwigBase\UI\Component\UITitleParser;
+use Exception;
+use ReflectionClass;
 use Twig\Extension\AbstractExtension;
 
 class UIBlockExtension extends AbstractExtension
 {
+	private static $aFactoryClasses = null;
+
 	public function getTokenParsers()
 	{
-		return [
-			new UIHtmlParser(),
-			new UIContentBlockParser(),
-			new UIFieldSetParser(),
-			new UIFieldParser(),
-			new UIAlertParser(),
-			new UITitleParser(),
-			new UIDataTableParser(),
-			new UIFormParser(),
-			new UIInputParser(),
-		];
+		$aParsers = [new UIHtmlParser()];
+
+		$aClassMap = include APPROOT.'lib/composer/autoload_classmap.php';
+		if (is_null(self::$aFactoryClasses)) {
+			self::$aFactoryClasses = [];
+			$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
+			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
+				if (strpos($sPHPClass, 'UIBlockFactory') !== false) {
+					try {
+						$oRefClass = new ReflectionClass($sPHPClass);
+						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+							self::$aFactoryClasses[] = $sPHPClass;
+						}
+					} catch (Exception $e) {
+					}
+				}
+			}
+		}
+
+		foreach (self::$aFactoryClasses as $sFactoryClass) {
+			$aParsers[] = new UIBlockParser($sFactoryClass);
+		}
+
+		return $aParsers;
 	}
 }

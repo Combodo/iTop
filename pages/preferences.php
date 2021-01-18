@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
@@ -41,7 +41,7 @@ function DisplayPreferences($oP)
 	$oAppContext = new ApplicationContext();
 	$sURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?'.$oAppContext->GetForLink();
 
-	$oContentLayout->AddMainBlock(TitleFactory::MakeForPage(Dict::S('UI:Preferences:Title')));
+	$oContentLayout->AddMainBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Preferences:Title')));
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -84,10 +84,10 @@ HTML;
 	$oMiscSettingsHtml = new Html($sMiscSettingsHtml);
 
 	// - Cancel button
-	$oMiscSettingsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oMiscSettingsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oMiscSettingsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
-	$oMiscSettingsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
+	$oMiscSettingsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
 
 	$oMiscSettingsEndHtmlBlock = new Html('</form>');
 
@@ -145,22 +145,21 @@ JS
 		'selection_type' => 'multiple',
 		'table_id' => 'user_prefs',
 		'surround_with_panel' => false,
-		'selected_rows'=>$aFavoriteOrgs
+		'selected_rows' => $aFavoriteOrgs
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
 	$oFavoriteOrganizationsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
 	$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
 	// - Cancel button
-	$oFavoriteOrganizationsCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsCancelButton);
 	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
-	$oFavoriteOrganizationsSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
+	$oFavoriteOrganizationsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
 	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 
-	if ($aFavoriteOrgs == null)
-	{
+	if ($aFavoriteOrgs == null) {
 		// All checked
 		$oP->add_ready_script(
 			<<<JS
@@ -200,11 +199,11 @@ JS
 		$oShortcutsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
 		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
 		// - Rename button
-		$oShortcutsRenameButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,
+		$oShortcutsRenameButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,
 			"shortcut_btn_rename");
 		$oShortcutsToolBar->AddSubBlock($oShortcutsRenameButton);
 		// - Delete button
-		$oShortcutsDeleteButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false,
+		$oShortcutsDeleteButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false,
 			"shortcut_btn_delete");
 		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
 	}
@@ -273,13 +272,13 @@ JS
 		$sNewsroomHtml .= $oAppContext->GetForForm();
 
 		// - Reset button
-		$oNewsroomResetCacheButton = ButtonFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
+		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
 		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
 		// - Cancel button
-		$oNewsroomCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 		// - Submit button
-		$oNewsroomSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
+		$oNewsroomSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
 			'apply_newsroom_preferences', true);
 
 
@@ -302,20 +301,20 @@ JS
 	$oRichTextBlock = new Panel(Dict::S('UI:RichText:Preferences'), array(), 'grey', 'ibo-richtext');
 
 	$oRichTextForm = new Form();
-	$oRichTextForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_richtext_config'));
-	
+	$oRichTextForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_richtext_config'));
+
 	$sRichTextToolbarDefaultState = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
-	$oRichTextToolbarDefaultStateInput = InputFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:RichText:ToolbarState'));
-	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputFactory::MakeForSelectOption('true', Dict::S('UI:RichText:ToolbarState:Expanded'), $sRichTextToolbarDefaultState));
-	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
+	$oRichTextToolbarDefaultStateInput = InputUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:RichText:ToolbarState'));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:RichText:ToolbarState:Expanded'), $sRichTextToolbarDefaultState));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
 	$oRichTextForm->AddSubBlock($oRichTextToolbarDefaultStateInput);
-	
+
 	// - Cancel button
-	$oRichTextCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oRichTextCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oRichTextCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	$oRichTextForm->AddSubBlock($oRichTextCancelButton);
 	// - Submit button
-	$oRichTextSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oRichTextSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oRichTextForm->AddSubBlock($oRichTextSubmitButton);
 
 	$oRichTextBlock->AddSubBlock($oRichTextForm);
@@ -415,7 +414,7 @@ HTML
 function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): Form
 {
 	$oUserLanguageForm = new Form();
-	$oUserLanguageForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_language'));
+	$oUserLanguageForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_language'));
 
 	// Lang selector
 	$aLanguages = Dict::GetLanguages();
@@ -430,22 +429,22 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 		$aSortedLang[$aLang['description']] = $sCode;
 	}
 	ksort($aSortedLang);
-	$oUserLanguageBlockSelect = InputFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	$oUserLanguageBlockSelect = InputUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oUserLanguageBlockSelectInput */
 	$oUserLanguageBlockSelectInput = $oUserLanguageBlockSelect->GetInput();
 	foreach ($aSortedLang as $sCode) {
 		$bSelected = ($sCode == Dict::GetUserLanguage());
-		$oUserLanguageBlockSelectInput->AddOption(InputFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
+		$oUserLanguageBlockSelectInput->AddOption(InputUIBlockFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
 	}
 	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
 
 	$oUserLanguageForm->AddSubBlock($oAppContext->GetForFormBlock());
 	// - Cancel button
-	$oUserLanguageCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oUserLanguageCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
 	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	$oUserLanguageForm->AddSubBlock($oUserLanguageCancelButton);
 	// - Submit button
-	$oUserLanguageSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+	$oUserLanguageSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
 	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
 	return $oUserLanguageForm;
 }

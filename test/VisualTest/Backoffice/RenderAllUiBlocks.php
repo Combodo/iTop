@@ -22,8 +22,8 @@
 
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
@@ -73,20 +73,20 @@ $sContent = <<<HTML
 <div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
 HTML;
 
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeNeutral('Neutral alert', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForInformation('Alert for information', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForSuccess('Alert for success', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForWarning('Alert for warning', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForDanger('Alert for danger', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeForFailure('Alert for failure', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color', $sContent));
-$oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color', $sContent));
-$oAlertNonClosable = AlertFactory::MakeNeutral('Alert not closable, not collapsable', $sContent)
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeNeutral('Neutral alert', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForInformation('Alert for information', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForSuccess('Alert for success', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForWarning('Alert for warning', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForDanger('Alert for danger', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForFailure('Alert for failure', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color', $sContent));
+$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color', $sContent));
+$oAlertNonClosable = AlertUIBlockFactory::MakeNeutral('Alert not closable, not collapsable', $sContent)
 	->SetIsClosable(false)
 	->SetIsCollapsible(false);
 $oPageContentLayout->AddMainBlock($oAlertNonClosable);
-$oAlertSaveCollapsibleState = AlertFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
-	->EnableSaveCollapsibleState('RenderAllUiBlocks__alert');
+$oAlertSaveCollapsibleState = AlertUIBlockFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
+	->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
 $oPageContentLayout->AddMainBlock($oAlertSaveCollapsibleState);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
@@ -96,29 +96,29 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 //////////
 $oButtonsTitle = new Html('<h2 id="title-buttons">Buttons examples</h2>');
 $oPage->AddUiBlock($oButtonsTitle);
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral', 'neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForSecondaryAction('Secondary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPositiveAction('Validation'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForPositiveAction('Validation dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeAlternativeNeutral('Alt. neutral dis.', 'alt-neutral')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativePrimaryAction('Alt. primary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeSecondaryAction('Alt. secondary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeValidationAction('Alt. validation dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral', 'neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Secondary'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Secondary dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('Validation'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('Validation dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral dis.', 'alt-neutral')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button'));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

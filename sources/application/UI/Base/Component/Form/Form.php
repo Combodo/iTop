@@ -25,9 +25,9 @@ class Form extends UIContentBlock
 	/** @var string */
 	protected $sAction;
 
-	public function __construct(string $sName = null)
+	public function __construct(string $sId = null)
 	{
-		parent::__construct($sName);
+		parent::__construct($sId);
 		$this->sOnSubmitJsCode = null;
 		$this->sAction = null;
 	}

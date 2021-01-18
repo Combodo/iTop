@@ -19,7 +19,7 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -726,8 +726,8 @@ JS
 		$oHeader = new UIContentBlock();
 
 		// Log KPIs
-		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()){
-			$oKPIAlert = AlertFactory::MakeForInformation('KPIs', ExecutionKPI::GetDescription())
+		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
+			$oKPIAlert = AlertUIBlockFactory::MakeForInformation('KPIs', ExecutionKPI::GetDescription())
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oKPIAlert);
@@ -735,7 +735,7 @@ JS
 
 		// Archive mode
 		if (utils::IsArchiveMode()) {
-			$oArchiveAlert = AlertFactory::MakeForInformation(Dict::S('UI:ArchiveMode:Banner'), '')
+			$oArchiveAlert = AlertUIBlockFactory::MakeForInformation(Dict::S('UI:ArchiveMode:Banner'), '')
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oArchiveAlert);
@@ -754,24 +754,23 @@ JS
 			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
 			$sRestrictionTitle = empty($sAdminMessage) ? '' : $sAdminMessage;
 
-			$oRestrictionAlert = AlertFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
+			$oRestrictionAlert = AlertUIBlockFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oRestrictionAlert);
 		}
 
 		// Misc. app. messages
-		foreach ($this->m_aMessages as $aMessage)
-		{
+		foreach ($this->m_aMessages as $aMessage) {
 			$sMessageForHtml = $aMessage['message'];
-			if($aMessage['tip']) {
+			if ($aMessage['tip']) {
 				$sTooltipForHtml = utils::HtmlEntities($aMessage['tip']);
 				$sMessageForHtml = <<<HTML
 <div data-tooltip-content="$sTooltipForHtml">$sMessageForHtml</div>
 HTML;
 			}
 			// Note: Message icon has been ignored during 3.0 migration. If we want them back, we should find a proper way to integrate them, not just putting an <img /> tag
-			$oAppMessageAlert = AlertFactory::MakeForInformation('', $sMessageForHtml);
+			$oAppMessageAlert = AlertUIBlockFactory::MakeForInformation('', $sMessageForHtml);
 			$oHeader->AddSubBlock($oAppMessageAlert);
 		}
 

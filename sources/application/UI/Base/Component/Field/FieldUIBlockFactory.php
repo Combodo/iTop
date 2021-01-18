@@ -7,14 +7,18 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
  * @since 3.0.0
  */
-class FieldFactory
+class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIField';
+	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field";
+
 	public static function MakeFromParams($aParams)
 	{
 		$oValue = new Html($aParams['value']);
@@ -86,5 +90,11 @@ class FieldFactory
 		return $oField;
 	}
 
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
+	{
+		$oField = new Field($sLabel, null, $sId);
+		$oField->SetLayout($sLayout);
+		return $oField;
 
+	}
 }

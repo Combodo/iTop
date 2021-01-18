@@ -8,12 +8,15 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Title;
 
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
 use MetaModel;
 
-class TitleFactory
+class TitleUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title";
+	public const TWIG_TAG_NAME = 'UITitle';
 
 	public static function MakeForPage(string $sTitle, ?string $sId = null)
 	{

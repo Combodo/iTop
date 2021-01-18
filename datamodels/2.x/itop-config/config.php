@@ -24,12 +24,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
@@ -91,14 +91,14 @@ try {
 	$sOperation = utils::ReadParam('operation', '');
 	$iEditorTopMargin = 2;
 
-	$oP->AddUiBlock(TitleFactory::MakeForPage(Dict::S('config-edit-title')));
+	$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('config-edit-title')));
 
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
-		$oAlert = AlertFactory::MakeForInformation('', "Sorry, iTop is in <b>demonstration mode</b>: the configuration file cannot be edited.");
+		$oAlert = AlertUIBlockFactory::MakeForInformation('', "Sorry, iTop is in <b>demonstration mode</b>: the configuration file cannot be edited.");
 		$oP->AddUiBlock($oAlert);
 	} else {
 		if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled') {
-			$oAlert = AlertFactory::MakeForWarning('', "iTop interactive edition of the configuration as been disabled. See <tt>'config_editor' => 'disabled'</tt> in the configuration file.");
+			$oAlert = AlertUIBlockFactory::MakeForWarning('', "iTop interactive edition of the configuration as been disabled. See <tt>'config_editor' => 'disabled'</tt> in the configuration file.");
 			$oP->AddUiBlock($oAlert);
 		} else {
 			$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
@@ -114,17 +114,17 @@ try {
 			}
 
 			if ($sOperation == 'revert') {
-				$oAlert = AlertFactory::MakeForWarning('', Dict::S('config-reverted'));
+				$oAlert = AlertUIBlockFactory::MakeForWarning('', Dict::S('config-reverted'));
 				$oP->AddUiBlock($oAlert);
 			}
 			if ($sOperation == 'save') {
 				$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 				if (!utils::IsTransactionValid($sTransactionId, true)) {
-					$oAlert = AlertFactory::MakeForFailure('', 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.');
+					$oAlert = AlertUIBlockFactory::MakeForFailure('', 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.');
 					$oP->AddUiBlock($oAlert);
 				} else {
 					if ($sConfig == $sOriginalConfig) {
-						$oAlert = AlertFactory::MakeForInformation('', Dict::S('config-no-change'));
+						$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-no-change'));
 						$oP->AddUiBlock($oAlert);
 					} else {
 						try {
@@ -150,14 +150,14 @@ try {
 							@chmod($sConfigFile, 0440); // Read-only
 
 							if (DBPasswordInNewConfigIsOk($sConfig)) {
-								$oAlert = AlertFactory::MakeForSuccess('', Dict::S('config-saved'));
+								$oAlert = AlertUIBlockFactory::MakeForSuccess('', Dict::S('config-saved'));
 							} else {
-								$oAlert = AlertFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
+								$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
 							}
 							$oP->AddUiBlock($oAlert);
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
 						} catch (Exception $e) {
-							$oAlert = AlertFactory::MakeForDanger('', $e->getMessage());
+							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
 							$oP->AddUiBlock($oAlert);
 						}
 					}
@@ -170,19 +170,19 @@ try {
 			$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
 
 			$oForm = new Form();
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('operation', 'save'));
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save'));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 
 			// - Cancel button
-			$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
+			$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
 			$oCancelButton->SetOnClickJsCode("return ResetConfig();");
 			$oForm->AddSubBlock($oCancelButton);
 
 			// - Submit button
-			$oSubmitButton = ButtonFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
+			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
 			$oForm->AddSubBlock($oSubmitButton);
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
-			$oForm->AddSubBlock(InputFactory::MakeForHidden('new_config', $sConfigEscaped));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sConfigEscaped));
 			$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 			$oP->AddUiBlock($oForm);
 

@@ -18,11 +18,11 @@
  */
 
 use Combodo\iTop\Application\Search\SearchForm;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -133,51 +133,84 @@ class DisplayBlock
 				'group_by',         /** string group by att code */
 				'group_by_expr',    /** string group by expression */
 				'group_by_label',   /** string aggregation column name */
-				'aggregation_function',     /** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
-				'aggregation_attribute',    /** string att code used for aggregation */
-				'limit',            /** int limit the chart results */
-				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
-				'order_direction',  /** string order direction 'asc' or 'desc' */
+				'aggregation_function',
+				/** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
+				'aggregation_attribute',
+				/** string att code used for aggregation */
+				'limit',
+				/** int limit the chart results */
+				'order_by',
+				/** string either 'attribute' group_by attcode or 'function' aggregation_function value */
+				'order_direction',
+				/** string order direction 'asc' or 'desc' */
 			],
 			'csv' => [],
 			'join' => array_merge([
-				'display_aliases',  /** string comma separated list of class aliases to display */
-				'group_by',         /** string group by att code */
-			], DataTableFactory::GetAllowedParams()),
-			'links' => DataTableFactory::GetAllowedParams(),
+				'display_aliases',
+				/** string comma separated list of class aliases to display */
+				'group_by',
+				/** string group by att code */
+			], DataTableUIBlockFactory::GetAllowedParams()),
+			'links' => DataTableUIBlockFactory::GetAllowedParams(),
 			'list' => array_merge([
-				'update_history',   /** bool add breadcrumb entry */
-				'default',          /** array of default attribute values */
-				'menu_actions_target',  /** string html link target */
-				'toolkit_menu',     /** bool add toolkit menu */
-			], DataTableFactory::GetAllowedParams()),
+				'update_history',
+				/** bool add breadcrumb entry */
+				'default',
+				/** array of default attribute values */
+				'menu_actions_target',
+				/** string html link target */
+				'toolkit_menu',
+				/** bool add toolkit menu */
+			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
-				'update_history',   /** bool add breadcrumb entry */
-				'result_list_outer_selector',   /** string js selector of the search result display */
-				'table_inner_id',   /** string html id of the results table */
-				'json',             /** string  */
-				'hidden_criteria',  /** string search criteria not visible */
-				'baseClass',        /** string base class */
-				'action',           /** string */
-				'open',             /** bool open by default the search */
-			], DataTableFactory::GetAllowedParams()),
+				'update_history',
+				/** bool add breadcrumb entry */
+				'result_list_outer_selector',
+				/** string js selector of the search result display */
+				'table_inner_id',
+				/** string html id of the results table */
+				'json',
+				/** string  */
+				'hidden_criteria',
+				/** string search criteria not visible */
+				'baseClass',
+				/** string base class */
+				'action',
+				/** string */
+				'open',
+				/** bool open by default the search */
+			], DataTableUIBlockFactory::GetAllowedParams()),
 			'search' => array_merge([
-				'baseClass',        /** string search root class */
-				'open',             /** bool open the search panel by default */
-				'result_list_outer_selector',   /** string js selector of the search result display */
-				'search_header_force_dropdown', /** string Search class selection dropdown html code */
-				'action',           /** string search URL */
-				'table_inner_id',   /** string html id of the results table */
-				'json',             /** string  */
-				'hidden_criteria',  /** string search criteria not visible */
-				'class',            /** string class searched */
-			], DataTableFactory::GetAllowedParams()),
+				'baseClass',
+				/** string search root class */
+				'open',
+				/** bool open the search panel by default */
+				'result_list_outer_selector',
+				/** string js selector of the search result display */
+				'search_header_force_dropdown',
+				/** string Search class selection dropdown html code */
+				'action',
+				/** string search URL */
+				'table_inner_id',
+				/** string html id of the results table */
+				'json',
+				/** string  */
+				'hidden_criteria',
+				/** string search criteria not visible */
+				'class',
+				/** string class searched */
+			], DataTableUIBlockFactory::GetAllowedParams()),
 			'summary' => [
-				'status[block]',        /** string object 'status' att code */
-				'status_codes[block]',  /** string comma separated list of object states */
-				'title[block]',         /** string title */
-				'label[block]',         /** string label */
-				'context_filter',	    /** int if != 0 filter with user context */
+				'status[block]',
+				/** string object 'status' att code */
+				'status_codes[block]',
+				/** string comma separated list of object states */
+				'title[block]',
+				/** string title */
+				'label[block]',
+				/** string label */
+				'context_filter',
+				/** int if != 0 filter with user context */
 			],
 		];
 
@@ -390,7 +423,7 @@ class DisplayBlock
 Exception thrown:<br>
 <code>{$e->getMessage()}</code>
 HTML;
-					$oExceptionAlert = AlertFactory::MakeForFailure('Cannot display results', $sExceptionContent);
+					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
 				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
@@ -1077,7 +1110,7 @@ JS
 			);
 			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
-			$oBlock = DataTableFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
+			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
 
 		} else {
 			// Simply count the number of elements in the set
@@ -1159,7 +1192,7 @@ JS
 					} else {
 						$iListId = $aExtraParams['currentId'];
 					}
-					$oBlock->AddSubBlock(DataTableFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
+					$oBlock->AddSubBlock(DataTableUIBlockFactory::MakeForObject($oPage, $iListId, $this->m_oSet, $aExtraParams));
 				} else {
 					// Empty set
 					$oBlock->bEmptySet = true;
@@ -1310,7 +1343,7 @@ JS
 						} else {
 							$iListId = $aExtraParams['currentId'];
 						}
-						$oBlock = DataTableFactory::MakeForRendering($iListId, $oSet, $aExtraParams);
+						$oBlock = DataTableUIBlockFactory::MakeForRendering($iListId, $oSet, $aExtraParams);
 						$oHtml->AddHtml("<tr><td>");
 						$oContentBlock->AddSubBlock($oBlock);
 						$oHtml = new Html();
@@ -2048,7 +2081,7 @@ class MenuBlock extends DisplayBlock
 				} else {
 					$sName = 'UI:Menu:Actions';
 				}
-				$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
 				// TODO Add Js
 				$oActionsBlock->AddSubBlock($oActionButton)
 					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
@@ -2072,14 +2105,14 @@ JS
 			}
 
 			if ($this->m_sStyle == 'details') {
-				$oActionButton = ButtonFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
 				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
 					->AddCSSClasses('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction != '')) {
-				$oActionButton = ButtonFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
+				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
 				$oActionButton->SetIconClass('fas fa-sync')
 					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
@@ -2122,7 +2155,7 @@ JS
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sActionId, $sTarget);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sActionId, $sTarget);
 				$oActionButton->AddCSSClasses('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
