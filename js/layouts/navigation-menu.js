@@ -123,7 +123,12 @@ $(function()
 				oEvent.preventDefault();
 
 				var sMenuGroupId = oMenuGroupElem.attr('data-menu-group-id');
-				this._openDrawer(sMenuGroupId);
+				if(this._getActiveMenuGroupId() === sMenuGroupId) {
+					this._closeDrawer();
+				}
+				else {
+					this._openDrawer(sMenuGroupId);
+				}
 			},
 			_onBodyClick: function(oEvent)
 			{
