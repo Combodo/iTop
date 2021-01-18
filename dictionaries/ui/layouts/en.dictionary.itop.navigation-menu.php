@@ -21,6 +21,7 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey' => 'Alt + M',

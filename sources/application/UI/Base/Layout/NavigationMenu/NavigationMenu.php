@@ -67,8 +67,12 @@ class NavigationMenu extends UIBlock
 	protected $sAppFullIconUrl;
 	/** @var string URL of the link on both $AppXXXIconUrl */
 	protected $sAppIconLink;
-	/** @var array $aSiloSelection */
+	/** @var array Data to render the silo selection area */
 	protected $aSiloSelection;
+	/** @var bool Whether a silo is currently selected or not */
+	protected $bHasSiloSelected;
+	/** @var string|null Current silo label */
+	protected $sSiloLabel;
 	/** @var array $aMenuGroups */
 	protected $aMenuGroups;
 	/** @var array $aUserData */
@@ -158,6 +162,24 @@ class NavigationMenu extends UIBlock
 	public function GetSiloSelection()
 	{
 		return $this->aSiloSelection;
+	}
+
+	/**
+	 * @uses $bHasSiloSelected
+	 * @return bool
+	 */
+	public function HasSiloSelected(): bool
+	{
+		return $this->bHasSiloSelected;
+	}
+
+	/**
+	 * @uses $sSiloLabel
+	 * @return string|null
+	 */
+	public function GetSiloLabel()
+	{
+		return $this->sSiloLabel;
 	}
 	
 	/**
@@ -253,6 +275,9 @@ class NavigationMenu extends UIBlock
 	 */
 	public function ComputeSiloSelection()
 	{
+		$this->bHasSiloSelected = false;
+		$this->sSiloLabel = null;
+
 		//TODO 3.0 Use components if we have the time to build select/autocomplete components before release
 		// List of visible Organizations
 		$iCount = 0;
@@ -285,6 +310,13 @@ class NavigationMenu extends UIBlock
 			default:
 				$oAppContext = new ApplicationContext();
 				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+
+				if(!empty($iCurrentOrganization)) {
+					$oCurrentOrganization = MetaModel::GetObject('Organization', $iCurrentOrganization, true, true);
+					$this->bHasSiloSelected = true;
+					$this->sSiloLabel = $oCurrentOrganization->GetRawName();
+				}
+
 				$this->aSiloSelection['html'] = '<form data-role="ibo-navigation-menu--silo-selection--form" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
 				$oPage = new \CaptureWebPage();

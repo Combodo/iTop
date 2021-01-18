@@ -31,15 +31,6 @@ $ibo-navigation-menu--top-part--padding-y: $ibo-navigation-menu--body--padding-y
 $ibo-navigation-menu--top-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
 $ibo-navigation-menu--top-part--elements-spacing: 20px !default;
 
-$ibo-navigation-menu--silo-selection--width: 70% !default;
-$ibo-navigation-menu--silo-selection--margin-left: 15px !default;
-$ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right: -42px !default;
-$ibo-navigation-menu--silo-selection--input--padding-right: 38px !default;
-$ibo-navigation-menu--silo-selection--input-select--action-button--hierarchy--margin-left: -42px !default;
-$ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left: 60px !default;
-$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left: -42px !default;
-$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left: -60px !default;
-
 $ibo-navigation-menu--middle-part--padding-top: 24px !default;
 $ibo-navigation-menu--middle-part--padding-bottom: 16px !default;
 $ibo-navigation-menu--middle-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
@@ -57,6 +48,26 @@ $ibo-navigation-menu--bottom-part--height: 126px !default;
 $ibo-navigation-menu--bottom-part--background-color: $ibo-color-grey-800 !default;
 $ibo-navigation-menu--bottom-part--is-expanded--padding-top: 24px !default;
 $ibo-navigation-menu--bottom-part--is-expanded--padding-bottom: 12px !default;
+
+$ibo-navigation-menu--visual-hint--size: 16px !default;
+$ibo-navigation-menu--visual-hint--background-color: $ibo-color-red-600 !default;
+$ibo-navigation-menu--visual-hint--border-radius: $ibo-border-radius-full !default;
+
+$ibo-navigation-menu--silo-selection--width: 70% !default;
+$ibo-navigation-menu--silo-selection--margin-left: 15px !default;
+$ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right: -42px !default;
+$ibo-navigation-menu--silo-selection--input--padding-right: 38px !default;
+$ibo-navigation-menu--silo-selection--input-select--action-button--hierarchy--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left: 60px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left: -60px !default;
+
+$ibo-navigation-menu--silo-visual-hint--top: 2px !default;
+$ibo-navigation-menu--silo-visual-hint--right: 0 !default;
+$ibo-navigation-menu--silo-visual-hint--size: $ibo-navigation-menu--visual-hint--size !default;
+$ibo-navigation-menu--silo-visual-hint--background-color: $ibo-navigation-menu--visual-hint--background-color !default;
+$ibo-navigation-menu--silo-visual-hint--border: 2px solid $ibo-navigation-menu--body--background-color !default;
+$ibo-navigation-menu--silo-visual-hint--border-radius: $ibo-navigation-menu--visual-hint--border-radius !default;
 
 $ibo-navigation-menu--action--padding-x: 8px !default;
 $ibo-navigation-menu--action--padding-y: 10px !default;
@@ -163,13 +174,12 @@ $ibo-navigation-menu--notifications-toggler--color: $ibo-color-grey-600 !default
 $ibo-navigation-menu--notifications-toggler--color--is-loaded: $ibo-color-grey-300 !default;
 $ibo-navigation-menu--notifications-toggler--color--on-hover: $ibo-color-white-200 !default;
 
-$ibo-navigation-menu--notifications-toggler--new-messages--width: 16px !default;
-$ibo-navigation-menu--notifications-toggler--new-messages--height: 16px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--top: -2px !default;
 $ibo-navigation-menu--notifications-toggler--new-messages--right: -7px !default;
-$ibo-navigation-menu--notifications-toggler--new-messages--background-color: $ibo-color-red-600 !default;
-$ibo-navigation-menu--notifications-toggler--new-messages--border: solid 2px $ibo-navigation-menu--bottom-part--background-color !default;
-$ibo-navigation-menu--notifications-toggler--new-messages--border-radius: $ibo-border-radius-full !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--size: $ibo-navigation-menu--visual-hint--size !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--background-color: $ibo-navigation-menu--visual-hint--background-color !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border: 2px solid $ibo-navigation-menu--bottom-part--background-color !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border-radius: $ibo-navigation-menu--visual-hint--border-radius !default;
 
 $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--width: 10px !default;
 $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--height: 10px !default;
@@ -214,6 +224,9 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 		}
 		.ibo-navigation-menu--silo-selection{
 			display: inline-block;
+		}
+		.ibo-navigation-menu--silo-visual-hint{
+			display: none;
 		}
 		.ibo-navigation-menu--body{
 			width: $ibo-navigation-menu--body--width-expanded;
@@ -383,6 +396,7 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 }
 /* - Toggler */
 .ibo-navigation-menu--toggler{
+	position: relative; /* For the silo visual hint to be placed relatively to it */
 	display: inline-flex;
 	/* Width is define here in addition of the icon so we can fix its width whether the menu is collapsed or expanded */
 	width: $ibo-navigation-menu--toggler--width;
@@ -446,6 +460,16 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 			}
 		}
 	}
+}
+.ibo-navigation-menu--silo-visual-hint{
+	position: absolute;
+	top: $ibo-navigation-menu--silo-visual-hint--top;
+	right: $ibo-navigation-menu--silo-visual-hint--right;
+	width: $ibo-navigation-menu--silo-visual-hint--size;
+	height: $ibo-navigation-menu--silo-visual-hint--size;
+	background-color: $ibo-navigation-menu--silo-visual-hint--background-color;
+	border: $ibo-navigation-menu--silo-visual-hint--border;
+	border-radius: $ibo-navigation-menu--silo-visual-hint--border-radius;
 }
 
 
@@ -698,8 +722,8 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	.ibo-navigation-menu--notifications-toggler--new-messages{
 		top: $ibo-navigation-menu--notifications-toggler--new-messages--top;
 		right: $ibo-navigation-menu--notifications-toggler--new-messages--right;
-		width: $ibo-navigation-menu--notifications-toggler--new-messages--width;
-		height:  $ibo-navigation-menu--notifications-toggler--new-messages--height;
+		width: $ibo-navigation-menu--notifications-toggler--new-messages--size;
+		height:  $ibo-navigation-menu--notifications-toggler--new-messages--size;
 	}
 }
 
