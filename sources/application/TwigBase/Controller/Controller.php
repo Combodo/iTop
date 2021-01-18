@@ -221,20 +221,24 @@ abstract class Controller
 
 	/**
 	 * Check if page access is allowed to remote network
+	 *
+	 * @param $sExecModule
+	 *
 	 * @throws \Exception
 	 */
-	private function checkNetworkAccess()
+	private function checkNetworkAccess($sExecModule)
 	{
-		if (!empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
-			$sExecModule = utils::ReadParam('exec_module', "");
-			$sAllowedNetworkRegexpPattern = MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId);
-			$sRemoteIpAddress = $_SERVER['REMOTE_ADDR'];
+		$sAllowedNetworkRegexpPattern = empty($this->m_sAccessAuthorizedNetworkConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId));
 
-			if (!preg_match("/$sAllowedNetworkRegexpPattern/", $sRemoteIpAddress)){
-				$sMsg = "'$sExecModule' page is not authorized to '$sRemoteIpAddress' ip address. only to '$sAllowedNetworkRegexpPattern' networks.";
-				IssueLog::Error($sMsg);
-				throw new Exception("Unauthorized network");
-			}
+		if (empty($sExecModule) || empty($sAllowedNetworkRegexpPattern)){
+			return;
+		}
+
+		$sRemoteIpAddress = $_SERVER['REMOTE_ADDR'];
+		if (!preg_match("/$sAllowedNetworkRegexpPattern/", $sRemoteIpAddress)){
+			$sMsg = "'$sExecModule' page is not authorized to '$sRemoteIpAddress' ip address. only to '$sAllowedNetworkRegexpPattern' networks.";
+			IssueLog::Error($sMsg);
+			throw new Exception("Unauthorized network");
 		}
 	}
 
@@ -248,19 +252,21 @@ abstract class Controller
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
 		}
 
-		$this->checkNetworkAccess();
+		$sExecModule = utils::ReadParam('exec_module', "");
+		$this->checkNetworkAccess($sExecModule);
 
-		if (!empty($this->m_sAccessTokenConfigParamId)){
+		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
+
+		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
+			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		}else {
 			//token mode without login required
 			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
-			$sExecModule = utils::ReadParam('exec_module', "");
-			if ($sPassedToken !== MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId)){
+			if ($sPassedToken !== $sConfiguredAccessTokenValue){
 				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
 				IssueLog::Error($sMsg);
 				throw new Exception("Invalid token");
 			}
-		} else {
-			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
 		}
 
 		if (!empty($this->m_sMenuId))
