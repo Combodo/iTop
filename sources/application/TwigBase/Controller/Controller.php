@@ -32,7 +32,6 @@ use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
-use Twig_Error;
 use utils;
 use ZipArchive;
 
@@ -158,8 +157,6 @@ abstract class Controller
 		}
 		catch (Exception $e)
 		{
-			require_once(APPROOT."/setup/setuppage.class.inc.php");
-
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -529,20 +526,7 @@ abstract class Controller
 		{
 			throw new Exception('Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display');
 		}
-		try
-		{
-			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
-		}
-		catch (Twig_Error $e)
-		{
-			// Ignore errors
-			if (!utils::StartsWith($e->getMessage(), 'Unable to find template'))
-			{
-				IssueLog::Error($e->getMessage());
-			}
-		}
-
-		return '';
+		return TwigHelper::RenderTemplate($this->m_oTwig, $aParams, $sName, $sTemplateFileExtension, false);
 	}
 
 	/**

@@ -42,7 +42,8 @@ class UIBlockNode extends Node
 			->write("ob_end_clean();\n")
 			->write("if (strlen(\$sHtml) > 0) {\n")
 			->indent()->write("end(\$context['UIBlockParent'])->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html(\$sHtml));\n")->outdent()
-			->write("}\n")			->write("\$aParams = ")
+			->write("}\n")
+			->write("\$aParams = ")
 			->subcompile($oParams)
 			->raw(";\n");
 

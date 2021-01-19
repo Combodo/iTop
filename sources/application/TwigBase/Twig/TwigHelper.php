@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
+use Exception;
 use IssueLog;
 use Twig\Environment;
 use Twig_Environment;
@@ -110,21 +111,30 @@ class TwigHelper
 	 * @param array $aParams
 	 * @param string $sName
 	 * @param string $sTemplateFileExtension
+	 * @param bool $bLogMissingFile
 	 *
 	 * @return string
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Exception
 	 */
-	public static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension = self::DEFAULT_FILE_TYPE)
+	public static function RenderTemplate(Environment $oTwig, array $aParams, string $sName, string $sTemplateFileExtension = self::DEFAULT_FILE_TYPE, bool $bLogMissingFile = true): string
 	{
 		try {
 			return $oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
 		} catch (Twig_Error $e) {
+			$sPath = '';
+			if ($e->getSourceContext()) {
+				$sPath = utils::LocalPath($e->getSourceContext()->getPath()).' ('.$e->getLine().') - ';
+			}
+			$sMessage = $sPath.$e->getMessage();
 			if (!utils::StartsWith($e->getMessage(), 'Unable to find template')) {
-				IssueLog::Error($e->getMessage());
-			} else {
-				IssueLog::Debug($e->getMessage());
+				IssueLog::Error($sMessage);
+				// Todo 3.0 Less violent message
+				throw new Exception($sMessage);
+			} elseif ($bLogMissingFile) {
+				IssueLog::Debug($sMessage);
 			}
 		}
 
