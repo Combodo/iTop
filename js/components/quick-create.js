@@ -165,7 +165,7 @@ $(function()
 		{
 			this.element.removeClass(this.css_classes.opened);
 			//Note: Elements are hidden to avoid having the keyboard navigation "TAB" passing throught them when they are not displayed
-			this.element.find(this.js_selectors.compartment_element).addClass(this.css_classes.hidden)
+			this.element.find(this.js_selectors.compartment_element).addClass(this.css_classes.hidden);
 		},
 		_setFocusOnInput: function()
 		{
