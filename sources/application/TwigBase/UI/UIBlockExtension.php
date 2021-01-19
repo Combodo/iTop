@@ -19,7 +19,7 @@ class UIBlockExtension extends AbstractExtension
 {
 	public function getTokenParsers()
 	{
-		$aParsers = [new UIHtmlParser()];
+		$aParsers = [];
 
 		$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
 		$aFactoryClasses = self::GetClassForInterface($sInterface);

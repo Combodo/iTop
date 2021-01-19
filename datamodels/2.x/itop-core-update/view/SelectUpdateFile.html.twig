@@ -6,31 +6,23 @@
 
     {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}
 
-    {% UIHtml %}
-        <div class="ibo-v-spacer">&nbsp;</div>
-    {% EndUIHtml %}
+    <div class="ibo-v-spacer">&nbsp;</div>
 
     {% UIContentBlock Standard {'sContainerClass':'display_block display-files'} %}
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
             {% UIAlert ForInformation {'sId':'header-requirements', 'IsCollapsible':false, 'IsClosable':false} %}
                 {% UIContentBlock Standard {'sContainerClass':'ibo-update-core-header-requirements', 'sId':'can-core-update'} %}
-                    {% UIHtml %}
-                        {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
-                    {% EndUIHtml %}
+                    {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
                     {% UISpinner Standard {} %}
                 {% EndUIContentBlock %}
             {% EndUIAlert %}
 
             {% UIField Standard {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s} %}
-                {% UIHtml %}
-                    {{ 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) }}
-                {% EndUIHtml %}
+                {{ 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) }}
             {% EndUIField %}
 
             {% UIField Standard {'sLabel':'iTopUpdate:UI:DiskFreeSpace'|dict_s} %}
-                {% UIHtml %}
-                    {{ sDiskFreeSpace }}
-                {% EndUIHtml %}
+                {{ sDiskFreeSpace }}
             {% EndUIField %}
 
             {% UIField Standard {'sLabel':'iTopUpdate:UI:ItopDiskSpace'|dict_s, 'ValueId':'itop-disk-space'} %}
@@ -42,9 +34,7 @@
             {% EndUIField %}
 
             {% UIField Standard {'sLabel':'iTopUpdate:UI:FileUploadMaxSize'|dict_s} %}
-                {% UIHtml %}
-                    {{ sFileUploadMaxSize }}
-                {% EndUIHtml %}
+                {{ sFileUploadMaxSize }}
             {% EndUIField %}
 
         {% EndUIFieldSet %}
@@ -56,19 +46,13 @@
 
                 {% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}
                     {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
-                        {% UIHtml %}
-                            {{ 'iTopUpdate:Error:FileUploadMaxSizeTooStandard'|dict_s }}
-                        {% EndUIHtml %}
+                        {{ 'iTopUpdate:Error:FileUploadMaxSizeTooStandard'|dict_s }}
                     {% EndUIContentBlock %}
                     {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
-                        {% UIHtml %}
-                            {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}
-                        {% EndUIHtml %}
+                        {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}
                     {% EndUIContentBlock %}
                     {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
-                        {% UIHtml %}
-                            {{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}
-                        {% EndUIHtml %}
+                        {{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}
                     {% EndUIContentBlock %}
                 {% EndUIAlert %}
 
@@ -77,9 +61,7 @@
                 {% EndUIContentBlock %}
 
                 {% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
-                    {% UIHtml %}
-                        {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
-                    {% EndUIHtml %}
+                    {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
                 {% EndUIAlert %}
 
                 {% UIField Standard {'sLabel':'iTopUpdate:UI:DoBackup:Label'|dict_s, 'sLayout':'large'} %}

@@ -38,7 +38,11 @@ class UIBlockNode extends Node
 		$oParams = $this->getAttribute('params');
 		$compiler
 			->addDebugInfo($this)
-			->write("\$aParams = ")
+			->write("\$sHtml = trim(ob_get_contents());\n")
+			->write("ob_end_clean();\n")
+			->write("if (strlen(\$sHtml) > 0) {\n")
+			->indent()->write("end(\$context['UIBlockParent'])->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html(\$sHtml));\n")->outdent()
+			->write("}\n")			->write("\$aParams = ")
 			->subcompile($oParams)
 			->raw(";\n");
 
@@ -107,8 +111,15 @@ class UIBlockNode extends Node
 		if ($oSubNode) {
 			$compiler
 				->write("array_push(\$context['UIBlockParent'], \${$sBlockVar});\n")
+				->write("ob_start();\n")
 				->subcompile($oSubNode)
+				->write("\$sHtml = trim(ob_get_contents());\n")
+				->write("ob_end_clean();\n")
+				->write("if (strlen(\$sHtml) > 0) {\n")
+				->indent()->write("end(\$context['UIBlockParent'])->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html(\$sHtml));\n")->outdent()
+				->write("}\n")
 				->write("array_pop(\$context['UIBlockParent']);\n");
 		}
+		$compiler->write("ob_start();\n");
 	}
 }

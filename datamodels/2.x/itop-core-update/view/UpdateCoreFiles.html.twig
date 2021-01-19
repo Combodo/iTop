@@ -6,24 +6,20 @@
     {% UIContentBlock Standard {'sContainerClass':'ibo-update-core display_block display-files'} %}
 
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Progress'|dict_s, 'sId':'installation_progress'} %}
-            {% UIHtml %}
-                {#  Todo 3.0 Add Progress bar UIBlock  #}
-                <div id="progress_content">
-                    <p class="center">
-                        <span id="setup_msg">{{ 'iTopUpdate:UI:SetupMessage:Ready'|dict_s }}</span>
-                    </p>
-                    <div id="progress">0%</div>
-                </div>
-            {% EndUIHtml %}
+            {#  Todo 3.0 Add Progress bar UIBlock  #}
+            <div id="progress_content">
+                <p class="center">
+                    <span id="setup_msg">{{ 'iTopUpdate:UI:SetupMessage:Ready'|dict_s }}</span>
+                </p>
+                <div id="progress">0%</div>
+            </div>
         {% EndUIFieldSet %}
 
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
             {% UIField Large {'sId':'new_version', 'sLabel':'iTopUpdate:UI:NewVersion'|dict_s, 'ValueId':'db-disk-space', 'IsHidden':true} %}{% EndUIField %}
             {% UIAlert ForInformation {'sId':'current_version', 'IsCollapsible':false, 'IsClosable':false} %}
                 {% UIContentBlock Standard {'sId':'current-version','sContainerClass':'ibo-update-core--current-version'} %}
-                    {% UIHtml %}
-                        {{ sCurrentVersion }}
-                    {% EndUIHtml %}
+                    {{ sCurrentVersion }}
                 {% EndUIContentBlock %}
             {% EndUIAlert %}
 
@@ -48,18 +44,12 @@
             {% UIAlert ForFailure {'sId':'setup_error_outer', 'sContent':'', 'IsCollapsible':false, 'IsClosable':false, 'IsHidden':true} %}
                 {% UIContentBlock Standard {'sId':'setup_error','sContainerClass':'ibo-update-core--error'} %}{% EndUIContentBlock %}
                 {% if bDoFilesArchive %}
-                    {% UIHtml %}
-                        {{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}
-                    {% EndUIHtml %}
+                    {{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}
                 {% endif %}
                 {% if bDoBackup %}
-                    {% UIHtml %}
-                        {{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}
-                    {% EndUIHtml %}
+                    {{ 'iTopUpdate:UI:RestoreBackup'|dict_format(sBackupFile) }}
                 {% endif %}
-                {% UIHtml %}
                     {{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}
-                {% EndUIHtml %}
             {% EndUIAlert %}
 
             {% UIContentBlock Standard {'sId':'run_setup','sContainerClass':'ibo-update-core--run-setup', 'IsHidden':true} %}
