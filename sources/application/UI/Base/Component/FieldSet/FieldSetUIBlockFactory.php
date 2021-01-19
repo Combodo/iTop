@@ -12,8 +12,8 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
 class FieldSetUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\FieldSet\\FieldSet";
 	public const TWIG_TAG_NAME = 'UIFieldSet';
+	public const UI_BLOCK_CLASS_NAME = FieldSet::class;
 
 	public static function MakeStandard(string $sLegend, ?string $sId = null): FieldSet
 	{

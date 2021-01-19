@@ -12,8 +12,8 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
 class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\Spinner";
 	public const TWIG_TAG_NAME = 'UISpinner';
+	public const UI_BLOCK_CLASS_NAME = Spinner::class;
 
 	public static function MakeStandard(?string $sId = null)
 	{

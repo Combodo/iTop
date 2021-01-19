@@ -33,7 +33,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 class AlertUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIAlert';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\Alert";
+	public const UI_BLOCK_CLASS_NAME = Alert::class;
 
 	/**
 	 * Make a basis Alert component

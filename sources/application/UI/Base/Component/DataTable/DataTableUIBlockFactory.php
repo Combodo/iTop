@@ -36,7 +36,7 @@ use WebPage;
 class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIDataTable';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable";
+	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 	
 	/**
 	 * @param \WebPage $oPage

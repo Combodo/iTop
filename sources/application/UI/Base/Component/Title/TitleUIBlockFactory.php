@@ -15,8 +15,8 @@ use MetaModel;
 
 class TitleUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title";
 	public const TWIG_TAG_NAME = 'UITitle';
+	public const UI_BLOCK_CLASS_NAME = Title::class;
 
 	public static function MakeForPage(string $sTitle, ?string $sId = null)
 	{

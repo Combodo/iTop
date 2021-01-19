@@ -21,6 +21,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -305,8 +306,8 @@ JS
 
 	$sRichTextToolbarDefaultState = isset(utils::GetCkeditorPref()['toolbarStartupExpanded']) ? (bool)utils::GetCkeditorPref()['toolbarStartupExpanded'] : false;
 	$oRichTextToolbarDefaultStateInput = InputUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:RichText:ToolbarState'));
-	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:RichText:ToolbarState:Expanded'), $sRichTextToolbarDefaultState));
-	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:RichText:ToolbarState:Expanded'), $sRichTextToolbarDefaultState));
+	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
 	$oRichTextForm->AddSubBlock($oRichTextToolbarDefaultStateInput);
 
 	// - Cancel button
@@ -333,8 +334,8 @@ JS
 
 	$sTabsScrollableValue = appUserPreferences::GetPref('tab_scrollable', false);;
 	$oTabsScrollable = InputUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Tabs:Scrollable:Label'));
-	$oTabsScrollable->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
-	$oTabsScrollable->GetInput()->AddOption(InputUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
+	$oTabsScrollable->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
+	$oTabsScrollable->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
 	$oTabsForm->AddSubBlock($oTabsScrollable);
 
 	// - Cancel button
@@ -434,7 +435,7 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	$oUserLanguageBlockSelectInput = $oUserLanguageBlockSelect->GetInput();
 	foreach ($aSortedLang as $sCode) {
 		$bSelected = ($sCode == Dict::GetUserLanguage());
-		$oUserLanguageBlockSelectInput->AddOption(InputUIBlockFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
+		$oUserLanguageBlockSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aLanguages[$sCode]['description'].' ('.$aLanguages[$sCode]['localized_description'].')', $bSelected));
 	}
 	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
 

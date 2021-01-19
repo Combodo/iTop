@@ -65,10 +65,11 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock)
+	public function AddSubBlock(?iUIBlock $oSubBlock)
 	{
-		$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
-
+		if ($oSubBlock) {
+			$this->aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
+		}
 		return $this;
 	}
 

@@ -11,12 +11,11 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOption;
 
 class InputUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIInput';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input";
+	public const UI_BLOCK_CLASS_NAME = Input::class;
 
 	public static function MakeForHidden(string $sName, string $sValue, ?string $sId = null): Input
 	{
@@ -63,6 +62,17 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		return static::MakeInputWithLabel($sInputName, $sLabel, $oInput, $sInputId);
 	}
 
+	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
+	{
+		$oInput->SetName($sName);
+
+		if (is_null($sId)) {
+			$sId = $oInput->GetId();
+		}
+
+		return new InputWithLabel($sLabel, $oInput, $sId);
+	}
+
 	/**
 	 * If you need to have a real field with a label, you might use a {@link Field} component instead
 	 *
@@ -75,12 +85,6 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
 	{
 		$oInput = new Select($sId);
-
-		return static::MakeInputWithLabel($sName, $sLabel, $oInput, $sId);
-	}
-
-	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
-	{
 		$oInput->SetName($sName);
 
 		if (is_null($sId)) {
@@ -88,25 +92,6 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		return new InputWithLabel($sLabel, $oInput, $sId);
-	}
-
-	public static function MakeForSelect(string $sName, ?string $sId = null): Select
-	{
-		$oInput = new Select($sId);
-		$oInput->SetName($sName);
-
-		return $oInput;
-	}
-
-	public static function MakeForSelectOption(string $sValue, string $sLabel, bool $bSelected, ?string $sId = null): SelectOption
-	{
-		$oInput = new SelectOption($sId);
-
-		$oInput->SetValue($sValue)
-			->SetLabel($sLabel)
-			->SetSelected($bSelected);
-
-		return $oInput;
 	}
 
 }

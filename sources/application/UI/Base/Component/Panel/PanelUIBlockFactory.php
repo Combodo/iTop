@@ -36,7 +36,7 @@ use ormStyle;
 class PanelUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIPanel';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\Panel";
+	public const UI_BLOCK_CLASS_NAME = Panel::class;
 	
 	/**
 	 * Make a basis Panel component

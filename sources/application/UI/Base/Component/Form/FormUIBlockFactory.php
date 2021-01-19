@@ -12,8 +12,8 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
 class FormUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Form\\Form";
 	public const TWIG_TAG_NAME = 'UIForm';
+	public const UI_BLOCK_CLASS_NAME = Form::class;
 
 	public static function MakeStandard(string $sId = null)
 	{

@@ -34,7 +34,7 @@ interface iUIContentBlock {
 	 *
 	 * @return $this
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock);
+	public function AddSubBlock(?iUIBlock $oSubBlock);
 
 	/**
 	 * Remove the sub block identified by $sId.

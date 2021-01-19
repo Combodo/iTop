@@ -34,7 +34,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 class ButtonUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIButton';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\Button";
+	public const UI_BLOCK_CLASS_NAME = Button::class;
 
 	//---------------------------------------------
 	// Regular action buttons, mostly used in forms

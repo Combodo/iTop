@@ -147,7 +147,7 @@ class TabContainer extends UIContentBlock
 	 * @return iUIContentBlock
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock): iUIContentBlock
+	public function AddSubBlock(?iUIBlock $oSubBlock): iUIContentBlock
 	{
 		if (!($oSubBlock instanceof Tab)) {
 			throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockNotTabForbidden', $oSubBlock->GetId(), $this->GetId()));

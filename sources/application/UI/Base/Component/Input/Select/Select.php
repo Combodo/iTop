@@ -8,28 +8,81 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Input\Select;
 
 
-use Combodo\iTop\Application\UI\Base\Component\Input\Input;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
-class Select extends Input
+class Select extends UIContentBlock
 {
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/select/select';
 
-	/** @var array */
-	protected $aOptions;
+	/** @var string */
+	protected $sName;
+	/** @var string */
+	protected $sValue;
+	/** @var bool  */
+	protected $bSubmitOnChange = false;
+
 
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->aOptions = [];
 	}
 
 	public function AddOption(SelectOption $oOption)
 	{
-		$this->aOptions[$oOption->GetId()] = $oOption;
+		$this->AddSubBlock($oOption);
 	}
 
-	public function GetSubBlocks()
+	public function GetName(): string
 	{
-		return $this->aOptions;
+		return $this->sName;
 	}
+
+	/**
+	 * @param string $sName
+	 *
+	 * @return $this
+	 */
+	public function SetName(string $sName)
+	{
+		$this->sName = $sName;
+
+		return $this;
+	}
+
+	public function GetValue(): ?string
+	{
+		return $this->sValue;
+	}
+
+	/**
+	 * @param string|null $sValue
+	 *
+	 * @return $this
+	 */
+	public function SetValue(?string $sValue)
+	{
+		$this->sValue = $sValue;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetSubmitOnChange(): bool
+	{
+		return $this->bSubmitOnChange;
+	}
+
+	/**
+	 * @param bool $bSubmitOnChange
+	 *
+	 * @return $this
+	 */
+	public function SetSubmitOnChange(bool $bSubmitOnChange)
+	{
+		$this->bSubmitOnChange = $bSubmitOnChange;
+		return $this;
+	}
+
 }

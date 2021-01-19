@@ -13,7 +13,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 class CollapsibleSectionUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UICollapsibleSection';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\CollapsibleSection\\CollapsibleSection";
+	public const UI_BLOCK_CLASS_NAME = CollapsibleSection::class;
 
 	public static function MakeStandard(string $sTitle, ?string $sId = null)
 	{

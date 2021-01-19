@@ -154,9 +154,10 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock) {
-		$this->AddMainBlock($oSubBlock);
-
+	public function AddSubBlock(?iUIBlock $oSubBlock) {
+		if ($oSubBlock) {
+			$this->AddMainBlock($oSubBlock);
+		}
 		return $this;
 	}
 

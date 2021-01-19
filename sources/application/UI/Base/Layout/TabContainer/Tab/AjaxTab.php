@@ -114,7 +114,7 @@ class AjaxTab extends Tab {
 	 * @inheritDoc
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
-	public function AddSubBlock(iUIBlock $oSubBlock) {
+	public function AddSubBlock(?iUIBlock $oSubBlock) {
 		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
 	}
 

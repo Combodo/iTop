@@ -13,9 +13,9 @@ use ormStyle;
 
 class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\FieldBadge\\FieldBadge";
 	public const TWIG_TAG_NAME = 'UIFieldBadge';
-	
+	public const UI_BLOCK_CLASS_NAME = FieldBadge::class;
+
 	/**
 	 * @param string $sValue
 	 * @param \ormStyle|null $oStyle

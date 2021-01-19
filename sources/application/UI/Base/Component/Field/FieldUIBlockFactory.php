@@ -17,7 +17,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIField';
-	public const UI_BLOCK_CLASS_NAME = "Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field";
+	public const UI_BLOCK_CLASS_NAME = Field::class;
 
 	public static function MakeFromParams($aParams)
 	{

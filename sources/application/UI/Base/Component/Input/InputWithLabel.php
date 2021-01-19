@@ -21,15 +21,15 @@ class InputWithLabel extends UIBlock
 
 	/** @var string */
 	protected $sLabel;
-	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Input */
+	/** @var \Combodo\iTop\Application\UI\Base\UIBlock */
 	protected $oInput;
 
 	/**
 	 * @param string $sLabel
-	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput $oInput
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oInput
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sLabel, AbstractInput $oInput, ?string $sId)
+	public function __construct(string $sLabel, UIBlock $oInput, ?string $sId)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
@@ -37,7 +37,7 @@ class InputWithLabel extends UIBlock
 	}
 
 	/**
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput
+	 * @return UIBlock
 	 */
 	public function GetInput()
 	{
@@ -45,11 +45,11 @@ class InputWithLabel extends UIBlock
 	}
 
 	/**
-	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput $oInput
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oInput
 	 *
 	 * @return $this
 	 */
-	public function SetInput(AbstractInput $oInput)
+	public function SetInput(UIBlock $oInput)
 	{
 		$this->oInput = $oInput;
 
