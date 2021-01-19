@@ -71,7 +71,7 @@ define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
-
+define('DEFAULT_HASH_ALGO', PASSWORD_DEFAULT);
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
@@ -1543,7 +1543,7 @@ class Config
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
-		$this->m_iPasswordHashAlgo = PASSWORD_DEFAULT;
+		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -1864,6 +1864,14 @@ class Config
 		return $this->m_iPasswordHashAlgo;
 	}
 
+	/**
+	 * @param $iPasswordHashAlgo
+	 */
+	public function SetPasswordHashAlgo($iPasswordHashAlgo)
+	{
+		$this->m_iPasswordHashAlgo = $iPasswordHashAlgo;
+	}
+
 	public function SetLogGlobal($iLogGlobal)
 	{
 		$this->m_iLogGlobal = $iLogGlobal;
@@ -2092,6 +2100,7 @@ class Config
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
+				'password_hash_algo' => $this->m_iPasswordHashAlgo
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{
