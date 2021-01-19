@@ -179,6 +179,8 @@ class DisplayBlock
 				/** string */
 				'open',
 				/** bool open by default the search */
+				'class', /** class name */
+				'search_header_force_dropdown', /** Html for <select> to choose the class to search  */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'search' => array_merge([
 				'baseClass',
