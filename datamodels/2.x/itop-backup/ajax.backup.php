@@ -65,17 +65,16 @@ switch ($sOperation)
 	 */
 	case 'restore_exec':
 		IssueLog::Enable(APPROOT.'log/error.log');
-		if (utils::GetConfig()->Get('demo_mode'))
-		{
-			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+		if (utils::GetConfig()->Get('demo_mode')) {
+			DisplayErrorAndDie($oPage,
+				'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
 		}
 
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 		$sBasePath = APPROOT.'/data/';
 		$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
 		$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
-		if (($tokenRealPath === false) || (!is_file($tokenRealPath)))
-		{
+		if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
 			IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
 			$sEscapedToken = utils::HtmlEntities($sToken);
 			DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");

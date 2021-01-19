@@ -17,8 +17,19 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\UIBlock;
+
+if (!defined('__DIR__')) {
+	define('__DIR__', dirname(__FILE__));
+}
+if (!defined('APPROOT')) {
+	require_once(__DIR__.'/../../approot.inc.php');
+}
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/itopwebpage.class.inc.php');
 
@@ -27,41 +38,62 @@ require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
+function GenerateBackupsList(string $sListTitleDictKey, string $sNoRecordDictKey, $aListConfig, $aListData): UIBlock
+{
+	$oFieldsetForList = new FieldSet(Dict::S($sListTitleDictKey));
+
+	if (count($aListData) > 0) {
+		$oFieldsetForList->AddSubBlock(
+			DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aListConfig, array_reverse($aListData))
+		);
+	} else {
+		$oFieldsetForList->AddSubBlock(
+			AlertUIBlockFactory::MakeNeutral('', Dict::S($sNoRecordDictKey))
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
+	}
+
+	return $oFieldsetForList;
+}
+
+
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
-try
-{
+try {
 	$sTransactionId = utils::GetNewTransactionId();
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 
-	$oP->add("<h1>".Dict::S('bkp-status-title')."</h1>");
+	$oBackupTitle = TitleUIBlockFactory::MakeForPage(Dict::S('bkp-status-title'), 1);
+	$oP->AddUiBlock($oBackupTitle);
 
-	if (MetaModel::GetConfig()->Get('demo_mode'))
-	{
-		$oP->add("<div class=\"header_message message_info\">iTop is in <b>demonstration mode</b>: the feature is disabled.</div>");
+	if (MetaModel::GetConfig()->Get('demo_mode')) {
+		$oBackupDisabledCauseDemoMode = AlertUIBlockFactory::MakeForFailure(
+			'The feature is disabled.',
+			'iTop is in <b>demonstration mode</b>'
+		);
+		$oBackupDisabledCauseDemoMode
+			->SetIsCollapsible(false)
+			->SetIsClosable(false);
+		$oP->AddUiBlock($oBackupDisabledCauseDemoMode);
 	}
 
-	$sImgOk = '<img src="../images/validation_ok.png"> ';
-	$sImgError = '<img src="../images/validation_error.png"> ';
-
-	$oP->add("<fieldset>");
-	$oP->add("<legend>".Dict::S('bkp-status-checks')."</legend>");
+	//--- Settings and checks
+	$oFieldsetChecks = new FieldSet(Dict::S('bkp-status-checks'));
+	$oP->AddUiBlock($oFieldsetChecks);
 
 	// Availability of mysqldump
 	//
 	$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 	$sMySQLBinDir = utils::ReadParam('mysql_bindir', $sMySQLBinDir, true);
-	if (empty($sMySQLBinDir))
-	{
+	if (empty($sMySQLBinDir)) {
 		$sMySQLDump = 'mysqldump';
-	}
-	else
-	{
+	} else {
 		//echo 'Info - Found mysql_bindir: '.$sMySQLBinDir;
 		$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
 	}
@@ -70,44 +102,57 @@ try
 	$aOutput = array();
 	$iRetCode = 0;
 	exec($sCommand, $aOutput, $iRetCode);
-	if ($iRetCode == 0)
-	{
-		$sMySqlDump = $sImgOk.Dict::Format("bkp-mysqldump-ok", $aOutput[0]);
+	if ($iRetCode == 0) {
+		$oFieldsetChecks->AddSubBlock(
+			AlertUIBlockFactory::MakeForSuccess('', Dict::Format("bkp-mysqldump-ok", $aOutput[0]))
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
+	} else {
+		if ($iRetCode == 1) {
+			$sMySqlDump = Dict::Format("bkp-mysqldump-notfound", implode(' ', $aOutput));
+		} else {
+			$sMySqlDump = Dict::Format("bkp-mysqldump-issue", $iRetCode);
+		}
+		$oFieldsetChecks->AddSubBlock(
+			AlertUIBlockFactory::MakeForWarning($sMySqlDump, '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
 	}
-	elseif ($iRetCode == 1)
-	{
-		$sMySqlDump = $sImgError.Dict::Format("bkp-mysqldump-notfound", implode(' ', $aOutput));
-	}
-	else
-	{
-		$sMySqlDump = $sImgError.Dict::Format("bkp-mysqldump-issue", $iRetCode);
-	}
-	foreach($aOutput as $sLine)
-	{
+	foreach ($aOutput as $sLine) {
 		IssueLog::Info("$sCommand said: $sLine");
 	}
-	$oP->p($sMySqlDump);
 
 	// Destination directory
 	//
 	// Make sure the target directory exists and is writeable
-	$sBackupDir = APPROOT.'data/backups/';
+	$sBackupDir = realpath(APPROOT.'data/backups/');
 	SetupUtils::builddir($sBackupDir);
-	if (!is_dir($sBackupDir))
-	{
-		$oP->p($sImgError.Dict::Format('bkp-missing-dir', $sBackupDir));
-	}
-	else
-	{
-		$oP->p(Dict::Format('bkp-free-disk-space', SetupUtils::HumanReadableSize(SetupUtils::CheckDiskSpace($sBackupDir)), $sBackupDir));
-		if (!is_writable($sBackupDir))
-		{
-			$oP->p($sImgError.Dict::Format('bkp-dir-not-writeable', $sBackupDir));
+	if (!is_dir($sBackupDir)) {
+		$oFieldsetChecks->AddSubBlock(
+			AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-missing-dir', $sBackupDir), '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
+	} else {
+		$sDiskSpaceReadable = SetupUtils::HumanReadableSize(SetupUtils::CheckDiskSpace($sBackupDir));
+		$oFieldsetChecks->AddSubBlock(
+			AlertUIBlockFactory::MakeForInformation('', Dict::Format('bkp-free-disk-space', $sDiskSpaceReadable, $sBackupDir))
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
+		if (!is_writable($sBackupDir)) {
+			$oFieldsetChecks->AddSubBlock(
+				AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-dir-not-writeable', $sBackupDir), '')
+					->SetIsClosable(false)
+					->SetIsCollapsible(false)
+			);
 		}
 	}
-	$sBackupDirAuto = $sBackupDir.'auto/';
+	$sBackupDirAuto = $sBackupDir.'/auto/';
 	SetupUtils::builddir($sBackupDirAuto);
-	$sBackupDirManual = $sBackupDir.'manual/';
+	$sBackupDirManual = $sBackupDir.'/manual/';
 	SetupUtils::builddir($sBackupDirManual);
 
 	// Wrong format
@@ -115,17 +160,20 @@ try
 	$sBackupFile = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'file_name_format', BACKUP_DEFAULT_FORMAT);
 	$oBackup = new DBBackupScheduled();
 	$sZipName = $oBackup->MakeName($sBackupFile);
-	if ($sZipName == '')
-	{
-		$oP->p($sImgError.Dict::Format('bkp-wrong-format-spec', $sBackupFile, BACKUP_DEFAULT_FORMAT));
-	}
-	else
-	{
-		$oP->p(Dict::Format('bkp-name-sample', $sZipName));
+	$sZipNameInfo = '';
+	if ($sZipName == '') {
+		$oFieldsetChecks->AddSubBlock(
+			AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-wrong-format-spec', $sBackupFile, BACKUP_DEFAULT_FORMAT), '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
+	} else {
+		$sZipNameInfo = Dict::Format('bkp-name-sample', $sZipName);
 	}
 
 	// Week Days
 	//
+	$sScheduleInfo = empty($sZipNameInfo) ? '' : $sZipNameInfo.'<br>';
 	$aWeekDayToString = array(
 		1 => Dict::S('DayOfWeek-Monday'),
 		2 => Dict::S('DayOfWeek-Tuesday'),
@@ -133,55 +181,51 @@ try
 		4 => Dict::S('DayOfWeek-Thursday'),
 		5 => Dict::S('DayOfWeek-Friday'),
 		6 => Dict::S('DayOfWeek-Saturday'),
-		7 => Dict::S('DayOfWeek-Sunday')
+		7 => Dict::S('DayOfWeek-Sunday'),
 	);
 	$aDayLabels = array();
 	$oBackupExec = new BackupExec();
-	foreach ($oBackupExec->InterpretWeekDays() as $iDay)
-	{
+	foreach ($oBackupExec->InterpretWeekDays() as $iDay) {
 		$aDayLabels[] = $aWeekDayToString[$iDay];
 	}
 	$sDays = implode(', ', $aDayLabels);
 	$sBackupTime = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'time', '23:30');
-	$oP->p(Dict::Format('bkp-week-days', $sDays, $sBackupTime));
+	$sScheduleInfo .= Dict::Format('bkp-week-days', $sDays, $sBackupTime);
 
 	$iRetention = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'retention_count', 5);
-	$oP->p(Dict::Format('bkp-retention', $iRetention));
+	$sScheduleInfo .= '<br>'.Dict::Format('bkp-retention', $iRetention);
 
-	$oP->add("</fieldset>");
+	$oFieldsetChecks->AddSubBlock(
+		AlertUIBlockFactory::MakeForInformation('', $sScheduleInfo)
+			->SetIsClosable(false)
+			->SetIsCollapsible(false)
+	);
 
-	// List of backups
+
+	//--- List of backups
 	//
 	$aFiles = $oBackup->ListFiles($sBackupDirAuto);
 	$aFilesToDelete = array();
-	while (count($aFiles) > $iRetention - 1)
-	{
+	while (count($aFiles) > $iRetention - 1) {
 		$aFilesToDelete[] = array_shift($aFiles);
 	}
 
 	$oRestoreMutex = new iTopMutex('restore.'.utils::GetCurrentEnvironment());
-	if ($oRestoreMutex->IsLocked())
-	{
+	if ($oRestoreMutex->IsLocked()) {
 		$sDisableRestore = 'disabled="disabled"';
-	}
-	else
-	{
+	} else {
 		$sDisableRestore = '';
 	}
-	
-	// 1st table: list the backups made in the background
+
+	//--- 1st table: list the backups made in the background
 	//
 	$aDetails = array();
-	foreach ($oBackup->ListFiles($sBackupDirAuto) as $sBackupFile)
-	{
+	foreach ($oBackup->ListFiles($sBackupDirAuto) as $sBackupFile) {
 		$sFileName = basename($sBackupFile);
 		$sFilePath = 'auto/'.$sFileName;
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			$sName = $sFileName;
-		}
-		else
-		{
+		} else {
 			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
 				array(
 					'operation' => 'download',
@@ -195,12 +239,13 @@ try
 		$sConfirmRestore = addslashes(Dict::Format('bkp-confirm-restore', $sFileName));
 		$sFileEscaped = addslashes($sFilePath);
 		$sRestoreBtn = '<button class="restore" onclick="LaunchRestoreNow(\''.$sFileEscaped.'\', \''.$sConfirmRestore.'\');" '.$sDisableRestore.'>'.Dict::S('bkp-button-restore-now').'</button>';
-		if (in_array($sBackupFile, $aFilesToDelete))
-		{
-			$aDetails[] = array('file' => $sName.' <span class="next_to_delete" title="'.Dict::S('bkp-next-to-delete').'">*</span>', 'size' => $sSize, 'actions' => $sRestoreBtn);
-		}
-		else
-		{
+		if (in_array($sBackupFile, $aFilesToDelete)) {
+			$aDetails[] = array(
+				'file' => $sName.' <span class="next_to_delete" title="'.Dict::S('bkp-next-to-delete').'">*</span>',
+				'size' => $sSize,
+				'actions' => $sRestoreBtn,
+			);
+		} else {
 			$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => $sRestoreBtn);
 		}
 	}
@@ -209,33 +254,26 @@ try
 		'size' => array('label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')),
 		'actions' => array('label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')),
 	);
-	$oP->add("<fieldset>");
-	$oP->add("<legend>".Dict::S('bkp-status-backups-auto')."</legend>");
-	if (count($aDetails) > 0)
-	{
-		$oP->add('<div style="max-height:400px; overflow: auto;">');
-		$oP->table($aConfig, array_reverse($aDetails));
-		$oP->add('</div>');
-	}
-	else
-	{
-		$oP->p(Dict::S('bkp-status-backups-none'));
-	}
-	$oP->add("</fieldset>");
 
-	// 2nd table: list the backups made manually
+	$oP->AddUiBlock(
+		GenerateBackupsList(
+			'bkp-status-backups-auto',
+			'bkp-status-backups-none',
+			$aConfig,
+			$aDetails
+		)
+	);
+
+
+	//--- 2nd table: list the backups made manually
 	//
 	$aDetails = array();
-	foreach ($oBackup->ListFiles($sBackupDirManual) as $sBackupFile)
-	{
+	foreach ($oBackup->ListFiles($sBackupDirManual) as $sBackupFile) {
 		$sFileName = basename($sBackupFile);
 		$sFilePath = 'manual/'.$sFileName;
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			$sName = $sFileName;
-		}
-		else
-		{
+		} else {
 			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
 				array(
 					'operation' => 'download',
@@ -256,43 +294,69 @@ try
 		'size' => array('label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')),
 		'actions' => array('label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')),
 	);
-	$oP->add("<fieldset>");
-	$oP->add("<legend>".Dict::S('bkp-status-backups-manual')."</legend>");
-	if (count($aDetails) > 0)
-	{
-		$oP->add('<div style="max-height:400px; overflow: auto;">');
-		$oP->table($aConfig, array_reverse($aDetails));
-		$oP->add('</div>');
-	}
-	else
-	{
-		$oP->p(Dict::S('bkp-status-backups-none'));
-	}
-	$oP->add("</fieldset>");
+
+	$oP->AddUiBlock(
+		GenerateBackupsList(
+			'bkp-status-backups-manual',
+			'bkp-status-backups-none',
+			$aConfig,
+			$aDetails
+		)
+	);
+
+
+	//--- Backup now
+	$oFieldsetBackupNow = new FieldSet(Dict::S('bkp-button-backup-now'));
+	$oP->AddSubBlock($oFieldsetBackupNow);
 
 	// Ongoing operation ?
 	//
 	$oBackupMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
-	if ($oBackupMutex->IsLocked())
-	{
-		$oP->p(Dict::S('bkp-backup-running'));
+	if ($oBackupMutex->IsLocked()) {
+		$oFieldsetBackupNow->AddSubBlock(
+			AlertUIBlockFactory::MakeForFailure(Dict::S('bkp-backup-running'), '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
 	}
 	$oRestoreMutex = new iTopMutex('restore.'.utils::GetCurrentEnvironment());
-	if ($oRestoreMutex->IsLocked())
-	{
-		$oP->p(Dict::S('bkp-restore-running'));
+	if ($oRestoreMutex->IsLocked()) {
+		$oFieldsetBackupNow->AddSubBlock(
+			AlertUIBlockFactory::MakeForFailure(Dict::S('bkp-restore-running'), '')
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
 	}
 
 	// Do backup now
 	//
 	$oBackupExec = new BackupExec();
 	$oNext = $oBackupExec->GetNextOccurrence();
-	$oP->p(Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'), $oNext->Format('H:i')));
-	$oP->p('<button onclick="LaunchBackupNow();">'.Dict::S('bkp-button-backup-now').'</button>');
-	$oP->add('<div id="backup_success" class="header_message message_ok" style="display: none;"></div>');
-	$oP->add('<div id="backup_errors" class="header_message message_error" style="display: none;"></div>');
-	$oP->add('<input type="hidden" name="restore_token" id="restore_token"/>');
-	
+	$sNextOccurrence = Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'),
+		$oNext->Format('H:i'));
+	$oFieldsetBackupNow->AddSubBlock(
+		AlertUIBlockFactory::MakeForInformation('', $sNextOccurrence)
+			->SetIsClosable(false)
+			->SetIsCollapsible(false)
+	);
+
+	$oLaunchBackupButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('bkp-button-backup-now'));
+	$oLaunchBackupButton->SetOnClickJsCode('LaunchBackupNow();');
+	$oFieldsetBackupNow->AddSubBlock($oLaunchBackupButton);
+
+	// restoration panels / hidden info
+	$oRestoreSuccess = AlertUIBlockFactory::MakeForSuccess('', '', 'backup_success')
+		->AddCSSClass('ibo-is-hidden')
+		->SetIsCollapsible(false)
+		->SetIsClosable(true);
+	$oFieldsetBackupNow->AddSubBlock($oRestoreSuccess);
+	$oRestoreFailure = AlertUIBlockFactory::MakeForFailure('', '', 'backup_errors')
+		->AddCSSClass('ibo-is-hidden')
+		->SetIsCollapsible(false)
+		->SetIsClosable(true);
+	$oFieldsetBackupNow->AddSubBlock($oRestoreFailure);
+	$oFieldsetBackupNow->AddHtml('<input type="hidden" name="restore_token" id="restore_token">');
+
 	$sConfirmBackup = addslashes(Dict::S('bkp-confirm-backup'));
 	$sPleaseWaitBackup = addslashes(Dict::S('bkp-wait-backup'));
 	$sPleaseWaitRestore = addslashes(Dict::S('bkp-wait-restore'));
@@ -311,8 +375,8 @@ try
 <<<JS
 function LaunchBackupNow()
 {
-	$('#backup_success').hide();
-	$('#backup_errors').hide();
+	$('#backup_success').addClass('ibo-is-hidden');
+	$('#backup_errors').addClass('ibo-is-hidden');
 
 	if (confirm('$sConfirmBackup'))
 	{
@@ -337,52 +401,48 @@ function LaunchBackupNow()
 }
 function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 {
-	if (confirm(sConfirmationMessage))
+	if (!confirm(sConfirmationMessage))
 	{
-		$.blockUI({ message: '<h1><img src="../images/indicator.gif" /> $sPleaseWaitRestore</h1>' });
+		return;
+	}
 
-		$('#backup_success').hide();
-		$('#backup_errors').hide();
+	$.blockUI({ message: '<h1><img src="../images/indicator.gif" /> $sPleaseWaitRestore</h1>' });
+
+	$('#backup_success').addClass('ibo-is-hidden');
+	$('#backup_errors').addClass('ibo-is-hidden');
+
+	var oParams = {};
+	oParams.operation = 'restore_get_token';
+	oParams.file = sBackupFile;
+	oParams.transaction_id = "$sTransactionId";
+	$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
+
+		// Get the value of restore_token
+		$('#backup_errors').append(data);
 
 		var oParams = {};
-		oParams.operation = 'restore_get_token';
-		oParams.file = sBackupFile;		
+		oParams.operation = 'restore_exec';
+		oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
+		oParams.environment = '$sEnvironment'; // needed to load the config
 		oParams.transaction_id = "$sTransactionId";
-		$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
-
-			// Get the value of restore_token
-			$('#backup_errors').append(data);
-
-			var oParams = {};
-			oParams.operation = 'restore_exec';
-			oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
-			oParams.environment = '$sEnvironment'; // needed to load the config
-			oParams.transaction_id = "$sTransactionId";
-			if (oParams.token.length > 0)
-			{
-				$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
-					if (data.search(/error|exceptio|notice|warning/i) != -1)
-					{
-						$('#backup_success').hide();
-						$('#backup_errors').html(data);
-						$('#backup_errors').show();
-					}
-					else
-					{
-						$('#backup_errors').hide();
-						$('#backup_success').html('$sRestoreDone');
-						$('#backup_success').show();
-					}
-					$.unblockUI();
-				});
-			}
-			else
-			{
-				$('button.restore').prop('disabled', true);
+		if (oParams.token.length > 0) {
+			$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){
+				if (data.search(/error|exceptio|notice|warning/i) != -1) {
+					$('#backup_success').addClass('ibo-is-hidden');
+					$('#backup_errors').html(data);
+					$('#backup_errors').removeClass('ibo-is-hidden');
+				} else {
+					$('#backup_errors').addClass('ibo-is-hidden');
+					$('#backup_success').html('$sRestoreDone');
+					$('#backup_success').removeClass('ibo-is-hidden');
+				}
 				$.unblockUI();
-			}
-		});
-	}
+			});
+		} else {
+			$('button.restore').prop('disabled', true);
+			$.unblockUI();
+		}
+	});
 }
 JS
 	);
@@ -399,4 +459,3 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
