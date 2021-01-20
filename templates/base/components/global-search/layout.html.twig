@@ -1,9 +1,13 @@
-<div id="{{ oUIBlock.GetId() }}" class="ibo-global-search" data-role="ibo-global-search">
+<div id="{{ oUIBlock.GetId() }}"
+	 {# Note: The "ibo-is-opened" class is put there and not through the JS widget to avoid visual glitches #}
+	 {# Otherwise it would open only when the DOM is ready and the JS widget instantiated #}
+     class="ibo-global-search {% if oUIBlock.HasQuery() %}ibo-is-opened{% endif %}"
+     data-role="ibo-global-search">
 	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-global-search--head" data-role="ibo-global-search--head">
 		<a href="#" class="ibo-global-search--icon" data-role="ibo-global-search--icon" data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25">
 			<span class="fas fa-search"></span>
 		</a>
-		<input type="text" name="text" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" autocomplete="off">
+		<input type="text" name="text" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" value="{{ oUIBlock.GetQuery() }}" autocomplete="off">
 		<input type="hidden" name="operation" value="full_text">
 	</form>
 	<div class="ibo-global-search--drawer" data-role="ibo-global-search--drawer">

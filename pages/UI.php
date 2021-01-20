@@ -630,7 +630,10 @@ try
 					$sQueryLabel = $sFullText;
 				}
 				GlobalSearchHelper::AddQueryToHistory($sQuery, $sQueryIconUrl, $sQueryLabel);
-				$oP->GetTopBarLayout()->GetGlobalSearch()->SetLastQueries(GlobalSearchHelper::GetLastQueries());
+				$oP->GetTopBarLayout()
+					->GetGlobalSearch()
+					->SetQuery($sQuery)
+					->SetLastQueries(GlobalSearchHelper::GetLastQueries());
 
 				// Check the needle length
 				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');

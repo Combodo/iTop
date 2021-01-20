@@ -26,7 +26,7 @@ $(function()
 		// default options
 		options:
 		{
-
+			init_opened: false,
 		},
 		css_classes:
 		{
@@ -45,6 +45,19 @@ $(function()
 		_create: function()
 		{
 			this.element.addClass('ibo-global-search');
+
+			if(this.options.init_opened === true) {
+				// Make sure the class is there
+				this.element.addClass(this.css_classes.opened);
+
+				// Solution for the focus at the end of the input found here https://stackoverflow.com/questions/4609405/set-focus-after-last-character-in-text-box
+				this.element.find(this.js_selectors.input).trigger('focus');
+				const sTmpVal = this.element.find(this.js_selectors.input).val();
+				this.element.find(this.js_selectors.input)
+					.val('')
+					.val(sTmpVal);
+			}
+
 			this._bindEvents();
 		},
 		// events bound via _bind are removed automatically
