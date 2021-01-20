@@ -1,11 +1,11 @@
 <form method="post" enctype="multipart/form-data" id="{{ oUIBlock.GetId() }}"
+      class="{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
         {% if oUIBlock.GetOnSubmitJsCode() %}
             onSubmit="{{ oUIBlock.GetOnSubmitJsCode() }}"
         {% endif %}
         {% if oUIBlock.GetAction() %}
             action="{{ oUIBlock.GetAction() }}"
         {% endif %}
-        {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}
 >
     {% apply spaceless %}
         {% block iboContentBlockContainer %}

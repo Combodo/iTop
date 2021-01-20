@@ -2,7 +2,7 @@
 {% endblock %}
 {% block iboInput %}
     <input type="{{ oUIBlock.GetType() }}" id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}" value="{{ oUIBlock.GetValue()|raw }}"
+           class="{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
            {% if oUIBlock.IsChecked() %}checked="checked"{% endif %}
-           {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}
     >
 {% endblock %}

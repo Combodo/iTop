@@ -46,7 +46,7 @@
 
                 {% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}
                     {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
-                        {{ 'iTopUpdate:Error:FileUploadMaxSizeTooStandard'|dict_s }}
+                        {{ 'iTopUpdate:Error:FileUploadMaxSizeTooSmall'|dict_s }}
                     {% EndUIContentBlock %}
                     {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
                         {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}

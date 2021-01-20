@@ -1,5 +1,5 @@
 {% apply spaceless %}
-    <div id="{{ oUIBlock.GetId() }}" class="ibo-title {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %}" {% if oUIBlock.IsHidden() %}style="display: none;"{% endif %}>
+    <div id="{{ oUIBlock.GetId() }}" class="ibo-title {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}">
         {% if oUIBlock.HasIcon() %}
             <div class="ibo-title--medallion">
                 <img class="ibo-title--icon ibo-title--icon--must-{{ oUIBlock.GetIconCoverMethod() }}" src="{{ oUIBlock.GetIconUrl() }}">

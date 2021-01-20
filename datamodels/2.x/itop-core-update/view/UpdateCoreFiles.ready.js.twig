@@ -98,10 +98,10 @@ function ExecNextStep() {
                     {
                         $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }});
                     }
-                    $('#progress').hide();
-                    $("#setup_error_outer").show();
-                    $("#run_setup").show();
-                    $("#setup_continue").hide();
+                    $('#progress').addClass("ibo-is-hidden");
+                    $("#setup_error_outer").removeClass("ibo-is-hidden");
+                    $("#run_setup").removeClass("ibo-is-hidden");
+                    $("#setup_continue").addClass("ibo-is-hidden");
                 });
         }
         else
@@ -114,7 +114,7 @@ function ExecNextStep() {
         $.ajax(oGetCurrentVersion);
         $("#setup_continue").removeAttr("disabled");
         $('#installation_progress').hide(300);
-        $('#new_version').show();
+        $('#new_version').removeClass("ibo-is-hidden");
         $("#current_version").removeClass("message-info").addClass("message-valid");
     }
 }
