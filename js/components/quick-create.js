@@ -31,6 +31,7 @@ $(function()
 		css_classes:
 		{
 			opened: 'ibo-is-opened',
+			hidden: 'ibo-is-hidden',
 		},
 		js_selectors:
 		{
@@ -157,11 +158,14 @@ $(function()
 		},
 		_openDrawer: function()
 		{
+			this.element.find(this.js_selectors.compartment_element).removeClass(this.css_classes.hidden);
 			this.element.addClass(this.css_classes.opened);
 		},
 		_closeDrawer: function()
 		{
 			this.element.removeClass(this.css_classes.opened);
+			//Note: Elements are hidden to avoid having the keyboard navigation "TAB" passing throught them when they are not displayed
+			this.element.find(this.js_selectors.compartment_element).addClass(this.css_classes.hidden);
 		},
 		_setFocusOnInput: function()
 		{

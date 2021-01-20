@@ -213,7 +213,7 @@ EOF
 		null,
 		null,
 		true
-	);
+	)->SetTooltip(Dict::S('UI:Button:Evaluate:Title'));
 	$oQueryForm->AddSubBlock($oQuerySubmit);
 
 

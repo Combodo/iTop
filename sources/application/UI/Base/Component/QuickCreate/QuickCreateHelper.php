@@ -108,7 +108,7 @@ class QuickCreateHelper
 			// Add class label
 			if(!isset($aHistoryEntries[$iIdx]['label_html']))
 			{
-				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities(MetaModel::GetName($sClass));
+				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml(MetaModel::GetName($sClass));
 			}
 
 			// Add url

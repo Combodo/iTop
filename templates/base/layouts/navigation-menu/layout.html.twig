@@ -7,12 +7,19 @@
 			<a class="ibo-navigation-menu--full-company-logo" title="{{ oUIBlock.AppRevisionNumber }}" href="{{ oUIBlock.AppIconLink }}">
 				<img src="{{ oUIBlock.AppFullIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}">
 			</a>
-			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="20" href="#">
+			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler"
+			   data-tooltip-content="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+			   data-tooltip-placement="right"
+			   data-tooltip-distance-offset="20"
+			   href="#">
 				<span class="ibo-navigation-menu--toggler-icon">
 					<span class="ibo-navigation-menu--toggler-bar"></span>
 					<span class="ibo-navigation-menu--toggler-bar"></span>
 					<span class="ibo-navigation-menu--toggler-bar"></span>
 				</span>
+				{% if oUIBlock.HasSiloSelected() %}
+					<span class="ibo-navigation-menu--silo-visual-hint"></span>
+				{% endif %}
 			</a>
 			<div class="ibo-navigation-menu--silo-selection">
 				{{ oUIBlock.GetSiloSelection().html|raw }}

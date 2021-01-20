@@ -1413,6 +1413,19 @@ class Config
 	}
 
 	/**
+	 * Whether the $sPropCode parameter has a custom value or the default one.
+	 *
+	 * @param string $sPropCode
+	 *
+	 * @return bool true if the $sPropCode parameter has been customized, false if it is the default value.
+	 * @since 3.0.0
+	 */
+	public function IsCustomValue(string $sPropCode): bool
+	{
+		return $this->m_aSettings[$sPropCode]['value'] !== $this->m_aSettings[$sPropCode]['default'];
+	}
+
+	/**
 	 * Event log options (see LOG_... definition)
 	 */
 	// Those variables will be deprecated later, when the transition to ...Get('my_setting') will be done

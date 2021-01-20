@@ -112,7 +112,7 @@ class GlobalSearchHelper
 			// Add HTML label if missing
 			if(!isset($aHistoryEntries[$iIdx]['label_html']))
 			{
-				$aHistoryEntries[$iIdx]['label_html'] = utils::HtmlEntities($aHistoryEntries[$iIdx]['query']);
+				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml($aHistoryEntries[$iIdx]['query']);
 			}
 
 			// Set absolute URL
