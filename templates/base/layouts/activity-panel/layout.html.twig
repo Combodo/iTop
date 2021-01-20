@@ -2,14 +2,22 @@
 	<div class="ibo-activity-panel--header">
 		<div class="ibo-activity-panel--tabs-togglers">
 			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-				<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }}" data-role="ibo-activity-panel--tab-toggler" data-tab-type="caselog" data-caselog-attribute-code="{{ sCaseLogAttCode }}" data-caselog-rank="{{ loop.index }}">
+				{% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
+				<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
+				     data-role="ibo-activity-panel--tab-toggler"
+				     data-tab-type="caselog"
+				     data-caselog-attribute-code="{{ sCaseLogAttCode }}"
+				     data-caselog-rank="{{ loop.index }}">
 					<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
 						<span class="ibo-activity-panel--tab-title-decoration"></span>
 						<span class="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
 					</a>
 				</div>
 			{% endfor %}
-			<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity ibo-is-active" data-role="ibo-activity-panel--tab-toggler" data-tab-type="activity">
+			{% set sExtraCSSClass = (oUIBlock.GetCaseLogTabs() is empty) ? 'ibo-is-active' : '' %}
+			<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
+			     data-role="ibo-activity-panel--tab-toggler"
+			     data-tab-type="activity">
 				<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
 					<span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
 				</a>
