@@ -1413,11 +1413,11 @@ class Config
 	}
 
 	/**
-	 * Return true is the $sPropCode parameter has been customized, false if it is the default value.
+	 * Whether the $sPropCode parameter has a custom value or the default one.
 	 *
 	 * @param string $sPropCode
 	 *
-	 * @return bool
+	 * @return bool true if the $sPropCode parameter has been customized, false if it is the default value.
 	 * @since 3.0.0
 	 */
 	public function IsCustomValue(string $sPropCode): bool
