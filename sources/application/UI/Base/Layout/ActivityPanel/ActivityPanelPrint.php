@@ -16,12 +16,6 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 class ActivityPanelPrint extends ActivityPanel
 {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-activity-panel';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/print';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/print';
-	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/layouts/activity-panel/activity-panel.js',
-	];
-
-
 }
