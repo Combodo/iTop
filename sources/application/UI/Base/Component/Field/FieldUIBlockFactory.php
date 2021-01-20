@@ -76,14 +76,14 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		return $oField;
 	}
 
-	public static function MakeLarge(string $sLabel, $sValueHtml)
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
 		return $oField;
 	}
 
-	public static function MakeSmall(string $sLabel, $sValueHtml)
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
 	{
 		$oField = new Field($sLabel, new Html($sValueHtml));
 		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);

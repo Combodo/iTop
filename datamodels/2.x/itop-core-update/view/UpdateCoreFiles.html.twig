@@ -33,7 +33,7 @@
 
             {% if bDoFilesArchive %}
                 {% UIContentBlock Standard {'sId':'do_files_archive_done','sContainerClass':'ibo-update-core--archive-done', 'IsHidden':true} %}
-                    {% UIField Large {'sLabel':''iTopUpdate:UI:WithFilesBackup'|dict_s', 'sValueHtml':''} %}{% EndUIField %}
+                    {% UIField Large {'sLabel':'iTopUpdate:UI:WithFilesBackup'|dict_s} %}{% EndUIField %}
                     {% UIAlert ForSuccess {'sContent':sItopArchive} %}{% EndUIAlert %}
                 {% EndUIContentBlock %}
             {% endif %}
