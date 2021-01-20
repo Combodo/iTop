@@ -104,6 +104,9 @@ class ActivityPanel extends UIBlock
 		$this->oObject = $oObject;
 		$sObjectClass = get_class($this->oObject);
 
+		// Check if object has a lifecycle
+		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
+
 		// Initialize the case log tabs
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
@@ -113,9 +116,6 @@ class ActivityPanel extends UIBlock
 		{
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
-
-		// Check if object has a lifecycle
-		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
 
 		return $this;
 	}
@@ -400,6 +400,7 @@ class ActivityPanel extends UIBlock
 	/**
 	 * Add the case log tab to the panel
 	 * Note: Case log entries are added separately, see static::AddEntry()
+	 * Note: If hidden, the case log will not be added
 	 *
 	 * @param string $sAttCode
 	 *
@@ -411,12 +412,20 @@ class ActivityPanel extends UIBlock
 		// Add case log only if not already existing
 		if (!array_key_exists($sAttCode, $this->aCaseLogs))
 		{
-			$this->aCaseLogs[$sAttCode] = [
-				'rank' => count($this->aCaseLogs) + 1,
-				'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
-				'total_messages_count' => 0,
-				'authors' => [],
-			];
+			$iFlags = ($this->GetObject()->IsNew()) ? $this->GetObject()->GetInitialStateAttributeFlags($sAttCode) : $this->GetObject()->GetAttributeFlags($sAttCode);
+			$bIsHidden = (OPT_ATT_HIDDEN === ($iFlags & OPT_ATT_HIDDEN));
+			$bIsReadOnly = (OPT_ATT_READONLY === ($iFlags & OPT_ATT_READONLY));
+
+			// Only if not hidden
+			if (false === $bIsHidden) {
+				$this->aCaseLogs[$sAttCode] = [
+					'rank' => count($this->aCaseLogs) + 1,
+					'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
+					'total_messages_count' => 0,
+					'authors' => [],
+					'is_read_only' => $bIsReadOnly,
+				];
+			}
 		}
 
 		return $this;

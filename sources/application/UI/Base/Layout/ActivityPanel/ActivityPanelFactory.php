@@ -72,11 +72,13 @@ class ActivityPanelFactory
 		$oActivityPanel->SetObjectMode($sMode);
 
 		// Prepare caselogs
-		$aCaseLogAttCodes = array_keys($oActivityPanel->GetCaseLogTabs());
-		foreach($aCaseLogAttCodes as $sCaseLogAttCode)
+		$aCaseLogTabs = $oActivityPanel->GetCaseLogTabs();
+		foreach($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData)
 		{
-			// Add new entry block
-			$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+			// Add new entry block only if the case log is not read only
+			if (false === $aCaseLogData['is_read_only']) {
+				$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+			}
 
 			// Retrieve case logs entries
 			/** @var \ormCaseLog $oCaseLog */
