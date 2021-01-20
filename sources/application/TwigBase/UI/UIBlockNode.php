@@ -16,6 +16,13 @@ use Twig\Error\SyntaxError;
 use Twig\Node\Node;
 use utils;
 
+/**
+ * Class UIBlockNode
+ *
+ * @package Combodo\iTop\Application\TwigBase\UI
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class UIBlockNode extends Node
 {
 	/** @var string */
@@ -23,20 +30,26 @@ class UIBlockNode extends Node
 	/** @var string */
 	protected $sBlockClass;
 
-	public function __construct($sFactoryClass, $sBlockClass, $sType, $oParams, $oBody, $lineno = 0, $tag = null)
+	/**
+	 * @inheritDoc
+	 */
+	public function __construct(string $sFactoryClass, string $sBlockClass, string $sType, $oParams, $oBody, int $iLineNo = 0, ?string $sTag = null)
 	{
-		parent::__construct(['body' => $oBody], ['type' => $sType, 'params' => $oParams], $lineno, $tag);
+		parent::__construct(['body' => $oBody], ['type' => $sType, 'params' => $oParams], $iLineNo, $sTag);
 		$this->sFactoryClass = $sFactoryClass;
 		$this->sBlockClass = $sBlockClass;
 	}
 
-	public function compile(Compiler $compiler)
+	/**
+	 * @inheritDoc
+	 */
+	public function compile(Compiler $oCompiler)
 	{
 		$aClassPath = explode("\\", $this->sBlockClass);
 		$sClassName = end($aClassPath);
 		$sBlockVar = str_replace('.', '', uniqid('o'.$sClassName.'_', true));
 		$oParams = $this->getAttribute('params');
-		$compiler
+		$oCompiler
 			->addDebugInfo($this)
 			->write("\$sHtml = trim(ob_get_contents());\n")
 			->write("ob_end_clean();\n")
@@ -64,9 +77,9 @@ class UIBlockNode extends Node
 			if ($oParameter->isOptional()) {
 				$sDefault = $oParameter->getDefaultValue();
 				$sDefault = var_export($sDefault, true);
-				$compiler->write("\${$sName} = \$aParams['{$sName}'] ?? {$sDefault};\n");
+				$oCompiler->write("\${$sName} = \$aParams['{$sName}'] ?? {$sDefault};\n");
 			} else {
-				$compiler
+				$oCompiler
 					->write("if (!isset(\$aParams['{$sName}'])) {\n")
 					->indent()->write("throw new Exception('{$this->getTemplateName()}: Missing parameter {$sName} for {$this->getNodeTag()} at line {$this->getTemplateLine()}');\n")->outdent()
 					->write("}\n")
@@ -75,18 +88,18 @@ class UIBlockNode extends Node
 		}
 
 		// Call the factory
-		$compiler->write("\${$sBlockVar} = {$this->sFactoryClass}::Make{$sType}(");
+		$oCompiler->write("\${$sBlockVar} = {$this->sFactoryClass}::Make{$sType}(");
 		$bIsFirst = true;
 		foreach ($aParameters as $oParameter) {
 			$sName = $oParameter->getName();
 			if ($bIsFirst) {
 				$bIsFirst = false;
 			} else {
-				$compiler->write(", ");
+				$oCompiler->write(", ");
 			}
-			$compiler->write("\${$sName}");
+			$oCompiler->write("\${$sName}");
 		}
-		$compiler->write(");\n");
+		$oCompiler->write(");\n");
 
 		// Call the setters if exists
 		$aSetters = [];
@@ -98,19 +111,19 @@ class UIBlockNode extends Node
 			}
 		}
 		foreach ($aSetters as $sSetter) {
-			$compiler
+			$oCompiler
 				->write("if (isset(\$aParams['{$sSetter}'])) {\n")
 				->indent()->write("\${$sBlockVar}->Set{$sSetter}(\$aParams['{$sSetter}']);\n")->outdent()
 				->write("}\n");
 		}
 
 		// Attach to parent UIBlock
-		$compiler->write("end(\$context['UIBlockParent'])->AddSubBlock(\${$sBlockVar});\n");
+		$oCompiler->write("end(\$context['UIBlockParent'])->AddSubBlock(\${$sBlockVar});\n");
 
 		// Add sub UIBlocks
 		$oSubNode = $this->getNode('body');
 		if ($oSubNode) {
-			$compiler
+			$oCompiler
 				->write("array_push(\$context['UIBlockParent'], \${$sBlockVar});\n")
 				->write("ob_start();\n")
 				->subcompile($oSubNode)
@@ -121,6 +134,6 @@ class UIBlockNode extends Node
 				->write("}\n")
 				->write("array_pop(\$context['UIBlockParent']);\n");
 		}
-		$compiler->write("ob_start();\n");
+		$oCompiler->write("ob_start();\n");
 	}
 }

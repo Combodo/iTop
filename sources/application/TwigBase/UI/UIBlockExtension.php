@@ -15,8 +15,18 @@ use SetupUtils;
 use Twig\Extension\AbstractExtension;
 use utils;
 
+/**
+ * Class UIBlockExtension
+ *
+ * @package Combodo\iTop\Application\TwigBase\UI
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class UIBlockExtension extends AbstractExtension
 {
+	/**
+	 * @inheritDoc
+	 */
 	public function getTokenParsers()
 	{
 		$aParsers = [];
@@ -31,7 +41,12 @@ class UIBlockExtension extends AbstractExtension
 		return $aParsers;
 	}
 
-	public static function GetClassForInterface($sInterface)
+	/**
+	 * @param string $sInterface
+	 *
+	 * @return array|mixed
+	 */
+	public static function GetClassForInterface(string $sInterface)
 	{
 		$aFactoryClasses = [];
 

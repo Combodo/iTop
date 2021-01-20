@@ -11,6 +11,13 @@ namespace Combodo\iTop\Application\TwigBase\UI;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
+/**
+ * Class UIBlockParser
+ *
+ * @package Combodo\iTop\Application\TwigBase\UI
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class UIBlockParser extends AbstractTokenParser
 {
 	/** @var string */
@@ -41,9 +48,9 @@ class UIBlockParser extends AbstractTokenParser
 	/**
 	 * @inheritDoc
 	 */
-	public function parse(Token $token)
+	public function parse(Token $sToken)
 	{
-		$iLineno = $token->getLine();
+		$iLineno = $sToken->getLine();
 		$oStream = $this->parser->getStream();
 
 		$sType = $oStream->expect(Token::NAME_TYPE)->getValue();
@@ -70,8 +77,8 @@ class UIBlockParser extends AbstractTokenParser
 		return $this->sTag;
 	}
 
-	public function decideForEnd(Token $token)
+	public function decideForEnd(Token $sToken)
 	{
-		return $token->test('End'.$this->sTag);
+		return $sToken->test('End'.$this->sTag);
 	}
 }
