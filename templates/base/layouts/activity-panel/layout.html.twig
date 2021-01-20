@@ -81,18 +81,11 @@
 						</label>
 					</div>
 				</div>
-				{% if oUIBlock.HasActivityTabEntryForm() %}
-					<div class="ibo-activity-panel--tab-toggler-entry-form" data-role="ibo-activity-panel--tab-toggler-entry-form">
-						{{ render_block(oUIBlock.GetActivityTabEntryForm()) }}
-					</div>
-				{% endif %}
 			</div>
 		</div>
 	</div>
-	{% if oUIBlock.HasActivityTabEntryForm() %}
-		{%  if oUIBlock.GetActivityTabEntryForm().IsSubmitAutonomous() %}
-			<a href="#" class="ibo-activity-panel--body--add-caselog-entry--toggler" data-role="ibo-activity-panel--body--add-caselog-entry--toggler"><i class="fas fa-feather"></i></a>
-		{% endif %}
+	{% if oUIBlock.IsCaseLogsSubmitAutonomous() %}
+		<a href="#" class="ibo-activity-panel--body--add-caselog-entry--toggler" data-role="ibo-activity-panel--body--add-caselog-entry--toggler"><i class="fas fa-feather"></i></a>
 	{% endif %}
 	<div class="ibo-activity-panel--body">
 		{% if oUIBlock.GetGroupedEntries()|length > 0 %}

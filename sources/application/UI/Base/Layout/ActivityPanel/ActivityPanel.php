@@ -63,8 +63,6 @@ class ActivityPanel extends UIBlock
 	protected $bAreEntriesSorted;
 	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
 	protected $bHasLifecycle;
-	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oActivityTabEntryForm New entry form for the activity tab which is different from the case log tabs */
-	protected $oActivityTabEntryForm;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
 	protected $aCaseLogTabsEntryForms;
 
@@ -533,6 +531,23 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * Whether the submission of the case logs present in the activity panel is autonomous or will be handled by another form
+	 *
+	 * @return bool
+	 */
+	public function IsCaseLogsSubmitAutonomous(): bool
+	{
+		$bIsAutonomous = true;
+
+		foreach ($this->GetCaseLogTabsEntryForms() as $oCaseLogEntryForm) {
+			$bIsAutonomous = $oCaseLogEntryForm->IsSubmitAutonomous();
+			break;
+		}
+
+		return $bIsAutonomous;
+	}
+
+	/**
 	 * Return true if the host object has a lifecycle
 	 *
 	 * @return bool
@@ -555,42 +570,6 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * Return the entry form for the activity tab
-	 *
-	 * @see $oActivityTabEntryForm
-	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm
-	 */
-	public function GetActivityTabEntryForm(): CaseLogEntryForm
-	{
-		return $this->oActivityTabEntryForm;
-	}
-
-	/**
-	 * Set the entry form for the activity tab
-	 *
-	 * @param \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oCaseLogEntryForm
-	 * @see $oActivityTabEntryForm
-	 *
-	 * @return $this
-	 *
-	 */
-	public function SetActivityTabEntryForm(CaseLogEntryForm $oCaseLogEntryForm)
-	{
-		$this->oActivityTabEntryForm = $oCaseLogEntryForm;
-		return $this;
-	}
-
-	/**
-	 * Return true is there is an entry form for the activity tab
-	 *
-	 * @return bool
-	 */
-	public function HasActivityTabEntryForm()
-	{
-		return $this->oActivityTabEntryForm !== null;
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function GetSubBlocks()
@@ -599,11 +578,6 @@ class ActivityPanel extends UIBlock
 
 		foreach($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
 			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
-		}
-
-		if ($this->HasActivityTabEntryForm()) {
-			$oNewEntryForm = $this->GetActivityTabEntryForm();
-			$aSubBlocks[$oNewEntryForm->GetId()] = $oNewEntryForm;
 		}
 
 		return $aSubBlocks;

@@ -90,12 +90,6 @@ class ActivityPanelFactory
 			}
 		}
 
-		// Activity tab entry form is only in view mode
-		// As caselog tabs input will be attached to the main object form and submit button hidden, we can't have an entry form in the activity tab as it's not for a specific caselog
-		if($sMode === cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW) {
-			$oActivityPanel->SetActivityTabEntryForm(CaseLogEntryFormFactory::MakeForActivityTab($oObject, $sMode));
-		}
-
 		// Retrieve history changes (including case logs entries)
 		// - Prepare query to retrieve changes
 		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');
