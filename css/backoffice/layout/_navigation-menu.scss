@@ -38,8 +38,6 @@ $ibo-navigation-menu--middle-part--elements-spacing: 20px !default;
 $ibo-navigation-menu--middle-part--scrollbar-width: 5px !default;
 $ibo-navigation-menu--middle-part--scrollbar-track-background-color: $ibo-color-transparent !default;
 $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color: $ibo-color-grey-300 !default;
-$ibo-navigation-menu--middle-part--scrollbar-thumb-border: none !default;
-$ibo-navigation-menu--middle-part--scrollbar-thumb-border-radius: $ibo-border-radius-500 !default;
 
 $ibo-navigation-menu--bottom-part--padding-top: 20px !default;
 $ibo-navigation-menu--bottom-part--padding-bottom: 16px !default;
@@ -337,22 +335,22 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	/* Only the middle part should have a variable size */
 	overflow-y: auto;
 	padding: $ibo-navigation-menu--middle-part--padding-top $ibo-navigation-menu--middle-part--padding-x $ibo-navigation-menu--middle-part--padding-bottom;
+
 	/* Scrollbar for Firefox and future W3C specs. */
 	scrollbar-width: thin;
 	scrollbar-color: $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color $ibo-navigation-menu--middle-part--scrollbar-track-background-color;
+	/* Scrollbar for Chrome/Edge/Safari */
+	&::-webkit-scrollbar {
+		width: $ibo-navigation-menu--middle-part--scrollbar-width;
+	}
+	&::-webkit-scrollbar-track {
+		background-color: $ibo-navigation-menu--middle-part--scrollbar-track-background-color;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color;
+	}
 }
-/* Scrollbar for Chrome/Edge/Safari */
-.ibo-navigation-menu--middle-part::-webkit-scrollbar {
-	width: $ibo-navigation-menu--middle-part--scrollbar-width;
-}
-.ibo-navigation-menu--middle-part::-webkit-scrollbar-track {
-	background-color: $ibo-navigation-menu--middle-part--scrollbar-track-background-color;
-}
-.ibo-navigation-menu--middle-part::-webkit-scrollbar-thumb {
-	background-color: $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color;
-	border: $ibo-navigation-menu--middle-part--scrollbar-thumb-border;
-	border-radius: $ibo-navigation-menu--middle-part--scrollbar-thumb-border-radius;
-}
+
 /* - Bottom part */
 .ibo-navigation-menu--bottom-part{
 	z-index: 2; /* User picture must be above the middle part when expanded */
