@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Application\TwigBase\UI;
 
 
-use Combodo\iTop\Application\TwigBase\UI\Component\UIHtmlParser;
 use Exception;
 use ReflectionClass;
 use SetupUtils;
@@ -32,7 +31,7 @@ class UIBlockExtension extends AbstractExtension
 		$aParsers = [];
 
 		$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
-		$aFactoryClasses = self::GetClassForInterface($sInterface);
+		$aFactoryClasses = self::GetClassesForInterface($sInterface);
 
 		foreach ($aFactoryClasses as $sFactoryClass) {
 			$aParsers[] = new UIBlockParser($sFactoryClass);
@@ -46,7 +45,7 @@ class UIBlockExtension extends AbstractExtension
 	 *
 	 * @return array|mixed
 	 */
-	public static function GetClassForInterface(string $sInterface)
+	public static function GetClassesForInterface(string $sInterface)
 	{
 		$aFactoryClasses = [];
 
