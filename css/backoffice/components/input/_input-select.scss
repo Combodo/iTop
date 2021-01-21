@@ -88,3 +88,11 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -82px !def
 	background-color: #f5fafd;
 	color: #495c68;
 }
+
+.ui-autocomplete{
+	z-index:2000;
+}
+
+.field_input_zone{
+	position:relative;
+}
