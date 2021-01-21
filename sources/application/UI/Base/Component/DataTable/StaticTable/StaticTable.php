@@ -51,10 +51,10 @@ class StaticTable extends UIContentBlock
 	 * ]
 	 */
 	private $aData;
-	
-	public function __construct(string $sId = null, string $sContainerCSSClass = '')
+
+	public function __construct(string $sId = null, string $sContainerCSSClasses = '')
 	{
-		parent::__construct($sId, $sContainerCSSClass);
+		parent::__construct($sId, $sContainerCSSClasses);
 		$this->aColumns = [];
 		$this->aData = [];
 	}

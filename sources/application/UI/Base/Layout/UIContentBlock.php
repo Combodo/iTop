@@ -29,8 +29,6 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/content-block/layout';
 
 	/** @var array */
-	protected $aCSSClasses;
-	/** @var array */
 	protected $aSubBlocks;
 	/** @var array */
 	protected $aDeferredBlocks;
@@ -40,15 +38,15 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 * Generates a <div> only if $sContainerClass if not empty or block has data attributes
 	 *
 	 * @param string|null $sId
-	 * @param string $sContainerClass
+	 * @param string $sContainerClasses list of additional CSS classes, space as separator
 	 */
-	public function __construct(string $sId = null, string $sContainerClass = '')
+	public function __construct(string $sId = null, string $sContainerClasses = '')
 	{
 		parent::__construct($sId);
 
 		$this->aSubBlocks = [];
 		$this->aDeferredBlocks = [];
-		$this->SetCSSClasses($sContainerClass);
+		$this->SetCSSClasses($sContainerClasses);
 	}
 
 	/**
@@ -116,43 +114,6 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	{
 		foreach ($aSubBlocks as $oSubBlock) {
 			$this->AddSubBlock($oSubBlock);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetCSSClasses(): string
-	{
-		return implode(' ', $this->aCSSClasses);
-	}
-
-	/**
-	 * @param string $sCSSClasses
-	 *
-	 * @return UIContentBlock
-	 */
-	public function SetCSSClasses(string $sCSSClasses)
-	{
-		$this->aCSSClasses = [];
-		$this->AddCSSClasses($sCSSClasses);
-
-		return $this;
-	}
-
-	/**
-	 * @param string $sCSSClasses
-	 *
-	 * @return $this
-	 */
-	public function AddCSSClasses(string $sCSSClasses)
-	{
-		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
-			if (!empty($sCSSClass)) {
-				$this->aCSSClasses[$sCSSClass] = $sCSSClass;
-			}
 		}
 
 		return $this;

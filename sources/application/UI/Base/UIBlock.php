@@ -83,9 +83,11 @@ abstract class UIBlock implements iUIBlock
 	/** @var array */
 	protected $aCssFilesRelPath;
 	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>") */
-	protected $aDataAttributes;
+	protected $aDataAttributes = [];
 	/** @var bool show or hide the current block */
 	protected $bIsHidden;
+	/** @var array */
+	protected $aAdditionalCSSClasses = [];
 
 	/**
 	 * UIBlock constructor.
@@ -103,7 +105,6 @@ abstract class UIBlock implements iUIBlock
 		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
-		$this->aDataAttributes = [];
 		$this->bIsHidden = static::DEFAULT_IS_HIDDEN;
 	}
 
@@ -129,6 +130,7 @@ abstract class UIBlock implements iUIBlock
 		if (!in_array($sType, [self::ENUM_JS_TYPE_LIVE, self::ENUM_JS_TYPE_ON_INIT, self::ENUM_JS_TYPE_ON_READY])) {
 			throw new UIException($this, "Type of javascript $sType not supported");
 		}
+
 		return $this->aJsTemplateRelPath[$sType];
 	}
 
@@ -243,6 +245,7 @@ abstract class UIBlock implements iUIBlock
 	public function AddJsFileRelPath(string $sPath)
 	{
 		$this->aJsFilesRelPath[] = $sPath;
+
 		return $this;
 	}
 
@@ -252,6 +255,7 @@ abstract class UIBlock implements iUIBlock
 	public function AddCssFileRelPath(string $sPath)
 	{
 		$this->aCssFilesRelPath[] = $sPath;
+
 		return $this;
 	}
 
@@ -300,6 +304,49 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * @param string $sCSSClasses with space as separator, like <code>ibo-is-hidden ibo-alert--body</code>
+	 *
+	 * @return $this
+	 *
+	 * @use aAdditionalCSSClasses
+	 */
+	public function AddCSSClasses(string $sCSSClasses)
+	{
+		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
+			if (!empty($sCSSClass)) {
+				$this->aAdditionalCSSClasses[$sCSSClass] = $sCSSClass;
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Overrides additional classes with the specified value
+	 *
+	 * @param string $sCSSClasses with space as separator, like <code>ibo-is-hidden ibo-alert--body</code>
+	 *
+	 * @return $this
+	 *
+	 * @use aAdditionalCSSClasses
+	 */
+	public function SetCSSClasses(string $sCSSClasses)
+	{
+		$this->aAdditionalCSSClasses = [];
+		$this->AddCSSClasses($sCSSClasses);
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetAdditionalCSSClasses(): string
+	{
+		return implode(' ', $this->aAdditionalCSSClasses);
+	}
+
+	/**
 	 * Return an array of the URL of the block $sFilesType and its sub blocks.
 	 * URL is relative unless the $bAbsoluteUrl is set to true.
 	 *
@@ -343,6 +390,7 @@ abstract class UIBlock implements iUIBlock
 	public function SetDataAttributes(array $aDataAttributes)
 	{
 		$this->aDataAttributes = $aDataAttributes;
+
 		return $this;
 	}
 
@@ -356,6 +404,7 @@ abstract class UIBlock implements iUIBlock
 	public function AddDataAttribute(string $sName, string $sValue)
 	{
 		$this->aDataAttributes[$sName] = $sValue;
+
 		return $this;
 	}
 
@@ -375,6 +424,7 @@ abstract class UIBlock implements iUIBlock
 	public function SetIsHidden(bool $bIsHidden)
 	{
 		$this->bIsHidden = $bIsHidden;
+
 		return $this;
 	}
 }

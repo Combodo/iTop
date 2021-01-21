@@ -69,13 +69,13 @@ class PopoverMenuItem extends UIBlock
 	}
 
 	/**
-	 * @see \ApplicationPopupMenuItem::SetCssClasses()
-	 *
 	 * @param array $aCssClasses
 	 *
 	 * @return $this
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::SetCssClasses()
 	 */
-	public function SetCssClasses(array $aCssClasses)
+	public function SetMenuItemCssClasses(array $aCssClasses)
 	{
 		$this->oPopupMenuItem->SetCssClasses($aCssClasses);
 
@@ -83,13 +83,13 @@ class PopoverMenuItem extends UIBlock
 	}
 
 	/**
-	 * @see \ApplicationPopupMenuItem::AddCssClass()
-	 *
 	 * @param string $sCssClass
 	 *
 	 * @return $this
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::AddCssClass()
 	 */
-	public function AddCssClass(string $sCssClass)
+	public function AddMenuItemCssClass(string $sCssClass)
 	{
 		$this->oPopupMenuItem->AddCssClass($sCssClass);
 
@@ -97,10 +97,11 @@ class PopoverMenuItem extends UIBlock
 	}
 
 	/**
-	 * @see \ApplicationPopupMenuItem::GetCssClasses()
 	 * @return array
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::GetCssClasses()
 	 */
-	public function GetCssClasses()
+	public function GetMenuItemCssClasses(): array
 	{
 		return $this->oPopupMenuItem->GetCssClasses();
 	}

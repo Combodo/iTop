@@ -19,8 +19,8 @@ class FieldBadge extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-field-badge';
 
-	public function __construct(string $sId = null, string $sContainerClass = '')
+	public function __construct(string $sId = null, string $sContainerClasses = '')
 	{
-		parent::__construct($sId, $sContainerClass);
+		parent::__construct($sId, $sContainerClasses);
 	}
 }

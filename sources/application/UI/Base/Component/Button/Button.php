@@ -94,8 +94,6 @@ class Button extends UIBlock
 	protected $sJsCode;
 	/** @var string $sOnClickJsCode */
 	protected $sOnClickJsCode;
-	/** @var array */
-	protected $aAdditionalCSSClasses;
 
 	/**
 	 * Button constructor.
@@ -131,7 +129,6 @@ class Button extends UIBlock
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
 		$this->bIsDisabled = false;
-		$this->aAdditionalCSSClasses = [];
 		$this->aDataAttributes = ['role' => 'ibo-button'];
 	}
 
@@ -346,24 +343,4 @@ class Button extends UIBlock
 
 		return $this;
 	}
-
-	/**
-	 * @return string
-	 */
-	public function GetAdditionalCSSClass(): string
-	{
-		return implode(' ', $this->aAdditionalCSSClasses);
-	}
-
-	public function AddCSSClasses(string $sCSSClasses): self
-	{
-		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
-			if (!empty($sCSSClass)) {
-				$this->aAdditionalCSSClasses[$sCSSClass] = $sCSSClass;
-			}
-		}
-		return $this;
-	}
-
-
 }
