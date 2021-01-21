@@ -1090,7 +1090,7 @@ JS
 		$sName = 'UI:Dashboard:Actions';
 		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
 		$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
-		$oActionButton->AddCSSClasses("ibo-top-bar--toolbar-dashboard-menu-toggler");
+		$oActionButton->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler');
 
 		$oToolbar->AddSubBlock($oActionButton);
 
@@ -1115,7 +1115,7 @@ JS
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
 		$oToolbar->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-		$oActionButton->AddCSSClasses('ibo-action-button')
+		$oActionButton->AddCSSClass('ibo-action-button')
 			->SetJsCode(<<<JS
 $("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
 $('#{$sMenuTogglerId}').on('click', function(oEvent) {

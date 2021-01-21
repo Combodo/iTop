@@ -17,7 +17,7 @@ class Badge extends UIContentBlock
 
 	public function __construct(string $sColor)
 	{
-		parent::__construct(null, "ibo-badge ibo-badge-is-{$sColor}");
+		parent::__construct(null, ["ibo-badge ibo-badge-is-{$sColor}"]);
 		$this->SetColor($sColor);
 	}
 

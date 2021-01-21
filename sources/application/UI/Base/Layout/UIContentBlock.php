@@ -35,18 +35,18 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 	/**
 	 * UIContentBlock constructor.
-	 * Generates a <div> only if $sContainerClass if not empty or block has data attributes
+	 * Generates a <div> only if $aContainerClasses if not empty or block has data attributes
 	 *
 	 * @param string|null $sId
-	 * @param string $sContainerClasses list of additional CSS classes, space as separator
+	 * @param array       $aContainerClasses Array of additional CSS classes
 	 */
-	public function __construct(string $sId = null, string $sContainerClasses = '')
+	public function __construct(string $sId = null, array $aContainerClasses = [])
 	{
 		parent::__construct($sId);
 
 		$this->aSubBlocks = [];
 		$this->aDeferredBlocks = [];
-		$this->SetCSSClasses($sContainerClasses);
+		$this->SetCSSClasses($aContainerClasses);
 	}
 
 	/**

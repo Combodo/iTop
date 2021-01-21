@@ -1894,7 +1894,7 @@ HTML
 							null,
 							$sPredefinedBtnId
 						);
-						$oPredefQueryButton->AddCSSClasses('ibo-action-button');
+						$oPredefQueryButton->AddCSSClass('ibo-action-button');
 						$oPredefQueryRenderer = new BlockRenderer($oPredefQueryButton);
 						$sAdditionalStuff = $oPredefQueryRenderer->RenderHtml();
 						$oPage->add_ready_script(<<<JS
@@ -1934,7 +1934,7 @@ JS
 							null,
 							$sTestResId
 						);
-						$oTestQueryButton->AddCSSClasses('ibo-action-button');
+						$oTestQueryButton->AddCSSClass('ibo-action-button');
 						$oPage->add_ready_script(<<<JS
 $("#$sTestResId").click(function () {
 	var sQueryRaw = $("#$iId").val(),
@@ -2476,7 +2476,7 @@ JS
 		}
 
 		$oContentBlock = new UIContentBlock();
-		$oContentBlock->SetCSSClasses("object-details")
+		$oContentBlock->SetCSSClasses(['object-details'])
 			->AddDataAttribute('object-class', $sClass)
 			->AddDataAttribute('object-id', $iKey)
 			->AddDataAttribute('object-mode', $sMode);
@@ -2538,7 +2538,7 @@ JS
 		}
 
 		$oContentBlock = new UIContentBlock();
-		$oContentBlock->SetCSSClasses("object-details")
+		$oContentBlock->SetCSSClasses(['object-details'])
 			->AddDataAttribute('object-class', $sClass)
 			->AddDataAttribute('object-id', $iKey)
 			->AddDataAttribute('object-mode', $sMode);
@@ -2587,13 +2587,13 @@ JS
 CSS
 		);
 		$oToolbarTop = new Toolbar();
-		$oToolbarTop->SetCSSClasses('ibo-toolbar ibo-toolbar-top');
+		$oToolbarTop->SetCSSClasses(['ibo-toolbar', 'ibo-toolbar-top']);
 
 		$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
-		$oCancelButton->AddCSSClasses('action cancel');
+		$oCancelButton->AddCSSClasses(['action', 'cancel']);
 		$oToolbarTop->AddSubBlock($oCancelButton);
 		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
-		$oApplyButton->AddCSSClasses('action');
+		$oApplyButton->AddCSSClass('action');
 		$oToolbarTop->AddSubBlock($oApplyButton);
 
 		$aTransitions = $this->EnumTransitions();
@@ -2607,7 +2607,7 @@ CSS
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
-						$oButton->AddCSSClasses('action');
+						$oButton->AddCSSClass('action');
 						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
 						$oToolbarTop->AddSubBlock($oButton);
 						break;
@@ -2714,7 +2714,7 @@ EOF
 			// bottom or both: display the buttons here
 			$oPage->p($sStatesSelection);
 			$oToolbarBottom = new Toolbar();
-			$oToolbarBottom->SetCSSClasses('ibo-toolbar');
+			$oToolbarBottom->SetCSSClasses(['ibo-toolbar']);
 			foreach ($oToolbarTop->GetSubBlocks() as $oButton) {
 				$oToolbarBottom->AddSubBlock($oButton);
 			}
@@ -3047,7 +3047,7 @@ HTML
 			$this->DisplayDetails($oPage, false, $sMode);
 		}
 
-		$oFormContainer = new UIContentBlock(null, 'ibo-wizard-container');
+		$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
 		$oPage->AddUiBlock($oFormContainer);
 		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
 		$oFormContainer->AddSubBlock($oForm);

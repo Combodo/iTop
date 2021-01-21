@@ -2,16 +2,16 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 
-{% UIContentBlock Standard {'sContainerClass':'ibo-update-core'} %}
+{% UIContentBlock Standard {'aContainerClasses':['ibo-update-core']} %}
 
     {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}
 
     <div class="ibo-v-spacer">&nbsp;</div>
 
-    {% UIContentBlock Standard {'sContainerClass':'display_block display-files'} %}
+    {% UIContentBlock Standard {'aContainerClasses': ['display_block', 'display-files']} %}
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
             {% UIAlert ForInformation {'sId':'header-requirements', 'IsCollapsible':false, 'IsClosable':false} %}
-                {% UIContentBlock Standard {'sContainerClass':'ibo-update-core-header-requirements', 'sId':'can-core-update'} %}
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core-header-requirements'], 'sId':'can-core-update'} %}
                     {{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}
                     {% UISpinner Standard {} %}
                 {% EndUIContentBlock %}
@@ -45,18 +45,18 @@
                 {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
 
                 {% UIAlert ForFailure {'sId':'header-file-size', 'IsHidden':true} %}
-                    {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
                         {{ 'iTopUpdate:Error:FileUploadMaxSizeTooSmall'|dict_s }}
                     {% EndUIContentBlock %}
-                    {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
                         {{ 'iTopUpdate:UI:PostMaxSize'|dict_format(sPostMaxSize) }}
                     {% EndUIContentBlock %}
-                    {% UIContentBlock Standard {'sContainerClass':'ibo-file-size-error'} %}
+                    {% UIContentBlock Standard {'aContainerClasses':['ibo-file-size-error']} %}
                         {{ 'iTopUpdate:UI:UploadMaxFileSize'|dict_format(sUploadMaxSize) }}
                     {% EndUIContentBlock %}
                 {% EndUIAlert %}
 
-                {% UIContentBlock Standard {'sContainerClass':'upload_container'} %}
+                {% UIContentBlock Standard {'aContainerClasses':['upload_container']} %}
                     {% UIInput Standard {'sType':'file', 'sId':'file', 'sName':'file', 'sValue':''} %}
                 {% EndUIContentBlock %}
 
@@ -72,7 +72,7 @@
                     {% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true} %}
                 {% EndUIField %}
 
-                {% UIContentBlock Standard {'sContainerClass':'ibo_check_update_submit'} %}
+                {% UIContentBlock Standard {'aContainerClasses':['ibo_check_update_submit']} %}
                     {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:CheckUpdate'|dict_s, 'sId':'check-update', 'bIsSubmit':true, 'IsDisabled':true} %}
                     {% UISpinner Standard {'sId':'submit-wait', 'IsHidden':true} %}
                 {% EndUIContentBlock %}

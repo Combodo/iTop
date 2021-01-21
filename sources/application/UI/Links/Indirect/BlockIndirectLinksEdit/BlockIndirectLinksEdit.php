@@ -54,7 +54,7 @@ class BlockIndirectLinksEdit extends UIContentBlock
 	{
 		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$this->sFormPrefix}{$this->iInputId}", '', "{$this->sFormPrefix}{$this->iInputId}"));
 
-		$oToolbar = new Toolbar(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+		$oToolbar = new Toolbar(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 		$this->AddSubBlock($oToolbar);
 		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:RemoveLinkedObjectsOf_Class'), null, null, false, "{$this->sLinkedSetId}_btnRemove");
 		$oRemoveButton->SetOnClickJsCode("oWidget{$this->iInputId}.RemoveSelected();");
@@ -65,7 +65,7 @@ class BlockIndirectLinksEdit extends UIContentBlock
 		$oToolbar->AddSubBlock($oAddButton);
 
 		// To prevent adding forms inside the main form
-		$oDeferredBlock = new UIContentBlock("dlg_{$this->sLinkedSetId}", 'ibo-block-indirect-links--edit--dialog');
+		$oDeferredBlock = new UIContentBlock("dlg_{$this->sLinkedSetId}", ['ibo-block-indirect-links--edit--dialog']);
 		$this->AddDeferredBlock($oDeferredBlock);
 	}
 }

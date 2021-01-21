@@ -38,13 +38,13 @@ class BlockObjectPickerDialog extends UIContentBlock
 
 		$oForm = new Form("ObjectsAddForm_{$this->sLinkedSetId}");
 		$this->AddSubBlock($oForm);
-		$oBlock = new UIContentBlock("SearchResultsToAdd_{$this->sLinkedSetId}", 'ibo-block-object-picker-dialog--results');
+		$oBlock = new UIContentBlock("SearchResultsToAdd_{$this->sLinkedSetId}", ['ibo-block-object-picker-dialog--results']);
 		$oForm->AddSubBlock($oBlock);
 		$oBlock->AddHtml("<p>{$sEmptyList}</p>");
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("count_{$this->sLinkedSetId}", '0', "count_{$this->sLinkedSetId}"));
 
-		$oToolbar = new Toolbar(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+		$oToolbar = new Toolbar(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 		$this->AddSubBlock($oToolbar);
 		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction($sCancel, null, null, false);
 		$oRemoveButton->SetOnClickJsCode("$('#dlg_{$this->sLinkedSetId}').dialog('close');");

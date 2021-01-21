@@ -15,8 +15,8 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	public const TWIG_TAG_NAME = 'UIContentBlock';
 	public const UI_BLOCK_CLASS_NAME = UIContentBlock::class;
 
-	public static function MakeStandard(string $sId = null, string $sContainerClass = '')
+	public static function MakeStandard(string $sId = null, array $aContainerClasses = [])
 	{
-		return new UIContentBlock($sId, $sContainerClass);
+		return new UIContentBlock($sId, $aContainerClasses);
 	}
 }

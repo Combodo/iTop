@@ -29,9 +29,9 @@ class FormTable extends StaticTable
 	/** @var iUIBlock[] */
 	private $aRows;
 
-	public function __construct(string $sRef, string $sContainerCSSClasses = '')
+	public function __construct(string $sRef, array $aContainerCSSClasses = [])
 	{
-		parent::__construct($sRef, $sContainerCSSClasses);
+		parent::__construct($sRef, $aContainerCSSClasses);
 		$this->SetRef($sRef);
 		$this->aRows = [];
 	}

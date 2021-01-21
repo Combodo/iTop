@@ -307,17 +307,55 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * @param string $sCSSClasses with space as separator, like <code>ibo-is-hidden ibo-alert--body</code>
+	 * Note: If $sCSSClass is already present, proceeds silently
+	 *
+	 * @param string $sCSSClass
 	 *
 	 * @return $this
 	 *
-	 * @use aAdditionalCSSClasses
+	 * @uses $aAdditionalCSSClasses
 	 */
-	public function AddCSSClasses(string $sCSSClasses)
+	public function AddCSSClass(string $sCSSClass)
 	{
-		foreach (explode(' ', $sCSSClasses) as $sCSSClass) {
+		$sCSSClass = trim($sCSSClass);
+
+		if (!array_key_exists($sCSSClass, $this->aAdditionalCSSClasses)) {
+			$this->aAdditionalCSSClasses[] = $sCSSClass;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Note: If $sCSSClass is not present, proceeds silently
+	 *
+	 * @param string $sCSSClass
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function RemoveCSSClass(string $sCSSClass)
+	{
+		if (array_key_exists($sCSSClass, $this->aAdditionalCSSClasses)) {
+			unset($this->aAdditionalCSSClasses[$sCSSClass]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param array $aCSSClasses like <code>['ibo-is-hidden', 'ibo-alert--body']</code>
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function AddCSSClasses(array $aCSSClasses)
+	{
+		foreach ($aCSSClasses as $sCSSClass) {
 			if (!empty($sCSSClass)) {
-				$this->aAdditionalCSSClasses[$sCSSClass] = $sCSSClass;
+				$this->AddCSSClass($sCSSClass);
 			}
 		}
 
@@ -327,26 +365,39 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * Overrides additional classes with the specified value
 	 *
-	 * @param string $sCSSClasses with space as separator, like <code>ibo-is-hidden ibo-alert--body</code>
+	 * @param array $aCSSClasses like <code>['ibo-is-hidden', 'ibo-alert--body']</code>
 	 *
 	 * @return $this
 	 *
-	 * @use aAdditionalCSSClasses
+	 * @uses $aAdditionalCSSClasses
 	 */
-	public function SetCSSClasses(string $sCSSClasses)
+	public function SetCSSClasses(array $aCSSClasses)
 	{
 		$this->aAdditionalCSSClasses = [];
-		$this->AddCSSClasses($sCSSClasses);
+		$this->AddCSSClasses($aCSSClasses);
 
 		return $this;
 	}
 
 	/**
-	 * @return string
+	 * @return array
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 * @see static::GetAdditionalCSSClassesAsString() for a simpler usage in the views
 	 */
-	public function GetAdditionalCSSClasses(): string
+	public function GetAdditionalCSSClasses(): array
 	{
-		return implode(' ', $this->aAdditionalCSSClasses);
+		return $this->aAdditionalCSSClasses;
+	}
+
+	/**
+	 * @return string All additional CSS classes as a spec-separated string
+	 *
+	 * @uses static::GetAdditionalCSSClasses()
+	 */
+	public function GetAdditionalCSSClassesAsString(): string
+	{
+		return implode(' ', $this->GetAdditionalCSSClasses());
 	}
 
 	/**

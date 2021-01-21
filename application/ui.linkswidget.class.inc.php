@@ -379,7 +379,7 @@ JS
 	{
 		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
 
-		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", "ibo-block-indirect-links--edit");
+		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", ["ibo-block-indirect-links--edit"]);
 
 		$oBlock->sLinkedSetId = $sLinkedSetId;
 		$oBlock->sClass = $this->m_sClass;

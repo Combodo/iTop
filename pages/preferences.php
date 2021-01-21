@@ -150,7 +150,7 @@ JS
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
-	$oFavoriteOrganizationsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+	$oFavoriteOrganizationsToolBar = new UIContentBlock(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 	$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
 	// - Cancel button
 	$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
@@ -197,7 +197,7 @@ JS
 
 	$oSet = new DBObjectSet($oShortcutsFilter);
 	if ($oSet->Count() > 0) {
-		$oShortcutsToolBar = new UIContentBlock(null, 'ibo-datatable--selection-validation-buttons-toolbar');
+		$oShortcutsToolBar = new UIContentBlock(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
 		// - Rename button
 		$oShortcutsRenameButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,

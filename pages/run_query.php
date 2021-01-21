@@ -196,7 +196,7 @@ EOF
 	if (count($aArgs) > 0) {
 		//--- Query arguments
 		$oQueryArgsContainer = PanelFactory::MakeForInformation('Query arguments')
-			->SetCSSClasses('wizContainer');
+			->SetCSSClasses(['wizContainer']);
 		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
 			$oArgInput = InputFactory::MakeForInputWithLabel(

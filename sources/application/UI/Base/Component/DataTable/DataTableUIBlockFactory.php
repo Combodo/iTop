@@ -114,7 +114,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClass('ibo-datatable-panel');
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {

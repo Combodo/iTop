@@ -396,7 +396,7 @@ class DisplayBlock
 	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): UIContentBlock
 	{
 		$oHtml = new UIContentBlock($sId);
-		$oHtml->AddCSSClasses("display_block");
+		$oHtml->AddCSSClass("display_block");
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
@@ -432,7 +432,7 @@ HTML;
 			}
 		} else {
 			// render it as an Ajax (asynchronous) call
-			$oHtml->AddCSSClasses("loading");
+			$oHtml->AddCSSClass("loading");
 			$oHtml->AddHtml("<p><img src=\"../images/indicator_arrows.gif\"> ".Dict::S('UI:Loading').'</p>');
 			$oPage->add_script('
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
@@ -976,7 +976,7 @@ JS
 			}
 		}
 
-		$oBlock = new UIContentBlock(null, "ibo-dashlet-header-dynamic--container");
+		$oBlock = new UIContentBlock(null, ["ibo-dashlet-header-dynamic--container"]);
 		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
 			$aCount = $aCounts[$sStateValue];
 			$oBadge = BadgeFactory::MakeForState($sClass, $sStateValue);
@@ -2071,7 +2071,7 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 
-		$oActionsBlock = new Toolbar("ibo-action-toolbar-{$sId}", 'ibo-action-toolbar');
+		$oActionsBlock = new Toolbar("ibo-action-toolbar-{$sId}", ['ibo-action-toolbar']);
 		$oRenderBlock->AddSubBlock($oActionsBlock);
 		$sMenuTogglerId = "ibo-actions-menu-toggler-{$sId}";
 		$sPopoverMenuId = "ibo-other-action-popover-{$sId}";
@@ -2087,7 +2087,7 @@ class MenuBlock extends DisplayBlock
 				// TODO Add Js
 				$oActionsBlock->AddSubBlock($oActionButton)
 					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-				$oActionButton->AddCSSClasses('ibo-action-button')
+				$oActionButton->AddCSSClass('ibo-action-button')
 					->SetJsCode(<<<JS
 $("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
 $('#{$sMenuTogglerId}').on('click', function(oEvent) {
@@ -2109,7 +2109,7 @@ JS
 			if ($this->m_sStyle == 'details') {
 				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
 				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
-					->AddCSSClasses('ibo-action-button');
+					->AddCSSClass('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
@@ -2118,7 +2118,7 @@ JS
 				$oActionButton->SetIconClass('fas fa-sync')
 					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
-					->AddCSSClasses('ibo-action-button');
+					->AddCSSClass('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
@@ -2158,7 +2158,7 @@ JS
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
 				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sActionId, $sTarget);
-				$oActionButton->AddCSSClasses('ibo-action-button');
+				$oActionButton->AddCSSClass('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 		}
