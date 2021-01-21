@@ -908,8 +908,21 @@ class ObjectFormManager extends FormManager
 					if ($this->oContainer !== null)
 					{
 						// Override hardcoded URLs in ormDocument pointing to back office console
-						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
-						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						$oOrmDoc = $this->oObject->Get($sAttCode);
+						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', [
+							'sObjectClass' => get_class($this->oObject),
+							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectField' => $sAttCode,
+							'cache' => 86400,
+							's' => $oOrmDoc->GetSignature(),
+							]);
+						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', [
+							'sObjectClass' => get_class($this->oObject),
+							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectField' => $sAttCode,
+							'cache' => 86400,
+							's' => $oOrmDoc->GetSignature(),
+						]);
 						/** @var \Combodo\iTop\Form\Field\BlobField $oField */
 						$oField->SetDisplayUrl($sDisplayUrl)
 							->SetDownloadUrl($sDownloadUrl);

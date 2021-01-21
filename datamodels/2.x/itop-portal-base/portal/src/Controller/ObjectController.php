@@ -1322,15 +1322,17 @@ class ObjectController extends BrickController
 			}
 			elseif ($oAttDef instanceof AttributeImage)
 			{
+				/** @var \ormDocument $oOrmDoc */
 				$oOrmDoc = $oObject->Get($oAttDef->GetCode());
 				if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
 				{
-					$sUrl = $oUrlGenerator->generate('p_object_document_display', array(
+					$sUrl = $oUrlGenerator->generate('p_object_document_display', [
 						'sObjectClass' => get_class($oObject),
 						'sObjectId' => $oObject->GetKey(),
 						'sObjectField' => $oAttDef->GetCode(),
 						'cache' => 86400,
-					));
+						's' => $oOrmDoc->GetSignature(),
+					]);
 				}
 				else
 				{

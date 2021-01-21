@@ -149,7 +149,7 @@ class ormDocument
 	 */
 	public function GetDisplayURL($sClass, $Id, $sAttCode)
 	{
-		$sSignature = md5($this->GetData());
+		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
@@ -161,7 +161,7 @@ class ormDocument
 	public function GetDownloadURL($sClass, $Id, $sAttCode)
 	{
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
-		$sSignature = md5($this->GetData());
+		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
@@ -220,5 +220,13 @@ class ormDocument
 		{
 			$oPage->p($e->getMessage());
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetSignature(): string
+	{
+		return md5($this->GetData());
 	}
 }

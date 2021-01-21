@@ -112,7 +112,13 @@ class CombodoCurrentContactPhotoUrl
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
 					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 3.0
-					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($oContact), 'sObjectId' => $oContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400));
+					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', [
+						'sObjectClass' => get_class($oContact),
+						'sObjectId' => $oContact->GetKey(),
+						'sObjectField' => $sPictureAttCode,
+						'cache' => 86400,
+						's' => $oImage->GetSignature(),
+						]);
 				}
 				else
 				{
