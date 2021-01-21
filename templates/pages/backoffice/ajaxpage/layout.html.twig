@@ -27,33 +27,44 @@
 			<script type="text/javascript">
 				var aFilesToLoad{{ sId }} = [];
 				{% for sJsFile in aPage.aJsFiles %}
-					aFilesToLoad{{ sId }}.push('{{ sJsFile|raw }}');
+					if (! $.inArray('{{ sJsFile|raw }}',aListJsFiles))
+					{
+						aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version }}');
+						aListJsFiles.push("{{ sJsFile }}");
+					}
 				{% endfor %}
 				var iCurrentIdx{{ sId }} = 0;
 				var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
-				var fLoadScript{{ sId }} = function(){
-					$.when(
-						$.ajax({
+				if(iFilesToLoadCount{{ sId }}>0)
+				{
+					var fLoadScript{{ sId }} = function () {
+						$.when(
+								$.ajax({
 									url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
 									dataType: 'script',
 									cache: true
 								})
-						)
-						.then(function(){
-							iCurrentIdx{{ sId }}++;
-							if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
-							{
-								fLoadScript{{ sId }}();
-							}
-							else
-							{
-								{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-									{{ sJsInlineOnDomReady|raw }}
-								{% endfor %}
-							}
-						});
-				};
-				fLoadScript{{ sId }}();
+								)
+								.then(function () {
+									iCurrentIdx{{ sId }}++;
+									if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
+									{
+										fLoadScript{{ sId }}();
+									}
+									else
+									{
+										{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+										{{ sJsInlineOnDomReady|raw }}
+										{% endfor %}
+									}
+								});
+					};
+					fLoadScript{{ sId }}();
+				} else {
+					{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+					{{ sJsInlineOnDomReady|raw }}
+					{% endfor %}
+				}
 			</script>
 		{% endblock %}
 	{% else %}

@@ -54,7 +54,12 @@
         {{ render_block(oBlock, {aPage: aPage}) }}
     {% endfor %}
 {% endblock %}
-
+<script type="text/javascript">
+	var aListJsFiles = [];
+	{% for sJsFile in aPage.aJsFiles %}
+		aListJsFiles.push("{{ sJsFile}}");
+	{% endfor %}
+</script>
 {% block iboPageJsFiles %}
     {% for sJsFile in aPage.aJsFiles %}
         <script type="text/javascript" src="{{ sJsFile|add_itop_version }}"></script>
