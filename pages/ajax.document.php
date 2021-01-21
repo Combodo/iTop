@@ -58,15 +58,10 @@ try
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
 				if ($iCacheSec > 0)
 				{
-					$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
-					$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
-					$oPage->add_header("Expires: "); // Reset the value set in ajax_page
-
+					$oPage->set_cache($iCacheSec);
 					// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 					// so we're resetting its value ! (see N°3416)
 					$oPage->add_xframe_options('');
-
-					$oPage->add_header("Last-Modified: Wed, 15 Jun 2015 13:21:15 GMT"); // An arbitrary date in the past is ok
 				}
 			}
 			break;

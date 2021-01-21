@@ -727,6 +727,13 @@ class WebPage implements Page
 		$this->add_header('Expires: 0');
 	}
 
+	public function set_cache($iCacheSec)
+	{
+		$this->add_header("Cache-Control: max-age=$iCacheSec");
+		$this->add_header("Pragma: cache");
+		$this->add_header("Expires: ");
+	}
+
 	/**
 	 * Build a special kind of TABLE useful for displaying the details of an object from a hash array of data
 	 *

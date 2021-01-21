@@ -129,7 +129,8 @@ class ormDocument
 	 */	 	 	
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+		$sUrl = $this->GetDisplayURL($sClass, $Id, $sAttCode);
+		return "<a href=\"$sUrl\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 	
 	/**
@@ -138,7 +139,8 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+		$sUrl = $this->GetDownloadURL($sClass, $Id, $sAttCode);
+		return "<a href=\"$sUrl\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 
 	/**
@@ -147,8 +149,9 @@ class ormDocument
 	 */
 	public function GetDisplayURL($sClass, $Id, $sAttCode)
 	{
+		$sSignature = md5($this->GetData());
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode";
+		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	/**

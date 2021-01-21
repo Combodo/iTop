@@ -3265,9 +3265,11 @@ HTML;
 	 */
 	public function DisplayDocumentInline(WebPage $oPage, $sAttCode)
 	{
+		/** @var \ormDocument $oDoc */
 		$oDoc = $this->Get($sAttCode);
 		$sClass = get_class($this);
-		$Id = $this->GetKey();
+		$sId = $this->GetKey();
+		$sDisplayUrl = $oDoc->GetDisplayURL($sClass, $sId, $sAttCode);
 		switch ($oDoc->GetMainMimeType())
 		{
 			case 'text':
@@ -3276,7 +3278,7 @@ HTML;
 				switch ($oDoc->GetMimeType())
 				{
 					case 'text/xml':
-						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+						$oPage->add("<iframe id='preview_$sAttCode' src=\"$sDisplayUrl\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 						break;
 
 					default:
@@ -3289,7 +3291,7 @@ HTML;
 				switch ($oDoc->GetMimeType())
 				{
 					case 'application/pdf':
-						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+						$oPage->add("<iframe id='preview_$sAttCode' src=\"$sDisplayUrl\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 						break;
 
 					default:
@@ -3298,7 +3300,7 @@ HTML;
 				break;
 
 			case 'image':
-				$oPage->add("<img src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
+				$oPage->add("<img src=\"$sDisplayUrl\" />\n");
 				break;
 
 			default:

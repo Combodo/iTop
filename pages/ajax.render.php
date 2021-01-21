@@ -788,6 +788,8 @@ try
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
 				$oPage->add_xframe_options('');
+				$iCacheSec = (int)utils::ReadParam('cache', 0);
+				$oPage->set_cache($iCacheSec);
 
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
