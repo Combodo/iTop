@@ -107,18 +107,22 @@ class GlobalSearchHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 		static::TruncateHistory($aHistoryEntries);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
-			// Add HTML label if missing
-			if(!isset($aHistoryEntries[$iIdx]['label_html']))
-			{
-				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml($aHistoryEntries[$iIdx]['query']);
+		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++){
+			$sRawQuery = $aHistoryEntries[$iIdx]['query'];
+
+			// Make icon URL absolute
+			if(isset($aHistoryEntries[$iIdx]['icon_url'])){
+				$aHistoryEntries[$iIdx]['icon_url'] = utils::GetAbsoluteUrlAppRoot().$aHistoryEntries[$iIdx]['icon_url'];
 			}
 
-			// Set absolute URL
-			if(isset($aHistoryEntries[$iIdx]['icon_url']))
-			{
-				$aHistoryEntries[$iIdx]['icon_url'] = utils::GetAbsoluteUrlAppRoot().$aHistoryEntries[$iIdx]['icon_url'];
+			// Add HTML label if missing
+			if(!isset($aHistoryEntries[$iIdx]['label_html'])) {
+				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml($sRawQuery);
+			}
+
+			// Add URL
+			if(!isset($aHistoryEntries[$iIdx]['target_url'])){
+				$aHistoryEntries[$iIdx]['target_url'] = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=full_text&text='.urlencode($sRawQuery);
 			}
 		}
 

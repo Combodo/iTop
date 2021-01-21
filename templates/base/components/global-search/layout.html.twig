@@ -22,7 +22,7 @@
 					</div>
 				{% elseif oUIBlock.GetLastQueries()|length > 0 %}
 					{% for aQuery in oUIBlock.GetLastQueries() %}
-						<a href="#" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
+						<a href="{{ aQuery.target_url }}" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
 								<img src="{{ aQuery.icon_url}}" class="ibo-global-search--compartment-element-image">
 							{% endif %}
