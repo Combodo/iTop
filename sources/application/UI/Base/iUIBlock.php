@@ -54,7 +54,7 @@ interface iUIBlock {
 	 *
 	 * @return string|null
 	 */
-	public function GetJsTemplateRelPath(string $sType) ;
+	public function GetJsTemplatesRelPath(string $sType) ;
 
 	/**
 	 * Return an array of the relative paths (from <ITOP>/) of the JS files to use for the block itself

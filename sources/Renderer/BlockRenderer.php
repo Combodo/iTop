@@ -143,12 +143,12 @@ class BlockRenderer
 	public function RenderJsInline(string $sType)
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock->GetJsTemplateRelPath($sType)))
+		if(!empty($this->oBlock->GetJsTemplatesRelPath($sType)))
 		{
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
-				$this->oBlock->GetJsTemplateRelPath($sType),
+				$this->oBlock->GetJsTemplatesRelPath($sType),
 				$sType
 			);
 		}
