@@ -613,7 +613,3 @@ abstract class Controller
 		$this->m_oPage->output();
 	}
 }
-
-class PageNotFoundException extends Exception
-{
-}
