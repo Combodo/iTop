@@ -27,6 +27,7 @@ $(function()
 					active_menu_group: null,
 					display_counts: false,
 					filter_keyup_throttle: 200,             // In milliseconds
+					org_id:''
 				},
 			css_classes:
 				{
@@ -362,7 +363,8 @@ $(function()
 						method: "POST",
 						url: GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php',
 						data: {
-							operation: "get_menus_count"
+							operation: "get_menus_count",
+							c: { org_id: me.options.org_id }
 						},
 						dataType: "json"
 					})

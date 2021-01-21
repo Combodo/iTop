@@ -1157,8 +1157,33 @@ class OQLMenuNode extends MenuNode
 	public function GetEntriesCount()
 	{
 		// Count the entries up to 99
+		$oFilter = DBSearch::FromOQL($this->sOQL);
+		$oAppContext = new ApplicationContext();
+		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 
-		$oSet = new DBObjectSet(DBSearch::FromOQL($this->sOQL));
+		if( isset($iCurrentOrganization) && $iCurrentOrganization!="" ) {
+			$aAllowedOrgs[] = intval( $iCurrentOrganization);
+			$aSettings['bSearchMode'] = true;
+			$aSelectedClasses = $oFilter->GetSelectedClasses();
+			foreach ($aSelectedClasses as $sClassAlias => $sClass)	{
+				//MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
+				$sAttCode = $sClass::MapContextParam('org_id');
+				if(!is_null($sAttCode) && MetaModel::IsValidAttCode($sClass,$sAttCode)) {
+					$oVisibleObjects = UserRights::MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);
+					if ($oVisibleObjects === false)	{
+						// Make sure this is a valid search object, saying NO for all
+						$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
+					}
+					if (is_object($oVisibleObjects)) {
+						$oVisibleObjects->AllowAllData();
+						$oFilter = $oFilter->Filter($sClassAlias, $oVisibleObjects);
+					}
+				}
+			}
+
+
+		}
+		$oSet = new DBObjectSet($oFilter);
 		$iCount = $oSet->CountWithLimit(99);
 		if ($iCount > 99) {
 			$iCount = "99+";

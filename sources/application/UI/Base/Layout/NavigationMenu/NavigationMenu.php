@@ -423,5 +423,15 @@ JS;
 
 		return $this;
 	}
+
+	public function GetOrgId(){
+		$oAppContext = new ApplicationContext();
+		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+
+		if(!empty($iCurrentOrganization)) {
+			return $iCurrentOrganization;
+		}
+		return '';
+	}
 	
 }
