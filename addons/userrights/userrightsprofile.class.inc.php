@@ -308,25 +308,30 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		$iOrigUserId = $this->GetOriginal('userid');
 		if (!empty($iOrigUserId))
 		{
-			$oUser = MetaModel::GetObject('User', $iOrigUserId, true, true);
+			$oUser = MetaModel::GetObject('User', $iOrigUserId, false, true);
+			if ($oUser && UserRights::IsAdministrator($oUser) && !UserRights::IsAdministrator())
+			{
+				throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
+			}
+			// else user already deleted
+		}
+		$oUser = MetaModel::GetObject('User', $this->Get('userid'), false, true);
+		if ($oUser)
+		{
 			if (UserRights::IsAdministrator($oUser) && !UserRights::IsAdministrator())
 			{
 				throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
 			}
+			if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, DBObjectSet::FromObject($this)))
+			{
+				throw new SecurityException(Dict::Format('UI:Error:ObjectCannotBeUpdated'));
+			}
+			if (!UserRights::IsAdministrator() && ($this->Get('profile') === ADMIN_PROFILE_NAME))
+			{
+				throw new SecurityException(Dict::Format('UI:Login:Error:AccessAdmin'));
+			}
 		}
-		$oUser = MetaModel::GetObject('User', $this->Get('userid'), true, true);
-		if (UserRights::IsAdministrator($oUser) && !UserRights::IsAdministrator())
-		{
-			throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
-		}
-		if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, DBObjectSet::FromObject($this)))
-		{
-			throw new SecurityException(Dict::Format('UI:Error:ObjectCannotBeUpdated'));
-		}
-		if (!UserRights::IsAdministrator() && ($this->Get('profile') === ADMIN_PROFILE_NAME))
-		{
-			throw new SecurityException(Dict::Format('UI:Login:Error:AccessAdmin'));
-		}
+		// else user already deleted...
 	}
 
 }
