@@ -437,7 +437,7 @@ class ModuleDiscovery
 				$aMatches = array();
 				if (is_dir($sDirectory.'/'.$sFile))
 				{
-					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn'))
+					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn') && ($sFile != 'vendor'))
 					{
 						self::ListModuleFiles($sRelDir.'/'.$sFile, $sRootDir);
 					}
