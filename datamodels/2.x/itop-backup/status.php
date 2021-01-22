@@ -38,6 +38,11 @@ require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
+function DecorateErrorMessages(string $sMessage)
+{
+	return '<b>'.$sMessage.'</b>';
+}
+
 function GenerateBackupsList(string $sListTitleDictKey, string $sNoRecordDictKey, $aListConfig, $aListData): UIBlock
 {
 	$oFieldsetForList = new FieldSet(Dict::S($sListTitleDictKey));
@@ -115,7 +120,7 @@ try {
 			$sMySqlDump = Dict::Format("bkp-mysqldump-issue", $iRetCode);
 		}
 		$oFieldsetChecks->AddSubBlock(
-			AlertUIBlockFactory::MakeForWarning($sMySqlDump, '')
+			AlertUIBlockFactory::MakeForWarning('', DecorateErrorMessages($sMySqlDump))
 				->SetIsClosable(false)
 				->SetIsCollapsible(false)
 		);
@@ -131,11 +136,12 @@ try {
 	SetupUtils::builddir($sBackupDir);
 	if (!is_dir($sBackupDir)) {
 		$oFieldsetChecks->AddSubBlock(
-			AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-missing-dir', $sBackupDir), '')
+			AlertUIBlockFactory::MakeForWarning('', DecorateErrorMessages(Dict::Format('bkp-missing-dir', $sBackupDir)))
 				->SetIsClosable(false)
 				->SetIsCollapsible(false)
 		);
 	} else {
+		$sBackupDir = realpath($sBackupDir); // just for cosmetic purpose (dir separator, as APPROOT contains a hardcoded '/')
 		$sDiskSpaceReadable = SetupUtils::HumanReadableSize(SetupUtils::CheckDiskSpace($sBackupDir));
 		$oFieldsetChecks->AddSubBlock(
 			AlertUIBlockFactory::MakeForInformation('', Dict::Format('bkp-free-disk-space', $sDiskSpaceReadable, $sBackupDir))
@@ -144,7 +150,7 @@ try {
 		);
 		if (!is_writable($sBackupDir)) {
 			$oFieldsetChecks->AddSubBlock(
-				AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-dir-not-writeable', $sBackupDir), '')
+				AlertUIBlockFactory::MakeForWarning('', DecorateErrorMessages(Dict::Format('bkp-dir-not-writeable', $sBackupDir)))
 					->SetIsClosable(false)
 					->SetIsCollapsible(false)
 			);
@@ -163,7 +169,10 @@ try {
 	$sZipNameInfo = '';
 	if ($sZipName == '') {
 		$oFieldsetChecks->AddSubBlock(
-			AlertUIBlockFactory::MakeForWarning(Dict::Format('bkp-wrong-format-spec', $sBackupFile, BACKUP_DEFAULT_FORMAT), '')
+			AlertUIBlockFactory::MakeForWarning(
+				'',
+				DecorateErrorMessages(Dict::Format('bkp-wrong-format-spec', $sBackupFile, BACKUP_DEFAULT_FORMAT))
+			)
 				->SetIsClosable(false)
 				->SetIsCollapsible(false)
 		);
@@ -314,7 +323,7 @@ try {
 	$oBackupMutex = new iTopMutex('backup.'.utils::GetCurrentEnvironment());
 	if ($oBackupMutex->IsLocked()) {
 		$oFieldsetBackupNow->AddSubBlock(
-			AlertUIBlockFactory::MakeForFailure(Dict::S('bkp-backup-running'), '')
+			AlertUIBlockFactory::MakeForFailure('', DecorateErrorMessages(Dict::S('bkp-backup-running')))
 				->SetIsClosable(false)
 				->SetIsCollapsible(false)
 		);
@@ -322,7 +331,7 @@ try {
 	$oRestoreMutex = new iTopMutex('restore.'.utils::GetCurrentEnvironment());
 	if ($oRestoreMutex->IsLocked()) {
 		$oFieldsetBackupNow->AddSubBlock(
-			AlertUIBlockFactory::MakeForFailure(Dict::S('bkp-restore-running'), '')
+			AlertUIBlockFactory::MakeForFailure('', DecorateErrorMessages(Dict::S('bkp-restore-running')))
 				->SetIsClosable(false)
 				->SetIsCollapsible(false)
 		);
