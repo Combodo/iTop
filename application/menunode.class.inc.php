@@ -1188,6 +1188,7 @@ class OQLMenuNode extends MenuNode
 							}
 						}
 						catch (Exception $e) {
+							// If filtering fails just ignore it
 						}
 					}
 				}
