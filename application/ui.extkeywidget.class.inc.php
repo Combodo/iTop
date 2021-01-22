@@ -193,6 +193,7 @@ class UIExtKeyWidget
 			{
 				$bAddingValue=true;
 			}
+			$bAutoSelectValue=false;
 			while($oObj = $oAllowedValues->Fetch())
 			{
 				$aOption=[];
@@ -205,11 +206,8 @@ class UIExtKeyWidget
 					$sDisplayValue=$oObj->GetName();
 					if($value != $oObj->GetKey())
 					{
-						$oPage->add_ready_script(
-							<<<EOF
-$('#$this->iId').attr('data-validate','dependencies');
-EOF
-						);
+						$bAutoSelectValue=true;
+						$value=$oObj->GetKey();
 					}
 				}
 				else
@@ -246,6 +244,19 @@ EOF
 
 EOF
 			);
+			if($bAutoSelectValue)
+			{
+				$oPage->add_ready_script(
+					<<<EOF
+$('#$this->iId > option').val('{$value}');
+$('#$this->iId > option').html('{$sDisplayValue}');
+$('#field_$this->iId').find('.ibo-input-select').append('<div data-value="{$value}">{$sDisplayValue}</div>');
+$('#$this->iId > .ibo-input-select').val('{$value}');
+$('#$this->iId > .ibo-input-select').html('{$sDisplayValue}');
+$('#$this->iId').attr('data-validate','dependencies');
+EOF
+				);
+			}
 		}
 		else
 		{
@@ -272,6 +283,7 @@ EOF
 			// the input for the auto-complete
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
+			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\"><i class=\"fas fa-times\"></i></div>";
 
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";

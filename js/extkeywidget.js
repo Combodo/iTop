@@ -405,6 +405,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		return false; // Do NOT submit the form in case we are called by OnSubmit...
 	};
 
+	this.Clear = function () {
+		$('#'+me.id).val('');
+		$('#label_'+me.id).val('');
+		$('#'+me.id).trigger('validate');
+		$('#'+me.id).trigger('extkeychange');
+		$('#'+me.id).trigger('change');
+	};
+
 	// Workaround for a ui.jquery limitation: if the content of
 	// the dialog contains many INPUTs, closing and opening the
 	// dialog is very slow. So empty it each time.
