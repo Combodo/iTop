@@ -331,7 +331,15 @@ JS
 
 	$oTabsForm = new Form();
 	$oTabsForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_tab_config'));
-
+	
+	// Tab Layout
+	$sTabsLayoutValue = appUserPreferences::GetPref('tab_layout', false);;
+	$oTabsLayout = InputUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Tabs:Layout:Label'));
+	$oTabsLayout->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('horizontal', Dict::S('UI:Tabs:Layout:Horizontal'), 'horizontal' === $sTabsLayoutValue));
+	$oTabsLayout->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('vertical', Dict::S('UI:Tabs:Layout:Vertical'), 'vertical' === $sTabsLayoutValue));
+	$oTabsForm->AddSubBlock($oTabsLayout);
+	
+	// Tab navigation
 	$sTabsScrollableValue = appUserPreferences::GetPref('tab_scrollable', false);;
 	$oTabsScrollable = InputUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Tabs:Scrollable:Label'));
 	$oTabsScrollable->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('true', Dict::S('UI:Tabs:Scrollable:Scrollable'), true === $sTabsScrollableValue));
@@ -501,8 +509,16 @@ try {
 				DisplayPreferences($oPage);
 				break;
 			case 'apply_tab_config':
-				$bScrollable= utils::ReadParam('tab_scrollable', 'false') === 'true';
+				$sLayout = utils::ReadParam('tab_layout', 'horizontal');
+				$sLayoutAllowedValues = ['horizontal', 'vertical'];
+				if(in_array($sLayout, $sLayoutAllowedValues, true))
+				{
+					appUserPreferences::SetPref('tab_layout', $sLayout);
+				}
+
+				$bScrollable = utils::ReadParam('tab_scrollable', 'false') === 'true';
 				appUserPreferences::SetPref('tab_scrollable', $bScrollable);
+				DisplayPreferences($oPage);
 				break;
 			case 'apply_language':
 				$sLangCode = utils::ReadParam('language', 'EN US');

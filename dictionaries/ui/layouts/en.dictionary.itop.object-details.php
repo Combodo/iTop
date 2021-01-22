@@ -5,5 +5,4 @@
  */
 
 Dict::Add('EN US', 'English', 'English', [
-	'UI:Menu:SwitchTabMode' => 'Switch tab mode',
 ]);

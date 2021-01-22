@@ -41,22 +41,6 @@ function StripArchiveArgument(sUrl)
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
 	return res;
 }
-//TODO 3.0.0 Is this the right place to put this method ?
-function SwitchTabMode()
-{
-	let aTabContainer = $('[data-role="ibo-tab-container"]');
-	if (!aTabContainer.hasClass('ibo-is-vertical'))
-	{
-		aTabContainer.removeClass('ibo-is-horizontal');
-		aTabContainer.addClass('ibo-is-vertical');
-		SetUserPreference('tab_layout', 'vertical', true);
-	} else
-	{
-		aTabContainer.removeClass('ibo-is-vertical');
-		aTabContainer.addClass('ibo-is-horizontal');
-		SetUserPreference('tab_layout', 'horizontal', true);
-	}
-}
 
 /**
  * A toolbox for common JS operations in the backoffice. Meant to be used by Combodo developers and the community.
