@@ -17,9 +17,10 @@
  */
 
 /* SCSS variables */
-$ibo-activity-panel--width: 460px !default;
+$ibo-activity-panel--width: 480px !default;
 /* TODO: This should be changed when responsive breakpoints are defined and used */
 $ibo-activity-panel--is-expanded--width: 60vw !default;
+$ibo-activity-panel--height: 100% !default;
 $ibo-activity-panel--padding-x: 16px !default;
 $ibo-activity-panel--padding-y: 0 !default;
 
@@ -64,7 +65,7 @@ $ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: 8px !default;
 $ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
 
 /* - Body */
-$ibo-activity-panel--body--padding-top: $ibo-activity-panel--padding-x !default;
+$ibo-activity-panel--body--padding-y: $ibo-activity-panel--padding-x !default;
 $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 
 $ibo-activity-panel--body--placeholder--margin-top: 16px !default;
@@ -72,10 +73,26 @@ $ibo-activity-panel--body--placeholder-image--width: 250px !default;
 $ibo-activity-panel--body--placeholder-hint--margin-top: 16px !default;
 $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default;
 
+$ibo-activity-panel--add-caselog-entry-button--right: 12px !default;
+$ibo-activity-panel--add-caselog-entry-button--top: 66px + $ibo-activity-panel--add-caselog-entry-button--right !default;
+$ibo-activity-panel--add-caselog-entry-button--diameter: 36px !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--add-caselog-entry-button--color: $ibo-color-white-100 !default;
+$ibo-activity-panel--add-caselog-entry-button--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--add-caselog-entry-button--box-shadow: $ibo-elevation-100 !default;
+
+$ibo-activity-panel--add-caselog-entry-button--icon--height: 100% !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--width: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--font-size: 16px !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
+
 /* Whole layout */
 .ibo-activity-panel{
 	width: $ibo-activity-panel--width;
+	height: $ibo-activity-panel--height;
 	transition: width 0.2s ease-in-out;
+	display: flex;
+	flex-direction: column;
 
 	&.ibo-is-expanded{
 		width: $ibo-activity-panel--is-expanded--width;
@@ -221,9 +238,9 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 
 /* Body */
 .ibo-activity-panel--body{
-	padding-top: $ibo-activity-panel--body--padding-top;
-	padding-left: $ibo-activity-panel--body--padding-x;
-	padding-right: $ibo-activity-panel--body--padding-x;
+	flex-grow: 1; /* To occupy all the space not used by the header  */
+	overflow: auto;
+	padding: $ibo-activity-panel--body--padding-y $ibo-activity-panel--body--padding-x;
 }
 
 .ibo-activity-panel--body--placeholder{
@@ -243,4 +260,33 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 
 	@extend %ibo-font-ral-ita-100;
 	@extend %ibo-fully-centered-content;
+}
+
+.ibo-activity-panel--add-caselog-entry-button{
+	@extend %ibo-baseline-centered-content;
+	position: absolute;
+	right: $ibo-activity-panel--add-caselog-entry-button--right;
+	top: $ibo-activity-panel--add-caselog-entry-button--top;
+
+	width: $ibo-activity-panel--add-caselog-entry-button--diameter;
+	height: $ibo-activity-panel--add-caselog-entry-button--diameter;
+
+	background-color: $ibo-activity-panel--add-caselog-entry-button--background-color;
+	color: $ibo-activity-panel--add-caselog-entry-button--color;
+
+	border-radius: $ibo-activity-panel--add-caselog-entry-button--border-radius;
+	box-shadow: $ibo-activity-panel--add-caselog-entry-button--box-shadow;
+	> i{
+		text-align: center;
+		height: $ibo-activity-panel--add-caselog-entry-button--icon--height;
+		width: $ibo-activity-panel--add-caselog-entry-button--icon--width;
+		font-size: $ibo-activity-panel--add-caselog-entry-button--icon--font-size;
+		line-height: $ibo-activity-panel--add-caselog-entry-button--icon--line-height;
+	}
+	&:hover {
+		color: $ibo-activity-panel--add-caselog-entry-button--color;
+	}
+	&.ibo-is-hidden{
+		display: none;
+	}
 }

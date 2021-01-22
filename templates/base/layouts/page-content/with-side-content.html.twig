@@ -1,7 +1,9 @@
 {% extends 'base/layouts/page-content/layout.html.twig' %}
 
-
-{% block iboPageCenterContainerExtraClasses %}{{ parent() }}{% if not aPage.isPrintable %} ibo-center-container--with-side-content{% endif %}{% endblock %}
+{% block iboPageCenterContainerExtraClasses %}
+	{{ parent() }}
+	{% if not aPage.isPrintable %} ibo-center-container--with-side-content{% endif %}
+{% endblock %}
 
 {% block iboPageCenterContainer %}
 	{{ parent() }}

@@ -16,13 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-.ibo-center-container--with-side-content {
-	display: flex;
-	align-items: stretch;
+/* Note: We have to wrap it in the ID i order to overload its rules, otherwise, the ID takes over the simple CSS class... */
+#ibo-center-container {
+	&.ibo-center-container--with-side-content {
+		display: flex;
+		align-items: stretch;
+		overflow: hidden; /* Only the content areas should scroll */
 
-	#ibo-main-content {
-		flex-grow: 1; /* To occupy maximum width, side content will handle its width */
-		overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part. */
+		> * {
+			height: 100%;
+		}
+		#ibo-main-content {
+			flex-grow: 1; /* To occupy maximum width, side content will handle its width */
+			overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part. */
+		}
 	}
 }
 
