@@ -103,17 +103,34 @@ class UIBlockNode extends Node
 
 		// Call the setters if exists
 		$aSetters = [];
+		$aAdders = [];
 		$oRefClass = new ReflectionClass($this->sBlockClass);
 		$aMethods = $oRefClass->getMethods(ReflectionMethod::IS_PUBLIC);
 		foreach ($aMethods as $oMethod) {
 			if (!$oMethod->isStatic() && utils::StartsWith($oMethod->getName(), 'Set')) {
 				$aSetters[] = substr($oMethod->getName(), 3); // remove 'Set' to get the variable name
 			}
+			if (!$oMethod->isStatic() && utils::StartsWith($oMethod->getName(), 'Add')) {
+				$aAdders[] = $oMethod->getName();
+			}
 		}
-		foreach ($aSetters as $sSetter) {
+		if (!empty($aSetters)) {
 			$oCompiler
-				->write("if (isset(\$aParams['{$sSetter}'])) {\n")
-				->indent()->write("\${$sBlockVar}->Set{$sSetter}(\$aParams['{$sSetter}']);\n")->outdent()
+				->write("\$aSetters = ['".implode("','", $aSetters)."'];\n")
+				->write("foreach (\$aSetters as \$sSetter) {\n")->indent()
+				->write("if (isset(\$aParams[\"{\$sSetter}\"])) {\n")->indent()
+				->write("\$sCmd = \"Set{\$sSetter}\";\n")
+				->write("call_user_func([\${$sBlockVar}, \$sCmd], \$aParams[\"{\$sSetter}\"]);\n")->outdent()
+				->write("}\n")->outdent()
+				->write("}\n");
+		}
+		if (!empty($aAdders)) {
+			$oCompiler
+				->write("\$aAdders = ['".implode("','", $aAdders)."'];\n")
+				->write("foreach (\$aAdders as \$sAdder) {\n")->indent()
+				->write("if (isset(\$aParams[\"{\$sAdder}\"])) {\n")->indent()
+				->write("call_user_func([\${$sBlockVar}, \$sAdder], \$aParams[\"{\$sAdder}\"]);\n")->outdent()
+				->write("}\n")->outdent()
 				->write("}\n");
 		}
 
