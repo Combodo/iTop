@@ -107,11 +107,13 @@ class UIBlockNode extends Node
 		$oRefClass = new ReflectionClass($this->sBlockClass);
 		$aMethods = $oRefClass->getMethods(ReflectionMethod::IS_PUBLIC);
 		foreach ($aMethods as $oMethod) {
-			if (!$oMethod->isStatic() && utils::StartsWith($oMethod->getName(), 'Set')) {
-				$aSetters[] = substr($oMethod->getName(), 3); // remove 'Set' to get the variable name
-			}
-			if (!$oMethod->isStatic() && utils::StartsWith($oMethod->getName(), 'Add')) {
-				$aAdders[] = $oMethod->getName();
+			if (!$oMethod->isStatic() && $oMethod->getNumberOfParameters() == 1) {
+				if (utils::StartsWith($oMethod->getName(), 'Set')) {
+					$aSetters[] = substr($oMethod->getName(), 3); // remove 'Set' to get the variable name
+				}
+				if (utils::StartsWith($oMethod->getName(), 'Add')) {
+					$aAdders[] = $oMethod->getName();
+				}
 			}
 		}
 		if (!empty($aSetters)) {
