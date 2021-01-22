@@ -36,45 +36,13 @@
           <values>
             <value id="new">new</value>
             <value id="waiting_for_approval">waiting_for_approval</value>
-            <value id="approved">approved</value>
-            <value id="rejected">rejected</value>
-            <value id="assigned">assigned</value>
-            <value id="pending">pending</value>
-            <value id="escalated_tto">escalated_tto</value>
-            <value id="escalated_ttr">escalated_ttr</value>
-            <value id="resolved">resolved</value>
-            <value id="closed">closed</value>
           </values>
-          <sql>status</sql>
-          <default_value>new</default_value>
-          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="operational_status" xsi:type="AttributeMetaEnum">
           <values>
             <value id="ongoing">ongoing</value>
             <value id="resolved">resolved</value>
-            <value id="closed">closed</value>
           </values>
-          <sql>operational_status</sql>
-          <default_value>ongoing</default_value>
-          <mappings>
-            <mapping id="Ticket">
-              <attcode>status</attcode>
-              <metavalues>
-                <metavalue id="resolved">
-                  <values>
-                    <value id="resolved"/>
-                  </values>
-                </metavalue>
-                <metavalue id="closed">
-                  <values>
-                    <value id="closed"/>
-                    <value id="rejected"/>
-                  </values>
-                </metavalue>
-              </metavalues>
-            </mapping>
-          </mappings>
         </field>
       </fields>
     </class>
