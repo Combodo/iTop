@@ -424,12 +424,16 @@ JS;
 		return $this;
 	}
 
-	public function GetOrgId(){
+	/**
+	 * @return string The current organization ID of the app. context
+	 */
+	public function GetOrgId(): string
+	{
 		$oAppContext = new ApplicationContext();
-		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+		$sCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 
-		if(!empty($iCurrentOrganization)) {
-			return $iCurrentOrganization;
+		if(!empty($sCurrentOrganization)) {
+			return $sCurrentOrganization;
 		}
 		return '';
 	}
