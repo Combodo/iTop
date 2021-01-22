@@ -1173,15 +1173,15 @@ class OQLMenuNode extends MenuNode
 				// Add Hierarchical condition if hierarchical key
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
-					$defaultValue = intval($oAppContext->GetCurrentValue($key));
-					if ($defaultValue != 0) {
+					$iDefaultValue = intval($oAppContext->GetCurrentValue($key));
+					if ($iDefaultValue != 0) {
 						try {
 							/** @var AttributeExternalKey $oAttDef */
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
 							if ($sHierarchicalKeyCode !== false) {
 								$oFilter = new DBObjectSearch($sTargetClass);
-								$oFilter->AddCondition('id', $defaultValue);
+								$oFilter->AddCondition('id', $iDefaultValue);
 								$oHKFilter = new DBObjectSearch($sTargetClass);
 								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
 								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
