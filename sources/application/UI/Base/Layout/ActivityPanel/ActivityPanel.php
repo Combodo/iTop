@@ -61,8 +61,11 @@ class ActivityPanel extends UIBlock
 	protected $aEntries;
 	/** @var bool $bAreEntriesSorted True if the entries have been sorted by date */
 	protected $bAreEntriesSorted;
-	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
-	protected $bHasLifecycle;
+	/**
+	 * @var bool True if the host object has states (but not necessary a lifecycle)
+	 * @see MetaModel::HasStateAttributeCode()
+	 */
+	protected $bHasStates;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
 	protected $aCaseLogTabsEntryForms;
 
@@ -103,7 +106,7 @@ class ActivityPanel extends UIBlock
 		$sObjectClass = get_class($this->oObject);
 
 		// Check if object has a lifecycle
-		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
+		$this->bHasStates = MetaModel::HasStateAttributeCode($sObjectClass);
 
 		// Initialize the case log tabs
 		$this->InitializeCaseLogTabs();
@@ -470,6 +473,23 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @return bool true if there is at least 1 editable case log
+	 */
+	public function HasAnEditableCaseLogTab(): bool
+	{
+		$bHasEditable = false;
+
+		foreach ($this->GetCaseLogTabs() as $aCaseLogTabData) {
+			if (false === $aCaseLogTabData['is_read_only']) {
+				$bHasEditable = true;
+				break;
+			}
+		}
+
+		return $bHasEditable;
+	}
+
+	/**
 	 * Empty the caselogs entry forms
 	 *
 	 * @return $this
@@ -556,13 +576,12 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * Return true if the host object has a lifecycle
-	 *
+	 * @uses $bHasStates
 	 * @return bool
 	 */
-	public function HasLifecycle()
+	public function HasStates(): bool
 	{
-		return $this->bHasLifecycle;
+		return $this->bHasStates;
 	}
 
 	/**

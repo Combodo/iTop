@@ -50,19 +50,18 @@ $ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300
 $ibo-activity-panel--tab-title-text--max-width: 100px !default;
 
 /* - Tab toolbar */
-$ibo-activity-panel--tab-toolbar--padding-x: $ibo-activity-panel--padding-x !default;
+$ibo-activity-panel--tab-toolbar--padding-x: 10px !default;
 $ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 
 $ibo-activity-panel--tab-toolbar-actions--height: 32px !default;
+$ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: 16px !default;
 
-$ibo-activity-panel--tab-toolbar-for-caselog--elements-spacing: 16px !default;
-$ibo-activity-panel--tab-toolbar-for-caselog--icon-margin-left: 8px !default;
-$ibo-activity-panel--tab-toolbar-for-caselog--icons-separator-content: "-" !default;
-$ibo-activity-panel--tab-toolbar-for-caselog--icons-separator-margin-x: 8px !default;
-
-$ibo-activity-panel--tab-toolbar-for-activity--elements-spacing: 36px !default;
-$ibo-activity-panel--tab-toolbar-for-activity--checkbox-margin-right: 8px !default;
+$ibo-activity-panel--tab-toolbar-action--elements-separator-content: "-" !default;
+$ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x: 8px !default;
+$ibo-activity-panel--tab-toolbar-filter--sibling-spacing: 18px !default;
+$ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: 8px !default;
+$ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
 
 /* - Body */
 $ibo-activity-panel--body--padding-top: $ibo-activity-panel--padding-x !default;
@@ -175,6 +174,7 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 }
 .ibo-activity-panel--tab-toolbar-actions{
 	@extend %ibo-fully-centered-content;
+	justify-content: space-between;
 	flex-wrap: wrap;
 	height: $ibo-activity-panel--tab-toolbar-actions--height;
 }
@@ -183,46 +183,40 @@ $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default
 .ibo-activity-panel--tab-toolbar-right-actions{
 	@extend %ibo-vertically-centered-content;
 }
+.ibo-activity-panel--tab-toolbar-left-actions{
+	.ibo-activity-panel--tab-toolbar-action{
+		&:not(:first-child){
+			&::before{
+				content: $ibo-activity-panel--tab-toolbar-action--elements-separator-content;
+				margin: 0 $ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x;
+			}
+		}
+	}
+}
+.ibo-activity-panel--tab-toolbar-middle-actions {
+	.ibo-activity-panel--tab-toolbar-action{
+		> input{
+			margin-right: $ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right;
+		}
+
+		&:not(:first-child){
+			margin-left: $ibo-activity-panel--tab-toolbar-filter--sibling-spacing;
+		}
+	}
+}
+.ibo-activity-panel--tab-toolbar-right-actions {
+	.ibo-activity-panel--tab-toolbar-info {
+		> .ibo-activity-panel--tab-toolbar-info-icon {
+			margin-left: $ibo-activity-panel--tab-toolbar-info-icon--margin-left;
+		}
+
+		&:not(:first-child) {
+			margin-left: $ibo-activity-panel--tab-toolbar-right-actions--elements-spacing;
+		}
+	}
+}
 .ibo-activity-panel--tab-toolbar-action{
 	@extend %ibo-fully-centered-content;
-}
-.ibo-activity-panel--tab-toolbar-for-caselog{
-	.ibo-activity-panel--tab-toolbar-actions{
-		justify-content: space-between;
-
-		.ibo-activity-panel--tab-toolbar-action{
-			&:not(:first-child){
-				&::before{
-					content: $ibo-activity-panel--tab-toolbar-for-caselog--icons-separator-content;
-					margin: 0 $ibo-activity-panel--tab-toolbar-for-caselog--icons-separator-margin-x;
-				}
-			}
-		}
-		.ibo-activity-panel--tab-toolbar-info{
-			> .ibo-activity-panel--tab-toolbar-info-icon{
-				margin-left: $ibo-activity-panel--tab-toolbar-for-caselog--icon-margin-left;
-			}
-
-			&:not(:first-child){
-				margin-left: $ibo-activity-panel--tab-toolbar-for-caselog--elements-spacing;
-			}
-		}
-	}
-}
-.ibo-activity-panel--tab-toolbar-for-activity{
-	.ibo-activity-panel--tab-toolbar-actions{
-		justify-content: center;
-
-		.ibo-activity-panel--tab-toolbar-action{
-			> input{
-				margin-right: $ibo-activity-panel--tab-toolbar-for-activity--checkbox-margin-right;
-			}
-
-			&:not(:first-child){
-				margin-left: $ibo-activity-panel--tab-toolbar-for-activity--elements-spacing;
-			}
-		}
-	}
 }
 
 /* Body */

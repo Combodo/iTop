@@ -19,7 +19,7 @@
 								</label>
 							{% endfor %}
 						{% endif %}
-						{% if oUIBlock.HasLifecycle() %}
+						{% if oUIBlock.HasStates() %}
 							<label class="ibo-activity-panel--tab-toolbar-action"
 							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}"
 							       data-role="ibo-activity-panel--activity-filter"

@@ -1,0 +1,56 @@
+<div class="ibo-activity-panel--tab-toolbar {% if bIsActive == true %}ibo-is-active{% endif %} {% block bExtraCSSClasses %}{% endblock %}"
+     data-role="ibo-activity-panel--tab-toolbar"
+     data-tab-type="{% block bDataTabType %}{% endblock %}"
+	 {% block bExtraDataAttributes %}{% endblock %}>
+	{% block btabToolbarFirstRow %}
+		<div class="ibo-activity-panel--tab-toolbar-actions">
+			{% block bTabToolbarActions %}
+				<div class="ibo-activity-panel--tab-toolbar-left-actions">
+					{% block bTabToolbarLeftActions %}
+						<a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-open-all" data-role="ibo-activity-panel--caselog-open-all" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:OpenAll:Tooltip'|dict_s }}">
+							<span class="fas fa-book-open"></span>
+						</a>
+						<a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-close-all" data-role="ibo-activity-panel--caselog-close-all" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:CloseAll:Tooltip'|dict_s }}">
+							<span class="fas fa-book"></span>
+						</a>
+					{% endblock %}
+				</div>
+				<div class="ibo-activity-panel--tab-toolbar-middle-actions">
+					{% if oUIBlock.HasCaseLogTabs() %}
+						<label class="ibo-activity-panel--tab-toolbar-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip'|dict_s }}">
+							<input type="checkbox" name="caselogs" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="caselog" checked>
+							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Title'|dict_s }}
+						</label>
+					{% endif %}
+					{% if oUIBlock.HasStates() %}
+						<label class="ibo-activity-panel--tab-toolbar-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}">
+							<input type="checkbox" name="transitions" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="transition" checked>
+							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title'|dict_s }}
+						</label>
+					{% endif %}
+					<label class="ibo-activity-panel--tab-toolbar-action"
+					       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip'|dict_s }}">
+						<input type="checkbox" name="edits" data-role="ibo-activity-panel--activity-filter" data-target-entry-types="edits" checked>
+						{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Title'|dict_s }}
+					</label>
+				</div>
+				<div class="ibo-activity-panel--tab-toolbar-right-actions">
+					{% block bTabToolbarRightActions %}
+						<span class="ibo-activity-panel--tab-toolbar-info ibo-activity-panel--tab-toolbar-info-authors-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip'|dict_s }}">
+							<span class="ibo-activity-panel--tab-toolbar-info-text">-</span>
+							<span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-users"></span>
+						</span>
+						<span class="ibo-activity-panel--tab-toolbar-info ibo-activity-panel--tab-toolbar-info-messages-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip'|dict_s }}">
+							<span class="ibo-activity-panel--tab-toolbar-info-text">-</span>
+							<span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-comment-alt"></span>
+						</span>
+					{% endblock %}
+				</div>
+			{% endblock %}
+		</div>
+	{% endblock %}
+	{% block bTabToolbarSecondRow %}
+	{% endblock %}
+</div>
