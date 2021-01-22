@@ -723,6 +723,56 @@ abstract class MenuNode
 		return false;
 	}
 
+	protected function GetEntriesCountFromOQL(string $sOQL)
+	{
+		// Count the entries up to 99
+		$oSearch = DBSearch::FromOQL($sOQL);
+
+		$oAppContext = new ApplicationContext();
+		$sClass = $oSearch->GetClass();
+		foreach ($oAppContext->GetNames() as $key) {
+			// Find the value of the object corresponding to each 'context' parameter
+			$aCallSpec = [$sClass, 'MapContextParam'];
+			$sAttCode = '';
+			if (is_callable($aCallSpec)) {
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
+			}
+
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
+				// Add Hierarchical condition if hierarchical key
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
+					$iDefaultValue = intval($oAppContext->GetCurrentValue($key));
+					if ($iDefaultValue != 0) {
+						try {
+							/** @var AttributeExternalKey $oAttDef */
+							$sTargetClass = $oAttDef->GetTargetClass();
+							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
+							if ($sHierarchicalKeyCode !== false) {
+								$oFilter = new DBObjectSearch($sTargetClass);
+								$oFilter->AddCondition('id', $iDefaultValue);
+								$oHKFilter = new DBObjectSearch($sTargetClass);
+								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+							}
+						}
+						catch (Exception $e) {
+							// If filtering fails just ignore it
+						}
+					}
+				}
+			}
+		}
+
+		$oSet = new DBObjectSet($oSearch);
+		$iCount = $oSet->CountWithLimit(99);
+		if ($iCount > 99) {
+			$iCount = "99+";
+		}
+
+		return $iCount;
+	}
+
 	/**
 	 * Get the number of entries of the page corresponding to this menu item.
 	 *
@@ -1156,52 +1206,7 @@ class OQLMenuNode extends MenuNode
 
 	public function GetEntriesCount()
 	{
-		// Count the entries up to 99
-		$oSearch = DBSearch::FromOQL($this->sOQL);
-
-		$oAppContext = new ApplicationContext();
-		$sClass = $oSearch->GetClass();
-		foreach ($oAppContext->GetNames() as $key) {
-			// Find the value of the object corresponding to each 'context' parameter
-			$aCallSpec = [$sClass, 'MapContextParam'];
-			$sAttCode = '';
-			if (is_callable($aCallSpec)) {
-				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
-			}
-
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
-				// Add Hierarchical condition if hierarchical key
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
-					$iDefaultValue = intval($oAppContext->GetCurrentValue($key));
-					if ($iDefaultValue != 0) {
-						try {
-							/** @var AttributeExternalKey $oAttDef */
-							$sTargetClass = $oAttDef->GetTargetClass();
-							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-							if ($sHierarchicalKeyCode !== false) {
-								$oFilter = new DBObjectSearch($sTargetClass);
-								$oFilter->AddCondition('id', $iDefaultValue);
-								$oHKFilter = new DBObjectSearch($sTargetClass);
-								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
-								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
-							}
-						}
-						catch (Exception $e) {
-							// If filtering fails just ignore it
-						}
-					}
-				}
-			}
-		}
-
-		$oSet = new DBObjectSet($oSearch);
-		$iCount = $oSet->CountWithLimit(99);
-		if ($iCount > 99) {
-			$iCount = "99+";
-		}
-
-		return $iCount;
+		return $this->GetEntriesCountFromOQL($this->sOQL);
 	}
 }
 
@@ -1659,5 +1664,23 @@ class ShortcutMenuNode extends MenuNode
 	{
 		return $this->oShortcut->Get('name');
 	}
+
+	/**
+	 * Indicates if the page corresponding to this menu node is countable
+	 *
+	 * @return bool true if corresponding page is countable
+	 * @since 3.0.0
+	 */
+	public function HasCount()
+	{
+		return true;
+	}
+
+
+	public function GetEntriesCount()
+	{
+		return $this->GetEntriesCountFromOQL($this->oShortcut->Get('oql'));
+	}
+
 }
 
