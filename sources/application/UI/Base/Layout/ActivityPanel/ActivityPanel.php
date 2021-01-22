@@ -537,14 +537,22 @@ class ActivityPanel extends UIBlock
 	 */
 	public function IsCaseLogsSubmitAutonomous(): bool
 	{
-		$bIsAutonomous = true;
-
+		$iAutonomousSubmission = 0;
+		$iBridgedSubmissions = 0;
 		foreach ($this->GetCaseLogTabsEntryForms() as $oCaseLogEntryForm) {
-			$bIsAutonomous = $oCaseLogEntryForm->IsSubmitAutonomous();
-			break;
+			if ($oCaseLogEntryForm->IsSubmitAutonomous()) {
+				$iAutonomousSubmission++;
+			}
+			else {
+				$iBridgedSubmissions++;
+			}
 		}
 
-		return $bIsAutonomous;
+		if (($iAutonomousSubmission > 0) && ($iBridgedSubmissions > 0)) {
+			throw new Exception('All case logs should have the same submission mode (Autonomous: '.$iAutonomousSubmission.', Bridged: '.$iBridgedSubmissions);
+		}
+
+		return $iAutonomousSubmission > 0;
 	}
 
 	/**
