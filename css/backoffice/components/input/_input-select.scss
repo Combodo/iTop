@@ -39,6 +39,10 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -92px !def
 		}
 	}
 }
+
+.ibo-input-select-wrapper{
+	position:relative;
+}
 .ibo-input-select-wrapper .selectize-control
 {
 	display: inline-block;
@@ -93,10 +97,6 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -92px !def
 	color: #495c68;
 }
 
-.ui-autocomplete{
-	z-index:2000;
-}
-
-.field_input_zone{
-	position:relative;
+.selectize-dropdown{
+	z-index:2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
 }
