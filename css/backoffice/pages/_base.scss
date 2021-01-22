@@ -42,6 +42,7 @@ body{
 	background-color: var(--ibo-body-background-color);
 	@extend %ibo-font-ral-nor-100;
 }
+
 #ibo-navigation-menu{
 	z-index: 20;
 }
@@ -57,28 +58,27 @@ body{
 	/* For children */
 	display: flex;
 	flex-direction: column;
+}
+#ibo-top-bar,
+#ibo-main-content{
+	/* Align both elements content for a slicker touch */
+	padding-left: $ibo-page-container--elements-padding-x;
+	padding-right: $ibo-page-container--elements-padding-x;
+}
+#ibo-top-container{
+	z-index: 20;
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+#ibo-center-container{
+	position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
+	z-index: 10;
 
-	#ibo-top-bar,
-	#ibo-main-content{
-		/* Align both elements content for a slicker touch */
-		padding-left: $ibo-page-container--elements-padding-x;
-		padding-right: $ibo-page-container--elements-padding-x;
-	}
-	#ibo-top-container{
-		z-index: 20;
-		position: sticky;
-		top: 0;
-		left: 0;
-		right: 0;
-	}
-	#ibo-center-container{
-		position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
-		z-index: 10;
-
-		flex-grow: 1; /* To occupy all height available */
-	}
-	#ibo-main-content{
-		padding-top: $ibo-main-content--padding-top;
-		padding-bottom: $ibo-main-content--padding-bottom;
-	}
+	flex-grow: 1; /* To occupy all height available */
+}
+#ibo-main-content{
+	padding-top: $ibo-main-content--padding-top;
+	padding-bottom: $ibo-main-content--padding-bottom;
 }
