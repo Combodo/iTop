@@ -27,7 +27,7 @@ $(function()
 					active_menu_group: null,
 					display_counts: false,
 					filter_keyup_throttle: 200,             // In milliseconds
-					org_id:''
+					org_id: ''
 				},
 			css_classes:
 				{
