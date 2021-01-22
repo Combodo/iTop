@@ -181,6 +181,20 @@ class NavigationMenu extends UIBlock
 	{
 		return $this->sSiloLabel;
 	}
+
+	/**
+	 * @return string The current organization ID of the app. context
+	 */
+	public function GetOrgId(): string
+	{
+		$oAppContext = new ApplicationContext();
+		$sCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+
+		if(!empty($sCurrentOrganization)) {
+			return $sCurrentOrganization;
+		}
+		return '';
+	}
 	
 	/**
 	 * @return array
@@ -423,19 +437,4 @@ JS;
 
 		return $this;
 	}
-
-	/**
-	 * @return string The current organization ID of the app. context
-	 */
-	public function GetOrgId(): string
-	{
-		$oAppContext = new ApplicationContext();
-		$sCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-
-		if(!empty($sCurrentOrganization)) {
-			return $sCurrentOrganization;
-		}
-		return '';
-	}
-	
 }
