@@ -19,6 +19,7 @@ ij_wrap_on_typing = true
 [*.css]
 indent_style = tab
 ij_smart_tabs = true
+ij_visual_guides = none
 ij_css_align_closing_brace_with_properties = false
 ij_css_blank_lines_around_nested_selector = 1
 ij_css_blank_lines_between_blocks = 1
@@ -38,7 +39,9 @@ ij_css_use_double_quotes = true
 ij_css_value_alignment = do_not_align
 
 [*.scss]
-indent_style = tab
+indent_size = 2
+tab_width = 2
+ij_visual_guides = none
 ij_scss_align_closing_brace_with_properties = false
 ij_scss_blank_lines_around_nested_selector = 1
 ij_scss_blank_lines_between_blocks = 1
@@ -58,8 +61,8 @@ ij_scss_use_double_quotes = true
 ij_scss_value_alignment = 0
 
 [*.twig]
-indent_style = tab
 ij_smart_tabs = true
+ij_visual_guides = none
 ij_wrap_on_typing = false
 ij_twig_keep_indents_on_empty_lines = false
 ij_twig_spaces_inside_comments_delimiters = true
@@ -67,6 +70,7 @@ ij_twig_spaces_inside_delimiters = true
 ij_twig_spaces_inside_variable_delimiters = true
 
 [.editorconfig]
+ij_visual_guides = none
 ij_editorconfig_align_group_field_declarations = false
 ij_editorconfig_space_after_colon = false
 ij_editorconfig_space_after_comma = true
@@ -74,10 +78,12 @@ ij_editorconfig_space_before_colon = false
 ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
-[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul,phpunit.xml.dist}]
+[{*.ant, *.fxml, *.jhm, *.jnlp, *.jrxml, *.rng, *.tld, *.wsdl, *.xml, *.xsd, *.xsl, *.xslt, *.xul, phpunit.xml.dist}]
 indent_size = 2
 tab_width = 2
 ij_smart_tabs = true
+ij_visual_guides = none
+ij_wrap_on_typing = false
 ij_xml_align_attributes = true
 ij_xml_align_text = false
 ij_xml_attribute_wrap = normal
@@ -93,11 +99,12 @@ ij_xml_line_comment_at_first_column = true
 ij_xml_space_after_tag_name = false
 ij_xml_space_around_equals_in_attribute = false
 ij_xml_space_inside_empty_tag = false
-ij_xml_text_wrap = normal
+ij_xml_text_wrap = off
 
 [{*.bash,*.sh,*.zsh}]
 indent_size = 2
 tab_width = 2
+ij_visual_guides = none
 ij_shell_binary_ops_start_line = false
 ij_shell_keep_column_alignment_padding = false
 ij_shell_minify_program = false
@@ -108,6 +115,7 @@ ij_shell_switch_cases_indented = false
 indent_style = tab
 ij_continuation_indent_size = 4
 ij_smart_tabs = true
+ij_visual_guides = none
 ij_javascript_align_imports = false
 ij_javascript_align_multiline_array_initializer_expression = false
 ij_javascript_align_multiline_binary_operation = false
@@ -297,6 +305,7 @@ ij_php_array_initializer_new_line_after_left_brace = true
 ij_php_array_initializer_right_brace_on_new_line = true
 ij_php_array_initializer_wrap = on_every_item
 ij_php_assignment_wrap = off
+ij_php_attributes_wrap = off
 ij_php_author_weight = 8
 ij_php_binary_operation_sign_on_next_line = false
 ij_php_binary_operation_wrap = off
@@ -385,6 +394,7 @@ ij_php_new_line_after_php_opening_tag = false
 ij_php_null_type_position = in_the_end
 ij_php_package_weight = 28
 ij_php_param_weight = 5
+ij_php_parameters_attributes_wrap = off
 ij_php_parentheses_expression_new_line_after_left_paren = false
 ij_php_parentheses_expression_right_paren_on_new_line = false
 ij_php_phpdoc_blank_line_before_tags = true
@@ -406,6 +416,7 @@ ij_php_see_weight = 3
 ij_php_since_weight = 28
 ij_php_sort_phpdoc_elements = true
 ij_php_space_after_colon = true
+ij_php_space_after_colon_in_named_argument = true
 ij_php_space_after_colon_in_return_type = true
 ij_php_space_after_comma = true
 ij_php_space_after_for_semicolon = true
@@ -419,6 +430,7 @@ ij_php_space_before_catch_parentheses = true
 ij_php_space_before_class_left_brace = true
 ij_php_space_before_closure_left_parenthesis = true
 ij_php_space_before_colon = true
+ij_php_space_before_colon_in_named_argument = false
 ij_php_space_before_colon_in_return_type = false
 ij_php_space_before_comma = false
 ij_php_space_before_do_left_brace = true
@@ -486,6 +498,7 @@ ij_php_while_on_new_line = false
 
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,composer.lock,jest.config}]
 indent_size = 2
+ij_visual_guides = none
 ij_json_keep_blank_lines_in_code = 0
 ij_json_keep_indents_on_empty_lines = false
 ij_json_keep_line_breaks = true
@@ -500,7 +513,8 @@ ij_json_wrap_long_lines = false
 [{*.htm,*.html,*.sht,*.shtm,*.shtml}]
 indent_style = tab
 ij_smart_tabs = true
-ij_html_add_new_line_before_tags = body,div,p,form,h1,h2,h3
+ij_visual_guides = none
+ij_html_add_new_line_before_tags = body, div, p, form, h1, h2, h3
 ij_html_align_attributes = true
 ij_html_align_text = false
 ij_html_attribute_wrap = normal
@@ -527,10 +541,16 @@ ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 ij_html_uniform_ident = false
 
-[{*.yaml,*.yml}]
+[{*.yaml, *.yml}]
 indent_size = 2
+ij_visual_guides = none
+ij_yaml_align_values_properties = do_not_align
+ij_yaml_autoinsert_sequence_marker = true
+ij_yaml_block_mapping_on_new_line = false
+ij_yaml_indent_sequence_value = true
 ij_yaml_keep_indents_on_empty_lines = false
 ij_yaml_keep_line_breaks = true
-ij_yaml_space_before_colon = true
+ij_yaml_sequence_on_new_line = false
+ij_yaml_space_before_colon = false
 ij_yaml_spaces_within_braces = true
 ij_yaml_spaces_within_brackets = true
