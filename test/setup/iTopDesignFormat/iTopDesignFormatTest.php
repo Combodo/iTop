@@ -51,7 +51,6 @@ class TestForITopDesignFormatClass extends ItopTestCase
 		$oInputDocument->formatOutput = true;
 		$oDesignFormat = new iTopDesignFormat($oInputDocument);
 		$oDesignFormat->Convert($sTargetVersion);
-
 		$sConvertedXml = $oInputDocument->saveXML();
 
 		$this->assertEquals($sExpectedXml, $sConvertedXml);

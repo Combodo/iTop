@@ -835,17 +835,13 @@ class iTopDesignFormat
 		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'ibo-page-banner-text-content');
 
 		// Add Class Style
-		$oNodeList = $oXPath->query("/itop_design/classes//class");
+		$oNodeList = $oXPath->query("/itop_design/classes//class/properties");
 		foreach ($oNodeList as $oNode) {
 			// Move "icon" node under "style" node
 			$oIconNode = $oXPath->query('icon', $oNode)->item(0);
 			if ($oIconNode) {
-				$sIcon = $oIconNode->textContent;
-				$this->DeleteNode($oIconNode);
-
 				$oStyleNode = $oNode->ownerDocument->createElement("style");
 				$oNode->appendChild($oStyleNode);
-				$oIconNode = $oNode->ownerDocument->createElement("icon", $sIcon);
 				$oStyleNode->appendChild($oIconNode);
 			}
 		}
@@ -936,17 +932,14 @@ class iTopDesignFormat
 		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'backoffice-environment-banner-text-content');
 
 		// Remove class style
-		$oNodeList = $oXPath->query("/itop_design/classes//class");
+		$oNodeList = $oXPath->query("/itop_design/classes//class/properties");
 		foreach ($oNodeList as $oNode) {
 			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
 			if ($oStyleNode) {
 				$oIconNode = $oXPath->query('icon', $oStyleNode)->item(0);
 				if ($oIconNode) {
 					// Move back the "icon" node to the class
-					$sIcon = $oIconNode->textContent;
-					$oNewIconNode = $oNode->ownerDocument->createElement("icon", $sIcon);
-					$oNode->appendChild($oNewIconNode);
-					$this->DeleteNode($oIconNode);
+					$oNode->appendChild($oIconNode);
 				}
 				$this->DeleteNode($oStyleNode);
 			}
