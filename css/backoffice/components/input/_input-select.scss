@@ -91,12 +91,12 @@ $ibo-input-select-autocomplete-action-button--hierarchy--margin-left: -92px !def
 .ibo-input-select-autocomplete ~ .ibo-input-select--action-button--hierarchy{
 	margin-left: $ibo-input-select-autocomplete-action-button--hierarchy--margin-left;
 }
+
+.selectize-dropdown{
+	z-index:2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
+}
 .selectize-dropdown.ui-menu .ui-state-active {
 	margin: unset;
 	background-color: #f5fafd;
 	color: #495c68;
-}
-
-.selectize-dropdown{
-	z-index:2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
 }
