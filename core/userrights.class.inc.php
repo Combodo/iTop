@@ -559,6 +559,14 @@ abstract class User extends cmdbAbstractObject
 			$oDeletionPlan->ComputeResults();
 			return false;
 		}
+		// Only administrators can manage administrators
+		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
+		{
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, array(Dict::S('UI:Login:Error:AccessRestricted')), true);
+			$oDeletionPlan->ComputeResults();
+			return false;
+		}
 		return parent::CheckToDelete($oDeletionPlan);
   	} 
 	
@@ -567,6 +575,11 @@ abstract class User extends cmdbAbstractObject
 		if (MetaModel::GetConfig()->Get('demo_mode'))
 		{
 			// Users deletion is NOT allowed in demo mode
+			return;
+		}
+		// Only administrators can manage administrators
+		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
+		{
 			return;
 		}
 		parent::DBDeleteSingleObject();
