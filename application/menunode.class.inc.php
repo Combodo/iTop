@@ -1174,18 +1174,21 @@ class OQLMenuNode extends MenuNode
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
 					$defaultValue = intval($oAppContext->GetCurrentValue($key));
-					try {
-						/** @var AttributeExternalKey $oAttDef */
-						$sTargetClass = $oAttDef->GetTargetClass();
-						$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-						if ($sHierarchicalKeyCode !== false) {
-							$oFilter = new DBObjectSearch($sTargetClass);
-							$oFilter->AddCondition('id', $defaultValue);
-							$oHKFilter = new DBObjectSearch($sTargetClass);
-							$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
-							$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+					if ($defaultValue != 0) {
+						try {
+							/** @var AttributeExternalKey $oAttDef */
+							$sTargetClass = $oAttDef->GetTargetClass();
+							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
+							if ($sHierarchicalKeyCode !== false) {
+								$oFilter = new DBObjectSearch($sTargetClass);
+								$oFilter->AddCondition('id', $defaultValue);
+								$oHKFilter = new DBObjectSearch($sTargetClass);
+								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+							}
 						}
-					} catch (Exception $e) {
+						catch (Exception $e) {
+						}
 					}
 				}
 			}
