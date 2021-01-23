@@ -38,7 +38,7 @@ $(function() {
 				activity_panel: '[data-role="ibo-activity-panel"]',
 				activity_panel_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 				form: '[data-role="ibo-caselog-entry-form"]', // Any caselog entry form
-				toggler: '[data-role="ibo-activity-panel--body--add-caselog-entry--toggler"]',
+				toggler: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
 				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
 				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
 				send_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"]',

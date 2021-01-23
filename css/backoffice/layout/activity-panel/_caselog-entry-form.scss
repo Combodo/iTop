@@ -9,18 +9,7 @@ $ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--bac
 $ibo-caselog-entry-form--actions--margin-top: 6px !default;
 $ibo-caselog-entry-form--actions--margin-bottom: 8px !default;
 
-$ibo-activity-panel--body--add-caselog-entry--toggler--right: 4px !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--margin-top: calc(#{$ibo-activity-panel--tab-toolbar-actions--height} + 4px) !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--diameter: 36px !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--background-color: $ibo-color-primary-600 !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--color: $ibo-color-white-100 !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--border-radius: $ibo-border-radius-full !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--box-shadow: $ibo-elevation-100 !default;
 
-$ibo-activity-panel--body--add-caselog-entry--toggler--icon--height: 100% !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--icon--width: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size: 16px !default;
-$ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !default;
 .ibo-caselog-entry-form{
 	display: block;
 	width: 100%;
@@ -37,34 +26,6 @@ $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height: 33px !
 	margin-bottom: $ibo-caselog-entry-form--actions--margin-bottom;
 }
 
-.ibo-activity-panel--body--add-caselog-entry--toggler{
-	@extend %ibo-baseline-centered-content;
-	position: absolute;
-	right: $ibo-activity-panel--body--add-caselog-entry--toggler--right;
-	margin-top: $ibo-activity-panel--body--add-caselog-entry--toggler--margin-top;
-	
-	width: $ibo-activity-panel--body--add-caselog-entry--toggler--diameter;
-	height: $ibo-activity-panel--body--add-caselog-entry--toggler--diameter;
-	
-	background-color: $ibo-activity-panel--body--add-caselog-entry--toggler--background-color;
-	color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
-	
-	border-radius: $ibo-activity-panel--body--add-caselog-entry--toggler--border-radius;
-	box-shadow: $ibo-activity-panel--body--add-caselog-entry--toggler--box-shadow;
-	> i{
-		text-align: center;
-		height: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--height;
-		width: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--width;
-		font-size: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--font-size;
-		line-height: $ibo-activity-panel--body--add-caselog-entry--toggler--icon--line-height;
-	}
-	&:hover {
-		color: $ibo-activity-panel--body--add-caselog-entry--toggler--color;
-	}
-	&.ibo-is-hidden{
-		display: none;
-	}
-}
 .ibo-caselog-entry-form--action-buttons--main-actions > .ibo-popover-menu{
 	z-index: 1;
 }
