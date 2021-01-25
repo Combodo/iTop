@@ -24,7 +24,6 @@ $(function() {
 			options:
 			{
 				submit_mode: 'autonomous',
-				target_type: null,
 				text_input_id: '',
 			},
 			css_classes:
@@ -38,7 +37,6 @@ $(function() {
 				activity_panel: '[data-role="ibo-activity-panel"]',
 				activity_panel_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 				form: '[data-role="ibo-caselog-entry-form"]', // Any caselog entry form
-				toggler: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
 				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
 				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
 				send_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"]',
@@ -50,11 +48,6 @@ $(function() {
 				{
 					autonomous: 'autonomous',
 					bridged: 'bridged',
-				},
-				target_type:
-				{
-					caselog: 'caselog',
-					activity: 'activity',
 				}
 			},
 			
@@ -76,18 +69,9 @@ $(function() {
 				}
 
 				this._bindEvents();
-
-				// TODO 3.0.0: Modify PopoverMenu so we can pass it the ID of the block triggering the open/close
-				$(this.element).find(this.js_selectors.send_choices_picker).popover_menu({toggler: this.js_selectors.send_button});
-
 			},
 			_bindEvents: function() {
 				let me = this;
-
-				// Composer toggle
-				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.toggler).on('click', function(oEvent){
-					me._ShowEntryForm();
-				});
 
 				// Enable send button only when content
 				CKEDITOR.on('instanceReady', function(oEvent){
@@ -106,22 +90,23 @@ $(function() {
 
 				// Form buttons
 				this.element.find(this.js_selectors.cancel_button).on('click', function(oEvent){
-					me._HideEntryForm();
+					me.element.trigger('cancelled_form.caselog_entry_form.itop');
 				});
 				this.element.find(this.js_selectors.send_button).on('click', function(oEvent){
-					// Avoid form being submitted
-					oEvent.preventDefault();
+					// TODO 3.0.0: To be refactored next
+					// // Avoid form being submitted
+					// oEvent.preventDefault();
+					//
+					// let sCaselogAttCode = me.element.closest(me.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
+					// me._SubmitEntryToCaselog(me._GetInputData(), sCaselogAttCode);
+				});
 
-					if(me.options.target_type === 'caselog')
-					{
-						let sCaselogAttCode = me.element.closest(me.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
-						me._SubmitEntryToCaselog(me._GetInputData(), sCaselogAttCode);
-					}
-					else
-					{
-						// TODO 3.0.0: Modify public methods of popover_menu to open/close to match other widgets naming conventions
-						me.element.find(me.js_selectors.send_choices_picker).popover_menu('openPopup');
-					}
+				// Form show/hide
+				this.element.on('show_form.caselog_entry_form.itop', function(){
+					me._ShowEntryForm();
+				});
+				this.element.on('hide_form.caselog_entry_form.itop', function(){
+					me._HideEntryForm();
 				});
 
 				// Caselog selection
@@ -165,11 +150,11 @@ $(function() {
 			// - Form
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
-				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.toggler).addClass(this.css_classes.is_hidden);
 			},
 			_HideEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).addClass(this.css_classes.is_closed);
-				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.toggler).removeClass(this.css_classes.is_hidden);
+
+				// TODO 3.0.0: This should also clear the form (input, lock, send button, ...)
 			},
 			// - Bridged form input
 			/**

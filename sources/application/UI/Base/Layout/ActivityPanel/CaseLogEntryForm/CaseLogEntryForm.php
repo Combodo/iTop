@@ -30,26 +30,15 @@ class CaseLogEntryForm extends UIContentBlock
 	public const ENUM_SUBMIT_MODE_AUTONOMOUS = 'autonomous';
 	/** @var string Form is bridged to its host object form */
 	public const ENUM_SUBMIT_MODE_BRIDGED = 'bridged';
-	/** @var string Container of the form is a specific caselog tab */
-	public const ENUM_CONTAINER_TAB_TYPE_CASELOG = 'caselog';
-	/** @var string Container of the form is the activity tab */
-	public const ENUM_CONTAINER_TAB_TYPE_ACTIVITY = 'activity';
 
 	/** @var string */
 	public const DEFAULT_SUBMIT_MODE = self::ENUM_SUBMIT_MODE_AUTONOMOUS;
-	/** @var string */
-	public const DEFAULT_CONTAINER_TAB_TYPE = self::ENUM_CONTAINER_TAB_TYPE_ACTIVITY;
 
 	/**
 	 * @var string Whether the form can send data on its own or if it's bridged with its host object form
 	 * @see static::ENUM_SUBMIT_MODE_XXX
 	 */
 	protected $sSubmitMode;
-	/**
-	 * @var string Whether the form container is a caselog tab or an activity tab
-	 * @see static::ENUM_CONTAINER_TAB_TYPE_XXX
-	 */
-	protected $sContainerTabType;
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText $oTextInput The main input to write a case log entry */
 	protected $oTextInput;
 	/** @var \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu Menu for possible options on the send button */
@@ -68,7 +57,6 @@ class CaseLogEntryForm extends UIContentBlock
 	{
 		parent::__construct($sId);
 		$this->sSubmitMode = static::DEFAULT_SUBMIT_MODE;
-		$this->sContainerTabType = static::DEFAULT_CONTAINER_TAB_TYPE;
 		$this->SetTextInput(new RichText());
 		$this->aMainActionButtons = [];
 		$this->aExtraActionButtons = [];
@@ -135,28 +123,6 @@ class CaseLogEntryForm extends UIContentBlock
 	public function IsSubmitAutonomous(): bool
 	{
 		return $this->GetSubmitMode() === static::ENUM_SUBMIT_MODE_AUTONOMOUS;
-	}
-
-	/**
-	 * @see $sContainerTabType
-	 *
-	 * @return string
-	 */
-	public function GetContainerTabType(): string
-	{
-		return $this->sContainerTabType;
-	}
-
-	/**
-	 * @param string $sContainerTabType
-	 * @see $sContainerTabType
-	 *
-	 * @return $this
-	 */
-	public function SetContainerTabType(string $sContainerTabType)
-	{
-		$this->sContainerTabType = $sContainerTabType;
-		return $this;
 	}
 
 	/**
