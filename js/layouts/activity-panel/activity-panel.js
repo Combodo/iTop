@@ -42,7 +42,7 @@ $(function()
 				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
-				activity_tab_filter: '[data-role="ibo-activity-panel--activity-filter"]',
+				activity_filter: '[data-role="ibo-activity-panel--activity-filter"]',
 				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
 				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
 				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
@@ -72,16 +72,17 @@ $(function()
 				const me = this;
 				const oBodyElem = $('body');
 
-				// Click on collapse/expand toggler
+				// Click on the panel collapse/expand toggler
 				this.element.find(this.js_selectors.panel_size_toggler).on('click', function(oEvent){
-					me._onTogglerClick(oEvent);
+					me._onPanelSizeTogglerClick(oEvent);
 				});
-				// Click on tab title
+				// Click on a tab title
 				this.element.find(this.js_selectors.tab_title).on('click', function(oEvent){
 					me._onTabTitleClick(oEvent, $(this));
 				});
-				// Change on activity filters
-				this.element.find(this.js_selectors.activity_tab_filter).on('change', function(){
+
+				// Change on an activity filter
+				this.element.find(this.js_selectors.activity_filter).on('change', function(){
 					me._onActivityFilterChange($(this));
 				});
 				// Click on open all case log messages
@@ -92,14 +93,16 @@ $(function()
 				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function(){
 					me._onCaseLogCloseAllClick($(this));
 				});
+
 				// Click on a closed case log message
 				this.element.find(this.js_selectors.entry_group).on('click', '.'+this.css_classes.is_closed + ' ' + this.js_selectors.entry_main_information, function(oEvent){
 					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
 				});
-				// Click on an edits entry long description toggler
+				// Click on an edits entry's long description toggler
 				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function(oEvent){
-					me._onEditsTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
+					me._onEditsLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
+
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function(oEvent){
 					me._onBodyClick(oEvent);
@@ -111,7 +114,7 @@ $(function()
 			},
 
 			// Events callbacks
-			_onTogglerClick: function(oEvent)
+			_onPanelSizeTogglerClick: function(oEvent)
 			{
 				// Avoid anchor glitch
 				oEvent.preventDefault();
@@ -164,7 +167,7 @@ $(function()
 			{
 				this._OpenMessage(oEntryElem);
 			},
-			_onEditsTogglerClick: function(oEvent, oEntryElem)
+			_onEditsLongDescriptionTogglerClick: function(oEvent, oEntryElem)
 			{
 				// Avoid anchor glitch
 				oEvent.preventDefault();
@@ -252,7 +255,7 @@ $(function()
 				const me = this;
 
 				// For each filter, show/hide corresponding entries
-				this.element.find(this.js_selectors.activity_tab_filter).each(function(){
+				this.element.find(this.js_selectors.activity_filter).each(function(){
 					const aTargetEntryTypes = $(this).attr('data-target-entry-types').split(' ');
 					const sCallbackMethod = ($(this).prop('checked')) ? '_ShowEntries' : '_HideEntries';
 
