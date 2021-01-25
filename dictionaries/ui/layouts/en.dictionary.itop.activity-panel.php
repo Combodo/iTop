@@ -25,17 +25,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Activity tab
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
 	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Title' => 'Case logs',
-	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip' => 'Show / hide case log entries',
+	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip' => 'Show / hide case log entries on this tab',
 	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title' => 'State changes',
-	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip' => 'Show / hide state changes',
+	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip' => 'Show / hide state changes on this tab',
 	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Title' => 'Edits',
-	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip' => 'Show / hide fields edits',
+	'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip' => 'Show / hide fields edits on this tab',
 
 	// Case log tab
 	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:OpenAll:Tooltip' => 'Open all messages',
 	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:CloseAll:Tooltip' => 'Close all messages',
-	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip' => 'Number of persons interacting in this log',
-	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip' => 'Number of messages in this log',
+	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries',
+	'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',

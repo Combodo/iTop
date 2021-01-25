@@ -42,9 +42,11 @@ $(function()
 				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
-				activity_filter: '[data-role="ibo-activity-panel--activity-filter"]',
 				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
 				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
+				activity_filter: '[data-role="ibo-activity-panel--activity-filter"]',
+				authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
+				messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
 				compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
 				caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
 				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
@@ -59,6 +61,11 @@ $(function()
 				tab_types: {
 					caselog: 'caselog',
 					activity: 'activity',
+				},
+				entry_types: {
+					caselog: 'caselog',
+					transition: 'transition',
+					edits: 'edits',
 				}
 			},
 
@@ -67,6 +74,7 @@ $(function()
 			{
 				this.element.addClass('ibo-activity-panel');
 				this._bindEvents();
+				this._UpdateMessagesCounters();
 				this._ReformatDateTimes();
 
 				// TODO 3.0.0: Modify PopoverMenu so we can pass it the ID of the block triggering the open/close
@@ -390,6 +398,40 @@ $(function()
 
 				this.element.find(this.js_selectors.entry + sExtraSelector)[sCallback](this.css_classes.is_closed);
 			},
+			/**
+			 * Update the messages and users counters in the tabs toolbar
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_UpdateMessagesCounters: function()
+			{
+				const me = this;
+				let iMessagesCount = 0;
+				let iUsersCount = 0;
+				let oUsers = {};
+
+				// Compute counts
+				this.element.find(this.js_selectors.entry + ':visible').each(function(){
+					// Increase messages count
+					if (me.enums.entry_types.caselog === $(this).attr('data-entry-type')) {
+						iMessagesCount++;
+					}
+
+					// Feed authors array so we can count them later
+					try {
+						oUsers[$(this).attr('data-entry-author-login')] = true;
+					}
+					catch (sError) {
+						// Do nothing, this is just in case the user's login has special chars that would break the object key
+					}
+				});
+				iUsersCount = Object.keys(oUsers).length;
+
+				// Update elements
+				this.element.find(this.js_selectors.messages_count).text(iMessagesCount);
+				this.element.find(this.js_selectors.authors_count).text(iUsersCount);
+			},
 
 			// - Helpers on entries
 			_ApplyEntriesFilters: function()
@@ -414,6 +456,7 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
+				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
 			{

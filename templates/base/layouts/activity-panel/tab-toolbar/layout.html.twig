@@ -38,14 +38,16 @@
 				</div>
 				<div class="ibo-activity-panel--tab-toolbar-right-actions">
 					{% block bTabToolbarRightActions %}
-						<span class="ibo-activity-panel--tab-toolbar-info ibo-activity-panel--tab-toolbar-info-authors-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip'|dict_s }}">
-							<span class="ibo-activity-panel--tab-toolbar-info-text">-</span>
+						<span class="ibo-activity-panel--tab-toolbar-info" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip'|dict_s }}">
+							<span class="ibo-activity-panel--tab-toolbar-info-text ibo-activity-panel--tab-toolbar-info-authors-count" data-role="ibo-activity-panel--tab-toolbar-info-authors-count">-</span>
 							<span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-users"></span>
 						</span>
-						<span class="ibo-activity-panel--tab-toolbar-info ibo-activity-panel--tab-toolbar-info-messages-count" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip'|dict_s }}">
-							<span class="ibo-activity-panel--tab-toolbar-info-text">-</span>
-							<span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-comment-alt"></span>
-						</span>
+                        {% if oUIBlock.HasCaseLogTabs() %}
+                            <span class="ibo-activity-panel--tab-toolbar-info" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip'|dict_s }}">
+                                <span class="ibo-activity-panel--tab-toolbar-info-text ibo-activity-panel--tab-toolbar-info-messages-count" data-role="ibo-activity-panel--tab-toolbar-info-messages-count">-</span>
+                                <span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-comment-alt"></span>
+                            </span>
+                        {% endif %}
 					{% endblock %}
 				</div>
 			{% endblock %}
