@@ -53,7 +53,7 @@
             {% EndUIAlert %}
 
             {% UIContentBlock Standard {'sId':'run_setup','aContainerClasses':['ibo-update-core--run-setup'], 'IsHidden':true} %}
-                {% UIForm Standard {'CSSClasses':'form-inline'} %}
+                {% UIForm Standard {'CSSClasses':['form-inline']} %}
                     {% UIInput ForHidden {'sName':'operation', 'sValue':'RunSetup'} %}
                     {% UIInput ForHidden {'sName':'authent', 'sValue':sSetupToken} %}
                     {% UIInput ForHidden {'sName':'', 'sValue':''} %}
@@ -61,7 +61,7 @@
                 {% EndUIForm %}
             {% EndUIContentBlock %}
 
-            {% UIForm Standard {'CSSClasses':'form-inline'} %}
+            {% UIForm Standard {'CSSClasses':['form-inline']} %}
                 {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Continue'|dict_s, 'sId':'setup_continue', 'bIsSubmit':true, 'IsDisabled':false} %}
             {% EndUIForm %}
 

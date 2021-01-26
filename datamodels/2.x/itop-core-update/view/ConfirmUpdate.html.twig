@@ -30,10 +30,10 @@
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Action'|dict_s} %}
             {% UIAlert ForWarning {'sContent':'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s} %}{% EndUIAlert %}
             {# <div> #}
-            {% UIForm Standard {'CSSClasses':'form-inline'} %}
+            {% UIForm Standard {'CSSClasses':['form-inline']} %}
                 {% UIButton ForSecondaryAction {'sId':'cancel-update', 'sLabel':'iTopUpdate:UI:Cancel'|dict_s, 'bIsSubmit':true} %}
             {% EndUIForm %}
-            {% UIForm Standard {'CSSClasses':'form-inline'} %}
+            {% UIForm Standard {'CSSClasses':['form-inline']} %}
                 {% UIButton ForPrimaryAction {'sId':'do-update', 'sLabel':'iTopUpdate:UI:DoUpdate'|dict_s, 'bIsSubmit':true} %}
                 {% UISpinner Standard {'sId':'submit-wait', 'IsHidden':true} %}
                 {% UIInput ForHidden {'sName':'operation', 'sValue':'UpdateCoreFiles'} %}
