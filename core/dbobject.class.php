@@ -3125,23 +3125,7 @@ abstract class DBObject implements iDisplay
 			$aOriginalValues = $this->m_aOrigValues;
 
 			// Activate any existing trigger
-			// - TriggerOnObjectUpdate
 			$sClass = get_class($this);
-			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
-				array(), $aParams);
-			while ($oTrigger = $oSet->Fetch())
-			{
-				/** @var \Trigger $oTrigger */
-				try
-				{
-					$oTrigger->DoActivate($this->ToArgs('this'));
-				}
-				catch(Exception $e)
-				{
-					utils::EnrichRaisedException($oTrigger, $e);
-				}
-			}
 			// - TriggerOnObjectMention
 			//   1 - Check if any caselog updated
 			$aUpdatedLogAttCodes = array();
@@ -3364,22 +3348,32 @@ abstract class DBObject implements iDisplay
 					throw new CoreCannotSaveObjectException(array(
 						'id' => $this->GetKey(),
 						'class' => get_class($this),
-						'issues' => $aErrors
+						'issues' => $aErrors,
 					));
 				}
 			}
 
-			try
-			{
+			try {
+				// - TriggerOnObjectUpdate
+				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
+					array(), $aParams);
+				while ($oTrigger = $oSet->Fetch()) {
+					/** @var \Trigger $oTrigger */
+					try {
+						$oTrigger->DoActivate($this->ToArgs('this'));
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
+					}
+				}
+				
 				$this->AfterUpdate();
 
 				// Reload to get the external attributes
-				if ($bHasANewExternalKeyValue)
-				{
+				if ($bHasANewExternalKeyValue) {
 					$this->Reload(true /* AllowAllData */);
-				}
-				else
-				{
+				} else {
 					// Reset original values although the object has not been reloaded
 					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
 					{
