@@ -1674,10 +1674,12 @@ EOF
 
 	/**
 	 * Converts the list of selected "choices" into a list of "modules": take into account the selected and the mandatory modules
-	 * @param hash $aInfo Info about the "choice" array('options' => array(...), 'alternatives' => array(...))
-	 * @param hash $aSelectedChoices List of selected choices array('name' => 'selected_value_id')
-	 * @param hash $aModules Return parameter: List of selected modules array('module_id' => true)
+	 *
+	 * @param array $aInfo Info about the "choice" array('options' => array(...), 'alternatives' => array(...))
+	 * @param array $aSelectedChoices List of selected choices array('name' => 'selected_value_id')
+	 * @param array $aModules Return parameter: List of selected modules array('module_id' => true)
 	 * @param string $sParentId Used for recursion
+	 *
 	 * @return string A text representation of what will be installed
 	 */
 	protected function GetSelectedModules($aInfo, $aSelectedChoices, &$aModules, $sParentId = '', $sDisplayChoices = '', &$aSelectedExtensions = null)
@@ -1698,35 +1700,55 @@ EOF
 			}
 		}
 		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : array();
-		foreach($aOptions as $index => $aChoice)
-		{
+		foreach($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
-			if ( (isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
-				 (isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId)) )
-			{
+			$aModuleInfo = [];
+			// Get the extension corresponding to the choice
+			foreach ($this->oExtensionsMap->GetAllExtensions() as $sExtensionVersion => $oExtension) {
+				if (utils::StartsWith($sExtensionVersion, $aChoice['extension_code'].'/')) {
+					$aModuleInfo = $oExtension->aModuleInfo;
+					break;
+				}
+			}
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
+				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
-				if (isset($aChoice['modules']))
-				{
-					foreach($aChoice['modules'] as $sModuleId)
-					{
-						$aModules[$sModuleId] = true; // store the Id of the selected module
+				if (isset($aChoice['modules'])) {
+					foreach ($aChoice['modules'] as $sModuleId) {
+						$bSelected = true;
+						if (isset($aModuleInfo[$sModuleId])) {
+							// Test if module has 'auto_select'
+							$aInfo = $aModuleInfo[$sModuleId];
+							if (isset($aInfo['auto_select'])) {
+								// Check the module selection
+								try {
+									$bSelected = false;
+									SetupInfo::SetSelectedModules($aModules);
+									eval('$bSelected = ('.$aInfo['auto_select'].');');
+								}
+								catch (Exception $e) {
+									$bSelected = false;
+								}
+							}
+						}
+						if ($bSelected) {
+							$aModules[$sModuleId] = true; // store the Id of the selected module
+							SetupInfo::SetSelectedModules($aModules);
+						}
 					}
 				}
 				$sChoiceType = isset($aChoice['type']) ? $aChoice['type'] : 'wizard_option';
-				if ($aSelectedExtensions !== null)
-				{
+				if ($aSelectedExtensions !== null) {
 					$aSelectedExtensions[] = $aChoice['extension_code'];
 				}
 				// Recurse only for selected choices
-				if (isset($aChoice['sub_options']))
-				{
+				if (isset($aChoice['sub_options'])) {
 					$sDisplayChoices .= '<ul>';
 					$sDisplayChoices = $this->GetSelectedModules($aChoice['sub_options'], $aSelectedChoices, $aModules, $sChoiceId, $sDisplayChoices, $aSelectedExtensions);
 					$sDisplayChoices .= '</ul>';
 				}
 				$sDisplayChoices .= '</li>';
 			}
-			$index++;
 		}
 
 		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : array();
@@ -1762,7 +1784,6 @@ EOF
 				}
 				$sDisplayChoices .= '</li>';
 			}
-			$index++;
 		}
 		if ($sParentId == '')
 		{
