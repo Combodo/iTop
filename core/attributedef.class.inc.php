@@ -1306,6 +1306,7 @@ class AttributeDashboard extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -1398,6 +1399,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2246,6 +2248,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2515,6 +2518,7 @@ class AttributeInteger extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2647,6 +2651,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2743,6 +2748,7 @@ class AttributePercentage extends AttributeInteger
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2807,6 +2813,7 @@ class AttributeDecimal extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -2946,6 +2953,7 @@ class AttributeBoolean extends AttributeInteger
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -3203,6 +3211,7 @@ class AttributeString extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -3449,6 +3458,7 @@ class AttributeClassState extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -3792,6 +3802,7 @@ class AttributePassword extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -3992,6 +4003,7 @@ class AttributeText extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4397,6 +4409,7 @@ class AttributeLongText extends AttributeText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4435,6 +4448,7 @@ class AttributeCaseLog extends AttributeLongText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4847,6 +4861,7 @@ class AttributeHTML extends AttributeLongText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4898,6 +4913,7 @@ class AttributeEmailAddress extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4944,6 +4960,7 @@ class AttributeIPAddress extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -4981,6 +4998,7 @@ class AttributePhoneNumber extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5033,6 +5051,7 @@ class AttributeOQL extends AttributeText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5064,6 +5083,7 @@ class AttributeTemplateString extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5090,6 +5110,7 @@ class AttributeTemplateText extends AttributeText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5116,6 +5137,7 @@ class AttributeTemplateHTML extends AttributeText
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5170,6 +5192,7 @@ class AttributeEnum extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5547,6 +5570,7 @@ class AttributeMetaEnum extends AttributeEnum
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -5705,6 +5729,7 @@ class AttributeDateTime extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -6172,6 +6197,7 @@ class AttributeDuration extends AttributeInteger
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -6318,6 +6344,7 @@ class AttributeDate extends AttributeDateTime
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -6418,6 +6445,7 @@ class AttributeDeadline extends AttributeDateTime
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -6514,6 +6542,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -6853,6 +6882,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -7045,6 +7075,7 @@ class AttributeExternalField extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -7569,6 +7600,7 @@ class AttributeURL extends AttributeString
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -7666,6 +7698,7 @@ class AttributeBlob extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -8017,6 +8050,7 @@ class AttributeImage extends AttributeBlob
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -8171,6 +8205,7 @@ class AttributeStopWatch extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -9022,6 +9057,7 @@ class AttributeSubItem extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -9285,6 +9321,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -9500,6 +9537,7 @@ class AttributeTable extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -9670,6 +9708,7 @@ class AttributePropertySet extends AttributeTable
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -11847,6 +11886,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -12336,6 +12376,7 @@ class AttributeCustomFields extends AttributeDefinition
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -12798,6 +12839,7 @@ class AttributeArchiveDate extends AttributeDate
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
@@ -12955,6 +12997,7 @@ class AttributeObsolescenceDate extends AttributeDate
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
 	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
 	 *
 	 * @param string $sCode
 	 * @param array $aParams
