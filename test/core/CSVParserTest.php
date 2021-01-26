@@ -13,7 +13,6 @@ class CSVParserTest extends ItopTestCase
 		parent::setUp();
 
 		require_once(APPROOT.'core/csvparser.class.inc.php');
-		require_once(APPROOT.'core/coreexception.class.inc.php');
 	}
 
 	public function testFile()

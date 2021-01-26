@@ -1,44 +1,13 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Bulk change facility (common to interactive and batch usages)
- *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 // The BOM is added at the head of exported UTF-8 CSV data, and removed (if present) from input UTF-8 data.
 // This helps MS-Excel (Version > 2007, Windows only) in changing its interpretation of a CSV file (by default Excel reads data as ISO-8859-1 -not 100% sure!)
 define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
 
-/**
- * BulkChange
- * Interpret a given data set and update the DB accordingly (fake mode avail.) 
- *
- * @package     iTopORM
- */
-
-class BulkChangeException extends CoreException
-{
-}
 
 /**
  * CellChangeSpec
@@ -245,6 +214,7 @@ class RowStatus_Issue extends RowStatus
 
 /**
  * BulkChange
+ * Interpret a given data set and update the DB accordingly (fake mode avail.)
  *
  * @package iTopORM
  */

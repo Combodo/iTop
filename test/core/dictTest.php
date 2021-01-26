@@ -41,7 +41,6 @@ class dictTest extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		require_once (APPROOT.'core/coreexception.class.inc.php');
 		require_once (APPROOT.'core/dict.class.inc.php');
 		require_once 'mockDict.incphp';
 	}

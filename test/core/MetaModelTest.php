@@ -28,7 +28,6 @@ class MetaModelTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/metamodel.class.php';
-		require_once APPROOT.'/core/coreexception.class.inc.php';
 	}
 
     /**

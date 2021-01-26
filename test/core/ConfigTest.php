@@ -25,11 +25,11 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
 use PHPUnit\Framework\TestCase;
 
-	/**
-	 * @runTestsInSeparateProcesses
-	 * @preserveGlobalState disabled
-	 * @backupGlobals disabled
-	 */
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class ConfigTest extends ItopTestCase
 {
 	protected function setUp()

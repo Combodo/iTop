@@ -1517,7 +1517,6 @@ JS
 	 */
 	public static function GetAvailableLanguages($sDir)
 	{
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
 		require_once(APPROOT.'/core/dict.class.inc.php');
 
 		$aFiles = scandir($sDir);

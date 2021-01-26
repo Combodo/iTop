@@ -16,45 +16,16 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * Class Dict
- * Management of localizable strings 
- *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
-
-class DictException extends CoreException
-{
-}
-
-class DictExceptionUnknownLanguage extends DictException
-{
-	public function __construct($sLanguageCode)
-	{
-		$aContext = array();
-		$aContext['language_code'] = $sLanguageCode;
-		parent::__construct('Unknown localization language', $aContext);
-	}
-}
-
-class DictExceptionMissingString extends DictException
-{
-	public function __construct($sLanguageCode, $sStringCode)
-	{
-		$aContext = array();
-		$aContext['language_code'] = $sLanguageCode;
-		$aContext['string_code'] = $sStringCode;
-		parent::__construct('Missing localized string', $aContext);
-	}
-}
-
 
 define('DICT_ERR_STRING', 1); // when a string is missing, return the identifier
 define('DICT_ERR_EXCEPTION', 2); // when a string is missing, throw an exception
 //define('DICT_ERR_LOG', 3); // when a string is missing, log an error
 
 
+/**
+ * Class Dict
+ * Management of localizable strings
+ */
 class Dict
 {
 	protected static $m_iErrorMode = DICT_ERR_STRING;

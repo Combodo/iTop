@@ -32,8 +32,6 @@
  * @package     iTopORM
  */
 
-require_once('coreexception.class.inc.php');
-
 require_once('config.class.inc.php');
 require_once('log.class.inc.php');
 require_once('kpi.class.inc.php');

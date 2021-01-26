@@ -27,86 +27,6 @@
 require_once('MyHelpers.class.inc.php');
 require_once(APPROOT.'core/kpi.class.inc.php');
 
-class MySQLException extends CoreException
-{
-	/**
-	 * MySQLException constructor.
-	 *
-	 * @param string $sIssue
-	 * @param array $aContext
-	 * @param \Exception $oException
-	 * @param \mysqli $oMysqli to use when working with a custom mysqli instance
-	 */
-	public function __construct($sIssue, $aContext, $oException = null, $oMysqli = null)
-	{
-		if ($oException != null)
-		{
-			$aContext['mysql_errno'] = $oException->getCode();
-			$this->code = $oException->getCode();
-			$aContext['mysql_error'] = $oException->getMessage();
-		}
-		else if ($oMysqli != null)
-		{
-			$aContext['mysql_errno'] = $oMysqli->errno;
-			$this->code = $oMysqli->errno;
-			$aContext['mysql_error'] = $oMysqli->error;
-		}
-		else
-		{
-			$aContext['mysql_errno'] = CMDBSource::GetErrNo();
-			$this->code = CMDBSource::GetErrNo();
-			$aContext['mysql_error'] = CMDBSource::GetError();
-		}
-		parent::__construct($sIssue, $aContext);
-	}
-}
-
-/**
- * Class MySQLQueryHasNoResultException
- *
- * @since 2.5.0
- */
-class MySQLQueryHasNoResultException extends MySQLException
-{
-
-}
-
-/**
- * Class MySQLHasGoneAwayException
- *
- * @since 2.5.0
- * @see itop bug 1195
- * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
- */
-class MySQLHasGoneAwayException extends MySQLException
-{
-	/**
-	 * can not be a constant before PHP 5.6 (http://php.net/manual/fr/language.oop5.constants.php)
-	 *
-	 * @return int[]
-	 */
-	public static function getErrorCodes()
-	{
-		return array(
-			2006,
-			2013
-		);
-	}
-
-	public function __construct($sIssue, $aContext)
-	{
-		parent::__construct($sIssue, $aContext, null);
-	}
-}
-
-/**
- * @since 2.7.0 N°679
- */
-class MySQLNoTransactionException extends MySQLException
-{
-
-}
-
 
 /**
  * CMDBSource
@@ -1420,13 +1340,14 @@ class CMDBSource
 	}
 
 	/**
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
+	 *
 	 * @param string $sTableName
 	 *
 	 * @return string query to upgrade table charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
 	 * @since 2.5.0 N°1001 switch to utf8mb4
-	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
 	 */
 	public static function DBCheckTableCharsetAndCollation($sTableName)
 	{
@@ -1572,11 +1493,11 @@ class CMDBSource
 	}
 
 	/**
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
 	 * @since 2.5.0 N°1001 switch to utf8mb4
-	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 */
 	public static function DBCheckCharsetAndCollation()
 	{

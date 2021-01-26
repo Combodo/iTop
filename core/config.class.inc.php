@@ -39,13 +39,8 @@ define('ACCESS_READONLY', 0);
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('coreexception.class.inc.php');
 require_once('attributedef.class.inc.php'); // For the defines
 require_once('simplecrypt.class.inc.php');
-
-class ConfigException extends CoreException
-{
-}
 
 // was utf8 but it only supports BMP chars (https://dev.mysql.com/doc/refman/5.5/en/charset-unicode-utf8mb4.html)
 // so we switched to utf8mb4 in iTop 2.5, adding dependency to MySQL 5.5.3
