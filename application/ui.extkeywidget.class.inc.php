@@ -138,7 +138,7 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper\" data-validation=\"untouched\">";
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper\" data-validation=\"untouched\" tabindex=0>";
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if($this->bSearchMode)
 		{
@@ -257,6 +257,7 @@ $('#$this->iId').attr('data-validate','dependencies');
 EOF
 				);
 			}
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
 		}
 		else
 		{
@@ -282,8 +283,6 @@ EOF
 
 			// the input for the auto-complete
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
-			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
-			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\"><i class=\"fas fa-times\"></i></div>";
 
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -301,10 +300,15 @@ EOF
 		}
 EOF
 			);
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\"><i class=\"fas fa-times\"></i></div>";
+
+
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
 		{
-			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -318,7 +322,7 @@ JS
 		{
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
-			$sHTMLValue .= "<div class=\"field_input_btn ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div>";
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -328,6 +332,7 @@ JS
 JS
 			);
 		}
+		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 

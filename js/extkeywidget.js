@@ -15,6 +15,46 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+var KEY_BACKSPACE = 8;
+var KEY_RETURN    = 13;
+Selectize.define('custom_itop', function(options) {
+	var self = this;
+
+	options.text = options.text || function(option) {
+		return option[this.settings.labelField];
+	};
+
+	this.onKeyDown = (function() {
+		var original = self.onKeyDown;
+		return function(e) {
+			var index, option;
+			switch (e.keyCode) {
+				case KEY_BACKSPACE:
+					if (e.keyCode === KEY_BACKSPACE && this.$control_input.val() === '' && !this.$activeItems.length) {
+						index = this.caretPos-1;
+						if (index >= 0 && index < this.items.length) {
+							this.clear(true);
+							e.preventDefault();
+							return;
+						}
+					}
+				case KEY_RETURN:
+					if (self.isOpen) {
+						//case nothing selected ->delete selection
+						if (!self.$activeOption || self.currentResults.query == "") {
+							self.deleteSelection(e);
+							//if(self.getOption("") != "undefined"){
+								self.setValue("");
+							//}
+							return;
+						}
+					}
+			}
+			return original.apply(this, arguments);
+		};
+	})();
+});
+
 
 function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch, sFormAttCode) {
 	this.id = id;
@@ -40,43 +80,43 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id+'_linksToRemove').val('');
 	}
 	this.AddSelectize = function (options, initValue) {
-		$('#'+me.id).selectize({
+		let $select = $('#'+me.id).selectize({
+			plugins:['custom_itop'],
 			render: {
 				item: function (item) {
 					if (item.obsolescence_flag == 1) {
 						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
 					} else {
 						val = item.label;
-						}
-						return $("<div>")
-							.append(val);
-					},
-					option: function(item) {
-						if ( item.obsolescence_flag == 1)
-						{
-							val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
-						}
-						else
-						{
-							val = item.label;
-						}
-						if (item.additional_field != undefined )
-						{
-							val = val+'<br><i>'+item.additional_field+'</i>';
-						}
-						return $("<div>")
-							.append(val);
 					}
+					return $("<div>").append(val);
 				},
-				items:[initValue],
-				valueField: 'value',
-				labelField: 'label',
-				searchField: ['value'],
-				options:JSON.parse(options),
-				maxItems: 1,
-				copyClassesToDropdown: false,
-				inputClass: 'ibo-input ibo-input-select ibo-input-selectize'
-			});
+				option: function(item) {
+					if ( item.obsolescence_flag == 1)
+					{
+						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+					}
+					else
+					{
+						val = item.label;
+					}
+					if (item.additional_field != undefined )
+					{
+						val = val+'<br><i>'+item.additional_field+'</i>';
+					}
+					return $("<div>").append(val);
+				}
+			},
+			valueField: 'value',
+			labelField: 'label',
+			searchField: 'label',
+			options:JSON.parse(options),
+			maxItems: 1,
+			copyClassesToDropdown: false,
+			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
+		});
+		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
+		$selectize.setValue(initValue, true);
 	}
 	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
 	{
