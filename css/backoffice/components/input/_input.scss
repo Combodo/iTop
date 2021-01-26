@@ -56,3 +56,7 @@ $ibo-field-validation: $ibo-color-red-700 !default;
 .ibo-field-validation{
 	color: $ibo-field-validation;
 }
+.file-input {
+	display:block;
+	position: relative;
+}
