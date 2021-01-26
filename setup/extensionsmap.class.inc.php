@@ -61,24 +61,29 @@ class iTopExtension
 	 * @var bool
 	 */
 	public $bVisible;
-	
+
 	/**
 	 * @var string[]
 	 */
 	public $aModules;
-	
+
 	/**
 	 * @var string[]
 	 */
 	public $aModuleVersion;
-	
+
+	/**
+	 * @var string[]
+	 */
+	public $aModuleInfo;
+
 	/**
 	 * @var string
 	 */
 	public $sSourceDir;
-	
+
 	/**
-	 * 
+	 *
 	 * @var string[]
 	 */
 	public $aMissingDependencies;
@@ -96,6 +101,7 @@ class iTopExtension
 		$this->sInstalledVersion = '';
 		$this->aModules = array();
 		$this->aModuleVersion = array();
+		$this->aModuleInfo = array();
 		$this->sSourceDir = '';
 		$this->bVisible = true;
 		$this->aMissingDependencies = array();
@@ -310,11 +316,11 @@ class iTopExtensionsMap
 							$sModuleVersion = '0.0.1';
 						}
 						
-						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension))
-						{
+						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[2];
 						}
 						else
 						{
@@ -329,8 +335,6 @@ class iTopExtensionsMap
 							}
 							
 							// Let's create a "fake" extension from this module (containing just this module) for backwards compatibility
-							$sExtensionId = $sModuleId;
-							
 							$oExtension = new iTopExtension();
 							$oExtension->sCode = $sModuleName;
 							$oExtension->sLabel = $aModuleInfo[2]['label'];
@@ -341,9 +345,10 @@ class iTopExtensionsMap
 							$oExtension->sMoreInfoUrl = $aModuleInfo[2]['doc.more_information'];
 							$oExtension->aModules = array($sModuleName);
 							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[2];
 							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
-							$this->AddExtension($oExtension);							
+							$this->AddExtension($oExtension);
 						}
 
 						closedir($hDir);
