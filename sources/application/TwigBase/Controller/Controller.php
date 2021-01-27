@@ -27,6 +27,7 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
+use Symfony\Component\HttpFoundation\IpUtils;
 use WebPage;
 use LoginWebPage;
 use MetaModel;
@@ -228,18 +229,31 @@ abstract class Controller
 	 */
 	private function checkNetworkAccess($sExecModule)
 	{
-		$sAllowedNetworkRegexpPattern = empty($this->m_sAccessAuthorizedNetworkConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId));
-
-		if (empty($sExecModule) || empty($sAllowedNetworkRegexpPattern)){
+		if (empty($sExecModule) || empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
 			return;
 		}
 
-		$sRemoteIpAddress = $_SERVER['REMOTE_ADDR'];
-		if (!preg_match("/$sAllowedNetworkRegexpPattern/", $sRemoteIpAddress)){
-			$sMsg = "'$sExecModule' page is not authorized to '$sRemoteIpAddress' ip address. only to '$sAllowedNetworkRegexpPattern' networks.";
-			IssueLog::Error($sMsg);
+		$aReadAllowedNetworkRegexpPatterns = MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId);
+		if (!is_array($aReadAllowedNetworkRegexpPatterns)){
+			IssueLog::Error("'$sExecModule' wrongly configured. please check $this->m_sAccessAuthorizedNetworkConfigParamId config (not an array).");
+			return;
+		} else if (empty($aReadAllowedNetworkRegexpPatterns)){
+			//no rule
+			return;
+		}
+
+		$sAllowedNetworkRegexpPatterns = [];
+
+		foreach ($aReadAllowedNetworkRegexpPatterns as $sAllowedNetworkRegexpPattern){
+			$sAllowedNetworkRegexpPatterns []= trim($sAllowedNetworkRegexpPattern);
+		}
+
+		$clientIp = $_SERVER['REMOTE_ADDR'];
+		if (!IpUtils::checkIp($clientIp, $sAllowedNetworkRegexpPatterns)){
+			IssueLog::Error("'$sExecModule' page is not authorized to '$clientIp' ip address.");
 			throw new Exception("Unauthorized network");
 		}
+
 	}
 
 	/**
