@@ -42,9 +42,13 @@ $(function()
 				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
+				tab_toolbar_action: '[data-role="ibo-activity-panel--tab-toolbar-action"]',
 				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
 				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
-				activity_filter: '[data-role="ibo-activity-panel--activity-filter"]',
+				activity_filter: '[data-role="ibo-activity-panel--filter"]',
+				activity_filter_options: '[data-role="ibo-activity-panel--filter-options"]',
+				activity_filter_options_toggler: '[data-role="ibo-activity-panel--filter-options-toggler"]',
+				activity_filter_option_input: '[data-role="ibo-activity-panel--filter-option-input"]',
 				authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
 				messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
 				compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
@@ -102,9 +106,17 @@ $(function()
 				});
 
 				// Tabs toolbar
-				// - Change on an activity filter
+				// - Change on a filter
 				this.element.find(this.js_selectors.activity_filter).on('change', function(){
-					me._onActivityFilterChange($(this));
+					me._onFilterChange($(this));
+				});
+				// - Click on a filter options toggler
+				this.element.find(this.js_selectors.activity_filter_options_toggler).on('click', function(oEvent){
+					me._onFilterOptionsTogglerClick(oEvent, $(this));
+				})
+				// - Change on a filter option
+				this.element.find(this.js_selectors.activity_filter_option_input).on('change', function(){
+					me._onFilterOptionChange($(this));
 				});
 				// - Click on open all case log messages
 				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function(){
@@ -182,8 +194,48 @@ $(function()
 					this._ShowActivityTab();
 				}
 			},
-			_onActivityFilterChange: function(oInputElem)
+			/**
+			 * @param oInputElem {Object} jQuery object representing the filter's input
+			 * @private
+			 */
+			_onFilterChange: function(oInputElem)
 			{
+				// Propagate on filter options
+				if ('caselogs' === oInputElem.attr('name')) {
+					oInputElem.closest(this.js_selectors.tab_toolbar_action).find(this.js_selectors.activity_filter_option_input).prop('checked', oInputElem.prop('checked'));
+				}
+
+				this._ApplyEntriesFilters();
+			},
+			/**
+			 * @param oEvent {Object} jQuery event
+			 * @param oElem {Object} jQuery object representing the filter's options toggler
+			 * @private
+			 */
+			_onFilterOptionsTogglerClick: function(oEvent, oElem)
+			{
+				oEvent.preventDefault();
+
+				this._ToggleFilterOptions(oElem.closest(this.js_selectors.tab_toolbar_action).find(this.js_selectors.activity_filter));
+			},
+			/**
+			 * @param oInputElem {Object} jQuery object representing the filter option's input
+			 * @private
+			 */
+			_onFilterOptionChange: function(oInputElem)
+			{
+				const oFilterOptionsElem = oInputElem.closest(this.js_selectors.activity_filter_options);
+				const oFilterInputElem = oInputElem.closest(this.js_selectors.tab_toolbar_action).find(this.js_selectors.activity_filter);
+
+				// If all options checked, checked the parent
+				if (oFilterOptionsElem.find(this.js_selectors.activity_filter_option_input + ':not(:checked)').length === 0) {
+					oFilterInputElem.prop('checked', true);
+				}
+				// Else, uncheck the parent
+				else {
+					oFilterInputElem.prop('checked', false);
+				}
+
 				this._ApplyEntriesFilters();
 			},
 			_onCaseLogOpenAllClick: function(oIconElem)
@@ -235,13 +287,33 @@ $(function()
 
 				oEntryElem.toggleClass(this.css_classes.is_opened);
 			},
+			/**
+			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
+			 *
+			 * @param oEvent {Object} The jQuery event
+			 * @private
+			 */
 			_onBodyClick: function(oEvent)
 			{
-
+				// Hide all filters' options only if click wasn't on one of them
+				if(($(oEvent.target).closest(this.js_selectors.activity_filter_options_toggler).length === 0)
+				&& $(oEvent.target).closest(this.js_selectors.activity_filter_options).length === 0) {
+					this._HideAllFiltersOptions();
+				}
 			},
+			/**
+			 * Callback for key hits that should interact with the activity panel (eg. "Esc" to close all dropdowns, ...)
+			 *
+			 * @param oEvent {Object} The jQuery event
+			 * @private
+			 */
 			_onBodyKeyUp: function(oEvent)
 			{
-
+				// On "Esc" key
+				if(oEvent.key === 'Escape') {
+					// Hide all filters's options
+					this._HideAllFiltersOptions();
+				}
 			},
 
 			// Methods
@@ -377,6 +449,48 @@ $(function()
 				}
 				return iIdx;
 			},
+			/**
+			 * Show the oFilterElem's options
+			 *
+			 * @param oFilterElem {Object}
+			 * @private
+			 */
+			_ShowFilterOptions: function(oFilterElem)
+			{
+				oFilterElem.parent().find(this.js_selectors.activity_filter_options_toggler).removeClass(this.css_classes.is_closed);
+			},
+			/**
+			 * Hide the oFilterElem's options
+			 *
+			 * @param oFilterElem {Object}
+			 * @private
+			 */
+			_HideFilterOptions: function(oFilterElem)
+			{
+				oFilterElem.parent().find(this.js_selectors.activity_filter_options_toggler).addClass(this.css_classes.is_closed);
+			},
+			/**
+			 * Toggle the visibility of the oFilterElem's options
+			 *
+			 * @param oFilterElem {Object}
+			 * @private
+			 */
+			_ToggleFilterOptions: function(oFilterElem)
+			{
+				oFilterElem.parent().find(this.js_selectors.activity_filter_options_toggler).toggleClass(this.css_classes.is_closed);
+			},
+			/**
+			 * Hide all the filters' options from all toolbars
+			 *
+			 * @private
+			 */
+			_HideAllFiltersOptions: function()
+			{
+				const me = this;
+				this.element.find(this.js_selectors.activity_filter_options_toggler).each(function(){
+					me._HideFilterOptions($(this));
+				});
+			},
 
 			// - Helpers on messages
 			_OpenMessage: function(oEntryElem)
@@ -443,13 +557,18 @@ $(function()
 					const aTargetEntryTypes = $(this).attr('data-target-entry-types').split(' ');
 					const sCallbackMethod = ($(this).prop('checked')) ? '_ShowEntries' : '_HideEntries';
 
-					for(let iIdx in aTargetEntryTypes)
+					let aFilterOptions = [];
+					$(this).closest(me.js_selectors.tab_toolbar_action).find(me.js_selectors.activity_filter_option_input + ':checked').each(function(){
+						aFilterOptions.push($(this).val());
+					});
+
+					for(let sTargetEntryType of aTargetEntryTypes)
 					{
-						me[sCallbackMethod](aTargetEntryTypes[iIdx]);
+						me[sCallbackMethod](sTargetEntryType, aFilterOptions);
 					}
 				});
 
-				// Show only the last visible entry's medallion of a group (can be done through CSS yet 😕)
+				// Show only the last visible entry's medallion of a group (cannot be done through CSS yet 😕)
 				this.element.find(this.js_selectors.entry_group).each(function(){
 					$(this).find(me.js_selectors.entry_medallion).removeClass(me.css_classes.is_visible);
 					$(this).find(me.js_selectors.entry + ':visible:last').find(me.js_selectors.entry_medallion).addClass(me.css_classes.is_visible);
@@ -471,23 +590,46 @@ $(function()
 			/**
 			 * Show entries of type sEntryType but do not hide the others
 			 *
-			 * @param sEntryType string
+			 * @param sEntryType {string}
 			 * @private
 			 */
 			_ShowEntries: function(sEntryType)
 			{
-				this.element.find(this.js_selectors.entry+'[data-entry-type="'+sEntryType+'"]').removeClass(this.css_classes.is_hidden);
+				let sEntrySelector = this.js_selectors.entry+'[data-entry-type="'+sEntryType+'"]';
+
+				// Note: Unlike, the _HideEntries() method, we don't have a special case for caselogs options. This is because this
+				// method is called when the main filter is checked, which means that all options are checked as well, so there is no
+				// need for a special treatment.
+
+				this.element.find(sEntrySelector).removeClass(this.css_classes.is_hidden);
 				this._UpdateEntryGroupsVisibility();
 			},
 			/**
 			 * Hide entries of type sEntryType but do not hide the others
 			 *
-			 * @param sEntryType string
+			 * @param sEntryType {string}
+			 * @param aOptions {Array} Options for the sEntryType, used differently depending on the sEntryType
 			 * @private
 			 */
-			_HideEntries: function(sEntryType)
+			_HideEntries: function(sEntryType, aOptions = [])
 			{
-				this.element.find(this.js_selectors.entry+'[data-entry-type="'+sEntryType+'"]').addClass(this.css_classes.is_hidden);
+				let sEntrySelector = this.js_selectors.entry+'[data-entry-type="'+sEntryType+'"]';
+
+				// Special case for options
+				if ((this.enums.entry_types.caselog === sEntryType) && (aOptions.length > 0)) {
+					// Hide all caselogs...
+					this._HideEntries(sEntryType);
+
+					// ... except the selected
+					for (let sCaseLogAttCode of aOptions) {
+						this.element.find(sEntrySelector + '[data-entry-caselog-attribute-code="' + sCaseLogAttCode + '"]').removeClass(this.css_classes.is_hidden);
+					}
+				}
+				// General case
+				else {
+					this.element.find(sEntrySelector).addClass(this.css_classes.is_hidden);
+				}
+
 				this._UpdateEntryGroupsVisibility();
 			},
 			_UpdateEntryGroupsVisibility: function()

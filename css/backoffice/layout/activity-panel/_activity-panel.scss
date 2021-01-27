@@ -60,9 +60,20 @@ $ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: 16px !default;
 
 $ibo-activity-panel--tab-toolbar-action--elements-separator-content: "-" !default;
 $ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x: 8px !default;
+$ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
 $ibo-activity-panel--tab-toolbar-filter--sibling-spacing: 18px !default;
 $ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: 8px !default;
-$ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
+
+$ibo-activity-panel--filter-options-toggler--margin-left: 0.5rem !default;
+$ibo-activity-panel--filter-options--padding-x: 12px !default;
+$ibo-activity-panel--filter-options--padding-y: 8px !default;
+$ibo-activity-panel--filter-options--top: 24px !default;
+$ibo-activity-panel--filter-options--left: -1 * $ibo-activity-panel--filter-options--padding-x !default;
+$ibo-activity-panel--filter-options--max-width: 200px !default;
+$ibo-activity-panel--filter-options--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
+$ibo-activity-panel--filter-options--border-radius: $ibo-border-radius-300 !default;
+$ibo-activity-panel--filter-option--sibling-spacing: 8px !default;
+$ibo-activity-panel--filter-option-input--margin-right: 0.5rem !default;
 
 /* - Body */
 $ibo-activity-panel--body--padding-y: $ibo-activity-panel--padding-x !default;
@@ -233,7 +244,48 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 	}
 }
 .ibo-activity-panel--tab-toolbar-action{
+  position: relative;
 	@extend %ibo-fully-centered-content;
+}
+.ibo-activity-panel--filter{
+  cursor: pointer;
+}
+.ibo-activity-panel--filter-options-toggler{
+  margin-left: $ibo-activity-panel--filter-options-toggler--margin-left;
+
+  &.ibo-is-closed{
+    transform: rotateX(180deg);
+
+    + .ibo-activity-panel--filter-options{
+      display: none;
+    }
+  }
+}
+.ibo-activity-panel--filter-options{
+  position: absolute;
+  z-index: 1; /* To be over the activity body */
+  display: flex;
+  flex-direction: column;
+  top: $ibo-activity-panel--filter-options--top;
+  left: $ibo-activity-panel--filter-options--left;
+  max-width: $ibo-activity-panel--filter-options--max-width;
+  padding: $ibo-activity-panel--filter-options--padding-y $ibo-activity-panel--filter-options--padding-x;
+  background-color: $ibo-activity-panel--filter-options--background-color;
+  border-radius: $ibo-activity-panel--filter-options--border-radius;
+
+  @extend %ibo-elevation-300;
+}
+.ibo-activity-panel--filter-option{
+  cursor: pointer;
+  @extend %ibo-vertically-centered-content;
+  @extend %ibo-text-truncated-with-ellipsis;
+
+  &:not(:first-child){
+    margin-top: $ibo-activity-panel--filter-option--sibling-spacing;
+  }
+}
+.ibo-activity-panel--filter-option-input{
+  margin-right: $ibo-activity-panel--filter-option-input--margin-right;
 }
 
 /* Body */

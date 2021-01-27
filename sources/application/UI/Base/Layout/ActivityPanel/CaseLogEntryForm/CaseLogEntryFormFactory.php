@@ -37,7 +37,7 @@ class CaseLogEntryFormFactory
 		$oCaseLogEntryForm = new CaseLogEntryForm();
 		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
 			->AddMainActionButtons(static::PrepareCancelButton())
-			->AddMainActionButtons(static::PrepareSendButton()->SetLabel(Dict::S('UI:Button:AddEntryAndWithChoice')))
+			->AddMainActionButtons(static::PrepareSaveButton())
 			->SetSendButtonPopoverMenu(static::PrepareSendActionSelectionPopoverMenu($oObject, $sCaseLogAttCode));
 
 		return $oCaseLogEntryForm;
@@ -54,9 +54,9 @@ class CaseLogEntryFormFactory
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
-	protected static function PrepareSendButton(): Button
+	protected static function PrepareSaveButton(): Button
 	{
-		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'send', 'send');
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Save'), 'save', 'save');
 		$oButton->SetIconClass('fas fa-paper-plane');
 
 		return $oButton;

@@ -37,7 +37,7 @@
 		</div>
 		<div class="ibo-activity-panel--tabs-toolbars">
 			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-				{{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1)}) }}
+				{{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
 			{% endfor %}
 			{{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
 		</div>

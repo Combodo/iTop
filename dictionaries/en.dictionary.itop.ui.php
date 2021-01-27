@@ -403,8 +403,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Close' => 'Close',
 	'UI:Button:Apply' => 'Apply',
 	'UI:Button:Send' => 'Send',
-	'UI:Button:AddEntryAndWithChoice' => 'Add entry and...',
-	'UI:Button:AddEntryToWithChoice' => 'Add entry to...',
 	'UI:Button:Back' => ' << Back ',
 	'UI:Button:Restart' => ' |<< Restart ',
 	'UI:Button:Next' => ' Next >> ',
