@@ -29,8 +29,8 @@
 				{% for sJsFile in aPage.aJsFiles %}
 					if (! $.inArray('{{ sJsFile|raw }}',aListJsFiles))
 					{
-						aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version }}');
-						aListJsFiles.push("{{ sJsFile }}");
+						aFilesToLoad{{ sId }}.push('{{ sJsFile|raw|add_itop_version }}');
+						aListJsFiles.push("{{ sJsFile|raw }}");
 					}
 				{% endfor %}
 				var iCurrentIdx{{ sId }} = 0;
