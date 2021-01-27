@@ -3,6 +3,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+// IMPORTANT: We have to cancel the panel padding because the tab-container already has its own.
+// - As the tab-container can be used outside a panel in another type of block, we can't remove it from its partial (_tab-container.scss)
+// - This kind of file is the place where *integrations* like this are supposed to be done, keep this in mind when integrating others blocks
+
+// Note: This might not be named well, maybe "tab-container-within-panel" would have been better?
+
 $ibo-panel-with-tab-container--padding-top: -1 * ($ibo-panel--body--padding-top - $ibo-panel--highlight--height) !default;
 $ibo-panel-with-tab-container--margin-x: -1 * $ibo-panel--body--padding-x !default;
 
