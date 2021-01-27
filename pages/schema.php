@@ -317,7 +317,7 @@ JS
 	}
 	usort($aClassLabelAndCodeAsJSON, "Label_sort");
 	// - Push to autocomplete
-	$oPage->add_script("autocompleteClassLabelAndCode=".json_encode($aClassLabelAndCodeAsJSON)."; console.warn(autocompleteClassLabelAndCode);");
+	$oPage->add_script("autocompleteClassLabelAndCode=".json_encode($aClassLabelAndCodeAsJSON).";");
 	$oPage->add_script("autocompleteClassLabel=".json_encode($aClassLabelAsJSON).";");
 	$oPage->add_script("autocompleteClassCode=".json_encode($aClassCodeAsJSON).";");
 
