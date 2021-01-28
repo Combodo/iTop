@@ -108,6 +108,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	{
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
+			$aExtraParams['sRefreshAction'] = $oDataTable->GetJSRefresh()[0];
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 		} else {
 			$oBlockMenu = new UIContentBlock();

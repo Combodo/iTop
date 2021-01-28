@@ -1727,7 +1727,7 @@ class MenuBlock extends DisplayBlock
 		}
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
-		$sRefreshAction = '';
+		$sRefreshAction = $aExtraParams['sRefreshAction']??'';
 		$aActions = [];
 		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
@@ -1780,7 +1780,7 @@ class MenuBlock extends DisplayBlock
 						}
 					} else {
 						$id = $oObj->GetKey();
-						if (utils::ReadParam('operation') == 'details') {
+						if (empty($sRefreshAction) && utils::ReadParam('operation') == 'details') {
 							if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 								$sRefreshAction = "window.location.reload();";
 							} else {

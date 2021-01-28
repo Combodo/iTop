@@ -158,4 +158,9 @@ class DataTable extends UIContentBlock
 	{
 		$this->aOptions = $aOptions;
 	}
+
+	public function GetJSRefresh():array{
+		return ["$('#".$this->sId."').DataTable().clearPipeline();
+				$('#".$this->sId."').DataTable().ajax.reload(null, false);"];
+	}
 }
