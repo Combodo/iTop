@@ -1,0 +1,28 @@
+$ibo-prop--apply--padding-left: 12px !default;
+$ibo-prop--cancel--padding-left: 7px !default;
+
+$ibo-prop--apply-cancel--span--height: 28px !default;
+$ibo-prop--apply-cancel--span--width: 32px !default;
+
+.ibo-prop--apply{
+	padding-left: $ibo-prop--apply--padding-left;
+	> span{
+		@extend .ibo-is-green;
+	}
+}
+.ibo-prop--cancel{
+	padding-left: $ibo-prop--cancel--padding-left;
+	> span{
+		@extend .ibo-is-red;
+	}
+}
+.ibo-prop--apply, .ibo-prop--cancel{
+	> span{
+		display: block;
+		height: $ibo-prop--apply-cancel--span--height;
+		width: $ibo-prop--apply-cancel--span--width;
+		text-align: center;
+		@extend .ibo-button;
+		@extend .ibo-is-alternative;
+	}
+}

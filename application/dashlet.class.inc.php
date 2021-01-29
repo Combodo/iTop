@@ -872,7 +872,7 @@ class DashletPlainText extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletPlainText:Label'),
-			'icon' => 'images/dashlet-text.png',
+			'icon' => 'images/dashlets/icons8-text-box-48.png',
 			'description' => Dict::S('UI:DashletPlainText:Description'),
 		);
 	}
@@ -981,7 +981,7 @@ class DashletObjectList extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletObjectList:Label'),
-			'icon' => 'images/dashlet-list.png',
+			'icon' => 'images/dashlets/icons8-list-48.png',
 			'description' => Dict::S('UI:DashletObjectList:Description'),
 		);
 	}
@@ -1581,7 +1581,7 @@ abstract class DashletGroupBy extends Dashlet
 		// Note: no need to translate, should never be visible to the end-user!
 		return array(
 			'label' => 'Objects grouped by...',
-			'icon' => 'images/dashlet-object-grouped.png',
+			'icon' => 'images/dashlets/icons8-transaction-list-48.png',
 			'description' => 'Grouped objects dashlet (abstract)',
 		);
 	}
@@ -1645,7 +1645,7 @@ class DashletGroupByPie extends DashletGroupBy
 	{
 		return array(
 			'label' => Dict::S('UI:DashletGroupByPie:Label'),
-			'icon' => 'images/dashlet-pie-chart.png',
+			'icon' => 'images/dashlets/icons8-pie-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByPie:Description'),
 		);
 	}
@@ -1720,7 +1720,7 @@ class DashletGroupByBars extends DashletGroupBy
 	{
 		return array(
 			'label' => Dict::S('UI:DashletGroupByBars:Label'),
-			'icon' => 'images/dashlet-bar-chart.png',
+			'icon' => 'images/dashlets/icons8-bar-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByBars:Description'),
 		);
 	}
@@ -1821,7 +1821,7 @@ class DashletGroupByTable extends DashletGroupBy
 		return array(
 			'label' => Dict::S('UI:DashletGroupByTable:Label'),
 			'description' => Dict::S('UI:DashletGroupByTable:Description'),
-			'icon' => 'images/dashlet-groupby-table.png',
+			'icon' => 'images/dashlets/icons8-transaction-list-48.png',
 		);
 	}
 
@@ -1950,7 +1950,7 @@ class DashletHeaderStatic extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletHeaderStatic:Label'),
-			'icon' => 'images/dashlet-header.png',
+			'icon' => 'images/dashlets/icons8-header-48.png',
 			'description' => Dict::S('UI:DashletHeaderStatic:Description'),
 		);
 	}
@@ -2256,7 +2256,7 @@ class DashletHeaderDynamic extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletHeaderDynamic:Label'),
-			'icon' => 'images/dashlet-header-stats.png',
+			'icon' => 'images/dashlets/icons8-header-altered-48.png',
 			'description' => Dict::S('UI:DashletHeaderDynamic:Description'),
 		);
 	}
@@ -2368,7 +2368,7 @@ class DashletBadge extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletBadge:Label'),
-			'icon' => 'images/dashlet-badge.png',
+			'icon' => 'images/dashlets/icons8-badge-48.png',
 			'description' => Dict::S('UI:DashletBadge:Description'),
 		);
 	}

@@ -26,7 +26,7 @@ $(function()
 			var me = this;
 
 			this.element
-				.addClass( "itop-property-field" )
+				.addClass( "itop-property-field ibo-field" )
 				.bind('apply_changes.itop-property-field', function(){me._do_apply();} );
 				
 			this.bModified = false;
@@ -52,19 +52,19 @@ $(function()
 				this.element.addClass("itop-property-field-modified");
 				if (this.options.can_apply)
 				{
-					this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: ''});					
+					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: ''});					
 				}
 				else
 				{
-					this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: 'hidden'});
+					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
 				}
-				this.element.find(".prop_icon span.ui-icon-circle-close").css({visibility: ''});
+				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: ''});
 			}
 			else
 			{
 				this.element.removeClass("itop-property-field-modified");
-				this.element.find(".prop_icon span.ui-icon-circle-check").css({visibility: 'hidden'});
-				this.element.find(".prop_icon span.ui-icon-circle-close").css({visibility: 'hidden'});
+				this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
+				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: 'hidden'});
 			}
 		},
 	

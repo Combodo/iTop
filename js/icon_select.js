@@ -44,7 +44,7 @@ $(function()
 			}
 			this.oImg = $('<img src="'+sIcon+'" style="vertical-align: middle;" foo="bar">');								
 			this.oLabel = $('<span>'+sLabel+'</span>');
-			this.oButton = $('<button type="button" class="icon-select icon-select-dropdown"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
+			this.oButton = $('<button type="button" class="icon-select icon-select-dropdown ibo-input ibo-input-select-icon"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
 			this.oButton.click(function(event, ui) {
 				//me._cleanAllMenus();
@@ -105,10 +105,10 @@ $(function()
 				me._cleanAllMenus();
 			});
 			var oMenu =
-				$('<ul class="menu-icon-select">');
+				$('<ul class="menu-icon-select ibo-input-select-icon--menu">');
 			for(var i in this.options.items)
 			{
-				var oItem = $('<li><div value="'+i+'"><img src="'+this.options.items[i].icon+'" style="vertical-align: middle;"/>'+this.options.items[i].label+'<div></li>');
+				var oItem = $('<li class="ibo-input-select-icon--menu--item"><div value="'+i+'"><img class="ibo-input-select-icon--menu--icon" src="'+this.options.items[i].icon+'" style="vertical-align: middle;"/>'+this.options.items[i].label+'<div></li>');
 				oItem.on('click',function(data) {me._on_icon_selection(data);} );
 				oMenu.append(oItem);
 			}

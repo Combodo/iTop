@@ -107,7 +107,7 @@ class DesignerForm
 				$aRow = $oField->Render($oP, $sFormId);
 				if ($oField->IsVisible())
 				{
-					$sValidation = '&nbsp;<span class="prop_apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
+					$sValidation = '<span class="prop_apply ibo-prop--apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
 					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
 				}
@@ -230,18 +230,18 @@ class DesignerForm
 				if ($oField->IsVisible())
 				{
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($sFieldId, '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td>'.$this->EndRow();
+					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="Apply"><i class="fas fa-check"></i></span>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="Revert"><i class="fas fa-times"></i></span></td>'.$this->EndRow();
 					
 					$sPath = $this->GetHierarchyPath().'/'.$oField->GetCode();
 					
 					if (is_null($aRow['label']))
 					{
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value ibo-field--value" colspan="2">'.$aRow['value'];
 					}
 					else
 					{
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label ibo-field--label">'.$aRow['label'].'</td><td class="prop_value ibo-field--value">'.$aRow['value'];
 					}
 					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField))
 					{
@@ -266,6 +266,7 @@ class DesignerForm
 					$this->AddReadyScript(
 <<<EOF
 $('#row_$sFieldId').$sWidgetClass({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams $sJSExtraParams });
+CombodoGlobalToolbox.InitTooltipFromMarkup($('#$sFormId [data-tooltip-content]'));
 EOF
 					);
 				}
@@ -548,7 +549,7 @@ EOF
 	
 	public function GetValidationArea($sId, $sContent = '')
 	{
-		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$sId}\"><span class=\"ui-icon ui-icon-alert\"></span>$sContent</span>";
+		return "<span id=\"v_{$sId}\">$sContent</span>";
 	}
 	public function GetAsyncActionClass()
 	{
@@ -716,7 +717,7 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
-		$this->aCSSClasses = array();
+		$this->aCSSClasses = array('ibo-input');
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
 	}
@@ -1055,6 +1056,12 @@ EOF
 
 class DesignerLongTextField extends DesignerTextField
 {
+	public function __construct($sCode, $sLabel = '', $defaultValue = '')
+	{
+		parent::__construct($sCode, $sLabel, $defaultValue);
+		$this->aCSSClasses[] = 'ibo-input-text-area';
+	}
+
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -1178,6 +1185,7 @@ class DesignerComboField extends DesignerFormField
 		$this->bMultipleSelection = false;
 		$this->bOtherChoices = false;
 		$this->sNullLabel = Dict::S('UI:SelectOne');
+		$this->aCSSClasses[] = 'ibo-input-select';
 
 		$this->bAutoApply = true;
 		$this->bSorted = true; // Sorted by default
@@ -1315,6 +1323,7 @@ class DesignerBooleanField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
+		$this->aCSSClasses[] = 'ibo-input-checkbox';
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -1597,6 +1606,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->defaultRealValue = $defaultValue;
 		$this->aSubForms = array();
 		$this->bSorted = true;
+		$this->aCSSClasses[] = 'ibo-input-select';
 	}
 
 	public function IsSorted()

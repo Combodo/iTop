@@ -442,11 +442,11 @@ abstract class Dashboard
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
 		// menu to pick a layout and edit other properties of the dashboard
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard--properties--title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div style="text-align:center">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
-		$oPage->add('<div id="select_layout" style="text-align:center">');
+		$oPage->add('<div class="ibo-dashboard--properties--subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
+		$oPage->add('<div id="select_layout" class="ibo-dashboard--properties--layout-list">');
 		foreach( get_declared_classes() as $sLayoutClass)
 		{
 			if (is_subclass_of($sLayoutClass, 'DashboardLayout'))
@@ -457,7 +457,7 @@ abstract class Dashboard
 					$aCallSpec = array($sLayoutClass, 'GetInfo');
 					$aInfo = call_user_func($aCallSpec);
 					$sChecked = ($this->sLayoutClass == $sLayoutClass) ? 'checked' : '';
-					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
+					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" class="ibo-dashboard--properties--icon"/></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
 		}
@@ -488,7 +488,8 @@ abstract class Dashboard
 		$oPage->add_ready_script(
 <<<EOF
 	// Note: the title gets deleted by the validation mechanism
-	$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+	$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+	CombodoGlobalToolbox.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
 	$('#attr_auto_reload').change( function(ev) {
@@ -578,19 +579,19 @@ JS
 	public function RenderDashletsSelection(WebPage $oPage)
 	{
 		// Toolbox/palette to drag and drop dashlets
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--available-dashlets"><div class="ui-widget-header ui-corner-all ibo-dashboard--available-dashlet--title">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div id="select_dashlet" style="text-align:center; max-height:120px; overflow-y:auto;">');
+		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
 		foreach($aAvailableDashlets as $sDashletClass => $aInfo)
 		{
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashlet--icon dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
-		$oPage->add_ready_script("$('.dashlet_icon').draggable({helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
+		$oPage->add_ready_script("$('.dashlet_icon').draggable({cursor: 'move', helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
 	}
 
 	/**
@@ -600,12 +601,12 @@ JS
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
 	{
 		// Toolbox/palette to edit the properties of each dashlet
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashlet--properties"><div class="ui-widget-header ui-corner-all ibo-dashlet--properties--title">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();
 
-		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
+		$oPage->add('<div id="dashlet_properties">');
 		foreach($this->aCells as $iCellIdx => $aCell)
 		{
 			/** @var \Dashlet $oDashlet */
@@ -1221,12 +1222,12 @@ EOF
 		}
 		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
 		$sJSExtraParams = json_encode($aExtraParams);
-		$oPage->add('<div id="dashboard_editor">');
+		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor">');
 		$oPage->add('<div class="ui-layout-center">');
 		$this->SetCustomFlag(true);
 		$this->Render($oPage, true, $aRenderParams);
 		$oPage->add('</div>');
-		$oPage->add('<div class="ui-layout-east">');
+		$oPage->add('<div class="ui-layout-east ibo-dashboard-editor--pane">');
 		$this->RenderProperties($oPage, $aExtraParams);
 		$this->RenderDashletsSelection($oPage);
 		$this->RenderDashletsProperties($oPage, $aExtraParams);
@@ -1261,7 +1262,24 @@ $('#dashboard_editor').dialog({
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: function() {
+	{ text: "$sCancelButtonLabel",
+	 class: "ibo-is-alternative",
+	 click: function() {
+		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
+		if (oDashboard.is_modified())
+		{
+			if (!confirm('$sCancelConfirmationMessage'))
+			{
+				return;
+			}
+		}
+		window.bLeavingOnUserAction = true;
+		$(this).dialog( "close" );
+		$(this).remove();
+	} },
+	{ text: "$sOkButtonLabel",
+	 class: "ibo-is-primary",
+	 click: function() {
 		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
 		if (oDashboard.is_dirty())
 		{
@@ -1276,19 +1294,6 @@ $('#dashboard_editor').dialog({
 		}
 		window.bLeavingOnUserAction = true;
 		oDashboard.save($(this));
-	} },
-	{ text: "$sCancelButtonLabel", click: function() {
-		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
-		if (oDashboard.is_modified())
-		{
-			if (!confirm('$sCancelConfirmationMessage'))
-			{
-				return;
-			}
-		}
-		window.bLeavingOnUserAction = true;
-		$(this).dialog( "close" );
-		$(this).remove();
 	} },
 	],
 	close: function() { $(this).remove(); }
@@ -1307,20 +1312,16 @@ $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
-dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);
-$('#dashboard_editor').layout({
-	east: {
-		minSize: 200,
-		size: dashboard_prop_size,
-		togglerLength_open: 0,
-		togglerLength_closed: 0, 
-		onresize_end: function(name, elt, state, options, layout)
-		{
-			if (state.isSliding == false)
-			{
-				SetUserPreference('dashboard_prop_size', state.size, true);
-			}
-		},
+var dashboard_prop_size = GetUserPreference('dashboard_prop_size', 400);
+$('#dashboard_editor > .itop-dashboard').width($('#dashboard_editor').width() - dashboard_prop_size);
+
+// We check when we finish click on the pane with the resize slider
+// if the pane size changed (% 5px), if it's the case we save the value in userpref
+$('#dashboard_editor > .itop-dashboard').on('mouseup',function (){
+	var iWidthDiff = $(this).width() - ($('#dashboard_editor').width()  - dashboard_prop_size);
+	if( Math.abs(iWidthDiff) > 5){
+		dashboard_prop_size = iWidthDiff;
+		SetUserPreference('dashboard_prop_size', $('#dashboard_editor').width() - $(this).width(), true);
 	}
 });
 
