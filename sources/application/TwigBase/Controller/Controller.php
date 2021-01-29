@@ -227,7 +227,7 @@ abstract class Controller
 	 *
 	 * @throws \Exception
 	 */
-	private function checkNetworkAccess($sExecModule)
+	private function CheckNetworkAccess($sExecModule)
 	{
 		if (empty($sExecModule) || empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
 			return;
@@ -242,14 +242,14 @@ abstract class Controller
 			return;
 		}
 
-		$sAllowedNetworkRegexpPatterns = [];
+		$aAllowedNetworkRegexpPatterns = [];
 
 		foreach ($aReadAllowedNetworkRegexpPatterns as $sAllowedNetworkRegexpPattern){
-			$sAllowedNetworkRegexpPatterns []= trim($sAllowedNetworkRegexpPattern);
+			$aAllowedNetworkRegexpPatterns []= trim($sAllowedNetworkRegexpPattern);
 		}
 
 		$clientIp = $_SERVER['REMOTE_ADDR'];
-		if (!IpUtils::checkIp($clientIp, $sAllowedNetworkRegexpPatterns)){
+		if (!IpUtils::checkIp($clientIp, $aAllowedNetworkRegexpPatterns)){
 			IssueLog::Error("'$sExecModule' page is not authorized to '$clientIp' ip address.");
 			throw new Exception("Unauthorized network");
 		}
@@ -267,7 +267,7 @@ abstract class Controller
 		}
 
 		$sExecModule = utils::ReadParam('exec_module', "");
-		$this->checkNetworkAccess($sExecModule);
+		$this->CheckNetworkAccess($sExecModule);
 
 		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
 
@@ -335,7 +335,7 @@ abstract class Controller
 	 *
 	 * @param string $m_sAccessTokenConfigParamId
 	 */
-	public function setAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
+	public function SetAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
 	{
 		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
 	}
@@ -354,7 +354,7 @@ abstract class Controller
 	 * Otherwise an HTTP error code 500 will be returned.
 	 *
 	 */
-	public function setAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
+	public function SetAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
 	{
 		$this->m_sAccessAuthorizedNetworkConfigParamId = trim($m_sAccessAuthorizedNetworkConfigParamId) ?? "";
 	}
