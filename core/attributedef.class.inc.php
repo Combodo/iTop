@@ -5212,24 +5212,25 @@ class AttributeEnum extends AttributeString
 
 	/**
 	 * Get the list of the actual 'enum' values present in the database
+	 * @since 3.0.0
 	 * @return string[]
 	 */
 	protected function GetActualValuesInDB()
 	{
-	    $sHostClass = $this->GetHostClass();
-	    $sDBTable = MetaModel::DBGetTable($sHostClass, $this->GetCode());
-	    $sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
-	    $aValuesInDB = CMDBSource::QueryToArray($sSQL);
-	    $aValues = array();
-	    foreach($aValuesInDB as $aRow)
-	    {
-	        if ($aRow['value'] !== null)
-	        {
-	           $aValues[] = $aRow['value'];
-	        }
-	    }
-	    IssueLog::Info('actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
-	    return CMDBSource::Quote($aValues);
+		$sHostClass = $this->GetHostClass();
+		$sDBTable = MetaModel::DBGetTable($sHostClass, $this->GetCode());
+		$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+		$aValuesInDB = CMDBSource::QueryToArray($sSQL);
+		$aValues = array();
+		foreach($aValuesInDB as $aRow)
+		{
+			if ($aRow['value'] !== null)
+			{
+				$aValues[] = $aRow['value'];
+			}
+		}
+		IssueLog::Info('actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
+		return CMDBSource::Quote($aValues);
 	}
 
 	protected function GetSQLColSpec()
