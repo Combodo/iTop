@@ -251,9 +251,8 @@ abstract class Controller
 		$clientIp = $_SERVER['REMOTE_ADDR'];
 		if (!IpUtils::checkIp($clientIp, $aAllowedNetworkRegexpPatterns)){
 			IssueLog::Error("'$sExecModule' page is not authorized to '$clientIp' ip address.");
-			throw new Exception("Unauthorized network");
+			throw new Exception("Unauthorized network ($clientIp)");
 		}
-
 	}
 
 	/**
