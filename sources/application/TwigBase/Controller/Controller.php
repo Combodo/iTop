@@ -105,7 +105,7 @@ abstract class Controller
 	 */
 	public function InitFromModule()
 	{
-		$sModulePath = dirname(dirname($this->getDir()));
+		$sModulePath = dirname(dirname($this->GetDir()));
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
 		try
@@ -140,7 +140,7 @@ abstract class Controller
 		$this->m_sModule = $sModule;
 	}
 
-	private function getDir()
+	private function GetDir()
 	{
 		return dirname((new ReflectionClass(static::class))->getFileName());
 	}
