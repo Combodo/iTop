@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>iTop Setup - redirection</title>
-<link type="text/css" href="../css/setup.css" rel="stylesheet">
-</head>
-<body>
+
 <?php
 /*
  * Copyright (C) 2010-2020 Combodo SARL
@@ -32,12 +26,17 @@
  * @since 3.0.0 N°3253
  */
 
-// this will trigger Composer platform_check
-// see https://github.com/composer/composer/blob/master/doc/07-runtime.md#platform-check
-require_once('../lib/autoload.php');
-
 
 echo <<<'HTML'
+<!DOCTYPE html>
+<html>
+<head>
+<title>iTop Setup - redirection</title>
+<link type="text/css" href="../css/setup.css" rel="stylesheet">
+</head>
+<body>
+
+
 <script src="../js/jquery.min.js"></script>
 <script>
 bSkipErrorDisplay = false;
@@ -66,9 +65,14 @@ function HandlePageErrors()
 	}
 }
 
+function CleanOutput($sBuffer)
+{
+	return '';
+}
+
 
 register_shutdown_function('HandlePageErrors');
-ob_start();
+ob_start('CleanOutput');
 require_once("wizard.php");
 ob_end_clean();
 
