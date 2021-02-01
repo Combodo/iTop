@@ -98,7 +98,22 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`UserRequest`.`start_date` > '2017-01-01')"
 			),
-			'contains' => array(
+			'contains nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "contains",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'contains a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -113,7 +128,38 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`Contact`.`name` LIKE '%toto%')"
 			),
-			'starts_with' => array(
+			// See PR #170
+			'contains 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "contains",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '%0%')"
+			),
+			'starts_with nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "starts_with",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'starts_with a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -128,7 +174,37 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`Contact`.`name` LIKE 'toto%')"
 			),
-			'ends_with' => array(
+			'starts_with a 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "starts_with",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '0%')"
+			),
+			'ends_with nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "ends_with",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'ends_with a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -142,6 +218,21 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": ""
                 }',
 				"(`Contact`.`name` LIKE '%toto')"
+			),
+			'ends_with 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "ends_with",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '%0')"
 			),
 			'empty' => array(
 				'Contact',
