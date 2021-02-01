@@ -43,14 +43,14 @@ function GetAjaxRequest(sOperation)
     if (sOperation === "Backup")
     {
         oAjaxRequest.success = function() {
-            $("#do_backup_done").show(300);
+            $("#do_backup_done").removeClass("ibo-is-hidden");
         };
     }
 
     if (sOperation === "FilesArchive")
     {
         oAjaxRequest.success = function() {
-            $("#do_files_archive_done").show(300);
+            $("#do_files_archive_done").removeClass("ibo-is-hidden");
         };
     }
 
