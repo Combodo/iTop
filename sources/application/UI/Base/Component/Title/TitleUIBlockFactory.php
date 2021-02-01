@@ -23,6 +23,17 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 		return new Title($sTitle, 1, $sId);
 	}
 
+	public static function MakeForPageWithIcon(
+		string $sTitle, string $sIconUrl, string $sIconCoverMethod = Title::DEFAULT_ICON_COVER_METHOD, bool $bIsMedallion = true,
+		?string $sId = null
+	)
+	{
+		$oTitle = new Title($sTitle, 1, $sId);
+		$oTitle->SetIcon($sIconUrl, $sIconCoverMethod, $bIsMedallion);
+
+		return $oTitle;
+	}
+
 	public static function MakeForObjectDetails(DBObject $oObject, ?string $sId = null)
 	{
 		// TODO 3.0.0: Refactor all of this

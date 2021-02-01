@@ -3,12 +3,12 @@
 {# Content Block #}
 {% apply spaceless %}
 
-    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClasses() or oUIBlock.GetDataAttributes()) %}
+    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or oUIBlock.GetDataAttributes() or oUIBlock.IsHidden()) %}
 
     {% block iboContentBlockContainer %}
         {% if bHasDiv %}
             <div id="{{ oUIBlock.GetId() }}"
-            class="{% if oUIBlock.GetAdditionalCSSClasses() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+            class="{% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
             {% if oUIBlock.GetDataAttributes() %}
                 {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                     data-{{ sName }}="{{ sValue }}"

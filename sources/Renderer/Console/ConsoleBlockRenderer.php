@@ -16,6 +16,28 @@ class ConsoleBlockRenderer extends BlockRenderer
 {
 
 	/**
+	 * Add blocks to the page using twig template
+	 * @param \WebPage $oPage
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock UIBlock containing template using UIBlock tags
+	 * @param array $aContextParams
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public static function PreRenderBlockIntoPage(WebPage $oPage, iUIBlock $oBlock, array $aContextParams = [])
+	{
+		static::AddCssJsToPage($oPage, $oBlock, $aContextParams);
+		$aContextParams['UIBlockParent'] = [$oPage];
+		$aContextParams['oPage'] = $oPage;
+
+		$oSelf = new static($oBlock, $aContextParams);
+		// No output will add blocks to the page
+		$oSelf->RenderHtml();
+	}
+
+	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
 	 * @param \WebPage $oPage

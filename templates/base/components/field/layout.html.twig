@@ -1,5 +1,8 @@
 {% set aParams = oUIBlock.GetParams() %}
-<div id="{{ oUIBlock.GetId() }}" class="ibo-field ibo-field-{{ oUIBlock.GetLayout() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+<div id="{{ oUIBlock.GetId() }}"
+     class="ibo-field ibo-field-{{ oUIBlock.GetLayout() }}
+        {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}
+        {% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
      data-role="ibo-field"
      data-attribute-code="{{ oUIBlock.GetAttCode() }}"
      data-attribute-type="{{ oUIBlock.GetAttType() }}"
@@ -21,7 +24,7 @@
 			{{ render_block(oSubBlock, {aPage: aPage}) }}
 		{% endfor %}
 	</div>
-	{% if (oUIBlock.GetComments() is not null) %}
-		{{ oUIBlock.GetComments() }}
+	{% if oUIBlock.GetComments() %}
+        <div class="ibo-field--comments">{{ oUIBlock.GetComments() }}</div>
 	{% endif %}
 </div>

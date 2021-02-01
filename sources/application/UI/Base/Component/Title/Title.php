@@ -37,6 +37,7 @@ class Title extends UIBlock
 	protected $sIconUrl;
 	/** @var string How the icon should cover the medallion, see static::ENUM_ICON_COVER_METHOD_COVER, static::ENUM_ICON_COVER_METHOD_ZOOMOUT */
 	protected $sIconCoverMethod;
+	protected $bIsMedallion;
 
 	/**
 	 * @inheritDoc
@@ -48,6 +49,7 @@ class Title extends UIBlock
 		$this->iLevel = $iLevel;
 		$this->sIconUrl = null;
 		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
+		$this->bIsMedallion = true;
 	}
 
 	/**
@@ -66,10 +68,12 @@ class Title extends UIBlock
 		return $this->iLevel;
 	}
 
-	public function SetIcon(string $sIconUrl, string $sIconCoverMethod = self::DEFAULT_ICON_COVER_METHOD)
+	public function SetIcon(string $sIconUrl, string $sIconCoverMethod = self::DEFAULT_ICON_COVER_METHOD, bool $bIsMedallion = true)
 	{
 		$this->sIconUrl = $sIconUrl;
 		$this->sIconCoverMethod = $sIconCoverMethod;
+		$this->bIsMedallion = $bIsMedallion;
+
 		return $this;
 	}
 
@@ -86,6 +90,14 @@ class Title extends UIBlock
 	public function HasIcon(): string
 	{
 		return !is_null($this->sIconUrl);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsMedallion(): bool
+	{
+		return $this->bIsMedallion;
 	}
 
 }

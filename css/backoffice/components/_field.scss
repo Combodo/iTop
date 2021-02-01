@@ -105,6 +105,12 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
   }
 }
 
+.ibo-field--comments {
+  display: table-cell;
+  vertical-align: top;
+  padding-right: 10px;
+}
+
 /* Fullscreen mode */
 .ibo-field-large {
   &.ibo-is-fullscreen {
