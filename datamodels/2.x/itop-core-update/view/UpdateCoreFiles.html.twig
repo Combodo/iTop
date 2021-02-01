@@ -16,7 +16,7 @@
         {% EndUIFieldSet %}
 
         {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
-            {% UIField Large {'sId':'new_version', 'sLabel':'iTopUpdate:UI:NewVersion'|dict_s, 'ValueId':'db-disk-space', 'IsHidden':true} %}{% EndUIField %}
+            {% UIField Large {'sId':'new_version', 'sLabel':'iTopUpdate:UI:NewVersion'|dict_s, 'IsHidden':true} %}{% EndUIField %}
             {% UIAlert ForInformation {'sId':'current_version', 'IsCollapsible':false, 'IsClosable':false} %}
                 {% UIContentBlock Standard {'sId':'current-version','aContainerClasses':['ibo-update-core--current-version']} %}
                     {{ sCurrentVersion }}
@@ -52,18 +52,20 @@
                     {{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}
             {% EndUIAlert %}
 
-            {% UIContentBlock Standard {'sId':'run_setup','aContainerClasses':['ibo-update-core--run-setup'], 'IsHidden':true} %}
+            {% UIContentBlock Standard {sId:"", aContainerClasses:["ibo-setup--button-bar"]} %}
+                {% UIContentBlock Standard {'sId':'run_setup','aContainerClasses':['ibo-update-core--run-setup'], 'IsHidden':true} %}
+                    {% UIForm Standard {'CSSClasses':['form-inline']} %}
+                        {% UIInput ForHidden {'sName':'operation', 'sValue':'RunSetup'} %}
+                        {% UIInput ForHidden {'sName':'authent', 'sValue':sSetupToken} %}
+                        {% UIInput ForHidden {'sName':'', 'sValue':''} %}
+                        {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:RunSetup'|dict_s, 'sId':'run_setup', 'bIsSubmit':true, 'IsDisabled':false} %}
+                    {% EndUIForm %}
+                {% EndUIContentBlock %}
+                {% UIContentBlock Standard {sId:"", aContainerClasses:["ibo-setup--button-spacer"]} %}{% EndUIContentBlock %}
                 {% UIForm Standard {'CSSClasses':['form-inline']} %}
-                    {% UIInput ForHidden {'sName':'operation', 'sValue':'RunSetup'} %}
-                    {% UIInput ForHidden {'sName':'authent', 'sValue':sSetupToken} %}
-                    {% UIInput ForHidden {'sName':'', 'sValue':''} %}
-                    {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:RunSetup'|dict_s, 'sId':'run_setup', 'bIsSubmit':true, 'IsDisabled':false} %}
+                    {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Continue'|dict_s, 'sId':'setup_continue', 'bIsSubmit':true, 'IsDisabled':true} %}
                 {% EndUIForm %}
             {% EndUIContentBlock %}
-
-            {% UIForm Standard {'CSSClasses':['form-inline']} %}
-                {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Continue'|dict_s, 'sId':'setup_continue', 'bIsSubmit':true, 'IsDisabled':true} %}
-            {% EndUIForm %}
 
         {% EndUIFieldSet %}
 

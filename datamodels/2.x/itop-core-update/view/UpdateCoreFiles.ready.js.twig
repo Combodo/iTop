@@ -112,12 +112,13 @@ function ExecNextStep() {
     else
     {
         $.ajax(oGetCurrentVersion);
-        $("#setup_continue").removeAttr("disabled");
+        $("#setup_continue").prop("disabled", false);
         $('#installation_progress').hide(300);
         $('#new_version').removeClass("ibo-is-hidden");
-        $("#current_version").removeClass("message-info").addClass("message-valid");
+        $("#current_version").removeClass("ibo-is-information").addClass("ibo-is-success");
     }
 }
 
+$("#setup_continue").prop("disabled", true);
 ExecNextStep();
 
