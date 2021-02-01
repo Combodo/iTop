@@ -31,8 +31,10 @@
  *
  * @since 3.0.0 N°3253
  */
-$bBypassMaintenance = true; // Reset maintenance mode in case of problem
-require_once('../approot.inc.php');
+
+// this will trigger Composer platform_check
+// see https://github.com/composer/composer/blob/master/doc/07-runtime.md#platform-check
+require_once('../lib/autoload.php');
 
 
 echo <<<'HTML'
