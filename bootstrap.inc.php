@@ -25,6 +25,10 @@
  * This is a hard-coded check that limits errors : we are stopping for anything < PHP 7.0.0
  * The "real one" will be done in {@link \SetupUtils::CheckPhpVersion()}
  *
+ * Note that since Composer 2 there is a platform_check that make this useless, but keeping it anyway to be extra safe !
+ *
+ * @see https://github.com/composer/composer/blob/master/doc/07-runtime.md#platform-check Composer's platform check
+ *
  * @since 3.0.0 N°2214
  */
 $bIsValidPhpVersion = false;

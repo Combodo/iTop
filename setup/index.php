@@ -19,68 +19,25 @@
 
 
 /**
- * Simple redirection page
- * Will display an error message if a parse error occurs !
+ * Simple redirection page to check PHP requirements
+ *
+ * @see https://github.com/composer/composer/blob/master/doc/07-runtime.md#platform-check Composer's platform_check
  *
  * @since 3.0.0 N°3253
  */
 
+require_once('../lib/autoload.php');
 
-echo <<<'HTML'
+echo <<<HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>iTop Setup - redirection</title>
-<link type="text/css" href="../css/setup.css" rel="stylesheet">
-</head>
-<body>
-
-
-<script src="../js/jquery.min.js"></script>
+<title>iTop setup - redirection page</title>
 <script>
-bSkipErrorDisplay = false;
-$(document).ready(function () {
-	if (!bSkipErrorDisplay) {
-		var $pageBody = $("body");
-		// $pageBody.addClass("error-container");
-		$pageBody.append("<div id='ibo-page-container'>" +
-		  "<h1>😭 The application cannot be installed</h1>" +
-		  "<p class=\"message message-error\">💣 PHP version isn't compatible</p>" +
-		  "<p>Please check <a href=\"https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Ainstalling_itop#software_requirements\" target=\"_blank\">iTop core requirements</a></p>" +
-		   "</div>")
-	}
-});
-</script>
-HTML;
-
-
-function HandlePageErrors()
-{
-	$error = error_get_last();
-	if ($error
-		&& (isset($error['type']))
-		&& (in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR], true))) {
-		ob_end_clean();
-	}
-}
-
-function CleanOutput($sBuffer)
-{
-	return '';
-}
-
-
-register_shutdown_function('HandlePageErrors');
-ob_start('CleanOutput');
-require_once("wizard.php");
-ob_end_clean();
-
-echo <<<HTML
-<script>
-bSkipErrorDisplay = true;
 document.location = "wizard.php";
 </script>
-
+</head>
+<body>
 </body>
 </html>
 HTML;
