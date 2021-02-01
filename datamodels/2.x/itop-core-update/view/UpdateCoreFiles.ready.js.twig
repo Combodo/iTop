@@ -20,7 +20,7 @@ var oGetCurrentVersion = {
     dataType: "json",
     success: function(data)
     {
-        var oCurrentVersion = $("#current-version");
+        var oCurrentVersion = $(".ibo-update-core--current-version");
         if (oCurrentVersion)
         {
             oCurrentVersion.html(data.sVersion);
@@ -115,10 +115,9 @@ function ExecNextStep() {
         $("#setup_continue").prop("disabled", false);
         $('#installation_progress').hide(300);
         $('#new_version').removeClass("ibo-is-hidden");
-        $("#current_version").removeClass("ibo-is-information").addClass("ibo-is-success");
+        $('#current_version').addClass("ibo-is-hidden");
     }
 }
 
-$("#setup_continue").prop("disabled", true);
 ExecNextStep();
 

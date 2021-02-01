@@ -3,9 +3,9 @@
 
 {% apply spaceless %}
 
-    {% UIContentBlock Standard {'aContainerClasses': ['ibo-update-core', 'display_block', 'display-files']} %}
+    {% UIContentBlock Standard {aContainerClasses: ['ibo-update-core', 'display_block', 'display-files']} %}
 
-        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Progress'|dict_s, 'sId':'installation_progress'} %}
+        {% UIFieldSet Standard {sLegend:'iTopUpdate:UI:Progress'|dict_s, sId:'installation_progress'} %}
             {#  Todo 3.0 Add Progress bar UIBlock  #}
             <div id="progress_content">
                 <p class="center">
@@ -15,34 +15,31 @@
             </div>
         {% EndUIFieldSet %}
 
-        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s} %}
-            {% UIField Large {'sId':'new_version', 'sLabel':'iTopUpdate:UI:NewVersion'|dict_s, 'IsHidden':true} %}{% EndUIField %}
-            {% UIAlert ForInformation {'sId':'current_version', 'IsCollapsible':false, 'IsClosable':false} %}
-                {% UIContentBlock Standard {'sId':'current-version','aContainerClasses':['ibo-update-core--current-version']} %}
+        {% UIFieldSet Standard {sLegend:'iTopUpdate:UI:Status'|dict_s} %}
+            {% UIAlert ForSuccess {sId:'new_version', sTitle:'iTopUpdate:UI:NewVersion'|dict_s, IsHidden:true, IsCollapsible:false, IsClosable:false} %}
+                {% UIContentBlock Standard {aContainerClasses:['ibo-update-core--current-version']} %}
+                    {{ sCurrentVersion }}
+                {% EndUIContentBlock %}
+            {% EndUIAlert %}
+            {% UIAlert ForInformation {sId:'current_version', IsCollapsible:false, IsClosable:false} %}
+                {% UIContentBlock Standard {aContainerClasses:['ibo-update-core--current-version']} %}
                     {{ sCurrentVersion }}
                 {% EndUIContentBlock %}
             {% EndUIAlert %}
 
             {% if bDoBackup %}
-                {% UIContentBlock Standard {'sId':'do_backup_done','aContainerClasses':['ibo-update-core--backup-done'], 'IsHidden':true} %}
-                    {% UIField Standard {'sLabel':'iTopUpdate:UI:WithDBBackup'|dict_s, 'sLayout':'large'} %}
-                        {% UIAlert ForInformation {'sContent':sBackupFile} %}{% EndUIAlert %}
-                    {% EndUIField %}
-                {% EndUIContentBlock %}
+                {% UIAlert ForInformation {sId:'do_backup_done', sTitle:'iTopUpdate:UI:WithDBBackup'|dict_s, sContent:sBackupFile, IsHidden:true} %}{% EndUIAlert %}
             {% endif %}
 
             {% if bDoFilesArchive %}
-                {% UIContentBlock Standard {'sId':'do_files_archive_done','aContainerClasses':['ibo-update-core--archive-done'], 'IsHidden':true} %}
-                    {% UIField Large {'sLabel':'iTopUpdate:UI:WithFilesBackup'|dict_s} %}{% EndUIField %}
-                    {% UIAlert ForSuccess {'sContent':sItopArchive} %}{% EndUIAlert %}
-                {% EndUIContentBlock %}
+                {% UIAlert ForInformation {sId:'do_files_archive_done', sTitle:'iTopUpdate:UI:WithFilesBackup'|dict_s, sContent:sItopArchive, IsHidden:true} %}{% EndUIAlert %}
             {% endif %}
         {% EndUIFieldSet %}
 
-        {% UIFieldSet Standard {'sLegend':''} %}
+        {% UIFieldSet Standard {sLegend:''} %}
 
-            {% UIAlert ForFailure {'sId':'setup_error_outer', 'sContent':'', 'IsCollapsible':false, 'IsClosable':false, 'IsHidden':true} %}
-                {% UIContentBlock Standard {'sId':'setup_error','aContainerClasses':['ibo-update-core--error']} %}{% EndUIContentBlock %}
+            {% UIAlert ForFailure {sId:'setup_error_outer', sContent:'', IsCollapsible:false, IsClosable:false, IsHidden:true} %}
+                {% UIContentBlock Standard {sId:'setup_error',aContainerClasses:['ibo-update-core--error']} %}{% EndUIContentBlock %}
                 {% if bDoFilesArchive %}
                     {{ 'iTopUpdate:UI:RestoreArchive'|dict_format(sItopArchive) }}
                 {% endif %}
@@ -52,18 +49,18 @@
                     {{ 'iTopUpdate:UI:MaintenanceModeActive'|dict_s }}
             {% EndUIAlert %}
 
-            {% UIContentBlock Standard {sId:"", aContainerClasses:["ibo-setup--button-bar"]} %}
-                {% UIContentBlock Standard {'sId':'run_setup','aContainerClasses':['ibo-update-core--run-setup'], 'IsHidden':true} %}
-                    {% UIForm Standard {'CSSClasses':['form-inline']} %}
-                        {% UIInput ForHidden {'sName':'operation', 'sValue':'RunSetup'} %}
-                        {% UIInput ForHidden {'sName':'authent', 'sValue':sSetupToken} %}
-                        {% UIInput ForHidden {'sName':'', 'sValue':''} %}
-                        {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:RunSetup'|dict_s, 'sId':'run_setup', 'bIsSubmit':true, 'IsDisabled':false} %}
+            {% UIContentBlock Standard {aContainerClasses:["ibo-setup--button-bar"]} %}
+                {% UIContentBlock Standard {sId:'run_setup',aContainerClasses:['ibo-update-core--run-setup'], IsHidden:true} %}
+                    {% UIForm Standard {CSSClasses:['form-inline']} %}
+                        {% UIInput ForHidden {sName:'operation', sValue:'RunSetup'} %}
+                        {% UIInput ForHidden {sName:'authent', sValue:sSetupToken} %}
+                        {% UIInput ForHidden {sName:'', sValue:''} %}
+                        {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:RunSetup'|dict_s, sId:'run_setup', bIsSubmit:true, IsDisabled:false} %}
                     {% EndUIForm %}
                 {% EndUIContentBlock %}
-                {% UIContentBlock Standard {sId:"", aContainerClasses:["ibo-setup--button-spacer"]} %}{% EndUIContentBlock %}
-                {% UIForm Standard {'CSSClasses':['form-inline']} %}
-                    {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Continue'|dict_s, 'sId':'setup_continue', 'bIsSubmit':true, 'IsDisabled':true} %}
+                {% UIContentBlock Standard {aContainerClasses:["ibo-setup--button-spacer"]} %}{% EndUIContentBlock %}
+                {% UIForm Standard {CSSClasses:['form-inline']} %}
+                    {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:Continue'|dict_s, sId:'setup_continue', bIsSubmit:true, IsDisabled:true} %}
                 {% EndUIForm %}
             {% EndUIContentBlock %}
 
