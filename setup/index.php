@@ -1,4 +1,3 @@
-
 <?php
 /*
  * Copyright (C) 2010-2020 Combodo SARL
