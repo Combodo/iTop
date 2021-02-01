@@ -2,7 +2,6 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 $("#do-update").on("click", function() {
-    $("#submit-wait").removeClass("ibo-is-hidden");
     $(this).prop("disabled", true);
     $("#cancel-update").prop("disabled", true);
     $(this).parents('form').submit();

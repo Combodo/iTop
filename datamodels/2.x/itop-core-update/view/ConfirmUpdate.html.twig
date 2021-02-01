@@ -37,7 +37,6 @@
                 {% UIContentBlock Standard {aContainerClasses:["ibo-setup--button-spacer"]} %}{% EndUIContentBlock %}
                 {% UIForm Standard {'CSSClasses':['form-inline']} %}
                     {% UIButton ForPrimaryAction {'sId':'do-update', 'sLabel':'iTopUpdate:UI:DoUpdate'|dict_s, 'bIsSubmit':true} %}
-                    {% UISpinner Standard {'sId':'submit-wait', 'IsHidden':true} %}
                     {% UIInput ForHidden {'sName':'operation', 'sValue':'UpdateCoreFiles'} %}
                     {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
                     {% UIInput ForHidden {'sName':'filename', 'sValue':sName} %}
