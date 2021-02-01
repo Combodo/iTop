@@ -80,7 +80,7 @@ echo <<<HTML
 bSkipErrorDisplay = true;
 document.location = "wizard.php";
 </script>
-HTML;
-?>
+
 </body>
 </html>
+HTML;
