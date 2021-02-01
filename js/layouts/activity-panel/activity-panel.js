@@ -79,6 +79,7 @@ $(function()
 				this.element.addClass('ibo-activity-panel');
 				this._bindEvents();
 				this._UpdateMessagesCounters();
+				this._UpdateFiltersCheckboxesFromOptions();
 				this._ReformatDateTimes();
 
 				// TODO 3.0.0: Modify PopoverMenu so we can pass it the ID of the block triggering the open/close
@@ -227,15 +228,7 @@ $(function()
 				const oFilterOptionsElem = oInputElem.closest(this.js_selectors.activity_filter_options);
 				const oFilterInputElem = oInputElem.closest(this.js_selectors.tab_toolbar_action).find(this.js_selectors.activity_filter);
 
-				// If all options checked, checked the parent
-				if (oFilterOptionsElem.find(this.js_selectors.activity_filter_option_input + ':not(:checked)').length === 0) {
-					oFilterInputElem.prop('checked', true);
-				}
-				// Else, uncheck the parent
-				else {
-					oFilterInputElem.prop('checked', false);
-				}
-
+				this._UpdateFiltersCheckboxesFromOptions();
 				this._ApplyEntriesFilters();
 			},
 			_onCaseLogOpenAllClick: function(oIconElem)
@@ -448,6 +441,37 @@ $(function()
 					iIdx = parseInt(oCaselogTab.attr('data-caselog-rank'));
 				}
 				return iIdx;
+			},
+			/**
+			 * Update the main filters checkboxes depending on the state of their filter's options.
+			 * The main goal is to have an "indeterminated" state.
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_UpdateFiltersCheckboxesFromOptions: function()
+			{
+				const me = this;
+
+				this.element.find(this.js_selectors.activity_filter_options).each(function(){
+					const oFilterOptionsElem = $(this);
+					const iTotalOptionsCount = oFilterOptionsElem.find(me.js_selectors.activity_filter_option_input).length;
+					const iCheckedOptionsCount = oFilterOptionsElem.find(me.js_selectors.activity_filter_option_input + ':checked').length;
+
+					let bChecked = false;
+					let bIndeterminate = false;
+					if (iCheckedOptionsCount === iTotalOptionsCount) {
+						bChecked = true;
+					}
+					else if ((0 < iCheckedOptionsCount) && (iCheckedOptionsCount < iTotalOptionsCount)) {
+						bIndeterminate = true;
+					}
+
+					oFilterOptionsElem.closest(me.js_selectors.tab_toolbar_action).find(me.js_selectors.activity_filter).prop({
+						indeterminate: bIndeterminate,
+						checked: bChecked
+					});
+				});
 			},
 			/**
 			 * Show the oFilterElem's options
