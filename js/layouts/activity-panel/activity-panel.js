@@ -451,32 +451,6 @@ $(function()
 				this._ShowAllEntries();
 				this._ApplyEntriesFilters();
 			},
-			/**
-			 * Show all case logs entry forms.
-			 * Event is triggered on the corresponding elements.
-			 *
-			 * @return {void}
-			 * @private
-			 */
-			_ShowCaseLogsEntryForms: function()
-			{
-				this.element.find(this.js_selectors.caselog_entry_form).trigger('show_form.caselog_entry_form.itop');
-				this.element.find(this.js_selectors.compose_button).addClass(this.css_classes.is_hidden);
-			},
-			/**
-			 * Hide all case logs entry forms.
-			 * Event is triggered on the corresponding elements.
-			 *
-			 * @return {void}
-			 * @private
-			 */
-			_HideCaseLogsEntryForms: function()
-			{
-				this.element.find(this.js_selectors.caselog_entry_form).trigger('hide_form.caselog_entry_form.itop');
-				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
-
-				// TODO 3.0.0: Release lock
-			},
 			GetCaseLogRank: function(sCaseLog)
 			{
 				let iIdx = 0;
@@ -490,6 +464,8 @@ $(function()
 				}
 				return iIdx;
 			},
+
+			// - Helpers on toolbars
 			/**
 			 * Update the main filters checkboxes depending on the state of their filter's options.
 			 * The main goal is to have an "indeterminated" state.
@@ -562,6 +538,34 @@ $(function()
 				this.element.find(this.js_selectors.activity_filter_options_toggler).each(function(){
 					me._HideFilterOptions($(this));
 				});
+			},
+
+			// - Helpers on case logs entry forms
+			/**
+			 * Show all case logs entry forms.
+			 * Event is triggered on the corresponding elements.
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_ShowCaseLogsEntryForms: function()
+			{
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('show_form.caselog_entry_form.itop');
+				this.element.find(this.js_selectors.compose_button).addClass(this.css_classes.is_hidden);
+			},
+			/**
+			 * Hide all case logs entry forms.
+			 * Event is triggered on the corresponding elements.
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_HideCaseLogsEntryForms: function()
+			{
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('hide_form.caselog_entry_form.itop');
+				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
+
+				// TODO 3.0.0: Release lock
 			},
 
 			// - Helpers on messages
