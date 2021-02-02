@@ -2602,5 +2602,18 @@ class DBObjectSearch extends DBSearch
 		return $oExpression;
 	}
 
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+	}
 
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
+	}
 }

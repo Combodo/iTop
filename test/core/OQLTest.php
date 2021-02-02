@@ -15,7 +15,10 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBSearch;
 use Exception;
+use MetaModel;
 use OqlInterpreter;
+use QueryBuilderContext;
+use SQLObjectQueryBuilder;
 use utils;
 
 /**
@@ -401,4 +404,54 @@ class OQLTest extends ItopDataTestCase
 		);
 	}
 
+
+	/**
+	 * @dataProvider GetOQLClassTreeProvider
+	 * @param $sOQL
+	 * @param $sExpectedOQL
+	 */
+	public function testGetOQLClassTree($sOQL, $sExpectedOQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass))
+			{
+				$sMainClass = $sClass;
+			}
+		}
+		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
+		$sResultOQL = $oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild);
+
+		static::assertEquals($sExpectedOQL, $sResultOQL);
+	}
+
+	public function GetOQLClassTreeProvider()
+	{
+		return [
+			'Bug 3660 1' => [
+				"SELECT UserRequest AS U
+	JOIN lnkContactToTicket AS l ON l.ticket_id=U.id
+		JOIN Team AS T ON l.contact_id=T.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id` 
+        INNER JOIN `Contact` AS `T_Contact`
+          ON `l`.`contact_id` = `T_Contact`.`id`",
+			],
+			'Bug 3660 2' => [
+				"SELECT UserRequest AS U
+	JOIN lnkContactToTicket AS l ON l.ticket_id=U.id
+		JOIN Contact AS C ON l.contact_id=C.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id`",
+			],
+		];
+	}
 }
