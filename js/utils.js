@@ -933,3 +933,82 @@ const CombodoGlobalToolbox = {
 		});
 	}
 };
+
+/**
+ * Helper to print messages in the browser JS console, use this instead of "console.xxx()" directly as this checks that the method exists.
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoJSConsole = {
+	/**
+	 * @param sMessage {string} Message to output in the JS console
+	 * @param sLevel {string} Console canal to use for the output, values can be log|debug|warn|error, default is log
+	 * @returns {boolean}
+	 * @internal
+	 */
+	_Trace: function(sMessage, sLevel = 'log')
+	{
+		// Check if browser has JS console
+		if (!window.console) {
+			return false;
+		}
+
+		// Check if browser has the wanted log level
+		if (!window.console[sLevel]) {
+			sLevel = 'log';
+		}
+
+		window.console[sLevel](sMessage);
+	},
+	/**
+	 * Equivalent of a "console.log(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 * @constructor
+	 */
+	Log: function(sMessage)
+	{
+		this._Trace(sMessage, 'log');
+	},
+	/**
+	 * Equivalent of a "console.info(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 * @constructor
+	 */
+	Info: function(sMessage)
+	{
+		this._Trace(sMessage, 'info');
+	},
+	/**
+	 * Equivalent of a "console.debug(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 * @constructor
+	 */
+	Debug: function(sMessage)
+	{
+		this._Trace(sMessage, 'debug');
+	},
+	/**
+	 * Equivalent of a "console.warn(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 * @constructor
+	 */
+	Warn: function(sMessage)
+	{
+		this._Trace(sMessage, 'warn');
+	},
+	/**
+	 * Equivalent of a "console.error(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 * @constructor
+	 */
+	Error: function(sMessage)
+	{
+		this._Trace(sMessage, 'error');
+	}
+}
