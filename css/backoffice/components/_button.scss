@@ -389,7 +389,8 @@ $ibo-button-colors: (
 
 .ibo-button {
 	cursor: pointer;
-	@extend %ibo-font-ral-med-150;
+	@extend %ibo-font-ral-sembol-100;
+  text-transform: uppercase;
 	padding: $ibo-button--padding-y $ibo-button--padding-x;
 	border: $ibo-button--border;
 	border-radius: $ibo-button--border-radius;

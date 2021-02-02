@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Dict;
 
 /**
  * Class ButtonUIBlockFactory
@@ -259,6 +260,28 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$bIsSubmit, $sId);
 	}
 
+	/**
+	 * Make a Button component for a cancel, should be used only for UI navigation, not destructive action
+	 *
+	 * @param string|null $sLabel
+	 * @param string|null $sName See Button::$sName
+	 * @param string|null $sValue See Button::$sValue
+	 * @param bool $bIsSubmit See Button::$sType
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
+	 */
+	public static function MakeForCancel(
+		string $sLabel = null,
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
+	): Button {
+		$sLabel = $sLabel ?? Dict::S('UI:Button:Cancel');
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+			$bIsSubmit, $sId);
+	}
 	//----------------------------------------------------------------------------------------------
 	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
 	//----------------------------------------------------------------------------------------------

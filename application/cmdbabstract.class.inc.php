@@ -2589,7 +2589,7 @@ CSS
 		$oToolbarTop = new Toolbar();
 		$oToolbarTop->SetCSSClasses(['ibo-toolbar', 'ibo-toolbar-top']);
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
 		$oCancelButton->AddCSSClasses(['action', 'cancel']);
 		$oToolbarTop->AddSubBlock($oCancelButton);
 		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
