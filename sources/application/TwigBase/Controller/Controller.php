@@ -68,9 +68,6 @@ abstract class Controller
 	private $m_aAjaxTabs;
 	/** @var string */
 	private $m_sAccessTokenConfigParamId = null;
-	/** @var string */
-	private $m_sAccessAuthorizedNetworkConfigParamId = null;
-
 
 	/**
 	 * Controller constructor.
@@ -221,41 +218,6 @@ abstract class Controller
 	}
 
 	/**
-	 * Check if page access is allowed to remote network
-	 *
-	 * @param $sExecModule
-	 *
-	 * @throws \Exception
-	 */
-	private function CheckNetworkAccess($sExecModule)
-	{
-		if (empty($sExecModule) || empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
-			return;
-		}
-
-		$aReadAllowedNetworkRegexpPatterns = MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId);
-		if (!is_array($aReadAllowedNetworkRegexpPatterns)){
-			IssueLog::Error("'$sExecModule' wrongly configured. please check $this->m_sAccessAuthorizedNetworkConfigParamId config (not an array).");
-			return;
-		} else if (empty($aReadAllowedNetworkRegexpPatterns)){
-			//no rule
-			return;
-		}
-
-		$aAllowedNetworkRegexpPatterns = [];
-
-		foreach ($aReadAllowedNetworkRegexpPatterns as $sAllowedNetworkRegexpPattern){
-			$aAllowedNetworkRegexpPatterns []= trim($sAllowedNetworkRegexpPattern);
-		}
-
-		$clientIp = $_SERVER['REMOTE_ADDR'];
-		if (!IpUtils::checkIp($clientIp, $aAllowedNetworkRegexpPatterns)){
-			IssueLog::Error("'$sExecModule' page is not authorized to '$clientIp' ip address.");
-			throw new Exception("Unauthorized network ($clientIp)");
-		}
-	}
-
-	/**
 	 * @throws \Exception
 	 */
 	private function CheckAccess()
@@ -266,7 +228,6 @@ abstract class Controller
 		}
 
 		$sExecModule = utils::ReadParam('exec_module', "");
-		$this->CheckNetworkAccess($sExecModule);
 
 		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
 
@@ -337,25 +298,6 @@ abstract class Controller
 	public function SetAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
 	{
 		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
-	}
-
-	/**
-	 * Used to ensure iTop security by serving HTTP page to a specific subset of remote networks (white list mode).
-	 * This security mechanism is applied to current extension when :
-	 *  - '$m_sAccessAuthorizedNetworkConfigParamId' is configured under $MyModuleSettings section.
-	 *
-	 * Extension page will be allowed as long as iTop '$m_sAccessAuthorizedNetworkConfigParamId' regexp configuration value matches $_SERVER['REMOTE_ADDR'] IP address.
-	 *
-	 * Example:
-	 * Let's assume $m_sAccessAuthorizedNetworkConfigParamId='allowed_networks' with iTop $MyModuleSettings below configuration:
-	 *      'combodo-shadok' => array ( 'allowed_networks' => '10\.\d{1,3}\.\d{1,3}\.\d{1,3}')
-	 * 'combodo-shadok' extension main page is rendered only for HTTP client under 10.X.X.X networks.
-	 * Otherwise an HTTP error code 500 will be returned.
-	 *
-	 */
-	public function SetAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
-	{
-		$this->m_sAccessAuthorizedNetworkConfigParamId = trim($m_sAccessAuthorizedNetworkConfigParamId) ?? "";
 	}
 
 	/**
