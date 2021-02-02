@@ -310,6 +310,23 @@
   --ibo-lifecycle-inactive-state-secondary-color: white;
 }
 /*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software !default; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY !default; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+/*!
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -375,95 +392,149 @@
  */
 .ibo-navigation-menu--menu-filter-hotkey, .ibo-activity-entry--sub-information {
   font-size: 0.83rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-breadcrumbs--item, .ibo-quick-create--drawer, .ibo-global-search--drawer, .ibo-navigation-menu--notifications--item--bottom-text, .ibo-title--status, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-organization, body {
   font-size: 1rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-breadcrumbs--item-icon, .ibo-popover-menu--item, .ibo-input-select-icon--menu--item, .ibo-navigation-menu--notifications--item--content, .ibo-field, .ibo-navigation-menu--menu-nodes ul li > a, .ibo-navigation-menu--menu-nodes ul li > span, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-notifications, .ibo-tab-container--tabs-list, .ibo-activity-entry--medallion {
   font-size: 1.17rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-collapsible-section .ibo-collapsible-section--body, .ibo-panel--body, .ibo-dashlet-header-static--text, .ibo-navigation-menu--menu-group {
   font-size: 1.33rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ui-dialog-title, .ibo-panel--title .ibo-panel--title-title .ibo-panel--title-title-subtitle, .ibo-panel--title .ibo-panel--title-title .ibo-panel--title-title-subtitle a.summary, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-welcome-message {
   font-size: 1.5rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-quick-create--input.selectize-control.single .selectize-input > input, .ibo-quick-create--input.selectize-control.single .selectize-input.input-active > input, .ibo-quick-create--input.selectize-control.single .selectize-input > .item, .ibo-quick-create--input.selectize-control.single .selectize-input.input-active > .item, .ibo-global-search--input, .ibo-global-search--input:hover, .ibo-global-search--input:focus, .ibo-global-search--input:active {
   font-size: 1.67rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-title--for-object-details, .ibo-title-for-dashlet--title, .ibo-navigation-menu--menu-nodes-title {
   font-size: 1.83rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-quick-create--icon, .ibo-global-search--icon {
   font-size: 2rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-dashlet-header-dynamic--label, .ibo-datatable thead tr th, .ibo-datatable tbody tr td, .dataTables_length, .dataTables_length select, .dataTables_info, .paginate_button a, .paginate_button.active a, .ibo-criterion-area, .ibo-field-badge, .ibo-dashboard--properties table td .ibo-field, .ibo-dashboard--available-dashlets table td .ibo-field, .ibo-dashlet--properties table td .ibo-field {
   font-size: 1rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-alert, .ibo-button, .ui-dialog .ui-button, .ui-datepicker-current, .ui-datepicker-close, .ibo-prop--apply > span, .ibo-prop--cancel > span, .sf_results_placeholder button, .sfc_fg_button, .ibo-dashlet--delete, .ibo-dashlet-badge--action-create, .sf_results_placeholder, .ibo-dashboard--properties--subtitle, .ibo-dashboard--available-dashlet--title, .ibo-dashlet--properties--title {
   font-size: 1.17rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-collapsible-section .ibo-collapsible-section--header .ibo-collapsible-section--title, .ibo-panel--title, .ibo-panel--title .ibo-panel--title-title, .ibo-dashlet-badge--action-list, .ibo-dashlet-header-static--title, .ibo-fieldset-legend, .ibo-dashboard--properties--subtitle, .ibo-dashboard--available-dashlet--title, .ibo-dashlet--properties--title, .ibo-top-bar--toolbar-dashboard-title, .ibo-tab-container--tab-container--label > span, .ibo-dashboard--properties--title {
   font-size: 1.5rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 500;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-field--label > .ibo-has-description::after, .ibo-navigation-menu--menu-filter-clear {
   font-size: 0.83rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-title, .ibo-navigation-menu--menu-node-counter {
   font-size: 1rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-alert .ibo-alert--title, .ibo-tab-container--tab-header.ui-tabs-active, .ui-tabs-active.ibo-tab-container--extra-tabs-container {
   font-size: 1.17rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu .ibo-navigation-menu--notifications-show-all-multiple--counter, .ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-input-select-icon--menu .ibo-navigation-menu--notifications-show-all-multiple--counter, .ibo-dashlet-header-dynamic--count {
   font-size: 1.33rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-dashlet-badge--action-list-count {
   font-size: 2.5rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-navigation-menu--menu-filter-hint {
   font-size: 0.83rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
   font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 .ibo-quick-create--compartment--placeholder-hint, .ibo-global-search--compartment--placeholder-hint, .ibo-navigation-menu--menu--placeholder-hint, .ibo-activity-panel--body--placeholder-hint {
   font-size: 1rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
   font-weight: 400;
   font-style: italic;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
 }
 /*!
  * Copyright (C) 2013-2020 Combodo SARL
@@ -869,7 +940,7 @@ article, aside, figure, footer, header, hgroup, section {
   display: block;
 }
 body, button, input, select, textarea {
-  font-family: "Monorale";
+  font-family: "Raleway";
 }
 code, pre {
   -moz-osx-font-smoothing: auto;
@@ -8537,13 +8608,13 @@ a.has-text-danger-dark:hover, .ibo-quick-create--compartment-results--element > 
   font-weight: 700 !important;
 }
 .is-family-primary {
-  font-family: "Monorale" !important;
+  font-family: "Raleway" !important;
 }
 .is-family-secondary {
-  font-family: "Monorale" !important;
+  font-family: "Raleway" !important;
 }
 .is-family-sans-serif {
-  font-family: "Monorale" !important;
+  font-family: "Raleway" !important;
 }
 .is-family-monospace {
   font-family: monospace !important;
@@ -10169,112 +10240,112 @@ a:active {
  */
 /* This is an overload of the default lib. stylesheet to use local fonts instead of the CDN */
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 100;
   font-style: normal;
-  src: local('Raleway-v4020 Thin'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Thin.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Thin.woff') format('woff');
+  src: local('Raleway Thin'), url('../node_modules/raleway-webfont/fonts/Raleway-Thin.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 100;
   font-style: italic;
-  src: local('Raleway-v4020 Thin'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-ThinItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-ThinItalic.woff') format('woff');
+  src: local('Raleway Thin'), url('../node_modules/raleway-webfont/fonts/Raleway-Thin-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 200;
   font-style: normal;
-  src: local('Raleway-v4020 ExtraLight'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraLight.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraLight.woff') format('woff');
+  src: local('Raleway ExtraLight'), url('../node_modules/raleway-webfont/fonts/Raleway-ExtraLight.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 200;
   font-style: italic;
-  src: local('Raleway-v4020 ExtraLight'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraLightItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraLightItalic.woff') format('woff');
+  src: local('Raleway ExtraLight'), url('../node_modules/raleway-webfont/fonts/Raleway-ExtraLight-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 300;
   font-style: normal;
-  src: local('Raleway-v4020 Light'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Light.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Light.woff') format('woff');
+  src: local('Raleway Light'), url('../node_modules/raleway-webfont/fonts/Raleway-Light.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 300;
   font-style: italic;
-  src: local('Raleway-v4020 Light'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-LightItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-LightItalic.woff') format('woff');
+  src: local('Raleway Light'), url('../node_modules/raleway-webfont/fonts/Raleway-Light-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 400;
   font-style: normal;
-  src: local('Raleway-v4020'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Regular.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Regular.woff') format('woff');
+  src: local('Raleway'), url('../node_modules/raleway-webfont/fonts/Raleway-Regular.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 400;
   font-style: italic;
-  src: local('Raleway-v4020'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Italic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Italic.woff') format('woff');
+  src: local('Raleway'), url('../node_modules/raleway-webfont/fonts/Raleway-Regular-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 500;
   font-style: normal;
-  src: local('Raleway-v4020 Medium'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Medium.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Medium.woff') format('woff');
+  src: local('Raleway Medium'), url('../node_modules/raleway-webfont/fonts/Raleway-Medium.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 500;
   font-style: italic;
-  src: local('Raleway-v4020 Medium'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-MediumItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-MediumItalic.woff') format('woff');
+  src: local('Raleway Medium'), url('../node_modules/raleway-webfont/fonts/Raleway-Medium-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 600;
   font-style: normal;
-  src: local('Raleway-v4020 SemiBold'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-SemiBold.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-SemiBold.woff') format('woff');
+  src: local('Raleway SemiBold'), url('../node_modules/raleway-webfont/fonts/Raleway-SemiBold.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 600;
   font-style: italic;
-  src: local('Raleway-v4020 SemiBold'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-SemiBoldItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-SemiBoldItalic.woff') format('woff');
+  src: local('Raleway SemiBold'), url('../node_modules/raleway-webfont/fonts/Raleway-SemiBold-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 700;
   font-style: normal;
-  src: local('Raleway-v4020'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Bold.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Bold.woff') format('woff');
+  src: local('Raleway'), url('../node_modules/raleway-webfont/fonts/Raleway-Bold.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 700;
   font-style: italic;
-  src: local('Raleway-v4020'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-BoldItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-BoldItalic.woff') format('woff');
+  src: local('Raleway'), url('../node_modules/raleway-webfont/fonts/Raleway-Bold-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 800;
   font-style: normal;
-  src: local('Raleway-v4020 ExtraBold'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraBold.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraBold.woff') format('woff');
+  src: local('Raleway ExtraBold'), url('../node_modules/raleway-webfont/fonts/Raleway-ExtraBold.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 800;
   font-style: italic;
-  src: local('Raleway-v4020 ExtraBold'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-ExtraBoldItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-ExtraBoldItalic.woff') format('woff');
+  src: local('Raleway ExtraBold'), url('../node_modules/raleway-webfont/fonts/Raleway-ExtraBold-Italic.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 900;
   font-style: normal;
-  src: local('Raleway-v4020 Black'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-Black.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-Black.woff') format('woff');
+  src: local('Raleway Black'), url('../node_modules/raleway-webfont/fonts/Raleway-Black.ttf') format('truetype');
 }
 @font-face {
-  font-family: Monorale;
+  font-family: Raleway;
   font-weight: 900;
   font-style: italic;
-  src: local('Raleway-v4020 Black'), url('../lib/samvk/monorale-raleway-sober/otf/Monorale-BlackItalic.otf') format('otf'), url('../lib/samvk/monorale-raleway-sober/woff/Monorale-BlackItalic.woff') format('woff');
+  src: local('Raleway Black'), url('../node_modules/raleway-webfont/fonts/Raleway-Black-Italic.ttf') format('truetype');
 }
 /*!
  * copyright   Copyright (C) 2010-2020 Combodo SARL
@@ -14816,7 +14887,7 @@ fieldset > legend {
 }
 body {
   font-size: 1.17rem;
-  font-family: "Monorale";
+  font-family: "Raleway";
 }
 #ibo_setup_container {
   width: 800px;
