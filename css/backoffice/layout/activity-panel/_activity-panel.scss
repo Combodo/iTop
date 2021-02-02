@@ -48,6 +48,8 @@ $ibo-activity-panel--tab-title-decoration--height: $ibo-activity-panel--tab-titl
 $ibo-activity-panel--tab-title-decoration--margin-right: 8px !default;
 $ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300 !default;
 
+$ibo-activity-panel--tab-title-draft-indicator--margin-right: $ibo-activity-panel--tab-title-decoration--margin-right !default;
+
 $ibo-activity-panel--tab-title-text--max-width: 100px !default;
 
 /* - Tab toolbar */
@@ -64,7 +66,7 @@ $ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
 $ibo-activity-panel--tab-toolbar-filter--sibling-spacing: 18px !default;
 $ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: 8px !default;
 
-$ibo-activity-panel--filter-options-toggler--margin-left: 0.5rem !default;
+$ibo-activity-panel--filter-options-toggler--padding-left: 0.5rem !default;
 $ibo-activity-panel--filter-options--padding-x: 12px !default;
 $ibo-activity-panel--filter-options--padding-y: 8px !default;
 $ibo-activity-panel--filter-options--top: 24px !default;
@@ -156,6 +158,11 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 			background-color: $ibo-activity-panel--tab-title--is-active--background-color;
 		}
 	}
+  &.ibo-is-draft{
+    .ibo-activity-panel--tab-title-draft-indicator{
+      display: initial;
+    }
+  }
 }
 /* - Specific decoration regarding the case log rank */
 @each $sColor in $ibo-activity-panel--tab-toggler--caselog-highlight-colors {
@@ -182,6 +189,11 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 	height: $ibo-activity-panel--tab-title-decoration--height;
 	border-radius: $ibo-activity-panel--tab-title-decoration--border-radius;
 	@extend %ibo-depression-100;
+}
+.ibo-activity-panel--tab-title-draft-indicator{
+  display: none;
+  margin-right: $ibo-activity-panel--tab-title-draft-indicator--margin-right;
+  @extend %ibo-font-ral-nor-50;
 }
 .ibo-activity-panel--tab-title-text{
 	max-width: $ibo-activity-panel--tab-title-text--max-width;
@@ -251,7 +263,7 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
   cursor: pointer;
 }
 .ibo-activity-panel--filter-options-toggler{
-  margin-left: $ibo-activity-panel--filter-options-toggler--margin-left;
+  padding-left: $ibo-activity-panel--filter-options-toggler--padding-left;
 
   &.ibo-is-closed{
     transform: rotateX(180deg);

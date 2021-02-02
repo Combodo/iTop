@@ -9,8 +9,13 @@
 				     data-caselog-attribute-code="{{ sCaseLogAttCode }}"
 				     data-caselog-rank="{{ loop.index }}">
 					<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
-						<span class="ibo-activity-panel--tab-title-decoration"></span>
-						<span class="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+						<span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
+						<span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                        <span class="ibo-activity-panel--tab-title-draft-indicator"
+                              data-role="ibo-activity-panel--tab-title-draft-indicator"
+                              data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:DraftIndicator:Tooltip'|dict_s }}">
+                            <span class="fas fa-pen"></span>
+                        </span>
 					</a>
 				</div>
 			{% endfor %}

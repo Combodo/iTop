@@ -528,10 +528,10 @@ JS
 
 		if ($iNbEntries > 0) {
 			// Dict entries
-			$sOpenAllEntriesTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:OpenAll:Tooltip'));
-			$sCloseAllEntriesTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:CloseAll:Tooltip'));
-			$sUsersCountTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:AuthorsCount:Tooltip'));
-			$sEntriesCountTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Caselog:Toolbar:MessagesCount:Tooltip'));
+			$sOpenAllEntriesTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'));
+			$sCloseAllEntriesTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'));
+			$sUsersCountTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip'));
+			$sEntriesCountTooltip = utils::HtmlEntities(Dict::S('UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip'));
 			$sCloseEntryTooltip = utils::HtmlEntities(Dict::S('Portal:Form:Caselog:Entry:Close:Tooltip'));
 
 			// First pass to retrieve number of users

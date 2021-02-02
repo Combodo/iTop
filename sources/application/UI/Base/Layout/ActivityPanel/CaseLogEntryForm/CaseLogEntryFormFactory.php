@@ -34,7 +34,7 @@ class CaseLogEntryFormFactory
 {
 	public static function MakeForCaselogTab(DBObject $oObject, string $sCaseLogAttCode, string $sObjectMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
 	{
-		$oCaseLogEntryForm = new CaseLogEntryForm();
+		$oCaseLogEntryForm = new CaseLogEntryForm($oObject, $sCaseLogAttCode);
 		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
 			->AddMainActionButtons(static::PrepareCancelButton())
 			->AddMainActionButtons(static::PrepareSaveButton())

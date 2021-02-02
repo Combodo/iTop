@@ -23,6 +23,9 @@ $(function() {
 			// default options
 			options:
 			{
+				object_class: null,
+				object_id: null,
+				attribute_code: null,
 				submit_mode: 'autonomous',
 				text_input_id: '',
 			},
@@ -39,8 +42,8 @@ $(function() {
 				form: '[data-role="ibo-caselog-entry-form"]', // Any caselog entry form
 				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
 				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
-				send_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"]',
-				send_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="send"] + [data-role="ibo-popover-menu"]',
+				save_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"]',
+				save_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"] + [data-role="ibo-popover-menu"]',
 			},
 			enums:
 			{
@@ -50,12 +53,20 @@ $(function() {
 					bridged: 'bridged',
 				}
 			},
+			is_draft: false,
 			
 			// the constructor
 			_create: function () {
-				let me = this;
+				const aMandatoryOptions = ['object_class', 'object_id', 'attribute_code'];
+				for (let sOption of aMandatoryOptions) {
+					if (null === this.options[sOption]) {
+						CombodoGlobalToolbox.Trace('CaseLogEntryForm: Could not initialize widget, make sure that the following options' +
+							' are passed: ' + aMandatoryOptions.join(' / '), 'error');
+						return false;
+					}
+				}
 
-				this._UpdateSubmitButtonState();
+				this._UpdateState();
 				if(this._IsSubmitAutonomous())
 				{
 					this._HideEntryForm();
@@ -78,11 +89,18 @@ $(function() {
 					// Handle only the current CKEditor instance
 					if(oEvent.editor.name === me.options.text_input_id) {
 						CKEDITOR.instances[me.options.text_input_id].on('change', function(){
-							if(me._IsSubmitAutonomous()) {
-								me._UpdateSubmitButtonState();
-							}
-							else {
-								me._UpdateBridgeInput();
+							const bWasDraftBefore = me.is_draft;
+							const bIsDraftNow = !me._IsInputEmpty();
+
+							if(bWasDraftBefore !== bIsDraftNow) {
+								me.is_draft = bIsDraftNow;
+								me._UpdateEditingVisualHint();
+								if(me._IsSubmitAutonomous()) {
+									me._UpdateSubmitButtonState();
+								}
+								else {
+									me._UpdateBridgeInput();
+								}
 							}
 						});
 					}
@@ -92,13 +110,11 @@ $(function() {
 				this.element.find(this.js_selectors.cancel_button).on('click', function(oEvent){
 					me.element.trigger('cancelled_form.caselog_entry_form.itop');
 				});
-				this.element.find(this.js_selectors.send_button).on('click', function(oEvent){
-					// TODO 3.0.0: To be refactored next
-					// // Avoid form being submitted
-					// oEvent.preventDefault();
-					//
-					// let sCaselogAttCode = me.element.closest(me.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
-					// me._SubmitEntryToCaselog(me._GetInputData(), sCaselogAttCode);
+				this.element.find(this.js_selectors.save_button).on('click', function(oEvent){
+					// Avoid form being submitted
+					oEvent.preventDefault();
+
+					me.element.trigger('request_submission.caselog_entry_form.itop');
 				});
 
 				// Form show/hide
@@ -109,7 +125,13 @@ $(function() {
 					me._HideEntryForm();
 				});
 
+				// Get the entry value
+				this.element.on('get_entry.caselog_entry_form.itop', function(){
+					return me._GetInputData();
+				});
+
 				// Caselog selection
+				// TODO 3.0.0: Remove this as it is no longer useful
 				this.element.on('add_to_caselog.caselog_entry_form.itop', function(oEvent, oData){
 					const sCaseLogAttCode = oData.caselog_att_code;
 					const sStimulusCode = oData.stimulus_code !== undefined ? oData.stimulus_code : null;
@@ -216,6 +238,13 @@ $(function() {
 			_EmptyInput: function() {
 				CKEDITOR.instances[this.options.text_input_id].setData('');
 			},
+			/**
+			 * @returns {boolean} True if the input has no text
+			 * @private
+			 */
+			_IsInputEmpty: function() {
+				return this._GetInputData() === '';
+			},
 			_GetInputData: function() {
 				return (CKEDITOR.instances[this.options.text_input_id] === undefined) ? '' : CKEDITOR.instances[this.options.text_input_id].getData();
 			},
@@ -226,10 +255,16 @@ $(function() {
 			_HideMainActions: function() {
 				this.element.find(this.js_selectors.main_actions).hide();
 			},
+			_UpdateState: function() {
+				this._UpdateEditingVisualHint();
+				this._UpdateSubmitButtonState();
+			},
 			_UpdateSubmitButtonState: function() {
-				const bIsInputEmpty = this._GetInputData() === '';
-
-				this.element.find(this.js_selectors.send_button).prop('disabled', bIsInputEmpty);
+				this.element.find(this.js_selectors.save_button).prop('disabled', this._IsInputEmpty());
+			},
+			_UpdateEditingVisualHint: function() {
+				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';
+				this.element.trigger(sEvent + '.caselog_entry_form.itop', {attribute_code: this.options.attribute_code});
 			}
 		});
 });

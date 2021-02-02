@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use DBObject;
 
 /**
  * Class CaseLogEntryForm
@@ -34,6 +35,10 @@ class CaseLogEntryForm extends UIContentBlock
 	/** @var string */
 	public const DEFAULT_SUBMIT_MODE = self::ENUM_SUBMIT_MODE_AUTONOMOUS;
 
+	/** @var DBObject Object hosting the case log attribute */
+	protected $oObject;
+	/** @var string Attribute code of the case log in $oObject */
+	protected $sAttCode;
 	/**
 	 * @var string Whether the form can send data on its own or if it's bridged with its host object form
 	 * @see static::ENUM_SUBMIT_MODE_XXX
@@ -51,15 +56,54 @@ class CaseLogEntryForm extends UIContentBlock
 	/**
 	 * CaseLogEntryForm constructor.
 	 *
-	 * @param null $sId
+	 * @param \DBObject $oObject
+	 * @param string|null $sId
 	 */
-	public function __construct($sId = null)
+	public function __construct(DBObject $oObject, string $sAttCode, string $sId = null)
 	{
 		parent::__construct($sId);
+		$this->oObject = $oObject;
+		$this->sAttCode = $sAttCode;
 		$this->sSubmitMode = static::DEFAULT_SUBMIT_MODE;
-		$this->SetTextInput(new RichText());
 		$this->aMainActionButtons = [];
 		$this->aExtraActionButtons = [];
+		$this->InitTextInput();
+	}
+
+	/**
+	 * @uses static::$oObject
+	 * @return \DBObject
+	 */
+	public function GetObject(): DBObject
+	{
+		return $this->oObject;
+	}
+
+	/**
+	 * @uses static::$oObject
+	 * @return string The class of $oObject
+	 */
+	public function GetObjectClass(): string
+	{
+		return get_class($this->oObject);
+	}
+
+	/**
+	 * @uses static::$oObject
+	 * @return string The ID of $oObject
+	 */
+	public function GetObjectId(): string
+	{
+		return $this->oObject->GetKey();
+	}
+
+	/**
+	 * @uses static::$sAttCode
+	 * @return string
+	 */
+	public function GetAttCode(): string
+	{
+		return $this->sAttCode;
 	}
 
 	/**
@@ -141,6 +185,16 @@ class CaseLogEntryForm extends UIContentBlock
 	public function SetTextInput(RichText $oTextInput)
 	{
 		$this->oTextInput = $oTextInput;
+		return $this;
+	}
+
+	/**
+	 * @uses $oTextInput
+	 * @return $this
+	 */
+	protected function InitTextInput()
+	{
+		$this->oTextInput = new RichText();
 		return $this;
 	}
 

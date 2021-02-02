@@ -10,7 +10,7 @@
 						{% if oUIBlock.HasCaseLogTabs() %}
 							{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
 								<label class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} "
-								       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:CaselogsFilter:Tooltip'|dict_s }}"
+								       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Tooltip'|dict_s }}"
 								       data-role="ibo-activity-panel--filter"
 								       data-target-entry-types="caselog"
 								       data-entry-caselog-attribute-code="{{ sCaseLogAttCode }}" >
@@ -21,17 +21,17 @@
 						{% endif %}
 						{% if oUIBlock.HasStates() %}
 							<label class="ibo-activity-panel--tab-toolbar-action"
-							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Tooltip'|dict_s }}"
+							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip'|dict_s }}"
 							       data-role="ibo-activity-panel--filter"
 							       data-target-entry-types="transition">
-								{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:TransitionsFilter:Title'|dict_s }}
+								{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title'|dict_s }}
 							</label>
 						{% endif %}
 						<label class="ibo-activity-panel--tab-toolbar-action"
-						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Tooltip'|dict_s }}"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip'|dict_s }}"
 						       data-role="ibo-activity-panel--filter"
 						       data-target-entry-types="edits">
-							{{ 'UI:Layout:ActivityPanel:Tab:Activity:Toolbar:EditsFilter:Title'|dict_s }}
+							{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title'|dict_s }}
 						</label>
 					</div>
 				</div>

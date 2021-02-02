@@ -35,6 +35,7 @@ $(function()
 				is_active: 'ibo-is-active',
 				is_visible: 'ibo-is-visible',
 				is_hidden: 'ibo-is-hidden',
+				is_draft: 'ibo-is-draft',
 			},
 			js_selectors:
 			{
@@ -133,11 +134,22 @@ $(function()
 				this.element.find(this.js_selectors.compose_button).on('click', function(oEvent){
 					me._onComposeButtonClick(oEvent);
 				});
-				// - Cancelled form
+				// - Draft value ongoing
+				this.element.on('draft.caselog_entry_form.itop', function(oEvent, oData){
+					me._onDraftEntryForm(oData.attribute_code);
+				});
+				// - Empty value
+				this.element.on('emptied.caselog_entry_form.itop', function(oEvent, oData){
+					me._onEmptyEntryForm(oData.attribute_code);
+				});
+				// - Entry form cancelled
 				this.element.on('cancelled_form.caselog_entry_form.itop', function(){
 					me._onCancelledEntryForm();
 				});
-				// - Submitted form
+				// - Entry form submission request
+				this.element.on('request_submission.caselog_entry_form.itop', function(){
+					me._onRequestSubmission();
+				});
 
 				// Entries
 				// - Click on a closed case log message
@@ -265,9 +277,45 @@ $(function()
 					// Else, open a popover menu to choose one
 				}
 			},
+			/**
+			 * @param sCaseLogAttCode {string} Attribute code of the case log entry form being draft
+			 * @private
+			 */
+			_onDraftEntryForm: function(sCaseLogAttCode)
+			{
+				this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="' + this.enums.tab_types.caselog + '"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').addClass(this.css_classes.is_draft);
+			},
+			/**
+			 * @param sCaseLogAttCode {string} Attribute code of the case log entry form being emptied
+			 * @private
+			 */
+			_onEmptyEntryForm: function(sCaseLogAttCode)
+			{
+				this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="' + this.enums.tab_types.caselog + '"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').removeClass(this.css_classes.is_draft);
+			},
 			_onCancelledEntryForm: function()
 			{
 				this._HideCaseLogsEntryForms();
+			},
+			_onRequestSubmission: function()
+			{
+				// TODO 3.0.0
+				// Retrieve current value from each entry form
+				let oEntries = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function(){
+					const oEntryFormElem = $(this);
+					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+
+					if('' !== sEntryFormValue) {
+						oEntries[oEntryFormElem.attr('data-attribute-code')] = sEntryFormValue;
+					}
+				});
+				console.log(oEntries);
+				// If several entry forms filled, show a confirmation message
+				// Push data to the server
+				// Put entries in the feed
+				// Renew transaction ID for inline images
+
 			},
 			_onCaseLogClosedMessageClick: function(oEntryElem)
 			{
