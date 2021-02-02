@@ -32,12 +32,14 @@ echo <<<HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>iTop setup - redirection page</title>
+<title>iTop setup - Checking minimum requirements</title>
+<meta http-equiv="refresh" content="0; url=wizard.php">
 <script>
 document.location = "wizard.php";
 </script>
 </head>
 <body>
+<p>Redirecting to <a href="wizard.php">setup launch page</a>...</p>
 </body>
 </html>
 HTML;
