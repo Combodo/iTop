@@ -1060,7 +1060,6 @@ function toggleCollapsableOptions($tbody) {
 }
 function updateCollapsableImage($tbody) {
 	$collapsableImg = $tbody.find("tr:first-child>th>label>img");
-	console.debug("img", $collapsableImg, $tbody);
 	imgPath = "../images/";
 	imgUrl = ($tbody.find("tr:nth-child(2)>td:visible").length > 0) 
 		? "minus.gif"
