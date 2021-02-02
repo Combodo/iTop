@@ -24,7 +24,7 @@
 
 
 
-// Dictionnay conventions
+// Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
 // Class:<class_name>/Attribute:<attribute_code>
@@ -36,22 +36,6 @@
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
@@ -152,7 +136,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:phone' => 'Phone',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Notification',
-	'Class:Contact/Attribute:notify+' => 'No automation. It must be tested explicitly in Notification OQL',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification',
 	'Class:Contact/Attribute:notify/Value:no' => 'no',
 	'Class:Contact/Attribute:notify/Value:no+' => 'no',
 	'Class:Contact/Attribute:notify/Value:yes' => 'yes',
