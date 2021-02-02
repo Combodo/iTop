@@ -27,7 +27,6 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
-use Symfony\Component\HttpFoundation\IpUtils;
 use WebPage;
 use LoginWebPage;
 use MetaModel;
