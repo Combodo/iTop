@@ -27,6 +27,7 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
+use WebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
@@ -37,6 +38,11 @@ use ZipArchive;
 
 abstract class Controller
 {
+	const ENUM_PAGE_TYPE_HTML = 'html';
+	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
+	const ENUM_PAGE_TYPE_AJAX = 'ajax';
+	const ENUM_PAGE_TYPE_SETUP = 'setup';
+
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
@@ -58,7 +64,8 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
-
+	/** @var string */
+	private $m_sAccessTokenConfigParamId = null;
 
 	/**
 	 * Controller constructor.
@@ -219,7 +226,22 @@ abstract class Controller
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
 		}
 
-		LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		$sExecModule = utils::ReadParam('exec_module', "");
+
+		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
+
+		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
+			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		}else {
+			//token mode without login required
+			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
+			if ($sPassedToken !== $sConfiguredAccessTokenValue){
+				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
+				IssueLog::Error($sMsg);
+				throw new Exception("Invalid token");
+			}
+		}
+
 		if (!empty($this->m_sMenuId))
 		{
 			ApplicationMenu::CheckMenuIdEnabled($this->m_sMenuId);
@@ -253,6 +275,28 @@ abstract class Controller
 	public function AllowOnlyAdmin()
 	{
 		$this->m_bMustBeAdmin = true;
+	}
+
+	/**
+	 * Used to ensure iTop security without logging-in by passing a token.
+	 * This security mechanism is applied to current extension main page when :
+	 *  - '$m_sAccessTokenConfigParamId' is configured under $MyModuleSettings section.
+	 *
+	 * Main page will be allowed as long as
+	 *  - there is an HTTP  parameter with the name '$m_sAccessTokenConfigParamId' parameter
+	 *  - '$m_sAccessTokenConfigParamId' HTTP parameter value matches the value stored in iTop configuration.
+	 *
+	 * Example:
+	 * Let's assume $m_sAccessTokenConfigParamId='access_token' with iTop $MyModuleSettings below configuration:
+	 *      'combodo-shadok' => array ( 'access_token' => 'gabuzomeu')
+	 * 'combodo-shadok' extension main page is rendered only with HTTP requests containing '&access_token=gabuzomeu'
+	 * Otherwise an HTTP error code 500 will be returned.
+	 *
+	 * @param string $m_sAccessTokenConfigParamId
+	 */
+	public function SetAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
+	{
+		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
 	}
 
 	/**
@@ -529,7 +573,20 @@ abstract class Controller
 		{
 			throw new Exception('Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display');
 		}
-		return TwigHelper::RenderTemplate($this->m_oTwig, $aParams, $sName, $sTemplateFileExtension, false);
+		try
+		{
+			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
+		}
+		catch (Twig_Error $e)
+		{
+			// Ignore errors
+			if (!utils::StartsWith($e->getMessage(), 'Unable to find template'))
+			{
+				IssueLog::Error($e->getMessage());
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -541,16 +598,20 @@ abstract class Controller
 	{
 		switch ($sPageType)
 		{
-			case 'html':
+			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
 				$this->m_oPage->add_xframe_options();
 				break;
 
-			case 'ajax':
+			case self::ENUM_PAGE_TYPE_BASIC_HTML:
+				$this->m_oPage = new WebPage($this->GetOperationTitle());
+				break;
+
+			case self::ENUM_PAGE_TYPE_AJAX:
 				$this->m_oPage = new AjaxPage($this->GetOperationTitle());
 				break;
 
-			case 'setup':
+			case self::ENUM_PAGE_TYPE_SETUP:
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
