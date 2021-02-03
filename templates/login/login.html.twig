@@ -12,7 +12,7 @@
 			{% if bFailedLogin %}
 				<p class="hilite">{{ sMessage }}</p>
 			{% else %}
-				<p>{{ sMessage }}</p>
+				<p>{{ sMessage|raw }}</p>
 			{% endif %}
 		</div>
 	{% endblock login_title %}
