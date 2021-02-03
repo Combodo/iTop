@@ -57,7 +57,7 @@
 <script type="text/javascript">
 	var aListJsFiles = [];
 	{% for sJsFile in aPage.aJsFiles %}
-		aListJsFiles.push("{{ sJsFile}}");
+		aListJsFiles.push("{{ sJsFile|raw }}");
 	{% endfor %}
 </script>
 {% block iboPageJsFiles %}
