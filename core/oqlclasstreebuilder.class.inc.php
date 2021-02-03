@@ -294,13 +294,6 @@ class OQLClassTreeBuilder
 								$oClassExpr = new FieldExpression($sClassAttCode, $this->sClassAlias);
 								$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
 								$oQBContextExpressions->AddCondition($oClassRestriction);
-							} elseif (($oKeyAttDef instanceof AttributeExternalKey) && $sKeyClass != $oKeyAttDef->GetTargetClass()) {
-								$sClassAttCode = 'finalclass';
-								$oClassListExpr = ListExpression::FromScalars(MetaModel::EnumChildClasses($sKeyClass,
-									ENUM_CHILD_CLASSES_ALL));
-								$oClassExpr = new FieldExpression($sClassAttCode, $sKeyClassAlias);
-								$oClassRestriction = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-								$oQBContextExpressions->AddCondition($oClassRestriction);
 							}
 
 							// Translate prior to recursing

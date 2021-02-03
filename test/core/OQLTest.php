@@ -441,8 +441,8 @@ class OQLTest extends ItopDataTestCase
 				"SELECT `U` FROM `UserRequest` AS `U`
     INNER JOIN `lnkContactToTicket` AS `l`
       ON `U`.`id` = `l`.`ticket_id` 
-        INNER JOIN `Contact` AS `T_Contact`
-          ON `l`.`contact_id` = `T_Contact`.`id`",
+        INNER JOIN `Team` AS `T`
+          ON `l`.`contact_id` = `T`.`id`",
 			],
 			'Bug 3660 2' => [
 				"SELECT UserRequest AS U
