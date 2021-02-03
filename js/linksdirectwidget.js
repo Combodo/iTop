@@ -52,7 +52,8 @@ $(function()
 
 			this.element
 			.addClass('itop-directlinks');
-			
+
+
 			this.datatable = this.element.find('table.listResults');
 			
 			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
@@ -154,9 +155,11 @@ $(function()
 		_updateTable: function()
 		{
 			var me = this;
+			/*
 			this.datatable.trigger("update").trigger("applyWidgets");
-			this.datatable.tableHover();
+			this.datatable.tableHover();*/
 			this.datatable.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
+
 		},
 		_updateDlgPosition: function()
 		{
@@ -335,9 +338,8 @@ $(function()
 					oMap[this.name].push(this.value);
 				});
 				// Retrieve the 'filter' definition
-				var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
-				oMap['filter'] = table.config.filter;
-				oMap['extra_params'] = table.config.extra_params;
+				oMap['filter'] = $(':input[name=filter]', oContext).val();
+				oMap['extra_params'] = $(':input[name=extra_params]', oContext).val();
 			}
 			// Normal table, retrieve all the checked check-boxes
 			$(':checked[name^=selectObject]', oContext).each(
@@ -377,6 +379,7 @@ $(function()
 		},
 		_onDoAdd:function()
 		{
+			var oContext = $('#SearchResultsToAdd_'+this.id);
 			var oParams = this._getSelection('selectObject');
 			oParams.operation = 'doAddObjects2';
 			oParams['class'] = this.options.class_name;
@@ -384,9 +387,8 @@ $(function()
 			oParams.iInputId = this.id;
 			
 			// Retrieve the 'filter' definition, BEFORE closing the dialog and destroying its contents
-			var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
-			oParams.filter = table.config.filter;
-			oParams.extra_params = table.config.extra_params;
+			oParams.filter = $(':input[name=filter]', oContext).val();
+			oParams.extra_params= $(':input[name=extra_params]', oContext).val();
 
 			this.oDlg.dialog('close');
 			
@@ -402,6 +404,9 @@ $(function()
 				me.inputToBeAdded.val(JSON.stringify(me.toBeAdded));
 				me.inputToBeRemoved.val(JSON.stringify(me.toBeRemoved));
 				me.inputToBeDeleted.val(JSON.stringify(me.toBeDeleted));
+
+				//me.datatable.find('tbody').append(data);
+				$('#datatable_'+me.id+' .dataTables_empty').hide();
 				me.datatable.find('tbody').append(data);
 				me._updateTable();
 				me.indicator.html('');
@@ -466,6 +471,9 @@ $(function()
 
 				$.post(this.options.submit_to, oParams, function(data){
 					me.datatable.find('tbody').append(data);
+					$('#datatable_'+me.id+' .dataTables_empty').hide();
+				//$('#linkedset_'+me.id+' .listResults tbody').append(data);
+
 					me._updateTable();
 					me.indicator.html('');
 					me.oButtons['create'].prop('disabled', false);
