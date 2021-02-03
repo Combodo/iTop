@@ -27,7 +27,7 @@
 			<script type="text/javascript">
 				var aFilesToLoad{{ sId }} = [];
 				{% for sJsFile in aPage.aJsFiles %}
-					if (! $.inArray('{{ sJsFile|raw }}',aListJsFiles))
+                    if ( $.inArray('{{ sJsFile|raw }}',aListJsFiles == -1 ))
 					{
 						aFilesToLoad{{ sId }}.push('{{ sJsFile|raw|add_itop_version }}');
 						aListJsFiles.push("{{ sJsFile|raw }}");
