@@ -48,7 +48,7 @@ $ibo-activity-panel--tab-title-decoration--height: $ibo-activity-panel--tab-titl
 $ibo-activity-panel--tab-title-decoration--margin-right: 8px !default;
 $ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300 !default;
 
-$ibo-activity-panel--tab-title-draft-indicator--margin-right: $ibo-activity-panel--tab-title-decoration--margin-right !default;
+$ibo-activity-panel--tab-title-draft-indicator--margin-x: $ibo-activity-panel--tab-title-decoration--margin-right !default;
 
 $ibo-activity-panel--tab-title-text--max-width: 100px !default;
 
@@ -98,6 +98,9 @@ $ibo-activity-panel--add-caselog-entry-button--icon--height: 100% !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--width: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--font-size: 16px !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
+
+$ibo-activity-panel--entry-forms-confirmation-explanation--spacing: 16px !default;
+$ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem !default;
 
 /* Whole layout */
 .ibo-activity-panel{
@@ -192,7 +195,7 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 }
 .ibo-activity-panel--tab-title-draft-indicator{
   display: none;
-  margin-right: $ibo-activity-panel--tab-title-draft-indicator--margin-right;
+  margin-left: $ibo-activity-panel--tab-title-draft-indicator--margin-x;
   @extend %ibo-font-ral-nor-50;
 }
 .ibo-activity-panel--tab-title-text{
@@ -300,6 +303,8 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
   margin-right: $ibo-activity-panel--filter-option-input--margin-right;
 }
 
+
+
 /* Body */
 .ibo-activity-panel--body{
 	flex-grow: 1; /* To occupy all the space not used by the header  */
@@ -353,4 +358,20 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 	&.ibo-is-hidden{
 		display: none;
 	}
+}
+
+/* Entry forms confirmation dialog */
+.ibo-activity-panel {
+  .ibo-activity-panel--entry-forms-confirmation-dialog {
+    display: none; /* Dialog will be moved elsewhere in the DOM on display so this rule won't apply anymore and it will be OK */
+  }
+}
+.ibo-activity-panel--entry-forms-confirmation-explanation{
+  margin-bottom: $ibo-activity-panel--entry-forms-confirmation-explanation--spacing;
+}
+.ibo-activity-panel--entry-forms-confirmation-preference{
+  @extend %ibo-vertically-centered-content;
+}
+.ibo-activity-panel--entry-forms-confirmation-preference-input{
+  margin-right: $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing;
 }

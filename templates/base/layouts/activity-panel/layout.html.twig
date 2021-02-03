@@ -1,6 +1,6 @@
 <div id="{{ oUIBlock.GetId() }}" class="ibo-activity-panel" data-role="ibo-activity-panel" data-object-class="{{ oUIBlock.GetObjectClass() }}" data-object-id="{{ oUIBlock.GetObjectId() }}" data-object-mode="{{ oUIBlock.GetObjectMode() }}">
 	<div class="ibo-activity-panel--header">
-		<div class="ibo-activity-panel--tabs-togglers">
+		<div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
 			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
 				{% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
 				<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
@@ -40,11 +40,18 @@
 				</a>
 			</div>
 		</div>
-		<div class="ibo-activity-panel--tabs-toolbars">
+		<div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
 			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
 				{{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
 			{% endfor %}
 			{{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
+            <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title'|dict_s }}">
+                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">By pressing the "save" button, you will submit entries for all the edited case logs at once.</div>
+                <label class="ibo-activity-panel--entry-forms-confirmation-preference">
+                    <input type="checkbox" class="ibo-activity-panel--entry-forms-confirmation-preference-input" data-role="ibo-activity-panel--entry-forms-confirmation-preference-input">
+                    <span class="ibo-activity-panel--entry-forms-confirmation-preference-text">{{ 'UI:UserPref:DoNotShowAgain'|dict_s }}</span>
+                </label>
+            </div>
 		</div>
 	</div>
 	{% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}

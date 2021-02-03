@@ -22,7 +22,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
 	'UI:Layout:ActivityPanel:SizeToggler:Collapse:Tooltip' => 'Reduce',
 
-	// Activity tab
+	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
 	'UI:Layout:ActivityPanel:Tab:Caselog:DraftIndicator:Tooltip' => 'Draft entry',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Title' => 'Case logs',
@@ -35,6 +35,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all messages',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)',
+
+	// Case log entry
+	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title' => 'Multiple case logs save',
+	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited case logs at once.',
+	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:PrefLabel' => 'By pressing the "save" button, you will submit entries for all the edited case logs at once.',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',

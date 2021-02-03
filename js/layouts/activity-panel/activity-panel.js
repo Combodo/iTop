@@ -26,6 +26,7 @@ $(function()
 			{
 				datetime_format: null,
 				datetimes_reformat_limit: 14,   // In days
+				show_multiple_entries_submit_confirmation: true,
 			},
 			css_classes:
 			{
@@ -42,6 +43,7 @@ $(function()
 				panel_size_toggler: '[data-role="ibo-activity-panel--size-toggler"]',
 				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
+				tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
 				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 				tab_toolbar_action: '[data-role="ibo-activity-panel--tab-toolbar-action"]',
 				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
@@ -54,6 +56,8 @@ $(function()
 				messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
 				compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
 				caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
+				caselog_entry_forms_confirmation_dialog: '[data-role="ibo-activity-panel--entry-forms-confirmation-dialog"]',
+				caselog_entry_forms_confirmation_preference_input: '[data-role="ibo-activity-panel--entry-forms-confirmation-preference-input"]',
 				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
 				entry: '[data-role="ibo-activity-entry"]',
 				entry_medallion: '[data-role="ibo-activity-entry--medallion"]',
@@ -82,6 +86,7 @@ $(function()
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ReformatDateTimes();
+				this._PrepareEntriesSubmitConfirmationDialog();
 
 				// TODO 3.0.0: Modify PopoverMenu so we can pass it the ID of the block triggering the open/close
 				//$(this.element).find(this.js_selectors.send_choices_picker).popover_menu({toggler: this.js_selectors.send_button});
@@ -297,25 +302,21 @@ $(function()
 			{
 				this._HideCaseLogsEntryForms();
 			},
+			/**
+			 * Called on submission request from a case log entry form, will display a confirmation dialog if multiple case logs have
+			 * been edited and the user hasn't dismiss the dialog.
+			 * @private
+			 */
 			_onRequestSubmission: function()
 			{
-				// TODO 3.0.0
-				// Retrieve current value from each entry form
-				let oEntries = {};
-				this.element.find(this.js_selectors.caselog_entry_form).each(function(){
-					const oEntryFormElem = $(this);
-					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
-
-					if('' !== sEntryFormValue) {
-						oEntries[oEntryFormElem.attr('data-attribute-code')] = sEntryFormValue;
-					}
-				});
-				console.log(oEntries);
 				// If several entry forms filled, show a confirmation message
-				// Push data to the server
-				// Put entries in the feed
-				// Renew transaction ID for inline images
-
+				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
+					this._ShowEntriesSubmitConfirmation();
+				}
+				// Else push data directly to the server
+				else {
+					this._SendEntriesToServer();
+				}
 			},
 			_onCaseLogClosedMessageClick: function(oEntryElem)
 			{
@@ -566,6 +567,94 @@ $(function()
 				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
 
 				// TODO 3.0.0: Release lock
+			},
+			/**
+			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
+			 * @private
+			 */
+			_GetEntriesFromAllForms: function()
+			{
+				let oEntries = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function(){
+					const oEntryFormElem = $(this);
+					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+
+					if('' !== sEntryFormValue) {
+						oEntries[oEntryFormElem.attr('data-attribute-code')] = sEntryFormValue;
+					}
+				});
+
+				return oEntries;
+			},
+			/**
+			 * Prepare the dialog for confirmation before submission when several case log entries have been edited.
+			 * @private
+			 */
+			_PrepareEntriesSubmitConfirmationDialog: function()
+			{
+				const me = this;
+
+				this.element.find(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog({
+					autoOpen: false,
+					minWidth: 400,
+					modal:true,
+					position: { my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars },
+					buttons: [
+						{
+							text: Dict.S('UI:Button:Cancel'),
+							class: 'ibo-is-alternative',
+							click: function() {
+								me._HideEntriesSubmitConfirmation();
+							}
+						},
+						{
+							text: Dict.S('UI:Button:Save'),
+							class: 'ibo-is-primary',
+							click: function() {
+								const bDoNotShowAgain = $(this).find(me.js_selectors.caselog_entry_forms_confirmation_preference_input).prop('checked');
+								if (bDoNotShowAgain) {
+									me._SaveSubmitConfirmationPref();
+								}
+								me._SendEntriesToServer();
+							}
+						},
+					],
+				});
+			},
+			/**
+			 * Show the confirmation dialog when multiple case log entries have been editied
+			 * @private
+			 */
+			_ShowEntriesSubmitConfirmation: function()
+			{
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('open');
+			},
+			/**
+			 * Hide the confirmation dialog for multiple edited case log entries
+			 * @private
+			 */
+			_HideEntriesSubmitConfirmation: function()
+			{
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('close');
+			},
+			/**
+			 * Save that the user don't want the confirmation dialog to be shown in the future
+			 * @private
+			 */
+			_SaveSubmitConfirmationPref: function()
+			{
+				// Note: We have to send the value as a string because of the API limitation
+				SetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', 'false', true);
+			},
+			/**
+			 * Send the edited case logs entries to the server
+			 * @private
+			 */
+			_SendEntriesToServer: function()
+			{
+				const oEntries = this._GetEntriesFromAllForms();
+				// Put entries in the feed
+				// Renew transaction ID for inline images
 			},
 
 			// - Helpers on messages

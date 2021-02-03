@@ -430,6 +430,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Wait' => 'Please wait while updating fields',
 	'UI:Treeview:CollapseAll' => 'Collapse All',
 	'UI:Treeview:ExpandAll' => 'Expand All',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a %1$s',

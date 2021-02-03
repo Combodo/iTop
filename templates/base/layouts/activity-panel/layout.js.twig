@@ -1,3 +1,4 @@
 $('#{{ oUIBlock.GetId() }}').activity_panel({
-	datetime_format: {{ oUIBlock.GetDateTimeFormatForJSWidget()|json_encode|raw }}
+	datetime_format: {{ oUIBlock.GetDateTimeFormatForJSWidget()|json_encode|raw }},
+    show_multiple_entries_submit_confirmation: {{ oUIBlock.GetShowMultipleEntriesSubmitConfirmation()|var_export }}
 });

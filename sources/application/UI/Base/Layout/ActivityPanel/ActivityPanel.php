@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 
+use appUserPreferences;
 use AttributeDateTime;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
@@ -48,6 +49,12 @@ class ActivityPanel extends UIBlock
 		'js/layouts/activity-panel/activity-panel.js',
 	];
 
+	/**
+	 * @var bool
+	 * @see static::$bShowMultipleEntriesSubmitConfirmation
+	 */
+	public const DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION = true;
+
 	/** @var \DBObject $oObject The object for which the activity panel is for */
 	protected $oObject;
 	/**
@@ -68,6 +75,8 @@ class ActivityPanel extends UIBlock
 	protected $bHasStates;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
 	protected $aCaseLogTabsEntryForms;
+	/** @var bool Whether a confirmation dialog should be prompt when multiple entries are about to be submitted at once */
+	protected $bShowMultipleEntriesSubmitConfirmation;
 
 	/**
 	 * ActivityPanel constructor.
@@ -89,6 +98,7 @@ class ActivityPanel extends UIBlock
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
 		$this->SetEntries($aEntries);
 		$this->bAreEntriesSorted = false;
+		$this->ComputedShowMultipleEntriesSubmitConfirmation();
 	}
 
 	/**
@@ -551,6 +561,15 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @uses static::$bShowMultipleEntriesSubmitConfirmation
+	 * @return bool
+	 */
+	public function GetShowMultipleEntriesSubmitConfirmation(): bool
+	{
+		return $this->bShowMultipleEntriesSubmitConfirmation;
+	}
+
+	/**
 	 * Whether the submission of the case logs present in the activity panel is autonomous or will be handled by another form
 	 *
 	 * @return bool
@@ -608,5 +627,20 @@ class ActivityPanel extends UIBlock
 		}
 
 		return $aSubBlocks;
+	}
+
+	/**
+	 * @see static::$bShowMultipleEntriesSubmitConfirmation
+	 * @return $this
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	protected function ComputedShowMultipleEntriesSubmitConfirmation()
+	{
+		// Note: Test on a string is necessary as we can only store strings from the JS API, not booleans.
+		// Note 2: Do not invert the test to "=== 'true'" as it won't work. Default value is a bool ("true"), values from the DB are strings (true|false)
+		$this->bShowMultipleEntriesSubmitConfirmation = appUserPreferences::GetPref('activity_panel.show_multiple_entries_submit_confirmation', static::DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION) !== 'false';
+		return $this;
 	}
 }
