@@ -102,8 +102,7 @@ class UILinksWidget
 		$this->m_aEditableFields[] = $this->m_sExtKeyToRemote;
 
 		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
-		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef)
-		{
+		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef) {
 			$sRemoteAttCode = $oRemoteAttDef->GetCode();
 			$this->m_aTableConfig['static::'.$sRemoteAttCode] = array(
 				'label' => $oRemoteAttDef->GetLabel(),

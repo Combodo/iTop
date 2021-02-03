@@ -1977,19 +1977,17 @@ abstract class MetaModel
 	 *
 	 * @return \AttributeDefinition[] list of attdefs to display by default for the remote class
 	 *
+	 * @throws \Exception
+	 * @uses \MetaModel::GetZListItems 'list' zlist
+	 *
 	 * @since 3.0.0 N°2334
 	 */
-	public static function GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass)
+	public static function GetZListAttDefsFilteredForIndirectRemoteClass(string $sRemoteClass): array
 	{
 		$aAttCodesToPrint = [];
 
-		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode)
-		{
+		foreach (MetaModel::GetZListItems($sRemoteClass, 'list') as $sFieldCode) {
 			//TODO: check the state of the attribute: hidden or visible ?
-			if ($sFieldCode == 'finalclass')
-			{
-				continue;
-			}
 
 			$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sFieldCode);
 			$aAttCodesToPrint[] = $oRemoteAttDef;
@@ -2005,9 +2003,11 @@ abstract class MetaModel
 	 * @return \AttributeDefinition[] list of attdefs to display by default for lnk class
 	 *
 	 * @throws \CoreException
+	 * @uses \MetaModel::GetZListItems 'list' zlist
+	 *
 	 * @since 3.0.0 N°2334
 	 */
-	public static function GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode)
+	public static function GetZListAttDefsFilteredForIndirectLinkClass(string $sClass, string $sAttCode): array
 	{
 		$aAttCodesToPrint = [];
 
