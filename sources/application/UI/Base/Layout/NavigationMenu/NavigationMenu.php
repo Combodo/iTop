@@ -376,13 +376,20 @@ JS;
 		// Check if menu should be opened only if we re not in demo mode
 		if (false === MetaModel::GetConfig()->Get('demo_mode'))
 		{
+			// Force state if necessary...
 			if (utils::ReadParam('force_menu_pane', null) === 0)
 			{
 				$bIsExpanded = false;
 			}
-			elseif (appUserPreferences::GetPref('menu_pane', 'closed') === 'opened')
+			// ... otherwise look for the new user pref ...
+			elseif (appUserPreferences::GetPref('navigation_menu.expanded', null) !== null)
 			{
-				$bIsExpanded = true;
+				$bIsExpanded = appUserPreferences::GetPref('navigation_menu.expanded', null) === 'expanded';
+			}
+			// ... or fallback on the old one
+			elseif (appUserPreferences::GetPref('menu_pane', null) !== null)
+			{
+				$bIsExpanded = appUserPreferences::GetPref('menu_pane', null) === 'opened';
 			}
 		}
 
@@ -402,7 +409,7 @@ JS;
 	 */
 	protected function ComputeMenuFilterHintState(): void
 	{
-		$this->bShowMenuFilterHint = (true === appUserPreferences::GetPref('navigation_menu_filter_hint', static::DEFAULT_SHOW_MENU_FILTER_HINT));
+		$this->bShowMenuFilterHint = (true === appUserPreferences::GetPref('navigation_menu.show_filter_hint', static::DEFAULT_SHOW_MENU_FILTER_HINT));
 	}
 
 	/**

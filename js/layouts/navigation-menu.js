@@ -115,8 +115,8 @@ $(function()
 				this.element.toggleClass(this.css_classes.menu_expanded);
 
 				// Save state in user preferences
-				const sPrefValue = this.element.hasClass(this.css_classes.menu_expanded) ? 'opened' : 'closed';
-				SetUserPreference('menu_pane', sPrefValue, true);
+				const sPrefValue = this.element.hasClass(this.css_classes.menu_expanded) ? 'expanded' : 'collapsed';
+				SetUserPreference('navigation_menu.expanded', sPrefValue, true);
 			},
 			_onMenuGroupClick: function(oEvent, oMenuGroupElem)
 			{
@@ -192,7 +192,7 @@ $(function()
 				this.element.find(this.js_selectors.menu_filter_hint).hide();
 
 				// Save state in user preferences
-				SetUserPreference('navigation_menu_filter_hint', false, true);
+				SetUserPreference('navigation_menu.show_filter_hint', false, true);
 			},
 
 			_onUserMenuTogglerClick: function(oEvent)

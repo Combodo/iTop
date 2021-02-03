@@ -824,7 +824,7 @@ try
 			break;
 
 		case 'set_pref':
-			$sCode = utils::ReadPostedParam('code', '');
+			$sCode = utils::ReadPostedParam('code', '', 'raw_data');
 			$sValue = utils::ReadPostedParam('value', '', 'raw_data');
 			appUserPreferences::SetPref($sCode, $sValue);
 			break;
