@@ -24,9 +24,9 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -195,11 +195,11 @@ EOF
 
 	if (count($aArgs) > 0) {
 		//--- Query arguments
-		$oQueryArgsContainer = PanelFactory::MakeForInformation('Query arguments')
+		$oQueryArgsContainer = PanelUIBlockFactory::MakeForInformation('Query arguments')
 			->SetCSSClasses(['wizContainer']);
 		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
-			$oArgInput = InputFactory::MakeForInputWithLabel(
+			$oArgInput = InputUIBlockFactory::MakeForInputWithLabel(
 				$sParam,
 				'arg_'.$sParam,
 				$sValue
@@ -304,7 +304,7 @@ EOF
 		$oMoreInfoSection->EnableSaveCollapsibleState('run_query__more-info');
 		$oP->AddUiBlock($oMoreInfoSection);
 	} elseif ($sSyntaxError) {
-		$oSyntaxErrorPanel = PanelFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'));
+		$oSyntaxErrorPanel = PanelUIBlockFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'));
 		$oP->AddUiBlock($oSyntaxErrorPanel);
 
 		if ($e instanceof OqlException) {
