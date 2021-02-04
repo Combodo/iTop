@@ -30,6 +30,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use UserRights;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

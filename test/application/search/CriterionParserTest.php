@@ -32,6 +32,7 @@ use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

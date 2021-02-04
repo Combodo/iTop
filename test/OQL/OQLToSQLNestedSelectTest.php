@@ -13,6 +13,7 @@ use SetupUtils;
 use utils;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -50,6 +51,7 @@ class OQLToSQLNestedSelectTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopConfigMgmt
 	 * @dataProvider OQLSelectProvider
 	 * @depends testOQLSetup
 	 *

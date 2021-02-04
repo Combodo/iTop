@@ -73,7 +73,6 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		//require_once(APPROOT.'/application/startup.inc.php');
 		require_once(APPROOT.'application/utils.inc.php');
 
 		$sEnv = 'production';

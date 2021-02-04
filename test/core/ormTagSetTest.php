@@ -36,6 +36,7 @@ use ormTagSet;
 define('MAX_TAGS', 12);
 
 /**
+ * @group itopFaqLight
  * Tests of the ormTagSet class
  *
  * @runTestsInSeparateProcesses

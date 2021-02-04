@@ -31,6 +31,9 @@ use Exception;
 
 
 /**
+ * @group itopVirtualizationMgmt
+ * @group itopConfigMgmt
+ * @group itopTickets
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

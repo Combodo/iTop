@@ -31,6 +31,7 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
     /**
+     * @group itopRequestMgmt
      * @covers       MetaModel::ApplyParams()
      * @dataProvider ApplyParamsProvider
      *

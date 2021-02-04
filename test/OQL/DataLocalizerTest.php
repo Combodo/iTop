@@ -8,6 +8,9 @@ define('NUM_PRECISION', 2);
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
+ * @group itopRequestMgmt
+ * @group itopVirtualizationMgmt
+ * @group itopServiceMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

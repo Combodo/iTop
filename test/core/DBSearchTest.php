@@ -37,6 +37,7 @@ use FunctionExpression;
 
 
 /**
+ * @group itopStorageMgmt
  * Tests of the DBSearch class.
  * <ul>
  * <li>MakeGroupByQuery</li>
@@ -62,6 +63,7 @@ class DBSearchTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @dataProvider UReqProvider
 	 * @param $iOrgNb
 	 * @param $iPersonNb
@@ -485,6 +487,7 @@ class DBSearchTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
@@ -660,6 +663,7 @@ class DBSearchTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException

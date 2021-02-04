@@ -19,6 +19,7 @@ use OqlInterpreter;
 use utils;
 
 /**
+ * @group itopStructure
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -46,6 +47,9 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group iTopChangeMgt
+	 * @group itopConfigMgmt
+	 * @group itopRequestMgmt
 	 * @dataProvider NestedQueryProvider
 	 *
 	 * @param $sQuery
@@ -74,6 +78,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
     /**
+     * @group itopRequestMgmt
      * @dataProvider GoodQueryProvider
      * @depends testOQLSetup
      *
@@ -213,6 +218,7 @@ class OQLTest extends ItopDataTestCase
     }
 
     /**
+     * @group itopRequestMgmt
      * Needs actual datamodel
      * @depends testOQLSetup
      *
@@ -363,6 +369,9 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group iTopChangeMgt
+	 * @group itopConfigMgmt
+	 * @group itopRequestMgmt
 	 * @dataProvider MakeSelectQueryProvider
 	 * @param $sOQL
 	 * @param $sExpectedExceptionClass

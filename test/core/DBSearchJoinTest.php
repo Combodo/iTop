@@ -7,6 +7,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBSearch;
 
 /**
+ * @group itopServiceMgmt
  * Class DBSearchIntersectTest
  *
  * @package Combodo\iTop\Test\UnitTest\Core

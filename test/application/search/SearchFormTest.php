@@ -28,6 +28,7 @@ use DBObjectSearch;
 use Exception;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
