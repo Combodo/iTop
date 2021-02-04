@@ -278,6 +278,7 @@ class MetaModelTest extends ItopDataTestCase
 
 
 	/**
+	 * @group itopRequestMgmt
 	 * @dataProvider GetEnumStyleProvider
 	 */
 	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass)
