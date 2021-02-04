@@ -97,9 +97,9 @@ class ItopTestCase extends TestCase
 		return $sId;
 	}
 
-	public function InvokeInvisibleStaticMethod($sObjectClass, $sMethodName, $aArgs)
+	public function InvokeNonPublicStaticMethod($sObjectClass, $sMethodName, $aArgs)
 	{
-		return $this->InvokeInvisibleMethod($sObjectClass, $sMethodName, null, $aArgs);
+		return $this->InvokeNonPublicMethod($sObjectClass, $sMethodName, null, $aArgs);
 	}
 
 	/**
@@ -112,7 +112,7 @@ class ItopTestCase extends TestCase
 	 *
 	 * @throws \ReflectionException
 	 */
-	public function InvokeInvisibleMethod($sObjectClass, $sMethodName, $oObject, $aArgs)
+	public function InvokeNonPublicMethod($sObjectClass, $sMethodName, $oObject, $aArgs)
 	{
 		$class = new \ReflectionClass($sObjectClass);
 		$method = $class->getMethod($sMethodName);

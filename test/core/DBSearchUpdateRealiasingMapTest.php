@@ -35,7 +35,7 @@ class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 	{
 		$oObject = new DBObjectSearch('Organization');
 		$aArgs = [&$aRealiasingMap, $aAliasTranslation];
-		$this->InvokeInvisibleMethod(DBObjectSearch::class, 'UpdateRealiasingMap', $oObject, $aArgs);
+		$this->InvokeNonPublicMethod(DBObjectSearch::class, 'UpdateRealiasingMap', $oObject, $aArgs);
 		$this->assertEquals($aExpectedRealiasingMap, $aRealiasingMap);
 	}
 
