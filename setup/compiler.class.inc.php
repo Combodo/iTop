@@ -2901,14 +2901,15 @@ EOF;
 
 	/**
 	 * Choose between precompiled files declared in datamodel XMLs or latest precompiled files generated after latest setup.
-	 * @param $sTempTargetDir
-	 * @param $sPrecompiledFileUri
-	 * @param $sPostCompilationLatestPrecompiledFile
-	 * @param $sThemeId
+	 *
+	 * @param string $sTempTargetDir
+	 * @param string $sPrecompiledFileUri
+	 * @param string $sPostCompilationLatestPrecompiledFile
+	 * @param string $sThemeId
 	 *
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
-	public function UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
+	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
 		if (!empty($sPrecompiledFileUri)){

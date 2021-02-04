@@ -6,7 +6,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
- * @covers utils
+ * @covers \MFCompiler::UseLatestPrecompiledFile
  */
 class MFCompilerTest extends ItopTestCase {
 	/** @var array  */
@@ -20,7 +20,6 @@ class MFCompilerTest extends ItopTestCase {
 
 	public function setUp()
 	{
-		@include_once '/home/combodo/workspace/iTop/approot.inc.php';
 		parent::setUp();
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 
@@ -98,8 +97,14 @@ class MFCompilerTest extends ItopTestCase {
 
 	/**
 	 * @dataProvider UseLatestPrecompiledFileProvider
+	 *
+	 * @param string $sTempTargetDir
+	 * @param string $sPrecompiledFileUri
+	 * @param string $sPostCompilationLatestPrecompiledFile
+	 * @param string $sThemeDir
+	 * @param ?string $sExpectedReturn
 	 */
-	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, $sExpectedReturn){
+	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn){
 		$sRes = $this->oMFCompiler->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeDir);
 		$this->assertEquals($sExpectedReturn, $sRes);
 	}
@@ -107,6 +112,7 @@ class MFCompilerTest extends ItopTestCase {
 	public function UseLatestPrecompiledFileProvider(){
 		self::init();
 		return [
+			'no precompiled file at all' => $this->BuildProviderUseCaseArray('', self::$aRessources['sMissingFile'], null),
 			'no precompiled file configured in precompiled_stylesheet XM section' => $this->BuildProviderUseCaseArray('', self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1']),
 			'missing precompiled file in precompiled_stylesheet section' => $this->BuildProviderUseCaseArray(self::$aRessources['sMissingFile'], self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1'] ),
 			'no precompiled file generated in previous setup in /data/precompiled_styles' => $this->BuildProviderUseCaseArray(self::$aRessources['sPrecompiledInExtensionFileUri1'], self::$aRessources['sMissingFile'], self::$aRessources['sCopiedExtensionFile1'] ),
