@@ -59,6 +59,7 @@ abstract class Query extends cmdbAbstractObject
 			'default_value' => 'no',
 			'is_null_allowed' => false,
 			'depends_on' => [],
+			'display_style' => 'radio_horizontal',
 		)));
 
 		// Display lists
