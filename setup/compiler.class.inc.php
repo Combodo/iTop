@@ -51,6 +51,8 @@ class DOMFormatException extends Exception
  */ 
 class MFCompiler
 {
+	const DATA_PRECOMPILED_FOLDER = 'data' . DIRECTORY_SEPARATOR . 'precompiled_styles' . DIRECTORY_SEPARATOR;
+
 	/** @var \ModelFactory */
 	protected $oFactory;
 
@@ -2862,6 +2864,11 @@ EOF;
 			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
 		}
 
+		$sPostCompilationPrecompiledThemeFolder = APPROOT . self::DATA_PRECOMPILED_FOLDER;
+		if (! is_dir($sPostCompilationPrecompiledThemeFolder)){
+			mkdir($sPostCompilationPrecompiledThemeFolder);
+		}
+
 		// Compile themes
 		$fStart = microtime(true);
 		foreach($aThemes as $sThemeId => $aThemeParameters)
@@ -2871,30 +2878,87 @@ EOF;
 			{
 				SetupUtils::builddir($sThemeDir);
 			}
+
 			// Check if a precompiled version of the theme is supplied
-			$sPrecompiledFile = $sTempTargetDir.$aThemeParameters['precompiled_stylesheet'];
-			if (file_exists($sPrecompiledFile) && !is_dir($sPrecompiledFile))
-			{
-				copy($sPrecompiledFile, $sThemeDir.'/main.css');
+			$sPostCompilationLatestPrecompiledFile = $sPostCompilationPrecompiledThemeFolder . $sThemeId . ".css";
+
+			$sPrecompiledFileToUse = $this->UseLatestPrecompiledFile($sTempTargetDir, $aThemeParameters['precompiled_stylesheet'], $sPostCompilationLatestPrecompiledFile, $sThemeId);
+			if ($sPrecompiledFileToUse != null){
+				copy($sPrecompiledFileToUse, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
 				touch($sThemeDir.'/main.css', 1577836800 /* 2020-01-01 00:00:00 */);
-
-			}
-			else if ($sPrecompiledFile != '')
-			{
-				$this->Log("Precompiled file not found: '$sPrecompiledFile'");
 			}
 
 			$bHasCompiled = ThemeHandler::CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
-			$sInitialPrecompiledFilePath = APPROOT.'datamodels/2.x/'.$aThemeParameters['precompiled_stylesheet'];
-			if ($bHasCompiled && is_file($sInitialPrecompiledFilePath))
+			if ($bHasCompiled)
 			{
-				SetupLog::Info("Replacing precompiled file $sInitialPrecompiledFilePath for theme $sThemeId for next setup.");
-				copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
+				SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
+				copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
+			}
+		}
+		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
+	}
+
+	/**
+	 * Choose between precompiled files declared in datamodel XMLs or latest precompiled files generated after latest setup.
+	 * @param $sTempTargetDir
+	 * @param $sPrecompiledFileUri
+	 * @param $sPostCompilationLatestPrecompiledFile
+	 * @param $sThemeId
+	 *
+	 * @return string : file path of latest precompiled file to use for setup
+	 */
+	public function UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
+		$bDataXmlPrecompiledFileExists = false;
+		clearstatcache();
+		if (!empty($sPrecompiledFileUri)){
+			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir . DIRECTORY_SEPARATOR . $sPrecompiledFileUri;
+			$bDataXmlPrecompiledFileExists = file_exists($sDataXmlProvidedPrecompiledFile) ;
+			if (!$bDataXmlPrecompiledFileExists){
+				SetupLog::Warning("Missing defined theme '$sThemeId' precompiled file configured with: '$sPrecompiledFileUri'");
+			} else {
+				$sSourceDir = APPROOT . utils::GetConfig()->Get('source_dir');
+
+				$aDirToCheck = [
+					$sSourceDir,
+					APPROOT . DIRECTORY_SEPARATOR . 'extensions/'
+				];
+
+				$iDataXmlFileLastModified = 0;
+				foreach ($aDirToCheck as $sDir){
+					$sCurrentFile = $sDir . DIRECTORY_SEPARATOR . $sPrecompiledFileUri;
+					if (is_file($sCurrentFile)){
+						$iDataXmlFileLastModified = max($iDataXmlFileLastModified, @filemtime($sCurrentFile));
+					}
+				}
+
+				if ($iDataXmlFileLastModified == 0){
+					SetupLog::Warning("Missing defined theme '$sThemeId' precompiled file in datamodels/X.x or extensions directory configured with: '$sPrecompiledFileUri'. That should not happen!");
+					$bDataXmlPrecompiledFileExists = false;
+				}
 			}
 
 		}
-		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
+
+		$bPostCompilationPrecompiledFileExists = file_exists($sPostCompilationLatestPrecompiledFile);
+
+		if (!$bDataXmlPrecompiledFileExists && !$bPostCompilationPrecompiledFileExists){
+			return null;
+		}
+
+		if (!$bDataXmlPrecompiledFileExists){
+			$sPrecompiledFileToUse = $sPostCompilationLatestPrecompiledFile;
+		} else if (!$bPostCompilationPrecompiledFileExists){
+			$sPrecompiledFileToUse = $sDataXmlProvidedPrecompiledFile;
+		} else{
+			$iPostCompilationFileLastModified = @filemtime($sPostCompilationLatestPrecompiledFile);
+			SetupLog::Debug("Theme '$sThemeId' check mtime between data XML file " . $iDataXmlFileLastModified . " and latest postcompilation file: " . $iPostCompilationFileLastModified);
+
+			$sPrecompiledFileToUse = $iDataXmlFileLastModified > $iPostCompilationFileLastModified ? $sDataXmlProvidedPrecompiledFile : $sPostCompilationLatestPrecompiledFile;
+		}
+
+		SetupLog::Info("For theme '$sThemeId' precompiled file used: '$sPrecompiledFileToUse'");
+		return $sPrecompiledFileToUse;
 	}
 
 	/**
