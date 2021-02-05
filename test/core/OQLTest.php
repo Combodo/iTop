@@ -482,7 +482,7 @@ class OQLTest extends ItopDataTestCase
 	{
 		return [
 			'Bug 3618' => [
-				"SELECT UserRequest WHERE private_log LIKE '%Auteur : %' UNION SELECT Problem",
+				"SELECT UserRequest WHERE private_log LIKE '%Auteur : %' UNION SELECT UserRequest",
 				"SELECT COUNT(*) AS COUNT FROM (SELECT
  1 
  FROM (
@@ -494,9 +494,9 @@ SELECT
    
  UNION
  SELECT
- DISTINCT `Problem`.`id` AS `Problemid`
+ DISTINCT `UserRequest`.`id` AS `UserRequestid`
  FROM 
-   `ticket_problem` AS `Problem`
+   `ticket_request` AS `UserRequest`
  WHERE 1
    
 ) as __selects__
