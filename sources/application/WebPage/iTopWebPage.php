@@ -754,7 +754,7 @@ JS
 			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
 			$sRestrictionTitle = empty($sAdminMessage) ? '' : $sAdminMessage;
 
-			$oRestrictionAlert = AlertUIBlockFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
+			$oRestrictionAlert = AlertUIBlockFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage, 'ibo-access-readonly-alert')
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oRestrictionAlert);
