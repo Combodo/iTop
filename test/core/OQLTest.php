@@ -50,6 +50,7 @@ class OQLTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider NestedQueryProvider
+	 * @depends testOQLSetup
 	 *
 	 * @param $sQuery
 	 *
@@ -435,9 +436,7 @@ class OQLTest extends ItopDataTestCase
 	{
 		return [
 			'Bug 3660 1' => [
-				"SELECT UserRequest AS U
-	JOIN lnkContactToTicket AS l ON l.ticket_id=U.id
-		JOIN Team AS T ON l.contact_id=T.id",
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Team AS T ON l.contact_id=T.id",
 				"SELECT `U` FROM `UserRequest` AS `U`
     INNER JOIN `lnkContactToTicket` AS `l`
       ON `U`.`id` = `l`.`ticket_id` 
@@ -445,12 +444,63 @@ class OQLTest extends ItopDataTestCase
           ON `l`.`contact_id` = `T`.`id`",
 			],
 			'Bug 3660 2' => [
-				"SELECT UserRequest AS U
-	JOIN lnkContactToTicket AS l ON l.ticket_id=U.id
-		JOIN Contact AS C ON l.contact_id=C.id",
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Contact AS C ON l.contact_id=C.id",
 				"SELECT `U` FROM `UserRequest` AS `U`
     INNER JOIN `lnkContactToTicket` AS `l`
       ON `U`.`id` = `l`.`ticket_id`",
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider MakeSelectQueryForCountProvider
+	 *
+	 * @param $sOQL
+	 * @param $sExpectedSQL
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+	public function testMakeSelectQueryForCount($sOQL, $sExpectedSQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		// Avoid adding all the fields for counts or "group by" requests
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass)) {
+				$sMainClass = $sClass;
+			}
+		}
+		$sSQL = $oFilter->MakeSelectQuery([], [], $aCountAttToLoad, null, 0, 0, true);
+		static::assertEquals($sExpectedSQL, $sSQL);
+	}
+
+	public function MakeSelectQueryForCountProvider()
+	{
+		return [
+			'Bug 3618' => [
+				"SELECT UserRequest WHERE private_log LIKE '%Auteur : %' UNION SELECT Problem",
+				"SELECT COUNT(*) AS COUNT FROM (SELECT
+ 1 
+ FROM (
+SELECT
+ DISTINCT `UserRequest_Ticket`.`id` AS `UserRequestid`
+ FROM 
+   `ticket` AS `UserRequest_Ticket`
+ WHERE ((`UserRequest_Ticket`.`private_log` LIKE '%Auteur : %') AND COALESCE((`UserRequest_Ticket`.`finalclass` IN ('UserRequest')), 1))
+   
+ UNION
+ SELECT
+ DISTINCT `Problem`.`id` AS `Problemid`
+ FROM 
+   `ticket_problem` AS `Problem`
+ WHERE 1
+   
+) as __selects__
+) AS _union_alderaan_",
 			],
 		];
 	}
