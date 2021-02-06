@@ -60,8 +60,8 @@ $(function() {
 				const aMandatoryOptions = ['object_class', 'object_id', 'attribute_code'];
 				for (let sOption of aMandatoryOptions) {
 					if (null === this.options[sOption]) {
-						CombodoGlobalToolbox.Trace('CaseLogEntryForm: Could not initialize widget, make sure that the following options' +
-							' are passed: ' + aMandatoryOptions.join(' / '), 'error');
+						CombodoJSConsole.Error('CaseLogEntryForm: Could not initialize widget, make sure that the following options'+
+							' are passed: '+aMandatoryOptions.join(' / '), 'error');
 						return false;
 					}
 				}
@@ -88,17 +88,16 @@ $(function() {
 				CKEDITOR.on('instanceReady', function(oEvent){
 					// Handle only the current CKEditor instance
 					if(oEvent.editor.name === me.options.text_input_id) {
-						CKEDITOR.instances[me.options.text_input_id].on('change', function(){
+						me._GetCKEditorInstance().on('change', function () {
 							const bWasDraftBefore = me.is_draft;
 							const bIsDraftNow = !me._IsInputEmpty();
 
-							if(bWasDraftBefore !== bIsDraftNow) {
+							if (bWasDraftBefore !== bIsDraftNow) {
 								me.is_draft = bIsDraftNow;
 								me._UpdateEditingVisualHint();
-								if(me._IsSubmitAutonomous()) {
+								if (me._IsSubmitAutonomous()) {
 									me._UpdateSubmitButtonState();
-								}
-								else {
+								} else {
 									me._UpdateBridgeInput();
 								}
 							}
@@ -107,10 +106,10 @@ $(function() {
 				});
 
 				// Form buttons
-				this.element.find(this.js_selectors.cancel_button).on('click', function(oEvent){
+				this.element.find(this.js_selectors.cancel_button).on('click', function (oEvent) {
 					me.element.trigger('cancelled_form.caselog_entry_form.itop');
 				});
-				this.element.find(this.js_selectors.save_button).on('click', function(oEvent){
+				this.element.find(this.js_selectors.save_button).on('click', function (oEvent) {
 					// Avoid form being submitted
 					oEvent.preventDefault();
 
@@ -118,58 +117,39 @@ $(function() {
 				});
 
 				// Form show/hide
-				this.element.on('show_form.caselog_entry_form.itop', function(){
+				this.element.on('show_form.caselog_entry_form.itop', function () {
 					me._ShowEntryForm();
 				});
-				this.element.on('hide_form.caselog_entry_form.itop', function(){
+				this.element.on('hide_form.caselog_entry_form.itop', function () {
 					me._HideEntryForm();
+				});
+
+				// Form pending submission states
+				this.element.on('enter_pending_submission_state.caselog_entry_form.itop', function () {
+					me._EnterPendingSubmissionState();
+				});
+				this.element.on('leave_pending_submission_state.caselog_entry_form.itop', function () {
+					me._LeavePendingSubmissionState();
 				});
 
 				// Get the entry value
-				this.element.on('get_entry.caselog_entry_form.itop', function(){
+				this.element.on('get_entry.caselog_entry_form.itop', function () {
 					return me._GetInputData();
 				});
-
-				// Caselog selection
-				// TODO 3.0.0: Remove this as it is no longer useful
-				this.element.on('add_to_caselog.caselog_entry_form.itop', function(oEvent, oData){
-					const sCaseLogAttCode = oData.caselog_att_code;
-					const sStimulusCode = oData.stimulus_code !== undefined ? oData.stimulus_code : null;
-
-					me._SubmitEntryToCaselog(me._GetInputData(), sCaseLogAttCode, sStimulusCode);
-				});
-			},
-			_SubmitEntryToCaselog: function(sEntryContent, sCaselogAttCode, sStimulusCode = null){
-				const me = this;
-				const sObjClass = this.element.closest(this.js_selectors.activity_panel).attr('data-object-class');
-				const sObjId = this.element.closest(this.js_selectors.activity_panel).attr('data-object-id');
-
-				let oParams = {
-					'operation' : 'add_caselog_entry',
-					'class' : sObjClass,
-					'id' : sObjId,
-					'caselog_new_entry': sEntryContent,
-					'caselog_attcode' : sCaselogAttCode,
-					'caselog_rank' : this.element.closest(this.js_selectors.activity_panel).activity_panel('GetCaseLogRank', sCaselogAttCode),
-				}
-				//TODO 3.0.0 Handle errors
-				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(sNewEntry){
-					me.element.closest(me.js_selectors.activity_panel).activity_panel('AddEntry', sNewEntry, 'caselog:' + sCaselogAttCode)
+				// Clear the entry value
+				this.element.on('clear_entry.case_entry_form.itop', function () {
 					me._EmptyInput();
-					me._HideEntryForm();
-
-					// Redirect to stimulus
-					if(sStimulusCode !== null){
-						window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+sObjClass+'&id='+sObjId+'&stimulus='+sStimulusCode;
-					}
 				});
 			},
 
 			// Helpers
-			_IsSubmitAutonomous: function() {
+			_IsSubmitAutonomous: function () {
 				return this.options.submit_mode === this.enums.submit_mode.autonomous;
 			},
 			// - Form
+			_GetCKEditorInstance: function () {
+				return CKEDITOR.instances[this.options.text_input_id];
+			},
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
 			},
@@ -177,6 +157,16 @@ $(function() {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).addClass(this.css_classes.is_closed);
 
 				// TODO 3.0.0: This should also clear the form (input, lock, send button, ...)
+			},
+			_EnterPendingSubmissionState: function () {
+				this._GetCKEditorInstance().setReadOnly(true);
+				this.element.find(this.js_selectors.cancel_button).prop('disabled', true);
+				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+			},
+			_LeavePendingSubmissionState: function () {
+				this._GetCKEditorInstance().setReadOnly(false);
+				this.element.find(this.js_selectors.cancel_button).prop('disabled', false);
+				this.element.find(this.js_selectors.save_button).prop('disabled', false);
 			},
 			// - Bridged form input
 			/**
@@ -186,7 +176,7 @@ $(function() {
 			 * @returns {null|jQuery.fn.init|jQuery|HTMLElement}
 			 * @private
 			 */
-			_GetGeneralFormElement: function() {
+			_GetGeneralFormElement: function () {
 				const oActivityPanelElem = this.element.closest(this.js_selectors.activity_panel);
 				const sHostObjClass = oActivityPanelElem.attr('data-object-class');
 				const sHostObjId = oActivityPanelElem.attr('data-object-id');
@@ -194,7 +184,7 @@ $(function() {
 				const oGeneralFormElem = $('.object-details[data-object-class="'+sHostObjClass+'"][data-object-id="'+sHostObjId+'"] > form');
 
 				// Protection in case this is called with non editable general form
-				if(oGeneralFormElem.length === 0) {
+				if (oGeneralFormElem.length === 0) {
 					return null;
 				}
 
@@ -212,9 +202,7 @@ $(function() {
 				const oGeneralFormElem = this._GetGeneralFormElement();
 
 				if(oGeneralFormElem === null) {
-					if(window.console && window.console.error){
-						console.error('Could not add bridge input as there is no general form');
-					}
+					CombodoJSConsole.Error('CaseLogEntryForm: Could not add bridge input as there is no general form');
 					return false;
 				}
 

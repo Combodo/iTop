@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
@@ -2650,27 +2649,20 @@ EOF
 			}
 			$oPage->add(json_encode($aResult));
 			break;
-		case 'add_caselog_entry':
-			// TODO 3.0.0: Handle errors & rights
-			$sClass = utils::ReadPostedParam('class', '', 'class');
-			$sClassLabel = MetaModel::GetName($sClass);
-			$id = utils::ReadPostedParam('id', '');
-			// TODO 3.0.0 Handle transactions token which is not passed yet
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-			$sCaseLogAttCode = utils::ReadPostedParam('caselog_attcode', '');
-			$sCaseLogNewEntry = utils::ReadPostedParam('caselog_new_entry', '', 'raw');
-			$iCaseLogRank = utils::ReadPostedParam('caselog_rank', 0, 'integer');
-			if($id !== 0 && MetaModel::IsValidClass($sClass))
-			{
-				$oObj = MetaModel::GetObject($sClass, $id);
-				$oObj->Set($sCaseLogAttCode, $sCaseLogNewEntry);
-				$oObj->DBWrite();
+
+		// Activity panel
+		case 'add_caselog_entries':
+			$oPage->SetContentType('application/json');
+			try {
+				$aResult = AjaxRenderController::AddCaseLogsEntries();
 			}
-			$oNewEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $oObj->Get($sCaseLogAttCode)->GetAsArray()[0]);
-			$oNewEntry->SetCaseLogRank($iCaseLogRank);
-			$oPage->AddUiBlock($oNewEntry);
-			break;
-		case 'new_entry_group':
+			catch (Exception $oException) {
+				$aResult = [
+					'success' => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->add(json_encode($aResult));
 			break;
 
 		case 'get_menus_count':

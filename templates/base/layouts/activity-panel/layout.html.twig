@@ -1,7 +1,7 @@
 <div id="{{ oUIBlock.GetId() }}" class="ibo-activity-panel" data-role="ibo-activity-panel" data-object-class="{{ oUIBlock.GetObjectClass() }}" data-object-id="{{ oUIBlock.GetObjectId() }}" data-object-mode="{{ oUIBlock.GetObjectMode() }}">
-	<div class="ibo-activity-panel--header">
-		<div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
-			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+    <div class="ibo-activity-panel--header" data-role="ibo-activity-panel--header">
+        <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
+            {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
 				{% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
 				<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
 				     data-role="ibo-activity-panel--tab-toggler"
@@ -55,10 +55,13 @@
 		</div>
 	</div>
 	{% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}
-		<a href="#" class="ibo-activity-panel--add-caselog-entry-button" data-role="ibo-activity-panel--add-caselog-entry-button"><i class="fas fa-feather"></i></a>
-	{% endif %}
-	<div class="ibo-activity-panel--body">
-		{% if oUIBlock.GetGroupedEntries()|length > 0 %}
+        <a href="#" class="ibo-activity-panel--add-caselog-entry-button" data-role="ibo-activity-panel--add-caselog-entry-button"
+           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
+            <i class="fas fa-feather"></i>
+        </a>
+    {% endif %}
+    <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
+        {% if oUIBlock.GetGroupedEntries()|length > 0 %}
 			{% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
 				{{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
 			{% endfor %}

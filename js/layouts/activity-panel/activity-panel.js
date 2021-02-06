@@ -23,49 +23,52 @@ $(function()
 		{
 			// default options
 			options:
-			{
-				datetime_format: null,
-				datetimes_reformat_limit: 14,   // In days
-				show_multiple_entries_submit_confirmation: true,
-			},
+				{
+					datetime_format: null,
+					datetimes_reformat_limit: 14,   // In days
+					transaction_id: null,           // Null until the user gets the lock on the object
+					show_multiple_entries_submit_confirmation: true,
+				},
 			css_classes:
-			{
-				is_expanded: 'ibo-is-expanded',
-				is_opened: 'ibo-is-opened',
-				is_closed: 'ibo-is-closed',
-				is_active: 'ibo-is-active',
-				is_visible: 'ibo-is-visible',
-				is_hidden: 'ibo-is-hidden',
-				is_draft: 'ibo-is-draft',
-			},
+				{
+					is_expanded: 'ibo-is-expanded',
+					is_opened: 'ibo-is-opened',
+					is_closed: 'ibo-is-closed',
+					is_active: 'ibo-is-active',
+					is_visible: 'ibo-is-visible',
+					is_hidden: 'ibo-is-hidden',
+					is_draft: 'ibo-is-draft',
+					is_current_user: 'ibo-is-current-user',
+				},
 			js_selectors:
-			{
-				panel_size_toggler: '[data-role="ibo-activity-panel--size-toggler"]',
-				tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
-				tab_title: '[data-role="ibo-activity-panel--tab-title"]',
-				tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
-				tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
-				tab_toolbar_action: '[data-role="ibo-activity-panel--tab-toolbar-action"]',
-				caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
-				caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
-				activity_filter: '[data-role="ibo-activity-panel--filter"]',
-				activity_filter_options: '[data-role="ibo-activity-panel--filter-options"]',
-				activity_filter_options_toggler: '[data-role="ibo-activity-panel--filter-options-toggler"]',
-				activity_filter_option_input: '[data-role="ibo-activity-panel--filter-option-input"]',
-				authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
-				messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
-				compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
-				caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
-				caselog_entry_forms_confirmation_dialog: '[data-role="ibo-activity-panel--entry-forms-confirmation-dialog"]',
-				caselog_entry_forms_confirmation_preference_input: '[data-role="ibo-activity-panel--entry-forms-confirmation-preference-input"]',
-				entry_group: '[data-role="ibo-activity-panel--entry-group"]',
-				entry: '[data-role="ibo-activity-entry"]',
-				entry_medallion: '[data-role="ibo-activity-entry--medallion"]',
-				entry_main_information: '[data-role="ibo-activity-entry--main-information"]',
-				entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
-				edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
-				edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
-			},
+				{
+					panel_size_toggler: '[data-role="ibo-activity-panel--size-toggler"]',
+					tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
+					tab_title: '[data-role="ibo-activity-panel--tab-title"]',
+					tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
+					tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
+					tab_toolbar_action: '[data-role="ibo-activity-panel--tab-toolbar-action"]',
+					caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
+					caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
+					activity_filter: '[data-role="ibo-activity-panel--filter"]',
+					activity_filter_options: '[data-role="ibo-activity-panel--filter-options"]',
+					activity_filter_options_toggler: '[data-role="ibo-activity-panel--filter-options-toggler"]',
+					activity_filter_option_input: '[data-role="ibo-activity-panel--filter-option-input"]',
+					authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
+					messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
+					compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
+					caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
+					caselog_entry_forms_confirmation_dialog: '[data-role="ibo-activity-panel--entry-forms-confirmation-dialog"]',
+					caselog_entry_forms_confirmation_preference_input: '[data-role="ibo-activity-panel--entry-forms-confirmation-preference-input"]',
+					body: '[data-role="ibo-activity-panel--body"]',
+					entry_group: '[data-role="ibo-activity-panel--entry-group"]',
+					entry: '[data-role="ibo-activity-entry"]',
+					entry_medallion: '[data-role="ibo-activity-entry--medallion"]',
+					entry_main_information: '[data-role="ibo-activity-entry--main-information"]',
+					entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
+					edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
+					edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
+				},
 			enums: {
 				tab_types: {
 					caselog: 'caselog',
@@ -79,9 +82,9 @@ $(function()
 			},
 
 			// the constructor
-			_create: function()
-			{
+			_create: function () {
 				this.element.addClass('ibo-activity-panel');
+
 				this._bindEvents();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -561,26 +564,36 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_HideCaseLogsEntryForms: function()
-			{
+			_HideCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('hide_form.caselog_entry_form.itop');
 				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
 
 				// TODO 3.0.0: Release lock
 			},
+			_FreezeCaseLogsEntryForms: function () {
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('enter_pending_submission_state.caselog_entry_form.itop');
+			},
+			_UnfreezeCaseLogsEntryForms: function () {
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('leave_pending_submission_state.caselog_entry_form.itop');
+			},
 			/**
 			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
 			 * @private
 			 */
-			_GetEntriesFromAllForms: function()
-			{
+			_GetEntriesFromAllForms: function () {
+				const me = this;
+
 				let oEntries = {};
-				this.element.find(this.js_selectors.caselog_entry_form).each(function(){
+				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
 					const oEntryFormElem = $(this);
 					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
 
-					if('' !== sEntryFormValue) {
-						oEntries[oEntryFormElem.attr('data-attribute-code')] = sEntryFormValue;
+					if ('' !== sEntryFormValue) {
+						const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
+						oEntries[sCaseLogAttCode] = {
+							value: sEntryFormValue,
+							rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+						};
 					}
 				});
 
@@ -615,6 +628,7 @@ $(function()
 								if (bDoNotShowAgain) {
 									me._SaveSubmitConfirmationPref();
 								}
+								me._HideEntriesSubmitConfirmation();
 								me._SendEntriesToServer();
 							}
 						},
@@ -650,11 +664,67 @@ $(function()
 			 * Send the edited case logs entries to the server
 			 * @private
 			 */
-			_SendEntriesToServer: function()
-			{
+			_SendEntriesToServer: function () {
+				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
-				// Put entries in the feed
-				// Renew transaction ID for inline images
+
+				// Proceed only if entries to send
+				if (Object.keys(oEntries).length === 0) {
+					return false;
+				}
+
+				// Prepare parameters
+				let oParams = {
+					operation: 'add_caselog_entries',
+					object_class: this._GetHostObjectClass(),
+					object_id: this._GetHostObjectID(),
+					transaction_id: this.options.transaction_id,
+					entries: oEntries,
+				};
+
+				// Freeze case logs
+				this._FreezeCaseLogsEntryForms();
+
+				// Send request to server
+				$.post(
+					GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+					oParams,
+					'json'
+					)
+					.fail(function (oXHR, sStatus, sErrorThrown) {
+						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
+						alert(sErrorThrown);
+					})
+					.done(function (oData) {
+						if (false === oData.success) {
+							// TODO 3.0.0: Same comment as the fail() callback
+							alert(oData.error_message);
+							return false;
+						}
+
+						// Update the feed
+						for (let sCaseLogAttCode in oData.entries) {
+							me._AddEntry(sCaseLogAttCode, oData.entries[sCaseLogAttCode]);
+						}
+						me._ApplyEntriesFilters();
+
+						// For now, we don't hide the forms as the user may want to add something else
+						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.case_entry_form.itop');
+
+						// TODO 3.0.0: Redirect to transition page if necessary (buttons need to be added)
+						// // Redirect to stimulus
+						// if(sStimulusCode !== null){
+						// 	window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+sObjClass+'&id='+sObjId+'&stimulus='+sStimulusCode;
+						// }
+
+						// TODO 3.0.0: If no stimulus
+						// On done, lock was release, remove message
+						// On done, renew transaction ID
+					})
+					.always(function () {
+						// Always, unfreeze case logs
+						me._UnfreezeCaseLogsEntryForms();
+					});
 			},
 
 			// - Helpers on messages
@@ -787,7 +857,7 @@ $(function()
 
 					// ... except the selected
 					for (let sCaseLogAttCode of aOptions) {
-						this.element.find(sEntrySelector + '[data-entry-caselog-attribute-code="' + sCaseLogAttCode + '"]').removeClass(this.css_classes.is_hidden);
+						this.element.find(sEntrySelector+'[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_hidden);
 					}
 				}
 				// General case
@@ -797,49 +867,63 @@ $(function()
 
 				this._UpdateEntryGroupsVisibility();
 			},
-			_UpdateEntryGroupsVisibility: function()
-			{
+			_UpdateEntryGroupsVisibility: function () {
 				const me = this;
 
-				this.element.find(this.js_selectors.entry_group).each(function(){
-					if($(this).find(me.js_selectors.entry + ':not(.' + me.css_classes.is_hidden + ')').length === 0)
-					{
+				this.element.find(this.js_selectors.entry_group).each(function () {
+					if ($(this).find(me.js_selectors.entry+':not(.'+me.css_classes.is_hidden+')').length === 0) {
 						$(this).addClass(me.css_classes.is_hidden);
-					}
-					else
-					{
+					} else {
 						$(this).removeClass(me.css_classes.is_hidden);
 					}
 				});
 			},
-			_GetNewEntryGroup: function()
-			{
-				let AjaxNewEntryGroupDeferred = jQuery.Deferred();
-				const me = this;
-				var oParams = {
-					'operation' : 'new_entry_group',
-					'caselog_new_entry': sData,
-					'caselog_attcode' : sCaselog,
+			/**
+			 * Add an entry represented by its oData to the case log with the sCaseLogAttCode
+			 *
+			 * @param sCaseLogAttCode {string}
+			 * @param oData {Object} Structured data of the entry: {html_rendering: <HTML_DATA>}
+			 * @private
+			 */
+			_AddEntry: function (sCaseLogAttCode, oData) {
+				// Info about the new entry
+				const oNewEntryElem = $(oData.html_rendering);
+				const sNewEntryAuthorLogin = oNewEntryElem.attr('data-entry-author-login');
+				const sNewEntryOrigin = oNewEntryElem.attr('data-entry-group-origin');
+
+				// Info about the last entry group to see the entry to add should be in this one or a new one
+				const oLastEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first');
+				const sLastEntryAuthorLogin = oLastEntryGroupElem.length > 0 ? oLastEntryGroupElem.attr('data-entry-author-login') : null;
+				const sLastEntryOrigin = oLastEntryGroupElem.length > 0 ? oLastEntryGroupElem.attr('data-entry-group-origin') : null;
+
+				let oTargetEntryGroup = null;
+				if ((sLastEntryAuthorLogin === sNewEntryAuthorLogin) && (sLastEntryOrigin && sNewEntryOrigin)) {
+					oTargetEntryGroup = oLastEntryGroupElem;
+				} else {
+					oTargetEntryGroup = this._CreateEntryGroup(sNewEntryAuthorLogin, sNewEntryOrigin);
 				}
-				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
-					AjaxNewEntryGroupDeferred.resolve(data);
-				});	
-				return AjaxNewEntryGroupDeferred.promise();
+				oTargetEntryGroup.prepend(oNewEntryElem);
+				this._ReformatDateTimes();
 			},
-			AddEntry: function(sEntry, sOrigin)
-			{
-				let aEntryGroup = this.element.find(this.js_selectors.entry_group)
-				let sAuthorLogin = $(sEntry).attr('data-entry-author-login');
-				if (aEntryGroup.length > 0 && $(aEntryGroup[0]).attr('data-entry-group-author-login') === sAuthorLogin && $(aEntryGroup[0]).attr('data-entry-group-origin') === sOrigin)
-				{
-					$(aEntryGroup[0]).prepend(sEntry);
-					this._ReformatDateTimes();
-				}
-				else
-				{
-					// TODO 3.0.0 Create a new entry group
-					window.location.reload();
-				}
-			}
+			/**
+			 * Create an entry group and add it to the activity panel
+			 *
+			 * @param sAuthorLogin {string}
+			 * @param sOrigin {string}
+			 * @returns {Object} jQuery object representing the created entry group
+			 * @private
+			 */
+			_CreateEntryGroup: function (sAuthorLogin, sOrigin) {
+				// Note: When using the ActivityPanel, there should always be at least one entry group already, the one from the object creation
+				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first')
+					.clone()
+					.attr('data-entry-author-login', sAuthorLogin)
+					.attr('data-entry-group-origin', sOrigin)
+					.addClass(this.css_classes.is_current_user)
+					.html('')
+					.prependTo(this.element.find(this.js_selectors.body));
+
+				return oEntryGroupElem;
+			},
 		});
 });

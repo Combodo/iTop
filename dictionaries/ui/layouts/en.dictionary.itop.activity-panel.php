@@ -36,6 +36,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)',
 
+	// Compose button
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new case log entry',
+
 	// Case log entry
 	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title' => 'Multiple case logs save',
 	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited case logs at once.',

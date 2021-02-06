@@ -13,12 +13,15 @@ use BulkExport;
 use BulkExportException;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
 use Dict;
 use Exception;
 use ExecutionKPI;
+use InlineImage;
 use MetaModel;
 use utils;
 
@@ -366,5 +369,86 @@ class AjaxRenderController
 		$bRet = $oSettings->ResetToDefault($bResetAll);
 
 		return $bRet;
+	}
+
+	/**
+	 * Add new entries to some of the object's (identified by posted parameters) case logs
+	 *
+	 * @return array The status of the update, a renewed transaction ID and the entries as HTML so they can be append to the front.
+	 * [
+	 *  'success' => true,
+	 *  'entries' => [
+	 *      '<ATT_CODE_1>' => [
+	 *          html_rendering => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
+	 *      ],
+	 *      '<ATT_CODE_2>' => [
+	 *          html_rendering => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
+	 *      ],
+	 *      ...
+	 *  ],
+	 *  'renewed_transaction_id' => '<RENEWED_TRANSACTION_ID>',
+	 * ]
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public static function AddCaseLogsEntries(): array
+	{
+		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$sObjectId = utils::ReadPostedParam('object_id', 0);
+		$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
+		// TODO 3.0.0: Remove this line when transaction handled
+		$sTransactionId = 'foo';
+		$aEntries = utils::ReadPostedParam('entries', [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+		// Consistency checks
+		// - Mandatory parameters
+		if (empty($sObjectClass) || empty($sObjectId) || empty($sTransactionId) || empty($aEntries)) {
+			throw new Exception('Missing mandatory parameters object_class / object_id / transaction_id / entries');
+		}
+		// - Transaction ID
+		// TODO 3.0.0: Uncomment when transaction ID is passed (retrieved from the upcoming lock system)
+//		if (!utils::IsTransactionValid($sTransactionId)) {
+//			throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
+//		}
+
+		$aResults = [
+			'success' => true,
+			'entries' => [],
+		];
+
+		// Note: Will trigger an exception if object does not exists or not accessible to the user
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId);
+		foreach ($aEntries as $sAttCode => $aData) {
+			// Add entry to object
+			$oObject->Set($sAttCode, $aData['value']);
+
+			// Make entry rendering to send back to the front
+			$aEntryAsArray = $oObject->Get($sAttCode)->GetAsArray()[0];
+			$oEntryBlock = ActivityEntryFactory::MakeFromCaseLogEntryArray($sAttCode, $aEntryAsArray);
+			$oEntryBlock->SetCaseLogRank((int)$aData['rank']);
+			$sEntryAsHtml = BlockRenderer::RenderBlockTemplates($oEntryBlock);
+
+			$aResults['entries'][$sAttCode] = [
+				'html_rendering' => $sEntryAsHtml,
+			];
+		}
+		$oObject->DBWrite();
+
+		// Finalize inline images
+		InlineImage::FinalizeInlineImages($oObject);
+
+		// Renew transaction ID
+		utils::RemoveTransaction($sTransactionId);
+		$aResults['renewed_transaction_id'] = utils::GetNewTransactionId();
+
+		return $aResults;
 	}
 }
