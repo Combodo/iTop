@@ -218,7 +218,7 @@ $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem 
 .ibo-activity-panel--tab-toolbar-actions{
 	@extend %ibo-fully-centered-content;
 	justify-content: space-between;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	height: $ibo-activity-panel--tab-toolbar-actions--height;
 }
 .ibo-activity-panel--tab-toolbar-left-actions,
