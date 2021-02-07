@@ -382,14 +382,13 @@ $(function()
 				const me = this;
 
 				this.element.find(this.js_selectors.entry_datetime).each(function(){
-					const oEntryDateTime = moment($(this).text(), me.options.datetime_format);
+					const oEntryDateTime = moment($(this).attr('data-formatted-datetime'), me.options.datetime_format);
 					const oNowDateTime = moment();
 
 					// Reformat date time only if it is not too far in the past (eg. "2 years ago" is not easy to interpret)
 					const fDays = moment.duration(oNowDateTime.diff(oEntryDateTime)).asDays();
-					if(fDays < me.options.datetimes_reformat_limit)
-					{
-						$(this).text( moment($(this).text(), me.options.datetime_format).fromNow() );
+					if (fDays < me.options.datetimes_reformat_limit) {
+						$(this).text(moment($(this).attr('data-formatted-datetime'), me.options.datetime_format).fromNow());
 					}
 				});
 			},

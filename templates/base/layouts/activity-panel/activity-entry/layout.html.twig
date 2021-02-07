@@ -32,8 +32,11 @@
 			</div>
 			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
 				{% block iboActivityEntrySubInformation %}
-					<span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime" data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
-				{% endblock %}
+                    <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"
+                          data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}"
+                          data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"
+                          data-formatted-datetime="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
+                {% endblock %}
 			</div>
 		{% endblock %}
 	</div>
