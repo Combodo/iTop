@@ -86,6 +86,7 @@ $(function()
 				this.element.addClass('ibo-activity-panel');
 
 				this._bindEvents();
+				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ReformatDateTimes();
