@@ -88,6 +88,7 @@ $(function() {
 				CKEDITOR.on('instanceReady', function(oEvent){
 					// Handle only the current CKEditor instance
 					if(oEvent.editor.name === me.options.text_input_id) {
+						// Update depending elements on change
 						me._GetCKEditorInstance().on('change', function () {
 							const bWasDraftBefore = me.is_draft;
 							const bIsDraftNow = !me._IsInputEmpty();
@@ -113,7 +114,7 @@ $(function() {
 					// Avoid form being submitted
 					oEvent.preventDefault();
 
-					me.element.trigger('request_submission.caselog_entry_form.itop');
+					me._RequestSubmission();
 				});
 
 				// Form show/hide
@@ -145,6 +146,9 @@ $(function() {
 			// Helpers
 			_IsSubmitAutonomous: function () {
 				return this.options.submit_mode === this.enums.submit_mode.autonomous;
+			},
+			_RequestSubmission: function () {
+				this.element.trigger('request_submission.caselog_entry_form.itop');
 			},
 			// - Form
 			_GetCKEditorInstance: function () {
@@ -224,7 +228,7 @@ $(function() {
 			},
 			// - Input zone
 			_EmptyInput: function() {
-				CKEDITOR.instances[this.options.text_input_id].setData('');
+				this._GetCKEditorInstance().setData('');
 			},
 			/**
 			 * @returns {boolean} True if the input has no text
@@ -234,7 +238,7 @@ $(function() {
 				return this._GetInputData() === '';
 			},
 			_GetInputData: function() {
-				return (CKEDITOR.instances[this.options.text_input_id] === undefined) ? '' : CKEDITOR.instances[this.options.text_input_id].getData();
+				return (this._GetCKEditorInstance() === undefined) ? '' : this._GetCKEditorInstance().getData();
 			},
 			// - Main actions
 			_ShowMainActions: function() {
