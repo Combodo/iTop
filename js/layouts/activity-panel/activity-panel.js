@@ -620,9 +620,9 @@ $(function()
 							}
 						},
 						{
-							text: Dict.S('UI:Button:Save'),
+							text: Dict.S('UI:Button:Send'),
 							class: 'ibo-is-primary',
-							click: function() {
+							click: function () {
 								const bDoNotShowAgain = $(this).find(me.js_selectors.caselog_entry_forms_confirmation_preference_input).prop('checked');
 								if (bDoNotShowAgain) {
 									me._SaveSubmitConfirmationPref();

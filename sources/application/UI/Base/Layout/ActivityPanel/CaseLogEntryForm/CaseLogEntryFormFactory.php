@@ -48,7 +48,7 @@ class CaseLogEntryFormFactory
 	 */
 	protected static function PrepareCancelButton(): Button
 	{
-		return ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		return ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class CaseLogEntryFormFactory
 	 */
 	protected static function PrepareSaveButton(): Button
 	{
-		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Save'), 'save', 'save');
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'save', 'save');
 		$oButton->SetIconClass('fas fa-paper-plane');
 
 		return $oButton;
