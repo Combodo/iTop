@@ -4,20 +4,20 @@
  */
 
 $ibo-caselog-entry-form--width: 100% !default;
+$ibo-caselog-entry-form--padding-bottom: 12px default;
 $ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
 
-$ibo-caselog-entry-form--actions--margin-top: 6px !default;
-$ibo-caselog-entry-form--actions--margin-bottom: 8px !default;
+$ibo-caselog-entry-form--actions--margin-top: 8px !default;
+$ibo-caselog-entry-form--actions--margin-bottom: $ibo-caselog-entry-form--actions--margin-top !default;
 
+.ibo-caselog-entry-form {
+  display: block;
+  width: 100%;
+  background-color: $ibo-caselog-entry-form--background-color;
 
-.ibo-caselog-entry-form{
-	display: block;
-	width: 100%;
-	background-color: $ibo-caselog-entry-form--background-color;
-
-	&.ibo-is-closed{
-		display: none;
-	}
+  &.ibo-is-closed {
+    display: none;
+  }
 }	
 .ibo-caselog-entry-form--actions{
 	display: flex;

@@ -6,7 +6,7 @@
 
 {% block bExtraDataAttributes %}data-caselog-attribute-code="{{ sCaseLogAttCode }}" data-caselog-rank="{{ loop.index }}"{% endblock %}
 
-{% block bTabToolbarSecondRow %}
+{% block bTabToolbarFirstRow %}
 	{% if oUIBlock.HasCaseLogTabEntryForm(sCaseLogAttCode) %}
 		<div class="ibo-activity-panel--tab-entry-form" data-role="ibo-activity-panel--tab-entry-form">
 			{{ render_block(oUIBlock.GetCaseLogTabEntryForm(sCaseLogAttCode)) }}

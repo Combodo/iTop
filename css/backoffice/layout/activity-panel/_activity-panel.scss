@@ -57,6 +57,8 @@ $ibo-activity-panel--tab-toolbar--padding-x: 10px !default;
 $ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 
+$ibo-activity-panel--tab-toolbar-actions--margin-y: 4px !default;
+$ibo-activity-panel--tab-toolbar-actions--margin-x: 0 !default;
 $ibo-activity-panel--tab-toolbar-actions--height: 32px !default;
 $ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: 16px !default;
 
@@ -87,7 +89,7 @@ $ibo-activity-panel--body--placeholder-hint--margin-top: 16px !default;
 $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default;
 
 $ibo-activity-panel--add-caselog-entry-button--right: 12px !default;
-$ibo-activity-panel--add-caselog-entry-button--top: 66px + $ibo-activity-panel--add-caselog-entry-button--right !default;
+$ibo-activity-panel--add-caselog-entry-button--top: 76px + $ibo-activity-panel--add-caselog-entry-button--right !default;
 $ibo-activity-panel--add-caselog-entry-button--diameter: 36px !default;
 $ibo-activity-panel--add-caselog-entry-button--background-color: $ibo-color-primary-600 !default;
 $ibo-activity-panel--add-caselog-entry-button--color: $ibo-color-white-100 !default;
@@ -219,6 +221,7 @@ $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem 
 	@extend %ibo-fully-centered-content;
 	justify-content: space-between;
 	flex-wrap: nowrap;
+  margin: $ibo-activity-panel--tab-toolbar-actions--margin-y $ibo-activity-panel--tab-toolbar-actions--margin-x;
 	height: $ibo-activity-panel--tab-toolbar-actions--height;
 }
 .ibo-activity-panel--tab-toolbar-left-actions,
