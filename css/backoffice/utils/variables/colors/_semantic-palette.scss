@@ -74,28 +74,30 @@ $ibo-semantic-colors: ('primary', 'secondary', 'information', 'success', 'warnin
 
 $ibo-caselog-highlight-color-1: $ibo-color-green-700 !default;
 $ibo-caselog-highlight-color-2: $ibo-color-pink-700 !default;
-$ibo-caselog-highlight-color-3: $ibo-color-blue-600 !default;
-$ibo-caselog-highlight-color-4: $ibo-color-orange-400 !default;
+$ibo-caselog-highlight-color-3: $ibo-color-orange-400 !default;
+$ibo-caselog-highlight-color-4: $ibo-color-blue-600 !default;
 $ibo-caselog-highlight-color-5: $ibo-color-cyan-200 !default;
-$ibo-caselog-highlight-colors: ($ibo-caselog-highlight-color-1, $ibo-caselog-highlight-color-2, $ibo-caselog-highlight-color-3, $ibo-caselog-highlight-color-4, $ibo-caselog-highlight-color-5) !default;
+$ibo-caselog-highlight-color-6: $ibo-color-green-200 !default;
+$ibo-caselog-highlight-color-7: $ibo-color-pink-300 !default;
+$ibo-caselog-highlight-colors: ($ibo-caselog-highlight-color-1, $ibo-caselog-highlight-color-2, $ibo-caselog-highlight-color-3, $ibo-caselog-highlight-color-4, $ibo-caselog-highlight-color-5, $ibo-caselog-highlight-color-6, $ibo-caselog-highlight-color-7) !default;
 
 /* CSS variables */
 :root {
-	--ibo-color-primary-100: #{$ibo-color-primary-100};
-	--ibo-color-primary-200: #{$ibo-color-primary-200};
-	--ibo-color-primary-300: #{$ibo-color-primary-300};
-	--ibo-color-primary-400: #{$ibo-color-primary-400};
-	--ibo-color-primary-500: #{$ibo-color-primary-500};
-	--ibo-color-primary-600: #{$ibo-color-primary-600};
-	--ibo-color-primary-700: #{$ibo-color-primary-700};
-	--ibo-color-primary-800: #{$ibo-color-primary-800};
-	--ibo-color-primary-900: #{$ibo-color-primary-900};
+  --ibo-color-primary-100: #{$ibo-color-primary-100};
+  --ibo-color-primary-200: #{$ibo-color-primary-200};
+  --ibo-color-primary-300: #{$ibo-color-primary-300};
+  --ibo-color-primary-400: #{$ibo-color-primary-400};
+  --ibo-color-primary-500: #{$ibo-color-primary-500};
+  --ibo-color-primary-600: #{$ibo-color-primary-600};
+  --ibo-color-primary-700: #{$ibo-color-primary-700};
+  --ibo-color-primary-800: #{$ibo-color-primary-800};
+  --ibo-color-primary-900: #{$ibo-color-primary-900};
 
-	--ibo-color-secondary-100: #{$ibo-color-secondary-100};
-	--ibo-color-secondary-200: #{$ibo-color-secondary-200};
-	--ibo-color-secondary-300: #{$ibo-color-secondary-300};
-	--ibo-color-secondary-400: #{$ibo-color-secondary-400};
-	--ibo-color-secondary-500: #{$ibo-color-secondary-500};
+  --ibo-color-secondary-100: #{$ibo-color-secondary-100};
+  --ibo-color-secondary-200: #{$ibo-color-secondary-200};
+  --ibo-color-secondary-300: #{$ibo-color-secondary-300};
+  --ibo-color-secondary-400: #{$ibo-color-secondary-400};
+  --ibo-color-secondary-500: #{$ibo-color-secondary-500};
 	--ibo-color-secondary-600: #{$ibo-color-secondary-600};
 	--ibo-color-secondary-700: #{$ibo-color-secondary-700};
 	--ibo-color-secondary-800: #{$ibo-color-secondary-800};
