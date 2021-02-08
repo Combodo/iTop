@@ -226,7 +226,7 @@ abstract class TriggerOnObject extends Trigger
 		{
 			/** @var \DBObject $oObject */
 			$oObject = $aContextArgs['this->object()'];
-			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListChanges());
+			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListPreviousValuesForUpdatedAttributes());
 		}
 		if ($bGo)
 		{
