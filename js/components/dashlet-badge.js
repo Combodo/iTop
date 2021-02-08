@@ -23,14 +23,18 @@ $(function () {
 			options: {},
 			js_selectors:
 				{
-					dashletContainer: '[data-role="ibo-dashlet-badge--body"]',
+					dashletContainer: '[data-role="ibo-dashlet"]',
 					dashletActions: '[data-role="ibo-dashlet-badge--actions"]',
 					dashletActionList: '[data-role="ibo-dashlet-badge--action-list"]'
 				},
 			dashletContainer: null,
 
 			_create: function () {
-				this.dashletContainer = this.element.closest(this.js_selectors.dashletContainer);
+				this.dashletContainer = $(
+					this.element
+						.parents(this.js_selectors.dashletContainer)
+						.get(-1)
+				);
 
 				this._setStyle();
 				this._bindEvents();
