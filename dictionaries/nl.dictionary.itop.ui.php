@@ -813,7 +813,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Delete:WillBeDeletedAutomatically' => 'Zal automatisch verwijderd worden',
 	'UI:Delete:MustBeDeletedManually' => 'Moet handmatig verwijderd worden',
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Zou automatisch moeten geüpdatet worden, maar: %1$s',
-	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Zal automatisch aangeapst worden (reset: %1$s)',
+	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Zal automatisch aangepast worden (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objecten/links verwijzen naar %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objecten/links verwijzen naar sommige objecten die verwijderd worden',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Elke verdere verwijzing moet verwijderd worden om de integriteit van de database te verzekeren',

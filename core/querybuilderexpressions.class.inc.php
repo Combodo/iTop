@@ -178,6 +178,14 @@ class QueryBuilderExpressions
 		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr)
 		{
 			$this->m_aSelectExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+			if ($this->m_aSelectExpr[$sColAlias] instanceof FieldExpressionResolved)
+			{
+				// Split the field with the relevant alias
+				foreach ($this->m_aSelectExpr[$sColAlias]->AdditionalExpressions() as $sSuffix => $oAdditionalExpr)
+				{
+					$this->m_aSelectExpr[$sColAlias.$sSuffix] = $oAdditionalExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+				}
+			}
 		}
 		if ($this->m_aGroupByExpr)
 		{

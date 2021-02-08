@@ -33,7 +33,9 @@ class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 	 */
 	public function testUpdateRealiasingMap($aRealiasingMap, $aAliasTranslation, $aExpectedRealiasingMap)
 	{
-		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
+		$oObject = new DBObjectSearch('Organization');
+		$aArgs = [&$aRealiasingMap, $aAliasTranslation];
+		$this->InvokeNonPublicMethod(DBObjectSearch::class, 'UpdateRealiasingMap', $oObject, $aArgs);
 		$this->assertEquals($aExpectedRealiasingMap, $aRealiasingMap);
 	}
 
@@ -76,13 +78,5 @@ class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 				'ExpectedMap' => ['a' => ['f', 'd'], 'c' => ['e']]
 			],
 		];
-	}
-
-	private function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
-	{
-		$class = new \ReflectionClass(DBObjectSearch::class);
-		$method = $class->getMethod('UpdateRealiasingMap');
-		$method->setAccessible(true);
-		$method->invokeArgs(new DBObjectSearch('Organization'), [&$aRealiasingMap, $aAliasTranslation]);
 	}
 }

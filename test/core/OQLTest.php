@@ -15,7 +15,10 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBSearch;
 use Exception;
+use MetaModel;
 use OqlInterpreter;
+use QueryBuilderContext;
+use SQLObjectQueryBuilder;
 use utils;
 
 /**
@@ -51,6 +54,7 @@ class OQLTest extends ItopDataTestCase
 	 * @group itopConfigMgmt
 	 * @group itopRequestMgmt
 	 * @dataProvider NestedQueryProvider
+	 * @depends testOQLSetup
 	 *
 	 * @param $sQuery
 	 *
@@ -410,44 +414,103 @@ class OQLTest extends ItopDataTestCase
 		);
 	}
 
-	/**
-	 * @dataProvider bug3618Provider
-	 * @doesNotPerformAssertions
-	 */
-	public function testBug3618($sOQL, $sExplanation)
-	{
-		$this->markTestSkipped();
-		return;
-		if (is_string($sExplanation)) {
-			$this->debug($sExplanation);
-		}
 
-		$oSearch = DBSearch::FromOQL($sOQL);
-		$oSet = new \CMDBObjectSet($oSearch);
-		$oSet->CountWithLimit(1);
+	/**
+	 * @dataProvider GetOQLClassTreeProvider
+	 * @param $sOQL
+	 * @param $sExpectedOQL
+	 */
+	public function testGetOQLClassTree($sOQL, $sExpectedOQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass))
+			{
+				$sMainClass = $sClass;
+			}
+		}
+		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
+		$sResultOQL = $oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild);
+
+		static::assertEquals($sExpectedOQL, $sResultOQL);
 	}
 
-	public function bug3618Provider()
+	public function GetOQLClassTreeProvider()
 	{
 		return [
-			'ok' => [
-				'sOql' => "SELECT UserRequest WHERE private_log LIKE '%FOO : %'
-							
-							UNION
-							
-							SELECT Ticket WHERE private_log LIKE '%BAR : %'",
-				'sExplanation' => null,
+			'Bug 3660 1' => [
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Team AS T ON l.contact_id=T.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id` 
+        INNER JOIN `Team` AS `T`
+          ON `l`.`contact_id` = `T`.`id`",
 			],
-
-			'KO: different number of columns' => [
-				'sOql' => "SELECT UserRequest WHERE private_log LIKE '%FOO : %'
-									
-							UNION
-									
-							SELECT Ticket  ",
-				'sExplanation' => 'The UNION is composed by two SELECT stmt, the 1st one has two columns the second one has only one column: BOOM!',
+			'Bug 3660 2' => [
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Contact AS C ON l.contact_id=C.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id`",
 			],
 		];
 	}
 
+	/**
+	 * @dataProvider MakeSelectQueryForCountProvider
+	 *
+	 * @param $sOQL
+	 * @param $sExpectedSQL
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+	public function testMakeSelectQueryForCount($sOQL, $sExpectedSQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		// Avoid adding all the fields for counts or "group by" requests
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass)) {
+				$sMainClass = $sClass;
+			}
+		}
+		$sSQL = $oFilter->MakeSelectQuery([], [], $aCountAttToLoad, null, 0, 0, true);
+		static::assertEquals($sExpectedSQL, $sSQL);
+	}
+
+	public function MakeSelectQueryForCountProvider()
+	{
+		return [
+			'Bug 3618' => [
+				"SELECT UserRequest WHERE private_log LIKE '%Auteur : %' UNION SELECT UserRequest",
+				"SELECT COUNT(*) AS COUNT FROM (SELECT
+ 1 
+ FROM (
+SELECT
+ DISTINCT `UserRequest_Ticket`.`id` AS `UserRequestid`
+ FROM 
+   `ticket` AS `UserRequest_Ticket`
+ WHERE ((`UserRequest_Ticket`.`private_log` LIKE '%Auteur : %') AND COALESCE((`UserRequest_Ticket`.`finalclass` IN ('UserRequest')), 1))
+   
+ UNION
+ SELECT
+ DISTINCT `UserRequest`.`id` AS `UserRequestid`
+ FROM 
+   `ticket_request` AS `UserRequest`
+ WHERE 1
+   
+) as __selects__
+) AS _union_alderaan_",
+			],
+		];
+	}
 }

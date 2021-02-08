@@ -1919,6 +1919,39 @@ class FieldExpression extends UnaryExpression
 // Has been resolved into an SQL expression
 class FieldExpressionResolved extends FieldExpression
 {
+	protected $m_aAdditionalExpressions;
+
+	public function __construct($mExpression, $sParent = '')
+	{
+		$this->m_aAdditionalExpressions = array();
+		if (is_array($mExpression))
+		{
+			foreach ($mExpression as $sSuffix => $sExpression)
+			{
+				if ($sSuffix == '')
+				{
+					$sName = $sExpression;
+				}
+				$this->m_aAdditionalExpressions[$sSuffix] = new FieldExpressionResolved($sExpression, $sParent);
+			}
+		}
+		else
+		{
+			$sName = $mExpression;
+		}
+
+		parent::__construct($sName, $sParent);
+	}
+
+	/**
+	 * @return array of additional expressions for muti-column attributes
+	 * @since 2.7.4
+	 */
+	public function AdditionalExpressions()
+	{
+		return $this->m_aAdditionalExpressions;
+	}
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}

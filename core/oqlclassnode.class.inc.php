@@ -331,4 +331,12 @@ class OQLJoin
 		return $this->sRightField;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function GetLeftField()
+	{
+		return $this->sLeftField;
+	}
+
 }
