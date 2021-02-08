@@ -77,12 +77,15 @@ $(function()
 
 	            this._bindEvents();
             },
-	        _addTabsWidget: function(aParams)
-	        {
-	        	if(this.element.hasClass(this.css_classes.is_scrollable)){
-			        this.element.scrollabletabs(aParams);
+	        /**
+	         * @param oParams {Object} Structured object representing the options for the jQuery UI Tabs widget
+	         * @private
+	         */
+	        _addTabsWidget: function (oParams) {
+		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
+			        this.element.scrollabletabs(oParams);
 		        } else {
-			        this.element.tabs(aParams);
+			        this.element.tabs(oParams);
 		        }
 	        },
             // events bound via _bind are removed automatically
