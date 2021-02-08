@@ -567,21 +567,6 @@ JS
 		if (!$bEditMode) {
 			$oPage->add_linked_script('../js/dashlet.js');
 			$oPage->add_linked_script('../js/dashboard.js');
-			$oPage->add_ready_script(<<<'JS'
-$("div.ibo-dashboard").on("click", "div.ibo-dashlet-badge", function(event) {
-	let $eventTarget = $(event.target);
-
-  if ($eventTarget.is("div.ibo-dashlet-badge--actions > a")) {
-    return;
-  }
-
-	let $listLink = $eventTarget
-    .closest("div.ibo-dashlet-badge")
-  	.find("a.ibo-dashlet-badge--action-list");
-  $listLink[0].click();
-});
-JS
-			);
 		}
 	}
 
