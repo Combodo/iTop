@@ -2213,7 +2213,7 @@ CSS
 
 		$oPage->add('<fieldset id="summary"><legend>Installation Parameters</legend>');
 		$oPage->add('<div id="params_summary">');
-		$oPage->add('<div class="closed"><span class="title">Database Parameters</span><ul>');
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Database Parameters</span><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
 		$oPage->add('<li>DB user password: '.$aInstallParams['database']['pwd'].'</li>');
@@ -2235,11 +2235,11 @@ CSS
 		}
 		$oPage->add('</ul></div>');
 
-		$oPage->add('<div><span class="title">Data Model Configuration</span>');
+		$oPage->add('<div><span class="title ibo-setup-summary-title">Data Model Configuration</span>');
 		$oPage->add($this->oWizard->GetParameter('display_choices'));
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><span class="title">Other Parameters</span><ul>');
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Other Parameters</span><ul>');
 		if ($sMode == 'install')
 		{
 			$oPage->add('<li>Default language: '.$aInstallParams['language'].'</li>');

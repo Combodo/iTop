@@ -462,7 +462,7 @@
   -moz-font-feature-settings: "lnum";
   font-feature-settings: "lnum";
 }
-.ibo-alert, .ibo-button, .ui-dialog .ui-button, .ui-datepicker-current, .ui-datepicker-close, .ibo-prop--apply > span, .ibo-prop--cancel > span, .sf_results_placeholder button, .sfc_fg_button, .ibo-dashlet--delete, .ibo-dashlet-badge--action-create, .sf_results_placeholder, .ibo-dashboard--properties--subtitle, .ibo-dashboard--available-dashlet--title, .ibo-dashlet--properties--title {
+.ibo-alert, .ibo-dashlet-badge--action-create, .sf_results_placeholder, .ibo-dashboard--properties--subtitle, .ibo-dashboard--available-dashlet--title, .ibo-dashlet--properties--title {
   font-size: 1.17rem;
   font-family: "Raleway";
   font-weight: 500;
@@ -514,6 +514,14 @@ ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-title, .ibo-n
   font-size: 2.5rem;
   font-family: "Raleway";
   font-weight: 700;
+  -webkit-font-feature-settings: "lnum";
+  -moz-font-feature-settings: "lnum";
+  font-feature-settings: "lnum";
+}
+.ibo-button, .ui-dialog .ui-button, .ui-datepicker-current, .ui-datepicker-close, .ibo-prop--apply > span, .ibo-prop--cancel > span, .sf_results_placeholder button, .sfc_fg_button, .ibo-dashlet--delete {
+  font-size: 1rem;
+  font-family: "Raleway";
+  font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
   font-feature-settings: "lnum";
@@ -10930,6 +10938,7 @@ a:active {
 }
 .ibo-button, .ui-dialog .ui-button, .ui-datepicker-current, .ui-datepicker-close, .ibo-prop--apply > span, .ibo-prop--cancel > span, .sf_results_placeholder button, .sfc_fg_button, .ibo-dashlet--delete {
   cursor: pointer;
+  text-transform: uppercase;
   padding: 6px 9px;
   border: 0;
   border-radius: 4px;
@@ -14983,5 +14992,8 @@ body {
 }
 .ibo-setup--button-bar .ibo-setup--full-width {
   width: 100%;
+}
+.ibo-setup-summary-title {
+  font-size: 1.17rem;
 }
 /* integrityCheck: end (do not remove/edit) */
