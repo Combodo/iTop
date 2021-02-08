@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-/* Note: We have to wrap it in the ID i order to overload its rules, otherwise, the ID takes over the simple CSS class... */
+/* Note: We have to wrap it in the ID in order to overload its rules, otherwise, the ID takes over the simple CSS class... */
 #ibo-center-container {
 	&.ibo-center-container--with-side-content {
 		display: flex;
