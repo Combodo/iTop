@@ -80,7 +80,7 @@
     {% if aDeferredBlocks is not empty %}
         {# TODO 3.0.0 #}
         {# <script type="text/javascript"> #}
-        {# $('body').append('{% for oBlock in aDeferredBlocks %}{{ render_block(oBlock, {aPage: aPage})|escape_for_js_string|raw }}{% endfor %}'); #}
+        {# $('body').append('{% for oBlock in aDeferredBlocks %}{{ render_block(oBlock, {aPage: aPage})|escape('js')|raw }}{% endfor %}'); #}
         {# </script> #}
         {% for oBlock in aDeferredBlocks %}
             {{ render_block(oBlock, {aPage: aPage})|raw }}

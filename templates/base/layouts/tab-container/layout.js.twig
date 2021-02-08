@@ -5,7 +5,7 @@
 	$('#{{ oUIBlock.GetId() }}').tab_container();
 {% else %}
 	{% for oTab in oUIBlock.GetSubBlocks() %}
-		oHiddeableChapters['tab_{{ oTab.GetId()|sanitize_identifier }}'] = '{{ oTab.GetTitle()|escape_for_js_string }}';
+		oHiddeableChapters['tab_{{ oTab.GetId()|sanitize_identifier }}'] = '{{ oTab.GetTitle()|escape('js') }}';
 		{% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
 			$.post('{{ oTab.GetUrl()|raw}}', {printable: '1'}, function(data){
 				$('#tab_{{ oTab.GetId()|sanitize_identifier }} > .printable-tab-content').append(data);

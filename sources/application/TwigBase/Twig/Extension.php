@@ -129,13 +129,6 @@ class Extension
 			return $sUrl;
 		}));
 
-		// Filter to sanitize a string (escape ')
-		// Usage in twig: {{ 'string'|escape_for_js_string }}
-		$oTwigEnv->addFilter(new Twig_SimpleFilter('escape_for_js_string', function ($sString) {
-				return str_replace(["'", '"', "\n"], ["\\'", "\\\"", " "], $sString);
-			})
-		);
-
 		// var_export can be used for example to transform a PHP boolean to 'true' or 'false' strings
 		// @see https://www.php.net/manual/fr/function.var-export.php
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('var_export', 'var_export'));
