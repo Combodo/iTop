@@ -1696,6 +1696,10 @@ class FieldExpressionResolved extends FieldExpression
 		parent::__construct($sName, $sParent);
 	}
 
+	/**
+	 * @return array of additional expressions for muti-column attributes
+	 * @since 2.7.4
+	 */
 	public function AdditionalExpressions()
 	{
 		return $this->m_aAdditionalExpressions;
