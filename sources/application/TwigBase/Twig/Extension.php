@@ -132,7 +132,7 @@ class Extension
 		// Filter to sanitize a string (escape ')
 		// Usage in twig: {{ 'string'|escape_for_js_string }}
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('escape_for_js_string', function ($sString) {
-				return str_replace(["\n"], [" "], htmlentities($sString, ENT_QUOTES, 'UTF-8'));
+				return str_replace(["'", '"', "\n"], ["\\'", "\\\"", " "], $sString);
 			})
 		);
 
