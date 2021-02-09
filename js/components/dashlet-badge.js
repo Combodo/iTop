@@ -23,16 +23,16 @@ $(function () {
 			options: {},
 			js_selectors:
 				{
-					dashletContainer: '[data-role="ibo-dashlet"]',
-					dashletActions: '[data-role="ibo-dashlet-badge--actions"]',
-					dashletActionList: '[data-role="ibo-dashlet-badge--action-list"]'
+					dashlet_container: '[data-role="ibo-dashlet"]',
+					dashlet_actions: '[data-role="ibo-dashlet-badge--actions"]',
+					dashlet_action_list: '[data-role="ibo-dashlet-badge--action-list"]'
 				},
-			dashletContainer: null,
+			$dashlet_container: null,
 
 			_create: function () {
-				this.dashletContainer = $(
+				this.$dashlet_container = $(
 					this.element
-						.parents(this.js_selectors.dashletContainer)
+						.parents(this.js_selectors.dashlet_container)
 						.get(-1)
 				);
 
@@ -44,25 +44,25 @@ $(function () {
 			_destroy: function () {
 			},
 			_setStyle: function () {
-				this.dashletContainer.css("cursor", "pointer");
+				this.$dashlet_container.css("cursor", "pointer");
 			},
 			_bindEvents: function () {
 				const me = this;
 
-				this.dashletContainer.on('click', function (oEvent) {
+				this.$dashlet_container.on('click', function (oEvent) {
 					me._onComponentClick(oEvent);
 				});
 			},
 			_onComponentClick: function (oEvent) {
 				let $eventTarget = $(oEvent.target);
 
-				if ($eventTarget.is(this.js_selectors.dashletActions)) {
+				if ($eventTarget.is(this.js_selectors.dashlet_actions)) {
 					return;
 				}
 
 				let $listLink = $eventTarget
-					.closest(this.js_selectors.dashletContainer)
-					.find(this.js_selectors.dashletActionList);
+					.closest(this.js_selectors.dashlet_container)
+					.find(this.js_selectors.dashlet_action_list);
 				$listLink[0].click();
 			}
 		})
