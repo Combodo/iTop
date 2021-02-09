@@ -70,15 +70,24 @@ class CMDBChangeOp extends DBObject
 	}
 
 	/**
-	 * Safety net: in case the change is not given, let's guarantee that it will
-	 * be set to the current ongoing change (or create a new one)	
-	 */	
+	 * Safety net:
+	 * * if CMDBChange isn't persisted yet, do it !
+	 * * in case the change is not given, let's guarantee that it will be set to the current ongoing change (or create a new one)
+	 *
+	 * @since 2.7.4 do persist the CMDBChange if needed
+	 */
 	protected function OnInsert()
 	{
-		if ($this->Get('change') <= 0)
-		{
+		if ($this->Get('change') <= 0) {
 			$this->Set('change', CMDBObject::GetCurrentChange());
 		}
+
+		/** @var \CMDBChange $oChange */
+		$oChange = $this->Get('change');
+		if ($oChange->IsNew()) {
+			$oChange->DBWrite();
+		}
+
 		parent::OnInsert();
 	}
 }

@@ -201,7 +201,9 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
 	 *
-	 * The CMDBChange is persisted so that it has a key > 0, and any new CMDBChangeOp can link to it
+	 * The CMDBChange **is NOT persisted**, this will be done in \CMDBChangeOp::OnInsert
+	 *
+	 * @since 2.7.4 do not persist CMDBChange anymore, so that we won't persist CMDBChange without any CMDBChangeOp
 	 */
 	protected static function CreateChange()
 	{
@@ -209,7 +211,6 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
-		self::$m_oCurrChange->DBInsert();
 	}
 
 	/**
