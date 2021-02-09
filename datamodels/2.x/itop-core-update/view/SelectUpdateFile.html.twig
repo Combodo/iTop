@@ -56,21 +56,21 @@
                     {% EndUIContentBlock %}
                 {% EndUIAlert %}
 
-                {% UIContentBlock Standard {'aContainerClasses':['upload_container']} %}
-                    {% UIInput Standard {'sType':'file', 'sId':'file', 'sName':'file', 'sValue':''} %}
-                {% EndUIContentBlock %}
+                {% UIFileSelect Standard {sName: 'file', sId: 'file'} %}
 
                 {% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
                     {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
                 {% EndUIAlert %}
 
-                {% UIField Standard {'sLabel':'iTopUpdate:UI:DoBackup:Label'|dict_s, 'sLayout':'large'} %}
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
                     {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true} %}
-                {% EndUIField %}
+                    {{ 'iTopUpdate:UI:DoBackup:Label'|dict_s }}
+                {% EndUIContentBlock %}
 
-                {% UIField Standard {'sLabel':'iTopUpdate:UI:DoFilesArchive'|dict_s, 'sLayout':'large'} %}
+                {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
                     {% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true} %}
-                {% EndUIField %}
+                    {{ 'iTopUpdate:UI:DoFilesArchive'|dict_s }}
+                {% EndUIContentBlock %}
 
                 {% UIContentBlock Standard {'aContainerClasses':['ibo_check_update_submit']} %}
                     {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:CheckUpdate'|dict_s, 'sId':'check-update', 'bIsSubmit':true, 'IsDisabled':true} %}
