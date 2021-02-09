@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
 class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const TWIG_TAG_NAME = 'ToolbarSpacer';
+	public const TWIG_TAG_NAME = 'UIToolbarSpacer';
 	public const UI_BLOCK_CLASS_NAME = ToolbarSpacer::class;
 
 	/**

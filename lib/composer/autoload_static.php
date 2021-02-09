@@ -418,6 +418,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Html/Html.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\HtmlFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Html/HtmlFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\AbstractInput' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/AbstractInput.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\FileSelect\\FileSelect' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/FileSelect/FileSelect.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\FileSelect\\FileSelectUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/FileSelect/FileSelectUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/Input.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/InputUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputWithLabel' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/InputWithLabel.php',

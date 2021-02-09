@@ -12,7 +12,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
 class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 {
-	public const TWIG_TAG_NAME = 'Toolbar';
+	public const TWIG_TAG_NAME = 'UIToolbar';
 	public const UI_BLOCK_CLASS_NAME = Toolbar::class;
 
 	public static function MakeForAction(string $sId = null): Toolbar

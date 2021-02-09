@@ -188,6 +188,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\Html' => $baseDir . '/sources/application/UI/Base/Component/Html/Html.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Html\\HtmlFactory' => $baseDir . '/sources/application/UI/Base/Component/Html/HtmlFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\AbstractInput' => $baseDir . '/sources/application/UI/Base/Component/Input/AbstractInput.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\FileSelect\\FileSelect' => $baseDir . '/sources/application/UI/Base/Component/Input/FileSelect/FileSelect.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\FileSelect\\FileSelectUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Input/FileSelect/FileSelectUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Input' => $baseDir . '/sources/application/UI/Base/Component/Input/Input.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Input/InputUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\InputWithLabel' => $baseDir . '/sources/application/UI/Base/Component/Input/InputWithLabel.php',
