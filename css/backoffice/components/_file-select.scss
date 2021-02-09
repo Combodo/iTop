@@ -10,8 +10,7 @@ $ibo-input-file-select--file-name-margin-left: 10px !default;
   .ibo-input-file-select {
 
     .ibo-input-file-select--file-input {
-      opacity: 0;
-      width: 100%;
+      display: none;
     }
 
     .ibo-input-file-select--file-name {
