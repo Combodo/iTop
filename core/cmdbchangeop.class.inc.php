@@ -63,10 +63,33 @@ class CMDBChangeOp extends DBObject
 
 	/**
 	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 */
 	public function GetDescription()
 	{
 		return '';
+	}
+
+	/**
+	 * @param string $sAttCode
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 *
+	 * @since 2.7.4 reject non persisted CMDBChange
+	 */
+	public function Set($sAttCode, $value)
+	{
+		if ($sAttCode !== 'change') {
+			return parent::Set($sAttCode, $value);
+		}
+
+		if ($value->IsNew()) {
+			throw new CoreUnexpectedValue("Cannot set CMDBChangeOp.change with a non persisted CMDBChange !");
+		}
+
+		return parent::Set($sAttCode, $value);
 	}
 
 	/**
@@ -78,7 +101,8 @@ class CMDBChangeOp extends DBObject
 	 */
 	protected function OnInsert()
 	{
-		if ($this->Get('change') <= 0) {
+		$iChange = $this->Get('change');
+		if (($iChange <= 0) || (is_null($iChange))) {
 			$oChange = CMDBObject::GetCurrentChange();
 			if ($oChange->IsNew()) {
 				$oChange->DBWrite();
