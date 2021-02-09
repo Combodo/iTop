@@ -201,9 +201,8 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
 	 *
-	 * The CMDBChange **is NOT persisted**, this will be done in \CMDBChangeOp::OnInsert
-	 *
-	 * @since 2.7.4 do not persist CMDBChange anymore, so that we won't persist CMDBChange without any CMDBChangeOp
+	 * @since 2.7.4 CMDBChange **will be persisted later** in \CMDBChangeOp::OnInsert (was done previously directly here)
+	 *     This will avoid creating in DB CMDBChange lines without any corresponding CMDBChangeOp
 	 */
 	protected static function CreateChange()
 	{
