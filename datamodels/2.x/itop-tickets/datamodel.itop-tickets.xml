@@ -543,7 +543,7 @@
 				<field id="ticket_id" xsi:type="AttributeExternalKey">
 					<sql>ticket_id</sql>
 					<target_class>Ticket</target_class>
-					<is_null_allowed>false</is_null_allowed>
+					<is_null_allowed>true</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
 				</field>
 				<field id="ticket_ref" xsi:type="AttributeExternalField">
@@ -584,7 +584,7 @@
 				<field id="end_date" xsi:type="AttributeDateTime">
 					<sql>end_date</sql>
 					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
+					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="log" xsi:type="AttributeCaseLog">
 					<sql>log</sql>
@@ -602,7 +602,14 @@
 						<transitions>
 							<transition id="ev_close">
 								<target>closed</target>
-								<actions/>
+                <actions>
+                  <action>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="attcode">end_date</param>
+                    </params>
+                  </action>
+                </actions>
 							</transition>
 						</transitions>
 					</state>
