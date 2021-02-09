@@ -18,7 +18,7 @@
 
 ;
 $(function () {
-	$.widget('itop.dashletBadge',
+	$.widget('itop.dashlet_badge',
 		{
 			options: {},
 			js_selectors:
