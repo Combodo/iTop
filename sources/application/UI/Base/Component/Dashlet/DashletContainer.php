@@ -19,6 +19,6 @@ class DashletContainer extends UIContentBlock
 	{
 		parent::__construct($sId, $aContainerClasses);
 
-		$this->AddDataAttribute('role', 'ibo-dashlet');
+		$this->AddDataAttribute('role', static::BLOCK_CODE);
 	}
 }
