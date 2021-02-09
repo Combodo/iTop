@@ -14,7 +14,7 @@ class DashletBadge extends DashletContainer
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/components/dashlet-badge.js',
+		'js/components/dashlet/dashlet-badge.js',
 	];
 
 	/** @var string */
