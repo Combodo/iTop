@@ -79,13 +79,11 @@ class CMDBChangeOp extends DBObject
 	protected function OnInsert()
 	{
 		if ($this->Get('change') <= 0) {
-			$this->Set('change', CMDBObject::GetCurrentChange());
-		}
-
-		/** @var \CMDBChange $oChange */
-		$oChange = $this->Get('change');
-		if ($oChange->IsNew()) {
-			$oChange->DBWrite();
+			$oChange = CMDBObject::GetCurrentChange();
+			if ($oChange->IsNew()) {
+				$oChange->DBWrite();
+			}
+			$this->Set('change', $oChange);
 		}
 
 		parent::OnInsert();
