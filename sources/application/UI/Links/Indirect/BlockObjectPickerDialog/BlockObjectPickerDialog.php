@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 
@@ -44,9 +44,9 @@ class BlockObjectPickerDialog extends UIContentBlock
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("count_{$this->sLinkedSetId}", '0', "count_{$this->sLinkedSetId}"));
 
-		$oToolbar = new Toolbar(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 		$this->AddSubBlock($oToolbar);
-		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction($sCancel, null, null, false);
+		$oRemoveButton = ButtonUIBlockFactory::MakeForCancel($sCancel, null, null, false);
 		$oRemoveButton->SetOnClickJsCode("$('#dlg_{$this->sLinkedSetId}').dialog('close');");
 		$oToolbar->AddSubBlock($oRemoveButton);
 

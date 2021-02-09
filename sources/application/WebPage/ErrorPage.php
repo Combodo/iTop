@@ -1,4 +1,9 @@
 <?php
+
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
 /**
  * @copyright   Copyright (C) 2010-2020 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,8 +17,9 @@ class ErrorPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_saas("css/setup.scss");
-		$this->add_saas("css/errorpage.scss");
 	}
 
 	public function info($sText)
@@ -48,17 +54,18 @@ class ErrorPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png';
-		$sTimeStamp = utils::GetCacheBusterTimestamp();
-		$sTitle = utils::HtmlEntities($this->s_title);
-		$this->s_content = <<<HTML
-<div id="header" class="error_page">
-	<h1><a href="http://www.combodo.com/itop" target="_blank"><img title="iTop by Combodo" alt=" " src="{$sLogo}?t={$sTimeStamp}"></a>&nbsp;{$sTitle}</h1>
-</div>
-<div id="setup" class="error_page">
-	{$this->s_content}
-</div>
-HTML;
+		$sLogo = utils::GetAbsoluteUrlAppRoot(true).'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard('ibo_setup_container', ['ibo-setup']);
+		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
+		$oSetupPage->AddSubBlock($oHeader);
+		$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($this->s_title, $sLogo, Title::DEFAULT_ICON_COVER_METHOD, false);
+		$oHeader->AddSubBlock($oTitle);
+		$oSetup = UIContentBlockUIBlockFactory::MakeStandard('setup', ['ibo-setup--body']);
+		$oSetupPage->AddSubBlock($oSetup);
+		$oSetup->AddSubBlock($this->oContentLayout);
+
+		$this->oContentLayout = $oSetupPage;
+
 		return parent::output();
 	}
 
