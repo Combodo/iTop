@@ -27,13 +27,14 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
-use WebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
+use Twig\Error\Error;
 use utils;
+use WebPage;
 use ZipArchive;
 
 abstract class Controller
@@ -577,10 +578,8 @@ abstract class Controller
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
 		}
-		catch (Twig_Error $e)
-		{
-			// Ignore errors
-			if (!utils::StartsWith($e->getMessage(), 'Unable to find template'))
+		catch (Error $e) {
+			if (strpos($e->getMessage(), 'Unable to find template') === false)
 			{
 				IssueLog::Error($e->getMessage());
 			}

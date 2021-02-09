@@ -431,6 +431,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Treeview:CollapseAll' => 'Collapse All',
 	'UI:Treeview:ExpandAll' => 'Expand All',
 	'UI:UserPref:DoNotShowAgain' => 'Do not show again',
+	'UI:InputFile:NoFileSelected' => 'No File Selected',
+	'UI:InputFile:SelectFile' => 'Select a file',
 
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a %1$s',

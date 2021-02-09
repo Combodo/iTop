@@ -24,7 +24,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
@@ -2072,7 +2072,7 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 
-		$oActionsBlock = new Toolbar("ibo-action-toolbar-{$sId}", ['ibo-action-toolbar']);
+		$oActionsBlock = ToolbarUIBlockFactory::MakeForAction("ibo-action-toolbar-{$sId}");
 		$oRenderBlock->AddSubBlock($oActionsBlock);
 		$sMenuTogglerId = "ibo-actions-menu-toggler-{$sId}";
 		$sPopoverMenuId = "ibo-other-action-popover-{$sId}";

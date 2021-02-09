@@ -412,6 +412,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Wait' => 'Patientez pendant la mise à jour des champs',
 	'UI:Treeview:CollapseAll' => 'Tout replier',
 	'UI:Treeview:ExpandAll' => 'Tout déplier',
+	'UI:InputFile:NoFileSelected' => 'Aucun fichier sélectionné',
+	'UI:InputFile:SelectFile' => 'Sélectionner un fichier',
 
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',

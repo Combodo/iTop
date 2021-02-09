@@ -23,7 +23,9 @@
 .ibo-is-hidden{
 	display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
 }
-
+.ibo-is-fullwidth {
+  width: 100%;
+}
 /* Used on all ancestors when an element needs to be fullscreen (see .ibo-is-fullscreen) */
 html.ibo-has-fullscreen-descendant{
 	position: fixed !important;

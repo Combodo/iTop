@@ -19,7 +19,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -543,7 +543,7 @@ EOF
 		$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
 		if ($oPage instanceof iTopWebPage) {
 			$oTopBar = $oPage->GetTopBarLayout();
-			$oToolbar = new Toolbar();
+			$oToolbar = ToolbarUIBlockFactory::MakeStandard();
 			$oTopBar->SetToolbar($oToolbar);
 			$oToolbar->AddHtml($sHtml);
 		} else {

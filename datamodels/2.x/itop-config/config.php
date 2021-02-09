@@ -174,7 +174,7 @@ try {
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
 
 			// - Cancel button
-			$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
 			$oCancelButton->SetOnClickJsCode("return ResetConfig();");
 			$oForm->AddSubBlock($oCancelButton);
 

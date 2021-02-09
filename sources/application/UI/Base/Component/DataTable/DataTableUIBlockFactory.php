@@ -16,7 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRo
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSet;
 use Dict;
@@ -120,7 +120,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
 			$oContainer = new UIContentBlock();
-			$oToolbar = new Toolbar();
+			$oToolbar = ToolbarUIBlockFactory::MakeStandard();
 			$oToolbar->AddSubBlock($oBlockMenu);
 			$oContainer->AddSubBlock($oToolbar);
 			$oContainer->AddSubBlock($oDataTable);

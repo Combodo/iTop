@@ -30,7 +30,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
@@ -2575,19 +2575,7 @@ JS
 			// TODO 3.0.0: Refactor DisplayBareHeader and call it here
 		}
 
-		// TODO 3.0.0: Dehardcode this after object details are refactored
-		$oPage->add_style(<<<CSS
-.ibo-toolbar{
-    margin: 6px 0;
-}
-.ibo-toolbar-top{
-	padding-left: calc(90px + 64px);
-	text-align: right;
-}
-CSS
-		);
-		$oToolbarTop = new Toolbar();
-		$oToolbarTop->SetCSSClasses(['ibo-toolbar', 'ibo-toolbar-top']);
+		$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
 
 		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
 		$oCancelButton->AddCSSClasses(['action', 'cancel']);
@@ -2713,8 +2701,7 @@ EOF
 		if ($sButtonsPosition != 'top') {
 			// bottom or both: display the buttons here
 			$oPage->p($sStatesSelection);
-			$oToolbarBottom = new Toolbar();
-			$oToolbarBottom->SetCSSClasses(['ibo-toolbar']);
+			$oToolbarBottom = ToolbarUIBlockFactory::MakeStandard();
 			foreach ($oToolbarTop->GetSubBlocks() as $oButton) {
 				$oToolbarBottom->AddSubBlock($oButton);
 			}
@@ -3071,7 +3058,7 @@ HTML
 		$oAppContext = new ApplicationContext();
 		$oForm->AddHtml($oAppContext->GetForForm());
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
 		$oForm->AddSubBlock($oCancelButton);
 

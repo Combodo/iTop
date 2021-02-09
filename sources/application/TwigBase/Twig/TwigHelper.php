@@ -10,8 +10,8 @@ use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
 use Exception;
 use IssueLog;
 use Twig\Environment;
+use Twig\Error\Error;
 use Twig_Environment;
-use Twig_Error;
 use Twig_Loader_Filesystem;
 use utils;
 use WebPage;
@@ -114,7 +114,6 @@ class TwigHelper
 	 * @param bool $bLogMissingFile
 	 *
 	 * @return string
-	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 * @throws \Exception
@@ -123,13 +122,13 @@ class TwigHelper
 	{
 		try {
 			return $oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
-		} catch (Twig_Error $e) {
+		} catch (Error $e) {
 			$sPath = '';
 			if ($e->getSourceContext()) {
 				$sPath = utils::LocalPath($e->getSourceContext()->getPath()).' ('.$e->getLine().') - ';
 			}
 			$sMessage = $sPath.$e->getMessage();
-			if (!utils::StartsWith($e->getMessage(), 'Unable to find template')) {
+			if (strpos($e->getMessage(), 'Unable to find template') === false) {
 				IssueLog::Error($sMessage);
 				// Todo 3.0 Less violent message
 				throw new Exception($sMessage);

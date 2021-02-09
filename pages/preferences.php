@@ -24,8 +24,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 
 require_once('../approot.inc.php');
@@ -84,18 +84,20 @@ HTML;
 	$sMiscSettingsHtml .= $oAppContext->GetForForm();
 	$oMiscSettingsHtml = new Html($sMiscSettingsHtml);
 
+	$oMiscSettingsButtonToolbar = ToolbarUIBlockFactory::MakeForButton();
 	// - Cancel button
-	$oMiscSettingsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oMiscSettingsCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 	$oMiscSettingsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	$oMiscSettingsButtonToolbar->AddSubBlock($oMiscSettingsCancelButton);
 	// - Submit button
 	$oMiscSettingsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_others', true);
+	$oMiscSettingsButtonToolbar->AddSubBlock($oMiscSettingsSubmitButton);
 
 	$oMiscSettingsEndHtmlBlock = new Html('</form>');
 
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsStartForm);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsHtml);
-	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsCancelButton);
-	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsSubmitButton);
+	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsButtonToolbar);
 	$oMiscSettingsBlock->AddSubBlock($oMiscSettingsEndHtmlBlock);
 
 	$oContentLayout->AddMainBlock($oMiscSettingsBlock);
@@ -150,10 +152,12 @@ JS
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
-	$oFavoriteOrganizationsToolBar = new UIContentBlock(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
+	// Button toolbar
+	$oFavoriteOrganizationsToolBar = ToolbarUIBlockFactory::MakeForButton(null, ['ibo-is-fullwidth']);
 	$oFavoriteOrganizationsForm->AddSubBlock($oFavoriteOrganizationsToolBar);
+
 	// - Cancel button
-	$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oFavoriteOrganizationsCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsCancelButton);
 	$oFavoriteOrganizationsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 	// - Submit button
@@ -197,7 +201,7 @@ JS
 
 	$oSet = new DBObjectSet($oShortcutsFilter);
 	if ($oSet->Count() > 0) {
-		$oShortcutsToolBar = new UIContentBlock(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
+		$oShortcutsToolBar = ToolbarUIBlockFactory::MakeForButton();
 		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
 		// - Rename button
 		$oShortcutsRenameButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,
@@ -272,15 +276,20 @@ JS
 
 		$sNewsroomHtml .= $oAppContext->GetForForm();
 
+		$oNewsroomToolbar = ToolbarUIBlockFactory::MakeForButton();
+
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
 		$oNewsroomResetCacheButton->SetOnClickJsCode("$('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')");
+		$oNewsroomToolbar->AddSubBlock($oNewsroomResetCacheButton);
 		// - Cancel button
-		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+		$oNewsroomCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+		$oNewsroomToolbar->AddSubBlock($oNewsroomCancelButton);
 		// - Submit button
 		$oNewsroomSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
 			'apply_newsroom_preferences', true);
+		$oNewsroomToolbar->AddSubBlock($oNewsroomSubmitButton);
 
 
 		$sNewsroomEndHtml = '</form>';
@@ -288,9 +297,7 @@ JS
 
 		$oNewsroomHtmlBlock = new Html($sNewsroomHtml);
 		$oNewsroomBlock->AddSubBlock($oNewsroomHtmlBlock);
-		$oNewsroomBlock->AddSubBlock($oNewsroomResetCacheButton);
-		$oNewsroomBlock->AddSubBlock($oNewsroomCancelButton);
-		$oNewsroomBlock->AddSubBlock($oNewsroomSubmitButton);
+		$oNewsroomBlock->AddSubBlock($oNewsroomToolbar);
 		$oNewsroomBlock->AddSubBlock($oNewsroomEndHtmlBlock);
 		$oContentLayout->AddMainBlock($oNewsroomBlock);
 	}
@@ -310,13 +317,16 @@ JS
 	$oRichTextToolbarDefaultStateInput->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:RichText:ToolbarState:Collapsed'), !$sRichTextToolbarDefaultState));
 	$oRichTextForm->AddSubBlock($oRichTextToolbarDefaultStateInput);
 
+	$oRichTextToolbar = ToolbarUIBlockFactory::MakeForButton();
+	$oRichTextForm->AddSubBlock($oRichTextToolbar);
+
 	// - Cancel button
-	$oRichTextCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oRichTextCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 	$oRichTextCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	$oRichTextForm->AddSubBlock($oRichTextCancelButton);
+	$oRichTextToolbar->AddSubBlock($oRichTextCancelButton);
 	// - Submit button
 	$oRichTextSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
-	$oRichTextForm->AddSubBlock($oRichTextSubmitButton);
+	$oRichTextToolbar->AddSubBlock($oRichTextSubmitButton);
 
 	$oRichTextBlock->AddSubBlock($oRichTextForm);
 	$oContentLayout->AddMainBlock($oRichTextBlock);
@@ -346,13 +356,16 @@ JS
 	$oTabsScrollable->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('false', Dict::S('UI:Tabs:Scrollable:Classic'), false === $sTabsScrollableValue));
 	$oTabsForm->AddSubBlock($oTabsScrollable);
 
+	$oTabsToolbar = ToolbarUIBlockFactory::MakeForButton();
+	$oTabsForm->AddSubBlock($oTabsToolbar);
+
 	// - Cancel button
-	$oTabsCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oTabsCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 	$oTabsCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	$oTabsForm->AddSubBlock($oTabsCancelButton);
+	$oTabsToolbar->AddSubBlock($oTabsCancelButton);
 	// - Submit button
 	$oTabsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
-	$oTabsForm->AddSubBlock($oTabsSubmitButton);
+	$oTabsToolbar->AddSubBlock($oTabsSubmitButton);
 
 	$oTabsBlock->AddSubBlock($oTabsForm);
 	$oContentLayout->AddMainBlock($oTabsBlock);
@@ -448,13 +461,17 @@ function GetUserLanguageForm(ApplicationContext $oAppContext, string $sURL): For
 	$oUserLanguageForm->AddSubBlock($oUserLanguageBlockSelect);
 
 	$oUserLanguageForm->AddSubBlock($oAppContext->GetForFormBlock());
+
+	$oUserLanguageButtonToolbar = ToolbarUIBlockFactory::MakeForButton();
+	$oUserLanguageForm->AddSubBlock($oUserLanguageButtonToolbar);
+
 	// - Cancel button
-	$oUserLanguageCancelButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'));
+	$oUserLanguageCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'));
 	$oUserLanguageCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	$oUserLanguageForm->AddSubBlock($oUserLanguageCancelButton);
+	$oUserLanguageButtonToolbar->AddSubBlock($oUserLanguageCancelButton);
 	// - Submit button
 	$oUserLanguageSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
-	$oUserLanguageForm->AddSubBlock($oUserLanguageSubmitButton);
+	$oUserLanguageButtonToolbar->AddSubBlock($oUserLanguageSubmitButton);
 	return $oUserLanguageForm;
 }
 

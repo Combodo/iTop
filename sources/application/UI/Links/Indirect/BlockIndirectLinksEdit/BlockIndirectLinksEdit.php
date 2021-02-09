@@ -9,7 +9,7 @@ namespace Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit;
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
 use MetaModel;
@@ -54,7 +54,7 @@ class BlockIndirectLinksEdit extends UIContentBlock
 	{
 		$this->AddSubBlock(InputUIBlockFactory::MakeForHidden("{$this->sFormPrefix}{$this->iInputId}", '', "{$this->sFormPrefix}{$this->iInputId}"));
 
-		$oToolbar = new Toolbar(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
+		$oToolbar = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
 		$this->AddSubBlock($oToolbar);
 		$oRemoveButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:RemoveLinkedObjectsOf_Class'), null, null, false, "{$this->sLinkedSetId}_btnRemove");
 		$oRemoveButton->SetOnClickJsCode("oWidget{$this->iInputId}.RemoveSelected();");
