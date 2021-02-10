@@ -129,8 +129,6 @@ class MFCompiler
 		{
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
-			SetupUtils::rrmdir($sFinalTargetDir);
-			SetupUtils::builddir($sFinalTargetDir); // Here is the directory
 		}
 		else
 		{
