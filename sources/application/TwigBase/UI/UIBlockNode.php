@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Application\TwigBase\UI;
 
 
+use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -35,7 +36,8 @@ class UIBlockNode extends Node
 	 */
 	public function __construct(string $sFactoryClass, string $sBlockClass, string $sType, $oParams, $oBody, int $iLineNo = 0, ?string $sTag = null)
 	{
-		parent::__construct(['body' => $oBody], ['type' => $sType, 'params' => $oParams], $iLineNo, $sTag);
+		$aNodes =  is_null($oBody) ? [] : ['body' => $oBody];
+		parent::__construct($aNodes, ['type' => $sType, 'params' => $oParams], $iLineNo, $sTag);
 		$this->sFactoryClass = $sFactoryClass;
 		$this->sBlockClass = $sBlockClass;
 	}
@@ -140,8 +142,8 @@ class UIBlockNode extends Node
 		$oCompiler->write("end(\$context['UIBlockParent'])->AddSubBlock(\${$sBlockVar});\n");
 
 		// Add sub UIBlocks
-		$oSubNode = $this->getNode('body');
-		if ($oSubNode) {
+		try {
+			$oSubNode = $this->getNode('body');
 			$oCompiler
 				->write("array_push(\$context['UIBlockParent'], \${$sBlockVar});\n")
 				->write("ob_start();\n")
@@ -152,6 +154,8 @@ class UIBlockNode extends Node
 				->indent()->write("end(\$context['UIBlockParent'])->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html(\$sHtml));\n")->outdent()
 				->write("}\n")
 				->write("array_pop(\$context['UIBlockParent']);\n");
+		} catch (Exception $e) {
+			// Ignore errors because when a tag has no body, GetNode('body') throws an exception
 		}
 		$oCompiler->write("ob_start();\n");
 	}
