@@ -26,6 +26,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
@@ -178,13 +179,17 @@ abstract class AbstractAttachmentsRenderer
 	{
 		$sClass = $this->sObjClass;
 		$sId = $this->iObjKey;
-
-		$this->oPage->add('<div style="clear:both"></div>');
 		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
 		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
 		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
 		$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
-		$this->oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('<div id="ibo-attachment--upload-file">');
+		$this->oPage->add(Dict::S('Attachments:AddAttachment'));
+		$oAddButton = FileSelectUIBlockFactory::MakeStandard('file', 'file');
+		$oAddButton->SetShowFilename(false);
+		$this->oPage->AddUiBlock($oAddButton);
+		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		
 
 		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
@@ -318,6 +323,7 @@ abstract class AbstractAttachmentsRenderer
 JS
 		);
 		$this->oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
+		$this->oPage->add('</div>');
 
 		$this->oPage->add_style(<<<CSS
 .drag_in {

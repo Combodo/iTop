@@ -5,6 +5,12 @@ $ibo-attachment--datatable--line-height: $ibo-attachment--datatable--icon-previe
 
 $ibo-attachment--datatable--first-column--line-height: 0px !default;
 
+#ibo-attachment--upload-file{
+  .ibo-input-file-select--container{
+    display: inline-block;
+  }
+}
+
 .ibo-attachment--datatable--icon-preview{
   max-height: $ibo-attachment--datatable--icon-preview--max-height;
   max-width: $ibo-attachment--datatable--icon-preview--max-width;

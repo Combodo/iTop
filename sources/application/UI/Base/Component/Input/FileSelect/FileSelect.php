@@ -24,6 +24,8 @@ class FileSelect extends UIBlock
 	private $sFileName;
 	/** @var string */
 	private $sButtonText;
+	/** @var bool */
+	private $bShowFilename;
 
 	public function __construct(string $sName, string $sId = null)
 	{
@@ -31,6 +33,7 @@ class FileSelect extends UIBlock
 		$this->sName = $sName;
 		$this->sFileName = Dict::S('UI:InputFile:NoFileSelected');
 		$this->sButtonText = Dict::S('UI:InputFile:SelectFile');
+		$this->bShowFilename = true;
 	}
 
 	/**
@@ -80,4 +83,25 @@ class FileSelect extends UIBlock
 	{
 		return $this->sName;
 	}
+
+	/**
+	 * @param bool $bShowFilename
+	 *
+	 * @return $this
+	 */
+	public function SetShowFilename(bool $bShowFilename)
+	{
+		$this->bShowFilename = $bShowFilename;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetShowFilename(): bool
+	{
+		return $this->bShowFilename;
+	}
+	
 }
