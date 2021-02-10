@@ -367,30 +367,48 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 		else
 		{
-			switch ($aPathParts['extension'])
+			switch (strtolower($aPathParts['extension']))
 			{
 				case 'doc':
 				case 'docx':
-					$sIcon = 'doc.png';
+					$sIcon = 'icons8-word.svg';
 					break;
 
 				case 'xls':
 				case 'xlsx':
-					$sIcon = 'xls.png';
+				case 'xlsm':
+					$sIcon = 'icons8-xls.svg';
 					break;
 
 				case 'ppt':
 				case 'pptx':
-					$sIcon = 'ppt.png';
+				case 'pps':
+					$sIcon = 'icons8-ppt.svg';
 					break;
 
+				case 'c':
+				case 'cgi':
+				case 'pl':
+				case 'class':
+				case 'cpp':
+				case 'cs':
+				case 'h':
+				case 'java':
+				case 'py':
+				case 'php':
+				case 'sh':
+				case 'swift':
+				case 'vb':
+					$sIcon = 'icons8-code-file.svg';
+					break;
+					
 				case 'pdf':
-					$sIcon = 'pdf.png';
+					$sIcon = 'icons8-pdf.svg';
 					break;
 
 				case 'txt':
 				case 'text':
-					$sIcon = 'txt.png';
+					$sIcon = 'icons8-txt.svg';
 					break;
 
 				case 'rtf':
@@ -398,20 +416,29 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 					break;
 
 				case 'odt':
-					$sIcon = 'odt.png';
+					$sIcon = 'icons8-libre-office-writer.svg';
 					break;
 
 				case 'ods':
-					$sIcon = 'ods.png';
+					$sIcon = 'icons8-libre-office-calc.svg';
 					break;
 
 				case 'odp':
-					$sIcon = 'odp.png';
+					$sIcon = 'icons8-libre-office-impress.svg';
 					break;
 
+				case 'odb':
+					$sIcon = 'icons8-libre-office-base.svg';
+					break;
+
+				case 'odg':
+					$sIcon = 'icons8-libre-office-draw.svg';
+					break;
+
+				case 'xhtml':
 				case 'html':
 				case 'htm':
-					$sIcon = 'html.png';
+					$sIcon = 'icons8-html-filetype.svg';
 					break;
 
 				case 'png':
@@ -421,25 +448,76 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 				case 'tiff':
 				case 'tif':
 				case 'bmp':
-					$sIcon = 'image.png';
-
+				case 'ico':
+				case 'psd':
+				case 'svg':
+				case 'ai':
+					$sIcon = 'icons8-image-file.svg';
 					break;
+					
 				case 'zip':
 				case 'gz':
 				case 'tgz':
 				case 'rar':
-					$sIcon = 'zip.png';
+				case '7z':
+				case 'pkg':
+				case 'tar':
+					$sIcon = 'icons8-archive-folder.svg';
 					break;
 
 				case 'avi':
 				case 'mp4':
 				case 'mpeg':
 				case 'mpg':
-					$sIcon = 'movie.png';
+				case 'h264':
+				case 'mkv':
+				case 'mov':
+				case 'm4v':
+				case 'wmv':
+					$sIcon = 'icons8-video-file.svg';
 					break;
 
+				case 'aif':
+				case 'cda':
+				case 'mid':
+				case 'midi':
+				case 'mp3':
+				case 'mpa':
+				case 'ogg':
+				case 'wav':
+				case 'wma':
+					$sIcon = 'icons8-audio-file.svg';
+					break;
+					
+				case 'csv':
+					$sIcon = 'icons8-csv.svg';
+					break;
+					
+				case 'log':
+					$sIcon = 'icons8-event-log.svg';
+					break;
+					
+				case 'sql':
+					$sIcon = 'icons8-sql.svg';
+					break;
+					
+				case 'xml':
+					$sIcon = 'icons8-xml-file.svg';
+					break;	
+					
+				case 'email':
+				case 'eml':
+				case 'emlx':
+				case 'msg':
+					$sIcon = 'icons8-mail.svg';
+					break;
+					
+				case 'patch':
+					$sIcon = 'icons8-bandage.svg';
+					break;
+					
 				default:
-					$sIcon = 'document.png';
+					$sIcon = 'icons8-file.svg';
 					break;
 			}
 		}
