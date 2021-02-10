@@ -96,11 +96,16 @@ $(function() {
 							if (bWasDraftBefore !== bIsDraftNow) {
 								me.is_draft = bIsDraftNow;
 								me._UpdateEditingVisualHint();
+
+								// Update button only once, not at each character chane
 								if (me._IsSubmitAutonomous()) {
 									me._UpdateSubmitButtonState();
-								} else {
-									me._UpdateBridgeInput();
 								}
+							}
+
+							// We need to keep this out of the draft check as we need to update the bridge input at character change, otherwise, only the first character will be sent
+							if (false === me._IsSubmitAutonomous()) {
+								me._UpdateBridgeInput();
 							}
 						});
 					}
