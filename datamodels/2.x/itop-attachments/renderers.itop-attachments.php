@@ -443,6 +443,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 	 * @param array $aAttachmentsDate
 	 * @param int[] $aAttachmentsDeleted
 	 *
+	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \Exception
