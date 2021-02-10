@@ -154,7 +154,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contact/Attribute:phone' => 'Téléphone',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Notification',
-	'Class:Contact/Attribute:notify+' => 'Sans effet automatique. Il faut tester explicitement ce champ dans la recherche des destinataires des Notifications',
+	'Class:Contact/Attribute:notify+' => 'Champ utilisable dans la recherche des destinataires de Notifications',
 	'Class:Contact/Attribute:notify/Value:no' => 'non',
 	'Class:Contact/Attribute:notify/Value:no+' => 'non',
 	'Class:Contact/Attribute:notify/Value:yes' => 'oui',
