@@ -122,9 +122,13 @@ class ActivityPanel extends UIBlock
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
 
-		$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass);
-		foreach($aCaseLogAttCodes as $sCaseLogAttCode)
-		{
+		// Get only case logs from the "details" zlist, but if none (2.7 and older) show them all
+		$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass, 'details');
+		if (empty($aCaseLogAttCodes)) {
+			$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass);
+		}
+		
+		foreach ($aCaseLogAttCodes as $sCaseLogAttCode) {
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
 

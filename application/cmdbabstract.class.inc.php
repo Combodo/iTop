@@ -849,6 +849,12 @@ EOF
 					$aDetails = [];
 					foreach ($aFields as $sAttCode) {
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+						// Skip case logs as they will be hadnled by the activty panel
+						if ($oAttDef instanceof AttributeCaseLog) {
+							continue;
+						}
+
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClass, $sAttCode);
 

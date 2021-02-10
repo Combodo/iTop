@@ -1334,26 +1334,36 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param string[] $aDesiredAttTypes Array of AttributeDefinition classes to filter the list on
+	 * @param string|null $sListCode If provided, attributes will be limited to those in this zlist
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 */
-	final public static function GetAttributesList($sClass, $aDesiredAttTypes = [])
+	final public static function GetAttributesList(string $sClass, array $aDesiredAttTypes = [], ?string $sListCode = null)
 	{
 		self::_check_subclass($sClass);
 
-		if(empty($aDesiredAttTypes))
-		{
-			return array_keys(self::$m_aAttribDefs[$sClass]);
+		$aAttributesToCheck = [];
+		if (!is_null($sListCode)) {
+			$aAttCodes = self::FlattenZList(self::GetZListItems($sClass, $sListCode));
+			foreach ($aAttCodes as $sAttCode) {
+				// Important: As $aAttributesToCheck will only be used to check the type of the attribute definition, we considered is was ok to mix strings and objects to lower the memory print.
+				$aAttributesToCheck[$sAttCode] = get_class(self::$m_aAttribDefs[$sClass][$sAttCode]);
+			}
+		} else {
+			$aAttributesToCheck = self::$m_aAttribDefs[$sClass];
+		}
+
+		if (empty($aDesiredAttTypes)) {
+			return array_keys($aAttributesToCheck);
 		}
 
 		$aMatchingAttCodes = [];
-		foreach(self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
-		{
-			foreach($aDesiredAttTypes as $sDesiredAttType)
-			{
-				if(is_a($oAttDef, $sDesiredAttType))
-				{
+		/** @var string|AttributeDefinition $mAttDef See how it's built */
+		foreach ($aAttributesToCheck as $sAttCode => $mAttDef) {
+			foreach ($aDesiredAttTypes as $sDesiredAttType) {
+				// Important: Use of a method allowing either an object or a class as a parameter is important
+				if (is_a($mAttDef, $sDesiredAttType, true)) {
 					$aMatchingAttCodes[] = $sAttCode;
 				}
 			}
@@ -1633,18 +1643,20 @@ abstract class MetaModel
 	 * Return an array of attribute codes for the caselogs attributes of $sClass
 	 *
 	 * @param string $sClass
+	 * @param string|null $sListCode If provided, will only return attributes from ths zlist
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @since 3.0.0
 	 */
-	final public static function GetCaseLogs(string $sClass)
+	final public static function GetCaseLogs(string $sClass, ?string $sListCode = null)
 	{
-		if (!isset(static::$m_aCaseLogsAttributesCache[$sClass])) {
-			static::$m_aCaseLogsAttributesCache[$sClass] = self::GetAttributesList($sClass, ['AttributeCaseLog']);
+		$sScopeKey = empty($sListCode) ? 'all' : 'zlist:'.$sListCode;
+		if (!isset(static::$m_aCaseLogsAttributesCache[$sClass][$sScopeKey])) {
+			static::$m_aCaseLogsAttributesCache[$sClass][$sScopeKey] = self::GetAttributesList($sClass, ['AttributeCaseLog'], $sListCode);
 		}
 
-		return static::$m_aCaseLogsAttributesCache[$sClass];
+		return static::$m_aCaseLogsAttributesCache[$sClass][$sScopeKey];
 	}
 
 	/** @var array */
