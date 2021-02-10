@@ -164,16 +164,17 @@ JS
 	$oFavoriteOrganizationsSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply', true);
 	$oFavoriteOrganizationsToolBar->AddSubBlock($oFavoriteOrganizationsSubmitButton);
 
-	if ($aFavoriteOrgs == null) {
-		// All checked
-		$oP->add_ready_script(
-			<<<JS
-	$('#$sIdFavoriteOrganizations .checkAll').prop('checked', true);
-	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
-JS
-		);
-
-	}
+	// TODO 3.0 have this code work again, currently it prevents the display of favorite organizations and shortcuts.
+	//	if ($aFavoriteOrgs == null) {
+	//		// All checked
+	//		$oP->add_ready_script(
+	//			<<<JS
+	//	$('#$sIdFavoriteOrganizations.checkAll').prop('checked', true);
+	//	checkAllDataTable('datatable_$sIdFavoriteOrganizations',true,'$sIdFavoriteOrganizations');
+	//JS
+	//		);
+	//
+	//	}
 
 	$oContentLayout->AddMainBlock($oFavoriteOrganizationsBlock);
 
