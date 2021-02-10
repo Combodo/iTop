@@ -242,7 +242,7 @@ JS
 		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
 		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
-		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-comment-dots" style="top: 0;"></i>';
+		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
 		
 		/**
