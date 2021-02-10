@@ -4950,12 +4950,12 @@
 				</field>
 				<field id="ip" xsi:type="AttributeIPAddress">
 					<sql>ip</sql>
-					<default_value/>
+          <default_value>0.0.0.0</default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="ip_mask" xsi:type="AttributeIPAddress">
 					<sql>ip_mask</sql>
-					<default_value/>
+          <default_value>0.0.0.0</default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
