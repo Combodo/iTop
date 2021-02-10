@@ -261,11 +261,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			$sTitle = ($iCount > 0) ? Dict::Format('Attachments:TabTitle_Count', $iCount) : Dict::S('Attachments:EmptyTabTitle');
 			$oPage->SetCurrentTab('Attachments:Tab', $sTitle);
 		}
-
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('Attachments:FieldsetTitle').'</legend>');
-
-		$oPage->add('<div id="AttachmentsContent">');
+		
 		$bIsReadOnlyState = self::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
 		if ($bEditMode && !$bIsReadOnlyState)
 		{
@@ -274,10 +270,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		else
 		{
 			$oAttachmentsRenderer->RenderViewAttachmentsList();
-		}
-		$oPage->add('</div>');
 
-		$oPage->add('</fieldset>');
+		}
 	}
 
 	protected static function UpdateAttachments($oObject, $oChange = null)

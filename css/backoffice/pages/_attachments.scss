@@ -1,0 +1,17 @@
+$ibo-attachment--datatable--icon-preview--max-height: 44px !default;
+$ibo-attachment--datatable--icon-preview--max-width: $ibo-attachment--datatable--icon-preview--max-height !default;
+
+$ibo-attachment--datatable--line-height: $ibo-attachment--datatable--icon-preview--max-height !default;
+
+$ibo-attachment--datatable--first-column--line-height: 0px !default;
+
+.ibo-attachment--datatable--icon-preview{
+  max-height: $ibo-attachment--datatable--icon-preview--max-height;
+  max-width: $ibo-attachment--datatable--icon-preview--max-width;
+}
+.ibo-attachment--datatable tbody tr td {
+  line-height: $ibo-attachment--datatable--line-height;
+}
+.ibo-attachment--datatable tbody tr td:nth-child(1){
+  line-height: $ibo-attachment--datatable--first-column--line-height;
+}

@@ -12,11 +12,11 @@
     </thead>
     <tbody>
     {% for data in oUIBlock.GetData() %}
-        {% if data['@class'] is not empty %}
-        <tr role="row" class="{{ data['@class'] }}">
-        {% else %}
-            <tr>
-        {% endif %}
+       
+        <tr {% if data['@id'] is not empty %}id="{{ data['@id'] }}" {% endif %}
+            role="row"
+            {% if data['@class'] is not empty %} class="{{ data['@class'] }}"{% endif %}
+            {% if data['@meta'] is not empty %} {{ data['@meta'] | raw}}{% endif %}>
         {% for name,column in columns %}
             <td {% if column.class is not empty %}class="{{ column.class }}" {% endif %}
                     {% if column.metadata is not empty %}
