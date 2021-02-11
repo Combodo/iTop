@@ -94,6 +94,9 @@ class QuickCreateHelper
 		{
 			$sClass = $aHistoryEntries[$iIdx]['class'];
 
+			if (!MetaModel::IsValidClass($sClass)) {
+				continue;
+			}
 			// Add class icon
 			if(!isset($aHistoryEntries[$iIdx]['icon_url']))
 			{
