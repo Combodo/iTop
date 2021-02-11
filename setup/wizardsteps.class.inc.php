@@ -2259,7 +2259,7 @@ CSS
 
 		if ($sMode == 'install')
 		{
-			$oPage->add('<div class="closed"><span class="title">Admininistrator Account</span><ul>');
+			$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Admininistrator Account</span><ul>');
 			$oPage->add('<li>Login: '.$aInstallParams['admin_account']['user'].'</li>');
 			$oPage->add('<li>Password: '.$aInstallParams['admin_account']['pwd'].'</li>');
 			$oPage->add('<li>Language: '.$aInstallParams['admin_account']['language'].'</li>');
