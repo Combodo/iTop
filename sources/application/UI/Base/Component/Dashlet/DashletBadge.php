@@ -11,7 +11,11 @@ namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 class DashletBadge extends DashletContainer
 {
 	public const BLOCK_CODE = 'ibo-dashlet-badge';
-	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashletbadge';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/components/dashlet/dashlet-badge.js',
+	];
 
 	/** @var string */
 	protected $sClassIconUrl;
