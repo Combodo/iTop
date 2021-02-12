@@ -3982,6 +3982,30 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
+	/**
+	 * Helper to set a value only if it is currently undefined
+	 *
+	 * Call SetCurrentDate() only of the internal representation of the attribute is null.
+	 *
+	 * @api
+	 * @see SetCurrentDate()
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function SetCurrentDateIfNull($sAttCode)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$oCurrentValue = $this->Get($sAttCode);
+		if ($oAttDef->IsNull($oCurrentValue))
+		{
+			$this->SetCurrentDate($sAttCode);
+		}
+	}
+
     /**
      * Helper to set the current logged in user for the given attribute
      * Suitable for use as a lifecycle action

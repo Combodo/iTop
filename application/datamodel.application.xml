@@ -253,6 +253,22 @@
               </argument>
             </arguments>
           </method>
+          <method id="SetCurrentDateIfNull">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
           <method id="SetCurrentUser">
             <arguments>
               <argument id="1">

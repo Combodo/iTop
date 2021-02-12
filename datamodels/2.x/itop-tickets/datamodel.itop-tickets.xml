@@ -604,7 +604,7 @@
 								<target>closed</target>
                 <actions>
                   <action>
-                    <verb>SetCurrentDate</verb>
+                    <verb>SetCurrentDateIfNull</verb>
                     <params>
                       <param xsi:type="attcode">end_date</param>
                     </params>
