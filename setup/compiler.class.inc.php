@@ -2902,6 +2902,7 @@ EOF;
 	}
 
 	/**
+	 * @since 3.0.0 N°2982
 	 * Choose between precompiled files declared in datamodel XMLs or latest precompiled files generated after latest setup.
 	 *
 	 * @param string $sTempTargetDir
