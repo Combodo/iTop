@@ -6,7 +6,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
- * @covers ThemeHandler
+ * @covers utils
  */
 class ThemeHandlerTest extends ItopTestCase
 {
@@ -159,15 +159,15 @@ class ThemeHandlerTest extends ItopTestCase
 							$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
 						}
 
+						$aStylesheetFiles = [];
 						/** @var \DOMNodeList $oImports */
 						$oImports = $oTheme->GetNodes('imports/import');
-						$oFindStylesheetObject = new FindStylesheetObject();
-
 						foreach ($oImports as $oImport)
 						{
 							$sImportId = $oImport->getAttribute('id');
 							$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
-							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
+							$sFile = ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths);
+							$aStylesheetFiles[] = $sFile;
 						}
 
 						/** @var \DOMNodeList $oStylesheets */
@@ -176,10 +176,11 @@ class ThemeHandlerTest extends ItopTestCase
 						{
 							$sStylesheetId = $oStylesheet->getAttribute('id');
 							$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
-							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
+							$sFile = ThemeHandler::FindStylesheetFile($oStylesheet->GetText(), $aImportsPaths);
+							$aStylesheetFiles[] = $sFile;
 						}
 
-						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetAllStylesheetFiles(), $sThemeId);
+						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $aStylesheetFiles, $sThemeId);
 						$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 						//echo "  current signature: $compiled_json_sig\n";
 
@@ -600,59 +601,6 @@ SCSS;
 		}
 
 		$this->assertEquals($aExpectedImages, $aIncludedImages);
-	}
-
-	/**
-	 * @dataProvider FindStylesheetFileProvider
-	 * @throws \Exception
-	 */
-	public function testFindStylesheetFile(string $sFileToFind, array $aAllStylesheetFiles, array $aAllImports){
-		$aImportsPath = $this->sTmpDir.'/branding/';
-
-		$oFindStylesheetObject = new FindStylesheetObject();
-		ThemeHandler::FindStylesheetFile($sFileToFind, [$aImportsPath], $oFindStylesheetObject);
-
-		$this->assertEquals($aAllStylesheetFiles, str_replace($aImportsPath, "", $oFindStylesheetObject->GetAllStylesheetFiles()));
-		$this->assertEquals($aAllImports, str_replace($aImportsPath, "", $oFindStylesheetObject->GetAllImports()));
-		$this->assertEquals($aImportsPath . $aAllStylesheetFiles[0], $oFindStylesheetObject->GetLastStyleSheet());
-	}
-
-	public function FindStylesheetFileProvider(){
-		$sFileToFind3 = "css/multi_imports.scss";
-		$sFileToFind4 = "css/included_file1.scss";
-		$sFileToFind5 = "css/included_scss/included_file2.scss";
-
-		return [
-			"single file to find" => [
-				"sFileToFind" => "css/DO_NOT_CHANGE.light-grey.scss",
-				"aAllStylesheetFiles" => ["css/DO_NOT_CHANGE.light-grey.scss"],
-				"aAllImports" => []
-			],
-			"scss with simple @imports" => [
-				"sFileToFind" => "css/simple_import.scss",
-				"aAllStylesheetFiles" => ["css/simple_import.scss", $sFileToFind4],
-				"aAllImports" => [$sFileToFind4]
-			],
-			"scss with simple @imports in another folder" => [
-				"sFileToFind" => "css/simple_import2.scss",
-				"aAllStylesheetFiles" => ["css/simple_import2.scss", $sFileToFind5],
-				"aAllImports" => [$sFileToFind5]
-			],
-			"scss with @imports shortcut typography => _typography.scss" => [
-				"sFileToFind" => "css/short_cut.scss",
-				"aAllStylesheetFiles" => ["css/short_cut.scss", "css/_included_file3.scss"],
-				"aAllImports" => ["css/_included_file3.scss"]
-			],
-			"scss with multi @imports" => [
-				"sFileToFind" => $sFileToFind3,
-				"aAllStylesheetFiles" => [
-					$sFileToFind3,
-					$sFileToFind4,
-					$sFileToFind5
-				],
-				"aAllImports" => [$sFileToFind4, $sFileToFind5]
-			]
-		];
 	}
 
 	/**
