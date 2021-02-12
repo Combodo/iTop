@@ -84,11 +84,12 @@ $(function() {
 			_bindEvents: function() {
 				let me = this;
 
-				// Enable send button only when content
-				CKEDITOR.on('instanceReady', function(oEvent){
+				// Handlers for the CKEditor itself
+				CKEDITOR.on('instanceReady', function (oEvent) {
 					// Handle only the current CKEditor instance
-					if(oEvent.editor.name === me.options.text_input_id) {
+					if (oEvent.editor.name === me.options.text_input_id) {
 						// Update depending elements on change
+						// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
 						me._GetCKEditorInstance().on('change', function () {
 							const bWasDraftBefore = me.is_draft;
 							const bIsDraftNow = !me._IsInputEmpty();
@@ -102,14 +103,18 @@ $(function() {
 									me._UpdateSubmitButtonState();
 								}
 							}
-
-							// We need to keep this out of the draft check as we need to update the bridge input at character change, otherwise, only the first character will be sent
-							if (false === me._IsSubmitAutonomous()) {
-								me._UpdateBridgeInput();
-							}
 						});
 					}
 				});
+
+				if (false === this._IsSubmitAutonomous()) {
+					// Update the general form input on submit.
+					// This cannot be "completely" done in the "change" handler above because we don't have an event for when
+					// the image has been uploaded and its HTML markup added to the data. The "change" event occurs too early.
+					this._GetGeneralFormElement().on('submit', function () {
+						me._UpdateBridgeInput();
+					});
+				}
 
 				// Form buttons
 				this.element.find(this.js_selectors.cancel_button).on('click', function (oEvent) {
