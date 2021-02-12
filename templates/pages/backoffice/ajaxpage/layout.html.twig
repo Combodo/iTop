@@ -22,17 +22,17 @@
 	{% endblock %}
 
 	{% if aPage.aJsFiles is not empty %}
-		{% set sId = oUIBlock.GetId() | variable_name %}
-		{% block iboPageJsFiles %}
-			<script type="text/javascript">
-				var aFilesToLoad{{ sId }} = [];
-				{% for sJsFile in aPage.aJsFiles %}
-                    if ( $.inArray('{{ sJsFile|raw }}',aListJsFiles) == -1 )
-					{
-						aFilesToLoad{{ sId }}.push('{{ sJsFile|raw|add_itop_version }}');
-						aListJsFiles.push("{{ sJsFile|raw }}");
-					}
-				{% endfor %}
+        {% set sId = oUIBlock.GetId() | sanitize_variable_name %}
+        {% block iboPageJsFiles %}
+            <script type="text/javascript">
+            var aFilesToLoad{{ sId }} = [];
+            {% for sJsFile in aPage.aJsFiles %}
+            if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) == -1)
+            {
+                aFilesToLoad{{ sId }}.push('{{ sJsFile|raw|add_itop_version }}');
+                aListJsFiles.push("{{ sJsFile|raw }}");
+            }
+            {% endfor %}
 				var iCurrentIdx{{ sId }} = 0;
 				var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
 				if(iFilesToLoadCount{{ sId }}>0)

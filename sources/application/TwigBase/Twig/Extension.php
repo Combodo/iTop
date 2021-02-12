@@ -94,8 +94,8 @@ class Extension
 		);
 
 		// Filter to sanitize a variable name
-		// Usage in twig: {{ 'variable_name:to-sanitize'|variable_name }}
-		$oTwigEnv->addFilter(new Twig_SimpleFilter('variable_name', function ($sString) {
+		// Usage in twig: {{ 'variable_name:to-sanitize'|sanitize_variable_name }}
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize_variable_name', function ($sString) {
 				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
 			})
 		);
@@ -104,8 +104,7 @@ class Extension
 		//
 		// Note: This could be rename "add_cache_buster" instead.
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
-			if (strpos($sUrl, '?') === false)
-			{
+			if (strpos($sUrl, '?') === false) {
 				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
 			}
 			else
