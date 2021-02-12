@@ -98,7 +98,7 @@ $(function() {
 								me.is_draft = bIsDraftNow;
 								me._UpdateEditingVisualHint();
 
-								// Update button only once, not at each character chane
+								// Update button only once, not at each character change
 								if (me._IsSubmitAutonomous()) {
 									me._UpdateSubmitButtonState();
 								}
