@@ -1193,15 +1193,28 @@ EOF
 	 * @param string $sContent
 	 * @param string $sCssClasses CSS classes to add to the container
 	 *
-	 * @throws \Exception
 	 * @since 2.6.0
 	 */
-	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
+	public function AddHeaderMessage(string $sContent, string $sCssClasses = 'message_info')
 	{
-		$this->add(<<<EOF
-<div class="header_message $sCssClasses">$sContent</div>
-EOF
-		);
+		switch ($sCssClasses) {
+			case 'message_ok':
+				$oAlert = AlertUIBlockFactory::MakeForSuccess('', $sContent);
+				break;
+			case 'message_warning':
+				$oAlert = AlertUIBlockFactory::MakeForWarning('', $sContent);
+				break;
+			case 'message_error':
+				$oAlert = AlertUIBlockFactory::MakeForDanger('', $sContent);
+				break;
+			case 'message_info':
+			default:
+				$oAlert = AlertUIBlockFactory::MakeForInformation('', $sContent);
+				break;
+
+		}
+		$oAlert->AddCSSClass($sCssClasses);
+		$this->AddUiBlock($oAlert);
 	}
 
 

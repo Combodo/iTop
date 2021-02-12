@@ -272,35 +272,7 @@ EOF
 				}
 			}
 			$sMessageKey = get_class($this).'::'.$this->GetKey();
-			if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
-					$_SESSION['obj_messages'])) {
-				$aReadMessages = [];
-				foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData) {
-					if (!in_array($aMessageData['message'], $aReadMessages)) {
-						$aReadMessages[] = $aMessageData['message'];
-						$aRanks[] = $aMessageData['rank'];
-						switch ($aMessageData['severity']) {
-							case 'info':
-								$aMessages[] = AlertUIBlockFactory::MakeForInformation('', $aMessageData['message']);
-								break;
-							case 'ok':
-								$aMessages[] = AlertUIBlockFactory::MakeForSuccess('', $aMessageData['message']);
-								break;
-							case 'warning':
-								$aMessages[] = AlertUIBlockFactory::MakeForWarning('', $aMessageData['message']);
-								break;
-							case 'error':
-								$aMessages[] = AlertUIBlockFactory::MakeForDanger('', $aMessageData['message']);
-								break;
-						}
-					}
-				}
-				unset($_SESSION['obj_messages'][$sMessageKey]);
-			}
-			array_multisort($aRanks, $aMessages);
-			foreach ($aMessages as $oMessage) {
-				$oPage->AddUiBlock($oMessage);
-			}
+			$oPage->AddSessionMessages($sMessageKey, $aRanks, $aMessages);
 		}
 
 		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW))

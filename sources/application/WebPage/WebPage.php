@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
@@ -132,9 +133,49 @@ class WebPage implements Page
 	}
 
 	/**
+	 * @param string $sMessageKey
+	 * @param array $aRanks
+	 * @param array $aMessages
+	 */
+	public function AddSessionMessages(string $sMessageKey, array $aRanks = [], array $aMessages = []): void
+	{
+		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
+				$_SESSION['obj_messages'])) {
+			$aReadMessages = [];
+			foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData) {
+				if (!in_array($aMessageData['message'], $aReadMessages)) {
+					$aReadMessages[] = $aMessageData['message'];
+					$aRanks[] = $aMessageData['rank'];
+					switch ($aMessageData['severity']) {
+						case 'ok':
+							$aMessages[] = AlertUIBlockFactory::MakeForSuccess('', $aMessageData['message']);
+							break;
+						case 'warning':
+							$aMessages[] = AlertUIBlockFactory::MakeForWarning('', $aMessageData['message']);
+							break;
+						case 'error':
+							$aMessages[] = AlertUIBlockFactory::MakeForDanger('', $aMessageData['message']);
+							break;
+						case 'info':
+						default:
+							$aMessages[] = AlertUIBlockFactory::MakeForInformation('', $aMessageData['message']);
+							break;
+					}
+				}
+			}
+			unset($_SESSION['obj_messages'][$sMessageKey]);
+		}
+		array_multisort($aRanks, $aMessages);
+		foreach ($aMessages as $oMessage) {
+			$this->AddUiBlock($oMessage);
+		}
+	}
+
+	/**
 	 * Change the title of the page after its creation
 	 *
 	 * @param string $s_title
+	 *
 	 * @return void
 	 */
 	public function set_title($s_title)

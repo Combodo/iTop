@@ -22,12 +22,16 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum
  * until the user unchecks the "Display welcome at startup"
+ *
  * @param WebPage $oP The current web page for the display
+ *
  * @return void
  */
 function DisplayWelcomePopup(WebPage $oP)
@@ -156,25 +160,9 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
  * @param string $sMessageKey
  * @param WebPage $oPage
  */
-function DisplayMessages($sMessageKey, WebPage $oPage)
+function DisplayMessages(string $sMessageKey, WebPage $oPage)
 {
-	if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
-	{
-		$aMessages = array();
-		$aRanks = array();
-		foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
-		{
-			$sMsgClass = 'message_'.$aMessageData['severity'];
-			$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
-			$aRanks[] = $aMessageData['rank'];
-		}
-		unset($_SESSION['obj_messages'][$sMessageKey]);
-		array_multisort($aRanks, $aMessages);
-		foreach ($aMessages as $sMessage)
-		{
-			$oPage->add($sMessage);
-		}
-	}
+	$oPage->AddSessionMessages($sMessageKey);
 }
 
 /**
@@ -1250,28 +1238,22 @@ HTML
 				$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $sName, $sClassLabel);
 
 				$sNextAction = utils::ReadPostedParam('next_action', '');
-				if (!empty($sNextAction))
-				{
+				if (!empty($sNextAction)) {
 					$oP->add("<h1>$sMessage</h1>");
-					try
-					{
+					try {
 						ApplyNextAction($oP, $oObj, $sNextAction);
 					}
-					catch (ApplicationException $e)
-					{
+					catch (ApplicationException $e) {
 						$sMessage = $e->getMessage();
 						$sSeverity = 'info';
 						ReloadAndDisplay($oP, $oObj, 'create', $sMessage, $sSeverity);
 					}
-				}
-				else
-				{
+				} else {
 					// Nothing more to do
 					ReloadAndDisplay($oP, $oObj, 'create', $sMessage, 'ok');
 				}
 			}
-			catch (CoreCannotSaveObjectException $e)
-			{
+			catch (CoreCannotSaveObjectException $e) {
 				// Found issues, explain and give the user a second chance
 				//
 				$aIssues = $e->getIssues();
@@ -1281,33 +1263,17 @@ HTML
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="$sObjKey" data-object-mode="create">
-	<div class="page_header">
-		<h1>$sClassIcon $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-				);
+				$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sHeaderTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
+				$oP->AddUiBlock($oTitle);
 
-
-				if (!empty($aIssues))
-				{
+				if (!empty($aIssues)) {
 					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
 				}
-				if (!empty($aWarnings))
-				{
+				if (!empty($aWarnings)) {
 					$sWarnings = implode(', ', $aWarnings);
-					$oP->AddHeaderMessage($sWarnings, 'message_info');
+					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
-				$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-</div><!-- End of object-details -->
-HTML
-				);
 			}
 		}
 		break;
