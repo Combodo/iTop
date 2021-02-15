@@ -204,14 +204,13 @@ class ThemeHandler
 			static::FindStylesheetFile($sStylesheet, $aImportsPaths, $oFindStylesheetObject);
 		}
 
-		$aStylesheetFiles = $oFindStylesheetObject->GetAllStylesheetFiles();
-		foreach ($aStylesheetFiles as $sStylesheet){
+		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet){
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
 		}
 
 		$iStyleLastModified = $oFindStylesheetObject->GetLastModified();
 
-		$aIncludedImages=static::GetIncludedImages($aThemeParametersWithVersion, $aStylesheetFiles, $sThemeId);
+		$aIncludedImages=static::GetIncludedImages($aThemeParametersWithVersion, $oFindStylesheetObject->GetAllStylesheetPaths(), $sThemeId);
 		foreach ($aIncludedImages as $sImage)
 		{
 			if (is_file($sImage))
@@ -323,7 +322,7 @@ CSS;
 			}
 		}
 
-		$aFiles = $oFindStylesheetObject->GetAllImports();
+		$aFiles = $oFindStylesheetObject->GetImports();
 		if (count($aFiles) !== 0) {
 			foreach ($aFiles as $sFile) {
 				$aSignature['imports'][$sFile] = md5_file($sFile);
@@ -759,29 +758,41 @@ CSS;
 			$sFilePath = $sPath.'/'.$sFile;
 			$sImportedFile = realpath($sFilePath);
 			if ($sImportedFile === false){
-				// Handle shortcut syntax like @import "typo ;
+				// Handle shortcut syntax : @import "typo" ;
+				// file matched: typo.scss
+				$sFilePath2 = "$sFilePath.scss";
+				$sImportedFile = realpath($sFilePath2);
+				if ($sImportedFile){
+					self::FindStylesheetFile("$sFile.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
+					$sImportedFile = false;
+				}
+			}
+
+			if ($sImportedFile === false){
+				// Handle shortcut syntax : @import "typo" ;
 				// file matched: _typo.scss
 				$sShortCut = substr($sFilePath, strrpos($sFilePath, '/') + 1);
 				$sFilePath = str_replace($sShortCut, "_$sShortCut.scss", $sFilePath);
+				$sFile = str_replace($sShortCut, "_$sShortCut.scss", $sFile);
 				$sImportedFile = realpath($sFilePath);
 			}
 
-			if (file_exists($sImportedFile))
+			if ((file_exists($sImportedFile))
+				&& (!$oFindStylesheetObject->AlreadyFetched($sFile)))
 			{
 				if ($bImports){
-					$oFindStylesheetObject->AddImport($sImportedFile);
+					$oFindStylesheetObject->AddImport($sFile, $sImportedFile);
 				}else{
-					$oFindStylesheetObject->AddStylesheet($sImportedFile);
+					$oFindStylesheetObject->AddStylesheet($sFile, $sImportedFile);
 				}
 				$oFindStylesheetObject->UpdateLastModified($sImportedFile);
 
 				//Regexp matching on all included scss files : @import 'XXX.scss';
+				$sDirUri = dirname($sFile);
 				preg_match_all('/@import \s*[\"\']([^\"\']*)\s*[\"\']\s*;/', file_get_contents($sImportedFile), $aMatches);
 				if ( (is_array($aMatches)) && (count($aMatches)!==0) ){
 					foreach ($aMatches[1] as $sImportedFile){
-						if (! $oFindStylesheetObject->AlreadyFetched($sImportedFile)) {
-							self::FindStylesheetFile($sImportedFile, [ dirname($sFilePath) ], $oFindStylesheetObject, true);
-						}
+						self::FindStylesheetFile("$sDirUri/$sImportedFile", [ $sPath ], $oFindStylesheetObject, true);
 					}
 				}
 			}
@@ -828,9 +839,14 @@ CSS;
  */
 class FindStylesheetObject{
 
-	private $aStylesheetImports;
-	private $aAllStylesheetFiles;
-	private $sLastStyleSheet;
+	//file URIs
+	private $aStylesheetImportURIs;
+	private $aStylesheetFileURIs;
+
+	//fill paths
+	private $aAllStylesheetFilePaths;
+	private $sLastStyleSheetPath;
+
 	private $iLastModified;
 
 	/**
@@ -838,25 +854,28 @@ class FindStylesheetObject{
 	 */
 	public function __construct()
 	{
-		$this->aAllStylesheetFiles = [];
-		$this->aStylesheetImports = [];
-		$this->sLastStyleSheet = "";
+		$this->aStylesheetFileURIs = [];
+		$this->aStylesheetImportURIs = [];
+		$this->sLastStyleSheetPath = "";
 		$this->iLastModified = 0;
 	}
 
 	public function GetLastStylesheetFile(): string
 	{
-		return $this->sLastStyleSheet;
+		return $this->sLastStyleSheetPath;
 	}
 
-	public function GetAllImports(): array
+	public function GetImports(): array
 	{
-		return $this->aStylesheetImports;
+		return $this->aStylesheetImportURIs;
 	}
 
-	public function GetAllStylesheetFiles(): array
+	/**
+	 * @return array : main stylesheets URIs
+	 */
+	public function GetStylesheetFileURIs(): array
 	{
-		return $this->aAllStylesheetFiles;
+		return $this->aStylesheetFileURIs;
 	}
 
 	public function GetLastModified() : int
@@ -864,31 +883,46 @@ class FindStylesheetObject{
 		return $this->iLastModified;
 	}
 
-	public function GetStylesheetImports(): array
+	/**
+	 * @return array : included files URIs
+	 */
+	public function GetStylesheetImportURIs(): array
 	{
-		return $this->aStylesheetImports;
+		return $this->aStylesheetImportURIs;
 	}
 
-	public function GetLastStyleSheet(): string
+	/**
+	 * @return array : main stylesheets paths + included files paths
+	 */
+	public function GetAllStylesheetPaths(): array
 	{
-		return $this->sLastStyleSheet;
+		return $this->aAllStylesheetFilePaths;
 	}
 
-	public function AddStylesheet(string $sStylesheetFile): void
+	/**
+	 * @return string : last found stylesheet URI
+	 */
+	public function GetLastStyleSheetPath(): string
 	{
-		$this->aAllStylesheetFiles[] = $sStylesheetFile;
-		$this->sLastStyleSheet = $sStylesheetFile;
+		return $this->sLastStyleSheetPath;
+	}
+
+	public function AddStylesheet(string $sStylesheetFile, string $sStylesheetFilePath): void
+	{
+		$this->aStylesheetFileURIs[] = $sStylesheetFile;
+		$this->aAllStylesheetFilePaths[] = $sStylesheetFilePath;
+		$this->sLastStyleSheetPath = $sStylesheetFilePath;
 	}
 
 	public function AlreadyFetched(string $sStylesheetFile) : bool {
-		return in_array($sStylesheetFile, $this->aAllStylesheetFiles)
-			|| in_array($sStylesheetFile, $this->aStylesheetImports);
+		return in_array($sStylesheetFile, $this->aStylesheetFileURIs)
+			|| in_array($sStylesheetFile, $this->aStylesheetImportURIs);
 	}
 
-	public function AddImport(string $sStylesheetFile): void
+	public function AddImport(string $sStylesheetFile, string $sStylesheetFilePath): void
 	{
-		$this->aAllStylesheetFiles[] = $sStylesheetFile;
-		$this->aStylesheetImports[] = $sStylesheetFile;
+		$this->aStylesheetImportURIs[] = $sStylesheetFile;
+		$this->aAllStylesheetFilePaths[] = $sStylesheetFilePath;
 	}
 
 	public function UpdateLastModified(string $sStylesheetFile): void
@@ -898,7 +932,7 @@ class FindStylesheetObject{
 
 	public function ResetLastStyleSheet(): void
 	{
-		$this->sLastStyleSheet = "";
+		$this->sLastStyleSheetPath = "";
 	}
 }
 

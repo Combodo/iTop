@@ -20,6 +20,9 @@ class ThemeHandlerTest extends ItopTestCase
 
 	public function setUp()
 	{
+		@include_once '/home/combodo/workspace/iTop/approot.inc.php';
+
+
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -179,7 +182,7 @@ class ThemeHandlerTest extends ItopTestCase
 							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
 						}
 
-						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetAllStylesheetFiles(), $sThemeId);
+						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetStylesheetFileURIs(), $sThemeId);
 						$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 						//echo "  current signature: $compiled_json_sig\n";
 
@@ -285,7 +288,7 @@ JSON;
 	{
 		return [
 			"pass ParamAttributes and Save them in Json" => [false],
-			"use them from saved json" => [true]
+			//"use them from saved json" => [true]
 		];
 	}
 
@@ -606,15 +609,21 @@ SCSS;
 	 * @dataProvider FindStylesheetFileProvider
 	 * @throws \Exception
 	 */
-	public function testFindStylesheetFile(string $sFileToFind, array $aAllStylesheetFiles, array $aAllImports){
+	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
 		$aImportsPath = $this->sTmpDir.'/branding/';
 
 		$oFindStylesheetObject = new FindStylesheetObject();
 		ThemeHandler::FindStylesheetFile($sFileToFind, [$aImportsPath], $oFindStylesheetObject);
 
-		$this->assertEquals($aAllStylesheetFiles, str_replace($aImportsPath, "", $oFindStylesheetObject->GetAllStylesheetFiles()));
-		$this->assertEquals($aAllImports, str_replace($aImportsPath, "", $oFindStylesheetObject->GetAllImports()));
-		$this->assertEquals($aImportsPath . $aAllStylesheetFiles[0], $oFindStylesheetObject->GetLastStyleSheet());
+		$this->assertEquals([$sFileToFind], $oFindStylesheetObject->GetStylesheetFileURIs());
+		$this->assertEquals($aAllImports, str_replace($aImportsPath, "", $oFindStylesheetObject->GetImports()));
+		$this->assertEquals($aImportsPath.$sFileToFind, $oFindStylesheetObject->GetLastStyleSheetPath());
+
+		$aExpectedAllStylesheetPaths = [];
+		foreach (array_merge([$sFileToFind], $aAllImports) as $sFileUri){
+			$aExpectedAllStylesheetPaths [] = $aImportsPath.$sFileUri;
+		}
+		$this->assertEquals($aExpectedAllStylesheetPaths, $oFindStylesheetObject->GetAllStylesheetPaths());
 	}
 
 	public function FindStylesheetFileProvider(){
@@ -625,33 +634,28 @@ SCSS;
 		return [
 			"single file to find" => [
 				"sFileToFind" => "css/DO_NOT_CHANGE.light-grey.scss",
-				"aAllStylesheetFiles" => ["css/DO_NOT_CHANGE.light-grey.scss"],
 				"aAllImports" => []
 			],
 			"scss with simple @imports" => [
 				"sFileToFind" => "css/simple_import.scss",
-				"aAllStylesheetFiles" => ["css/simple_import.scss", $sFileToFind4],
 				"aAllImports" => [$sFileToFind4]
-			],
-			"scss with simple @imports in another folder" => [
-				"sFileToFind" => "css/simple_import2.scss",
-				"aAllStylesheetFiles" => ["css/simple_import2.scss", $sFileToFind5],
-				"aAllImports" => [$sFileToFind5]
-			],
-			"scss with @imports shortcut typography => _typography.scss" => [
-				"sFileToFind" => "css/short_cut.scss",
-				"aAllStylesheetFiles" => ["css/short_cut.scss", "css/_included_file3.scss"],
-				"aAllImports" => ["css/_included_file3.scss"]
 			],
 			"scss with multi @imports" => [
 				"sFileToFind" => $sFileToFind3,
-				"aAllStylesheetFiles" => [
-					$sFileToFind3,
-					$sFileToFind4,
-					$sFileToFind5
-				],
 				"aAllImports" => [$sFileToFind4, $sFileToFind5]
-			]
+			],
+			"scss with simple @imports in another folder" => [
+				"sFileToFind" => "css/simple_import2.scss",
+				"aAllImports" => [$sFileToFind5]
+			],
+			"scss with @imports shortcut typography => _typography.scss" => [
+				"sFileToFind" => "css/shortcut.scss",
+				"aAllImports" => ["css/_included_file3.scss", "css/included_scss/included_file4.scss"]
+			],
+			"cross_reference & infinite loop" => [
+				"sFileToFind" => "css/cross_reference1.scss",
+				"aAllImports" => ["css/cross_reference2.scss"]
+			],
 		];
 	}
 
