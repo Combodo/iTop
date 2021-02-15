@@ -512,8 +512,8 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			if ($oDoc->GetSize() <= self::MAX_SIZE_FOR_PREVIEW)
 			{
 				$sAttachmentThumbUrl = $sDocDownloadUrl;
-				$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sAttachmentThumbUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 			}
+			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDownloadUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 		}
 
 		
