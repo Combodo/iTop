@@ -114,6 +114,33 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange = $oChange;
 	}
 
+	/**
+	 * @param string $sUserInfo
+	 * @param string $sOrigin
+	 * @param $oDate
+	 *
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.4 3.0.0 N°3717 new method to reset current change
+	 */
+	public static function SetCurrentChangeFromParams($sUserInfo, $sOrigin = null, $oDate = null)
+	{
+		$oChange = MetaModel::NewObject('CMDBChange');
+
+		self::$m_oCurrChange->Set("userinfo", $sUserInfo);
+
+		if (!is_null($sOrigin)) {
+			self::$m_oCurrChange->Set("origin", $sOrigin);
+		}
+
+		if (is_null($oDate)) {
+			$oDate = time();
+		}
+		self::$m_oCurrChange->Set("date", $oDate);
+
+		self::$m_oCurrChange = $oChange;
+	}
+
 	//
 	// Todo: simplify the APIs and do not pass the current change as an argument anymore
 	//       SetTrackInfo to be invoked in very few cases (UI.php, CSV import, Data synchro)
@@ -167,10 +194,10 @@ abstract class CMDBObject extends DBObject
 	{
 		self::$m_sOrigin = $sOrigin;
 	}
-	
+
 	/**
 	 * Get the additional information (defaulting to user name)
-	 */	 	
+	 */
 	protected static function GetTrackInfo()
 	{
 		if (is_null(self::$m_sInfo))
