@@ -11,6 +11,8 @@ use ApplicationMenu;
 use AttributeLinkedSet;
 use BulkExport;
 use BulkExportException;
+use CMDBObjectSet;
+use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
@@ -451,4 +453,158 @@ class AjaxRenderController
 
 		return $aResults;
 	}
+
+	/**
+	 * @param string $sEncoding
+	 * @param string $sFilter
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public static function RefreshDashletList(string $sStyle, string $sFilter): array
+	{
+		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+		$oFilter = DBObjectSearch::FromOQL($sFilter);
+
+		if (isset($aExtraParams['group_by'])) {
+
+			$sAlias = $oFilter->GetClassAlias();
+			if (isset($aExtraParams['group_by_label'])) {
+				$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+				$sGroupByLabel = $aExtraParams['group_by_label'];
+			} else {
+				// Backward compatibility: group_by is simply a field id
+				$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+				$sGroupByLabel = MetaModel::GetLabel($oFilter->GetClass(), $aExtraParams['group_by']);
+			}
+
+			// Security filtering
+			$aFields = $oGroupByExp->ListRequiredFields();
+			foreach ($aFields as $sFieldAlias) {
+				$aMatches = array();
+				if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches)) {
+					$sFieldClass = $oFilter->GetClassName($aMatches[1]);
+					$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
+					if ($oAttDef instanceof AttributeOneWayPassword) {
+						throw new Exception('Grouping on password fields is not supported.');
+					}
+				}
+			}
+
+			$aGroupBy = array();
+			$aGroupBy['grouped_by_1'] = $oGroupByExp;
+			$aQueryParams = array();
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
+			$aFunctions = array();
+			$sAggregationFunction = 'count';
+			$sFctVar = '_itop_count_';
+			$sAggregationAttr = '';
+			if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute'])) {
+				$sAggregationFunction = $aExtraParams['aggregation_function'];
+				$sAggregationAttr = $aExtraParams['aggregation_attribute'];
+				$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAggregationAttr.'`');
+				$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), array($oAttrExpr));
+				$sFctVar = '_itop_'.$sAggregationFunction.'_';
+				$aFunctions = array($sFctVar => $oFctExpr);
+			}
+
+			if (!empty($sAggregationAttr)) {
+				$sClass = $oFilter->GetClass();
+				$sAggregationAttr = MetaModel::GetLabel($sClass, $sAggregationAttr);
+			}
+			$iLimit = 0;
+			if (isset($aExtraParams['limit'])) {
+				$iLimit = intval($aExtraParams['limit']);
+			}
+			$aOrderBy = array();
+			if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
+				switch ($aExtraParams['order_by']) {
+					case 'attribute':
+						$aOrderBy = array('grouped_by_1' => ($aExtraParams['order_direction'] === 'asc'));
+						break;
+					case 'function':
+						$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+						break;
+				}
+			}
+
+			$sSql = $oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
+
+			$aRes = CMDBSource::QueryToArray($sSql);
+
+			$aGroupBy = array();
+			$aLabels = array();
+			$aValues = array();
+			$iTotalCount = 0;
+			foreach ($aRes as $iRow => $aRow) {
+				$sValue = $aRow['grouped_by_1'];
+				$aValues[$iRow] = $sValue;
+				$sHtmlValue = $oGroupByExp->MakeValueLabel($oFilter, $sValue, $sValue);
+				$aLabels[$iRow] = $sHtmlValue;
+				$aGroupBy[$iRow] = (int)$aRow[$sFctVar];
+				$iTotalCount += $aRow['_itop_count_'];
+			}
+
+			$aResult = array();
+			$oAppContext = new ApplicationContext();
+			$sParams = $oAppContext->GetForLink();
+			foreach ($aGroupBy as $iRow => $iCount) {
+				// Build the search for this subset
+				$oSubsetSearch = $oFilter->DeepClone();
+				$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
+				$oSubsetSearch->AddConditionExpression($oCondition);
+				if (isset($aExtraParams['query_params'])) {
+					$aQueryParams = $aExtraParams['query_params'];
+				} else {
+					$aQueryParams = array();
+				}
+				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
+
+				$aResult[] = array(
+					'group' => $aLabels[$iRow],
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>",
+				); // TO DO: add the context information
+			}
+
+		} else {
+			// Simply count the number of elements in the set
+			$aOrderBy = [];
+			if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
+				$aOrderBy = ['order_by' => $aExtraParams['order_by'], 'order_direction' => $aExtraParams['order_direction']];
+			}
+
+			$oSet = new CMDBObjectSet($oFilter, $aOrderBy, $aExtraParams);
+			$iCount = $oSet->Count();
+			$sFormat = 'UI:CountOfObjects';
+			if (isset($aExtraParams['format'])) {
+				$sFormat = $aExtraParams['format'];
+			}
+			$aResult = ['result' => Dict::Format($sFormat, $iCount)];
+		}
+
+		return $aResult;
+	}
+
+	public static function RefreshCount(string $sFilter): array
+	{
+		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+		$oFilter = DBObjectSearch::FromOQL($sFilter);
+
+		$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
+		$iCount = $oSet->Count();
+		$aResult = ['count' => $iCount];
+
+		return $aResult;
+	}
+
+
 }

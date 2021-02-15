@@ -115,7 +115,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClass('ibo-datatable-panel');
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "")->AddCSSClass('ibo-datatable-panel');
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -147,13 +147,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForRendering(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = new DataTable('datatable_'.$sListId);
-		///////////////////////////////////////////////////
-		/*TODO 3.0.0 PrintableVersion
-		if ($oPage->IsPrintableVersion() || $oPage->is_pdf())
-		{
-			return self::GetDisplaySetForPrinting($oPage, $oSet, $aExtraParams);
-		}
-		*/
 
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
@@ -352,6 +345,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$aOptions['select_mode'] = "single";
 			}
 		}
+		$aOptions['selectionMode'] = $aExtraParams['selectionMode']?? 'positive';
 
 		if (isset($aExtraParams['cssCount'])) {
 			$aOptions['sCountSelector'] = $aExtraParams['cssCount'];
@@ -577,6 +571,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				$aOptions['select_mode'] = "single";
 			}
 		}
+		$aOptions['selectionMode'] = $aExtraParams['selectionMode']?? 'positive';
 
 		$aOptions['sort'] = $aSortDatable;
 

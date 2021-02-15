@@ -154,17 +154,25 @@ $(function()
             // - Update URL hash when tab is activated
             _onTabActivated: function(oUI)
             {
-                let oState = {};
+	            let oState = {};
 
-                // Get the id of this tab widget.
-                const sId = this.element.attr( 'id' );
+	            // Get the id of this tab widget.
+	            const sId = this.element.attr('id');
 
-                // Get the index of this tab.
-                const iIdx = $(oUI.newTab).prevAll().length;
+	            //Datatable are not displayed correctly when hidden
+	            $(oUI.newPanel).find('.dataTables_scrollBody > .ibo-datatable').each(function () {
+		            if ($('#'+this.id).find('thead').is(':visible')) {
+			            $('#'+this.id).DataTable().columns.adjust().draw();
+			            $('#'+this.id).find('thead').hide();
+		            }
+	            });
 
-                // Set the state!
-                oState[ sId ] = iIdx;
-                $.bbq.pushState( oState );
+	            // Get the index of this tab.
+	            const iIdx = $(oUI.newTab).prevAll().length;
+
+	            // Set the state!
+	            oState[sId] = iIdx;
+	            $.bbq.pushState(oState);
             },
             // - Change current tab as necessary when URL hash changes
             _onHashChange: function()

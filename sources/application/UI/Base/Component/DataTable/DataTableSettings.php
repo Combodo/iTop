@@ -214,7 +214,6 @@ class DataTableSettings implements Serializable
                 return null;
             }
         }
-        $oSettings->unserialize($pref);
 
         return $oSettings;
     }

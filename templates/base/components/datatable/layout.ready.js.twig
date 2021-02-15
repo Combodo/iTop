@@ -4,7 +4,7 @@
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
 	{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
-	{% set iPageSize = 10 %}
+{% set iPageSize = 10 %}
 {% endif %}
 
 $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", function () {
@@ -13,10 +13,36 @@ $('#{{ oUIBlock.GetId() }}').closest("[role=dialog]").on("dialogbeforeclose", fu
 
 $('#{{ sListId }}').data('target', 'ibo-datatables--outer');
 
-if ($.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
+if ($('#{{ oUIBlock.GetId() }}') != 'undefined' && $.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}'))
+{
     $('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
 }
-
+//define maxHeight for Datatable
+var maxHeight{{ sListId }} = 300;
+if ($('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').length > 0)
+{
+    //we are in dialogbox
+    maxHeight{{ sListId }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').height();
+    a
+}
+else
+{
+    maxHeight{{ sListId }} = $(window).height()-$('#ibo-top-container').outerHeight()+$('#ibo-main-content').height()-$('#ibo-main-content').outerHeight();
+}
+if ($('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').length > 0)
+{
+    //we are in dialogbox
+    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').height();
+}
+if (maxHeight{{ sListId }} < 300)
+{
+    maxHeight{{ sListId }} = 250;
+}
+else
+{
+    maxHeight{{ sListId }} = maxHeight{{ sListId }} -50;
+}
+console.warn('#{{ oUIBlock.GetId() }}');
 var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
@@ -38,6 +64,9 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             sortDescending: ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
         }
     },
+    scrollY: maxHeight{{ sListId }},
+    scrollX: true,
+    scrollCollapse: true,
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
     {% if( oUIBlock.GetOptions("sort")[0] is defined ) %}
@@ -51,23 +80,30 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         style: "{{ oUIBlock.GetOption("select_mode") }}"
     },
     rowCallback: function (oRow, oData) {
-        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
             if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1) {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
         } else {
-            if (oSelectedItems{{ sListId }}.indexOf(oData.id) > -1) {
+            if (oSelectedItems{{ sListId }}.indexOf(oData.id) > -1)
+            {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
         }
     },
     drawCallback: function () {
-        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-            $(this).find('[name=selectAll]').prop('checked', true);
+        console.warn('la');
+        console.warn($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val());
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
+            $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
             $(this).DataTable().rows({page: 'current'}).select();
-        } else {
+        }
+        else
+        {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
     },
@@ -84,11 +120,12 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             width: "20px",
             searchable: false,
             sortable: false,
+            orderable: false,
             title:
-            {% if oUIBlock.GetOption("select_mode") != "single" %}
-                '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"></span>'
+                    {% if oUIBlock.GetOption("select_mode") != "single" %}
+                    '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% else %}
-                '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"></span>'
+            '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% endif %},
             type: "html",
             data: "",
@@ -110,7 +147,8 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endif %}
         {% for aColumn in oUIBlock.GetDisplayColumns() %}
         {
-            width: "auto",
+            // width: 100,
+            autoWidth: true,
             searchable: false,
             sortable: true,
             title: "{{ aColumn["attribute_label"] }}",
@@ -137,7 +175,9 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         pages: 5 // number of pages to cache
     }),
     initComplete: function () {
-	    if (this.api().page.info().pages < 2) {
+        this.api().columns.adjust().draw();
+        if (this.api().page.info().pages < 2)
+        {
             this.parent().find('.dataTables_paginate').hide();
             this.parent().find('.dataTables_length').hide();
         }

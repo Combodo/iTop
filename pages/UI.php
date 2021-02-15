@@ -285,12 +285,13 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	}
 	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
+	//by default all the elements are selected
+	$aExtraParams['selectionMode'] = 'negative';
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
 	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
 	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
 
 	$oP->AddUiBlock($oForm);
-	$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)

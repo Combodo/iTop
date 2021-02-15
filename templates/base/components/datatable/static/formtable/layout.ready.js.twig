@@ -1,9 +1,15 @@
-$('#{{ oUIBlock.GetId() }}').DataTable({
+var table{{ oUIBlock.GetId()|sanitize_identifier }}= $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         emptyTable: "{{ 'UI:Message:EmptyList:UseAdd'|dict_s }}"
     },
+    scrollX: true,
+    scrollCollapse: true,
     paging: false,
     filter: false,
     search: false,
-	dom: "t"
+    dom: "t",
 });
+
+
+//table{{ oUIBlock.GetId()|sanitize_identifier }}.columns.adjust().draw();
+//$(".dataTables_scrollBody thead").hide();
