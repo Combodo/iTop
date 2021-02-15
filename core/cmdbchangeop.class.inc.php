@@ -85,24 +85,15 @@ class CMDBChangeOp extends DBObject
 			return parent::Set($sAttCode, $value);
 		}
 
-		if (is_int($value)) {
-			if ($value <= 0) {
-				$this->ThrowInvalidCMDBChangeException();
-			}
-
-			return parent::Set($sAttCode, $value);
+		if ((is_int($value)) && ($value <= 0)) {
+			$this->ThrowInvalidCMDBChangeException();
 		}
 
-		if (is_object($value)) {
-			if ($value->IsNew()) {
-				$this->ThrowInvalidCMDBChangeException();
-			}
-
-			return parent::Set($sAttCode, $value);
+		if ((is_object($value)) && ($value->IsNew())) {
+			$this->ThrowInvalidCMDBChangeException();
 		}
 
-		// we should never get here O:)
-		throw new CoreUnexpectedValue("Invalid value set to CMDBChangeOp.change");
+		return parent::Set($sAttCode, $value);
 	}
 
 	protected function ThrowInvalidCMDBChangeException()
