@@ -240,3 +240,7 @@ div.explain-printable button{
 	margin-right: 16px;
 	background-color: var(--ibo-body-background-color);
 }
+
+.ibo-panel > .ibo-panel--body > .ibo-tab-container {
+	height: 100%;
+}
