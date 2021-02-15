@@ -348,12 +348,14 @@ CSS
 
 	protected function GetDeleteAttachmentButton($iAttId)
 	{
-		$oButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('Attachments:DeleteBtn'),
+		$oButton = ButtonUIBlockFactory::MakeDestructiveIconLink('fas fa-trash', Dict::S('Attachments:DeleteBtn'),
+			'',
 			Dict::S('Attachments:DeleteBtn'),
-			Dict::S('Attachments:DeleteBtn'),
-		false,
+			null,
 			"btn_remove_".$iAttId);
-		$oButton->AddCSSClass('btn_hidden')->SetOnClickJsCode("RemoveAttachment('.$iAttId.');");
+		$oButton->AddCSSClass('btn_hidden')
+			->SetOnClickJsCode("RemoveAttachment('.$iAttId.');");
+		
 		return BlockRenderer::RenderBlockTemplates($oButton);
 	}
 
