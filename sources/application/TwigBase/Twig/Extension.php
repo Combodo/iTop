@@ -147,6 +147,20 @@ class Extension
 			return $oConfig->Get($sParamName);
 		}));
 
+		/**
+		 * Function to get a module setting
+		 * Usage in twig: {{ get_module_setting(<MODULE_CODE>, <PROPERTY_CODE> [, <DEFAULT_VALUE>]) }}
+		 *
+		 * @uses Config::GetModuleSetting()
+		 * @since 3.0.0
+		 */
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_module_setting',
+			function (string $sModuleCode, string $sPropertyCode, $defaultValue = null) {
+				$oConfig = MetaModel::GetConfig();
+
+				return $oConfig->GetModuleSetting($sModuleCode, $sPropertyCode, $defaultValue);
+			}));
+
 		// Function to get iTop's app root absolute URL (eg. https://aaa.bbb.ccc/xxx/yyy/)
 		// Usage in twig: {{ get_absolute_url_app_root() }}
 		/** @since 3.0.0 */
