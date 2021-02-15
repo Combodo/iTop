@@ -86,19 +86,18 @@ class Extension
 			})
 		);
 
-		// Filter to sanitize an XML / HTML identifier
-		// Usage in twig: {{ 'identifier:to-sanitize'|sanitize_identifier }}
-		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize_identifier', function ($sString) {
-				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+		/**
+		 * Filter to sanitize a text
+		 * Usage in twig: {{ 'variable_name:to-sanitize'|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }}
+		 *
+		 * @uses \utils::Sanitize()
+		 * @since 3.0.0
+		 */
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize', function (string $sString, string $sFilter) {
+				return utils::Sanitize($sString, '', $sFilter);
 			})
 		);
 
-		// Filter to sanitize a variable name
-		// Usage in twig: {{ 'variable_name:to-sanitize'|sanitize_variable_name }}
-		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize_variable_name', function ($sString) {
-				return utils::Sanitize($sString, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
-			})
-		);
 		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
 		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
 		//
@@ -106,9 +105,7 @@ class Extension
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
 			if (strpos($sUrl, '?') === false) {
 				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
+			} else {
 				$sUrl = $sUrl."&t=".utils::GetCacheBusterTimestamp();
 			}
 
