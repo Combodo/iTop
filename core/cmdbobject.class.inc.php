@@ -175,10 +175,16 @@ abstract class CMDBObject extends DBObject
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
 	 * @param string $sInfo
+	 *
+	 * @since 2.7.4 3.0.0 N°3717 if a current change is set then overrides its value
 	 */
 	public static function SetTrackInfo($sInfo)
 	{
 		self::$m_sInfo = $sInfo;
+
+		if (!is_null(static::$m_oCurrChange)) {
+			static::$m_oCurrChange->Set('userinfo', $sInfo);
+		}
 	}
 
 	/**
@@ -189,10 +195,16 @@ abstract class CMDBObject extends DBObject
 	 *
 	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source,
 	 *     email-processing, custom-extension
+	 *
+	 * @since 2.7.4 3.0.0 N°3717 if a current change is set then overrides its value
 	 */
 	public static function SetTrackOrigin($sOrigin)
 	{
 		self::$m_sOrigin = $sOrigin;
+
+		if (!is_null(static::$m_oCurrChange)) {
+			static::$m_oCurrChange->Set('origin', $sOrigin);
+		}
 	}
 
 	/**
