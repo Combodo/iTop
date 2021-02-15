@@ -862,7 +862,7 @@ $(function()
 			}
 			$.post(sUrl, oParams, function(data) {
 				var sDownloadLink = GetAbsoluteUrlAppRoot()+'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id='+data.att_id;
-				var sIcon = GetAbsoluteUrlModulesRoot()+'itop-attachments/icons/pdf.png';
+				var sIcon = GetAbsoluteUrlModulesRoot()+'itop-attachments/icons/icons8-pdf.svg';
 				if (jTab != null)
 				{
 					var re = /^([^(]+)\(([0-9]+)\)(.*)$/;

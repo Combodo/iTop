@@ -363,7 +363,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		if (!array_key_exists('extension', $aPathParts))
 		{
 			// No extension: use the default icon
-			$sIcon = 'document.png';
+			$sIcon = 'icons8-file.svg';
 		}
 		else
 		{
