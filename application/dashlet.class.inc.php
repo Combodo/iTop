@@ -221,10 +221,7 @@ abstract class Dashlet
 			$oDashletContainer->AddCSSClasses($this->aCSSClasses);
 		} else {
 			$oDashletContainer = new DashletContainer();
-
-			foreach ($this->aCSSClasses as $sCSSClass) {
-				$oPage->add_ready_script("$('#dashlet_".$sId."').addClass('$sCSSClass');");
-			}
+			$oDashletContainer->AddCSSClasses($this->aCSSClasses);
 		}
 
 		try {
@@ -2289,6 +2286,7 @@ class DashletBadge extends Dashlet
 		$oFilter = new DBObjectSearch($sClass);
 		$oBlock = new DisplayBlock($oFilter, 'actions');
 		$aExtraParams['context_filter'] = 1;
+		$aExtraParams['withJSRefreshCallBack'] = true;
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oDashletContainer, $oPage, $sBlockId, $aExtraParams);
 

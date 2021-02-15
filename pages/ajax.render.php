@@ -90,12 +90,34 @@ try
 			$oPage->SetContentType('application/json');
 			$aResult = AjaxRenderController::SearchAndRefresh($sFilter);
 			$oPage->add(json_encode($aResult));
-		break;
+			break;
 
 		case 'search':
 			$oPage->SetContentType('application/json');
 			$aResult = AjaxRenderController::Search($sEncoding, $sFilter);
 			$oPage->add(json_encode($aResult));
+			break;
+
+		case 'refreshDashletCount':
+			$oPage->SetContentType('application/json');
+			$aResult = AjaxRenderController::RefreshCount($sFilter);
+			$oPage->add(json_encode($aResult));
+			break;
+
+		case 'refreshDashletList':
+			$oPage->SetContentType('application/json');
+			$aResult = AjaxRenderController::RefreshDashletList($sStyle, $sFilter);
+			$oPage->add(json_encode($aResult));
+			break;
+
+		case 'refreshDashletSummary':
+			$oPage->SetContentType('text/html');
+			$sExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+			$aExtraParams = json_decode($sExtraParams, true);
+			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
+			$oBlock = new displayblock($oFilter, 'summary', false, [], $oSet);
+			$oBlock->RenderContent($oPage, $aExtraParams);
 			break;
 
 		case 'datatable_save_settings':
@@ -143,7 +165,6 @@ try
 			$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
-
 
 		// ui.linkswidget
 		case 'addObjects':
@@ -710,24 +731,62 @@ try
 			break;
 
 		case 'chart':
-			// Workaround for IE8 + IIS + HTTPS
-			// See TRAC #363, fix described here: http://forums.codecharge.com/posts.php?post_id=97771
-			$oPage->add_header("Cache-Control: cache, must-revalidate");
-			$oPage->add_header("Pragma: public");
-			$oPage->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");
+			$iRefresh = utils::ReadParam('refresh', '-1', false, 'int');
+			if ($iRefresh != -1) {
+				$oPage->SetContentType('application/json');
+				$aParams = utils::ReadParam('params', array(), false, 'raw_data');
+				if ($sFilter != '') {
+					$oFilter = DBObjectSearch::FromOQL($sFilter);
+					$oKPI = new ExecutionKPI();
+					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
+					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams);
+					$sChartType = isset($aParams['chart_type']) ? $aParams['chart_type'] : 'pie';
+					switch ($sChartType) {
+						case 'bars':
+							$aResult['type'] = 'bars';
+							//$aResult['JSNames'] = str_replace('"','\'',$oBlock->sJSNames);
+							$aResult['Json'] = str_replace('"', '\'', $oBlock->sJson);
+							$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
+							$aResult['js'] = 'charts['.$iRefresh.'].load({json: '.str_replace('"', '\'', $oBlock->sJson).
+								',keys: { x: \'label\', value:  [\'value\']'.
+								'},onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+							break;
 
-			$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-			if ($sFilter != '') {
-				$oFilter = DBSearch::unserialize($sFilter);
-				$oKPI = new ExecutionKPI();
-				$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
-				$oDisplayBlock->RenderContent($oPage, $aParams);
-				$oKPI->ComputeAndReport('Data fetch and format');
-			}
-			else
-			{
+						case 'pie':
+							$aResult['type'] = 'pie';
+							$aResult['JSColumns'] = str_replace('"', '\'', $oBlock->sJSColumns);
+							$aResult['JSNames'] = str_replace('"', '\'', $oBlock->sJSNames);
+							//$aResult['JSNames'] = json_decode($oBlock->sJSNames);
+							$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
+							$aResult['js'] = 'charts['.$iRefresh.'].load({columns: '.str_replace('"', '\'', $oBlock->sJSColumns).
+								',names: '.str_replace('"', '\'', $oBlock->sJSNames).
+								',onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+							break;
+					}
+					$oKPI->ComputeAndReport('Data fetch and format');
+				} else {
+					$aResult = [];
+				}
 
-				$oPage->add("<chart>\n<chart_type>3d pie</chart_type><!-- empty filter '$sFilter' --></chart>\n.");
+				$oPage->add(json_encode($aResult));
+			} else {
+				// Workaround for IE8 + IIS + HTTPS
+				// See TRAC #363, fix described here: http://forums.codecharge.com/posts.php?post_id=97771
+				$oPage->add_header("Cache-Control: cache, must-revalidate");
+				$oPage->add_header("Pragma: public");
+				$oPage->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");
+
+				$aParams = utils::ReadParam('params', array(), false, 'raw_data');
+				if ($sFilter != '') {
+					$oFilter = DBSearch::unserialize($sFilter);
+					$oKPI = new ExecutionKPI();
+					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
+					$oDisplayBlock->RenderContent($oPage, $aParams);
+					$oKPI->ComputeAndReport('Data fetch and format');
+				} else {
+
+					$oPage->add("<chart>\n<chart_type>3d pie</chart_type><!-- empty filter '$sFilter' --></chart>\n.");
+				}
 			}
 			break;
 
@@ -2666,7 +2725,8 @@ EOF
 			break;
 
 		case 'get_menus_count':
-			$oAjaxRenderController->GetMenusCount($oPage);
+
+		$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
 		default:

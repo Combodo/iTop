@@ -27,5 +27,13 @@ var chart = c3.generate({
 if (typeof(charts) === "undefined")
 {
     charts = [];
+	refreshChart = [];
 }
+var idxChart=charts.length;
 charts.push(chart);
+var refreshChart{{ oUIBlock.sId|variable_name }}='	$.post("{{ oUIBlock.sURLForRefresh|raw }}&refresh='+idxChart+'","", function (data) {'+
+															'charts['+idxChart+'].unload();'+
+															'setTimeout(function () {eval(data.js);},50);'+
+														'});';
+
+refreshChart.push(refreshChart{{ oUIBlock.sId|variable_name }});

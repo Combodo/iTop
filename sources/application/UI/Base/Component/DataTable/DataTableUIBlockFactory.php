@@ -37,7 +37,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIDataTable';
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
-	
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sListId
@@ -265,6 +265,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
+		}
+
+		if (sizeof($oCustomSettings->aColumns) == 0)
+		{
+			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
+			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
 		// Load only the requested columns
@@ -746,24 +752,28 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $aOptions;
 	}
 
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null)
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [],
+		string $sFilter = "")
 	{
 		$oBlock = new UIContentBlock();
 		$oTitle = TitleUIBlockFactory::MakeNeutral($sTitle, 3);
 		$oBlock->AddSubBlock($oTitle);
-		$oTable = new StaticTable($sId);
+		$oTable = new StaticTable($sId, [], $aExtraParams);
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);
+		$oTable->SetFilter($sFilter);
+
 		$oBlock->AddSubBlock($oTable);
 
 		return $oBlock;
 	}
 
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = []): FormTable
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter= ''): FormTable
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
 		$oTable->SetColumns($aColumns);
+		$oTable->SetFilter($sFilter);
 
 		foreach ($aData as $iRowId => $aRow) {
 			$oRow = new FormTableRow($sRef, $aColumns, $aRow, $iRowId);

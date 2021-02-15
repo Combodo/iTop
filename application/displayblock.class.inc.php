@@ -27,6 +27,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxPie\BlockChartAjaxPie;
@@ -104,19 +105,33 @@ class DisplayBlock
 	{
 		$aAllowedParams = [
 			'actions' => [
-				'context_filter',	/** int if != 0 filter with user context */
+				'context_filter',
+				/** int if != 0 filter with user context */
+				'display_limit',
+				/** for dashlet*/
 			],
 			'chart' => [
-				'chart_type',       /** string 'pie' or 'bars'  */
-				'group_by',         /** string group by att code */
-				'group_by_expr',    /** string group by expression */
-				'group_by_label',   /** string aggregation column name */
-				'aggregation_function',     /** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
-				'aggregation_attribute',    /** string att code used for aggregation */
-				'limit',            /** int limit the chart results */
-				'order_by',         /** string either 'attribute' group_by attcode or 'function' aggregation_function value */
-				'order_direction',  /** string order direction 'asc' or 'desc' */
-				'chart_title',      /** string title */
+				'chart_type',
+				/** string 'pie' or 'bars'  */
+				'group_by',
+				/** string group by att code */
+				'group_by_expr',
+				/** string group by expression */
+				'group_by_label',
+				/** string aggregation column name */
+				'aggregation_function',
+				/** string aggregation function ('count', 'sum', 'avg', 'min', 'max', ...) */
+				'aggregation_attribute',
+				/** string att code used for aggregation */
+				'limit',
+				/** int limit the chart results */
+				'order_by',
+				/** string either 'attribute' group_by attcode or 'function' aggregation_function value */
+				'order_direction',
+				/** string order direction 'asc' or 'desc' */
+				'chart_title',
+				/** string title */
+				'display_limit',
 			],
 			'chart_ajax' => [
 				'chart_type',       /** string 'pie' or 'bars'  */
@@ -143,6 +158,7 @@ class DisplayBlock
 				/** string either 'attribute' group_by attcode or 'function' aggregation_function value */
 				'order_direction',
 				/** string order direction 'asc' or 'desc' */
+				'display_limit',
 			],
 			'csv' => [],
 			'join' => array_merge([
@@ -161,6 +177,8 @@ class DisplayBlock
 				/** string html link target */
 				'toolkit_menu',
 				/** bool add toolkit menu */
+				'selectionMode',
+				/**positive or negative*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -214,22 +232,37 @@ class DisplayBlock
 				/** string label */
 				'context_filter',
 				/** int if != 0 filter with user context */
+				'org_id',
 			],
 		];
 
 		$aAllowedGeneralParams = [
-			'show_obsolete_data',   /** bool display obsolete data */
-			'currentId',            /** string current block id overridden by $sId argument */
-			'query_params',   	    /** array query parameters */
-			'this->id',             /** int Id of the current object */
-			'this->class',          /** string class of the current object */
-			'order_by',             /** string comma separated list of attCodes */
-			'auto_reload',          /** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
-			'c[menu]',              /** string current navigation menu */
-			'c[org_id]',            /** int current filtered organization */
-			'c[menu',               /** string workaround due to extraparams in menunode */
-			'c[org_id',             /** int workaround due to extraparams in menunode */
-			'dashboard_div_id',     /** string dashboard html div id */
+			'show_obsolete_data',
+			/** bool display obsolete data */
+			'currentId',
+			/** string current block id overridden by $sId argument */
+			'query_params',
+			/** array query parameters */
+			'this->id',
+			/** int Id of the current object */
+			'this->class',
+			/** string class of the current object */
+			'order_by',
+			/** string comma separated list of attCodes */
+			'auto_reload',
+			/** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
+			'c[menu]',
+			/** string current navigation menu */
+			'c[org_id]',
+			/** int current filtered organization */
+			'c[menu',
+			/** string workaround due to extraparams in menunode */
+			'c[org_id',
+			/** int workaround due to extraparams in menunode */
+			'dashboard_div_id',
+			/** string dashboard html div id */
+			'withJSRefreshCallBack',
+			/**param true if block is in a dashboard*/
 		];
 
 		if (isset($aAllowedParams[$sStyle])) {
@@ -381,6 +414,7 @@ class DisplayBlock
 				$oFilter = DBSearch::FromOQL($sITopData);
 				break;
 		}
+
 		return new $sBlockClass($oFilter, $sBlockType, $bAsynchronous, $aParams);
 	}
 
@@ -396,11 +430,17 @@ class DisplayBlock
 
 	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): UIContentBlock
 	{
-		$oHtml = new UIContentBlock($sId);
+		if (isset($aExtraParams['withJSRefreshCallBack'])) {
+			$oHtml = new UIContentBlockWithJSRefreshCallback($sId);
+		} else {
+			$oHtml = new UIContentBlock($sId);
+		}
+
 		$oHtml->AddCSSClass("display_block");
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		$aExtraParams['currentId'] = $sId;
-		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+		$sExtraParams = addslashes(str_replace('"', "'",
+			json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
@@ -977,7 +1017,7 @@ JS
 			}
 		}
 
-		$oBlock = new UIContentBlock(null, ["ibo-dashlet-header-dynamic--container"]);
+		$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
 		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
 			$aCount = $aCounts[$sStateValue];
 			$oBadge = BadgeFactory::MakeForState($sClass, $sStateValue);
@@ -988,7 +1028,17 @@ JS
 			$oBadge->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-badge-is-{$sColor}\">$sStateLabel</span>");
 			$oBlock->AddSubBlock($oBadge);
 		}
-
+		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
+		$aRefreshParams = ['filter' => $this->m_oFilter->ToOQL(), "extra_params" => json_encode($aExtraParams)];
+		$oBlock->SetJSRefresh(
+			"$('#".$oBlock->GetId()."').block();
+				$.post('ajax.render.php?operation=refreshDashletSummary',
+				   ".json_encode($aRefreshParams).",
+				   function(data){
+					 $('#".$oBlock->GetId()."').html(data);
+					 $('#".$oBlock->GetId()."').unblock();
+					});
+				$('#".$oBlock->GetId()."').unblock();");
 
 		return $oBlock;
 	}
@@ -1042,12 +1092,19 @@ JS
 		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 		$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
 
+		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
+		$aRefreshParams = [
+			"filter" => $this->m_oFilter->ToOQL(),
+			"extra_params" => $aExtraParams,
+		];
+
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
 			$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&'.$oAppContext->GetForLink();
 			$sCreateActionLabel = Dict::Format('UI:Button:Create');
-			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel);
+			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl,
+				$sCreateActionLabel, $aRefreshParams);
 		} else {
-			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel);
+			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, null, null, $aRefreshParams);
 		}
 
 		return $oBlock;
@@ -1113,7 +1170,8 @@ JS
 			);
 			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
-			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData);
+			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams,
+				$this->m_oFilter->ToOQL());
 
 		} else {
 			// Simply count the number of elements in the set
@@ -1124,6 +1182,7 @@ JS
 			}
 			$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
 		}
+
 		return $oBlock;
 }
 
@@ -1180,6 +1239,9 @@ JS
 		$oBlock->sDefault = '';
 		$oBlock->sEventAttachedData = '';
 		$oBlock->sAbsoluteUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+		$oBlock->aExtraParams = $aExtraParams;
+		$oBlock->sFilter = $this->m_oFilter->ToOQL();
+
 
 		if (count($aClasses) > 1) {
 			// Check the classes that can be read (i.e authorized) by this user...
@@ -1470,7 +1532,11 @@ JS
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
 				$iTotalCount += $aRow['_itop_count_'];
-				$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int)$aRow[$sFctVar]);
+				$aValues[] = array(
+					'label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'),
+					'label_html' => $sHtmlValue,
+					'value' => (int)$aRow[$sFctVar],
+				);
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
@@ -1479,6 +1545,11 @@ JS
 				$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".rawurlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
 			}
 			$sJSURLs = json_encode($aURLs);
+		}
+		if (isset($aExtraParams['group_by_label'])) {
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$aExtraParams[group_by]&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$aExtraParams[currentId]&params[order_direction]=$aExtraParams[order_direction]&params[order_by]=$aExtraParams[order_by]&params[limit]=$aExtraParams[limit]&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId&filter=".rawurlencode($this->m_oFilter->ToOQL()).'&'.$sContextParam;
+		} else {
+			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$aExtraParams[group_by]&params[chart_type]=$sChartType&params[currentId]=$aExtraParams[currentId]&params[order_direction]=$aExtraParams[order_direction]&params[order_by]=$aExtraParams[order_by]&params[limit]=$aExtraParams[limit]&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId&filter=".rawurlencode($this->m_oFilter->ToOQL()).'&'.$sContextParam;
 		}
 
 		switch ($sChartType) {
@@ -1492,6 +1563,7 @@ JS
 				$oBlock->sJson = json_encode($aValues);
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
+				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
 				break;
 
 			case 'pie':
@@ -1506,6 +1578,7 @@ JS
 				$oBlock->sJSNames = json_encode($aNames);
 				$oBlock->sId = $sId;
 				$oBlock->sJSURLs = $sJSURLs;
+				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
 				break;
 		}
 		return $oBlock;

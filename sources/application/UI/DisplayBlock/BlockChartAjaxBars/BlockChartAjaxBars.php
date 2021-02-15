@@ -28,4 +28,7 @@ class BlockChartAjaxBars extends UIBlock
 	public $sId;
 	/** @var string */
 	public $sJSURLs;
+
+	public $sURLForRefresh;
+
 }

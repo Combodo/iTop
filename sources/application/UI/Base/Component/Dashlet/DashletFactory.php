@@ -10,9 +10,9 @@ namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 
 class DashletFactory
 {
-	public static function MakeForDashletBadge(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, string $sCreateActionUrl = '', string $sCreateActionLabel = '')
+	public static function MakeForDashletBadge(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, string $sCreateActionUrl = '', string $sCreateActionLabel = '', array $aRefreshParams = [])
 	{
-		return new DashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel);
+		return new DashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel, $aRefreshParams);
 	}
 
 	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl)

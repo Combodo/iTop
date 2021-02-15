@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\DisplayBlock\BlockChart;
 
 
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
@@ -16,6 +17,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  */
 class BlockChart extends UIBlock
 {
+	use tJSRefreshCallback;
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-blockchart';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'application/display-block/block-chart/layout';
@@ -27,4 +29,19 @@ class BlockChart extends UIBlock
 	public $sChartId;
 	/** @var string */
 	public $sUrl;
+
+	public function GetJSRefresh():string{
+		return " 
+			if (typeof(nbChar) === \"undefined\") {
+			    var nbChar = 0;
+			}
+			else {
+				nbChar++;
+			}
+			{ 
+				let nb = nbChar;
+				eval(refreshChart[nb]);
+			}";
+	}
+
 }

@@ -7,10 +7,12 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\Dashboard;
 
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 class DashboardRow extends UIBlock
 {
+	use tJSRefreshCallback;
 	public const BLOCK_CODE = 'ibo-dashboard-row';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashboard/row/layout';
 

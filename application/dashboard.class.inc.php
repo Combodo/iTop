@@ -945,8 +945,11 @@ class RuntimeDashboard extends Dashboard
 				$oAppContext = new ApplicationContext();
 				$sContext=$oAppContext->GetForPostParams();
 				//$sContext is named "c"  because it use the existing code for context parameters c[org_id] and c[menu]
+
+
+
 				$oPage->add_script(
-<<<EOF
+<<<JS
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
 					clearInterval(AutoReloadDashboardId$sDivId);
@@ -960,17 +963,10 @@ class RuntimeDashboard extends Dashboard
 					// Do not reload when a dialog box is active
 					if (!($('.ui-dialog:visible').length > 0) && $('.ibo-dashboard#$sDivId').is(':visible'))
 					{
-						$('.ibo-dashboard#$sDivId').block();
-						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, c: $sContext, reload_url: '$sReloadURL'},
-						   function(data){
-							 $('.ibo-dashboard#$sDivId').html(data);
-							 $('.ibo-dashboard#$sDivId').unblock();
-							}
-						 );
+						updateDashboard$sDivId();
 					}
 				}
-EOF
+JS
 				);
 			}
 			else

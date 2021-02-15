@@ -122,6 +122,9 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$iCellIdx = 0;
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
 
+		//Js given by each dashlet to reload
+		$sJSReload = "";
+
 		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
 			$oDashboardRow = new DashboardRow();
 			$oDashboardLayout->AddDashboardRow($oDashboardRow);
@@ -148,7 +151,10 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				}
 				$iCellIdx++;
 			}
+			$sJSReload .= $oDashboardRow->GetJSRefresh()."\n";
 		}
+
+		$oPage->add_script("function updateDashboard".$aExtraParams['dashboard_div_id']."(){".$sJSReload."}");
 
 		if ($bEditMode) // Add one row for extensibility
 		{

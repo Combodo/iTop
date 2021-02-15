@@ -345,12 +345,18 @@ class Panel extends UIContentBlock
 	 *
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks(): array {
+	public function GetSubBlocks(): array
+	{
 		$aSubBlocks = [];
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$aSubBlocks = array_merge($aSubBlocks, $oContentArea->GetSubBlocks());
 		}
 
 		return $aSubBlocks;
+	}
+
+	public function GetJSRefresh(): string
+	{
+		return "";
 	}
 }

@@ -275,4 +275,9 @@ class Alert extends UIContentBlock
 	{
 		return $this->sSectionStateStorageKey;
 	}
+
+	public function GetJSRefresh(): string
+	{
+		return "";
+	}
 }

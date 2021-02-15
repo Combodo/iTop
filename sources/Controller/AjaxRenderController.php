@@ -7,8 +7,10 @@
 namespace Combodo\iTop\Controller;
 
 use AjaxPage;
+use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
+use BinaryExpression;
 use BulkExport;
 use BulkExportException;
 use CMDBObjectSet;
@@ -23,8 +25,10 @@ use DBSearch;
 use Dict;
 use Exception;
 use ExecutionKPI;
+use Expression;
 use InlineImage;
 use MetaModel;
+use ScalarExpression;
 use utils;
 
 class AjaxRenderController
@@ -345,7 +349,7 @@ class AjaxRenderController
 
 		if ($bSaveAsDefaults) {
 			if ($sTableId != null) {
-				$oCurrSettings = DataTableSettings::GetTableSettings($aClassAliases, $sTableId, true /* bOnlyTable */);
+				$oCurrSettings = unserialize(DataTableSettings::GetTableSettings($aClassAliases, $sTableId, true /* bOnlyTable */));
 				if ($oCurrSettings) {
 					$oCurrSettings->ResetToDefault(false); // Reset this table to the defaults
 				}

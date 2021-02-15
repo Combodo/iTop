@@ -30,6 +30,8 @@ class DashletBadge extends DashletContainer
 	protected $sCreateActionUrl;
 	/** @var string */
 	protected $sCreateActionLabel;
+	/** @var array */
+	protected $aRefreshParams;
 
 	/**
 	 * DashletBadge constructor.
@@ -41,7 +43,7 @@ class DashletBadge extends DashletContainer
 	 * @param string $sCreateActionUrl
 	 * @param string $sCreateActionLabel
 	 */
-	public function __construct(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, string $sCreateActionUrl = '', string $sCreateActionLabel = '')
+	public function __construct(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, string $sCreateActionUrl = '', string $sCreateActionLabel = '', array $aRefreshParams)
 	{
 		parent::__construct();
 
@@ -51,6 +53,7 @@ class DashletBadge extends DashletContainer
 		$this->sClassLabel = $sClassLabel;
 		$this->sCreateActionUrl = $sCreateActionUrl;
 		$this->sCreateActionLabel = $sCreateActionLabel;
+		$this->aRefreshParams = $aRefreshParams;
 	}
 
 
@@ -165,8 +168,21 @@ class DashletBadge extends DashletContainer
 	public function SetClassLabel(string $sClassLabel): DashletBadge
 	{
 		$this->sClassLabel = $sClassLabel;
+
 		return $this;
 	}
 
+	public function GetJSRefresh(): string
+	{
+		return "$('#".$this->sId."').block();
+				$.post('ajax.render.php?operation=refreshDashletCount&style=count',
+				   ".json_encode($this->aRefreshParams).",
+				   function(data){
+					 $('#".$this->sId."').find('.ibo-dashlet-badge--action-list-count').html(data.count);
+					 $('#".$this->sId."').unblock();
+					});
+					
+				$('#".$this->sId."').unblock();";
+	}
 
 }

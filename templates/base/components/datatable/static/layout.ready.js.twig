@@ -39,9 +39,10 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
-        {% for column in oUIBlock.GetColumns() %}
+        {% for key, column in oUIBlock.GetColumns() %}
         {
-            width: "auto",
+            data: "{{ key }}",
+        	width: "auto",
             sortable: true
         },
         {% endfor %}

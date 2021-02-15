@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\UI\DisplayBlock\BlockList;
 
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 
 /**
  * Class BlockList
@@ -16,6 +17,8 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
  */
 class BlockList extends UIContentBlock
 {
+	use tJSRefreshCallback;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-blocklist';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
@@ -39,4 +42,21 @@ class BlockList extends UIContentBlock
 	public $sDefault = '';
 	/** @var string */
 	public $sEventAttachedData = '';
+	/** @var array */
+	public $aExtraParams;
+	/** @var string */
+	public $sFilter;
+
+	public function GetJSRefresh(): string
+	{
+		return '$("#'.$this->sId.'").block();
+			$.post("ajax.render.php?style=list",
+			{ operation: "refreshDashletList", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
+			function(data){
+				$("#'.$this->sId.'")
+				.empty()
+				.append(data)
+				.unblock();
+			});';
+	}
 }

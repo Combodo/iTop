@@ -3,6 +3,8 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable;
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
+use utils;
 
 /**
  * @copyright   Copyright (C) 2010-2020 Combodo SARL
@@ -15,6 +17,8 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
  */
 class StaticTable extends UIContentBlock
 {
+	use tJSRefreshCallback;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
@@ -51,12 +55,16 @@ class StaticTable extends UIContentBlock
 	 * ]
 	 */
 	private $aData;
+	private $aExtraParams;
+	/*@var string $sUrlForRefresh*/
+	private $sFilter;
 
-	public function __construct(string $sId = null, array $aContainerCSSClasses = [])
+	public function __construct(string $sId = null, array $aContainerCSSClasses = [], array $aExtraParams = [])
 	{
 		parent::__construct($sId, $aContainerCSSClasses);
 		$this->aColumns = [];
 		$this->aData = [];
+		$this->aExtraParams = $aExtraParams;
 	}
 
 	/**
@@ -91,4 +99,27 @@ class StaticTable extends UIContentBlock
 		$this->aData = $aData;
 	}
 
+	/**
+	 * @param string $sUrlForRefresh
+	 */
+	public function SetFilter($sFilter): void
+	{
+		$this->sFilter = $sFilter;
+	}
+
+	public function GetJSRefresh(): string
+	{
+		//$('#".$this->sId."').DataTable().clear().rows.add(data).draw()
+		$aParams = [
+			'style' => 'list',
+			'filter' => $this->sFilter,
+			'extra_params' => $this->aExtraParams,
+		];
+
+		return "$.post('".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=refreshDashletList', ".json_encode($aParams).", 
+					function (data) {
+						$('#".$this->sId."').DataTable().clear();
+	                    $('#".$this->sId."').dataTable().fnAddData(data);
+					});";
+	}
 }
