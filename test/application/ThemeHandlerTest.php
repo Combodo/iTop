@@ -20,9 +20,6 @@ class ThemeHandlerTest extends ItopTestCase
 
 	public function setUp()
 	{
-		@include_once '/home/combodo/workspace/iTop/approot.inc.php';
-
-
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -179,7 +176,7 @@ class ThemeHandlerTest extends ItopTestCase
 						{
 							$sStylesheetId = $oStylesheet->getAttribute('id');
 							$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
-							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
+							ThemeHandler::FindStylesheetFile($oStylesheet->GetText(), $aImportsPaths, $oFindStylesheetObject);
 						}
 
 						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetStylesheetFileURIs(), $sThemeId);
@@ -611,12 +608,19 @@ SCSS;
 	 */
 	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
 		$aImportsPath = $this->sTmpDir.'/branding/';
+		$aExpectedAllImports =[];
+		if (count($aAllImports)!==0){
+			foreach ($aAllImports as $sFileURI){
+				$aExpectedAllImports [$sFileURI] = $aImportsPath.$sFileURI;
+			}
+		}
+
 
 		$oFindStylesheetObject = new FindStylesheetObject();
 		ThemeHandler::FindStylesheetFile($sFileToFind, [$aImportsPath], $oFindStylesheetObject);
 
 		$this->assertEquals([$sFileToFind], $oFindStylesheetObject->GetStylesheetFileURIs());
-		$this->assertEquals($aAllImports, str_replace($aImportsPath, "", $oFindStylesheetObject->GetImports()));
+		$this->assertEquals($aExpectedAllImports, $oFindStylesheetObject->GetImportPaths());
 		$this->assertEquals($aImportsPath.$sFileToFind, $oFindStylesheetObject->GetLastStyleSheetPath());
 
 		$aExpectedAllStylesheetPaths = [];

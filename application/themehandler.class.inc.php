@@ -322,10 +322,10 @@ CSS;
 			}
 		}
 
-		$aFiles = $oFindStylesheetObject->GetImports();
+		$aFiles = $oFindStylesheetObject->GetImportPaths();
 		if (count($aFiles) !== 0) {
-			foreach ($aFiles as $sFile) {
-				$aSignature['imports'][$sFile] = md5_file($sFile);
+			foreach ($aFiles as $sFileURI => $sFilePath) {
+				$aSignature['imports'][$sFileURI] = md5_file($sFilePath);
 			}
 		}
 
@@ -736,18 +736,18 @@ CSS;
 	}
 
 	/**
-	 * @since 3.0.0 N°2982
-	 * Find the given file in the list '$aImportsPaths' of directory and all included stylesheets as well
-	 * Compute latest timestamp found among all found stylesheets
-	 *
-	 * @param string $sFile
+	 * @param string $sFileURI
 	 * @param string[] $aImportsPaths
 	 * @param FindStylesheetObject $oFindStylesheetObject
 	 * @param bool $bImports
 	 *
 	 * @throws \Exception
+	 *@since 3.0.0 N°2982
+	 * Find the given file in the list '$aImportsPaths' of directory and all included stylesheets as well
+	 * Compute latest timestamp found among all found stylesheets
+	 *
 	 */
-	public static function FindStylesheetFile(string $sFile, array $aImportsPaths, $oFindStylesheetObject, $bImports = false)
+	public static function FindStylesheetFile(string $sFileURI, array $aImportsPaths, $oFindStylesheetObject, $bImports = false)
 	{
 		if (! $bImports) {
 			$oFindStylesheetObject->ResetLastStyleSheet();
@@ -755,7 +755,7 @@ CSS;
 
 		foreach($aImportsPaths as $sPath)
 		{
-			$sFilePath = $sPath.'/'.$sFile;
+			$sFilePath = $sPath.'/'.$sFileURI;
 			$sImportedFile = realpath($sFilePath);
 			if ($sImportedFile === false){
 				// Handle shortcut syntax : @import "typo" ;
@@ -763,7 +763,7 @@ CSS;
 				$sFilePath2 = "$sFilePath.scss";
 				$sImportedFile = realpath($sFilePath2);
 				if ($sImportedFile){
-					self::FindStylesheetFile("$sFile.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
+					self::FindStylesheetFile("$sFileURI.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
 					$sImportedFile = false;
 				}
 			}
@@ -773,22 +773,22 @@ CSS;
 				// file matched: _typo.scss
 				$sShortCut = substr($sFilePath, strrpos($sFilePath, '/') + 1);
 				$sFilePath = str_replace($sShortCut, "_$sShortCut.scss", $sFilePath);
-				$sFile = str_replace($sShortCut, "_$sShortCut.scss", $sFile);
+				$sFileURI = str_replace($sShortCut, "_$sShortCut.scss", $sFileURI);
 				$sImportedFile = realpath($sFilePath);
 			}
 
 			if ((file_exists($sImportedFile))
-				&& (!$oFindStylesheetObject->AlreadyFetched($sFile)))
+				&& (!$oFindStylesheetObject->AlreadyFetched($sImportedFile)))
 			{
 				if ($bImports){
-					$oFindStylesheetObject->AddImport($sFile, $sImportedFile);
+					$oFindStylesheetObject->AddImport($sFileURI, $sImportedFile);
 				}else{
-					$oFindStylesheetObject->AddStylesheet($sFile, $sImportedFile);
+					$oFindStylesheetObject->AddStylesheet($sFileURI, $sImportedFile);
 				}
 				$oFindStylesheetObject->UpdateLastModified($sImportedFile);
 
 				//Regexp matching on all included scss files : @import 'XXX.scss';
-				$sDirUri = dirname($sFile);
+				$sDirUri = dirname($sFileURI);
 				preg_match_all('/@import \s*[\"\']([^\"\']*)\s*[\"\']\s*;/', file_get_contents($sImportedFile), $aMatches);
 				if ( (is_array($aMatches)) && (count($aMatches)!==0) ){
 					foreach ($aMatches[1] as $sImportedFile){
@@ -831,123 +831,5 @@ CSS;
 		$aThemeParametersVariable['$version'] = $bSetupCompilationTimestamp;
 		return $aThemeParametersVariable;
 	}
-}
-
-/**
- * @since 3.0.0 N°2982
- * Class FindStylesheetObject: dedicated class to store computations made in method FindStylesheetFile.
- */
-class FindStylesheetObject{
-
-	//file URIs
-	private $aStylesheetImportURIs;
-	private $aStylesheetFileURIs;
-
-	//fill paths
-	private $aAllStylesheetFilePaths;
-	private $sLastStyleSheetPath;
-
-	private $iLastModified;
-
-	/**
-	 * FindStylesheetObject constructor.
-	 */
-	public function __construct()
-	{
-		$this->aStylesheetFileURIs = [];
-		$this->aStylesheetImportURIs = [];
-		$this->sLastStyleSheetPath = "";
-		$this->iLastModified = 0;
-	}
-
-	public function GetLastStylesheetFile(): string
-	{
-		return $this->sLastStyleSheetPath;
-	}
-
-	public function GetImports(): array
-	{
-		return $this->aStylesheetImportURIs;
-	}
-
-	/**
-	 * @return array : main stylesheets URIs
-	 */
-	public function GetStylesheetFileURIs(): array
-	{
-		return $this->aStylesheetFileURIs;
-	}
-
-	public function GetLastModified() : int
-	{
-		return $this->iLastModified;
-	}
-
-	/**
-	 * @return array : included files URIs
-	 */
-	public function GetStylesheetImportURIs(): array
-	{
-		return $this->aStylesheetImportURIs;
-	}
-
-	/**
-	 * @return array : main stylesheets paths + included files paths
-	 */
-	public function GetAllStylesheetPaths(): array
-	{
-		return $this->aAllStylesheetFilePaths;
-	}
-
-	/**
-	 * @return string : last found stylesheet URI
-	 */
-	public function GetLastStyleSheetPath(): string
-	{
-		return $this->sLastStyleSheetPath;
-	}
-
-	public function AddStylesheet(string $sStylesheetFile, string $sStylesheetFilePath): void
-	{
-		$this->aStylesheetFileURIs[] = $sStylesheetFile;
-		$this->aAllStylesheetFilePaths[] = $sStylesheetFilePath;
-		$this->sLastStyleSheetPath = $sStylesheetFilePath;
-	}
-
-	public function AlreadyFetched(string $sStylesheetFile) : bool {
-		return in_array($sStylesheetFile, $this->aStylesheetFileURIs)
-			|| in_array($sStylesheetFile, $this->aStylesheetImportURIs);
-	}
-
-	public function AddImport(string $sStylesheetFile, string $sStylesheetFilePath): void
-	{
-		$this->aStylesheetImportURIs[] = $sStylesheetFile;
-		$this->aAllStylesheetFilePaths[] = $sStylesheetFilePath;
-	}
-
-	public function UpdateLastModified(string $sStylesheetFile): void
-	{
-		$this->iLastModified = max($this->iLastModified, @filemtime($sStylesheetFile));
-	}
-
-	public function ResetLastStyleSheet(): void
-	{
-		$this->sLastStyleSheetPath = "";
-	}
-}
-
-class CompileCSSService
-{
-	/**
-	 * CompileCSSService constructor.
-	 */
-	public function __construct()
-	{
-	}
-
-	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = []){
-		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
-	}
-
 }
 
