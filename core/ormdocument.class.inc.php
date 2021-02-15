@@ -175,6 +175,9 @@ class ormDocument
 			case 'image/jpg':
 			case 'image/jpeg':
 			case 'image/gif':
+			case 'image/bmp':
+			case 'image/tiff':
+			case 'image/svg+xml':
 			$bRet = true;
 			break;
 		}
