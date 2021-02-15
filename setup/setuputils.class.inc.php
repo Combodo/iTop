@@ -554,6 +554,12 @@ class SetupUtils
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
 		}
 
+		$sEscapedGraphvizPath = \escapeshellarg($sGraphvizPath);
+		if (!is_file($sEscapedGraphvizPath) || ! is_executable($sEscapedGraphvizPath)){
+			//N°3412 avoid shell injection
+			return new CheckResult(CheckResult::WARNING, "$sGraphvizPath could not be executed: Please make sure it is installed and in the path");
+		}
+
 		// availability of dot / dot.exe
 		if (empty($sGraphvizPath))
 		{
