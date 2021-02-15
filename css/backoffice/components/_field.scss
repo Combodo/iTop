@@ -130,3 +130,6 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
     }
   }
 }
+.mailto, .tel{
+  white-space:nowrap;
+}

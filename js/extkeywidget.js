@@ -15,24 +15,29 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-var KEY_BACKSPACE = 8;
-var KEY_RETURN    = 13;
-Selectize.define('custom_itop', function(options) {
+/*
+* Plugin to change the behaviour of enter and backspace buttons
+* if the inputText is null when iti push on enter, the field is put to null
+* when we push on backspace, it clean the input text, in order to autocmplete
+* */
+Selectize.define('custom_itop', function(aOptions) {
+	var KEY_BACKSPACE = 8;
+	var KEY_RETURN    = 13;
 	var self = this;
 
-	options.text = options.text || function(option) {
-		return option[this.settings.labelField];
+	aOptions.text = aOptions.text || function(aOptions) {
+		return aOptions[this.settings.labelField];
 	};
 
 	this.onKeyDown = (function() {
 		var original = self.onKeyDown;
 		return function(e) {
-			var index, option;
+			var iIndex;
 			switch (e.keyCode) {
 				case KEY_BACKSPACE:
 					if (e.keyCode === KEY_BACKSPACE && this.$control_input.val() === '' && !this.$activeItems.length) {
-						index = this.caretPos-1;
-						if (index >= 0 && index < this.items.length) {
+						iIndex = this.caretPos-1;
+						if (iIndex >= 0 && iIndex < this.items.length) {
 							this.clear(true);
 							e.preventDefault();
 							return;
@@ -43,14 +48,12 @@ Selectize.define('custom_itop', function(options) {
 						//case nothing selected ->delete selection
 						if (!self.$activeOption || self.currentResults.query == "") {
 							self.deleteSelection(e);
-							//if(self.getOption("") != "undefined"){
-								self.setValue("");
-							//}
+							self.setValue("");
 							return;
 						}
 					}
 			}
-			return original.apply(this, arguments);
+			return original.apply(this);
 		};
 	})();
 });
@@ -78,6 +81,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		// make sure that the form is clean
 		$('#'+this.id+'_btnRemove').prop('disabled', true);
 		$('#'+this.id+'_linksToRemove').val('');
+
 	}
 	this.AddSelectize = function (options, initValue) {
 		let $select = $('#'+me.id).selectize({
@@ -117,6 +121,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
+		var iPaddingRight = 	$('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
+		 $('#'+this.id).parent().find('.ibo-input-select').css('padding-right',iPaddingRight);
+
 	}
 	this.AddAutocomplete = function(iMinChars, sWizHelperJSON)
 	{
@@ -171,7 +178,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			autoFocus: true,
 			minLength: iMinChars,
 			focus: function (event, ui) {
-				// $('#label_$this->iId').val( ui.item.label );
 				return false;
 			},
 			select: function (event, ui) {
@@ -214,6 +220,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					$('#label_'+me.id).autocomplete("search");
 				}
 			});
+		var iPaddingRight = 	$('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
+		$('#'+this.id).parent().find('.ibo-input-select').css('padding-right',iPaddingRight);
 	};
 
 	this.StopPendingRequest = function () {
@@ -359,8 +367,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		theMap.operation = 'searchObjectsToSelect'; // Override what is defined in the form itself
 		theMap.sAttCode = me.sAttCode,
 
-			sSearchAreaId = '#dr_'+me.id;
-		//$(sSearchAreaId).html('<div style="text-align:center;width:100%;height:24px;vertical-align:middle;"><img src="../images/indicator.gif" /></div>');
+		sSearchAreaId = '#dr_'+me.id;
 		$(sSearchAreaId).block();
 		me.UpdateButtons();
 

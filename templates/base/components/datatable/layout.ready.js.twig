@@ -42,7 +42,7 @@ else
 {
     maxHeight{{ sListId }} = maxHeight{{ sListId }} -50;
 }
-console.warn('#{{ oUIBlock.GetId() }}');
+
 var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
@@ -95,8 +95,6 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     drawCallback: function () {
-        console.warn('la');
-        console.warn($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val());
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
         {
             $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;

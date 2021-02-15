@@ -45,6 +45,7 @@ $ibo-datatable--sorting--opacity: 0.3 !default;
 $ibo-datatable--sorting--right: 1em !default;
 
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
+$ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
 
 .ibo-datatable {
 	padding-bottom: $ibo-datatable--padding-y;
@@ -55,7 +56,6 @@ $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-pane
 		padding-right: $ibo-datatable-cell-row--padding-x;
 		padding-left: $ibo-datatable-cell-row--padding-x;
 		@extend %ibo-font-ral-med-100;
-
 		a {
 			color: $ibo-datatable-cell-row--link--color;
 		}
@@ -177,4 +177,5 @@ $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-pane
 // For cancel / OK / next... selection validation buttons
 .ibo-datatable--selection-validation-buttons-toolbar {
 	clear: both;
+  margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
 }
