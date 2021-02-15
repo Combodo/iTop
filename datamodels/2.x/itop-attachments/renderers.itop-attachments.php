@@ -506,12 +506,14 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 		$sIconClass = '';
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
+		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::MAX_SIZE_FOR_PREVIEW);
+
 		$sPreviewNotAvailable = Dict::S('Attachments:PreviewNotAvailable');
 		$sPreviewMarkup = $sPreviewNotAvailable;
 		if ($oDoc->IsPreviewAvailable())
 		{
 			$sIconClass = ' preview';
-			if ($oDoc->GetSize() <= self::MAX_SIZE_FOR_PREVIEW)
+			if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 			{
 				$sAttachmentThumbUrl = $sDocDownloadUrl;
 			}
