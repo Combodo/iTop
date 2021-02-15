@@ -292,7 +292,6 @@ EOF
 		}
 		$this->AddReadyScript(
 <<<EOF
-		$('.prop_table').tableHover();
 		var idx = 0;
 		$('.prop_table tbody tr').each(function() {
 			if ((idx % 2) == 0)

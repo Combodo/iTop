@@ -379,7 +379,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$(sSearchAreaId).html(data);
-				$(sSearchAreaId+' .listResults').tableHover();
 				$('#fr_'+me.id+' input:radio').click(function () {
 					me.UpdateButtons();
 				});

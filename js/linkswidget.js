@@ -258,10 +258,9 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			function (data) {
 				if (data != '')
 				{
-					$('#'+me.id+'_empty_row').hide();
-					$('#linkedset_'+me.id+' .listResults tbody').prepend(data);
-					$('#linkedset_'+me.id+' .listResults').trigger('update');
-					$('#linkedset_'+me.id+' .listResults').tableHover();
+					$('#datatable_'+me.id+' .dataTables_empty').hide();
+					$('#linkedset_'+me.id+' .listResults tbody').append(data);
+
 					$('#linkedset_'+me.id+' .listResults').trigger('update').trigger("applyWidgets"); // table is already sortable, just refresh it
 					$('#linkedset_'+me.id+' :input').each(function () {
 						$(this).trigger('validate', '');

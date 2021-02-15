@@ -303,7 +303,6 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data) {
 				
 				$('#SearchResultsToAdd_'+me.id).html(data);
-				$('#SearchResultsToAdd_'+me.id+' .listResults').tableHover();
 				$('#count_'+me.id).change(function() {
 					var c = this.value;
 					me._onUpdateDlgButtons(c);

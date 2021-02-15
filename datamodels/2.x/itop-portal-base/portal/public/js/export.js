@@ -76,8 +76,6 @@ function ExportRun(data) {
                 if (data.mime_type == 'text/html') {
                     $('#export-content').parent().html(data.text_result);
                     $('#export-text-result').show();
-                    $('#export-text-result .listResults').tableHover();
-                    $('#export-text-result .listResults').tablesorter({widgets: ['myZebra']});
                 }
                 else {
                     if ($('#export-text-result').closest('ui-dialog').length == 0) {
