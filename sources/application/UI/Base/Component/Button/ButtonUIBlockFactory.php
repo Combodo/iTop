@@ -346,6 +346,26 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 		return $oButton;
 	}
+	
+	/**
+	 * @param string $sIconClasses
+	 * @param string $sTooltipText
+	 * @param string|null $sURL
+	 * @param string|null $sName
+	 * @param string|null $sTarget
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
+	 */
+	public static function MakeDestructiveIconLink(
+		string $sIconClasses, string $sTooltipText, ?string $sURL = null, ?string $sName = null, ?string $sTarget = null,
+		?string $sId = null
+	) {
+		$oButton = static::MakeIconLink($sIconClasses, $sTooltipText, $sURL, $sName, $sTarget, $sId);
+		$oButton->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
+		$oButton->SetTooltip($sTooltipText);
+		return $oButton;
+	}
 
 	//--------
 	// Helpers
