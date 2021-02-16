@@ -465,6 +465,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
+	'UI:Error:InvalidToken' => 'Error: the requested operation have already been performed (CSRF token not found)',
 
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
