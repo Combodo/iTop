@@ -11,5 +11,5 @@ var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_
 });
 
 
-//table{{ oUIBlock.GetId()|sanitize_identifier }}.columns.adjust().draw();
+//table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}.columns.adjust().draw();
 //$(".dataTables_scrollBody thead").hide();
