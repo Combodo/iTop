@@ -162,7 +162,38 @@ abstract class FormManager
 	 *
 	 * @return mixed
 	 */
-	abstract public function OnSubmit($aArgs = null);
+	public function OnSubmit($aArgs = null)
+	{
+		$aData = array(
+			'valid' => true,
+			'messages' => array(
+				'success' => array(),
+				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
+				'error' => array(),
+			),
+		);
+
+		$aData = $this->CheckTransaction($aData);
+
+		return $aData;
+	}
+
+	/**
+	 * @param $aData
+	 *
+	 * @return array
+	 */
+	public function CheckTransaction($aData)
+	{
+		if (! \utils::IsTransactionValid($this->oForm->GetTransactionId())) {
+			$aData['messages']['error'] += [
+				'_main' => [\Dict::S('UI:Error:InvalidToken')] //This message is generic, if you override this method you should use a more precise message. @see \Combodo\iTop\Portal\Form\ObjectFormManager::CheckTransaction
+			];
+			$aData['valid'] = false;
+		}
+
+		return $aData;
+	}
 
 	/**
 	 * @param array|null $aArgs
