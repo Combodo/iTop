@@ -151,7 +151,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				}
 				$iCellIdx++;
 			}
-			$sJSReload .= $oDashboardRow->GetJSRefresh()."\n";
+			$sJSReload .= $oDashboardRow->GetJSRefreshCallback()."\n";
 		}
 
 		$oPage->add_script("function updateDashboard".$aExtraParams['dashboard_div_id']."(){".$sJSReload."}");

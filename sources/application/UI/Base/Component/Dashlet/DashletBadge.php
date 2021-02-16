@@ -8,8 +8,12 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 
 
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
+
 class DashletBadge extends DashletContainer
 {
+	use tJSRefreshCallback;
+
 	public const BLOCK_CODE = 'ibo-dashlet-badge';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-badge';
@@ -73,6 +77,7 @@ class DashletBadge extends DashletContainer
 	public function SetCreateActionUrl(string $sCreateActionUrl): DashletBadge
 	{
 		$this->sCreateActionUrl = $sCreateActionUrl;
+
 		return $this;
 	}
 
@@ -92,6 +97,7 @@ class DashletBadge extends DashletContainer
 	public function SetCreateActionLabel(string $sCreateActionLabel): DashletBadge
 	{
 		$this->sCreateActionLabel = $sCreateActionLabel;
+
 		return $this;
 	}
 
@@ -111,6 +117,7 @@ class DashletBadge extends DashletContainer
 	public function SetClassIconUrl(string $sClassIconUrl): DashletBadge
 	{
 		$this->sClassIconUrl = $sClassIconUrl;
+
 		return $this;
 	}
 
@@ -130,6 +137,7 @@ class DashletBadge extends DashletContainer
 	public function SetHyperlink(string $sHyperlink): DashletBadge
 	{
 		$this->sHyperlink = $sHyperlink;
+
 		return $this;
 	}
 
@@ -149,6 +157,7 @@ class DashletBadge extends DashletContainer
 	public function SetCount(string $iCount): DashletBadge
 	{
 		$this->iCount = $iCount;
+
 		return $this;
 	}
 

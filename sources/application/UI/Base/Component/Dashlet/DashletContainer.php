@@ -9,11 +9,9 @@ namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 
 class DashletContainer extends UIContentBlock
 {
-	use tJSRefreshCallback;
 	public const BLOCK_CODE = 'ibo-dashlet';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/content-block/layout';
 

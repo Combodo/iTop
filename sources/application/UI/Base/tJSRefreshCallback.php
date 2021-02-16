@@ -6,34 +6,61 @@
 
 namespace Combodo\iTop\Application\UI\Base;
 
-use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Dict;
-
 /**
  * Trait tJSRefreshCallback
  *
- * This brings the ability to a UIBlock to have give the JS to use in order to refresh it
+ * This brings the ability to a UIBlock to give the JS to use in order to refresh it
+ * All bricks with JS refresh must use directly this trait in order to be found by the function class_uses in GetRecursiveJSRefresh
  *
- * @package Combodo\iTop\Application\UI\Base
  * @internal
+ * @package Combodo\iTop\Application\UI\Base
  * @since 3.0.0
  */
-trait tJSRefreshCallback {
+trait tJSRefreshCallback
+{
 	/** @var string */
 	protected $sJSRefresh = "";
 
 
 	/**
+	 * Get JS refresh for $this
+	 *
 	 * @return string
 	 */
-	public function GetJSRefresh():string
+	public function GetJSRefresh(): string
 	{
-		$sJSRefresh = $this->sJSRefresh;
-		foreach ($this->GetSubBlocks() as $oSubBlock) {
-			if( $oSubBlock->GetJSRefresh() !="") {
-				$sJSRefresh =$oSubBlock->GetJSRefresh().'\n'.$sJSRefresh;
+		return $this->sJSRefresh;
+	}
+
+	/**
+	 * Get the global JS refresh for all subblocks
+	 *
+	 * @return string
+	 */
+	public function GetJSRefreshCallback(): string
+	{
+		$sJSRefresh = $this->GetJSRefresh();
+		tJSRefreshCallback::GetRecursiveJSRefresh($this, $sJSRefresh);
+
+		return $sJSRefresh;
+	}
+
+	/**
+	 * method only for private use in GetJSRefreshCallback
+	 *
+	 * @param $oBlock
+	 * @param $sJSRefresh
+	 *
+	 * @return string
+	 */
+	public static function GetRecursiveJSRefresh($oBlock, &$sJSRefresh): string
+	{
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$usingTrait = in_array('Combodo\iTop\Application\UI\Base\tJSRefreshCallback', class_uses(get_class($oSubBlock)));
+			if ($usingTrait && $oSubBlock->GetJSRefresh() != "") {
+				$sJSRefresh = $oSubBlock->GetJSRefresh().'\n'.$sJSRefresh;
 			}
+			tJSRefreshCallback::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
 		}
 
 		return $sJSRefresh;

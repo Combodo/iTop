@@ -355,8 +355,4 @@ class Panel extends UIContentBlock
 		return $aSubBlocks;
 	}
 
-	public function GetJSRefresh(): string
-	{
-		return "";
-	}
 }

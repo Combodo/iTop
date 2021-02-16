@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use DataTableConfig;
 
 /**
@@ -18,6 +19,8 @@ use DataTableConfig;
  */
 class DataTable extends UIContentBlock
 {
+	use tJSRefreshCallback;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
@@ -159,8 +162,9 @@ class DataTable extends UIContentBlock
 		$this->aOptions = $aOptions;
 	}
 
-	public function GetJSRefresh():array{
-		return ["$('#".$this->sId."').DataTable().clearPipeline();
-				$('#".$this->sId."').DataTable().ajax.reload(null, false);"];
+	public function GetJSRefresh(): string
+	{
+		return "$('#".$this->sId."').DataTable().clearPipeline();
+				$('#".$this->sId."').DataTable().ajax.reload(null, false);";
 	}
 }

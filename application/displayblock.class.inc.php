@@ -430,11 +430,7 @@ class DisplayBlock
 
 	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): UIContentBlock
 	{
-		if (isset($aExtraParams['withJSRefreshCallBack'])) {
-			$oHtml = new UIContentBlockWithJSRefreshCallback($sId);
-		} else {
-			$oHtml = new UIContentBlock($sId);
-		}
+		$oHtml = new UIContentBlock($sId);
 
 		$oHtml->AddCSSClass("display_block");
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
