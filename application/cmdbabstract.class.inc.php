@@ -268,7 +268,6 @@ EOF
 					if ($aLockInfo['owner']->Get('contactid') != 0) {
 						$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
 					}
-					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
 					$aMessages[] = AlertUIBlockFactory::MakeForDanger('', Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName));
 				}
 			}
@@ -1017,7 +1016,8 @@ HTML
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
 		/** @var ActivityPanel $oActivityPanel */
 		$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
-		if ($oActivityPanel->HasTransactionId()) {
+		// Note: Testing if block exists is necessary as during the 'release_lock_and_details' operation we don't have an activity panel
+		if (!is_null($oActivityPanel) && $oActivityPanel->HasTransactionId()) {
 			$iTransactionId = $oActivityPanel->GetTransactionId();
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
