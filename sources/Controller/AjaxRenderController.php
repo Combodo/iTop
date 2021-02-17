@@ -410,8 +410,6 @@ class AjaxRenderController
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-		// TODO 3.0.0: Remove this line when transaction handled
-		$sTransactionId = 'foo';
 		$aEntries = utils::ReadPostedParam('entries', [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 
 		// Consistency checks
@@ -420,10 +418,13 @@ class AjaxRenderController
 			throw new Exception('Missing mandatory parameters object_class / object_id / transaction_id / entries');
 		}
 		// - Transaction ID
-		// TODO 3.0.0: Uncomment when transaction ID is passed (retrieved from the upcoming lock system)
-//		if (!utils::IsTransactionValid($sTransactionId)) {
-//			throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
-//		}
+		// Note: We keep the transaction ID for several reasons:
+		// - We might send several messages, so renewing it would not make such a difference except making the follwoing line harder
+		// - We need the transaction ID to passed in the JS snippet that allows images to be uploaded (see InlineImage::EnableCKEditorImageUpload()), renewing it would only make things more complicated
+		// => For all those reasons, we let the GC clean the transactions IDs, just like when a transaction ID is not deleted when cancelling a regular object edition.
+		if (!utils::IsTransactionValid($sTransactionId, false)) {
+			throw new Exception(Dict::S('iTopUpdate:Error:InvalidToken'));
+		}
 
 		$aResults = [
 			'success' => true,
@@ -450,10 +451,6 @@ class AjaxRenderController
 
 		// Finalize inline images
 		InlineImage::FinalizeInlineImages($oObject);
-
-		// Renew transaction ID
-		utils::RemoveTransaction($sTransactionId);
-		$aResults['renewed_transaction_id'] = utils::GetNewTransactionId();
 
 		return $aResults;
 	}

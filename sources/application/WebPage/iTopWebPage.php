@@ -586,6 +586,7 @@ JS
 		foreach ($oPrevContentLayout->GetSubBlocks() as $oBlock){
 			$this->AddUiBlock($oBlock);
 		}
+
 		return $this;
 	}
 
@@ -596,10 +597,11 @@ JS
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent
 	 * @since 3.0.0
 	 */
-	protected function GetContentLayout()
+	public function GetContentLayout()
 	{
 		/** @var PageContent $oPageContent */
 		$oPageContent = $this->oContentLayout;
+
 		return $oPageContent;
 	}
 

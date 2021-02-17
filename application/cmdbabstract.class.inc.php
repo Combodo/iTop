@@ -31,6 +31,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
@@ -1011,6 +1012,16 @@ HTML
 </div><!-- End of object-details -->
 HTML
 		);
+
+		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
+		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
+		/** @var ActivityPanel $oActivityPanel */
+		$oActivityPanel = $oPage->GetContentLayout()->GetSubBlock(ActivityPanel::BLOCK_CODE);
+		if ($oActivityPanel->HasTransactionId()) {
+			$iTransactionId = $oActivityPanel->GetTransactionId();
+			$sTempId = utils::GetUploadTempId($iTransactionId);
+			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		}
 	}
 
 	/**

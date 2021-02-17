@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
 use Exception;
 use MetaModel;
+use utils;
 
 /**
  * Class ActivityPanel
@@ -62,6 +63,8 @@ class ActivityPanel extends UIBlock
 	 * @see \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
 	 */
 	protected $sObjectMode;
+	/** @var null|string $sTransactionId Only when $sObjectMode is set to \cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW */
+	protected $sTransactionId;
 	/** @var array $aCaseLogs Metadata of the case logs (att. code, color, ...), will be use to make the tabs and identify them easily */
 	protected $aCaseLogs;
 	/** @var ActivityEntry[] $aEntries */
@@ -94,8 +97,8 @@ class ActivityPanel extends UIBlock
 
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
-		$this->SetObject($oObject);
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
+		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
 		$this->bAreEntriesSorted = false;
 		$this->ComputedShowMultipleEntriesSubmitConfirmation();
@@ -193,6 +196,24 @@ class ActivityPanel extends UIBlock
 	public function GetObjectMode(): string
 	{
 		return $this->sObjectMode;
+	}
+
+	/**
+	 * @return bool
+	 * @uses static::$sTransactionId
+	 */
+	public function HasTransactionId(): bool
+	{
+		return (null !== $this->sTransactionId);
+	}
+
+	/**
+	 * @return string|null
+	 * @uses static::$sTransactionId
+	 */
+	public function GetTransactionId(): ?string
+	{
+		return $this->sTransactionId;
 	}
 
 	/**
@@ -440,6 +461,14 @@ class ActivityPanel extends UIBlock
 					'authors' => [],
 					'is_read_only' => $bIsReadOnly,
 				];
+
+				// Transaction ID is generated only when:
+				// - There is a least 1 *writable* case log
+				// - And object is in view mode (in edit mode, it will be handled by the general form)
+				// Otherwise we generate unnecessary transaction IDs that could saturate the system
+				if ((false === $bIsReadOnly) && (false === $this->HasTransactionId()) && (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode)) {
+					$this->sTransactionId = (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode) ? utils::GetNewTransactionId() : null;
+				}
 			}
 		}
 

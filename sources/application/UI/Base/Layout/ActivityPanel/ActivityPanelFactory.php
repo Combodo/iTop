@@ -62,12 +62,11 @@ class ActivityPanelFactory
 		$sObjClass = get_class($oObject);
 		$iObjId = $oObject->GetKey();
 
-		if($sMode==cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT){
-			$oActivityPanel = new ActivityPanelPrint($oObject);
-			$sMode= cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW;
-		}
-		else{
-			$oActivityPanel = new ActivityPanel($oObject);
+		if ($sMode == cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT) {
+			$oActivityPanel = new ActivityPanelPrint($oObject, [], ActivityPanel::BLOCK_CODE);
+			$sMode = cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW;
+		} else {
+			$oActivityPanel = new ActivityPanel($oObject, [], ActivityPanel::BLOCK_CODE);
 		}
 		$oActivityPanel->SetObjectMode($sMode);
 

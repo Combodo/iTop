@@ -1,4 +1,6 @@
 $('#{{ oUIBlock.GetId() }}').activity_panel({
     datetime_format: {{ oUIBlock.GetDateTimeFormatForJSWidget()|json_encode|raw }},
+    {% if oUIBlock.HasTransactionId() %}transaction_id: {{ oUIBlock.GetTransactionId()|var_export }},{% endif %}
+    lock_watcher_period: {{ get_config_parameter('activity_panel.lock_watcher_period') }},
     show_multiple_entries_submit_confirmation: {{ oUIBlock.GetShowMultipleEntriesSubmitConfirmation()|var_export }}
 });
