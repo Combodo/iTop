@@ -77,11 +77,14 @@ class TabContainer extends UIContentBlock
 	 */
 	public function __construct($sId, $sPrefix)
 	{
-		$sId = null;
-		if (!empty($sId) || !empty($sPrefix)) {
-			$sId = "{$sId}".((!empty($sPrefix)) ? "-{$sPrefix}" : "");
+		// Intention is to pass the $sPrefix as the UIBlock ID even when no $sId is provided (eg. sometimes $sId is "")
+		// But in case everything comes down to an empty string (""), we give a null to the constructor so it can generate a good one to prevent collision
+		$sRealIdSeparator = (!empty($sId) && !empty($sPrefix)) ? '-' : '';
+		$sRealId = $sId.$sRealIdSeparator.$sPrefix;
+		if (empty($sRealId)) {
+			$sRealId = null;
 		}
-		parent::__construct($sId);
+		parent::__construct($sRealId);
 
 		$this->sName = $sId;
 		$this->sPrefix = $sPrefix;
