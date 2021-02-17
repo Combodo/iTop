@@ -184,11 +184,16 @@ abstract class AbstractAttachmentsRenderer
 		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
 		$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
 		$this->oPage->add('<div id="ibo-attachment--upload-file">');
+		$this->oPage->add('<div id="ibo-attachment--upload-file--upload-button-container">');
 		$this->oPage->add(Dict::S('Attachments:AddAttachment'));
 		$oAddButton = FileSelectUIBlockFactory::MakeStandard('file', 'file');
 		$oAddButton->SetShowFilename(false);
 		$this->oPage->AddUiBlock($oAddButton);
 		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('</div>');
+		$this->oPage->add('<div class="ibo-attachment--upload-file--drop-zone-hint ibo-svg-illustration--container">');
+		$this->oPage->add(file_get_contents(utils::GetAbsoluteUrlAppRoot().'images/illustrations/undraw_upload.svg'));
+		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
 		
 
 		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
@@ -281,23 +286,22 @@ abstract class AbstractAttachmentsRenderer
 	
 		if (!bFiles) return; // Not dragging files
 		
-		var dropZone = $('#file').closest('fieldset');
-		if (!dropZone.is(':visible'))
+		window.dropZone = $('#file').closest('.ibo-tab');
+		if (!IsElementVisibleToTheUser(dropZone[0]))
 		{
-			// Hidden, but inside an inactive tab? Higlight the tab
-			var sTabId = dropZone.closest('.ui-tabs-panel').attr('aria-labelledby');
+			// Hidden, but inside an inactive tab? Highlight the tab
+			var sTabId = dropZone.closest('.ibo-tab-container--tab-container').attr('aria-labelledby');
 			dropZone = $('#'+sTabId).closest('li');
 		}
-	    timeout = window.dropZoneTimeout;
-	    if (!timeout) {
-	        dropZone.addClass('drag_in');
-	    } else {
-	        clearTimeout(timeout);
-	    }
-	    window.dropZoneTimeout = setTimeout(function () {
-	        window.dropZoneTimeout = null;
-	        dropZone.removeClass('drag_in');
-	    }, 300);
+
+        window.dropZone.addClass('ibo-drag-in');
+	});
+	
+	$(document).bind('dragleave dragend drop', function(){
+		if(window.dropZone){
+			window.dropZone.removeClass('ibo-drag-in');
+		}
+		window.dropZone = null;
 	});
 	
 	// check if the attachments are used by inline images
@@ -324,14 +328,6 @@ JS
 		);
 		$this->oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
 		$this->oPage->add('</div>');
-
-		$this->oPage->add_style(<<<CSS
-.drag_in {
-	-webkit-box-shadow:inset 0 0 10px 2px #1C94C4;
-	box-shadow:inset 0 0 10px 2px #1C94C4;
-}
-CSS
-		);
 	}
 
 	protected function GetAttachmentContainerId($iAttachmentId)
@@ -354,9 +350,9 @@ CSS
 			null,
 			"btn_remove_".$iAttId);
 		$oButton->AddCSSClass('btn_hidden')
-			->SetOnClickJsCode("RemoveAttachment('.$iAttId.');");
+			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");");
 		
-		return BlockRenderer::RenderBlockTemplates($oButton);
+		return $oButton;
 	}
 
 	protected function GetDeleteAttachmentJs()
@@ -535,13 +531,15 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);
-			$aAttachmentLine['delete'] = $sDeleteButton;
+			
+			$oBlockRenderer = new BlockRenderer($sDeleteButton);
+			$this->oPage->add_ready_script($oBlockRenderer->RenderJsInline($sDeleteButton::ENUM_JS_TYPE_ON_INIT));
+			$aAttachmentLine['delete'] = $oBlockRenderer->RenderHtml();
 		}
 		$this->oPage->add_ready_script(
 			<<<JS
 CombodoGlobalToolbox.InitTooltipFromMarkup($('#$sTrId [data-tooltip-content]'));
 JS
-
 		);
 		return  $aAttachmentLine;
 	}
