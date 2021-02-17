@@ -30,16 +30,16 @@ class SetupUtilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider CheckGravitProvider
+	 * @dataProvider CheckGravizProvider
 	 */
-	public function testCheckGravitz($sScriptPath, $iSeverity, $sLabel){
+	public function testCheckGraviz($sScriptPath, $iSeverity, $sLabel){
 		/** @var \CheckResult $oCheck */
 		$oCheck = SetupUtils::CheckGraphviz($sScriptPath);
 		$this->assertEquals($iSeverity, $oCheck->iSeverity);
 		$this->assertContains($sLabel, $oCheck->sLabel);
 	}
 
-	public function CheckGravitProvider(){
+	public function CheckGravizProvider(){
 		if (substr(PHP_OS,0,3) === 'WIN'){
 			return [];
 		}
