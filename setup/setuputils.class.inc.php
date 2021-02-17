@@ -566,7 +566,7 @@ class SetupUtils
 					"$sGraphvizPath could not be executed: Please make sure it is installed and in the path");
 			}
 
-			if (!utils::IsWindows()){
+			if (!utils::IsWindowsEnvironment()){
 				$sGraphvizPath = escapeshellcmd($sGraphvizPath);
 			}
 		}

@@ -2342,7 +2342,7 @@ class utils
 	 * @return bool : indicate whether we run under a windows environnement or not
 	 * @since 2.7.4 : N°3412
 	 */
-	public static function IsWindows(){
+	public static function IsWindowsEnvironment(){
 		return (substr(PHP_OS,0,3) === 'WIN');
 	}
 }
