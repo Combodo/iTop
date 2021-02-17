@@ -70,9 +70,9 @@ class AttachmentsRendererFactory
 abstract class AbstractAttachmentsRenderer
 {
 	/**
-	 * If size (in bits) is above this, then we will display a file icon instead of preview
+	 * If size (in bits) is above this, then we will display a file icon instead of preview. Overloaded by 'icon_preview_max_size' conf param
 	 */
-	const MAX_SIZE_FOR_PREVIEW = 500000;
+	const DEFAULT_MAX_SIZE_FOR_PREVIEW = 500000;
 
 	/**
 	 * Attachments list container HTML id, that must be generated in {@link RenderEditAttachmentsList}
@@ -506,7 +506,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 		$sIconClass = '';
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
-		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::MAX_SIZE_FOR_PREVIEW);
+		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::DEFAULT_MAX_SIZE_FOR_PREVIEW);
 
 		$sPreviewNotAvailable = Dict::S('Attachments:PreviewNotAvailable');
 		$sPreviewMarkup = $sPreviewNotAvailable;
