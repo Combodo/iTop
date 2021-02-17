@@ -17,8 +17,8 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 			me._newScene(b.tab, b.panel).addTo(me.controller);
 		};
 		this.element.on('scrollabletabsload', afterloadajax);
-		
-		this._super();
+
+		this._super(this.options);
 
 		// Load remote tabs as soon as possible
 		$(this.js_selectors.tab_toggler).each(function() {
@@ -37,7 +37,10 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 				me._newScene($(that).parent('li'), $($(that).attr('href'))).addTo(me.controller);
 			}
 		});
-
+		
+		// Set active tab, tab-container gives us a tab based on url hash or 0
+		this.setTab(this._findActive(this.options.active));
+		this.controller.scrollTo('#' + this.tabs.eq(this.options.active).attr('data-tab-id'));
 	},
 	// Create a new scene to be added to the controller
 	_newScene: function(tab, panel)

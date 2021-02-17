@@ -63,7 +63,8 @@ $(function()
 	            let oTabsParams = {
 		            classes: {
 			            'ui-tabs-panel': 'ibo-tab-container--tab-container',    // For ajax tabs, so their containers have the right CSS classes
-		            }
+		            },
+		            active: $.bbq.getState( this.element.attr('id'), true ) || 0
 	            };
 	            if ($.bbq) {
 		            // Enable tabs on all tab widgets. The `event` property must be overridden so
