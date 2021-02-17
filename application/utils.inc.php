@@ -2337,4 +2337,12 @@ class utils
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
 	}
+
+	/**
+	 * @return bool : indicate whether we run under a windows environnement or not
+	 * @since 2.7.4 : N°3412
+	 */
+	public static function IsWindows(){
+		return (substr(PHP_OS,0,3) === 'WIN');
+	}
 }

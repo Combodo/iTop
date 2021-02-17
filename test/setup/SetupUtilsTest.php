@@ -30,7 +30,7 @@ class SetupUtilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider CheckGravitzProvider
+	 * @dataProvider CheckGravitProvider
 	 */
 	public function testCheckGravitz($sScriptPath, $iSeverity, $sLabel){
 		/** @var \CheckResult $oCheck */
@@ -39,7 +39,7 @@ class SetupUtilsTest extends ItopTestCase
 		$this->assertContains($sLabel, $oCheck->sLabel);
 	}
 
-	public function CheckGravitzProvider(){
+	public function CheckGravitProvider(){
 		if (substr(PHP_OS,0,3) === 'WIN'){
 			return [];
 		}
