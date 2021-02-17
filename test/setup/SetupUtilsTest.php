@@ -55,6 +55,11 @@ class SetupUtilsTest extends ItopTestCase
 				2,
 				"",
 			],
+			"empty command => dot by default" => [
+				"",
+				2,
+				"",
+			],
 			"command failed" => [
 				"/bin/ls",
 				1,
