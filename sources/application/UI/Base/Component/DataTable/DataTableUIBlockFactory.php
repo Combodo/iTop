@@ -309,15 +309,21 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						if ($bViewLink) {
+							if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
+								$sDisplayFunction = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
+							} else {
+								$sDisplayFunction = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
+							}
 							$aColumnDefinition[] = [
 								'description' => $aData['label'],
 								'object_class' => $sClassName,
 								'class_alias' => $sClassAlias,
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
-								'attribute_label' => $aData['alias'],
-								"render" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
+								'attribute_label' => Dict::S('Class:'.$sClassName),
+								'render' => $sDisplayFunction,
 							];
+
 						}
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
@@ -330,7 +336,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							'attribute_code' => $sAttCode,
 							'attribute_type' => $sAttDefClass,
 							'attribute_label' => $sAttLabel,
-							"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
+							'render' => $oAttDef->GetRenderForDataTable($sClassAlias),
 						];
 					}
 					$iIndexColumn++;
