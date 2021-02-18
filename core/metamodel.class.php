@@ -5545,15 +5545,10 @@ abstract class MetaModel
 
 						// The field already exists, does it have the relevant properties?
 						//
-						$bToBeChanged = false;
 						$sActualFieldSpec = CMDBSource::GetFieldSpec($sTable, $sField);
 						if (!CMDBSource::IsSameFieldTypes($sDBFieldSpec, $sActualFieldSpec))
 						{
-							$bToBeChanged = true;
 							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found <code>$sActualFieldSpec</code> while expecting <code>$sDBFieldSpec</code>";
-						}
-						if ($bToBeChanged)
-						{
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
 							$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
 						}
