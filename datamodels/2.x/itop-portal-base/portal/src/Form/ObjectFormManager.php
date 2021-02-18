@@ -1050,7 +1050,8 @@ class ObjectFormManager extends FormManager
 
 	public function CheckTransaction($aData)
 	{
-		if (! utils::IsTransactionValid($this->oForm->GetTransactionId())) {
+		$isTransactionValid = \utils::IsTransactionValid($this->oForm->GetTransactionId(), false); //The transaction token is kept in order to preserve BC with ajax forms (the second call would fail if the token is deleted). (The GC will take care of cleaning the token for us later on)
+		if (!$isTransactionValid) {
 			if ($this->oObject->IsNew()) {
 				$sError = Dict::S('UI:Error:ObjectAlreadyCreated');
 			} else {

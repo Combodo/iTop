@@ -49,6 +49,8 @@ class PreferencesFormManager extends FormManager
 		// Building the form
 		$oForm = new Form('preferences');
 
+		$oForm->SetTransactionId(\utils::GetNewTransactionId());
+
 		// Adding hidden field with form type
 		$oField = new HiddenField('form_type');
 		$oField->SetCurrentValue('preferences');
