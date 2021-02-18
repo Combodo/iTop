@@ -517,7 +517,8 @@ class CriterionConversionTest extends ItopDataTestCase
 	 */
     function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+    	\MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
+	    $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
     }
 
 
