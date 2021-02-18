@@ -30,16 +30,16 @@ class SetupUtilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @dataProvider CheckGravitzProvider
+	 * @dataProvider CheckGraphvizProvider
 	 */
-	public function testCheckGravitz($sScriptPath, $iSeverity, $sLabel){
+	public function testCheckGraphviz($sScriptPath, $iSeverity, $sLabel){
 		/** @var \CheckResult $oCheck */
 		$oCheck = SetupUtils::CheckGraphviz($sScriptPath);
 		$this->assertEquals($iSeverity, $oCheck->iSeverity);
 		$this->assertContains($sLabel, $oCheck->sLabel);
 	}
 
-	public function CheckGravitzProvider(){
+	public function CheckGraphvizProvider(){
 		if (substr(PHP_OS,0,3) === 'WIN'){
 			return [];
 		}
@@ -52,6 +52,11 @@ class SetupUtilsTest extends ItopTestCase
 			],
 			"command ok" => [
 				"/usr/bin/whereis",
+				2,
+				"",
+			],
+			"empty command => dot by default" => [
+				"",
 				2,
 				"",
 			],
