@@ -5147,7 +5147,18 @@ EOF
 					if ($('.lock_owned').length == 0)
 					{
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
-						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, minWidth: 600, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
+						$('<div>'+data.popup_message+'</div>').dialog({
+							title: $sJSTitle,
+							modal: true,
+							autoOpen: true,
+							minWidth: 600,
+							buttons:[{
+								text: {$sJSOk},
+								class: 'ibo-is-alternative',
+								click: function() { $(this).dialog('close'); }
+							}],
+							close: function() { $(this).remove(); }
+						});
 					}
 					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
@@ -5157,7 +5168,18 @@ EOF
 					if ($('.lock_owned').length == 0)
 					{
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
-						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, minWidth: 600, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
+						$('<div>'+data.popup_message+'</div>').dialog({
+							title: $sJSTitle,
+							modal: true,
+							autoOpen: true,
+							minWidth: 600,
+							buttons:[{
+								text: $sJSOk,
+								class: 'ibo-is-alternative',
+								click: function() { $(this).dialog('close'); }
+							}],
+							close: function() { $(this).remove(); }
+						});
 					}
 					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
