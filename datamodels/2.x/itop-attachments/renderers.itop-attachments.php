@@ -192,7 +192,7 @@ abstract class AbstractAttachmentsRenderer
 		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
 		$this->oPage->add('</div>');
 		$this->oPage->add('<div class="ibo-attachment--upload-file--drop-zone-hint ibo-svg-illustration--container">');
-		$this->oPage->add(file_get_contents(utils::GetAbsoluteUrlAppRoot().'images/illustrations/undraw_upload.svg'));
+		$this->oPage->add(file_get_contents(APPROOT.'images/illustrations/undraw_upload.svg'));
 		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
 		
 
