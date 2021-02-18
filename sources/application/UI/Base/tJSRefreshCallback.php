@@ -58,7 +58,7 @@ trait tJSRefreshCallback
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
 			$usingTrait = in_array('Combodo\iTop\Application\UI\Base\tJSRefreshCallback', class_uses(get_class($oSubBlock)));
 			if ($usingTrait && $oSubBlock->GetJSRefresh() != "") {
-				$sJSRefresh = $oSubBlock->GetJSRefresh().'\n'.$sJSRefresh;
+				$sJSRefresh = $oSubBlock->GetJSRefresh()."\n".$sJSRefresh;
 			}
 			tJSRefreshCallback::GetRecursiveJSRefresh($oSubBlock, $sJSRefresh);
 		}
