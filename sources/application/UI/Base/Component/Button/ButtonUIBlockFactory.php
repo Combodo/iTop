@@ -279,6 +279,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		?string $sId = null
 	): Button {
 		$sLabel = $sLabel ?? Dict::S('UI:Button:Cancel');
+		$sName = $sName ?? 'cancel';
+
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
