@@ -2394,6 +2394,7 @@ EOF
 					}
 				}
 			}
+			$oPage->SetContentType('application/json');
 			$oPage->add(json_encode($aResult));
 			break;
 
