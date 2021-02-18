@@ -126,24 +126,30 @@ $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
 	padding-left: $ibo-datatable--paginate--padding-left;
 }
 .paginate_button {
-	display: inline-block;
-	box-sizing: border-box;
+  display: inline-block;
+  box-sizing: border-box;
 }
 .paginate_button a{
 	@extend %ibo-font-ral-med-100;
 	color: $ibo-datatable--paginate-button--link--color;
 }
+
 .paginate_button a:hover {
-	color: $ibo-datatable--paginate-button--link--hover--color;
+  color: $ibo-datatable--paginate-button--link--hover--color;
 }
+
+.paginate_button.disabled a:hover {
+  cursor: default;
+}
+
 .paginate_button.active a {
-	@extend %ibo-font-ral-med-100;
-	
-	color: $ibo-datatable--paginate-button-active--link--color;
-	background-color: $ibo-datatable--paginate-button-active--link--background-color;
-	padding: $ibo-datatable--paginate-button-active--link--padding-y $ibo-datatable--paginate-button-active--link--padding-x;
-	box-shadow: $ibo-datatable--paginate-button-active--link--box-shadow;
-	border-radius: $ibo-border-radius-300;
+  @extend %ibo-font-ral-med-100;
+
+  color: $ibo-datatable--paginate-button-active--link--color;
+  background-color: $ibo-datatable--paginate-button-active--link--background-color;
+  padding: $ibo-datatable--paginate-button-active--link--padding-y $ibo-datatable--paginate-button-active--link--padding-x;
+  box-shadow: $ibo-datatable--paginate-button-active--link--box-shadow;
+  border-radius: $ibo-border-radius-300;
 }
 .ibo-datatable thead tr th{
 	position: relative;

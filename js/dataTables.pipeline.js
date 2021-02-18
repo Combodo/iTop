@@ -21,36 +21,40 @@ $.fn.dataTable.pipeline = function ( opts ) {
 	var	draw_number = 1;
 
 	return function ( request, drawCallback, settings ) {
-		var ajax          = false;
-		var requestStart  = request.start;
-		var drawStart     = request.start;
+		var ajax = false;
+		var requestStart = request.start;
+		var drawStart = request.start;
 		var requestLength = request.length;
-		if(request.start=undefined)
-		{
-			requestStart  = settings._iDisplayStart;
-			drawStart     = settings._iDisplayStart;
+		if (request.start = undefined) {
+			requestStart = settings._iDisplayStart;
+			drawStart = settings._iDisplayStart;
 			requestLength = settings._iDisplayLength;
 		}
-		var requestEnd    = requestStart + requestLength;
+		var requestEnd = requestStart+requestLength;
 
-		if ( settings.clearCache ) {
+		//Manage case requestLength=-1 => all the row are display 
+		if (requestLength == -1) {
+			requestLength = cacheLastJson.recordsTotal;
+			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
+				//new server request is mandatory
+				ajax = true;
+			}
+		}
+
+		if (settings.clearCache) {
 			// API requested that the cache be cleared
 			ajax = true;
 			settings.clearCache = false;
-		}
-		else if ( cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper ) {
+		} else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
 			// outside cached data - need to make a request
 			ajax = true;
-		}
-		else if ( JSON.stringify( request.order )   !== JSON.stringify( cacheLastRequest.order ) ||
-			JSON.stringify( request.columns ) !== JSON.stringify( cacheLastRequest.columns ) ||
-			JSON.stringify( request.search )  !== JSON.stringify( cacheLastRequest.search )
+		} else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
+			JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
+			JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
 		) {
 			// properties changed (ordering, columns, searching)
 			ajax = true;
-		}
-		else if(cacheLastJson == undefined || cacheLastJson.length==0)
-		{
+		} else if (cacheLastJson == undefined || cacheLastJson.length == 0) {
 			ajax = true;
 		}
 
@@ -97,13 +101,13 @@ $.fn.dataTable.pipeline = function ( opts ) {
 				"success":  function ( json ) {
 					cacheLastJson = $.extend(true, {}, json);
 
-					if ( cacheLower != drawStart ) {
-						json.data.splice( 0, drawStart-cacheLower );
+					if (cacheLower != drawStart && requestLength != -1) {
+						json.data.splice(0, drawStart-cacheLower);
 					}
-					if ( requestLength >= -1 ) {
-						json.data.splice( requestLength, json.data.length );
+					if (requestLength >= -1) {
+						json.data.splice(requestLength, json.data.length);
 					}
-					drawCallback( json );
+					drawCallback(json);
 				}
 			} );
 		}

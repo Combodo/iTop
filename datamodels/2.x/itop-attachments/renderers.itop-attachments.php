@@ -428,16 +428,17 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'uploader' => array('label' => $sFileUploader, 'description' => $sFileUploader),
 			'type' => array('label' => $sFileType, 'description' => $sFileType),
 		);
-		
-		if($bWithDeleteButton)
-		{
-			$aAttribs['delete'] =  array('label' => '', 'description' => '');
-		}  
-		
-		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('',$aAttribs, $aData);
+
+		if ($bWithDeleteButton) {
+			$aAttribs['delete'] = array('label' => '', 'description' => '');
+		}
+
+		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
 		$this->oPage->AddUiBlock($oAttachmentTableBlock);
-		
+		foreach ($aData as $aRow) {
+			$this->oPage->add_ready_script($aRow['js']);
+		}
 	}
 
 	/**
@@ -525,7 +526,8 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
 			'uploader' => $sAttachmentUploader,
-			'type' => $sFileType
+			'type' => $sFileType,
+			'js' => 'CombodoGlobalToolbox.InitTooltipFromMarkup($("#$sTrId [data-tooltip-content]"));',
 		);
 		
 		if ($bWithDeleteButton)
@@ -536,11 +538,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			$this->oPage->add_ready_script($oBlockRenderer->RenderJsInline($sDeleteButton::ENUM_JS_TYPE_ON_INIT));
 			$aAttachmentLine['delete'] = $oBlockRenderer->RenderHtml();
 		}
-		$this->oPage->add_ready_script(
-			<<<JS
-CombodoGlobalToolbox.InitTooltipFromMarkup($('#$sTrId [data-tooltip-content]'));
-JS
-		);
+
 		return  $aAttachmentLine;
 	}
 }

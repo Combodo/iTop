@@ -22,17 +22,21 @@ var maxHeight{{ sListId }} = 300;
 if ($('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').length > 0)
 {
     //we are in dialogbox
-    maxHeight{{ sListId }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').height();
-    a
+    maxHeight{{ sListId }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog-content').height();
 }
 else
 {
     maxHeight{{ sListId }} = $(window).height()-$('#ibo-top-container').outerHeight()+$('#ibo-main-content').height()-$('#ibo-main-content').outerHeight();
 }
+
 if ($('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').length > 0)
 {
     //we are in dialogbox
-    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').height();
+    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').outerHeight();
+}
+if ($('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').length > 0)
+{
+    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').outerHeight();
 }
 if (maxHeight{{ sListId }} < 300)
 {
@@ -42,7 +46,7 @@ else
 {
     maxHeight{{ sListId }} = maxHeight{{ sListId }} -50;
 }
-
+console.warn(maxHeight{{ sListId }});
 var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
@@ -182,93 +186,109 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     }
 });
 
-
+$('#{{ oUIBlock.GetId() }}').closest(".dataTables_scrollBody").css('max-height', maxHeight{{ sListId }}-100);
 
 {% if oUIBlock.GetOption("select_mode") is not empty %}
-	{% if oUIBlock.GetOption("select_mode") != "single" %}
-		oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-			let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
-			if( $(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
-		    {
-			     // Checking input
-			    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
-			    // Saving values in temp array
-			    for (let i in aData) {
-				    let iItemId = aData[i].id;
-				    if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1) {
-					    oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-					    updateDataTableSelection('{{ sListId }}');
-				    }
-			    }
-		    }
-			else {
-			     // Checking input
-			    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
-			    // Saving values in temp array
-			    for (let i in aData) {
-				    let iItemId = aData[i].id;
-				    if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1) {
-					    oSelectedItems{{ sListId }}.push(iItemId);
-                        updateDataTableSelection('{{ sListId }}');
-				    }
-			    }
-		    }
-		});
+{% if oUIBlock.GetOption("select_mode") != "single" %}
+oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+    if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+    {
+        // Checking input
+        $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+        // Saving values in temp array
+        for (let i in aData)
+        {
+            let iItemId = aData[i].id;
+            if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+            {
+                oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+                updateDataTableSelection('{{ sListId }}');
+            }
+        }
+    }
+    else
+    {
+        // Checking input
+        $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+        // Saving values in temp array
+        for (let i in aData)
+        {
+            let iItemId = aData[i].id;
+            if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+            {
+                oSelectedItems{{ sListId }}.push(iItemId);
+                updateDataTableSelection('{{ sListId }}');
+            }
+        }
+    }
+});
 
-		oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-			let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
 
-			// Checking input
-			$('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
-			// Saving values in temp array
-			if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-				for (let i in aData) {
-					let iItemId = aData[i].id;
-					if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1) {
-						oSelectedItems{{ sListId }}.push(iItemId);
-                        updateDataTableSelection('{{ sListId }}');
-					}
-				}
-			} else {
-				for (let i in aData) {
-                    let iItemId = aData[i].id;
-					if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1) {
-						oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-                        updateDataTableSelection('{{ sListId }}');
-					}
-				}
-			}
-		});
-	{% else %}
-		oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-            let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
-			// Checking input
-			$('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
-			// Saving values in temp array
-			for (let i in aData) {
-                let iItemId = aData[i].id;
-				if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1) {
-					oSelectedItems{{ sListId }}.push(iItemId);
-                    updateDataTableSelection('{{ sListId }}');
-				}
-			}
-		});
+    // Checking input
+    $('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+    // Saving values in temp array
+    if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+    {
+        for (let i in aData)
+        {
+            let iItemId = aData[i].id;
+            if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+            {
+                oSelectedItems{{ sListId }}.push(iItemId);
+                updateDataTableSelection('{{ sListId }}');
+            }
+        }
+    }
+    else
+    {
+        for (let i in aData)
+        {
+            let iItemId = aData[i].id;
+            if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+            {
+                oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+                updateDataTableSelection('{{ sListId }}');
+            }
+        }
+    }
+});
+{% else %}
+oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+    // Checking input
+    $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
+    // Saving values in temp array
+    for (let i in aData)
+    {
+        let iItemId = aData[i].id;
+        if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+        {
+            oSelectedItems{{ sListId }}.push(iItemId);
+            updateDataTableSelection('{{ sListId }}');
+        }
+    }
+});
 
-		oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-            let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
 
-			// Checking input
-			$('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
-			// Saving values in temp array
-			for (let i in aData) {
-                let iItemId = aData[i].id;
-				if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1) {
-					oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-                    updateDataTableSelection('{{ sListId }}');
-				}
-			}
-		});
-	{% endif %}
+    // Checking input
+    $('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+    // Saving values in temp array
+    for (let i in aData)
+    {
+        let iItemId = aData[i].id;
+        if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+        {
+            oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+            updateDataTableSelection('{{ sListId }}');
+        }
+    }
+});
+{% endif %}
 
     {% if oUIBlock.GetOption('sCountSelector') is not empty %}
         $('#{{ sListId }} [name="selectionCount"]').bind('change', function() {

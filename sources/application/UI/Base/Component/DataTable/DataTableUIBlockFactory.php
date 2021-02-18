@@ -316,7 +316,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
 								'attribute_label' => $aData['alias'],
-								"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+								"render" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
 							];
 						}
 					} else {
@@ -542,7 +542,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
 								'attribute_label' => $aData['alias'],
-								"render" => "return '<a class=\'object-ref-link\' href=  \'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+								"render" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
 							];
 						}
 					} else {
@@ -669,7 +669,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
-							"display" => "return '<a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a>' ;",
+							"display" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
 							"_" => $sClassAlias."/".$sAttCode,
 						];
 					} else {
