@@ -59,7 +59,18 @@ $ibo-color-warning-700: $ibo-color-orange-700 !default;
 $ibo-color-warning-800: $ibo-color-orange-800 !default;
 $ibo-color-warning-900: $ibo-color-orange-900 !default;
 
-/* Danger: messages of danger / failure, actions that cannot be undone, ... */
+/* Danger: messages of failure, error, ... */
+$ibo-color-error-100: $ibo-color-red-100 !default;
+$ibo-color-error-200: $ibo-color-red-200 !default;
+$ibo-color-error-300: $ibo-color-red-300 !default;
+$ibo-color-error-400: $ibo-color-red-400 !default;
+$ibo-color-error-500: $ibo-color-red-500 !default;
+$ibo-color-error-600: $ibo-color-red-600 !default;
+$ibo-color-error-700: $ibo-color-red-700 !default;
+$ibo-color-error-800: $ibo-color-red-800 !default;
+$ibo-color-error-900: $ibo-color-red-900 !default;
+
+/* Danger: messages of danger, actions that cannot be undone, ... */
 $ibo-color-danger-100: $ibo-color-red-100 !default;
 $ibo-color-danger-200: $ibo-color-red-200 !default;
 $ibo-color-danger-300: $ibo-color-red-300 !default;
@@ -142,6 +153,16 @@ $ibo-caselog-highlight-colors: ($ibo-caselog-highlight-color-1, $ibo-caselog-hig
 	--ibo-color-danger-700: #{$ibo-color-danger-700};
 	--ibo-color-danger-800: #{$ibo-color-danger-800};
 	--ibo-color-danger-900: #{$ibo-color-danger-900};
+
+	--ibo-color-error-100: #{$ibo-color-error-100};
+	--ibo-color-error-200: #{$ibo-color-error-200};
+	--ibo-color-error-300: #{$ibo-color-error-300};
+	--ibo-color-error-400: #{$ibo-color-error-400};
+	--ibo-color-error-500: #{$ibo-color-error-500};
+	--ibo-color-error-600: #{$ibo-color-error-600};
+	--ibo-color-error-700: #{$ibo-color-error-700};
+	--ibo-color-error-800: #{$ibo-color-error-800};
+	--ibo-color-error-900: #{$ibo-color-error-900};
 
 	--ibo-caselog-color-highlight-1: #{$ibo-caselog-highlight-color-1};
 	--ibo-caselog-color-highlight-2: #{$ibo-caselog-highlight-color-2};
