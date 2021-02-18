@@ -111,9 +111,13 @@ $(function() {
 					// Update the general form input on submit.
 					// This cannot be "completely" done in the "change" handler above because we don't have an event for when
 					// the image has been uploaded and its HTML markup added to the data. The "change" event occurs too early.
-					this._GetGeneralFormElement().on('submit', function () {
-						me._UpdateBridgeInput();
-					});
+					if (null === this._GetGeneralFormElement()) {
+						CombodoJSConsole.Error('CaseLogEntryForm: Could not find the general form element, image upload will NOT work in CKEditor');
+					} else {
+						this._GetGeneralFormElement().on('submit', function () {
+							me._UpdateBridgeInput();
+						});
+					}
 				}
 
 				// Form buttons
