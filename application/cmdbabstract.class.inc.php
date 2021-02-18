@@ -731,7 +731,6 @@ EOF
 				}
 			}
 		}
-		$oPage->SetCurrentTab('');
 
 		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -739,6 +738,8 @@ EOF
 			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
 
+		$oPage->SetCurrentTab('');
+		
 		// Look for any trigger that considers this object as "In Scope"
 		// If any trigger has been found then display a tab with notifications
 		//
