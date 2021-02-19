@@ -33,20 +33,38 @@ use utils;
  * @internal
  * @since   3.0.0
  */
-class AjaxTab extends Tab {
+class AjaxTab extends Tab
+{
 
-	const ENUM_TAB_PLACEHOLDER_REL_PATH_LIST = 'images/placeholders/skeleton-list.svg';
-	const ENUM_TAB_PLACEHOLDER_REL_PATH_DASHBOARD = 'images/placeholders/skeleton-dashboard.svg';
-	const ENUM_TAB_PLACEHOLDER_REL_PATH_OBJECT = 'images/placeholders/skeleton-object.svg';
-	const ENUM_TAB_PLACEHOLDER_REL_PATH_MISC = 'images/placeholders/skeleton.svg';
+	/**
+	 * @see static::$sPlaceholderRelPath
+	 * @var string
+	 */
+	public const ENUM_TAB_PLACEHOLDER_LIST = 'images/placeholders/skeleton-list.svg';
+	/**
+	 * @see static::$sPlaceholderRelPath
+	 * @var string
+	 */
+	public const ENUM_TAB_PLACEHOLDER_DASHBOARD = 'images/placeholders/skeleton-dashboard.svg';
+	/**
+	 * @see static::$sPlaceholderRelPath
+	 * @var string
+	 */
+	public const ENUM_TAB_PLACEHOLDER_OBJECT = 'images/placeholders/skeleton-object.svg';
+	/**
+	 * @see static::$sPlaceholderRelPath
+	 * @var string
+	 */
+	public const ENUM_TAB_PLACEHOLDER_MISC = 'images/placeholders/skeleton.svg';
 
-	const DEFAULT_TAB_PLACEHOLDER_REL_PATH = self::ENUM_TAB_PLACEHOLDER_REL_PATH_MISC;
-	
+	/** @var string */
+	public const DEFAULT_TAB_PLACEHOLDER = self::ENUM_TAB_PLACEHOLDER_MISC;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-ajax-tab';
 	public const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
 
-	/** @var string Placeholder displayed before tab is loaded */
+	/** @var string Placeholder displayed before tab is loaded (relative path from the app. root) */
 	private $sPlaceholderRelPath;
 	/** @var string The target URL to be loaded asynchronously */
 	private $sUrl;
@@ -60,11 +78,12 @@ class AjaxTab extends Tab {
 	 * @param string $sTitle
 	 * @param string $sPlaceholderRelPath
 	 */
-	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER_REL_PATH)
+	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER)
 	{
 		parent::__construct($sTabCode, $sTitle);
 		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
 	}
+
 	/**
 	 * @param string $sUrl
 	 *

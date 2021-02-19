@@ -121,7 +121,7 @@ class TabContainer extends UIContentBlock
 	public function AddAjaxTab(string $sTabCode, string $sTitle, ?string $sPlaceholder = null): Tab
 	{
 		if($sPlaceholder === null){
-			$sPlaceholder = AjaxTab::DEFAULT_TAB_PLACEHOLDER_REL_PATH;
+			$sPlaceholder = AjaxTab::DEFAULT_TAB_PLACEHOLDER;
 		}
 		$oTab = new AjaxTab($sTabCode, $sTitle, $sPlaceholder);
 		$this->AddSubBlock($oTab);

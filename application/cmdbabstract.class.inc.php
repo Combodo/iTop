@@ -544,11 +544,11 @@ EOF
 				{
 					continue;
 				}
-				$oPage->AddAjaxTab($oAttDef->GetLabel(), 
+				$oPage->AddAjaxTab($oAttDef->GetLabel(),
 					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(),
 					true,
 					'Class:'.$sClass.'/Attribute:'.$sAttCode,
-					AjaxTab::ENUM_TAB_PLACEHOLDER_REL_PATH_DASHBOARD);
+					AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
 				continue;
 			}
 

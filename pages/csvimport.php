@@ -1440,7 +1440,8 @@ EOF
 		if (Utils::GetConfig()->Get('csv_import_history_display'))
 		{
 			$oPage->SetCurrentTabContainer('tabs1');
-			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */, null, AjaxTab::ENUM_TAB_PLACEHOLDER_REL_PATH_MISC);
+			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */,
+				null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
 		}
 	}
 			
