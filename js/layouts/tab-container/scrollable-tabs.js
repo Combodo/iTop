@@ -317,6 +317,11 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		if ( this._isLocal( anchor[ 0 ] ) ) {
 			return;
 		}
+		// Remote already loaded
+		else if (panel.attr("data-loaded") == "true")
+		{
+			return
+		}
 
 		this.xhr = $.ajax( this._ajaxSettings( anchor, event, eventData ) );
 
@@ -336,6 +341,7 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 						var tempdiv = $('<div>').addClass('ibo-tab').html(response);
 						panel.find('.ibo-tab--temporary-remote-content').remove();
 						panel.append( tempdiv );
+						panel.attr( "data-loaded", "true" );
 						that._trigger( "load", event, eventData );
 
 						complete( jqXHR, status );
