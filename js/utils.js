@@ -919,17 +919,16 @@ const CombodoGlobalToolbox = {
 	 * Useful after AJAX calls or dynamic content modification for examples.
 	 *
 	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
+	 * @param {boolean} bForce Whether the tooltip instantiation should be forced or not (if already done)
 	 * @constructor
 	 */
-	InitAllNonInstantiatedTooltips: function(oContainerElem = null)
-	{
-		if(oContainerElem === null)
-		{
+	InitAllNonInstantiatedTooltips: function (oContainerElem = null, bForce = false) {
+		if (oContainerElem === null) {
 			oContainerElem = $('body');
 		}
 
-		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
-			CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function () {
+			CombodoGlobalToolbox.InitTooltipFromMarkup($(this), bForce);
 		});
 	}
 };
