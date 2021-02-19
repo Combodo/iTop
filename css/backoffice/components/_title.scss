@@ -41,22 +41,26 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
   max-width: 100%;
   max-height: 100%;
 }
+
 .ibo-title--icon--must-zoomout {
   width: $ibo-title--icon--size--must-zoomout;
 }
 
-.ibo-title--emphasis {
-
+.ibo-title--for-object-details {
+  @extend %ibo-font-ral-med-300;
 }
 
-.ibo-title--for-object-details {
-  @extend %ibo-font-ral-nor-350;
+.ibo-title--subtitle {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  @extend %ibo-baseline-centered-content;
+  @extend %ibo-font-ral-nor-150;
 }
 
 .ibo-title--status {
   @extend %ibo-baseline-centered-content;
-  @extend %ibo-font-ral-nor-100;
 }
+
 .ibo-title--status-dot {
   @extend %ibo-fully-centered-content;
 
@@ -67,11 +71,21 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
 
   border-radius: $ibo-title--status-dot--border-radius;
 }
-.ibo-title--status-label {
 
-}
 .ibo-title--status-dot + .ibo-title--status-label {
   margin-left: $ibo-title--status-dot--spacing;
+}
+
+.ibo-title--status + .ibo-title--object-class {
+  margin-left: 0.5rem;
+
+  &::before {
+    content: "(";
+  }
+
+  &::after {
+    content: ")";
+  }
 }
 
 @each $sType, $aColors in $ibo-lifecycle-states-colors {
@@ -80,7 +94,6 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
     background-color: map-get($aColors, 'primary-color');
   }
 }
-
 
 
 .ibo-title-for-dashlet {
