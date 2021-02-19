@@ -264,6 +264,11 @@ abstract class AbstractAttachmentsRenderer
 		}
     });
 
+  $(document).on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  })
+  
 	$(document).bind('dragover', function (e) {
 		var bFiles = false;
 		if (e.dataTransfer && e.dataTransfer.types)
@@ -296,12 +301,21 @@ abstract class AbstractAttachmentsRenderer
 
         window.dropZone.addClass('ibo-drag-in');
 	});
-	
-	$(document).bind('dragleave dragend drop', function(){
-		if(window.dropZone){
+  
+  // Counter used to fix chrome firing dragenter/dragleave on each $(document) child it encounter
+  window.dropZoneCnt = 0;
+  
+  $(document).on('dragenter', function(ev) {
+        ev.preventDefault(); // needed for IE
+        window.dropZoneCnt++;
+    });
+    
+	$(document).bind('dragend dragleave drop', function(event){
+        window.dropZoneCnt--;
+		if(window.dropZone && window.dropZoneCnt === 0){
 			window.dropZone.removeClass('ibo-drag-in');
+			window.dropZone = null;
 		}
-		window.dropZone = null;
 	});
 	
 	// check if the attachments are used by inline images
