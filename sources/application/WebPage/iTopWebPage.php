@@ -343,7 +343,7 @@ JS
 		// Make image attributes zoomable
 		$this->add_ready_script(
 			<<<JS
-		$('.view-image img').each(function(){
+		$('.ibo-input-image--image-view img').each(function(){
 			$(this).attr('href', $(this).attr('src'))
 		})
 		.magnificPopup({type: 'image', closeOnContentClick: true });

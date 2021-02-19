@@ -154,60 +154,6 @@
 	//	color: $text-color;
 	//}
 
-	.edit-image {
-		.view-image {
-			display: inline-block;
-
-			img[src=""],
-			img[src="null"] {
-				// Hiding "broken" image when src is not set
-				visibility: hidden;
-			}
-
-			&.dirty {
-				// The image will be modified when saving the changes
-
-				&.compat {
-					// Browser not supporting FileReader
-					background-image: url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=" + $version);
-
-					img {
-						opacity: 0.3;
-					}
-				}
-			}
-		}
-
-		.edit-buttons {
-			display: inline-block;
-			vertical-align: top;
-			margin-top: 4px;
-			margin-left: 3px;
-
-			.button {
-				cursor: pointer;
-				margin-bottom: 3px;
-				padding: 2px;
-				background-color: $highlight-color;
-
-				&.disabled {
-					cursor: default;
-					background-color: $grey-color;
-					opacity: 0.3;
-				}
-
-				.ui-icon {
-					background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffffff_256x240.png?v=" + $version);
-				}
-			}
-		}
-
-		.file-input {
-			display: block;
-			position: relative;
-		}
-	}
-
 	/* Center the image both horizontally and vertically, withing a box which size is fixed (depends on the attribute definition) */
 	.details .view-image {
 		text-align: center;

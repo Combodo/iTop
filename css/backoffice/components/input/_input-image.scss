@@ -1,0 +1,45 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-input-image {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.ibo-input-image--image-view {
+  position: relative;
+  overflow: hidden;
+  background-color: $ibo-color-grey-200;
+  border-radius: $ibo-border-radius-500;
+  @extend %ibo-fully-centered-content;
+
+  img[src=""],
+  img[src="null"] {
+    // Hiding "broken" image when src is not set
+    visibility: hidden;
+  }
+
+  input[type="file"] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+  }
+}
+
+.ibo-input-image--edit-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+
+  // Overload original siblings rule as buttons are displayed vertically
+  .ibo-button + .ibo-button {
+    margin-top: 0.5rem;
+    margin-left: 0;
+  }
+}

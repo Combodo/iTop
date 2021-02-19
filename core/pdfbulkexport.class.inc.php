@@ -229,7 +229,7 @@ EOF
 							$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
 						}
 						$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="width: '.$iNewWidth.'px; height: '.$iNewHeight.'px">' : '';
-						$sRet = '<div class="view-image">'.$sRet.'</div>';
+						$sRet = '<div class="ibo-input-image--image-view">'.$sRet.'</div>';
 					}
 					else
 					{

@@ -2099,16 +2099,13 @@ EOF
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
 					$oDocument = $value; // Value is an ormDocument objectm
 					$sDefaultUrl = $oAttDef->Get('default_image');
-					if (is_object($oDocument) && !$oDocument->IsEmpty())
-					{
+					if (is_object($oDocument) && !$oDocument->IsEmpty()) {
 						$sUrl = 'data:'.$oDocument->GetMimeType().';base64,'.base64_encode($oDocument->GetData());
-					}
-					else
-					{
+					} else {
 						$sUrl = null;
 					}
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_image\"><div id=\"edit_$iInputId\" class=\"edit-image\"></div></div>\n";
+					$sHTMLValue = "<div class=\"field_input_zone ibo-input-image-wrapper\"><div id=\"edit_$iInputId\" class=\"ibo-input-image\"></div></div>\n";
 					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
 
 					$aEditImage = array(

@@ -8112,10 +8112,10 @@ class AttributeImage extends AttributeBlob
 			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
 		}
 
-		$sCssClasses = 'view-image attribute-image';
+		$sCssClasses = 'ibo-input-image--image-view attribute-image';
 		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
 
-		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';">'.$sRet.'</div>';
 	}
 
 	/**

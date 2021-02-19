@@ -27,108 +27,10 @@ $(function()
 
 			// the constructor
 			_create: function () {
-				var me = this;
-				me.bLoadedEmpty = (me.options.current_image_url == '' || me.options.current_image_url == null);
+				this.element.addClass('ibo-input-image');
 
-				var sMarkup = '';
-				sMarkup += '<input type="hidden" id="do_remove_' + me.options.input_name + '" name="' + me.options.input_name + '[remove]" value="0"/>';
-
-				var sCssClasses = "view-image attribute-image";
-				console.debug("edit_image", me.options.current_image_url);
-				var sCssClassToAdd, sImageUrl;
-				if (me.options.current_image_url === null)
-				{
-					sCssClassToAdd = "attribute-image-default";
-					sImageUrl = me.options.default_image_url;
-				}
-				else
-				{
-					sCssClassToAdd = "attribute-image-custom";
-					sImageUrl = me.options.current_image_url;
-				}
-				sCssClasses += ' '+sCssClassToAdd;
-				sMarkup += '<div id="preview_'+me.options.input_name+'" class="'+sCssClasses+'" style="width: '+me.options.max_width_px+'px; height: '+me.options.max_height_px+'px;">';
-
-				sMarkup += '<span class="helper-middle"></span>';
-				sMarkup += '<img src="'+sImageUrl+'" data-original-src="'+sImageUrl+'" data-default-src="'+me.options.default_image_url+'" style="max-width: '+me.options.max_width_px+'px; max-height: '+me.options.max_height_px+'px">';
-				sMarkup += '</div>';
-				sMarkup += '<div id="buttons_' + me.options.input_name + '" class="edit-buttons">';
-				sMarkup += '<div title="' + me.options.labels.reset_button + '" id="reset_' + me.options.input_name + '" class="button disabled"><div class="ui-icon ui-icon-arrowreturnthick-1-w"></div></div>';
-
-				var sDisabled = me.bLoadedEmpty ? 'disabled' : '';
-				var sLoadedDisabled = me.bLoadedEmpty ? 'yes' : 'no';
-				sMarkup += '<div title="' + me.options.labels.remove_button + '" id="remove_' + me.options.input_name + '" data-loaded-disabled="' + sLoadedDisabled + '" class="button ' + sDisabled + '"><div class="ui-icon ui-icon-trash"></div></div>';
-				sMarkup += '</div>';
-
-				sMarkup += '<input type="hidden" name="MAX_FILE_SIZE" value="'+me.options.max_file_size+'" />';
-				sMarkup += '<input class="file-input" title="' + me.options.labels.upload_button + '" name="' + me.options.input_name + '[fcontents]" type="file" id="file_' + me.options.input_name + '" />';
-
-				this.element
-					.addClass('edit-image')
-					.append(sMarkup);
-
-				$('#file_' + me.options.input_name).change(function () {
-
-					$('#do_remove_' + me.options.input_name).val('0');
-
-					me.previewImage(this, '#preview_' + me.options.input_name + ' img');
-
-					var oImage = $('#preview_' + me.options.input_name + ' img');
-					oImage.closest('.view-image').addClass('dirty');
-
-					$('#reset_' + me.options.input_name).removeClass('disabled');
-					$('#remove_' + me.options.input_name).removeClass('disabled');
-				});
-				$('#reset_' + me.options.input_name).click(function () {
-
-					if ($(this).hasClass('disabled')) return;
-
-					$('#do_remove_' + me.options.input_name).val('0');
-
-					// Restore the image
-					var oImage = $('#preview_' + me.options.input_name + ' img');
-					oImage.attr('src', oImage.attr('data-original-src'));
-					oImage.closest('.view-image').removeClass('dirty').removeClass('compat');
-
-					// Reset the file input without losing events bound to it
-					var oInput = $('#file_' + me.options.input_name);
-					oInput.replaceWith(oInput.val('').clone(true));
-
-					$('#reset_' + me.options.input_name).addClass('disabled');
-					var oRemoveBtn = $('#remove_' + me.options.input_name);
-					if (oRemoveBtn.attr('data-loaded-disabled') == 'yes') {
-						oRemoveBtn.addClass('disabled');
-					}
-					else {
-						oRemoveBtn.removeClass('disabled');
-					}
-				});
-				$('#remove_' + me.options.input_name).click(function () {
-
-					if ($(this).hasClass('disabled')) return;
-
-					$('#do_remove_' + me.options.input_name).val('1');
-
-					// Restore the default image
-					var oImage = $('#preview_' + me.options.input_name + ' img');
-					oImage.attr('src', oImage.attr('data-default-src'));
-					oImage.closest('.view-image')
-						.removeClass('compat')
-						.addClass('dirty');
-
-					// Reset the file input without losing events bound to it
-					var oInput = $('#file_' + me.options.input_name);
-					oInput.replaceWith(oInput.val('').clone(true));
-
-					var oRemoveBtn = $('#remove_' + me.options.input_name);
-					if (oRemoveBtn.attr('data-loaded-disabled') == 'yes') {
-						$('#reset_' + me.options.input_name).addClass('disabled');
-					}
-					else {
-						$('#reset_' + me.options.input_name).removeClass('disabled');
-					}
-					oRemoveBtn.addClass('disabled');
-				});
+				this._buildMarkup();
+				this._bindEvents();
 			},
 			// called when created, and later when changing options
 			_refresh: function () {
@@ -136,7 +38,7 @@ $(function()
 			// events bound via _bind are removed automatically
 			// revert other modifications here
 			_destroy: function () {
-				this.element.removeClass('edit-image');
+				this.element.removeClass('ibo-input-image');
 			},
 			// _setOptions is called with a hash of all options that are changing
 			_setOptions: function () {
@@ -145,6 +47,114 @@ $(function()
 			// _setOption is called for each individual option that is changing
 			_setOption: function (key, value) {
 				this._superApply(arguments);
+			},
+
+			_buildMarkup: function () {
+				CombodoJSConsole.Debug('edit_image: '+this.options.current_image_url);
+
+				this.bLoadedEmpty = (this.options.current_image_url == '' || this.options.current_image_url == null);
+
+				const sDisabled = this.bLoadedEmpty ? 'disabled' : '';
+				const sLoadedDisabled = this.bLoadedEmpty ? 'yes' : 'no';
+				const sUploadButtonTooltipAttribute = this.options.labels.upload_button !== '' ? 'data-tooltip-content="'+this.options.labels.upload_button+'"' : '';
+				let sCssClasses = "ibo-input-image--image-view attribute-image";
+				let sCssClassToAdd, sImageUrl;
+
+				if (this.options.current_image_url === null) {
+					sCssClassToAdd = "attribute-image-default";
+					sImageUrl = this.options.default_image_url;
+				} else {
+					sCssClassToAdd = "attribute-image-custom";
+					sImageUrl = this.options.current_image_url;
+				}
+				sCssClasses += ' '+sCssClassToAdd;
+
+				let sMarkup = `
+				<input type="hidden" id="do_remove_${this.options.input_name}" name="${this.options.input_name}[remove]" value="0"/>
+				<div id="preview_${this.options.input_name}" class="${sCssClasses}" data-role="ibo-input-image--image-view" style="width: ${this.options.max_width_px}px; min-width: ${this.options.max_width_px}px; height: ${this.options.max_height_px}px;" min-height: ${this.options.max_height_px}px;">
+					<img src="${sImageUrl}" data-original-src="${sImageUrl}" data-default-src="${this.options.default_image_url}" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px">
+					<input id="file_${this.options.input_name}" name="${this.options.input_name}[fcontents]" type="file" ${sUploadButtonTooltipAttribute} />
+				</div>
+				<div id="buttons_${this.options.input_name}" class="ibo-input-image--edit-buttons" data-role="ibo-input-image--edit-buttons">
+					<button id="reset_${this.options.input_name}" class="ibo-button ibo-is-alternative ibo-is-neutral" data-role="ibo-button" type="button" data-tooltip-content="${this.options.labels.reset_button}" data-tooltip-placement="right" disabled>
+						<span class="fas fa-undo-alt"></span>
+					</button>
+					<button id="remove_${this.options.input_name}" class="ibo-button ibo-is-alternative ibo-is-danger" data-role="ibo-button" type="button" data-tooltip-content="${this.options.labels.remove_button}" data-tooltip-placement="right" data-loaded-disabled="${sLoadedDisabled}" ${sDisabled}>
+						<span class="fas fa-trash"></span>
+					</button>
+				</div>
+				<input type="hidden" name="MAX_FILE_SIZE" value="${this.options.max_file_size}" />
+				`;
+
+				this.element.append(sMarkup);
+
+				CombodoGlobalToolbox.InitAllNonInstantiatedTooltips(this.element);
+			},
+			_bindEvents: function () {
+				const me = this;
+
+				$('#file_'+me.options.input_name).change(function () {
+					$('#do_remove_'+me.options.input_name).val('0');
+
+					me.previewImage(this, '#preview_'+me.options.input_name+' img');
+
+					let oImage = $('#preview_'+me.options.input_name+' img');
+					oImage.closest('.ibo-input-image--image-view').addClass('dirty');
+
+					$('#reset_'+me.options.input_name).prop('disabled', false);
+					$('#remove_'+me.options.input_name).prop('disabled', false);
+				});
+
+				$('#reset_'+me.options.input_name).click(function () {
+					if ($(this).prop('disabled')) {
+						return;
+					}
+
+					$('#do_remove_'+me.options.input_name).val('0');
+
+					// Restore the image
+					let oImage = $('#preview_'+me.options.input_name+' img');
+					oImage.attr('src', oImage.attr('data-original-src'));
+					oImage.closest('.ibo-input-image--image-view').removeClass('dirty');
+
+					// Reset the file input without losing events bound to it
+					let oInput = $('#file_'+me.options.input_name);
+					oInput.replaceWith(oInput.val('').clone(true));
+
+					$('#reset_'+me.options.input_name).prop('disabled', true);
+					let oRemoveBtn = $('#remove_'+me.options.input_name);
+					if (oRemoveBtn.attr('data-loaded-disabled') == 'yes') {
+						oRemoveBtn.prop('disabled', true);
+					} else {
+						oRemoveBtn.prop('disabled', false);
+					}
+				});
+				
+				$('#remove_'+me.options.input_name).click(function () {
+					if ($(this).prop('disabled')) {
+						return;
+					}
+
+					$('#do_remove_'+me.options.input_name).val('1');
+
+					// Restore the default image
+					let oImage = $('#preview_'+me.options.input_name+' img');
+					oImage.attr('src', oImage.attr('data-default-src'));
+					oImage.closest('.ibo-input-image--image-view')
+						.addClass('dirty');
+
+					// Reset the file input without losing events bound to it
+					let oInput = $('#file_'+me.options.input_name);
+					oInput.replaceWith(oInput.val('').clone(true));
+
+					let oRemoveBtn = $('#remove_'+me.options.input_name);
+					if (oRemoveBtn.attr('data-loaded-disabled') == 'yes') {
+						$('#reset_'+me.options.input_name).prop('disabled', true);
+					} else {
+						$('#reset_'+me.options.input_name).prop('disabled', false);
+					}
+					oRemoveBtn.prop('disabled', true);
+				});
 			},
 			previewImage: function (input, sImageSelector) {
 				if (input.files && input.files[0]) {
@@ -157,12 +167,6 @@ $(function()
 
 						reader.readAsDataURL(input.files[0]);
 					}
-					else {
-						$(sImageSelector).closest('.view-image').addClass('compat');
-					}
-				}
-				else {
-					$(sImageSelector).closest('.view-image').addClass('compat');
 				}
 			}
 	});
