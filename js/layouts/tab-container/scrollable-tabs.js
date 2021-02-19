@@ -34,15 +34,7 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 		this.element.on('scrollabletabsload', afterloadajax);
 
 		this._super(this.options);
-
-		//Load remote tabs as soon as possible
-		$(this.js_selectors.tab_toggler).each(function() {
-			var that = this;
-			if($(that).attr('href').charAt(0) !== '#') {
-				var index = $(this).parent('li').prevAll().length
-				//me.load(index);
-			}
-		});
+		
 		
 		// Add every other tab to the controller 
 		$(this.js_selectors.tab_toggler).each(function(){
