@@ -97,11 +97,7 @@ $(function() {
 							if (bWasDraftBefore !== bIsDraftNow) {
 								me.is_draft = bIsDraftNow;
 								me._UpdateEditingVisualHint();
-
-								// Update button only once, not at each character change
-								if (me._IsSubmitAutonomous()) {
-									me._UpdateSubmitButtonState();
-								}
+								// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
 							}
 						});
 					}
@@ -137,6 +133,14 @@ $(function() {
 				});
 				this.element.on('hide_form.caselog_entry_form.itop', function () {
 					me._HideEntryForm();
+				});
+
+				// Form enable/disable submission
+				this.element.on('disable_submission.caselog_entry_form.itop', function () {
+					me._DisableSubmission();
+				});
+				this.element.on('enable_submission.caselog_entry_form.itop', function () {
+					me._EnableSubmission();
 				});
 
 				// Form pending submission states
@@ -175,6 +179,12 @@ $(function() {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).addClass(this.css_classes.is_closed);
 
 				// TODO 3.0.0: This should also clear the form (input, lock, send button, ...)
+			},
+			_DisableSubmission: function () {
+				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+			},
+			_EnableSubmission: function () {
+				this.element.find(this.js_selectors.save_button).prop('disabled', false);
 			},
 			_EnterPendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(true);
@@ -243,6 +253,7 @@ $(function() {
 			// - Input zone
 			_EmptyInput: function() {
 				this._GetCKEditorInstance().setData('');
+				this._UpdateEditingVisualHint();
 			},
 			/**
 			 * @returns {boolean} True if the input has no text

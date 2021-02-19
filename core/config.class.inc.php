@@ -1205,6 +1205,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.lock_watcher_period' => [
+			'type' => 'integer',
+			'description' => 'Period (in second) between lock status update.',
+			'default' => 30,
+			'value' => 30,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'obsolescence.show_obsolete_data' => [
 			'type' => 'bool',
 			'description' => 'Default value for the user preference "show obsolete data"',

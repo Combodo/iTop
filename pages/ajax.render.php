@@ -2359,8 +2359,7 @@ EOF
 			if ($token !== null)
 			{
 				$oExporter = BulkExport::FindExporterFromToken($token);
-				if ($oExporter)
-				{
+				if ($oExporter) {
 					$oExporter->Cleanup();
 				}
 			}
@@ -2368,32 +2367,83 @@ EOF
 			$oPage->add(json_encode($aResult));
 			break;
 
+		case 'check_lock_state':
+			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+			$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+			$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
+
+			$aResult = [
+				'locked' => $aLockData['locked'],
+				'message' => '',
+			];
+
+			// If lock taken by someone else, tell by who
+			if (true === $aLockData['locked']) {
+				// Either the contact friendlyname if the user has a contact, otherwise its login
+				$sOwner = ($aLockData['owner']->Get('contactid') > 0) ? $aLockData['owner']->Get('contactid_friendlyname') : $aLockData['owner']->GetRawName();
+				$aResult['message'] = Dict::Format('UI:CurrentObjectIsSoftLockedBy_User', $sOwner);
+			}
+
+			$oPage->SetContentType('application/json');
+			$oPage->add(json_encode($aResult));
+			break;
+
+		// Important: Only from the backoffice AND logged in
+		case 'acquire_lock':
+			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+			$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+
+			$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
+			if (false === $aResult['success']) {
+				$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
+				// If lock taken by someone else, tell by who
+				if (true === $aLockData['locked']) {
+					// Either the contact friendlyname if the user has a contact, otherwise its login
+					$sOwner = ($aLockData['owner']->Get('contactid') > 0) ? $aLockData['owner']->Get('contactid_friendlyname') : $aLockData['owner']->GetRawName();
+					$aResult['message'] = Dict::Format('UI:CurrentObjectIsSoftLockedBy_User', $sOwner);
+				}
+			}
+
+			$oPage->SetContentType('application/json');
+			$oPage->add(json_encode($aResult));
+			break;
+
 		case 'extend_lock':
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
 			$sToken = utils::ReadParam('token', 0, false, 'raw_data');
+
 			$aResult = iTopOwnershipLock::ExtendLock($sObjClass, $iObjKey, $sToken);
-			if (!$aResult['status'])
-			{
-				if ($aResult['operation'] == 'lost')
-				{
+			if (!$aResult['status']) {
+				if ($aResult['operation'] == 'lost') {
 					$sName = $aResult['owner']->GetName();
-					if ($aResult['owner']->Get('contactid') != 0)
-					{
+					if ($aResult['owner']->Get('contactid') != 0) {
 						$sName .= ' ('.$aResult['owner']->Get('contactid_friendlyname').')';
 					}
 					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
 					$aResult['popup_message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User_Explanation', $sName);
-				}
-				else
-				{
-					if ($aResult['operation'] == 'expired')
-					{
+				} else {
+					if ($aResult['operation'] == 'expired') {
 						$aResult['message'] = Dict::S('UI:CurrentObjectLockExpired');
 						$aResult['popup_message'] = Dict::S('UI:CurrentObjectLockExpired_Explanation');
 					}
 				}
 			}
+
+			$oPage->SetContentType('application/json');
+			$oPage->add(json_encode($aResult));
+			break;
+
+		case 'release_lock':
+			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
+			$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
+			$sToken = utils::ReadParam('token', 0, false, 'raw_data');
+
+			$bReleased = iTopOwnershipLock::ReleaseLock($sObjClass, $iObjKey, $sToken);
+			$aResult = [
+				'success' => $bReleased,
+			];
+
 			$oPage->SetContentType('application/json');
 			$oPage->add(json_encode($aResult));
 			break;

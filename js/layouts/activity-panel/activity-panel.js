@@ -27,6 +27,11 @@ $(function()
 					datetime_format: null,
 					datetimes_reformat_limit: 14,   // In days
 					transaction_id: null,           // Null until the user gets the lock on the object
+					lock_enabled: false,            // Should only be true when object mode is set to "view" and the "concurrent_lock_enabled" config. param. enabled
+					lock_status: null,
+					lock_token: null,
+					lock_watcher_period: 30,        // Period (in seconds) between lock status update, uses the "activity_panel.lock_watcher_period" config. param.
+					lock_endpoint: null,
 					show_multiple_entries_submit_confirmation: true,
 				},
 			css_classes:
@@ -48,6 +53,8 @@ $(function()
 					tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
 					tab_toolbar: '[data-role="ibo-activity-panel--tab-toolbar"]',
 					tab_toolbar_action: '[data-role="ibo-activity-panel--tab-toolbar-action"]',
+					lock_hint: '[data-role="ibo-caselog-entry-form--lock-indicator"]',
+					lock_message: '[data-role="ibo-caselog-entry-form--lock-message"]',
 					caselog_tab_open_all: '[data-role="ibo-activity-panel--caselog-open-all"]',
 					caselog_tab_close_all: '[data-role="ibo-activity-panel--caselog-close-all"]',
 					activity_filter: '[data-role="ibo-activity-panel--filter"]',
@@ -78,7 +85,19 @@ $(function()
 					caselog: 'caselog',
 					transition: 'transition',
 					edits: 'edits',
-				}
+				},
+				lock_status: {
+					// Default, we can't be sure an object is unlocked as we only check from time to time
+					unknown: 'unknown',
+					// Current user wants the lock, we are trying to get it
+					request_pending: 'request_pending',
+					// Current user does not need the lock anymore
+					release_pending: 'release_pending',
+					// Current user has the lock
+					locked_by_myself: 'locked_by_myself',
+					// Object is locked by another user
+					locked_by_someone_else: 'locked_by_someone_else',
+				},
 			},
 
 			// the constructor
@@ -86,6 +105,15 @@ $(function()
 				this.element.addClass('ibo-activity-panel');
 
 				this._bindEvents();
+
+				// Lock
+				if (null === this.options.lock_status) {
+					this.options.lock_status = this.enums.lock_status.unknown;
+				}
+				if (true === this.options.lock_enabled) {
+					this._InitializeLockWatcher();
+				}
+
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -287,23 +315,33 @@ $(function()
 				}
 			},
 			/**
+			 * Indicate that there is a draft entry and will request lock on the object
+			 *
 			 * @param sCaseLogAttCode {string} Attribute code of the case log entry form being draft
 			 * @private
 			 */
-			_onDraftEntryForm: function(sCaseLogAttCode)
-			{
-				this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="' + this.enums.tab_types.caselog + '"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').addClass(this.css_classes.is_draft);
+			_onDraftEntryForm: function (sCaseLogAttCode) {
+				// Put draft indicator
+				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
+				// Request lock
+				this._RequestLock();
 			},
 			/**
+			 * Remove indication of a draft entry and will cancel the lock (acquired or pending) if no draft entry left
+			 *
 			 * @param sCaseLogAttCode {string} Attribute code of the case log entry form being emptied
 			 * @private
 			 */
-			_onEmptyEntryForm: function(sCaseLogAttCode)
-			{
-				this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="' + this.enums.tab_types.caselog + '"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').removeClass(this.css_classes.is_draft);
+			_onEmptyEntryForm: function (sCaseLogAttCode) {
+				// Remove draft indicator
+				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
+				// Cancel lock if all forms empty
+				if (Object.keys(this._GetEntriesFromAllForms()).length === 0) {
+					this._CancelLock();
+				}
 			},
-			_onCancelledEntryForm: function()
-			{
+			_onCancelledEntryForm: function () {
+				this._EmptyCaseLogsEntryForms();
 				this._HideCaseLogsEntryForms();
 			},
 			/**
@@ -311,8 +349,13 @@ $(function()
 			 * been edited and the user hasn't dismiss the dialog.
 			 * @private
 			 */
-			_onRequestSubmission: function()
-			{
+			_onRequestSubmission: function () {
+				// Check lock state
+				if (this.enums.lock_status.locked_by_myself !== this.options.lock_status) {
+					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
+					return;
+				}
+
 				// If several entry forms filled, show a confirmation message
 				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation();
@@ -567,8 +610,16 @@ $(function()
 			_HideCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('hide_form.caselog_entry_form.itop');
 				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
-
-				// TODO 3.0.0: Release lock
+			},
+			/**
+			 * Empty all case logs entry forms
+			 * Event is triggered on the corresponding elements.
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_EmptyCaseLogsEntryForms: function () {
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('clear_entry.case_entry_form.itop');
 			},
 			_FreezeCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('enter_pending_submission_state.caselog_entry_form.itop');
@@ -727,25 +778,188 @@ $(function()
 					});
 			},
 
+			// - Helpers on object lock
+			/**
+			 * Initialize the lock watcher on a regular basis
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_InitializeLockWatcher: function () {
+				const me = this;
+				setInterval(function () {
+					me._UpdateLock();
+				}, this.options.lock_watcher_period * 1000);
+			},
+			/**
+			 * Request lock on the object for the current user
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_RequestLock: function () {
+				// Do not request lock again if we already have it or a request is already pending
+				// Note: This can happen when we write in several case logs
+				if ([this.enums.lock_status.request_pending, this.enums.lock_status.locked_by_myself].indexOf(this.options.lock_status) !== -1) {
+					return;
+				}
+
+				this.options.lock_status = this.enums.lock_status.request_pending;
+				this._UpdateLock();
+			},
+			/**
+			 * Cancel the lock on the object for the current user
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_CancelLock: function () {
+				if (this.enums.lock_status.locked_by_myself === this.options.lock_status) {
+					this.options.lock_status = this.enums.lock_status.release_pending;
+				} else {
+					this.options.lock_status = this.enums.lock_status.unknown;
+				}
+				this._UpdateLock();
+			},
+			/**
+			 * Update the lock status every now and then to inform the user that he/she can submit or not yet.
+			 *
+			 * This is to prevent scenario where the user has the lock, puts its computer in standby, opens it again after a few days
+			 * (eg. the weekend). We have to check if he/she still has the lock or not.
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_UpdateLock: function () {
+				const me = this;
+				let oParams = {
+					obj_class: this._GetHostObjectClass(),
+					obj_key: this._GetHostObjectID(),
+				};
+
+				// Try to acquire it if requested...
+				if (this.enums.lock_status.request_pending === this.options.lock_status) {
+					oParams.operation = 'acquire_lock';
+				}
+				// ... or extend lock if locked by current user...
+				else if (this.enums.lock_status.locked_by_myself === this.options.lock_status) {
+					oParams.operation = 'extend_lock';
+					oParams.token = this.options.lock_token;
+				}
+				// ... or release lock if current user does not want it anymore...
+				else if (this.enums.lock_status.release_pending === this.options.lock_status) {
+					oParams.operation = 'release_lock';
+					oParams.token = this.options.lock_token;
+				}
+				// ... otherwise, just check if locked by someone else
+				else {
+					oParams.operation = 'check_lock_state';
+				}
+
+				$.post(
+					this.options.lock_endpoint,
+					oParams,
+					'json'
+					)
+					.fail(function (oXHR, sStatus, sErrorThrown) {
+						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
+						alert(sErrorThrown);
+					})
+					.done(function (oData) {
+						let sNewLockStatus = me.enums.lock_status.unknown;
+						let sMessage = null;
+
+						// Tried to acquire lock
+						if ('acquire_lock' === oParams.operation) {
+							// Status true means that we acquired the lock...
+							if (true === oData.success) {
+								me.options.lock_token = oData.token
+								sNewLockStatus = me.enums.lock_status.locked_by_myself;
+							}
+							// ... otherwise we will retry later
+							else {
+								sNewLockStatus = me.enums.lock_status.request_pending;
+								if (oData.message) {
+									sMessage = oData.message;
+								}
+							}
+						}
+
+						// Tried to extend our lock
+						else if ('extend_lock' === oParams.operation) {
+							// Status false means that we don't have the lock anymore
+							if (false === oData.status) {
+								sMessage = oData.message;
+
+								// If it was lost, means that someone else has it, else it expired
+								if ('lost' === oData.operation) {
+									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
+								}
+							} else {
+								sNewLockStatus = me.enums.lock_status.locked_by_myself;
+							}
+						}
+
+						// Tried to release our lock
+						else if ('release_lock' === oParams.operation) {
+							sNewLockStatus = me.enums.lock_status.unknown;
+						}
+
+						// Just checked if object was locked
+						else if ('check_lock_state' === oParams.operation) {
+							if (true === oData.locked) {
+								sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
+								sMessage = oData.message;
+							}
+						}
+
+						me._UpdateLockDependencies(sNewLockStatus, sMessage);
+					});
+			},
+			/**
+			 * Update the lock dependencies (status, message, case logs form entries, ...)
+			 *
+			 * @param sNewLockStatus {string} See this.enums.lock_status
+			 * @param sMessage {null|string}
+			 * @return {bool} Whether the dependencies have been updated or not
+			 * @private
+			 */
+			_UpdateLockDependencies: function (sNewLockStatus, sMessage) {
+				const sOldLockStatus = this.options.lock_status;
+
+				if (sOldLockStatus === sNewLockStatus) {
+					return false;
+				}
+
+				// Update lock indicator
+				this.options.lock_status = sNewLockStatus;
+				this.element.find(this.js_selectors.lock_message).text(sMessage);
+
+				const sCallback = ([this.enums.lock_status.request_pending, this.enums.lock_status.locked_by_someone_else].indexOf(sNewLockStatus) !== -1) ? 'removeClass' : 'addClass';
+				this.element.find(this.js_selectors.lock_hint)[sCallback](this.css_classes.is_hidden);
+
+				// Update case logs entry forms
+				const sEvent = (this.enums.lock_status.locked_by_myself === this.options.lock_status) ? 'enable_submission.caselog_entry_form.itop' : 'disable_submission.caselog_entry_form.itop';
+				this.element.find(this.js_selectors.caselog_entry_form).trigger(sEvent);
+
+				return true;
+			},
+
 			// - Helpers on messages
-			_OpenMessage: function(oEntryElem)
-			{
+			_OpenMessage: function (oEntryElem) {
 				oEntryElem.removeClass(this.css_classes.is_closed);
 			},
-			_OpenAllMessages: function(sCaseLogAttCode = null)
-			{
+			_OpenAllMessages: function (sCaseLogAttCode = null) {
 				this._SwitchAllMessages('open', sCaseLogAttCode);
 			},
-			_CloseAllMessages: function(sCaseLogAttCode = null)
-			{
+			_CloseAllMessages: function (sCaseLogAttCode = null) {
 				this._SwitchAllMessages('close', sCaseLogAttCode);
 			},
-			_SwitchAllMessages: function(sMode, sCaseLogAttCode = null)
-			{
-				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="' + sCaseLogAttCode+'"]';
+			_SwitchAllMessages: function (sMode, sCaseLogAttCode = null) {
+				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]';
 				const sCallback = (sMode === 'open') ? 'removeClass' : 'addClass';
 
-				this.element.find(this.js_selectors.entry + sExtraSelector)[sCallback](this.css_classes.is_closed);
+				this.element.find(this.js_selectors.entry+sExtraSelector)[sCallback](this.css_classes.is_closed);
 			},
 			/**
 			 * Update the messages and users counters in the tabs toolbar

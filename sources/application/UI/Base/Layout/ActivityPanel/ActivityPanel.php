@@ -217,6 +217,17 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @return bool True if the lock mechanism has to be enabled
+	 * @uses \cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW
+	 * @uses static::HasAnEditableCaseLogTab()
+	 * @uses "concurrent_lock_enabled" config. param.
+	 */
+	public function IsLockEnabled(): bool
+	{
+		return (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode) && (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) && (true === $this->HasAnEditableCaseLogTab());
+	}
+
+	/**
 	 * Set all entries at once.
 	 *
 	 * @param ActivityEntry[] $aEntries
@@ -645,7 +656,17 @@ class ActivityPanel extends UIBlock
 	public function GetDateTimeFormatForJSWidget()
 	{
 		$oDateTimeFormat = AttributeDateTime::GetFormat();
+
 		return $oDateTimeFormat->ToMomentJS();
+	}
+
+	/**
+	 * @return string The endpoint for all "lock" related operations
+	 * @throws \Exception
+	 */
+	public function GetLockEndpointForJSWidget(): string
+	{
+		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 	}
 
 	/**
@@ -655,7 +676,7 @@ class ActivityPanel extends UIBlock
 	{
 		$aSubBlocks = array();
 
-		foreach($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
+		foreach ($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
 			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
 		}
 
