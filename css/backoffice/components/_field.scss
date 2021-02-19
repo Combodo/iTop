@@ -139,5 +139,9 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
   }
 }
 .mailto, .tel{
-  white-space:nowrap;
+  white-space: nowrap;
+
+  .text_decoration {
+    margin-right: 0.5rem;
+  }
 }
