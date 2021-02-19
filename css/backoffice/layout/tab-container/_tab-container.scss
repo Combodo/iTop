@@ -37,6 +37,7 @@ $ibo-tab-container--tab-container--label--text-color: $ibo-color-grey-600 !defau
 $ibo-tab-container--tab-container--label--spacing: 20px !default;
 $ibo-tab-container--tab-container--label--margin-bottom: 20px !default;
 $ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
+$ibo-tab-container--tab-container--label--separator-height: 2px !default;
 
 $ibo-tab--temporary-remote-content-max-height: 300px !default;
 
@@ -141,15 +142,15 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
 		@extend %ibo-font-ral-med-250;
 	}
 	> span::before, 
-	> span::after{
-		content: "";
-		display: inline-block;
-		position: absolute;
-		top: 50%;
-		height: 1px;
-		width: 2000px;
-		border-top: 2px solid $ibo-tab-container--tab-container--label--text-color;
-	}
+	> span::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: calc(50% - (#{$ibo-tab-container--tab-container--label--separator-height} / 2));
+    height: 1px;
+    width: 10000px;
+    border-top: $ibo-tab-container--tab-container--label--separator-height solid $ibo-tab-container--tab-container--label--text-color;
+  }
 	> span::before{
 		right: 100%;
 	}
