@@ -5219,17 +5219,25 @@ class AttributeEnum extends AttributeString
 	{
 		$sHostClass = $this->GetHostClass();
 		$sDBTable = MetaModel::DBGetTable($sHostClass, $this->GetCode());
-		$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
-		$aValuesInDB = CMDBSource::QueryToArray($sSQL);
 		$aValues = array();
-		foreach($aValuesInDB as $aRow)
+		try
 		{
-			if ($aRow['value'] !== null)
+			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
+			foreach($aValuesInDB as $aRow)
 			{
-				$aValues[] = $aRow['value'];
+				if ($aRow['value'] !== null)
+				{
+					$aValues[] = $aRow['value'];
+				}
 			}
+			IssueLog::Debug('Actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
 		}
-		IssueLog::Info('actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
+		catch(MySQLException $e)
+		{
+			// Never mind, maybe the table does not exist yet (new installation from scratch)
+			// It seems more efficient to try and ignore errors than to test if the table & column really exists
+		}
 		return CMDBSource::Quote($aValues);
 	}
 
