@@ -3,6 +3,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-input-image--image-view--background-color: $ibo-color-grey-200 !default;
+$ibo-input-image--image-view--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-input-image--edit-buttons--margin-left: 0.5rem !default;
+$ibo-input-image--edit-buttons--elements-spacing: $ibo-input-image--edit-buttons--margin-left !default;
+
 .ibo-input-image {
   display: flex;
   justify-content: flex-start;
@@ -12,8 +18,8 @@
 .ibo-input-image--image-view {
   position: relative;
   overflow: hidden;
-  background-color: $ibo-color-grey-200;
-  border-radius: $ibo-border-radius-500;
+  background-color: $ibo-input-image--image-view--background-color;
+  border-radius: $ibo-input-image--image-view--border-radius;
   @extend %ibo-fully-centered-content;
 
   img[src=""],
@@ -35,11 +41,11 @@
 .ibo-input-image--edit-buttons {
   display: flex;
   flex-direction: column;
-  margin-left: 0.5rem;
+  margin-left: $ibo-input-image--edit-buttons--margin-left;
 
   // Overload original siblings rule as buttons are displayed vertically
   .ibo-button + .ibo-button {
-    margin-top: 0.5rem;
+    margin-top: $ibo-input-image--edit-buttons--elements-spacing;
     margin-left: 0;
   }
 }
