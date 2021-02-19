@@ -4,10 +4,25 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 			tab_toggler: '[data-role="ibo-tab-container--tab-toggler"]',
 			tab_container_list: '[data-role="ibo-tab-container--tab-container-list"]'
 		},
+	options:
+		{
+			remote_tab_load_dict: 'Click to load',
+			remotePanelCreated: function( panel, tab , placeholder ) {
+				if(tab.attr('data-role') === 'ibo-tab-container--tab-header')
+				{
+					panel.prepend('<div class="ibo-tab-container--tab-container--label"><span>' + tab.text() + '</span></div>');
+					var oTempDiv = $('<div>').addClass('ibo-tab--temporary-remote-content')
+					var oPlaceholder = $('<div>').addClass('ibo-tab--temporary-remote-content--placeholder').load(GetAbsoluteUrlAppRoot()+'images/placeholders/skeleton.svg');
+					var oLoadButton = $('<div>').addClass('ibo-tab--temporary-remote-content--button').text(placeholder).on('click', function(){tab.find('a').click()})
+					oTempDiv.append(oPlaceholder)
+					oTempDiv.append(oLoadButton)
+					panel.append(oTempDiv);
+				}
+			},
+		},
 	controller: null,
 	_create: function() {
 		var me = this;
-
 		// Initialize a single controller for this tab container
 		this.controller = new ScrollMagic.Controller({'container': '#' + this.element.find(this.js_selectors.tab_container_list).attr('id'), 'refreshInterval' : 200});
 		
@@ -20,12 +35,12 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 
 		this._super(this.options);
 
-		// Load remote tabs as soon as possible
+		//Load remote tabs as soon as possible
 		$(this.js_selectors.tab_toggler).each(function() {
 			var that = this;
 			if($(that).attr('href').charAt(0) !== '#') {
 				var index = $(this).parent('li').prevAll().length
-				me.load(index);
+				//me.load(index);
 			}
 		});
 		
@@ -173,7 +188,169 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 			tabIndex: 0
 		} );
 	},
-	
+	// jQuery UI overload
+// Trigger a new event
+	_processTabs: function() {
+		var that = this,
+			prevTabs = this.tabs,
+			prevAnchors = this.anchors,
+			prevPanels = this.panels;
+
+		this.tablist = this._getList().attr( "role", "tablist" );
+		this._addClass( this.tablist, "ui-tabs-nav",
+			"ui-helper-reset ui-helper-clearfix ui-widget-header" );
+
+		// Prevent users from focusing disabled tabs via click
+		this.tablist
+			.on( "mousedown" + this.eventNamespace, "> li", function( event ) {
+				if ( $( this ).is( ".ui-state-disabled" ) ) {
+					event.preventDefault();
+				}
+			} )
+
+			// Support: IE <9
+			// Preventing the default action in mousedown doesn't prevent IE
+			// from focusing the element, so if the anchor gets focused, blur.
+			// We don't have to worry about focusing the previously focused
+			// element since clicking on a non-focusable element should focus
+			// the body anyway.
+			.on( "focus" + this.eventNamespace, ".ui-tabs-anchor", function() {
+				if ( $( this ).closest( "li" ).is( ".ui-state-disabled" ) ) {
+					this.blur();
+				}
+			} );
+
+		this.tabs = this.tablist.find( "> li:has(a[href])" )
+			.attr( {
+				role: "tab",
+				tabIndex: -1
+			} );
+		this._addClass( this.tabs, "ui-tabs-tab", "ui-state-default" );
+
+		this.anchors = this.tabs.map( function() {
+				return $( "a", this )[ 0 ];
+			} )
+			.attr( {
+				tabIndex: -1
+			} );
+		this._addClass( this.anchors, "ui-tabs-anchor" );
+
+		this.panels = $();
+
+		this.anchors.each( function( i, anchor ) {
+			var selector, panel, panelId,
+				anchorId = $( anchor ).uniqueId().attr( "id" ),
+				tab = $( anchor ).closest( "li" ),
+				originalAriaControls = tab.attr( "aria-controls" );
+
+			// Inline tab
+			if ( that._isLocal( anchor ) ) {
+				selector = anchor.hash;
+				panelId = selector.substring( 1 );
+				panel = that.element.find( that._sanitizeSelector( selector ) );
+
+				// remote tab
+			} else {
+
+				// If the tab doesn't already have aria-controls,
+				// generate an id by using a throw-away element
+				panelId = tab.attr( "aria-controls" ) || $( {} ).uniqueId()[ 0 ].id;
+				selector = "#" + panelId;
+				panel = that.element.find( selector );
+				if ( !panel.length ) {
+					panel = that._createPanel( panelId );
+					panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
+					that.options.remotePanelCreated(panel, tab, that.options.remote_tab_load_dict);
+				}
+				panel.attr( "aria-live", "polite" );
+			}
+
+			if ( panel.length ) {
+				that.panels = that.panels.add( panel );
+			}
+			if ( originalAriaControls ) {
+				tab.data( "ui-tabs-aria-controls", originalAriaControls );
+			}
+			tab.attr( {
+				"aria-controls": panelId,
+				"aria-labelledby": anchorId
+			} );
+			panel.attr( "aria-labelledby", anchorId );
+		} );
+
+		this.panels.attr( "role", "tabpanel" );
+		this._addClass( this.panels, "ui-tabs-panel", "ui-widget-content" );
+
+		// Avoid memory leaks (#10056)
+		if ( prevTabs ) {
+			this._off( prevTabs.not( this.tabs ) );
+			this._off( prevAnchors.not( this.anchors ) );
+			this._off( prevPanels.not( this.panels ) );
+		}
+	},
+	// jQuery UI overload
+// Append content to panel instead of replacing all html
+	load: function( index, event ) {
+		index = this._getIndex( index );
+		var that = this,
+			tab = this.tabs.eq( index ),
+			anchor = tab.find( ".ui-tabs-anchor" ),
+			panel = this._getPanelForTab( tab ),
+			eventData = {
+				tab: tab,
+				panel: panel
+			},
+			complete = function( jqXHR, status ) {
+				if ( status === "abort" ) {
+					that.panels.stop( false, true );
+				}
+
+				that._removeClass( tab, "ui-tabs-loading" );
+				panel.removeAttr( "aria-busy" );
+
+				if ( jqXHR === that.xhr ) {
+					delete that.xhr;
+				}
+			};
+
+		// Not remote
+		if ( this._isLocal( anchor[ 0 ] ) ) {
+			return;
+		}
+
+		this.xhr = $.ajax( this._ajaxSettings( anchor, event, eventData ) );
+
+		// Support: jQuery <1.8
+		// jQuery <1.8 returns false if the request is canceled in beforeSend,
+		// but as of 1.8, $.ajax() always returns a jqXHR object.
+		if ( this.xhr && this.xhr.statusText !== "canceled" ) {
+			this._addClass( tab, "ui-tabs-loading" );
+			panel.attr( "aria-busy", "true" );
+
+			this.xhr
+				.done( function( response, status, jqXHR ) {
+
+					// support: jQuery <1.8
+					// http://bugs.jquery.com/ticket/11778
+					setTimeout( function() {
+						var tempdiv = $('<div>').addClass('ibo-tab').html(response);
+						panel.find('.ibo-tab--temporary-remote-content').remove();
+						panel.append( tempdiv );
+						that._trigger( "load", event, eventData );
+
+						complete( jqXHR, status );
+					}, 1 );
+				} )
+				.fail( function( jqXHR, status ) {
+
+					// support: jQuery <1.8
+					// http://bugs.jquery.com/ticket/11778
+					setTimeout( function() {
+						complete( jqXHR, status );
+					}, 1 );
+				} );
+		}
+	},
 	// Set the current tab information 
 	setTab : function(tab){
 		this.active = tab;

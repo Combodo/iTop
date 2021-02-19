@@ -23,6 +23,7 @@ $(function()
             // default options
             options:
             {
+	            remote_tab_load_dict: 'Click to load',
             },
             css_classes:
             {
@@ -64,7 +65,8 @@ $(function()
 		            classes: {
 			            'ui-tabs-panel': 'ibo-tab-container--tab-container',    // For ajax tabs, so their containers have the right CSS classes
 		            },
-		            active: $.bbq.getState( this.element.attr('id'), true ) || 0
+		            active: $.bbq.getState( this.element.attr('id'), true ) || 0,
+		            remote_tab_load_dict: this.options.remote_tab_load_dict
 	            };
 	            if ($.bbq) {
 		            // Enable tabs on all tab widgets. The `event` property must be overridden so

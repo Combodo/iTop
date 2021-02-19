@@ -6,4 +6,5 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Click to load this tab',
 ]);

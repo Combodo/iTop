@@ -38,6 +38,14 @@ $ibo-tab-container--tab-container--label--spacing: 20px !default;
 $ibo-tab-container--tab-container--label--margin-bottom: 20px !default;
 $ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
 
+$ibo-tab--temporary-remote-content-max-height: 300px !default;
+
+$ibo-tab--temporary-remote-content--button--color: $ibo-color-grey-800 !default;
+
+$ibo-tab--temporary-remote-content--button--hover--opacity: 0.5 !default;
+$ibo-tab--temporary-remote-content--button--hover--background-color: $ibo-color-grey-900 !default;
+$ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !default;
+
 /* Rules */
 .ibo-tab-container--tabs-list {
 	position: relative;
@@ -116,7 +124,12 @@ $ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
 	padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
 }
 
+.ibo-is-scrollable .ibo-tab-container--tab-container--label{
+  display: block;
+}
+
 .ibo-tab-container--tab-container--label{
+  display: none;
 	margin-bottom: $ibo-tab-container--tab-container--label--margin-bottom;
 	overflow-x: hidden;
 	> span{
@@ -144,4 +157,41 @@ $ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
 		left: 100%;
 		margin-left: $ibo-tab-container--tab-container--label--spacing;
 	}
+}
+
+.ibo-tab--temporary-remote-content{
+  position: relative;
+}
+
+.ibo-tab--temporary-remote-content--placeholder{
+    height: auto;
+    position: relative;
+    max-height: $ibo-tab--temporary-remote-content-max-height;
+    >svg{
+      max-height: $ibo-tab--temporary-remote-content-max-height;
+    }
+}
+
+.ibo-tab--temporary-remote-content--button{
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
+
+  height: 100%;
+  width: 100%;
+  
+  cursor: pointer;
+  @extend %ibo-font-ral-med-300;
+  
+  background-color: transparent;
+  color: $ibo-tab--temporary-remote-content--button--color;
+  &:hover{
+    opacity: $ibo-tab--temporary-remote-content--button--hover--opacity;
+    background-color: $ibo-tab--temporary-remote-content--button--hover--background-color;
+    color: $ibo-tab--temporary-remote-content--button--hover--color;
+  }
 }

@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% if not aPage.isPrintable %}
-	$('#{{ oUIBlock.GetId() }}').tab_container();
+	$('#{{ oUIBlock.GetId() }}').tab_container({'remote_tab_load_dict':  '{{ 'UIBlock:TabContainer:RemoteTabLoad'|dict_s|escape('js') }}'});
 {% else %}
 	{% for oTab in oUIBlock.GetSubBlocks() %}
 oHiddeableChapters['tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}'] = '{{ oTab.GetTitle()|escape('js') }}';

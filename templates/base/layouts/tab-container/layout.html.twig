@@ -47,14 +47,12 @@
 
         {% block iboTabContainerTabsContainers %}
 	        {% if not aPage.isPrintable  %}
-				<div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list" data-role="ibo-tab-container--tab-container-list">
+				<div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{% if oUIBlock.GetIsScrollable()  %} ibo-is-scrollable{% endif %}" data-role="ibo-tab-container--tab-container-list">
 		            {% for oTab in oUIBlock.GetSubBlocks() %}
                         {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                             <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                  class="ibo-tab-container--tab-container">
-                                {% if oUIBlock.GetIsScrollable() %}
-                                    <div class="ibo-tab-container--tab-container--label"><span>{{ oTab.GetTitle() }}</span></div>
-                                {% endif %}
+                                <div class="ibo-tab-container--tab-container--label"><span>{{ oTab.GetTitle() }}</span></div>
                                 {{ render_block(oTab, {aPage: aPage}) }}
                             </div>
                         {% endif %}
