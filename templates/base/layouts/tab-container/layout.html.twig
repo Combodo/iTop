@@ -12,7 +12,8 @@
                                 <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
                                     data-tab-id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                     data-tab-type="{{ oTab.GetType() }}"
-                                    data-cache="{{ oTab.GetCache() }}">
+                                    data-cache="{{ oTab.GetCache() }}"
+                                    data-placeholder="{{ oTab.GetPlaceholderAbsPath() }}">
                                     <a href="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
                                        data-role="ibo-tab-container--tab-toggler"><span>{{ oTab.GetTitle() }}</span></a>
                                 </li>

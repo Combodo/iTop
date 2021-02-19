@@ -113,13 +113,17 @@ class TabContainer extends UIContentBlock
 	/**
 	 * @param string $sTabCode
 	 * @param string $sTitle
+	 * @param string|null $sPlaceholder
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
-	public function AddAjaxTab(string $sTabCode, string $sTitle): Tab
+	public function AddAjaxTab(string $sTabCode, string $sTitle, ?string $sPlaceholder = null): Tab
 	{
-		$oTab = new AjaxTab($sTabCode, $sTitle);
+		if($sPlaceholder === null){
+			$sPlaceholder = AjaxTab::DEFAULT_TAB_PLACEHOLDER_REL_PATH;
+		}
+		$oTab = new AjaxTab($sTabCode, $sTitle, $sPlaceholder);
 		$this->AddSubBlock($oTab);
 		return $oTab;
 	}

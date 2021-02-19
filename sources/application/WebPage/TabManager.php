@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 
@@ -198,17 +199,18 @@ class TabManager
 	 *     the tab to be reloaded upon each activation.
 	 *
 	 * @param string|null $sTabTitle
+	 * @param string $sPlaceholder
 	 *
 	 * @return string
 	 *
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.0.3
 	 */
-	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, string $sTabTitle = null): string
+	public function AddAjaxTab(string $sTabCode, string $sUrl, bool $bCache = true, string $sTabTitle = null, string $sPlaceholder = null): string
 	{
 		// Set the content of the tab
 		/** @var \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab $oTab */
-		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle);
+		$oTab = $this->InitTab($this->m_sCurrentTabContainer, $sTabCode, static::ENUM_TAB_TYPE_AJAX, $sTabTitle, $sPlaceholder);
 		$oTab->SetUrl($sUrl)
 			->SetCache($bCache);
 
@@ -311,12 +313,13 @@ class TabManager
 	 * @param string $sTabCode
 	 * @param string $sTabType
 	 * @param string|null $sTabTitle
+	 * @param string|null $sPlaceholder
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 * @since 2.7.0
 	 */
-	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, string $sTabTitle = null): Tab
+	protected function InitTab(string $sTabContainer, string $sTabCode, string $sTabType = self::DEFAULT_TAB_TYPE, string $sTabTitle = null, string $sPlaceholder = null): Tab
 	{
 		$oTab = null;
 		if (!$this->TabExists($sTabContainer, $sTabCode)) {
@@ -330,7 +333,7 @@ class TabManager
 
 			switch ($sTabType) {
 				case static::ENUM_TAB_TYPE_AJAX:
-					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle);
+					$oTab = $oTabContainer->AddAjaxTab($sTabCode, $sTitle, $sPlaceholder);
 					break;
 
 				case static::ENUM_TAB_TYPE_HTML:

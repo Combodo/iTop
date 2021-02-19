@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
+
 try
 {
 	ini_set('memory_limit', '256M');
@@ -1438,7 +1440,7 @@ EOF
 		if (Utils::GetConfig()->Get('csv_import_history_display'))
 		{
 			$oPage->SetCurrentTabContainer('tabs1');
-			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */);
+			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */, null, AjaxTab::ENUM_TAB_PLACEHOLDER_REL_PATH_MISC);
 		}
 	}
 			

@@ -11,9 +11,9 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 				if(tab.attr('data-role') === 'ibo-tab-container--tab-header')
 				{
 					panel.prepend('<div class="ibo-tab-container--tab-container--label"><span>' + tab.text() + '</span></div>');
-					var oTempDiv = $('<div>').addClass('ibo-tab--temporary-remote-content')
-					var oPlaceholder = $('<div>').addClass('ibo-tab--temporary-remote-content--placeholder').load(GetAbsoluteUrlAppRoot()+'images/placeholders/skeleton.svg');
-					var oLoadButton = $('<div>').addClass('ibo-tab--temporary-remote-content--button').text(placeholder).on('click', function(){tab.find('a').click()})
+					let oTempDiv = $('<div>').addClass('ibo-tab--temporary-remote-content')
+					let oPlaceholder = $('<div>').addClass('ibo-tab--temporary-remote-content--placeholder').load(tab.attr('data-placeholder'));
+					let oLoadButton = $('<div>').addClass('ibo-tab--temporary-remote-content--button').text(placeholder).on('click', function(){tab.find('a').click()})
 					oTempDiv.append(oPlaceholder)
 					oTempDiv.append(oLoadButton)
 					panel.append(oTempDiv);

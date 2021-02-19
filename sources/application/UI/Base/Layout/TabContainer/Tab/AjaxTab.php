@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIException;
 use Dict;
 use TabManager;
+use utils;
 
 /**
  * Class AjaxTab
@@ -33,15 +34,37 @@ use TabManager;
  * @since   3.0.0
  */
 class AjaxTab extends Tab {
+
+	const ENUM_TAB_PLACEHOLDER_REL_PATH_LIST = 'images/placeholders/skeleton-list.svg';
+	const ENUM_TAB_PLACEHOLDER_REL_PATH_DASHBOARD = 'images/placeholders/skeleton-dashboard.svg';
+	const ENUM_TAB_PLACEHOLDER_REL_PATH_OBJECT = 'images/placeholders/skeleton-object.svg';
+	const ENUM_TAB_PLACEHOLDER_REL_PATH_MISC = 'images/placeholders/skeleton.svg';
+
+	const DEFAULT_TAB_PLACEHOLDER_REL_PATH = self::ENUM_TAB_PLACEHOLDER_REL_PATH_MISC;
+	
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-ajax-tab';
 	public const TAB_TYPE = TabManager::ENUM_TAB_TYPE_AJAX;
 
+	/** @var string Placeholder displayed before tab is loaded */
+	private $sPlaceholderRelPath;
 	/** @var string The target URL to be loaded asynchronously */
 	private $sUrl;
 	/** @var bool Whether the tab should should be cached by the browser or always refreshed */
 	private $bCache;
 
+	/**
+	 * Tab constructor.
+	 *
+	 * @param string $sTabCode
+	 * @param string $sTitle
+	 * @param string $sPlaceholderRelPath
+	 */
+	public function __construct(string $sTabCode, string $sTitle, string $sPlaceholderRelPath = AjaxTab::DEFAULT_TAB_PLACEHOLDER_REL_PATH)
+	{
+		parent::__construct($sTabCode, $sTitle);
+		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
+	}
 	/**
 	 * @param string $sUrl
 	 *
@@ -80,6 +103,35 @@ class AjaxTab extends Tab {
 	 */
 	public function GetCache(): string {
 		return $this->bCache ? 'true' : 'false';
+	}
+
+	/**
+	 *
+	 * @param string $sPlaceholderRelPath
+	 *
+	 * @return $this
+	 */
+	public function SetPlaceholderRelPath(string $sPlaceholderRelPath) {
+		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
+
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetPlaceholderRelPath(): string {
+		return $this->sPlaceholderRelPath;
+	}
+
+	/**
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function GetPlaceholderAbsPath(): string {
+		return utils::GetAbsoluteUrlAppRoot().$this->sPlaceholderRelPath;
 	}
 
 	//-------------------------------

@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 
 
 /**
@@ -284,7 +285,7 @@ class _Ticket extends cmdbAbstractObject
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
-			$oPage->AddAjaxTab('Ticket:ImpactAnalysis', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(), true);
+			$oPage->AddAjaxTab('Ticket:ImpactAnalysis', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(), true, null, AjaxTab::ENUM_TAB_PLACEHOLDER_REL_PATH_MISC);
 		}
 	}
 }

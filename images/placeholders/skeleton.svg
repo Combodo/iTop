@@ -1,48 +1,42 @@
 <svg
         role="img"
         aria-labelledby="loading-aria"
-        viewBox="0 0 1000 300"
+        viewBox="0 0 540 100"
         preserveAspectRatio="none"
 >
-  <title id="loading-aria">Loading...</title>
   <rect
           x="0"
           y="0"
           width="100%"
           height="100%"
-          clip-path="url(#clip-path)"
-          style='fill: url("#fill");'
+          clip-path="url(#misc-clip-path)"
+          style='fill: url("#misc-fill");'
   ></rect>
   <defs>
-    <clipPath id="clip-path">
+    <clipPath id="misc-clip-path">
         <rect x="0" y="0" rx="0" ry="0" width="NaN" height="NaN" /> 
-        <rect x="36" y="16" rx="5" ry="5" width="326" height="15" /> 
-        <circle cx="14" cy="68" r="12" /> 
-        <rect x="36" y="61" rx="5" ry="5" width="326" height="15" /> 
-        <circle cx="13" cy="26" r="12" /> 
-        <rect x="405" y="16" rx="0" ry="0" width="163" height="146" /> 
-        <circle cx="45" cy="135" r="42" /> 
-        <rect x="103" y="104" rx="5" ry="5" width="156" height="15" /> 
-        <rect x="104" y="146" rx="5" ry="5" width="257" height="15" /> 
-        <rect x="584" y="14" rx="5" ry="5" width="326" height="15" /> 
-        <rect x="922" y="14" rx="5" ry="5" width="69" height="15" /> 
-        <rect x="584" y="46" rx="5" ry="5" width="326" height="15" /> 
-        <rect x="922" y="46" rx="5" ry="5" width="69" height="15" /> 
-        <rect x="584" y="78" rx="5" ry="5" width="326" height="15" /> 
-        <rect x="922" y="78" rx="5" ry="5" width="69" height="15" /> 
-        <rect x="584" y="110" rx="5" ry="5" width="326" height="15" /> 
-        <rect x="922" y="110" rx="5" ry="5" width="69" height="15" /> 
-        <rect x="440" y="186" rx="5" ry="5" width="326" height="15" /> 
-        <circle cx="418" cy="238" r="12" /> 
-        <rect x="440" y="231" rx="5" ry="5" width="326" height="15" /> 
-        <circle cx="417" cy="196" r="12" /> 
-        <rect x="410" y="269" rx="5" ry="5" width="352" height="27" /> 
-        <rect x="805" y="176" rx="0" ry="0" width="163" height="146" /> 
-        <circle cx="44" cy="250" r="42" /> 
-        <rect x="102" y="219" rx="5" ry="5" width="156" height="15" /> 
-        <rect x="103" y="261" rx="5" ry="5" width="257" height="15" />
+        <rect x="20" y="1" rx="5" ry="5" width="103" height="10" /> 
+        <circle cx="6" cy="6" r="6" /> 
+        <rect x="247" y="2" rx="0" ry="0" width="72" height="64" /> 
+        <circle cx="18" cy="80" r="18" /> 
+        <rect x="41" y="66" rx="5" ry="5" width="70" height="10" /> 
+        <rect x="428" y="78" rx="0" ry="0" width="75" height="67" /> 
+        <circle cx="6" cy="26" r="6" /> 
+        <rect x="20" y="41" rx="5" ry="5" width="183" height="10" /> 
+        <circle cx="6" cy="46" r="6" /> 
+        <rect x="41" y="81" rx="5" ry="5" width="55" height="10" /> 
+        <circle cx="19" cy="121" r="18" /> 
+        <rect x="42" y="107" rx="5" ry="5" width="30" height="10" /> 
+        <rect x="42" y="122" rx="5" ry="5" width="60" height="10" /> 
+        <rect x="20" y="21" rx="5" ry="5" width="143" height="10" /> 
+        <rect x="334" y="8" rx="5" ry="5" width="163" height="10" /> 
+        <rect x="334" y="48" rx="5" ry="5" width="163" height="10" /> 
+        <rect x="334" y="28" rx="5" ry="5" width="163" height="10" /> 
+        <rect x="252" y="89" rx="5" ry="5" width="163" height="10" /> 
+        <rect x="252" y="129" rx="5" ry="5" width="163" height="10" /> 
+        <rect x="252" y="109" rx="5" ry="5" width="163" height="10" />
     </clipPath>
-    <linearGradient id="fill">
+    <linearGradient id="misc-fill">
       <stop
               offset="0.599964"
               stop-color="#f3f3f3"

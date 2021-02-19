@@ -1045,9 +1045,9 @@ EOF
 	 * @throws \Exception
 	 * @since 2.0.3
 	 */
-	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
+	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null, $sPlaceholder = null)
 	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
+		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle, $sPlaceholder));
 	}
 
 	/**
