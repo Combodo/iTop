@@ -39,7 +39,9 @@ $ibo-tab-container--tab-container--label--margin-bottom: 20px !default;
 $ibo-tab-container--tab-container--label--span--margin-left: 40px !default;
 $ibo-tab-container--tab-container--label--separator-height: 2px !default;
 
-$ibo-tab--temporary-remote-content-max-height: 300px !default;
+$ibo-tab--temporary-remote-content--ratio: 5.4 !default;
+$ibo-tab--temporary-remote-content--max-height: 300px !default;
+$ibo-tab--temporary-remote-content--max-width: calc(#{$ibo-tab--temporary-remote-content--max-height} * #{$ibo-tab--temporary-remote-content--ratio}) !default; // Skeleton ratio is 540/100 for now, so we have to ensure that ratio, otherwise skeletons look bad on very wide screens
 
 $ibo-tab--temporary-remote-content--button--color: $ibo-color-grey-800 !default;
 
@@ -164,13 +166,16 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   position: relative;
 }
 
-.ibo-tab--temporary-remote-content--placeholder{
-    height: auto;
-    position: relative;
-    max-height: $ibo-tab--temporary-remote-content-max-height;
-    >svg{
-      max-height: $ibo-tab--temporary-remote-content-max-height;
-    }
+.ibo-tab--temporary-remote-content--placeholder {
+  position: relative;
+  height: auto;
+  max-height: $ibo-tab--temporary-remote-content--max-height;
+  text-align: center;
+
+  > svg {
+    max-width: $ibo-tab--temporary-remote-content--max-width;
+    max-height: $ibo-tab--temporary-remote-content--max-height;
+  }
 }
 
 .ibo-tab--temporary-remote-content--button{
