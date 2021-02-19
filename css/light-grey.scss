@@ -154,29 +154,6 @@
 	//	color: $text-color;
 	//}
 
-	/* Center the image both horizontally and vertically, withing a box which size is fixed (depends on the attribute definition) */
-	.details .view-image {
-		text-align: center;
-		padding: 2px;
-		border: 2px solid $gray-lighter;
-		border-radius: 6px;
-
-		img {
-			display: inline-block;
-			vertical-align: middle;
-			max-width: 90% !important;
-			max-height: 90% !important;
-			cursor: zoom-in;
-		}
-
-		.helper-middle {
-			// Helper to center the image (requires a span dedicated to this)
-			display: inline-block;
-			height: 100%;
-			vertical-align: middle;
-		}
-	}
-
 	//table.listContainer {
 	//	border: 0;
 	//	padding: 0;
