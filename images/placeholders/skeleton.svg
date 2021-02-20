@@ -2,8 +2,9 @@
         role="img"
         aria-labelledby="loading-aria"
         viewBox="0 0 540 100"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMid meet"
 >
+<title id="loading-aria">Loading...</title>
   <rect
           x="0"
           y="0"
