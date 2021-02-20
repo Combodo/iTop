@@ -450,14 +450,12 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
 		$this->oPage->AddUiBlock($oAttachmentTableBlock);
-		
+
 		$sTableId = $oAttachmentTableBlock->GetId();
-		$this->oPage->add_script(			
+		$this->oPage->add_script(
 <<<JS
 $('#$sTableId').on('inited drawn', function(){
-	$('#$sTableId [data-tooltip-content]').each(function(){
-		CombodoGlobalToolbox.InitTooltipFromMarkup($(this), true);
-	});
+	CombodoTooltip.InitAllNonInstantiatedTooltips($(this), true);
 });
 JS
 		);

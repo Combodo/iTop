@@ -110,7 +110,7 @@ CKEDITOR.plugins.add( 'disabler',
 $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
 	$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
-		CombodoGlobalToolbox.InitTooltipFromMarkup($(this));
+		CombodoTooltip.InitTooltipFromMarkup($(this));
 	});
 
 	// Enable fullscreen togglers based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)

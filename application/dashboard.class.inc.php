@@ -489,7 +489,7 @@ abstract class Dashboard
 <<<EOF
 	// Note: the title gets deleted by the validation mechanism
 	$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
-	CombodoGlobalToolbox.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
+	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
 	$('#attr_auto_reload').change( function(ev) {

@@ -88,7 +88,7 @@ $(function()
 
 				this.element.append(sMarkup);
 
-				CombodoGlobalToolbox.InitAllNonInstantiatedTooltips(this.element);
+				CombodoTooltip.InitAllNonInstantiatedTooltips(this.element);
 			},
 			_bindEvents: function () {
 				const me = this;
@@ -129,7 +129,7 @@ $(function()
 						oRemoveBtn.prop('disabled', false);
 					}
 				});
-				
+
 				$('#remove_'+me.options.input_name).click(function () {
 					if ($(this).prop('disabled')) {
 						return;

@@ -713,7 +713,6 @@ Dict.Format = function () {
 }
 
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
-
 /**
  * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.
  *
@@ -722,8 +721,17 @@ Dict.Format = function () {
  * @api
  * @since 3.0.0
  */
-const CombodoGlobalToolbox = {
-	// Instanciate tooltips (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
+const CombodoGlobalToolbox = {};
+
+/**
+ * Helper for tooltip instantiation (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
+ *
+ * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoTooltip = {
 	/**
 	 * Instanciate a tooltip on oElem from its data attributes
 	 *
@@ -733,15 +741,13 @@ const CombodoGlobalToolbox = {
 	 * @param {boolean} bForce When set to true, tooltip will be instanciate even if one already exists, overwritting it.
 	 * @constructor
 	 */
-	InitTooltipFromMarkup: function(oElem, bForce = false)
-	{
+	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {
 			allowHTML: true, // Always true so line breaks can work. Don't worry content will be sanitized.
 		};
 
 		// First, check if the tooltip isn't already instanciated
-		if((oElem.attr('data-tooltip-instanciated') === 'true') && (bForce === false))
-		{
+		if ((oElem.attr('data-tooltip-instanciated') === 'true') && (bForce === false)) {
 			return false;
 		}
 
@@ -758,16 +764,12 @@ const CombodoGlobalToolbox = {
 		// - Sanitize content and make sure line breaks are kept
 		const oTmpContentElem = $('<div />').html(oElem.attr('data-tooltip-content'));
 		let sContent = '';
-		if(bEnableHTML)
-		{
+		if (bEnableHTML) {
 			sContent = oTmpContentElem.html();
-			if(bSanitizeContent)
-			{
+			if (bSanitizeContent) {
 				sContent = sContent.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
 			}
-		}
-		else
-		{
+		} else {
 			sContent = oTmpContentElem.text();
 			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
 		}
@@ -811,7 +813,7 @@ const CombodoGlobalToolbox = {
 		}
 
 		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function () {
-			CombodoGlobalToolbox.InitTooltipFromMarkup($(this), bForce);
+			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
 	}
 };

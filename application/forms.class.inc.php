@@ -266,7 +266,7 @@ class DesignerForm
 					$this->AddReadyScript(
 <<<EOF
 $('#row_$sFieldId').$sWidgetClass({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams $sJSExtraParams });
-CombodoGlobalToolbox.InitTooltipFromMarkup($('#$sFormId [data-tooltip-content]'));
+CombodoTooltip.InitTooltipFromMarkup($('#$sFormId [data-tooltip-content]'));
 EOF
 					);
 				}
