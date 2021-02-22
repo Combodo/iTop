@@ -70,38 +70,6 @@ class CMDBChangeOp extends DBObject
 	}
 
 	/**
-	 * @param string $sAttCode
-	 * @param mixed $value
-	 *
-	 * @return bool
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 *
-	 * @since 2.7.4 reject non persisted CMDBChange
-	 */
-	public function Set($sAttCode, $value)
-	{
-		if ($sAttCode !== 'change') {
-			return parent::Set($sAttCode, $value);
-		}
-
-		if ((is_int($value)) && ($value <= 0)) {
-			$this->ThrowInvalidCMDBChangeException();
-		}
-
-		if ((is_object($value)) && ($value->IsNew())) {
-			$this->ThrowInvalidCMDBChangeException();
-		}
-
-		return parent::Set($sAttCode, $value);
-	}
-
-	protected function ThrowInvalidCMDBChangeException()
-	{
-		throw new CoreUnexpectedValue("Cannot set CMDBChangeOp.change with a non persisted CMDBChange !");
-	}
-
-	/**
 	 * Safety net:
 	 * * if CMDBChange isn't persisted yet, do it !
 	 * * in case the change is not given, let's guarantee that it will be set to the current ongoing change (or create a new one)
