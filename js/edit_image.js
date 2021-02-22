@@ -95,7 +95,7 @@ $(function()
 			_bindEvents: function () {
 				const me = this;
 
-				$('#file_'+me.options.input_name).change(function () {
+				$('#file_'+me.options.input_name).on('change', function () {
 					$('#do_remove_'+me.options.input_name).val('0');
 
 					me.previewImage(this, '#preview_'+me.options.input_name+' img');
@@ -111,7 +111,7 @@ $(function()
 					$('#file_'+me.options.input_name).trigger('click');
 				});
 
-				$('#reset_'+me.options.input_name).click(function () {
+				$('#reset_'+me.options.input_name).on('click', function () {
 					if ($(this).prop('disabled')) {
 						return;
 					}
@@ -136,7 +136,7 @@ $(function()
 					}
 				});
 
-				$('#remove_'+me.options.input_name).click(function () {
+				$('#remove_'+me.options.input_name).on('click', function () {
 					if ($(this).prop('disabled')) {
 						return;
 					}
