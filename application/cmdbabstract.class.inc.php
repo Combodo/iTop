@@ -1784,13 +1784,12 @@ HTML
 		if (!$oAttDef->IsExternalField())
 		{
 			$bMandatory = 'false';
-			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
-			{
+			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
 				$bMandatory = 'true';
 			}
 			$sValidationSpan = "<span class=\"form_validation ibo-field-validation\" id=\"v_{$iId}\"></span>";
 			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
-			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
+			$sHelpText = utils::EscapeHtml($oAttDef->GetHelpOnEdition());
 
 			// mandatory field control vars
 			$aEventsList = array(); // contains any native event (like change), plus 'validate' for the form submission
@@ -2116,9 +2115,9 @@ EOF
 						'current_image_url' => $sUrl,
 						'default_image_url' => $sDefaultUrl,
 						'labels' => array(
-							'reset_button' => htmlentities(Dict::S('UI:Button:ResetImage'), ENT_QUOTES, 'UTF-8'),
-							'remove_button' => htmlentities(Dict::S('UI:Button:RemoveImage'), ENT_QUOTES, 'UTF-8'),
-							'upload_button' => $sHelpText,
+							'reset_button' => utils::EscapeHtml(Dict::S('UI:Button:ResetImage')),
+							'remove_button' => utils::EscapeHtml(Dict::S('UI:Button:RemoveImage')),
+							'upload_button' => !empty($sHelpText) ? $sHelpText : utils::EscapeHtml(Dict::S('UI:Button:UploadImage')),
 						),
 					);
 					$sEditImageOptions = json_encode($aEditImage);

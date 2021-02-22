@@ -21,7 +21,7 @@ $(function()
 				labels: {
 					reset_button: 'Reset',
 					remove_button: 'Remove',
-					upload_button: 'Upload'
+					upload_button: 'Upload',
 				}
 			},
 
@@ -56,7 +56,6 @@ $(function()
 
 				const sDisabled = this.bLoadedEmpty ? 'disabled' : '';
 				const sLoadedDisabled = this.bLoadedEmpty ? 'yes' : 'no';
-				const sUploadButtonTooltipAttribute = this.options.labels.upload_button !== '' ? 'data-tooltip-content="'+this.options.labels.upload_button+'"' : '';
 				let sCssClasses = "ibo-input-image--image-view attribute-image";
 				let sCssClassToAdd, sImageUrl;
 
@@ -73,9 +72,12 @@ $(function()
 				<input type="hidden" id="do_remove_${this.options.input_name}" name="${this.options.input_name}[remove]" value="0"/>
 				<div id="preview_${this.options.input_name}" class="${sCssClasses}" data-role="ibo-input-image--image-view" style="width: ${this.options.max_width_px}px; min-width: ${this.options.max_width_px}px; height: ${this.options.max_height_px}px;" min-height: ${this.options.max_height_px}px;">
 					<img src="${sImageUrl}" data-original-src="${sImageUrl}" data-default-src="${this.options.default_image_url}" style="max-width: ${this.options.max_width_px}px; max-height: ${this.options.max_height_px}px">
-					<input id="file_${this.options.input_name}" name="${this.options.input_name}[fcontents]" type="file" ${sUploadButtonTooltipAttribute} />
+					<input id="file_${this.options.input_name}" name="${this.options.input_name}[fcontents]" type="file" />
 				</div>
 				<div id="buttons_${this.options.input_name}" class="ibo-input-image--edit-buttons" data-role="ibo-input-image--edit-buttons">
+					<button id="upload_${this.options.input_name}" class="ibo-button ibo-is-alternative ibo-is-neutral" data-role="ibo-button" type="button" data-tooltip-content="${this.options.labels.upload_button}" data-tooltip-placement="right">
+						<span class="fas fa-cloud-upload-alt"></span>
+					</button>
 					<button id="reset_${this.options.input_name}" class="ibo-button ibo-is-alternative ibo-is-neutral" data-role="ibo-button" type="button" data-tooltip-content="${this.options.labels.reset_button}" data-tooltip-placement="right" disabled>
 						<span class="fas fa-undo-alt"></span>
 					</button>
@@ -103,6 +105,10 @@ $(function()
 
 					$('#reset_'+me.options.input_name).prop('disabled', false);
 					$('#remove_'+me.options.input_name).prop('disabled', false);
+				});
+
+				$('#upload_'+me.options.input_name).on('click', function () {
+					$('#file_'+me.options.input_name).trigger('click');
 				});
 
 				$('#reset_'+me.options.input_name).click(function () {
