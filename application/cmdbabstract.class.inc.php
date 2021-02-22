@@ -2466,32 +2466,12 @@ JS
 			}
 		}
 
-		$oContentBlock = new UIContentBlock();
-		$oContentBlock->SetCSSClasses(['object-details'])
-			->AddDataAttribute('object-class', $sClass)
-			->AddDataAttribute('object-id', $iKey)
-			->AddDataAttribute('object-mode', $sMode);
-		$oPage->AddUiBlock($oContentBlock);
-
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
 			//$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName());
 
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
-
-			//$oContentBlock->AddSubBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
-
-//			$oPage->add(<<<HTML
-//<!-- Beginning of object-details -->
-//<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
-//	<div class="page_header">
-//		<h1>{$this->GetIcon()} $sHeaderTitle</h1>
-//	</div>
-//	<!-- Beginning of wizContainer -->
-//	<div class="wizContainer">
-//HTML
-//			);
 		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
