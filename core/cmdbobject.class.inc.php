@@ -117,7 +117,7 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * @param string $sUserInfo
 	 * @param string $sOrigin
-	 * @param $oDate
+	 * @param \DateTime $oDate
 	 *
 	 * @throws \CoreException
 	 *
@@ -172,6 +172,8 @@ abstract class CMDBObject extends DBObject
 	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
 	 *    $iChangeId = $oMyChange->DBInsert();
 	 *
+	 * **warning** : this will do nothing if current change already exists !
+	 *
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
 	 * @param string $sInfo
@@ -183,6 +185,8 @@ abstract class CMDBObject extends DBObject
 
 	/**
 	 * Provides information about the origin of the change
+	 *
+	 * **warning** : this will do nothing if current change already exists !
 	 *
 	 * @see SetTrackInfo
 	 * @see SetCurrentChange to specify a CMDBObject instance instead

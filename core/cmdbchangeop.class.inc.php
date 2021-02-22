@@ -71,10 +71,10 @@ class CMDBChangeOp extends DBObject
 
 	/**
 	 * Safety net:
-	 * * if CMDBChange isn't persisted yet, do it !
+	 * * if change isn't persisted yet, use the current change and persist it if needed
 	 * * in case the change is not given, let's guarantee that it will be set to the current ongoing change (or create a new one)
 	 *
-	 * @since 2.7.4 do persist the CMDBChange if needed
+	 * @since 2.7.4 do persist the current change if needed
 	 */
 	protected function OnInsert()
 	{
