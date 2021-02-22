@@ -733,12 +733,12 @@ const CombodoGlobalToolbox = {};
  */
 const CombodoTooltip = {
 	/**
-	 * Instanciate a tooltip on oElem from its data attributes
+	 * Instantiate a tooltip on oElem from its data attributes
 	 *
 	 * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
 	 *
 	 * @param {Object} oElem The jQuery object representing the element
-	 * @param {boolean} bForce When set to true, tooltip will be instanciate even if one already exists, overwritting it.
+	 * @param {boolean} bForce When set to true, tooltip will be instantiate even if one already exists, overwritting it.
 	 * @constructor
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
@@ -746,8 +746,8 @@ const CombodoTooltip = {
 			allowHTML: true, // Always true so line breaks can work. Don't worry content will be sanitized.
 		};
 
-		// First, check if the tooltip isn't already instanciated
-		if ((oElem.attr('data-tooltip-instanciated') === 'true') && (bForce === false)) {
+		// First, check if the tooltip isn't already instantiated
+		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
 
@@ -756,7 +756,7 @@ const CombodoTooltip = {
 		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
 
 		// - Content should be sanitized unless the developer says otherwise
-		// Note: Condition is inversed on purpose. When the developer is instanciating a tooltip,
+		// Note: Condition is inversed on purpose. When the developer is instantiating a tooltip,
 		// we want him/her to explicitly declare that he/she wants the sanitizer to be skipped.
 		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
 		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
@@ -796,8 +796,8 @@ const CombodoTooltip = {
 
 		tippy(oElem[0], oOptions);
 
-		// Mark tooltip as instanciated
-		oElem.attr('data-tooltip-instanciated', 'true');
+		// Mark tooltip as instantiated
+		oElem.attr('data-tooltip-instantiated', 'true');
 	},
 	/**
 	 * Instantiate all tooltips that are not already.
@@ -812,7 +812,7 @@ const CombodoTooltip = {
 			oContainerElem = $('body');
 		}
 
-		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instanciated="true"])')).each(function () {
+		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instantiated="true"])')).each(function () {
 			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
 	}

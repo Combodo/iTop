@@ -109,17 +109,17 @@ CKEDITOR.plugins.add( 'disabler',
 // Processing
 $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
-	$('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function(){
+	$('[data-tooltip-content]:not([data-tooltip-instantiated="true"])').each(function () {
 		CombodoTooltip.InitTooltipFromMarkup($(this));
 	});
 
 	// Enable fullscreen togglers based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
-	$('[data-fullscreen-toggler-target]:not([data-fullscreen-toggler-instanciated="true"])').each(function(){
+	$('[data-fullscreen-toggler-target]:not([data-fullscreen-toggler-instantiated="true"])').each(function () {
 		const sTargetSelector = $(this).attr('data-fullscreen-toggler-target');
 		let oTargetElem = null;
 
 		// Check if target selector is a jQuery expression, meaning that it needs to be evaluated (eg. $(this).closest('[data-role="ibo-xxx"]'))
-		if(sTargetSelector.indexOf('$') !== -1) {
+		if (sTargetSelector.indexOf('$') !== -1) {
 			oTargetElem = eval(sTargetSelector);
 		}
 		// Otherwise it should be a simple selector (eg. #abc, .def)
@@ -133,7 +133,7 @@ $(document).ready(function(){
 		}
 
 		// Toggle fullscreen on toggler click
-		$(this).on('click', function(oEvent){
+		$(this).on('click', function (oEvent) {
 			// Prevent anchor default behavior
 			oEvent.preventDefault();
 
@@ -141,19 +141,19 @@ $(document).ready(function(){
 		});
 		// Exit fullscreen on "Esc" key hit when focus is in either the toggler or the target
 		// - Toggler
-		$(this).on('keyup', function(oEvent){
-			if((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-toggler-instanciated'))) {
+		$(this).on('keyup', function (oEvent) {
+			if ((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-toggler-instantiated'))) {
 				CombodoBackofficeToolbox.ExitFullscreenForElement(oTargetElem);
 			}
 		});
 		// - Target
-		oTargetElem.on('keyup', function(oEvent){
-			if((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-target'))) {
+		oTargetElem.on('keyup', function (oEvent) {
+			if ((oEvent.key === 'Escape') && ($(oEvent.target).attr('data-fullscreen-target'))) {
 				CombodoBackofficeToolbox.ExitFullscreenForElement(oTargetElem);
 			}
 		});
 
 		oTargetElem.attr('data-fullscreen-target', 'true');
-		$(this).attr('data-fullscreen-toggler-instanciated', 'true');
+		$(this).attr('data-fullscreen-toggler-instantiated', 'true');
 	});
 });

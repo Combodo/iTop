@@ -639,16 +639,13 @@ JS
 
 		foreach( get_declared_classes() as $sDashletClass)
 		{
-			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instanciated.
-			if ( is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy')) )
-			{
+			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instantiated.
+			if (is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy'))) {
 				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract())
-				{
+				if (!$oReflection->isAbstract()) {
 					$aCallSpec = array($sDashletClass, 'IsVisible');
 					$bVisible = call_user_func($aCallSpec);
-					if ($bVisible)
-					{
+					if ($bVisible) {
 						$aCallSpec = array($sDashletClass, 'GetInfo');
 						$aInfo = call_user_func($aCallSpec);
 						$aDashlets[$sDashletClass] = $aInfo;
