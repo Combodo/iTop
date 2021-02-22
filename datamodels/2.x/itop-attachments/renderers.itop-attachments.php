@@ -454,7 +454,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sTableId = $oAttachmentTableBlock->GetId();
 		$this->oPage->add_script(
 <<<JS
-$('#$sTableId').on('inited drawn', function(){
+$('#$sTableId').on('init.dt draw.dt', function(){
 	CombodoTooltip.InitAllNonInstantiatedTooltips($(this), true);
 });
 JS

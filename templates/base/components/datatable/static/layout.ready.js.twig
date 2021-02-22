@@ -46,11 +46,5 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
             sortable: true
         },
         {% endfor %}
-    ],
-    initComplete: function () {
-        $('#{{ oUIBlock.GetId() }}').trigger('inited');
-    },
-    drawCallback: function(){
-        $('#{{ oUIBlock.GetId() }}').trigger('drawn');
-    }
+    ]
 });
