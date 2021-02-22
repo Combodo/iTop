@@ -2754,9 +2754,14 @@ EOF
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sClass
-	 * @param null $oObjectToClone
+	 * @param \DBObject|null $oSourceObject Object to use for the creation form, can be either the class to instantiate, an object to clone or an object to use (eg. already prefilled / modeled object)
 	 * @param array $aArgs
-	 * @param array $aExtraParams
+	 * @param array $aExtraParams Extra parameters depending on the context, below is a WIP attempt at documenting them:
+	 * [
+	 *  ...
+	 *  'keep_source_object' => true|false, // Whether the $oSourceObject should be kept or cloned. Default is true.
+	 *  ...
+	 * ]
 	 *
 	 * @return mixed
 	 * @throws \CoreException
@@ -2765,17 +2770,16 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
+	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oSourceObject = null, $aArgs = array(), $aExtraParams = array())
 	{
-		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
+		$sClass = ($oSourceObject == null) ? $sClass : get_class($oSourceObject);
 
-		if ($oObjectToClone == null)
-		{
+		if ($oSourceObject == null) {
 			$oObj = DBObject::MakeDefaultInstance($sClass);
-		}
-		else
-		{
-			$oObj = clone $oObjectToClone;
+		} elseif (isset($aExtraParams['keep_source_object']) && (true === isset($aExtraParams['keep_source_object']))) {
+			$oObj = $oSourceObject;
+		} else {
+			$oObj = clone $oSourceObject;
 		}
 
 		// Pre-fill the object with default values, when there is only on possible choice

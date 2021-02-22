@@ -801,13 +801,14 @@ EOF
 				$oAppContext->InitObjectFromContext($oObjToClone);
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');
-				$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				$aPrefillFormParam = array(
+					'user' => $_SESSION["auth_user"],
 					'context' => $oAppContext->GetAsHash(),
 					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
-					'origin' => 'console'
+					'origin' => 'console',
 				);
 				// 3rd - prefill API
-				$oObjToClone->PrefillForm('creation_from_0',$aPrefillFormParam);
+				$oObjToClone->PrefillForm('creation_from_0', $aPrefillFormParam);
 
 				// Display the creation form
 				$sClassLabel = MetaModel::GetName($sRealClass);
@@ -817,7 +818,7 @@ EOF
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
-				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1)); // wizard_container: Display the title above the form
+				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
 			}
 			else
 			{
