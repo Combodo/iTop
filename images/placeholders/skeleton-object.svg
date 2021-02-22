@@ -15,7 +15,6 @@
   ></rect>
   <defs>
     <clipPath id="object-clip-path">
-        <rect x="0" y="0" rx="0" ry="0" width="NaN" height="NaN" /> 
         <rect x="343" y="14" rx="0" ry="0" width="30" height="10" /> 
         <circle cx="36" cy="20" r="20" /> 
         <rect x="64" y="4" rx="5" ry="5" width="150" height="10" /> 
