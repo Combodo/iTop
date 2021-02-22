@@ -334,11 +334,12 @@ $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem 
 	@extend %ibo-fully-centered-content;
 }
 
-.ibo-activity-panel--add-caselog-entry-button{
-	@extend %ibo-baseline-centered-content;
-	position: absolute;
-	right: $ibo-activity-panel--add-caselog-entry-button--right;
-	top: $ibo-activity-panel--add-caselog-entry-button--top;
+.ibo-activity-panel--add-caselog-entry-button {
+  @extend %ibo-baseline-centered-content;
+  position: absolute;
+  z-index: 1;
+  right: $ibo-activity-panel--add-caselog-entry-button--right;
+  top: $ibo-activity-panel--add-caselog-entry-button--top;
 
 	width: $ibo-activity-panel--add-caselog-entry-button--diameter;
 	height: $ibo-activity-panel--add-caselog-entry-button--diameter;
