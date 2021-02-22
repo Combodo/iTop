@@ -894,6 +894,10 @@ $(function()
 								// If it was lost, means that someone else has it, else it expired
 								if ('lost' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
+								} else if ('expired' === oData.operation) {
+									sNewLockStatus = me.enums.lock_status.unknown;
+									// TODO 3.0.0: Maybe we could use the centralized dialog to dusplay error message we talked about in the .fail() callback?
+									alert(oData.popup_message);
 								}
 							} else {
 								sNewLockStatus = me.enums.lock_status.locked_by_myself;
