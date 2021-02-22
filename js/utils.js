@@ -812,7 +812,7 @@ const CombodoTooltip = {
 			oContainerElem = $('body');
 		}
 
-		oContainerElem.find('[data-tooltip-content]:not([data-tooltip-instanciated="true"])').each(function () {
+		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instanciated="true"])')).each(function () {
 			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
 	}
