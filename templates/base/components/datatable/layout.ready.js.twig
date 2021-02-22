@@ -108,6 +108,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
+        $('#{{ oUIBlock.GetId() }}').trigger('drawn');
     },
     {% endif %}
     rowId: "id",
@@ -183,6 +184,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             this.parent().find('.dataTables_paginate').hide();
             this.parent().find('.dataTables_length').hide();
         }
+        $('#{{ oUIBlock.GetId() }}').trigger('inited');
     }
 });
 

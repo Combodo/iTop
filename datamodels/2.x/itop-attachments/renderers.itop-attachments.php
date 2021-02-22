@@ -450,9 +450,17 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
 		$this->oPage->AddUiBlock($oAttachmentTableBlock);
-		foreach ($aData as $aRow) {
-			$this->oPage->add_ready_script($aRow['js']);
-		}
+		
+		$sTableId = $oAttachmentTableBlock->GetId();
+		$this->oPage->add_script(			
+<<<JS
+$('#$sTableId').on('inited drawn', function(){
+	$('#$sTableId [data-tooltip-content]').each(function(){
+		CombodoGlobalToolbox.InitTooltipFromMarkup($(this), true);
+	});
+});
+JS
+		);
 	}
 
 	/**
@@ -541,7 +549,6 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'upload-date' => $sAttachmentDateFormatted,
 			'uploader' => $sAttachmentUploader,
 			'type' => $sFileType,
-			'js' => 'CombodoGlobalToolbox.InitTooltipFromMarkup($("#$sTrId [data-tooltip-content]"));',
 		);
 		
 		if ($bWithDeleteButton)
