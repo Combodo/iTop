@@ -56,6 +56,8 @@ $ibo-activity-entry--sub-information--margin-top: 4px !default;
 $ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
 $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
+$ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
+
 /* Entry group */
 .ibo-activity-panel--entry-group{
 	&:not(:last-child){
@@ -64,7 +66,7 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 }
 
 /* Entry */
-.ibo-activity-entry{
+.ibo-activity-entry {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
@@ -207,13 +209,23 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 	color: $ibo-activity-entry--main-information-icon--text-color;
 	font-size: $ibo-activity-entry--main-information-icon--font-size;
 }
-.ibo-activity-entry--main-information-content{
+
+.ibo-activity-entry--main-information-content {
 
 }
-.ibo-activity-entry--sub-information{
-	margin-top: $ibo-activity-entry--sub-information--margin-top;
-	text-align: left;
-	color: $ibo-activity-entry--sub-information--text-color;
 
-	@extend %ibo-font-ral-nor-50;
+.ibo-activity-entry--sub-information {
+  margin-top: $ibo-activity-entry--sub-information--margin-top;
+  text-align: left;
+  color: $ibo-activity-entry--sub-information--text-color;
+
+  @extend %ibo-font-ral-nor-50;
+}
+
+.ibo-activity-entry--author-name {
+  &:after {
+    content: "-";
+    margin-left: $ibo-activity-entry--author-name--sibling-spacing;
+    margin-right: $ibo-activity-entry--author-name--sibling-spacing;
+  }
 }

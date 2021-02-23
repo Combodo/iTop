@@ -32,6 +32,11 @@
 			</div>
 			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
 				{% block iboActivityEntrySubInformation %}
+                    {% if get_config_parameter('activity_panel.show_author_name_below_entries') %}
+                        <span class="ibo-activity-entry--author-name ibo-is-hidden" data-role="ibo-activity-entry--author-name">
+                            {{ oUIBlock.GetAuthorFriendlyname() }}
+                        </span>
+                    {% endif %}
                     <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"
                           data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}"
                           data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"

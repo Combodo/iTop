@@ -72,6 +72,7 @@ $(function()
 					entry: '[data-role="ibo-activity-entry"]',
 					entry_medallion: '[data-role="ibo-activity-entry--medallion"]',
 					entry_main_information: '[data-role="ibo-activity-entry--main-information"]',
+					entry_author_name: '[data-role="ibo-activity-entry--author-name"]',
 					entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
 					edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
 					edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
@@ -1015,16 +1016,22 @@ $(function()
 						aFilterOptions.push($(this).val());
 					});
 
-					for(let sTargetEntryType of aTargetEntryTypes)
-					{
+					for (let sTargetEntryType of aTargetEntryTypes) {
 						me[sCallbackMethod](sTargetEntryType, aFilterOptions);
 					}
 				});
 
 				// Show only the last visible entry's medallion of a group (cannot be done through CSS yet 😕)
-				this.element.find(this.js_selectors.entry_group).each(function(){
+				this.element.find(this.js_selectors.entry_group).each(function () {
+					// Reset everything
 					$(this).find(me.js_selectors.entry_medallion).removeClass(me.css_classes.is_visible);
-					$(this).find(me.js_selectors.entry + ':visible:last').find(me.js_selectors.entry_medallion).addClass(me.css_classes.is_visible);
+					$(this).find(me.js_selectors.entry_author_name).addClass(me.css_classes.is_hidden);
+
+					// Then show only necessary
+					$(this).find(me.js_selectors.entry+':visible:last')
+						.find(me.js_selectors.entry_medallion).addClass(me.css_classes.is_visible)
+						.end()
+						.find(me.js_selectors.entry_author_name).removeClass(me.css_classes.is_hidden);
 				});
 
 				this._UpdateEntryGroupsVisibility();

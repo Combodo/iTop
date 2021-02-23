@@ -1213,6 +1213,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.show_author_name_below_entries' => [
+			'type' => 'bool',
+			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		],
 		'activity_panel.lock_watcher_period' => [
 			'type' => 'integer',
 			'description' => 'Period (in second) between lock status update.',
