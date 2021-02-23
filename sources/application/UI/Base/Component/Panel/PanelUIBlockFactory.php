@@ -35,9 +35,11 @@ use ormStyle;
  */
 class PanelUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIPanel';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Panel::class;
-	
+
 	/**
 	 * Make a basis Panel component
 	 *
@@ -48,8 +50,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeNeutral(string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		// TODO 3.0.0: Set this back to neutral when object details are done
-		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
+		$oPanel->SetColor(Panel::ENUM_COLOR_NEUTRAL);
 
 		return $oPanel;
 	}
