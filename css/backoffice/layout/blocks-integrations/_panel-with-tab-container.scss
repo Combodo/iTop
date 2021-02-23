@@ -23,6 +23,7 @@ $ibo-panel-with-tab-container--margin-x: -1 * $ibo-panel--body--padding-x !defau
 			> .ibo-tab-container--tab-container-list{
 				height: 100%;
 				overflow-y: auto;
+        flex-grow: 1;
 			}
 		}
 	}
