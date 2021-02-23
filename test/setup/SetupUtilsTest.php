@@ -21,6 +21,11 @@ use SetupUtils;
  */
 class SetupUtilsTest extends ItopTestCase
 {
+	const ERROR = 0;
+	const WARNING = 1;
+	const INFO = 2;
+	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
+
 	protected function setUp()
 	{
 		parent::setUp();
@@ -34,9 +39,15 @@ class SetupUtilsTest extends ItopTestCase
 	 */
 	public function testCheckGraphviz($sScriptPath, $iSeverity, $sLabel){
 		/** @var \CheckResult $oCheck */
-		$oCheck = SetupUtils::CheckGraphviz($sScriptPath);
-		$this->assertEquals($iSeverity, $oCheck->iSeverity);
-		$this->assertContains($sLabel, $oCheck->sLabel);
+		$aCheck = SetupUtils::CheckGraphviz($sScriptPath);
+		$bLabelFound = false;
+		foreach ($aCheck as $oCheck) {
+			$this->assertGreaterThanOrEqual($iSeverity, $oCheck->iSeverity);
+			if (!$bLabelFound && (empty($sLabel) || strpos($oCheck->sLabel, $sLabel) !== false)) {
+				$bLabelFound = true;
+			}
+		}
+		$this->assertTrue($bLabelFound, "label '$sLabel' not found");
 	}
 
 	public function CheckGraphvizProvider(){
@@ -47,22 +58,22 @@ class SetupUtilsTest extends ItopTestCase
 		return [
 			"bash injection" => [
 				"touch /tmp/toto",
-				0,
+				self::ERROR,
 				"could not be executed: Please make sure it is installed and in the path",
 			],
 			"command ok" => [
 				"/usr/bin/whereis",
-				2,
+				self::INFO,
 				"",
 			],
 			"empty command => dot by default" => [
 				"",
-				2,
+				self::INFO,
 				"",
 			],
 			"command failed" => [
 				"/bin/ls",
-				1,
+				self::WARNING,
 				"dot could not be executed (retcode=2): Please make sure it is installed and in the path",
 			]
 		];
