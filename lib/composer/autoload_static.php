@@ -429,6 +429,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectOption' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/Select/SelectOption.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectOptionUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/Select/SelectOptionUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\TextArea' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Input/TextArea.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\MedallionIcon\\MedallionIcon' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/MedallionIcon/MedallionIcon.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\Panel' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Panel/Panel.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\PanelEnhanced' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Panel/PanelEnhanced.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\PanelUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Panel/PanelUIBlockFactory.php',

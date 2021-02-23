@@ -1,0 +1,21 @@
+/*!
+ * copyright   Copyright (C) 2010-2021 Combodo SARL
+ * license     http://opensource.org/licenses/AGPL-3.0
+ */
+.ibo-medallion-icon{
+  display: flex;
+  padding: 13px 0px
+}
+.ibo-medallion--image{
+  border-radius: $ibo-border-radius-full;
+  background-color: $ibo-color-blue-200;
+  
+  height: 48px;
+  width: 48px;
+  padding: 2px;
+}
+
+.ibo-medallion-icon--description{
+  display: inline-block;
+  padding-left: 8px;
+}

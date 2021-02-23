@@ -199,6 +199,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectOption' => $baseDir . '/sources/application/UI/Base/Component/Input/Select/SelectOption.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\Select\\SelectOptionUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Input/Select/SelectOptionUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\TextArea' => $baseDir . '/sources/application/UI/Base/Component/Input/TextArea.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\MedallionIcon\\MedallionIcon' => $baseDir . '/sources/application/UI/Base/Component/MedallionIcon/MedallionIcon.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\Panel' => $baseDir . '/sources/application/UI/Base/Component/Panel/Panel.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\PanelEnhanced' => $baseDir . '/sources/application/UI/Base/Component/Panel/PanelEnhanced.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\PanelUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Panel/PanelUIBlockFactory.php',
