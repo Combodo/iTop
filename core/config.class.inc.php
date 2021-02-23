@@ -1213,6 +1213,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.datetimes_reformat_limit' => [
+			'type' => 'integer',
+			'description' => 'Limit (in days) for the dates / times to be displayed in a relative format (eg. "2 days ago") instead of in absolute format (eg. "2021-05-01 10:00"). After that limit, they will all be displayed in absolute format using the "date_and_time_format" parameter.',
+			'default' => 7,
+			'value' => 7,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'obsolescence.show_obsolete_data' => [
 			'type' => 'bool',
 			'description' => 'Default value for the user preference "show obsolete data"',

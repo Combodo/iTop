@@ -25,7 +25,7 @@ $(function()
 			options:
 				{
 					datetime_format: null,
-					datetimes_reformat_limit: 14,   // In days
+					datetimes_reformat_limit: 7,    // In days
 					transaction_id: null,           // Null until the user gets the lock on the object
 					lock_enabled: false,            // Should only be true when object mode is set to "view" and the "concurrent_lock_enabled" config. param. enabled
 					lock_status: null,
