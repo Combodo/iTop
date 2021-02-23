@@ -3,11 +3,10 @@
   text-align: center;
 }
 .ibo-blocklist--medallion{
-  
   > .ibo-medallion--image{
     margin: 0 auto;
   }
   > .ibo-medallion-icon--description{
-    text-align: center;
+    flex-grow: 1;
   }
 }
