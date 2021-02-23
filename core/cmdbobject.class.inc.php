@@ -195,14 +195,11 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Get the additional information (defaulting to user name)
 	 */
-	protected static function GetTrackInfo()
+	public static function GetTrackInfo()
 	{
-		if (is_null(self::$m_sInfo))
-		{
+		if (is_null(self::$m_sInfo)) {
 			return CMDBChange::GetCurrentUserName();
-		}
-		else
-		{
+		} else {
 			return self::$m_sInfo;
 		}
 	}
