@@ -454,6 +454,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
+	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
@@ -1544,6 +1545,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
+
+	'UI:StateChanged' => 'Etat modifié',
 ));
 
 //

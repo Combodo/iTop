@@ -3253,8 +3253,7 @@ HTML;
 			case 'text':
 			case 'html':
 				$data = $oDoc->GetData();
-				switch ($oDoc->GetMimeType())
-				{
+				switch ($oDoc->GetMimeType()) {
 					case 'text/xml':
 						$oPage->add("<iframe id='preview_$sAttCode' src=\"$sDisplayUrl\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
 						break;

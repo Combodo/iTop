@@ -1062,6 +1062,28 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function CheckTransaction($aData)
+	{
+		$isTransactionValid = \utils::IsTransactionValid($this->oForm->GetTransactionId(), false); //The transaction token is kept in order to preserve BC with ajax forms (the second call would fail if the token is deleted). (The GC will take care of cleaning the token for us later on)
+		if (!$isTransactionValid) {
+			if ($this->oObject->IsNew()) {
+				$sError = Dict::S('UI:Error:ObjectAlreadyCreated');
+			} else {
+				$sError = Dict::S('UI:Error:ObjectAlreadyUpdated');
+			}
+
+			$aData['messages']['error'] += [
+				'_main' => [$sError]
+			];
+			$aData['valid'] = false;
+		}
+
+		return $aData;
+	}
+
+	/**
 	 * Validates the form and returns an array with the validation status and the messages.
 	 * If the form is valid, creates/updates the object.
 	 *
@@ -1083,123 +1105,115 @@ class ObjectFormManager extends FormManager
 	 */
 	public function OnSubmit($aArgs = null)
 	{
-		$aData = array(
-			'valid' => true,
-			'messages' => array(
-				'success' => array(),
-				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array(),
-			),
-		);
+		$aData = parent::OnSubmit($aArgs);
+
+		if (! $aData['valid']) {
+			return $aData;
+		}
 
 		// Update object and form
 		$this->OnUpdate($aArgs);
 
 		// Check if form valid
-		if ($this->oForm->Validate())
-		{
-			// The try catch is essentially to start a MySQL transaction in order to ensure that all or none objects are persisted when creating an object with links
-			try
-			{
-				$sObjectClass = get_class($this->oObject);
-
-				// Starting transaction
-				CMDBSource::Query('START TRANSACTION');
-				// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-				$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
-				if ($bAllowWrite)
-				{
-					$this->oObject->AllowWrite(true);
-				}
-
-				// Writing object to DB
-				$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
-				$bWasModified = $this->oObject->IsModified();
-				try
-				{
-					$this->oObject->DBWrite();
-				}
-				catch (CoreCannotSaveObjectException $e)
-				{
-					throw new Exception($e->getHtmlMessage());
-				}
-				// Finalizing images link to object, otherwise it will be cleaned by the GC
-				InlineImage::FinalizeInlineImages($this->oObject);
-				// Finalizing attachments link to object
-				// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
-				if (isset($aArgs['attachmentIds']))
-				{
-					$this->FinalizeAttachments($aArgs['attachmentIds']);
-				}
-
-				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
-
-				// Checking if we have to apply a stimulus
-				if (isset($aArgs['applyStimulus']))
-				{
-					$this->oObject->ApplyStimulus($aArgs['applyStimulus']['code']);
-				}
-				// Activating triggers only on update
-				if ($bActivateTriggers)
-				{
-					$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
-					if ($sTriggersQuery !== null)
-					{
-						$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
-						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL($sTriggersQuery), array(),
-							array('parent_classes' => $aParentClasses));
-						/** @var \Trigger $oTrigger */
-						while ($oTrigger = $oTriggerSet->Fetch())
-						{
-							try
-							{
-								$oTrigger->DoActivate($this->oObject->ToArgs('this'));
-							}
-							catch(Exception $e)
-							{
-								utils::EnrichRaisedException($oTrigger, $e);
-							}
-						}
-					}
-				}
-
-				// Resetting caselog fields value, otherwise the value will stay in it after submit.
-				$this->oForm->ResetCaseLogFields();
-
-				if ($bWasModified)
-				{
-					//=if (isNew) because $bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified())
-					if(!$bActivateTriggers)
-					{
-						$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
-					}
-					else
-					{
-						$aData['messages']['success'] += array('_main' => array(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($this->oObject)), $this->oObject->GetName())));
-					}
-				}
-			}
-			catch (Exception $e)
-			{
-				// End transaction with a rollback as something failed
-				CMDBSource::Query('ROLLBACK');
-				$aData['valid'] = false;
-				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
-			}
-			finally
-			{
-				// Removing transaction id
-				utils::RemoveTransaction($this->oForm->GetTransactionId());
-			}
-		}
-		else
+		if (! $this->oForm->Validate())
 		{
 			// Handle errors
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
+			return $aData;
 		}
+
+		// The try catch is essentially to start a MySQL transaction in order to ensure that all or none objects are persisted when creating an object with links
+		try
+		{
+			$sObjectClass = get_class($this->oObject);
+
+			// Starting transaction
+			CMDBSource::Query('START TRANSACTION');
+			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			if ($bAllowWrite)
+			{
+				$this->oObject->AllowWrite(true);
+			}
+
+			// Writing object to DB
+			$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
+			$bWasModified = $this->oObject->IsModified();
+			try
+			{
+				$this->oObject->DBWrite();
+			}
+			catch (CoreCannotSaveObjectException $e)
+			{
+				throw new Exception($e->getHtmlMessage());
+			}
+			// Finalizing images link to object, otherwise it will be cleaned by the GC
+			InlineImage::FinalizeInlineImages($this->oObject);
+			// Finalizing attachments link to object
+			// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
+			if (isset($aArgs['attachmentIds']))
+			{
+				$this->FinalizeAttachments($aArgs['attachmentIds']);
+			}
+
+			// Ending transaction with a commit as everything was fine
+			CMDBSource::Query('COMMIT');
+
+			// Checking if we have to apply a stimulus
+			if (isset($aArgs['applyStimulus']))
+			{
+				$this->oObject->ApplyStimulus($aArgs['applyStimulus']['code']);
+			}
+			// Activating triggers only on update
+			if ($bActivateTriggers)
+			{
+				$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
+				if ($sTriggersQuery !== null)
+				{
+					$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL($sTriggersQuery), array(),
+						array('parent_classes' => $aParentClasses));
+					/** @var \Trigger $oTrigger */
+					while ($oTrigger = $oTriggerSet->Fetch())
+					{
+						try
+						{
+							$oTrigger->DoActivate($this->oObject->ToArgs('this'));
+						}
+						catch(Exception $e)
+						{
+							utils::EnrichRaisedException($oTrigger, $e);
+						}
+					}
+				}
+			}
+
+			// Resetting caselog fields value, otherwise the value will stay in it after submit.
+			$this->oForm->ResetCaseLogFields();
+
+			if ($bWasModified)
+			{
+				//=if (isNew) because $bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified())
+				if(!$bActivateTriggers)
+				{
+					$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
+				}
+				else
+				{
+					$aData['messages']['success'] += array('_main' => array(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($this->oObject)), $this->oObject->GetName())));
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			// End transaction with a rollback as something failed
+			CMDBSource::Query('ROLLBACK');
+			$aData['valid'] = false;
+			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
+		}
+
 
 		return $aData;
 	}

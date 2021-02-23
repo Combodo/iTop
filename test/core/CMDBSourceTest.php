@@ -35,7 +35,7 @@ class CMDBSourceTest extends ItopTestCase
 	 */
 	public function testCompareFieldTypes($bResult, $sItopFieldType, $sDbFieldType)
 	{
-		$this->assertEquals($bResult, CMDBSource::IsSameFieldTypes($sItopFieldType, $sDbFieldType));
+		$this->assertEquals($bResult, CMDBSource::IsSameFieldTypes($sItopFieldType, $sDbFieldType), "$sItopFieldType\n VS\n $sDbFieldType");
 	}
 
 	public function compareFieldTypesProvider()
@@ -106,12 +106,12 @@ class CMDBSourceTest extends ItopTestCase
 				"ENUM('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 				"enum('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			),
-//FIXME N°3065 before the fix this returns true :(
-//			'ENUM with different values, containing parenthesis' => array(
-//				false,
-//				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-//				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-//			),
+			//FIXME N°3065 before the fix this returns true :(
+			'ENUM with different values, containing parenthesis' => array(
+				false,
+				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+			),
 		);
 	}
 }

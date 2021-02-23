@@ -1189,7 +1189,7 @@ HTML
 					$sOrigState = utils::ReadPostedParam('obj_state_orig', '');
 					if ($sTargetState != $sOrigState)
 					{
-						$aWarnings[] = 'State changed';
+						$aWarnings[] = Dict::S('UI:StateChanged');
 					}
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}

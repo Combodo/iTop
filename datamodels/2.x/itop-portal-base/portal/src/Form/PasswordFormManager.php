@@ -48,6 +48,8 @@ class PasswordFormManager extends FormManager
 		// Building the form
 		$oForm = new Form('change_password');
 
+		$oForm->SetTransactionId(\utils::GetNewTransactionId());
+
 		// Adding hidden field with form type
 		$oField = new HiddenField('form_type');
 		$oField->SetCurrentValue('change_password');
@@ -93,14 +95,11 @@ class PasswordFormManager extends FormManager
 	 */
 	public function OnSubmit($aArgs = null)
 	{
-		$aData = array(
-			'valid' => true,
-			'messages' => array(
-				'success' => array(),
-				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array(),
-			),
-		);
+		$aData = parent::OnSubmit($aArgs);
+
+		if (! $aData['valid']) {
+			return $aData;
+		}
 
 		// Update object and form
 		$this->OnUpdate($aArgs);

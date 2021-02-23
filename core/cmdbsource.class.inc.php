@@ -1082,7 +1082,8 @@ class CMDBSource
 	}
 
 	/**
-	 * There may have some differences between DB : for example in MySQL 5.7 we have "INT", while in MariaDB >= 10.2 you get "int DEFAULT 'NULL'"
+	 * There may have some differences between DB : for example in MySQL 5.7 we have "INT", while in MariaDB >= 10.2 you get "int DEFAULT
+	 * 'NULL'"
 	 *
 	 * We still do a case sensitive comparison for enum values !
 	 *
@@ -1093,6 +1094,7 @@ class CMDBSource
 	 * @param string $sDbFieldType
 	 *
 	 * @return bool true if same type and options (case sensitive comparison only for type options), false otherwise
+	 * @throws \CoreException
 	 * @since 2.7.0 N°2490
 	 */
 	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
@@ -1146,14 +1148,51 @@ class CMDBSource
 	 *      1. data type : for example 'VARCHAR'
 	 *      2. type value : for example '255'
 	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 * @throws \CoreException
 	 */
 	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
 	{
 		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?/', $sCompleteFieldType, $aMatches);
 
 		$sDataType = isset($aMatches[1]) ? $aMatches[1] : '';
+
+		if (strcasecmp($sDataType, 'ENUM') === 0){
+			return self::GetEnumOptions($sDataType, $sCompleteFieldType);
+		}
+
 		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
 		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
+
+		return array($sDataType, $sTypeOptions, $sOtherOptions);
+	}
+
+	/**
+	 * @since 2.7.4 N°3065
+	 * Handle ENUM options
+	 *
+	 * @param $sDataType
+	 * @param $sCompleteFieldType
+	 * Example: ENUM('CSP A','CSP (aaaa) M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+	 *
+	 * @return string[] consisting of 3 items :
+	 *      1. data type : ENUM or enum here
+	 *      2. type value : in-between EUM parenthesis
+	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 * @throws \CoreException
+	 */
+	private static function GetEnumOptions($sDataType, $sCompleteFieldType)
+	{
+		$iFirstOpeningParenthesis = strpos($sCompleteFieldType, '(');
+		$iLastEndingParenthesis = strrpos($sCompleteFieldType, ')');
+
+		if ($iFirstOpeningParenthesis === false || $iLastEndingParenthesis === false ){
+			//should never happen as GetFieldDataTypeAndOptions regexp matched.
+			//except if regexp is modiied/broken somehow one day...
+			throw new CoreException("GetEnumOptions issue with $sDataType parsing : " . $sCompleteFieldType);
+		}
+
+		$sTypeOptions = substr($sCompleteFieldType, $iFirstOpeningParenthesis + 1, $iLastEndingParenthesis - 1);
+		$sOtherOptions = substr($sCompleteFieldType, $iLastEndingParenthesis + 1);
 
 		return array($sDataType, $sTypeOptions, $sOtherOptions);
 	}
