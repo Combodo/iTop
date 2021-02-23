@@ -44,9 +44,8 @@ class CMDBChangeOpSetAttributeScalarFactory extends CMDBChangeOpSetAttributeFact
 		$sHostObjectClass = $oChangeOp->Get('objclass');
 		$sAttCode = $oChangeOp->Get('attcode');
 
-		// Specific ActivityEntry for transition, otherwise just a regular EditsEntry
-		if(MetaModel::HasLifecycle($sHostObjectClass) && ($sAttCode === MetaModel::GetStateAttributeCode($sHostObjectClass)))
-		{
+		// Specific ActivityEntry for state changes, otherwise just a regular EditsEntry
+		if (MetaModel::HasStateAttributeCode($sHostObjectClass) && ($sAttCode === MetaModel::GetStateAttributeCode($sHostObjectClass))) {
 			$oDateTime = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $oChangeOp->Get('date'));
 
 			// Retrieve author login
