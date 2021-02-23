@@ -28,6 +28,7 @@ use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
@@ -629,7 +630,7 @@ EOF
 					$sTargetClass = $sLinkedClass;
 				}
 
-				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
 				$oPage->AddUiBlock($oClassIcon);
 				
@@ -707,7 +708,7 @@ EOF
 						'extra_fields' => $sAttCodesToDisplay,
 					);
 				}
-				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
 				$oPage->AddUiBlock($oClassIcon);
 				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
@@ -780,8 +781,8 @@ EOF
 
 			foreach($aNotificationClasses as $sNotifClass)
 			{
-				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
-				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
+				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
+				$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-blocklist--medallion');
 				$oPage->AddUiBlock($oClassIcon);
 				
 				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
