@@ -3,15 +3,15 @@
 {% apply spaceless %}
 
     {% if oUIBlock.bEmptySet or oUIBlock.bNotAuthorized %}
-        <p>{{ 'UI:NoObjectToDisplay'|dict_s }}</p>
+        <div class="ibo-blocklist--empty-text">{{ 'UI:NoObjectToDisplay'|dict_s }}</div>
     {% endif %}
 
     {% if oUIBlock.bCreateNew %}
-        <p>
+        <div class="ibo-blocklist--create-new">
             <a{{ oUIBlock.sLinkTarget }} href="{{ oUIBlock.sAbsoluteUrlAppRoot }}pages/UI.php?operation=new&class={{ oUIBlock.sClass }}&{{ oUIBlock.sParams }}{{ oUIBlock.sDefault }}">
                 {{ 'UI:ClickToCreateNew'|dict_format(oUIBlock.sClassLabel) }}
-            </a>
-        </p>
+            </a>       
+        </div>
     {% endif %}
 
     {% for oSubBlock in oUIBlock.GetSubBlocks() %}

@@ -628,8 +628,11 @@ EOF
 				{
 					$sTargetClass = $sLinkedClass;
 				}
-				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
 
+				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
+				$oPage->AddUiBlock($oClassIcon);
+				
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
 						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
@@ -663,8 +666,7 @@ EOF
 						'table_id' => $sClass.'_'.$sAttCode,
 					);
 				}
-				else
-				{
+				else {
 					// n:n links
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sLinkingAttCode = $oLinkingAttDef->GetCode();
@@ -678,8 +680,7 @@ EOF
 					},
 						$aLnkAttDefsToDisplay
 					);
-					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay))
-					{
+					if (!in_array(ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode, $aLnkAttCodesToDisplay)) {
 						// we need to display a link to the remote class instance !
 						$aLnkAttCodesToDisplay[] = ormLinkSet::LINK_ALIAS.'.'.$sLinkingAttCode;
 					}
@@ -706,7 +707,9 @@ EOF
 						'extra_fields' => $sAttCodesToDisplay,
 					);
 				}
-				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
+				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
+				$oPage->AddUiBlock($oClassIcon);
 				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
@@ -777,7 +780,10 @@ EOF
 
 			foreach($aNotificationClasses as $sNotifClass)
 			{
-				$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
+				$oClassIcon = new Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
+				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-blocklist--medallion');
+				$oPage->AddUiBlock($oClassIcon);
+				
 				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
 				$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
 			}
