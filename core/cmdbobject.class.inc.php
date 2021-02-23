@@ -125,18 +125,13 @@ abstract class CMDBObject extends DBObject
 	 */
 	public static function SetCurrentChangeFromParams($sUserInfo, $sOrigin = null, $oDate = null)
 	{
-		static::$m_oCurrChange = MetaModel::NewObject('CMDBChange');
+		static::SetTrackInfo($sUserInfo);
+		static::SetTrackOrigin($sOrigin);
+		static::CreateChange();
 
-		static::$m_oCurrChange->Set("userinfo", $sUserInfo);
-
-		if (!is_null($sOrigin)) {
-			static::$m_oCurrChange->Set("origin", $sOrigin);
+		if (!is_null($oDate)) {
+			static::$m_oCurrChange->Set("date", $oDate);
 		}
-
-		if (is_null($oDate)) {
-			$oDate = time();
-		}
-		static::$m_oCurrChange->Set("date", $oDate);
 	}
 
 	//
