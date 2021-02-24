@@ -1,0 +1,93 @@
+$ibo-impact-analysis--graph-zoom-slider--height: 1.1em !default;
+$ibo-impact-analysis--graph-zoom-slider--width: 10em !default;
+
+$ibo-impact-analysis--graph-zoom-plus-minus--margin-x: 0.5em !default;
+
+$ibo-simple-graph--grouping-threshold-additional-context--container--margin-right: 0.3em !default;
+$ibo-simple-graph--grouping-threshold-additional-context--content--margin-right: 1em !default;
+
+$ibo-impact-analysis--graph-zoom-slider--width: 10em !default;
+
+$ibo-display-graph--search-box--criterion--content--padding-y: 0 !default;
+$ibo-display-graph--search-box--criterion--content--padding-x: 15px !default;
+
+$ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px !default;
+
+
+.graph_zoom {
+  display: flex;
+  float: right;
+  align-items: center;
+}
+
+.graph_zoom_slider {
+  height: $ibo-impact-analysis--graph-zoom-slider--height;
+  display: inline-block;
+  width: $ibo-impact-analysis--graph-zoom-slider--width;
+}
+
+.graph_zoom_plus, .graph_zoom_minus {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: $ibo-impact-analysis--graph-zoom-plus-minus--margin-x;
+  margin-right:$ibo-impact-analysis--graph-zoom-plus-minus--margin-x;
+}
+.graph_config{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .toolkit_menu.graph{
+    >ul ul {
+      z-index: 1;
+      position: absolute;
+      display:none;
+      @extend .ibo-popover-menu;
+        li{
+          @extend .ibo-popover-menu--item
+        }
+    }
+  }
+}
+.graph_separator{
+  flex-grow: 1;
+}
+
+.ibo-simple-graph--grouping-threshold--container, .ibo-simple-graph--additional-context--container{
+  margin-right: $ibo-simple-graph--grouping-threshold-additional-context--container--margin-right;
+  display: flex;
+  align-items: center;
+  >*{
+    margin-right: $ibo-simple-graph--grouping-threshold-additional-context--content--margin-right;
+  }
+}
+#graph_grouping_threshold{
+  width: auto;
+  padding-right: 0;
+}  
+.ibo-display-graph--search-box {
+
+  .sf_criterion_row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > div {
+      align-items: center;
+      display: flex;
+      padding: $ibo-display-graph--search-box--criterion--content--padding-y $ibo-display-graph--search-box--criterion--content--padding-x;
+
+      > input {
+        margin-right: $ibo-display-graph--search-box--criterion--content--checkbox--margin-right;
+      }
+
+      .ibo-medallion-icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  #ReloadMovieBtn {
+    float: right;
+  }
+}

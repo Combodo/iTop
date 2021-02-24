@@ -466,22 +466,28 @@ $(function()
 			var sPopupMenuId = 'tk_graph'+this.element.attr('id');
 			var sHtml = '<div class="graph_config">';
 			var sId = this.element.attr('id');
-			sHtml += this.options.labels.grouping_threshold+'&nbsp;<input type="text" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2">';
+			sHtml += '<div class="ibo-simple-graph--grouping-threshold--container"><label for="'+sId+'_grouping_threshold">'+this.options.labels.grouping_threshold+'</label><input type="number" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2" class="ibo-input"></div>';
 			if (this.options.additional_contexts.length > 0)
 			{
-				sHtml += '&nbsp;'+this.options.labels.additional_context_info+' <select id="'+sId+'_contexts" name="contexts" class="multiselect" multiple size="1">';
+				sHtml += '<div class="ibo-simple-graph--additional-context--container"><label for="'+sId+'_contexts">'+this.options.labels.additional_context_info+'</label><div class="ibo-input-select-wrapper"><select id="'+sId+'_contexts" name="contexts" class="multiselect ibo-input' +
+					' ibo-input-select" multiple size="1">';
 				for(var k in this.options.additional_contexts)
 				{
-					sSelected = (this.options.additional_contexts[k]['default']) ? 'selected' : '';
+					var sSelected = (this.options.additional_contexts[k]['default']) ? 'selected' : '';
 					sHtml += '<option value="'+k+'" '+sSelected+'>'+this.options.additional_contexts[k].label+'</option>';
 				}
-				sHtml += '</select>'
+				sHtml += '</select></div></div>'
 			}
-			sHtml += '&nbsp;<button type="button" id="'+sId+'_refresh_btn">'+this.options.labels.refresh+'</button>';
-			sHtml += '<div class="itop_popup toolkit_menu graph" style="font-size: 12px;" id="'+sPopupMenuId+'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
+			sHtml += '<button type="button" id="'+sId+'_refresh_btn" class="ibo-button ibo-is-neutral ibo-is-regular">'+this.options.labels.refresh+'</button>';
+			sHtml += '<div class="graph_separator"></div>';
+			sHtml += '<div class="graph_zoom"><label for"'+sId+'_zoom">'+this.options.labels.zoom+'</label>';
+			sHtml += '<div id="'+sId+'_zoom_minus" class="graph_zoom_minus ui-icon ui-icon-circle-minus"><i class="fas fa-search-minus"></i></div>';
+			sHtml += '<div id="'+sId+'_zoom" class="graph_zoom_slider"></div>';
+			sHtml += '<div id="'+sId+'_zoom_plus" class="graph_zoom_plus ui-icon ui-icon-circle-plus"><i class="fas fa-search-plus"></i></div>';
+			sHtml += '<div class="itop_popup toolkit_menu graph" id="'+sPopupMenuId+'"><ul><li><i class="fas fa-tools"></i><i class="fas fa-caret-down"></i><ul>';
 			if (this.options.export_as_pdf != null)
 			{
-				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';			
+				sHtml += '<li><a href="#" id="'+sPopupMenuId+'_pdf">'+this.options.export_as_pdf.label+'</a></li>';
 			}
 			if (this.options.export_as_attachment != null)
 			{
@@ -489,11 +495,7 @@ $(function()
 			}
 			//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 			sHtml += '</ul></li></ul></div>';
-			sHtml += '<span class="graph_zoom"><span>'+this.options.labels.zoom+'</span>';
-			sHtml += '<div id="'+sId+'_zoom_minus" class="graph_zoom_minus ui-icon ui-icon-circle-minus"></div>';
-			sHtml += '<div id="'+sId+'_zoom" class="graph_zoom_slider"></div>';
-			sHtml += '<div id="'+sId+'_zoom_plus" class="graph_zoom_plus ui-icon ui-icon-circle-plus"></div>';
-			sHtml += '</span>';
+			sHtml += '</div>';
 			sHtml += '</div>';
 
 			
@@ -504,7 +506,6 @@ $(function()
 			var me = this;
 			$('#'+sPopupMenuId+'_pdf').click(function() { me.export_as_pdf(); });
 			$('#'+sPopupMenuId+'_attachment').click(function() { me.export_as_attachment(); });
-			$('#'+sId+'_grouping_threshold').spinner({ min: 2});
 			$('#'+sId+'_zoom').slider({ min: 0, max: 5, value: 1, step: 0.25, change: function() { me._on_zoom_change( $(this).slider('value')); } });
 			$('#'+sId+'_zoom_plus').click(function() { $('#'+sId+'_zoom').slider('value', 0.25 + $('#'+sId+'_zoom').slider('value')); return false; });
 			$('#'+sId+'_zoom_minus').click(function() { $('#'+sId+'_zoom').slider('value', $('#'+sId+'_zoom').slider('value') - 0.25); return false; });
@@ -890,69 +891,13 @@ $(function()
 		_make_tooltips: function()
 		{
 			var me  = this;
-			$( ".popupMenuTarget" ).tooltip({
-				content: function() {
-					var sDataId = $(this).attr('data-id');
-					var sTooltipContent = '<div class="tooltip-close-button" data-id="'+sDataId+'" style="display:inline-block; float:right; cursor:pointer; padding-left:0.25em;">×</div>';
-					sTooltipContent += me._get_tooltip_content(sDataId);
-					return sTooltipContent;
-				},
-				items: '.popupMenuTarget',
-				classes: {
-					'ui-tooltip': 'tooltip-simple-graph'
-				},
-				position: {
-					using: function( position, feedback ) { 
-						$(this).css( position );  
-						$( "<div>" )
-						.addClass( "arrow" )
-						.addClass( feedback.vertical )
-						.appendTo( this );
-						}
-				}
-			})
-			.off( "mouseover mouseout" )
-			.on( "mouseover", function(event){
-				event.stopImmediatePropagation();
-				var jMe = $('text[data-id="'+$(this).attr('data-id')+'"]');
-				jMe.data('openTimeoutId', setTimeout(function() {
-					var sDataId = jMe.attr('data-id');
-					if (jMe.tooltip())
-					{
-						jMe.data('openTimeoutId', 0);
-						jMe.tooltip('open');
-					}
-				}, 1000));					
-			})
-			.on( "mouseout", function(event){
-				event.stopImmediatePropagation();
-				clearTimeout($('text[data-id="'+$(this).attr('data-id')+'"]').data('openTimeoutId'));					
-			});
-			/* Happens at every on_drag_end !!!
-			.on( "click", function(){
+			$( ".popupMenuTarget" ).each(function(){
 				var sDataId = $(this).attr('data-id');
-				if ($('.tooltip-close-button[data-id="'+sDataId+'"]').length == 0)
-				{
-					$(this).tooltip( 'open' );							 
-				}
-				else
-				{
-					$(this).tooltip( 'close' );							 						
-				}           
-				$( this ).unbind( "mouseleave" );
-				return false;	
-			 });
-			*/
-			$('body').on('click', '.tooltip-close-button', function() {
-				var sDataId = $(this).attr('data-id');
-				$('.popupMenuTarget[data-id="'+sDataId+'"]').tooltip('close');
-			});
-			this.element.on("click", ":not(.tooltip-simple-graph *,.tooltip-simple-graph)", function(){
-				$('.popupMenuTarget').each(function (i) {
-					clearTimeout($(this).data('openTimeoutId'));
-					$(this).data('openTimeoutId', 0);
-					$(this).tooltip("close"); 
-				});
+				var sTooltipContent = me._get_tooltip_content(sDataId);
+				$(this).attr('data-tooltip-content', sTooltipContent);
+				$(this).attr('data-tooltip-html-enabled', 'true');
+				$(this).attr('data-tooltip-hide-delay', '1500');
+				CombodoTooltip.InitTooltipFromMarkup($(this));
 			});
 		},
 		_get_tooltip_content: function(sNodeId)
@@ -966,11 +911,7 @@ $(function()
 		},
 		_close_all_tooltips: function()
 		{
-			this.element.find('.popupMenuTarget').each(function() {
-				clearTimeout($(this).data('openTimeoutId'));
-				$(this).data('openTimeoutId', 0);
-				$(this).tooltip('close');
-			});
+			//obsolete
 		},
 		_on_background_drag_start: function(x, y, event)
 		{

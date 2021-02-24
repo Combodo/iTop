@@ -15,6 +15,9 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Special kind of Graph for producing some nice output
@@ -1450,15 +1453,15 @@ class DisplayableGraph extends SimpleGraph
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
 		$sSearchToggle = Dict::S('UI:Search:Toggle');
 		$oP->add("<div class=\"not-printable\">\n");
-		$oP->add(
+		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_CYAN, 'ds_flash');
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
+
+		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 <<<EOF
- <div id="ds_flash" class="search_box">
-	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+ <div id="ds_flash" class="search_box ibo-display-graph--search-box">
 	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
 		);
-		
 		$oP->add_ready_script(
 <<<EOF
 	$("#dh_flash > .sf_title").click( function() {
@@ -1481,14 +1484,20 @@ EOF
 		$idx = 0;
 		foreach($aSortedElements as $sSubClass => $sClassName)
 		{
-			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$oUiHtmlBlock->AddHtml("<div><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">");
+			$oUiMedallionBlock= new MedallionIcon(MetaModel::GetClassIcon($sSubClass, false));
+			$oUiMedallionBlock->SetDescription($sClassName);
+			$oUiHtmlBlock->AddHtml(BlockRenderer::RenderBlockTemplates($oUiMedallionBlock));
+			$oUiHtmlBlock->AddHtml("</label></div>");
 			$idx++;
 		}
-		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
-		$oP->add("</div></div></form>");
-		$oP->add("</div>\n");
-	 	$oP->add("</div>\n"); // class="not-printable"
+		$oUiHtmlBlock->AddHtml("</div>");
+		$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
+		$oUiHtmlBlock->AddHtml("</div>\n");
+		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
 
+		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
+		$oP->AddUiBlock($oUiSearchBlock);
 		$aAdditionalContexts = array();
 		foreach($aContextDefs as $sKey => $aDefinition)
 		{
