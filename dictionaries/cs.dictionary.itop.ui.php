@@ -1142,7 +1142,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní~~',
 	'UI:Favorites:SelectYourLanguage' => 'Preferovaný jazyk:',
 	'UI:FavoriteOtherSettings' => 'Další nastavení',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Všechny úpravy budou zahozeny.',

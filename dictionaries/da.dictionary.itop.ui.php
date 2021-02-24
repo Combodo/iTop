@@ -1131,7 +1131,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade~~',
 	'UI:Favorites:SelectYourLanguage' => 'Vælg dit foretrukne sprog',
 	'UI:FavoriteOtherSettings' => 'Andre indstillinger',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Enhver ændring vil blive kasseret.',

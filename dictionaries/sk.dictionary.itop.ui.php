@@ -1131,7 +1131,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania~~',
 	'UI:Favorites:SelectYourLanguage' => 'Vyberte si svoj preferovaný jazyk',
 	'UI:FavoriteOtherSettings' => 'Iné nastavenia',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Akákoľvek úprava bude zahodená.',

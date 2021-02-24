@@ -1142,7 +1142,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FavoriteLanguage' => 'Idioma do painel do Usuário~~',
 	'UI:Favorites:SelectYourLanguage' => 'Selecione sua linguagem preferida',
 	'UI:FavoriteOtherSettings' => 'Outras configurações',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Quantidade padrão para listas:  %1$s itens por página',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Quantidade padrão para listas:  %1$s itens por página~~',
 	'UI:Favorites:ShowObsoleteData' => 'Mostrar dados obsoletos',
 	'UI:Favorites:ShowObsoleteData+' => 'Mostrar dados obsoletos nos resultados de pesquisa e listas de itens para selecionar',
 	'UI:NavigateAwayConfirmationMessage' => 'Qualquer modificações serão descartados.',

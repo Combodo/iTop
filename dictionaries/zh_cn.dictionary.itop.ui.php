@@ -1142,7 +1142,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:FavoriteLanguage' => '用户界面~~',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
-	'UI:Favorites:Default_X_ItemsPerPage' => '默认列表: 每页 %1$s 个项目',
+	'UI:Favorites:Default_X_ItemsPerPage' => '默认列表: 每页 %1$s 个项目~~',
 	'UI:Favorites:ShowObsoleteData' => '显示废弃的数据',
 	'UI:Favorites:ShowObsoleteData+' => '在搜索结果中显示已废弃的数据',
 	'UI:NavigateAwayConfirmationMessage' => '所有修改都将丢失.',

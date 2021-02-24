@@ -1129,7 +1129,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:FavoriteLanguage' => 'Sprache des Benutzerinterfaces~~',
 	'UI:Favorites:SelectYourLanguage' => 'Wählen Sie Ihre bevorzugte Sprache aus',
 	'UI:FavoriteOtherSettings' => 'Andere Einstellungen',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default-Länge für Listen:  %1$s Elemente pro Seite',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default-Länge für Listen:  %1$s Elemente pro Seite~~',
 	'UI:Favorites:ShowObsoleteData' => 'Zeige obsolete (veraltete) Daten',
 	'UI:Favorites:ShowObsoleteData+' => 'Zeige obsolete (veraltete) Daten in Suchresultaten und Auswahllisten von Objekten',
 	'UI:NavigateAwayConfirmationMessage' => 'Jedwede Veränderung wird verworfen.',

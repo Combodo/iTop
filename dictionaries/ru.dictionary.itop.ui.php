@@ -1120,7 +1120,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:FavoriteLanguage' => 'Язык пользовательского интерфейса~~',
 	'UI:Favorites:SelectYourLanguage' => 'Выберите Ваш язык',
 	'UI:FavoriteOtherSettings' => 'Другие настройки',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Длина списка по умолчанию: %1$s элементов на страницу.',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Длина списка по умолчанию: %1$s элементов на страницу.~~',
 	'UI:Favorites:ShowObsoleteData' => 'Показывать устаревшие данные',
 	'UI:Favorites:ShowObsoleteData+' => 'Отображение устаревших данных в результатах поиска и списках элементов для выбора',
 	'UI:NavigateAwayConfirmationMessage' => 'Все изменения будут отменены.',

@@ -1143,7 +1143,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:FavoriteLanguage' => 'Language of the User Interface~~',
 	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language~~',
 	'UI:FavoriteOtherSettings' => 'Other Settings~~',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length:  %1$s items per page~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.~~',

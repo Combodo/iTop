@@ -20,7 +20,7 @@
 // Navigation menu
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:Title' => 'Preferences',
-	
+
 	'UI:Preferences:UserInterface:Title' => 'User interface',
 	'UI:Preferences:Lists:Title' => 'Lists',
 	'UI:Preferences:RichText:Title' => 'Rich text editor',
@@ -30,10 +30,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:RichText:ToolbarState:Expanded' => 'Expanded',
 	'UI:Preferences:RichText:ToolbarState:Collapsed' => 'Collapsed',
 	'UI:Preferences:Tabs:Title' => 'Tabs',
-	'UI:Preferences:Tabs:Layout:Label' => 'Tabs layout',
+	'UI:Preferences:Tabs:Layout:Label' => 'Layout',
 	'UI:Preferences:Tabs:Layout:Horizontal' => 'Horizontal',
 	'UI:Preferences:Tabs:Layout:Vertical' => 'Vertical',
-	'UI:Preferences:Tabs:Scrollable:Label' => 'Tabs navigation',
+	'UI:Preferences:Tabs:Scrollable:Label' => 'Navigation',
 	'UI:Preferences:Tabs:Scrollable:Classic' => 'Classic',
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Scrollable',
 ));

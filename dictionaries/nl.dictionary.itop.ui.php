@@ -1152,7 +1152,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface~~',
 	'UI:Favorites:SelectYourLanguage' => 'Selecteer jouw taal',
 	'UI:FavoriteOtherSettings' => 'Overige instellingen',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte voor lijsten: %1$s items per pagina',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte voor lijsten: %1$s items per pagina~~',
 	'UI:Favorites:ShowObsoleteData' => 'Toon "Buiten dienst"-data',
 	'UI:Favorites:ShowObsoleteData+' => 'Toon "Buiten dienst"-data in zoekresultaten en in keuzelijsten.',
 	'UI:NavigateAwayConfirmationMessage' => 'Bewerkingen zullen worden genegeerd.',

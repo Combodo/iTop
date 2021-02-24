@@ -1136,7 +1136,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:FavoriteLanguage' => 'Langue préférée',
 	'UI:Favorites:SelectYourLanguage' => 'Choisissez votre langue préférée',
 	'UI:FavoriteOtherSettings' => 'Autres réglages',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut des listes:  %1$s éléments par page',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut :  %1$s éléments par page',
 	'UI:Favorites:ShowObsoleteData' => 'Voir les données obsolètes',
 	'UI:Favorites:ShowObsoleteData+' => 'Voir les données obsolètes dans les résultats de recherche et dans les listes de choix',
 	'UI:NavigateAwayConfirmationMessage' => 'Toute modification sera perdue.',
