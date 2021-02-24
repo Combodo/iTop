@@ -345,4 +345,9 @@ class Field extends UIContentBlock
 	{
 		$this->AddDataAttribute('input-id', $sInputId);
 	}
+
+	public function SetInputType(string $sInputType)
+	{
+		$this->AddDataAttribute('input-type', $sInputType);
+	}
 }

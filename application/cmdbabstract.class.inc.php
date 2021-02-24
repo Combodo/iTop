@@ -80,6 +80,35 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
 	/** @var string ENUM_OBJECT_MODE_PRINT */
 	public const ENUM_OBJECT_MODE_PRINT = 'print';
+
+	// N°3750 rendering used
+	/** @var string */
+	public const ENUM_INPUT_TYPE_SINGLE_INPUT = 'single_input';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_MULTIPLE_INPUTS = 'multiple_inputs';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_TEXTAREA = 'textarea';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_HTML_EDITOR = 'html_editor';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_DOCUMENT = 'document';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_IMAGE = 'image';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_PASSWORD = 'password';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_TAGSET = 'tagset';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_RADIO = 'radio';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_DROPDOWN_RAW = 'dropdown_raw';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_DROPDOWN_DECORATED = 'dropdown_decorated'; // now with the JQuery Selectize plugin
+	/** @var string */
+	public const ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES = 'dropdown_multiple_choices';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_AUTOCOMPLETE = 'autocomplete';
+
 	/**
 	 * @var string DEFAULT_OBJECT_MODE
 	 * @since 3.0.0
@@ -854,6 +883,7 @@ EOF
 							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard)) {
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable()) {
+									$sInputType = '';
 									if (($sStateAttCode === $sAttCode) && (MetaModel::HasLifecycle($sClass))) {
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetAsHTML($sAttCode);
@@ -887,15 +917,15 @@ EOF
 
 											// Attribute is read-only
 											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
-										}
-										else
-										{
+										} else {
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
 											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-											$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode,
-													$oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
-													$aArgs).'';
+											$sHTMLValue = "".self::GetFormElementForField(
+													$oPage, $sClass, $sAttCode, $oAttDef, $sValue,
+													$sDisplayValue, $sInputId, '', $iFlags, $aArgs,
+													true, $sInputType
+												).'';
 										}
 										$aFieldsMap[$sAttCode] = $sInputId;
 
@@ -908,6 +938,7 @@ EOF
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
 											'value' => $sHTMLValue,
 											'input_id' => $sInputId,
+											'input_type' => $sInputType,
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);
@@ -1748,6 +1779,7 @@ HTML
 		return $oSearchForm->GetSearchForm($oPage, $oSet, $aExtraParams);
 	}
 
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sClass
@@ -1760,38 +1792,43 @@ HTML
 	 * @param int $iFlags
 	 * @param array $aArgs
 	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
+	 * @param string $sInputType type of rendering used, see ENUM_INPUT_TYPE_* const
 	 *
 	 * @return string
+	 *
 	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',	$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true)
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true, &$sInputType = '')
 	{
 		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
 		$sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
-		if ($sDisplayValue == '')
-		{
+		if ($sDisplayValue == '') {
 			$sDisplayValue = $value;
 		}
 
-		if (isset($aArgs[$sAttCode]) && empty($value))
-		{
+		if (isset($aArgs[$sAttCode]) && empty($value)) {
 			// default value passed by the context (either the app context of the operation)
 			$value = $aArgs[$sAttCode];
 		}
 
-		if (!empty($iId))
-		{
+		if (!empty($iId)) {
 			$iInputId = $iId;
-		}
-		else {
+		} else {
 			$iInputId = utils::GetUniqueId();
 		}
 
 		$sHTMLValue = '';
-		if (!$oAttDef->IsExternalField())
-		{
+		if (!$oAttDef->IsExternalField()) {
 			$bMandatory = 'false';
 			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY)) {
 				$bMandatory = 'true';
@@ -1813,6 +1850,7 @@ HTML
 			switch ($oAttDef->GetEditClass())
 			{
 				case 'Date':
+					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
@@ -1824,6 +1862,7 @@ HTML
 					break;
 
 				case 'DateTime':
+					$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
@@ -1835,6 +1874,7 @@ HTML
 					break;
 
 				case 'Duration':
+					$sInputType = self::ENUM_INPUT_TYPE_MULTIPLE_INPUTS;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 					$oPage->add_ready_script("$('#{$iId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
@@ -1854,6 +1894,7 @@ HTML
 					break;
 
 				case 'Password':
+					$sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
@@ -1863,6 +1904,7 @@ HTML
 
 				case 'OQLExpression':
 				case 'Text':
+					$sInputType = self::ENUM_INPUT_TYPE_TEXTAREA;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
@@ -1871,22 +1913,19 @@ HTML
 					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth();
-					if (!empty($sWidth))
-					{
+					if (!empty($sWidth)) {
 						$aStyles[] = 'width:'.$sWidth;
 					}
 					$sHeight = $oAttDef->GetHeight();
-					if (!empty($sHeight))
-					{
+					if (!empty($sHeight)) {
 						$aStyles[] = 'height:'.$sHeight;
 					}
-					if (count($aStyles) > 0)
-					{
+					if (count($aStyles) > 0) {
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
-						// predefined queries N°3227
+						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
 						$oPredefQueryButton = ButtonUIBlockFactory::MakeIconLink(
@@ -1951,12 +1990,12 @@ JS
 					} else {
 						$sAdditionalStuff = '';
 					}
-				// Ok, the text area is drawn here
-				$sHTMLValue = "$sAdditionalStuff<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
-						ENT_QUOTES, 'UTF-8')."</textarea></div>{$sValidationSpan}{$sReloadSpan}";
+					// Ok, the text area is drawn here
+					$sHTMLValue = "$sAdditionalStuff<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
+							ENT_QUOTES, 'UTF-8')."</textarea></div>{$sValidationSpan}{$sReloadSpan}";
 
-				$oPage->add_ready_script(
-					<<<EOF
+					$oPage->add_ready_script(
+						<<<EOF
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
@@ -1975,20 +2014,18 @@ EOF
 
 				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions?
 				case 'CaseLog':
+					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
 					$sStyle = '';
 					$sWidth = $oAttDef->GetWidth();
-					if (!empty($sWidth))
-					{
+					if (!empty($sWidth)) {
 						$aStyles[] = 'width:'.$sWidth;
 					}
 					$sHeight = $oAttDef->GetHeight();
-					if (!empty($sHeight))
-					{
+					if (!empty($sHeight)) {
 						$aStyles[] = 'height:'.$sHeight;
 					}
-					if (count($aStyles) > 0)
-					{
+					if (count($aStyles) > 0) {
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
@@ -2005,8 +2042,7 @@ EOF
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
-					if (!is_numeric($sNullValue))
-					{
+					if (!is_numeric($sNullValue)) {
 						$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 					}
 					$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value->GetModifiedEntry('html')) : 'undefined';
@@ -2045,9 +2081,10 @@ $('#$iId').bind('update', function(evt){
 });
 EOF
 					);
-				break;
+					break;
 
 				case 'HTML':
+					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$sEditValue = $oAttDef->GetEditValue($value);
 					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText,
 						$sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
@@ -2055,13 +2092,11 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					if ($oAttDef->IsIndirect())
-					{
+					$sInputType = ''; // TODO drop down VS autocomplete ?
+					if ($oAttDef->IsIndirect()) {
 						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
 							$oAttDef->DuplicatesAllowed());
-					}
-					else
-					{
+					} else {
 						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
 					}
 					$aEventsList[] = 'validate';
@@ -2071,12 +2106,12 @@ EOF
 					break;
 
 				case 'Document':
+					$sInputType = self::ENUM_INPUT_TYPE_DOCUMENT;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 					$oDocument = $value; // Value is an ormDocument object
 					$sFileName = '';
-					if (is_object($oDocument))
-					{
+					if (is_object($oDocument)) {
 						$sFileName = $oDocument->GetFileName();
 					}
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
@@ -2088,20 +2123,20 @@ EOF
 							ENT_QUOTES, 'UTF-8')."\"/>\n";
 					$sHTMLValue .= "<span id=\"name_$iInputId\"' >".htmlentities($sFileName, ENT_QUOTES,
 							'UTF-8')."</span>&#160;&#160;";
-					$sHTMLValue .= "<div title=\"".htmlentities(Dict::S('UI:Button:RemoveDocument'), ENT_QUOTES, 'UTF-8'). "\" id=\"remove_attr_$iId\" class=\"button\" onClick=\"$('#file_$iId').val('');UpdateFileName('$iId', '');\" style=\"display: contents;\">";
+					$sHTMLValue .= "<div title=\"".htmlentities(Dict::S('UI:Button:RemoveDocument'), ENT_QUOTES, 'UTF-8')."\" id=\"remove_attr_$iId\" class=\"button\" onClick=\"$('#file_$iId').val('');UpdateFileName('$iId', '');\" style=\"display: contents;\">";
 					$sHTMLValue .= "<div class=\"ui-icon ui-icon-trash\"></div></div>";
 					$sHTMLValue .= "</div>";
 					$sHTMLValue .= "<br/>\n";
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
 					$sHTMLValue .= "</div>\n";
 					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
-					if ($sFileName == '')
-					{
+					if ($sFileName == '') {
 						$oPage->add_ready_script("$('#remove_attr_{$iId}').hide();");
 					}
 					break;
 
 				case 'Image':
+					$sInputType = self::ENUM_INPUT_TYPE_IMAGE;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
@@ -2143,6 +2178,7 @@ EOF
 					break;
 
 				case 'One Way Password':
+					$sInputType = self::ENUM_INPUT_TYPE_PASSWORD;
 					$aEventsList[] = 'validate';
 					$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
@@ -2150,16 +2186,14 @@ EOF
 					break;
 
 				case 'ExtKey':
+					$sInputType = ''; // TODO
 					/** @var \AttributeExternalKey $oAttDef */
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 
-					if ($bPreserveCurrentValue)
-					{
+					if ($bPreserveCurrentValue) {
 						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
-					}
-					else
-					{
+					} else {
 						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
 					}
 					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
@@ -2167,15 +2201,14 @@ EOF
 					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
 					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
 					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(),
-						$oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
+						$oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams, false, $sInputType);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 
 					$bHasExtKeyUpdatingRemoteClassFields = (
 						array_key_exists('replaceDependenciesByRemoteClassFields', $aArgs)
 						&& ($aArgs['replaceDependenciesByRemoteClassFields'])
 					);
-					if ($bHasExtKeyUpdatingRemoteClassFields)
-					{
+					if ($bHasExtKeyUpdatingRemoteClassFields) {
 						// On this field update we need to update all the corresponding remote class fields
 						// Used when extkey widget is in a linkedset indirect
 						$sWizardHelperJsVarName = $aArgs['wizHelperRemote'];
@@ -2257,6 +2290,7 @@ JS
 
 				case 'Set':
 				case 'TagSet':
+					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-set-widget.js');
@@ -2297,6 +2331,7 @@ JS
 							case 'radio':
 							case 'radio_horizontal':
 							case 'radio_vertical':
+								$sInputType = self::ENUM_INPUT_TYPE_RADIO;
 								$aEventsList[] = 'change';
 								$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
 								$bVertical = ($sDisplayStyle != 'radio_horizontal');
@@ -2307,16 +2342,14 @@ JS
 
 							case 'select':
 							default:
+								$sInputType = self::ENUM_INPUT_TYPE_DROPDOWN_RAW;
 								$aEventsList[] = 'change';
 								$sHTMLValue = "<div class=\"field_input_zone field_input_string ibo-input-wrapper ibo-input-select-wrapper\" data-validation=\"untouched\"><select class=\"ibo-input ibo-input-select\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 								$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-								foreach($aAllowedValues as $key => $display_value)
-								{
-									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
-									{
+								foreach ($aAllowedValues as $key => $display_value) {
+									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true')) {
 										// When there is only once choice, select it by default
-										if($value != $key)
-										{
+										if ($value != $key) {
 											$oPage->add_ready_script(
 												<<<EOF
 $('#$iId').attr('data-validate','dependencies');
@@ -2324,9 +2357,7 @@ EOF
 											);
 										}
 										$sSelected = ' selected';
-									}
-									else
-									{
+									} else {
 										$sSelected = ($value == $key) ? ' selected' : '';
 									}
 									$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
@@ -2337,10 +2368,10 @@ EOF
 					}
 					else
 					{
+						$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
 						$sTip = '';
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
-						if (!empty($sDisplayValue))
-						{
+						if (!empty($sDisplayValue)) {
 							$sTip = ' data-tooltip-content="'.utils::HtmlEntities($sDisplayValue).'"';
 							$oPage->add_ready_script(
 								<<<EOF

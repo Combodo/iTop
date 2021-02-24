@@ -70,10 +70,29 @@ class UIExtKeyWidget
 	protected $sAttCode;
 	protected $bSearchMode;
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sClass
+	 * @param string $sTitle
+	 * @param object $oAllowedValues
+	 * @param mixed $value
+	 * @param int $iInputId
+	 * @param boolean $bMandatory
+	 * @param string $sFieldName
+	 * @param string $sFormPrefix
+	 * @param array $aArgs
+	 * @param boolean $bSearchMode
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
+	 * @return string
+	 * @throws \Exception
+	 *
+	 * @since 3.0.0 N°3750 new $sInputType parameter
+	 */
 	public static function DisplayFromAttCode(
 		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
-		$aArgs = [],
-		$bSearchMode = false
+		$aArgs = [], $bSearchMode = false, &$sInputType = ''
 	)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -92,21 +111,20 @@ class UIExtKeyWidget
 				case 'radio':
 				case 'radio_horizontal':
 				case 'radio_vertical':
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_RADIO;
 
-				return $oWidget->DisplayRadio($oPage, $iMaxComboLength, $bAllowTargetCreation, $oAllowedValues, $value, $sFieldName, $sDisplayStyle);
-					break;
+					return $oWidget->DisplayRadio($oPage, $iMaxComboLength, $bAllowTargetCreation, $oAllowedValues, $value, $sFieldName, $sDisplayStyle);
 
 				case 'select':
 				case 'list':
 				default:
 					return $oWidget->DisplaySelect($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value,
-						$bMandatory, $sFieldName, $sFormPrefix, $aArgs);
+						$bMandatory, $sFieldName, $sFormPrefix, $aArgs, $sInputType);
 			}
 		} else {
 			return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId,
-				$bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle);
+				$bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle, true, $sInputType);
 		}
-
 	}
 
 	public function __construct($sTargetClass, $iInputId, $sAttCode = '', $bSearchMode = false, $sFilter = null)
@@ -119,13 +137,32 @@ class UIExtKeyWidget
 	}
 
 	/**
-	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
-	 * Get the HTML fragment corresponding to the ext key editing widget
-	 * @param WebPage $oP The web page used for all the output
+	 * @param \WebPage $oPage
+	 * @param int $iMaxComboLength
+	 * @param bool $bAllowTargetCreation
+	 * @param string $sTitle
+	 * @param \DBObjectset $oAllowedValues
+	 * @param mixed $value
+	 * @param bool $bMandatory
+	 * @param string $sFieldName
+	 * @param string $sFormPrefix
 	 * @param array $aArgs Extra context arguments
-	 * @return string The HTML fragment to be inserted into the page
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
+	 * @return string the HTML fragment corresponding to the ext key editing widget
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
+	 * @since 3.0.0 N°3750 new $sInputType parameter
 	 */
-	public function DisplaySelect(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array())
+	public function DisplaySelect(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), &$sInputType = '')
 	{
 		$sTitle = addslashes($sTitle);
 		$oPage->add_linked_script('../js/extkeywidget.js');
@@ -208,30 +245,27 @@ class UIExtKeyWidget
 						$value=$oObj->GetKey();
 					}
 				}
-				else
-				{
-					if ((is_array($value) && in_array($oObj->GetKey(), $value)) || ($value == $oObj->GetKey()))
-					{
-						$sDisplayValue=$oObj->GetKey();
-					//	$sHTMLValue.="<div class='item' data-value='".$oObj->GetKey)."'>".$oObj->GetName()."</div>";
+				else {
+					if ((is_array($value) && in_array($oObj->GetKey(), $value)) || ($value == $oObj->GetKey())) {
+						$sDisplayValue = $oObj->GetKey();
+						//	$sHTMLValue.="<div class='item' data-value='".$oObj->GetKey)."'>".$oObj->GetName()."</div>";
 					}
 				}
-				if ($oObj->IsObsolete()){
-					$aOption['obsolescence_flag'] ="1";
+				if ($oObj->IsObsolete()) {
+					$aOption['obsolescence_flag'] = "1";
 				}
-				if ($bAddingValue)
-				{
+				if ($bAddingValue) {
 					$aArguments = [];
-					foreach ($aAdditionalField as $sAdditionalField)
-					{
-						array_push($aArguments,$oObj->Get($sAdditionalField));
+					foreach ($aAdditionalField as $sAdditionalField) {
+						array_push($aArguments, $oObj->Get($sAdditionalField));
 					}
 					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
 				}
-				array_push($aOptions,$aOption);
+				array_push($aOptions, $aOption);
 			}
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
 			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"></select>";
-			$sJsonOptions=json_encode($aOptions);
+			$sJsonOptions = json_encode($aOptions);
 			$oPage->add_ready_script(
 				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
@@ -272,14 +306,13 @@ EOF
 			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
 			{
 				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
-			}
-			else
-			{
+			} else {
 				$sDisplayValue = $this->GetObjectName($value);
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 
 			// another hidden input to store & pass the object's Id
@@ -419,17 +452,40 @@ JS
 
 		return $sHTMLValue;
 	}
+
 	/**
 	 * @deprecated Use DisplayBob
 	 * Get the HTML fragment corresponding to the ext key editing widget
-	 * @param WebPage $oP The web page used for all the output
+	 *
+	 * @param \WebPage $oPage
+	 * @param int $iMaxComboLength
+	 * @param boolean $bAllowTargetCreation
+	 * @param string $sTitle
+	 * @param \DBObjectset $oAllowedValues
+	 * @param mixed $value
+	 * @param int $iInputId
+	 * @param boolean $bMandatory
+	 * @param strin $sFieldName
+	 * @param string $sFormPrefix
 	 * @param array $aArgs Extra context arguments
+	 * @param null $bSearchMode
+	 * @param string $sDisplayStyle
+	 * @param boolean $bSearchMultiple
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
 	 * @return string The HTML fragment to be inserted into the page
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.0.0 N°3750 new $sInputType parameter
 	 */
-	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true, &$sInputType = '')
 	{
-		if (!is_null($bSearchMode))
-		{
+		if (!is_null($bSearchMode)) {
 			$this->bSearchMode = $bSearchMode;
 		}
 		$sTitle = addslashes($sTitle);
@@ -443,27 +499,20 @@ JS
 
 		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
-		if($this->bSearchMode)
-		{
+		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
 			$sWizHelperJSON = "''";
 			$sJSSearchMode = 'true';
-		}
-		else
-		{
-			if (isset($aArgs['wizHelper']))
-			{
+		} else {
+			if (isset($aArgs['wizHelper'])) {
 				$sWizHelper = $aArgs['wizHelper'];
-			}
-			else
-			{
+			} else {
 				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 			}
 			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
 			$sJSSearchMode = 'false';
 		}
-		if (is_null($oAllowedValues))
-		{
+		if (is_null($oAllowedValues)) {
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -472,84 +521,71 @@ JS
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength))
-		{
-            // Discrete list of values, use a SELECT or RADIO buttons depending on the config
-			switch($sDisplayStyle)
-			{
+		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
+			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+			switch ($sDisplayStyle) {
 				case 'radio':
 				case 'radio_horizontal':
 				case 'radio_vertical':
-				$sValidationField = null;
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_RADIO;
+					$sValidationField = null;
 
-				$bVertical = ($sDisplayStyle != 'radio_horizontal');
-				$bExtensions = false;
-				$oAllowedValues->Rewind();
-				$aAllowedValues = array();
-				while($oObj = $oAllowedValues->Fetch())
-				{
-					$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
-				}
-				$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
-				$aEventsList[] ='change';
-				break;
+					$bVertical = ($sDisplayStyle != 'radio_horizontal');
+					$bExtensions = false;
+					$oAllowedValues->Rewind();
+					$aAllowedValues = array();
+					while ($oObj = $oAllowedValues->Fetch()) {
+						$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
+					}
+					$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
+					$aEventsList[] = 'change';
+					break;
 
 				case 'select':
 				case 'list':
 				default:
+					$sHelpText = '';
+					$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
 
-				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
-				$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
-
-				if ($this->bSearchMode)
-				{
-					if ($bSearchMultiple)
-					{
-						$sHTMLValue .= "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
-					}
-					else
-					{
+					if ($this->bSearchMode) {
+						if ($bSearchMultiple) {
+							$sHTMLValue .= "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
+						} else {
+							$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+							$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
+							$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
+						}
+					} else {
 						$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
-						$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
-						$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
+						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 					}
-				}
-				else
-				{
-					$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
-					$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-				}
 
-				$oAllowedValues->Rewind();
-				while($oObj = $oAllowedValues->Fetch())
-				{
-					$key = $oObj->GetKey();
-					$display_value = $oObj->GetName();
+					$oAllowedValues->Rewind();
+					while ($oObj = $oAllowedValues->Fetch()) {
+						$key = $oObj->GetKey();
+						$display_value = $oObj->GetName();
 
-					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
-					{
-						// When there is only once choice, select it by default
-						$sSelected = 'selected';
-						if($value != $key)
-						{
-							$oPage->add_ready_script(
-								<<<EOF
+						if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
+							// When there is only once choice, select it by default
+							$sSelected = 'selected';
+							if ($value != $key) {
+								$oPage->add_ready_script(
+									<<<EOF
 $('#$this->iId').attr('data-validate','dependencies');
 EOF
-							);
+								);
+							}
+						} else {
+							$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? 'selected' : '';
 						}
+						$sHTMLValue .= "<option value=\"$key\" $sSelected>$display_value</option>\n";
 					}
-					else
-					{
-						$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? 'selected' : '';
-					}
-					$sHTMLValue .= "<option value=\"$key\" $sSelected>$display_value</option>\n";
-				}
 				$sHTMLValue .= "</select>\n";
 				$sHTMLValue .= "</div>\n";
 
-				if (($this->bSearchMode) && $bSearchMultiple)
-				{
+				$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
+				if (($this->bSearchMode) && $bSearchMultiple) {
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES;
 					$aOptions = array(
 						'header' => true,
 						'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
@@ -560,36 +596,32 @@ EOF
 					);
 					$sJSOptions = json_encode($aOptions);
 					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
-				}
-				$oPage->add_ready_script(
-					<<<EOF
+					}
+					$oPage->add_ready_script(
+						<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
-				);
-			} // Switch
-		}
-		else
-		{
+					);
+			}
+		} else {
 			// Too many choices, use an autocomplete
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
 			// Check that the given value is allowed
 			$oSearch = $oAllowedValues->GetFilter();
 			$oSearch->AddCondition('id', $value);
 			$oSet = new DBObjectSet($oSearch);
-			if ($oSet->Count() == 0)
-			{
+			if ($oSet->Count() == 0) {
 				$value = null;
 			}
 
 			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
 			{
 				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
-			}
-			else
-			{
+			} else {
 				$sDisplayValue = $this->GetObjectName($value);
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
@@ -615,33 +647,31 @@ EOF
 EOF
 			);
 		}
-		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
-		{
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<JS
+				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
 			{
 				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
 			}		
 JS
-);
+			);
 		}
-		if ($bCreate && $bExtensions)
-		{
+		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<JS
+				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ajax_{$this->iId}"></div>');
 		}
 JS
-);
+			);
 		}
-        $sHTMLValue .= "</div>";
+		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 
 		return $sHTMLValue;

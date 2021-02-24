@@ -32,6 +32,7 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			'value_raw' => 'SetValueRaw',
 			'comments' => 'SetComments',
 			'input_id' => 'SetInputId',
+			'input_type' => 'SetInputType',
 		];
 		foreach ($aParamsMapping as $sParamKey => $sFieldMethod) {
 			self::UpdateFieldFromParams($oField, $sFieldMethod, $aParams, $sParamKey);
