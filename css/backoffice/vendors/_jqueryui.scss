@@ -26,6 +26,17 @@ $ibo-input-date--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
 
 $ibo-input-date--ui-datepicker-header--padding: $ibo-border-radius-500 $ibo-border-radius-500 0 0 !default;
 $ibo-input-date--ui-datepicker-header--border-radius: 4px !default;
+
+$ibo-ui-slider--background-color: $ibo-color-grey-100 !default;
+$ibo-ui-slider--border-color: $ibo-color-grey-600 !default;
+$ibo-ui-slider--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-ui-slider--ui-slider-handle--background-color: $ibo-color-white-100 !default;
+$ibo-ui-slider--ui-slider-handle--border-color: $ibo-ui-slider--border-color !default;
+$ibo-ui-slider--ui-slider-handle--border-radius: $ibo-ui-slider--border-radius !default;
+$ibo-ui-slider--ui-slider-handle--diameter: 1.4em !default;
+$ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !default;
+
 // Tabs
 
 .ui-dialog{
@@ -515,4 +526,81 @@ $ibo-input-date--ui-datepicker-header--border-radius: 4px !default;
 	position: absolute;
 	opacity: 0;
 	filter: Alpha(Opacity=0);
+}
+
+// Sliders 
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+  background-color: $ibo-ui-slider--background-color;
+  border: solid 1px $ibo-ui-slider--border-color;
+  border-radius: $ibo-ui-slider--border-radius;
+  .ui-slider-handle {
+    background-color: $ibo-ui-slider--ui-slider-handle--background-color;
+    border: solid 1px $ibo-ui-slider--ui-slider-handle--border-color;
+    border-radius: $ibo-ui-slider--ui-slider-handle--border-radius;
+    position: absolute;
+    z-index: 2;
+    width: $ibo-ui-slider--ui-slider-handle--diameter;
+    height: $ibo-ui-slider--ui-slider-handle--diameter;
+    -ms-touch-action: none;
+    touch-action: none;
+    cursor: pointer;
+    &:hover, &:active{
+      border: solid 1px $ibo-color-orange-700;
+    }
+  }
+  .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    // border: 0;
+    background-position: 0 0;
+  }
+}
+.ui-slider.ui-state-disabled {
+  .ui-slider-handle {
+    filter: inherit;
+  }
+  .ui-slider-range {
+    filter: inherit;
+  }
+}
+.ui-slider-horizontal {
+  height: .8em;
+  .ui-slider-handle {
+    top: -.2em;
+    margin-left: -.6em;
+  }
+  .ui-slider-range {
+    top: 0;
+    height: 100%;
+  }
+  .ui-slider-range-min {
+    left: 0;
+  }
+  .ui-slider-range-max {
+    right: 0;
+  }
+}
+.ui-slider-vertical {
+  width: .8em;
+  height: 100px;
+  .ui-slider-handle {
+    left: -.3em;
+    margin-left: 0;
+    margin-bottom: -.6em;
+  }
+  .ui-slider-range {
+    left: 0;
+    width: 100%;
+  }
+  .ui-slider-range-min {
+    bottom: 0;
+  }
+  .ui-slider-range-max {
+    top: 0;
+  }
 }
