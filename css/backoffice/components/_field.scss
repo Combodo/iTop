@@ -27,6 +27,8 @@ $ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fu
 $ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
 $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
 
+$ibo-field--value-decoration--spacing-x: 0.5rem !default;
+
 /* SCSS rules */
 .ibo-field {
   @extend %ibo-font-ral-nor-150;
@@ -119,6 +121,7 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
   display: inline-block;
   padding-left: 5px;
 }
+
 /* Fullscreen mode */
 .ibo-field-large {
   &.ibo-is-fullscreen {
@@ -133,15 +136,24 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
       background-color: $ibo-field--label--background-color--is-fullscreen;
       border-bottom: $ibo-field--label--border-bottom--is-fullscreen;
     }
+
     .ibo-field--value {
       padding: $ibo-field--value--padding-top--is-fullscreen $ibo-field--value--padding-x--is-fullscreen $ibo-field--value--padding-bottom--is-fullscreen $ibo-field--value--padding-x--is-fullscreen;
     }
   }
 }
-.mailto, .tel{
+
+.mailto, .tel {
   white-space: nowrap;
 
   .text_decoration {
-    margin-right: 0.5rem;
+    margin-right: $ibo-field--value-decoration--spacing-x;
+  }
+}
+
+.object-ref-icon, .object-ref-icon-disabled {
+  &.text_decoration {
+    margin-right: $ibo-field--value-decoration--spacing-x;
+    @extend %ibo-font-ral-nor-100;
   }
 }

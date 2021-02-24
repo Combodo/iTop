@@ -89,23 +89,19 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			render: {
 				item: function (item) {
 					if (item.obsolescence_flag == 1) {
-						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
+						val = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
 						val = item.label;
 					}
 					return $("<div>").append(val);
 				},
 				option: function(item) {
-					if ( item.obsolescence_flag == 1)
-					{
-						val = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+item.label;
-					}
-					else
-					{
+					if (item.obsolescence_flag == 1) {
+						val = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
+					} else {
 						val = item.label;
 					}
-					if (item.additional_field != undefined )
-					{
+					if (item.additional_field != undefined) {
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
 					return $("<div>").append(val);
@@ -193,9 +189,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$(ul).addClass('selectize-dropdown');
 			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
 			var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-			if (item.obsolescence_flag == '1')
-			{
-				val = ' <span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+val;
+			if (item.obsolescence_flag == '1') {
+				val = ' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+val;
 			}
 			if (item.additional_field != undefined )
 			{

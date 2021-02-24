@@ -924,7 +924,7 @@ $(function()
 		{
 			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
 			if (bObsolete == 1)	{
-				sEscapedLabel = '<span class="object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw"></span>'+sEscapedLabel;
+				sEscapedLabel = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+sEscapedLabel;
 			}
 
 			if (sAdditionalField != undefined )	{
