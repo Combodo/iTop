@@ -235,8 +235,6 @@ $(function()
 				if(sTabType === 'caselog')
 				{
 					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
-
-					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="caselog"][data-caselog-attribute-code="' + sCaselogAttCode + '"]').addClass(this.css_classes.is_active);
 					this._ShowCaseLogTab(sCaselogAttCode);
 				}
 				else
@@ -305,6 +303,7 @@ $(function()
 				if (this.enums.tab_types.caselog === oActiveTabData.type) {
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
+					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
 				// Else if on the activity tab, check which case log tab to go to
 				else {
@@ -473,29 +472,33 @@ $(function()
 			 * @returns {Object} Active tab toolbar jQuery element
 			 * @private
 			 */
-			_GetActiveTabToolbarElement: function()
-			{
+			_GetActiveTabToolbarElement: function() {
 				const oActiveTabData = this._GetActiveTabData();
-				let sSelector = this.js_selectors.tab_toolbar + '[data-tab-type="' + oActiveTabData.type + '"]';
+				let sSelector = this.js_selectors.tab_toolbar+'[data-tab-type="'+oActiveTabData.type+'"]';
 
 				if (this.enums.tab_types.caselog === oActiveTabData.type) {
-					sSelector += '[data-caselog-attribute-code="' + oActiveTabData.att_code + '"]';
+					sSelector += '[data-caselog-attribute-code="'+oActiveTabData.att_code+'"]';
 				}
 
 				return this.element.find(sSelector);
 			},
-			_ShowCaseLogTab: function(sCaseLogAttCode)
-			{
+			/**
+			 * Show the case log tab of sCaseLogAttCode and applies its filters
+			 * Note: It doesn't open the entry form
+			 *
+			 * @param sCaseLogAttCode {string}
+			 * @return {void}
+			 * @private
+			 */
+			_ShowCaseLogTab: function (sCaseLogAttCode) {
+				this.element.find(this.js_selectors.tab_toolbar+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_active);
+
 				// Show only entries from this case log
-				// this._HideAllEntries();
-				//this.element.find(this.js_selectors.entry+'[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_hidden);
 				this._ShowAllEntries();
 				this._ApplyEntriesFilters();
 			},
-			_ShowActivityTab: function()
-			{
+			_ShowActivityTab: function () {
 				// Show all entries but regarding the current filters
-				//this._OpenAllMessages();
 				this._ShowAllEntries();
 				this._ApplyEntriesFilters();
 			},
@@ -580,15 +583,17 @@ $(function()
 			 *
 			 * @private
 			 */
-			_HideAllFiltersOptions: function()
-			{
+			_HideAllFiltersOptions: function () {
 				const me = this;
-				this.element.find(this.js_selectors.activity_filter_options_toggler).each(function(){
+				this.element.find(this.js_selectors.activity_filter_options_toggler).each(function () {
 					me._HideFilterOptions($(this));
 				});
 			},
 
 			// - Helpers on case logs entry forms
+			_SetFocusInCaseLogEntryForm: function (sCaseLogAttCode) {
+				this.element.find(this.js_selectors.caselog_entry_form+'[data-attribute-code="'+sCaseLogAttCode+'"]').trigger('set_focus.caselog_entry_form.itop');
+			},
 			/**
 			 * Show all case logs entry forms.
 			 * Event is triggered on the corresponding elements.
@@ -596,8 +601,7 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_ShowCaseLogsEntryForms: function()
-			{
+			_ShowCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('show_form.caselog_entry_form.itop');
 				this.element.find(this.js_selectors.compose_button).addClass(this.css_classes.is_hidden);
 			},

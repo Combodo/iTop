@@ -159,6 +159,10 @@ $(function() {
 				this.element.on('clear_entry.case_entry_form.itop', function () {
 					me._EmptyInput();
 				});
+				// Set focus in the input
+				this.element.on('set_focus.caselog_entry_form.itop', function () {
+					me._GetCKEditorInstance().focus();
+				});
 			},
 
 			// Helpers
