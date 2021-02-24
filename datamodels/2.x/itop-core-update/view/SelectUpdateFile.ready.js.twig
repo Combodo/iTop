@@ -22,6 +22,9 @@ $.ajax({
         }
         else
         {
+            $("#check-update").prop("disabled", true);
+            $("#file").prop("disabled", true);
+            $('#form-update-outer').slideUp(600);
             oRequirements.addClass("message_error");
         }
     }
