@@ -1,0 +1,113 @@
+$ibo-ui-multiselect--padding-left: 0.7em !default;
+$ibo-ui-multiselect--padding-right: 1.5em !default;
+
+$ibo-ui-multiselect-header--margin-bottom: 3px !default;
+$ibo-ui-multiselect-header--padding-y: 3px !default;
+$ibo-ui-multiselect-header--padding-x: 0 !default;
+
+$ibo-ui-multiselect-header--ul--padding-left: 24px !default;
+
+$ibo-ui-multiselect-header--ul--li--padding-right: 10px !default;
+
+$ibo-ui-multiselect-header--li--ui-multiselect-close--padding-right: 0 !default;
+
+$ibo-ui-multiselect-menu--padding: 3px !default;
+$ibo-ui-multiselect-menu--z-index: 10000 !default;
+
+
+
+.ui-multiselect { 
+  @extend .ibo-input;
+  @extend .ibo-input-select;
+  width: auto !important;
+  padding-left: $ibo-ui-multiselect--padding-left !important;
+  padding-right: $ibo-ui-multiselect--padding-right !important;
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+button.ui-multiselect > span { 
+  overflow:hidden;
+}
+
+.ui-multiselect span.ui-icon { 
+  float:right
+}
+
+.ui-multiselect-single .ui-multiselect-checkboxes input {
+  position:absolute !important;
+  top: auto !important;
+  left:-9999px; 
+}
+
+.ui-multiselect-single .ui-multiselect-checkboxes label {
+  padding:5px !important 
+}
+
+.ui-multiselect-header { 
+  margin-bottom: $ibo-ui-multiselect-header--margin-bottom; 
+  padding: $ibo-ui-multiselect-header--padding-y $ibo-ui-multiselect-header--padding-x; 
+}
+
+.ui-multiselect-header ul { 
+  @extend %ibo-font-ral-bol-100;
+  padding-left: $ibo-ui-multiselect-header--ul--padding-left;
+}
+
+.ui-multiselect-header ul li { 
+  float:left;
+  padding:0 $ibo-ui-multiselect-header--ul--li--padding-right 0 0;
+}
+
+.ui-multiselect-header span.ui-icon { 
+  float:left 
+}
+
+.ui-multiselect-header li.ui-multiselect-close { 
+  float:right; 
+  text-align:right;
+  padding-right:$ibo-ui-multiselect-header--li--ui-multiselect-close--padding-right;
+}
+
+.ui-multiselect-menu { 
+  @extend .ibo-popover-menu;
+  display:none;
+  padding: $ibo-ui-multiselect-menu--padding;
+  position:absolute;
+  z-index: $ibo-ui-multiselect-menu--z-index;
+  text-align: left
+}
+.ui-multiselect-checkboxes {
+  @extend .ibo-popover-menu--section;
+  position:relative;
+  overflow-y:scroll;
+}
+.ui-multiselect-checkboxes label {
+  display: flex;
+  align-items: center;
+  @extend %ibo-font-ral-nor-100;
+  cursor:pointer;
+  padding:3px 1px;
+}
+.ui-multiselect-checkboxes label input {
+  margin-right: 5px;
+  position:relative;
+  top:1px
+}
+.ui-multiselect-checkboxes li {
+  @extend .ibo-popover-menu--item;
+  @extend %ibo-font-ral-med-150;
+  clear:both;
+  padding-right:3px
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { 
+  text-align:center;
+  @extend %ibo-font-ral-bol-100;
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a {
+  display:block; 
+  padding:3px;
+  margin:1px 0; 
+  text-decoration:none 
+}
