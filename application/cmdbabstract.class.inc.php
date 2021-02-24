@@ -860,7 +860,7 @@ EOF
 										$val = array(
 											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
 											'value' => $sHTMLValue,
-											'inputId' => $sInputId,
+											'input_id' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);
@@ -907,7 +907,7 @@ EOF
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
 											'value' => $sHTMLValue,
-											'inputId' => $sInputId,
+											'input_id' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);

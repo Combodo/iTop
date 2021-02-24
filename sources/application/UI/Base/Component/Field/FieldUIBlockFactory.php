@@ -31,7 +31,7 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			'attlabel' => 'SetAttLabel',
 			'value_raw' => 'SetValueRaw',
 			'comments' => 'SetComments',
-			'inputId' => 'SetInputId',
+			'input_id' => 'SetInputId',
 		];
 		foreach ($aParamsMapping as $sParamKey => $sFieldMethod) {
 			self::UpdateFieldFromParams($oField, $sFieldMethod, $aParams, $sParamKey);
