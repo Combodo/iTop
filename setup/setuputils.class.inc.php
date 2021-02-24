@@ -562,8 +562,7 @@ class SetupUtils
 			clearstatcache();
 			if (!is_file($sGraphvizPath) || !is_executable($sGraphvizPath)) {
 				//N°3412 avoid shell injection
-				return new CheckResult(CheckResult::ERROR,
-					"$sGraphvizPath could not be executed: Please make sure it is installed and in the path");
+				return new CheckResult(CheckResult::WARNING, "$sGraphvizPath could not be executed: Please make sure it is installed and in the path");
 			}
 
 			if (!utils::IsWindowsEnvironment()){
