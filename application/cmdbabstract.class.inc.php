@@ -860,6 +860,7 @@ EOF
 										$val = array(
 											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
 											'value' => $sHTMLValue,
+											'inputId' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);
