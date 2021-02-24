@@ -183,8 +183,6 @@ abstract class FormManager
 	/**
 	 * @param array $aData
 	 *
-	 * @return array
-	 *
 	 * @since 2.7.4 3.0.0 N°3430
 	 */
 	public function CheckTransaction(&$aData)
