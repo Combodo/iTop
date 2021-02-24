@@ -1126,7 +1126,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ArchiveMode:Banner+' => 'Archivierte Objekte sind sichtbar, aber Veränderung ist nicht erlaubt',
 	'UI:FavoriteOrganizations' => 'Bevorzugte Organisationen',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Sprache des Benutzerinterfaces',
+	'UI:FavoriteLanguage' => 'Sprache des Benutzerinterfaces~~',
 	'UI:Favorites:SelectYourLanguage' => 'Wählen Sie Ihre bevorzugte Sprache aus',
 	'UI:FavoriteOtherSettings' => 'Andere Einstellungen',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Default-Länge für Listen:  %1$s Elemente pro Seite',

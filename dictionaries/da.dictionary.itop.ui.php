@@ -1128,7 +1128,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorit Organisationer',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade',
+	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade~~',
 	'UI:Favorites:SelectYourLanguage' => 'Vælg dit foretrukne sprog',
 	'UI:FavoriteOtherSettings' => 'Andre indstillinger',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Default længde for lister:  %1$s emner per side',

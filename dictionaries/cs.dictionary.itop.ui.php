@@ -1139,7 +1139,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Oblíbené organizace',
 	'UI:FavoriteOrganizations+' => 'Zaškrtněte, které organizace chcete vidět v rozbalovacím menu pro rychlý přístup. Mějte na paměti, že toto není bezpečnostní opatření. Objekty všech organizací jsou pořád viditelné a přístupné vybráním "Všechny organizace" z rozbalovacího menu.',
-	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní',
+	'UI:FavoriteLanguage' => 'Jazyk uživatelského rozhraní~~',
 	'UI:Favorites:SelectYourLanguage' => 'Preferovaný jazyk:',
 	'UI:FavoriteOtherSettings' => 'Další nastavení',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Výchozí délka seznamů: %1$s položek na stránku',

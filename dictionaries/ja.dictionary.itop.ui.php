@@ -1126,7 +1126,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'クイックアクセス組織',
 	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
-	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語',
+	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語~~',
 	'UI:Favorites:SelectYourLanguage' => '希望する言語を選択ください。',
 	'UI:FavoriteOtherSettings' => '他のセッティング',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'リストの規定の長さ: %1$s items 毎ページ',

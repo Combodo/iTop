@@ -1139,7 +1139,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
 	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问.请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
-	'UI:FavoriteLanguage' => '用户界面',
+	'UI:FavoriteLanguage' => '用户界面~~',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
 	'UI:Favorites:Default_X_ItemsPerPage' => '默认列表: 每页 %1$s 个项目',

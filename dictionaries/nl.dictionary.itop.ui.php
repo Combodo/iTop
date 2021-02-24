@@ -1149,7 +1149,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ArchiveMode:Banner+' => 'Gearchiveerde objecten zijn zichtbaar, maar kunnen niet worden aangepast',
 	'UI:FavoriteOrganizations' => 'Favoriete organisaties',
 	'UI:FavoriteOrganizations+' => 'Duid in onderstaande lijst de organisaties aan die je wilt zien in de keuzelijst voor een snelle toegang. Dit is geen beveiligingsinstelling; objecten van elke organisatie zijn nog steed zichtbaar en toegankelijk door "Alle Organisaties" te selecteren in de keuzelijst.',
-	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface',
+	'UI:FavoriteLanguage' => 'Taal van de gebruikersinterface~~',
 	'UI:Favorites:SelectYourLanguage' => 'Selecteer jouw taal',
 	'UI:FavoriteOtherSettings' => 'Overige instellingen',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Standaardlengte voor lijsten: %1$s items per pagina',

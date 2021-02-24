@@ -1128,7 +1128,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Obľúbené organizácie',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania',
+	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania~~',
 	'UI:Favorites:SelectYourLanguage' => 'Vyberte si svoj preferovaný jazyk',
 	'UI:FavoriteOtherSettings' => 'Iné nastavenia',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku',

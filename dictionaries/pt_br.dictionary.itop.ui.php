@@ -1139,7 +1139,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ArchiveMode:Banner+' => 'Objetos arquivados são visíveis e nenhuma modificação é permitida',
 	'UI:FavoriteOrganizations' => 'Organizações favoritas',
 	'UI:FavoriteOrganizations+' => 'Confira na lista abaixo as organizações que você deseja ver no menu drop-down para um acesso rápido.Note-se que esta não é uma configuração de segurança, objetos de qualquer organização ainda são visíveis e podem ser acessadas ao selecionar \\"Todos Organizações\\" na lista drop-down.',
-	'UI:FavoriteLanguage' => 'Idioma do painel do Usuário',
+	'UI:FavoriteLanguage' => 'Idioma do painel do Usuário~~',
 	'UI:Favorites:SelectYourLanguage' => 'Selecione sua linguagem preferida',
 	'UI:FavoriteOtherSettings' => 'Outras configurações',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Quantidade padrão para listas:  %1$s itens por página',

@@ -1133,7 +1133,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ArchiveMode:Banner+' => 'Les objets archivés sont visibles, et aucune modification n\'est possible',
 	'UI:FavoriteOrganizations' => 'Organisations Favorites',
 	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
-	'UI:FavoriteLanguage' => 'Langue de l\'interface utilisateur',
+	'UI:FavoriteLanguage' => 'Langue préférée',
 	'UI:Favorites:SelectYourLanguage' => 'Choisissez votre langue préférée',
 	'UI:FavoriteOtherSettings' => 'Autres réglages',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut des listes:  %1$s éléments par page',

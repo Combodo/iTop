@@ -1155,7 +1155,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:FavoriteOrganizations' => 'Favorite Organizations',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
 		'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
-	'UI:FavoriteLanguage' => 'Language of the User Interface',
+	'UI:FavoriteLanguage' => 'Favorite language',
 	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language',
 	'UI:FavoriteOtherSettings' => 'Other Settings',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page',

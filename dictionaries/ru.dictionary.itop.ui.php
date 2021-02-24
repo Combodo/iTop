@@ -1117,7 +1117,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Избранные организации',
 	'UI:FavoriteOrganizations+' => 'Отметьте в списке ниже организации, которые вы хотите видеть в раскрывающемся списке бокового меню для быстрого доступа. Обратите внимание, что это не параметр безопасности, объекты из любой организации по-прежнему видны и могут быть доступны, выбрав "Все организации" в раскрывающемся списке.',
-	'UI:FavoriteLanguage' => 'Язык пользовательского интерфейса',
+	'UI:FavoriteLanguage' => 'Язык пользовательского интерфейса~~',
 	'UI:Favorites:SelectYourLanguage' => 'Выберите Ваш язык',
 	'UI:FavoriteOtherSettings' => 'Другие настройки',
 	'UI:Favorites:Default_X_ItemsPerPage' => 'Длина списка по умолчанию: %1$s элементов на страницу.',
