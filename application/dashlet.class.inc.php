@@ -459,17 +459,21 @@ EOF
 					$sAttType = $aTargetAttCodes[$sTargetAttCode];
 					$sExtFieldAttCode = $sTargetAttCode;
 				}
-				if (is_a($sAttType, 'AttributeLinkedSet', true))
-				{
-					continue;
-				}
-				if (is_a($sAttType, 'AttributeFriendlyName', true))
-				{
-					continue;
-				}
-				if (is_a($sAttType, 'AttributeOneWayPassword', true))
-				{
-					continue;
+
+				$aForbidenAttType = [
+					'AttributeLinkedSet',
+					'AttributeFriendlyName',
+
+					'iAttributeNoGroupBy', //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
+					'AttributeOneWayPassword',
+					'AttributeEncryptedString',
+					'AttributePassword',
+				];
+				foreach ($aForbidenAttType as $sForbidenAttType) {
+					if (is_a($sAttType, $sForbidenAttType, true))
+					{
+						continue 2;
+					}
 				}
 
 				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);

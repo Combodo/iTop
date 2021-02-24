@@ -103,6 +103,10 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
+interface iAttributeNoGroupBy
+{
+	//no method, just a contract on implement
+}
 
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.)
@@ -3761,7 +3765,7 @@ class AttributeFinalClass extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributePassword extends AttributeString
+class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -3837,7 +3841,7 @@ class AttributePassword extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributeEncryptedString extends AttributeString
+class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -9217,7 +9221,7 @@ class AttributeSubItem extends AttributeDefinition
 /**
  * One way encrypted (hashed) password
  */
-class AttributeOneWayPassword extends AttributeDefinition
+class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 

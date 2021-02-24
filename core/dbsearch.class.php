@@ -1186,6 +1186,30 @@ abstract class DBSearch
 				}
 			}
 		}
+
+		if (is_array($aGroupByExpr))
+		{
+			foreach($aGroupByExpr as $sAlias => $oGroupByExp)
+			{
+				/** @var \Expression $oGroupByExp */
+
+				$aFields = $oGroupByExp->ListRequiredFields();
+				foreach($aFields as $sFieldAlias)
+				{
+					$aMatches = array();
+					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
+					{
+						$sFieldClass = $this->GetClassName($aMatches[1]);
+						$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
+						if ( $oAttDef instanceof iAttributeNoGroupBy)
+						{
+							throw new Exception("Grouping on '$sFieldClass' fields is not supported.");
+						}
+					}
+				}
+			}
+		}
+
 		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
 		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 

@@ -446,8 +446,21 @@ class DisplayBlock
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
 		$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
-		switch($this->m_sStyle)
-		{
+
+		switch($this->m_sStyle) {
+			case 'list_search':
+			case 'list':
+				break;
+			default:
+				// N°3473: except for 'list_search' and 'list' (which have more granularity, see the other switch below),
+				// refuse to render if the user is not allowed to see the class.
+				if (! UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) {
+					$sHtml .= $oPage->GetP(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $this->m_oSet->GetClass()));
+					return $sHtml;
+				}
+		}
+
+		switch ($this->m_sStyle) {
 			case 'count':
 			if (isset($aExtraParams['group_by']))
 			{
