@@ -744,7 +744,6 @@ const CombodoTooltip = {
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {
 			allowHTML: true,    // Always true so line breaks can work. Don't worry content will be sanitized.
-			interactive: true,  // Allow user to interact (select, click, ...) with the content
 		};
 
 		// First, check if the tooltip isn't already instantiated
@@ -775,6 +774,37 @@ const CombodoTooltip = {
 			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
 		}
 		oOptions['content'] = sContent;
+
+		// Interaction (selection, click, ...) have to be enabled manually
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		oOptions['interactive'] = bInteractive;
+
+		// Element to append the tooltip to
+		const sAppendToOriginalValue = oElem.attr('data-tooltip-append-to');
+		let mAppendTo;
+
+		if (sAppendToOriginalValue === undefined || sAppendToOriginalValue === '') {
+			mAppendTo = null;
+		} else if (sAppendToOriginalValue === 'body') {
+			mAppendTo = document.body;
+		} else if (sAppendToOriginalValue === 'parent') {
+			mAppendTo = oElem.parent()[0];
+		} else {
+			// We have a selector, try to get the first matching element
+			const oAppendToElems = $(sAppendToOriginalValue);
+			if (oAppendToElems.length === 0) {
+				CombodoJSConsole.Debug('CombodoTooltip: Could not create tooltip as there was no result for the element it should have been append to "'+sAppendToOriginalValue+'"');
+				return false;
+			} else {
+				mAppendTo = oAppendToElems[0];
+			}
+		}
+
+		// - Only set option if there is an actual value, otherwise, let the lib. handle it with it's default options
+		if (mAppendTo !== null) {
+			oOptions['appendTo'] = mAppendTo;
+		}
 
 		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
 		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
