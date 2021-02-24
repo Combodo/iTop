@@ -743,7 +743,8 @@ const CombodoTooltip = {
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {
-			allowHTML: true, // Always true so line breaks can work. Don't worry content will be sanitized.
+			allowHTML: true,    // Always true so line breaks can work. Don't worry content will be sanitized.
+			interactive: true,  // Allow user to interact (select, click, ...) with the content
 		};
 
 		// First, check if the tooltip isn't already instantiated
