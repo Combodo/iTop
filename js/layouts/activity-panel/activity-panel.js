@@ -897,7 +897,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									// TODO 3.0.0: Maybe we could use the centralized dialog to dusplay error message we talked about in the .fail() callback?
+									// TODO 3.0.0: Maybe we could use the centralized dialog to display error message we talked about in the .fail() callback?
 									alert(oData.popup_message);
 								}
 							} else {
