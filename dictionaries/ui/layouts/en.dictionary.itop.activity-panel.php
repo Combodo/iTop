@@ -24,9 +24,9 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
-	'UI:Layout:ActivityPanel:Tab:Caselog:DraftIndicator:Tooltip' => 'Draft entry',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Title' => 'Case logs',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Tooltip' => 'Show / hide case log entries on this tab',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits',
@@ -37,12 +37,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new case log entry',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title' => 'Multiple case logs save',
-	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited case logs at once.',
-	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:PrefLabel' => 'By pressing the "save" button, you will submit entries for all the edited case logs at once.',
+	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title' => 'Multiple logs save',
+	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',

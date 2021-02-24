@@ -9,15 +9,15 @@
 					<div class="ibo-activity-panel--tab-toolbar-middle-actions">
 						{% if oUIBlock.HasCaseLogTabs() %}
 							{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-								<label class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} "
-								       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Tooltip'|dict_s }}"
-								       data-role="ibo-activity-panel--filter"
-								       data-target-entry-types="caselog"
-								       data-entry-caselog-attribute-code="{{ sCaseLogAttCode }}" >
-									<span class=".ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} ibo-activity-panel--tab-title-decoration"></span>
-									{{ aCaseLogData.title }}
-								</label>
-							{% endfor %}
+                                <label class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} "
+                                       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip'|dict_s }}"
+                                       data-role="ibo-activity-panel--filter"
+                                       data-target-entry-types="caselog"
+                                       data-entry-caselog-attribute-code="{{ sCaseLogAttCode }}">
+                                    <span class=".ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} ibo-activity-panel--tab-title-decoration"></span>
+                                    {{ aCaseLogData.title }}
+                                </label>
+                            {% endfor %}
 						{% endif %}
 						{% if oUIBlock.HasStates() %}
 							<label class="ibo-activity-panel--tab-toolbar-action"

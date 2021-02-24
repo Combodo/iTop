@@ -3,22 +3,22 @@
         <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
 				{% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
-				<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
-				     data-role="ibo-activity-panel--tab-toggler"
-				     data-tab-type="caselog"
-				     data-caselog-attribute-code="{{ sCaseLogAttCode }}"
-				     data-caselog-rank="{{ loop.index }}">
-					<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
-						<span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
-						<span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
+                     data-role="ibo-activity-panel--tab-toggler"
+                     data-tab-type="caselog"
+                     data-caselog-attribute-code="{{ sCaseLogAttCode }}"
+                     data-caselog-rank="{{ loop.index }}">
+                    <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
+                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
                         <span class="ibo-activity-panel--tab-title-draft-indicator"
                               data-role="ibo-activity-panel--tab-title-draft-indicator"
-                              data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Caselog:DraftIndicator:Tooltip'|dict_s }}">
+                              data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip'|dict_s }}">
                             <span class="fas fa-pen"></span>
                         </span>
-					</a>
-				</div>
-			{% endfor %}
+                    </a>
+                </div>
+            {% endfor %}
 			{% set sExtraCSSClass = (oUIBlock.GetCaseLogTabs() is empty) ? 'ibo-is-active' : '' %}
 			<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
 			     data-role="ibo-activity-panel--tab-toggler"

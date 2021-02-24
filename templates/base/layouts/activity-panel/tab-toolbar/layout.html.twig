@@ -24,10 +24,10 @@
                 <div class="ibo-activity-panel--tab-toolbar-middle-actions">
                     {% if oUIBlock.HasCaseLogTabs() %}
                         <label class="ibo-activity-panel--tab-toolbar-action" data-role="ibo-activity-panel--tab-toolbar-action"
-                               data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Tooltip'|dict_s }}">
+                               data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip'|dict_s }}">
                             <input type="checkbox" name="caselogs" data-role="ibo-activity-panel--filter" data-target-entry-types="caselog"
                                    {% if (aFilteredCaseLogsAttCodes is not defined) or (aFilteredCaseLogsAttCodes is empty) %}checked{% endif %}>
-                            {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Caselogs:Title'|dict_s }}
+                            {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title'|dict_s }}
                             {% if oUIBlock.GetCaseLogTabs()|length > 0 %}
                                 <a class="ibo-activity-panel--filter-options-toggler ibo-is-closed"
                                    data-role="ibo-activity-panel--filter-options-toggler" href="#">
