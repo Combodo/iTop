@@ -46,7 +46,7 @@
 			{% endfor %}
 			{{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
             <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title'|dict_s }}">
-                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">By pressing the "save" button, you will submit entries for all the edited case logs at once.</div>
+                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">{{ 'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation'|dict_s }}</div>
                 <label class="ibo-activity-panel--entry-forms-confirmation-preference">
                     <input type="checkbox" class="ibo-activity-panel--entry-forms-confirmation-preference-input" data-role="ibo-activity-panel--entry-forms-confirmation-preference-input">
                     <span class="ibo-activity-panel--entry-forms-confirmation-preference-text">{{ 'UI:UserPref:DoNotShowAgain'|dict_s }}</span>
