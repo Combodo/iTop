@@ -906,6 +906,7 @@ EOF
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
 											'value' => $sHTMLValue,
+											'inputId' => $sInputId,
 											'comments' => $sComments,
 											'infos' => $sInfos,
 										);

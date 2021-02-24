@@ -337,7 +337,12 @@ class Field extends UIContentBlock
 	public function SetValueId(?string $sValueId)
 	{
 		$this->sValueId = $sValueId;
+
 		return $this;
 	}
 
+	public function SetInputId(string $sInputId)
+	{
+		$this->AddDataAttribute('input-id', $sInputId);
+	}
 }
