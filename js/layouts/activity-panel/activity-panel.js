@@ -624,7 +624,7 @@ $(function()
 			 * @private
 			 */
 			_EmptyCaseLogsEntryForms: function () {
-				this.element.find(this.js_selectors.caselog_entry_form).trigger('clear_entry.case_entry_form.itop');
+				this.element.find(this.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 			},
 			_FreezeCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('enter_pending_submission_state.caselog_entry_form.itop');
@@ -765,7 +765,7 @@ $(function()
 						me._ApplyEntriesFilters();
 
 						// For now, we don't hide the forms as the user may want to add something else
-						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.case_entry_form.itop');
+						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
 						// TODO 3.0.0: Redirect to transition page if necessary (buttons need to be added)
 						// // Redirect to stimulus

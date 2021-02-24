@@ -156,7 +156,7 @@ $(function() {
 					return me._GetInputData();
 				});
 				// Clear the entry value
-				this.element.on('clear_entry.case_entry_form.itop', function () {
+				this.element.on('clear_entry.caselog_entry_form.itop', function () {
 					me._EmptyInput();
 				});
 				// Set focus in the input
