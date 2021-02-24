@@ -894,9 +894,11 @@ $(function()
 			$( ".popupMenuTarget" ).each(function(){
 				var sDataId = $(this).attr('data-id');
 				var sTooltipContent = me._get_tooltip_content(sDataId);
-				$(this).attr('data-tooltip-content', sTooltipContent);
-				$(this).attr('data-tooltip-html-enabled', 'true');
-				$(this).attr('data-tooltip-hide-delay', '1500');
+				$(this).attr('data-tooltip-content', sTooltipContent)
+					.attr('data-tooltip-html-enabled', 'true')
+					.attr('data-tooltip-interaction-enabled', 'true')
+					.attr('data-tooltip-append-to', 'body')
+					.attr('data-tooltip-hide-delay', '1500');
 				CombodoTooltip.InitTooltipFromMarkup($(this));
 			});
 		},
