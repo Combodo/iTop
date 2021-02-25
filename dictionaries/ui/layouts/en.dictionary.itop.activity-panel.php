@@ -40,8 +40,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title' => 'Multiple logs save',
-	'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',

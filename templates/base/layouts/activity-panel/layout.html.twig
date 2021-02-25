@@ -19,42 +19,42 @@
                     </a>
                 </div>
             {% endfor %}
-			{% set sExtraCSSClass = (oUIBlock.GetCaseLogTabs() is empty) ? 'ibo-is-active' : '' %}
-			<div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
-			     data-role="ibo-activity-panel--tab-toggler"
-			     data-tab-type="activity">
-				<a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
-					<span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
-				</a>
-			</div>
-			<div class="ibo-activity-panel--size-toggler" data-role="ibo-activity-panel--size-toggler">
-				<a href="#" class="ibo-activity-panel--expand-icon"
-				   data-role="ibo-activity-panel--expand-icon"
-				   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
-					<span class="fas fa-fw fa-expand-alt"></span>
-				</a>
-				<a href="#" class="ibo-activity-panel--collapse-icon"
-				   data-role="ibo-activity-panel--collapse-icon"
-				   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Collapse:Tooltip'|dict_s }}">
-					<span class="fas fa-fw fa-compress-alt"></span>
-				</a>
-			</div>
-		</div>
-		<div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
-			{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-				{{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
-			{% endfor %}
-			{{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
-            <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Title'|dict_s }}">
-                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">{{ 'UI:Layout:ActivityPanel:MutltipleEntriesSaveConfirmation:Explanation'|dict_s }}</div>
+            {% set sExtraCSSClass = (oUIBlock.GetCaseLogTabs() is empty) ? 'ibo-is-active' : '' %}
+            <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
+                 data-role="ibo-activity-panel--tab-toggler"
+                 data-tab-type="activity">
+                <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                    <span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
+                </a>
+            </div>
+            <div class="ibo-activity-panel--size-toggler" data-role="ibo-activity-panel--size-toggler">
+                <a href="#" class="ibo-activity-panel--expand-icon"
+                   data-role="ibo-activity-panel--expand-icon"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-expand-alt"></span>
+                </a>
+                <a href="#" class="ibo-activity-panel--collapse-icon"
+                   data-role="ibo-activity-panel--collapse-icon"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Collapse:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-compress-alt"></span>
+                </a>
+            </div>
+        </div>
+        <div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
+            {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
+            {% endfor %}
+            {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
+            <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title'|dict_s }}">
+                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation'|dict_s }}</div>
                 <label class="ibo-activity-panel--entry-forms-confirmation-preference">
                     <input type="checkbox" class="ibo-activity-panel--entry-forms-confirmation-preference-input" data-role="ibo-activity-panel--entry-forms-confirmation-preference-input">
                     <span class="ibo-activity-panel--entry-forms-confirmation-preference-text">{{ 'UI:UserPref:DoNotShowAgain'|dict_s }}</span>
                 </label>
             </div>
-		</div>
-	</div>
-	{% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}
+        </div>
+    </div>
+    {% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}
         <a href="#" class="ibo-activity-panel--add-caselog-entry-button" data-role="ibo-activity-panel--add-caselog-entry-button"
            data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
             <i class="fas fa-feather"></i>
@@ -62,16 +62,16 @@
     {% endif %}
     <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
         {% if oUIBlock.GetGroupedEntries()|length > 0 %}
-			{% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
-				{{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
-			{% endfor %}
-		{% else %}
-			<div class="ibo-activity-panel--body--placeholder">
-				<div class="ibo-activity-panel--body--placeholder-image ibo-svg-illustration--container">
-					{{ source("illustrations/undraw_reading_time.svg") }}
-				</div>
-				<div class="ibo-activity-panel--body--placeholder-hint">{{ 'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint'|dict_s }}</div>
-			</div>
-		{% endif %}
+            {% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
+                {{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
+            {% endfor %}
+        {% else %}
+            <div class="ibo-activity-panel--body--placeholder">
+                <div class="ibo-activity-panel--body--placeholder-image ibo-svg-illustration--container">
+                    {{ source("illustrations/undraw_reading_time.svg") }}
+                </div>
+                <div class="ibo-activity-panel--body--placeholder-hint">{{ 'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint'|dict_s }}</div>
+            </div>
+        {% endif %}
 	</div>
 </div>
