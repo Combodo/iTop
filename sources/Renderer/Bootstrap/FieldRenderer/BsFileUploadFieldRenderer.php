@@ -29,6 +29,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use Dict;
 use InlineImage;
+use MetaModel;
 use utils;
 
 /**
@@ -421,7 +422,8 @@ HTML
 				if ($oDoc->IsPreviewAvailable())
 				{
 					$sIconClass = 'trigger-preview';
-					if ($oDoc->GetSize() <= AbstractAttachmentsRenderer::MAX_SIZE_FOR_PREVIEW)
+					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
+					if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 					{
 						$sAttachmentThumbUrl = $sDocDownloadUrl;
 					}
