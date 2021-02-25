@@ -1175,8 +1175,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:OQL:UnknownClassAndFix' => 'La classe "%1$s" est inconnue. Essayez plutôt "%2$s".',
 	'UI:OQL:UnknownClassNoFix' => 'La classe "%1$s" est inconnue',
 
-	'UI:Dashboard:Edit' => 'Editer cette page...',
-	'UI:Dashboard:Revert' => 'Revenir à la version d\'origine...',
+	'UI:Dashboard:CreateCustom' => 'Créer une version modifiée...',
+	'UI:Dashboard:EditCustom' => 'Éditer la version modifiée...',
+	'UI:Dashboard:DeleteCustom' => 'Supprimer la version modifiée...',
 	'UI:Dashboard:RevertConfirm' => 'Toutes modifications apportées à la version d\'origine seront perdues. Veuillez confirmer l\'opération.',
 	'UI:ExportDashBoard' => 'Exporter dans un fichier',
 	'UI:ImportDashBoard' => 'Importer depuis un fichier...',
@@ -1189,7 +1190,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletCreation:DashletType' => 'Type d\'Indicateur',
 	'UI:DashletCreation:EditNow' => 'Modifier le tableau de bord',
 
-	'UI:DashboardEdit:Title' => 'Editeur de tableau de bord',
+	'UI:DashboardEdit:Title' => 'Éditeur de tableau de bord',
 	'UI:DashboardEdit:DashboardTitle' => 'Titre',
 	'UI:DashboardEdit:AutoReload' => 'Réactualisation automatique',
 	'UI:DashboardEdit:AutoReloadSec' => 'Réactualisation toutes les (secondes)',

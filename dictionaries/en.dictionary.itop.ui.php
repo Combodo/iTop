@@ -1197,8 +1197,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class "%1$s". You may try "%2$s" instead.',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Edit This Page...',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.',
 	'UI:ExportDashBoard' => 'Export to a file',
 	'UI:ImportDashBoard' => 'Import from a file...',

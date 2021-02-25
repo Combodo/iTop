@@ -1091,20 +1091,17 @@ JS
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
 		$sJSExtraParams = json_encode($aExtraParams);
-		$bCanEdit = true;
 		if ($this->HasCustomDashboard()) {
-			$bCanEdit = !appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false);
-		}
-		if ($bCanEdit) {
-			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:DeleteCustom'),
+				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
+			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
+		} else {
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:CreateCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
 			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 		}
 
-		if ($this->bCustomized) {
-			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
-				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
-			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
-		}
 
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
