@@ -299,13 +299,13 @@ $(function()
 				oEvent.preventDefault();
 
 				const oActiveTabData = this._GetActiveTabData();
-				// If on a caselog tab, open its form
-				if (this.enums.tab_types.caselog === oActiveTabData.type) {
+				// If on a caselog tab, open its form if it has one
+				if ((this.enums.tab_types.caselog === oActiveTabData.type) && this._HasCaseLogEntryFormForTab(oActiveTabData.att_code)) {
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
 					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
-				// Else if on the activity tab, check which case log tab to go to
+				// Else, check which *editable* case log tab to go to
 				else {
 					// TODO 3.0.0: Make a tab popover menu selection
 					console.log('TO IMPLEMENT');
@@ -591,6 +591,14 @@ $(function()
 			},
 
 			// - Helpers on case logs entry forms
+			/**
+			 * @param sCaseLogAttCode {string}
+			 * @returns {boolean} Return true if there is a case log for entry for the sCaseLogAttCode tab
+			 * @private
+			 */
+			_HasCaseLogEntryFormForTab: function (sCaseLogAttCode) {
+				return (this.element.find(this.js_selectors.tab_toolbar+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').find(this.js_selectors.caselog_entry_form).length > 0);
+			},
 			_SetFocusInCaseLogEntryForm: function (sCaseLogAttCode) {
 				this.element.find(this.js_selectors.caselog_entry_form+'[data-attribute-code="'+sCaseLogAttCode+'"]').trigger('set_focus.caselog_entry_form.itop');
 			},
