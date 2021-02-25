@@ -3,39 +3,39 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-modal--ui-dialog--padding-x: 30px !default;
-$ibo-modal--ui-dialog--border-radius: $ibo-border-radius-500 !default;
-$ibo-modal--ui-dialog--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-jqueryui--ui-dialog--padding-x: 30px !default;
+$ibo-vendors-jqueryui--ui-dialog--border-radius: $ibo-border-radius-500 !default;
+$ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-white-100 !default;
 
-$ibo-modal--ui-dialog-titlebar--height: 50px !default;
-$ibo-modal--ui-dialog-titlebar--background-color: $ibo-modal--ui-dialog--background-color !default;
-$ibo-modal--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-200 !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--height: 50px !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-200 !default;
 
-$ibo-modal--ui-dialog-buttonpane--height: $ibo-modal--ui-dialog-titlebar--height !default;
-$ibo-modal--ui-dialog-buttonpane--background-color: $ibo-modal--ui-dialog--background-color !default;
-$ibo-modal--ui-dialog-buttonpane--border-top: $ibo-modal--ui-dialog-titlebar--border-bottom !default;
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height !default;
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--border-top: $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom !default;
 
-$ibo-modal--ui-dialog--border: $ibo-modal--ui-dialog--background-color !default;
+$ibo-vendors-jqueryui--ui-dialog--border: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
 
-$ibo-modal--ui-widget-overlay--background-color: $ibo-color-blue-grey-800 !default;
+$ibo-vendors-jqueryui--ui-widget-overlay--background-color: $ibo-color-blue-grey-800 !default;
 
-$ibo-input-date--ui-datepicker--padding-top: 34px !default;
-$ibo-input-date--ui-datepicker--background-color: $ibo-color-white-100 !default;
-$ibo-input-date--ui-datepicker--border-color: $ibo-color-grey-400 !default;
-$ibo-input-date--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
+$ibo-vendors-jqueryui--ui-datepicker--padding-top: 34px !default;
+$ibo-vendors-jqueryui--ui-datepicker--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-jqueryui--ui-datepicker--border-color: $ibo-color-grey-400 !default;
+$ibo-vendors-jqueryui--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
 
-$ibo-input-date--ui-datepicker-header--padding: $ibo-border-radius-500 $ibo-border-radius-500 0 0 !default;
-$ibo-input-date--ui-datepicker-header--border-radius: 4px !default;
+$ibo-vendors-jqueryui--ui-datepicker-header--padding: $ibo-border-radius-500 $ibo-border-radius-500 0 0 !default;
+$ibo-vendors-jqueryui--ui-datepicker-header--border-radius: 4px !default;
 
-$ibo-ui-slider--background-color: $ibo-color-grey-100 !default;
-$ibo-ui-slider--border-color: $ibo-color-grey-600 !default;
-$ibo-ui-slider--border-radius: $ibo-border-radius-300 !default;
+$ibo-vendors-jqueryui--ui-slider--background-color: $ibo-color-grey-100 !default;
+$ibo-vendors-jqueryui--ui-slider--border-color: $ibo-color-grey-600 !default;
+$ibo-vendors-jqueryui--ui-slider--border-radius: $ibo-border-radius-300 !default;
 
-$ibo-ui-slider--ui-slider-handle--background-color: $ibo-color-white-100 !default;
-$ibo-ui-slider--ui-slider-handle--border-color: $ibo-ui-slider--border-color !default;
-$ibo-ui-slider--ui-slider-handle--border-radius: $ibo-ui-slider--border-radius !default;
-$ibo-ui-slider--ui-slider-handle--diameter: 1.4em !default;
-$ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-color: $ibo-vendors-jqueryui--ui-slider--border-color !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-radius: $ibo-vendors-jqueryui--ui-slider--border-radius !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter: 1.4em !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !default;
 
 // Tabs
 
@@ -45,17 +45,17 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-color: $ibo-modal--ui-dialog--background-color;
-	border-radius: $ibo-modal--ui-dialog--border-radius;
+	background-color: $ibo-vendors-jqueryui--ui-dialog--background-color;
+	border-radius: $ibo-vendors-jqueryui--ui-dialog--border-radius;
 	overflow: hidden;
 	outline: 0;
 	z-index: 21;
 	.ui-dialog-titlebar {
-		padding: .4em $ibo-modal--ui-dialog--padding-x;
+		padding: .4em $ibo-vendors-jqueryui--ui-dialog--padding-x;
 		position: relative;
-		background-color: $ibo-modal--ui-dialog-titlebar--background-color;
-		height: $ibo-modal--ui-dialog-titlebar--height;
-		border-bottom: $ibo-modal--ui-dialog-titlebar--border-bottom;
+		background-color: $ibo-vendors-jqueryui--ui-dialog-titlebar--background-color;
+		height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height;
+		border-bottom: $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -71,7 +71,7 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 	}
 	.ui-dialog-titlebar-close {
 		position: absolute;
-		right: $ibo-modal--ui-dialog--padding-x;
+		right: $ibo-vendors-jqueryui--ui-dialog--padding-x;
 		top: 50%;
 		width: 20px;
 		margin: -10px 0 0 0;
@@ -80,18 +80,18 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 	}
 	.ui-dialog-content {
 		position: relative;
-		padding: 16px $ibo-modal--ui-dialog--padding-x;
+		padding: 16px $ibo-vendors-jqueryui--ui-dialog--padding-x;
 	}
 	.ui-dialog-buttonpane {
 		margin-top: auto;
 		text-align: left;
 		border-width: 1px 0 0 0;
 		background-image: none;
-		padding: .4em $ibo-modal--ui-dialog--padding-x;
+		padding: .4em $ibo-vendors-jqueryui--ui-dialog--padding-x;
 		position: relative;
-		background-color: $ibo-modal--ui-dialog-buttonpane--background-color;
-		border-top: $ibo-modal--ui-dialog-buttonpane--border-top;
-		height: $ibo-modal--ui-dialog-buttonpane--height;
+		background-color: $ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color;
+		border-top: $ibo-vendors-jqueryui--ui-dialog-buttonpane--border-top;
+		height: $ibo-vendors-jqueryui--ui-dialog-buttonpane--height;
 		.ui-dialog-buttonset {
 			float: right;
 		}
@@ -181,7 +181,7 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 	height: 100%;
 	opacity: .6;
 	filter: Alpha(Opacity=60);
-	background-color: $ibo-modal--ui-widget-overlay--background-color;
+	background-color: $ibo-vendors-jqueryui--ui-widget-overlay--background-color;
 }
 // Resiable
 
@@ -273,13 +273,13 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 
 .ui-datepicker{
 	padding-top: 15px;
-	background-color: $ibo-input-date--ui-datepicker--background-color;
-	border: solid 1px $ibo-input-date--ui-datepicker--border-color;
-	border-radius: $ibo-input-date--ui-datepicker--border-radius;
+	background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
+	border: solid 1px $ibo-vendors-jqueryui--ui-datepicker--border-color;
+	border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
 	.ui-datepicker-header{
 		height: unset;
-		padding: $ibo-input-date--ui-datepicker-header--border-radius;
-		border-radius: $ibo-input-date--ui-datepicker-header--border-radius;
+		padding: $ibo-vendors-jqueryui--ui-datepicker-header--border-radius;
+		border-radius: $ibo-vendors-jqueryui--ui-datepicker-header--border-radius;
 		&::before{
 			position: absolute;
 			top: 0;
@@ -533,17 +533,17 @@ $ibo-ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !de
 .ui-slider {
   position: relative;
   text-align: left;
-  background-color: $ibo-ui-slider--background-color;
-  border: solid 1px $ibo-ui-slider--border-color;
-  border-radius: $ibo-ui-slider--border-radius;
+  background-color: $ibo-vendors-jqueryui--ui-slider--background-color;
+  border: solid 1px $ibo-vendors-jqueryui--ui-slider--border-color;
+  border-radius: $ibo-vendors-jqueryui--ui-slider--border-radius;
   .ui-slider-handle {
-    background-color: $ibo-ui-slider--ui-slider-handle--background-color;
-    border: solid 1px $ibo-ui-slider--ui-slider-handle--border-color;
-    border-radius: $ibo-ui-slider--ui-slider-handle--border-radius;
+    background-color: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--background-color;
+    border: solid 1px $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-color;
+    border-radius: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-radius;
     position: absolute;
     z-index: 2;
-    width: $ibo-ui-slider--ui-slider-handle--diameter;
-    height: $ibo-ui-slider--ui-slider-handle--diameter;
+    width: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter;
+    height: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter;
     -ms-touch-action: none;
     touch-action: none;
     cursor: pointer;
