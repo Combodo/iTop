@@ -47,23 +47,19 @@ class TwigHelper
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oPage->add(self::RenderTemplate($oTwig, $aParams, $sTemplateName, $sDefaultType));
-		$oPage->add_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'js', false));
-		$oPage->add_ready_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'ready.js',false));
+		$oPage->add_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'js'));
+		$oPage->add_ready_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'ready.js'));
 	}
 
 	/**
 	 * @param \Twig\Environment $oTwig
-	 * @param array $aParams
-	 * @param string $sName
-	 * @param string $sTemplateFileExtension
-	 * @param bool $bLogMissingFile
+	 * @param $aParams
+	 * @param $sName
+	 * @param $sTemplateFileExtension
 	 *
 	 * @return string
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
 	 */
-	private static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension, $bLogMissingFile = true)
+	private static function RenderTemplate(Environment $oTwig, $aParams, $sName, $sTemplateFileExtension)
 	{
 		try
 		{
@@ -75,7 +71,7 @@ class TwigHelper
 			{
 				IssueLog::Error($e->getMessage());
 			}
-			elseif ($bLogMissingFile)
+			else
 			{
 				IssueLog::Debug($e->getMessage());
 			}
