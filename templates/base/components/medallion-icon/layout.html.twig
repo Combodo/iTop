@@ -3,10 +3,10 @@
 {% apply spaceless %}
 <div id="{{ oUIBlock.GetId() }}" class="ibo-medallion-icon {{ oUIBlock.GetAdditionalCSSClassesAsString() }}">
     {% if oUIBlock.GetImageUrl() != '' %}
-        <img class="ibo-medallion--image" src="{{ oUIBlock.GetImageUrl() }}" />
+        <img class="ibo-medallion-icon--image" src="{{ oUIBlock.GetImageUrl() }}" />
     {% endif %}
     {% if oUIBlock.GetIconClass() != '' %}
-        <i class="ibo-medallion--image {{ oUIBlock.GetIconClass() }}"></i>
+        <i class="ibo-medallion-icon--image {{ oUIBlock.GetIconClass() }}"></i>
     {% endif %}
     {% if oUIBlock.GetDescription() != '' %}
         <div class="ibo-medallion-icon--description">{{ oUIBlock.GetDescription() }}</div>
