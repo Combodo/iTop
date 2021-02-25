@@ -3976,6 +3976,30 @@ abstract class DBObject implements iDisplay
 	public function SetCurrentDate($sAttCode)
 	{
 		$this->Set($sAttCode, time());
+
+		return true;
+	}
+
+	/**
+	 * Helper to add a value to the given attribute
+	 *
+	 * Suitable for use as a lifecycle action
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode
+	 * @param int|float $iValue
+	 *
+	 * @return bool
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function AddValue($sAttCode, $iValue = 1)
+	{
+		$this->Set($sAttCode, $this->Get($sAttCode) + $iValue);
+
 		return true;
 	}
 
