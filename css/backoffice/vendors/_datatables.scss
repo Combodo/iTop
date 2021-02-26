@@ -1,0 +1,159 @@
+$ibo-vendors-datatable--toolbar--elements--padding-top: 0.755em !default;
+
+$ibo-vendors-datatable--sorting--opacity: 0.3 !default;
+$ibo-vendors-datatable--sorting--right: 1em !default;
+
+$ibo-vendors-datatable--pagination--color: $ibo-color-grey-800 !default;
+
+$ibo-vendors-datatable--pagination--position-x: 1.21% !default;
+$ibo-vendors-datatable--pagination--position-top: 91.58% !default;
+$ibo-vendors-datatable--pagination--position-bottom: 4.85% !default;
+$ibo-vendors-datatable--pagination--button-margin-x: 0.5em !default;
+
+$ibo-vendors-datatable--select-info--padding-left: 2em !default;
+
+$ibo-vendors-datatable--paginate--padding-top: $ibo-vendors-datatable--toolbar--elements--padding-top !default;
+$ibo-vendors-datatable--paginate--padding-left: 2em !default;
+
+$ibo-vendors-datatable--paginate-button--link--color: $ibo-color-grey-800 !default;
+$ibo-vendors-datatable--paginate-button--link--hover--color: $ibo-color-blue-grey-200 !default;
+
+$ibo-vendors-datatable--paginate-button-active--link--color: $ibo-color-grey-900 !default;
+$ibo-vendors-datatable--paginate-button-active--link--background-color: $ibo-color-grey-200 !default;
+$ibo-vendors-datatable--paginate-button-active--link--padding-y: 2px !default;
+$ibo-vendors-datatable--paginate-button-active--link--padding-x: 6px !default;
+$ibo-vendors-datatable--paginate-button-active--link--box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.15) !default;
+$ibo-vendors-datatable--paginate-button-active--link--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-vendors-datatable--toolbar--length--padding-right: 0.5em !default;
+$ibo-vendors-datatable--toolbar--length--select--height: 18px !default;
+$ibo-vendors-datatable--toolbar--length--select--width: unset !default;
+$ibo-vendors-datatable--toolbar--length--select--padding-y: 1px !default;
+$ibo-vendors-datatable--toolbar--length--select--padding-x: 2px !default;
+$ibo-vendors-datatable--toolbar--info--padding-right: 2em !default;
+$ibo-vendors-datatable--toolbar--info--padding-left: 0em !default;
+$ibo-vendors-datatable--toolbar--info--line-height: $ibo-vendors-datatable--toolbar--length--select--height + $ibo-vendors-datatable--toolbar--length--select--padding-y !default;
+
+
+.dataTables_scrollHead thead tr th.sorting::after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  content: "\f0dc";
+  font-weight: 900;
+  opacity: $ibo-vendors-datatable--sorting--opacity;
+  right: $ibo-vendors-datatable--sorting--right;
+}
+
+.dataTables_scrollHead thead tr th.sorting_desc:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  content: "\f0d7";
+  font-weight: 900;
+  right: $ibo-vendors-datatable--sorting--right;
+}
+
+.dataTables_scrollHead thead tr th.sorting_asc:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f0d8";
+  right: $ibo-vendors-datatable--sorting--right;
+}
+
+.pagination {
+  color: $ibo-vendors-datatable--pagination--color;
+
+  left: $ibo-vendors-datatable--pagination--position-x;
+  right: $ibo-vendors-datatable--pagination--position-x;
+  top: $ibo-vendors-datatable--pagination--position-top;
+  bottom: $ibo-vendors-datatable--pagination--position-bottom;
+
+  .paginate_button {
+    margin-left: $ibo-vendors-datatable--pagination--button-margin-x;
+    margin-right: $ibo-vendors-datatable--pagination--button-margin-x;
+  }
+}
+
+.dataTables_paginate {
+  float: left;
+  padding-top: $ibo-vendors-datatable--paginate--padding-top;
+  padding-left: $ibo-vendors-datatable--paginate--padding-left;
+}
+
+.paginate_button {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.paginate_button a {
+  @extend %ibo-font-ral-med-100;
+  color: $ibo-vendors-datatable--paginate-button--link--color;
+}
+
+.paginate_button a:hover {
+  color: $ibo-vendors-datatable--paginate-button--link--hover--color;
+}
+
+.paginate_button.disabled a:hover {
+  cursor: default;
+}
+
+.paginate_button.active a {
+  @extend %ibo-font-ral-med-100;
+
+  color: $ibo-vendors-datatable--paginate-button-active--link--color;
+  background-color: $ibo-vendors-datatable--paginate-button-active--link--background-color;
+  padding: $ibo-vendors-datatable--paginate-button-active--link--padding-y $ibo-vendors-datatable--paginate-button-active--link--padding-x;
+  box-shadow: $ibo-vendors-datatable--paginate-button-active--link--box-shadow;
+  border-radius: $ibo-border-radius-300;
+}
+
+.dataTables_info {
+  @extend %ibo-font-ral-med-100;
+  color: $ibo-color-grey-700;
+
+  position: relative;
+  float: right;
+  padding-top: $ibo-vendors-datatable--toolbar--elements--padding-top;
+  padding-right: $ibo-vendors-datatable--toolbar--info--padding-right;
+  padding-left: $ibo-vendors-datatable--toolbar--info--padding-left;
+  line-height: $ibo-vendors-datatable--toolbar--info--line-height;
+}
+
+.select-info {
+  padding-left: $ibo-vendors-datatable--select-info--padding-left;
+}
+
+.dataTables_length {
+  @extend %ibo-font-ral-med-100;
+  color: $ibo-color-grey-700;
+
+  position: relative;
+  float: right;
+  padding-top: $ibo-vendors-datatable--toolbar--elements--padding-top;
+  padding-right: $ibo-vendors-datatable--toolbar--length--padding-right;
+
+  select {
+    /*
+    TODO 3.0 refactorise duplicated code
+     @extend .ibo-input;
+      remove because of the with:100% of input-select
+     */
+    @extend .ibo-input-select;
+    @extend %ibo-vertically-centered-content;
+    background-color: $ibo-input--background-color;
+    color: $ibo-input--color;
+    border: 1px solid $ibo-input--border-color;
+    border-radius: $ibo-input--border-radius;
+
+    &:focus {
+      border: 1px solid $ibo-input--focus--border-color;
+    }
+
+    height: $ibo-vendors-datatable--toolbar--length--select--height;
+    width: $ibo-vendors-datatable--toolbar--length--select--width;
+    padding: $ibo-vendors-datatable--toolbar--length--select--padding-y $ibo-vendors-datatable--toolbar--length--select--padding-x;
+
+    @extend %ibo-font-ral-med-100;
+  }
+}

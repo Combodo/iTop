@@ -112,9 +112,7 @@ class DesignerForm
 					$sHiddenFields .= $aRow['value'];
 				}
 			}
-			$sReturn .= '<table><tr><td>';
 			$sReturn .= $oP->GetDetails($aDetails);
-			$sReturn .= '</td></tr></table>';
 
 			if ($sLabel != '') {
 				$sReturn .= '</fieldset>';

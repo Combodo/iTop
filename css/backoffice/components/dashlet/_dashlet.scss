@@ -10,16 +10,17 @@ $ibo-dashlet--elements-spacing-x: 24px !default;
 $ibo-dashlet--elements-spacing-y: 24px !default;
 
 /* Rules */
-.ibo-dashlet{
-	width: $ibo-dashlet--width;
-	margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
+.ibo-dashlet {
+  width: $ibo-dashlet--width;
+  margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
 
-	&.dashlet-selected {
-		position: relative;
-	}
+  &.dashlet-selected {
+    position: relative;
+  }
 }
-.ibo-dashlet--is-inline{
-	width: $ibo-dashlet--width--is-inline;
+
+.ibo-dashlet--is-inline {
+  width: $ibo-dashlet--width--is-inline;
 }
 .ibo-details > .ibo-prop--apply {
   display: table-column;
