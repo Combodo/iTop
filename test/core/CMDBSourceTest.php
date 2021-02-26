@@ -106,7 +106,7 @@ class CMDBSourceTest extends ItopTestCase
 				"ENUM('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 				"enum('CSP A','CSP M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			),
-			//FIXME N°3065 before the fix this returns true :(
+			// N°3065 before the fix this returned true :(
 			'ENUM with different values, containing parenthesis' => array(
 				false,
 				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",

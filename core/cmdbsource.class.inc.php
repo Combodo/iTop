@@ -1181,18 +1181,23 @@ class CMDBSource
 	}
 
 	/**
-	 * There may have some differences between DB : for example in MySQL 5.7 we have "INT", while in MariaDB >= 10.2 you get "int DEFAULT
-	 * 'NULL'"
+	 * There may have some differences between DB ! For example in :
+	 *   * MySQL 5.7 we have `INT`
+	 *   * MariaDB >= 10.2 you get `int DEFAULT 'NULL'`
 	 *
-	 * We still do a case sensitive comparison for enum values !
+	 * We still need to do a case sensitive comparison for enum values !
 	 *
 	 * A better solution would be to generate SQL field definitions ({@link GetFieldSpec} method) based on the DB used... But for
 	 * now (N°2490 / SF #1756 / PR #91) we did implement this simpler solution
 	 *
-	 * @param string $sItopGeneratedFieldType
+	 * @see GetFieldDataTypeAndOptions extracts all info from the SQL field definition
+	 *
 	 * @param string $sDbFieldType
 	 *
+	 * @param string $sItopGeneratedFieldType
+	 *
 	 * @return bool true if same type and options (case sensitive comparison only for type options), false otherwise
+	 *
 	 * @throws \CoreException
 	 * @since 2.7.0 N°2490
 	 */
@@ -1241,12 +1246,15 @@ class CMDBSource
 	}
 
 	/**
-	 * @param string $sCompleteFieldType sql field type, for example 'VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 * @see \self::GetEnumOptions() specific processing for ENUM fields
+	 *
+	 * @param string $sCompleteFieldType sql field type, for example `VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0`
 	 *
 	 * @return string[] consisting of 3 items :
-	 *      1. data type : for example 'VARCHAR'
-	 *      2. type value : for example '255'
-	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 *      1. data type : for example `VARCHAR`
+	 *      2. type value : for example `255`
+	 *      3. other options : for example `CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0`
+	 *
 	 * @throws \CoreException
 	 */
 	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
@@ -1266,18 +1274,17 @@ class CMDBSource
 	}
 
 	/**
-	 * @since 2.7.4 N°3065
-	 * Handle ENUM options
-	 *
-	 * @param $sDataType
-	 * @param $sCompleteFieldType
-	 * Example: ENUM('CSP A','CSP (aaaa) M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+	 * @param string $sDataType for example `ENUM`
+	 * @param string $sCompleteFieldType Example:
+	 *     `ENUM('CSP A','CSP (aaaa) M','NA','OEM(ROC)','OPEN(VL)','RETAIL (Boite)') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
 	 *
 	 * @return string[] consisting of 3 items :
 	 *      1. data type : ENUM or enum here
 	 *      2. type value : in-between EUM parenthesis
 	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
 	 * @throws \CoreException
+	 * @since 2.7.4 N°3065 specific processing for enum fields : fix no alter table when enum values containing parenthesis
+	 * Handle ENUM options
 	 */
 	private static function GetEnumOptions($sDataType, $sCompleteFieldType)
 	{
