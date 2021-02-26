@@ -23,6 +23,8 @@ class InputWithLabel extends UIBlock
 	protected $sLabel;
 	/** @var \Combodo\iTop\Application\UI\Base\UIBlock */
 	protected $oInput;
+	/** @var bool Label before input ? */
+	protected $bBeforeInput;
 
 	/**
 	 * @param string $sLabel
@@ -34,6 +36,7 @@ class InputWithLabel extends UIBlock
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
 		$this->oInput = $oInput;
+		$this->bBeforeInput = true;
 	}
 
 	/**
@@ -56,6 +59,30 @@ class InputWithLabel extends UIBlock
 		return $this;
 	}
 
+	/**
+	 * @param bool $bBeforeInput
+	 *
+	 * @return $this
+	 */
+	public function SetBeforeInput(bool $bBeforeInput)
+	{
+		$this->bBeforeInput = $bBeforeInput;
+		if ($bBeforeInput) {
+			$this->oInput->AddCSSClass('ibo-input--label-left');
+		} else {
+			$this->oInput->AddCSSClass('ibo-input--label-right');
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsLabelBefore(): bool
+	{
+		return $this->bBeforeInput;
+	}
 
 	/**
 	 * @return string

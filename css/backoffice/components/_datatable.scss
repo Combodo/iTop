@@ -47,31 +47,34 @@ $ibo-datatable--sorting--right: 1em !default;
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
 $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
 
+$ibo-list-column--max-height: 150px;
+
 .ibo-datatable {
-	padding-bottom: $ibo-datatable--padding-y;
-	padding-top: $ibo-datatable--padding-y;
+  padding-bottom: $ibo-datatable--padding-y;
+  padding-top: $ibo-datatable--padding-y;
 
-	thead tr th, tbody tr td {
-		line-height: $ibo-datatable-cell-row--line-height;
-		padding-right: $ibo-datatable-cell-row--padding-x;
-		padding-left: $ibo-datatable-cell-row--padding-x;
-		@extend %ibo-font-ral-med-100;
-		a {
-			color: $ibo-datatable-cell-row--link--color;
-		}
-	}
+  thead tr th, tbody tr td {
+    line-height: $ibo-datatable-cell-row--line-height;
+    padding-right: $ibo-datatable-cell-row--padding-x;
+    padding-left: $ibo-datatable-cell-row--padding-x;
+    @extend %ibo-font-ral-med-100;
 
-	.ibo-datatable-header.sorting, .ibo-datatable-header.sorting_asc, .ibo-datatable-header.sorting_desc {
-		cursor: pointer;
-	}
+    a {
+      color: $ibo-datatable-cell-row--link--color;
+    }
+  }
 
-	tbody tr:nth-child(odd) {
-		background-color: $ibo-datatable-row--odd--background-color;
-	}
+  .ibo-datatable-header.sorting, .ibo-datatable-header.sorting_asc, .ibo-datatable-header.sorting_desc {
+    cursor: pointer;
+  }
 
-	tbody tr:nth-child(even) {
-		background-color: $ibo-datatable-row--even--background-color;
-	}
+  tbody tr:nth-child(odd) {
+    background-color: $ibo-datatable-row--odd--background-color;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: $ibo-datatable-row--even--background-color;
+  }
 }
 .dataTables_length {
 	@extend %ibo-font-ral-med-100;
@@ -151,37 +154,47 @@ $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
   box-shadow: $ibo-datatable--paginate-button-active--link--box-shadow;
   border-radius: $ibo-border-radius-300;
 }
-.ibo-datatable thead tr th{
-	position: relative;
+
+.ibo-datatable thead tr th {
+  position: relative;
 }
-.ibo-datatable thead tr th.sorting::after{
-	position: absolute;
-	font-family: "Font Awesome 5 Free";
-	content: "\f0dc";
-	font-weight: 900;
-	opacity: $ibo-datatable--sorting--opacity;
-	right: $ibo-datatable--sorting--right;
+
+.dataTables_scrollHead thead tr th.sorting::after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  content: "\f0dc";
+  font-weight: 900;
+  opacity: $ibo-datatable--sorting--opacity;
+  right: $ibo-datatable--sorting--right;
 }
-.ibo-datatable thead tr th.sorting_desc:after{
-	position: absolute;
-	font-family: "Font Awesome 5 Free";
-	content: "\f0d7";
-	font-weight: 900;
-	right: $ibo-datatable--sorting--right;
+
+.dataTables_scrollHead thead tr th.sorting_desc:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  content: "\f0d7";
+  font-weight: 900;
+  right: $ibo-datatable--sorting--right;
 }
-.ibo-datatable thead tr th.sorting_asc:after{
-	position: absolute;
-	font-family: "Font Awesome 5 Free";
-	font-weight: 900;
-	content: "\f0d8";
-	right: $ibo-datatable--sorting--right;
+
+.dataTables_scrollHead thead tr th.sorting_asc:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f0d8";
+  right: $ibo-datatable--sorting--right;
 }
+
 .ibo-datatable-panel > .ibo-panel--body {
-	padding: $ibo-datatable-panel--body--padding;
+  padding: $ibo-datatable-panel--body--padding;
 }
 
 // For cancel / OK / next... selection validation buttons
 .ibo-datatable--selection-validation-buttons-toolbar {
-	clear: both;
+  clear: both;
   margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
+}
+
+.ibo-list-column {
+  max-height: $ibo-list-column--max-height;
+  overflow-y: auto;
 }

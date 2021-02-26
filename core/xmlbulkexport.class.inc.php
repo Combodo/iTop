@@ -15,6 +15,9 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Bulk export: XML export
@@ -22,7 +25,6 @@
  * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class XMLBulkExport extends BulkExport
 {
 	public function DisplayUsage(Page $oP)
@@ -36,28 +38,39 @@ class XMLBulkExport extends BulkExport
 	{
 		return array_merge(parent::EnumFormParts(), array('xml_options' => array('xml_no_options')));
 	}
-	
-	public function DisplayFormPart(WebPage $oP, $sPartId)
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
 	{
-		switch($sPartId)
-		{
+		switch ($sPartId) {
 			case 'xml_options':
-				$sNoLocalizeChecked = (utils::ReadParam('no_localize', 0) == 1) ? ' checked ' : '';
-				$sLinksetChecked = (utils::ReadParam('linksets', 0) == 1) ? ' checked ' : '';
-				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XMLOptions').'</legend>');
-				$oP->add('<table>');
-				$oP->add('<tr>');
-				$oP->add('<td><input type="checkbox" id="xml_no_localize" name="no_localize" value="1"'.$sNoLocalizeChecked.'><label for="xml_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label></td>');
-				$oP->add('</tr>');
-				$oP->add('<tr>');
-				$oP->add('<td><input type="checkbox" id="xml_linksets" name="linksets" value="1"'.$sLinksetChecked.'><label for="xml_linksets"> '.Dict::S('Core:BulkExport:OptionLinkSets').'</label></td>');
-				$oP->add('</tr>');
-				$oP->add('</table>');
-				$oP->add('</fieldset>');
+
+				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:XMLOptions'));
+
+				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
+				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oPanel->AddSubBlock($oMulticolumn);
+
+				$oCheckBoxLocalize = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "xml_no_localize", "checkbox");
+				$oCheckBoxLocalize->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
+				$oCheckBoxLocalize->SetBeforeInput(false);
+				$oPanel->AddSubBlock($oCheckBoxLocalize);
+
+				$oCheckBoxLink = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionLinkSets'), "linksets", "1", "xml_linksets", "checkbox");
+				$oCheckBoxLink->GetInput()->SetIsChecked((utils::ReadParam('linksets', 0) == 1));
+				$oCheckBoxLink->SetBeforeInput(false);
+				$oPanel->AddSubBlock($oCheckBoxLink);
+
+				return $oPanel;
 				break;
-					
+
 			default:
-				return parent:: DisplayFormPart($oP, $sPartId);
+				return parent:: GetFormPart($oP, $sPartId);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 {% if oUIBlock.GetSubBlocks() %}
-    <fieldset class="ibo-fieldset{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" id="{{ oUIBlock.GetId() }}">
+    <fieldset class="ibo-fieldset{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" id="{{ oUIBlock.GetId() }}">
         <legend class="ibo-fieldset-legend">{{ oUIBlock.GetLegend() }}</legend>
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}

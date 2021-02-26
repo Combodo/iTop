@@ -21,16 +21,17 @@ class TextArea extends AbstractInput
 	/** @var int */
 	protected $iRows;
 
-	public function __construct(?string $sValue, ?string $sId = null, ?int $iCols = null, ?int $iRows = null)
+	public function __construct(string $sName, ?string $sValue, ?string $sId = null, ?int $iCols = null, ?int $iRows = null)
 	{
 		parent::__construct($sId);
 
+		$this->sName = $sName;
 		$this->sValue = $sValue;
 		$this->iCols = $iCols;
 		$this->iRows = $iRows;
 	}
 
-	public function GetCols(): int
+	public function GetCols(): ?int
 	{
 		return $this->iCols;
 	}
@@ -47,7 +48,7 @@ class TextArea extends AbstractInput
 		return $this;
 	}
 
-	public function GetRows(): int
+	public function GetRows(): ?int
 	{
 		return $this->iRows;
 	}

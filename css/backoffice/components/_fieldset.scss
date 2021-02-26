@@ -13,7 +13,7 @@ $ibo-fieldset--legend--border-bottom-color: $ibo-color-grey-500 !default;
 $ibo-fieldset--legend--border-bottom-style: solid !default;
 
 .ibo-fieldset {
-  & ~ .ibo-fieldset {
+  & ~ .ibo-fieldset:not(.ibo-column) {
     margin-top: $ibo-fieldset--sibling-spacing;
   }
 }

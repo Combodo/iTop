@@ -16,21 +16,24 @@ $(function()
 		// the constructor
 		_create: function()
 		{
-			var me = this; 
+			var me = this;
 
 			this.element
-			.addClass('itop-fieldsorter');
-			
+				.addClass('itop-fieldsorter');
+
 			var me = this;
 			this._initFields();
-			
-			var width = 10+this.element.width();
-			this.moveup_btn = $('<button type="button" disabled style="position: absolute; top: 0; left: '+width+'px;">'+this.options.labels.moveup+'</button>');
-			this.movedown_btn = $('<button type="button" disabled style="position: absolute; top: 30px; left: '+width+'px;">'+this.options.labels.movedown+'</button>');
-			this.element.wrap('<div style="position:relative;"></div>');
-			this.element.parent().append(this.moveup_btn).append(this.movedown_btn);
-			this.moveup_btn.click(function() { me._moveUp(); });
-			this.movedown_btn.click(function() { me._moveDown(); });
+
+			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
+			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
+			columnWithButtons = $('<div class="ibo-mini-column"></div>');
+			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append('<br>').append(this.movedown_btn));
+			this.moveup_btn.click(function () {
+				me._moveUp();
+			});
+			this.movedown_btn.click(function () {
+				me._moveDown();
+			});
 		},
 	
 		// called when created, and later when changing options

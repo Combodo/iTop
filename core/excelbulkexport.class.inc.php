@@ -23,6 +23,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
 require_once(APPROOT.'application/xlsxwriter.class.php');
 
 class ExcelBulkExport extends TabularBulkExport
@@ -67,52 +73,71 @@ class ExcelBulkExport extends TabularBulkExport
 			// Custom format specified from the UI
 			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 			break;
-			
+
 			default:
-			// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
+				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
 	}
-	
+
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('xlsx_options' => array('formatted_text') ,'interactive_fields_xlsx' => array('interactive_fields_xlsx')));
+		return array_merge(parent::EnumFormParts(), array('xlsx_options' => array('formatted_text'), 'interactive_fields_xlsx' => array('interactive_fields_xlsx')));
 	}
 
-	public function DisplayFormPart(WebPage $oP, $sPartId)
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
 	{
-		switch($sPartId)
-		{
+		switch ($sPartId) {
 			case 'interactive_fields_xlsx':
-				$this->GetInteractiveFieldsWidget($oP, 'interactive_fields_xlsx');
+				return $this->GetInteractiveFieldsWidget($oP, 'interactive_fields_xlsx');
 				break;
-					
+
 			case 'xlsx_options':
-				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:XLSXOptions').'</legend>');
-				$oP->add('<table class="export_parameters"><tr><td style="vertical-align:top">');
-				
-				$sChecked = (utils::ReadParam('formatted_text', 0) == 1) ? ' checked ' : '';
-				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
-				$oP->add('<input type="checkbox" id="xlsx_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="xlsx_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label>');
-				
-				$oP->add('</td><td style="vertical-align:top">');
-				
+				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:XLSXOptions'));
+
+				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
+				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oPanel->AddSubBlock($oMulticolumn);
+
+				$oFieldSetFormat = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
+				$oFieldSetFormat->AddCSSClass('ibo-column');
+				$oMulticolumn->AddSubBlock($oFieldSetFormat);
+
+				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "xlsx_formatted_text", "checkbox");
+				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
+				$oCheckBox->SetBeforeInput(false);
+				$oFieldSetFormat->AddSubBlock($oCheckBox);
+
+				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
+				$oFieldSetDate->AddCSSClass('ibo-column');
+				$oMulticolumn->AddSubBlock($oFieldSetDate);
+
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
-				$sDefaultChecked = ($sDateTimeFormat == (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
-				$sCustomChecked = ($sDateTimeFormat !== (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
-				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
+
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="excel_date_time_format_default" name="excel_date_format_radio" value="default"'.$sDefaultChecked.'><label for="excel_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
+				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "excel_date_format_radio", "default", "excel_date_time_format_default", "radio");
+				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
+				$oRadioDefault->SetBeforeInput(false);
+				$oFieldSetDate->AddSubBlock($oRadioDefault);
+				$oFieldSetDate->AddSubBlock(new Html('</br>'));
+
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="excel_date_time_format_custom" name="excel_date_format_radio" value="custom"'.$sCustomChecked.'><label for="excel_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
-				
-				$oP->add('</td></tr></table>');
-				
-				$oP->add('</fieldset>');
+				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "excel_date_format_radio", "custom", "excel_date_time_format_custom", "radio");
+				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
+				$oRadioCustom->SetBeforeInput(false);
+				$oFieldSetDate->AddSubBlock($oRadioCustom);
+
+
 				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 				$oP->add_ready_script(
-<<<EOF
+					<<<EOF
 $('#excel_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#form_part_xlsx_options').on('preview_updated', function() { FormatDatesInPreview('excel', 'xlsx'); });
 $('#excel_date_time_format_default').on('click', function() { FormatDatesInPreview('excel', 'xlsx'); });
@@ -120,10 +145,12 @@ $('#excel_date_time_format_custom').on('click', function() { FormatDatesInPrevie
 $('#excel_custom_date_time_format').on('click', function() { $('#excel_date_time_format_custom').prop('checked', true); FormatDatesInPreview('excel', 'xlsx'); }).on('keyup', function() { FormatDatesInPreview('excel', 'xlsx'); });					
 EOF
 				);
+
+				return $oPanel;
 				break;
 
-				default:
-				return parent:: DisplayFormPart($oP, $sPartId);
+			default:
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
 

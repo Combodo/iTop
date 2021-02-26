@@ -102,23 +102,21 @@ class DesignerForm
 				$sReturn .= '<fieldset>';
 				$sReturn .= '<legend>'.$sLabel.'</legend>';
 			}
-			foreach($aFields as $oField)
-			{
+			foreach($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId);
-				if ($oField->IsVisible())
-				{
+				if ($oField->IsVisible()) {
 					$sValidation = '<span class="prop_apply ibo-prop--apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
 					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
-				}
-				else
-				{
+				} else {
 					$sHiddenFields .= $aRow['value'];
 				}
 			}
+			$sReturn .= '<table><tr><td>';
 			$sReturn .= $oP->GetDetails($aDetails);
-			if ($sLabel != '')
-			{
+			$sReturn .= '</td></tr></table>';
+
+			if ($sLabel != '') {
 				$sReturn .= '</fieldset>';
 			}
 		}
@@ -1304,6 +1302,7 @@ EOF
 			);
 		}
 		return array('label' => $this->sLabel, 'value' => $sHtml);
+
 	}
 
 	public function ReadParam(&$aValues)

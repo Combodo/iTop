@@ -26,15 +26,18 @@ $ibo-input--placeholder--color: $ibo-color-grey-700 !default;
 $ibo-input-wrapper--is-error--background-color: $ibo-color-red-200 !default;
 $ibo-input-wrapper--is-error--border-color: $ibo-color-red-600 !default;
 $ibo-field-validation: $ibo-color-red-700 !default;
-.ibo-input{
-	@extend %ibo-vertically-centered-content;
-	height: $ibo-input--height;
-	width: $ibo-input--width;
-	background-color: $ibo-input--background-color;
-	color: $ibo-input--color;
-	padding: $ibo-input--padding-y $ibo-input--padding-x;
-	border: 1px solid $ibo-input--border-color;
-	border-radius: $ibo-input--border-radius;
+
+$ibo-input--margin-x: 5px !default;
+
+.ibo-input {
+  @extend %ibo-vertically-centered-content;
+  height: $ibo-input--height;
+  width: $ibo-input--width;
+  background-color: $ibo-input--background-color;
+  color: $ibo-input--color;
+  padding: $ibo-input--padding-y $ibo-input--padding-x;
+  border: 1px solid $ibo-input--border-color;
+  border-radius: $ibo-input--border-radius;
 
 	&:focus{
 		border: 1px solid $ibo-input--focus--border-color;
@@ -50,13 +53,23 @@ $ibo-field-validation: $ibo-color-red-700 !default;
 .ibo-input-wrapper.is-error {
 	.ibo-input{
 		background-color: $ibo-input-wrapper--is-error--background-color;
-		border: 1px solid $ibo-input-wrapper--is-error--border-color;
-	}
+    border: 1px solid $ibo-input-wrapper--is-error--border-color;
+  }
 }
-.ibo-field-validation{
-	color: $ibo-field-validation;
+
+.ibo-field-validation {
+  color: $ibo-field-validation;
 }
+
 .file-input {
-	display:block;
-	position: relative;
+  display: block;
+  position: relative;
+}
+
+.ibo-input--label-right {
+  margin-right: $ibo-input--margin-x;
+}
+
+.ibo-input--label-left {
+  margin-leftt: $ibo-input--margin-x;
 }

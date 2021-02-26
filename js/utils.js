@@ -430,13 +430,11 @@ function ExportStartExport() {
 				if (this.checked) {
 					oParams[this.name] = $(this).val();
 				}
-			}
-			else {
+			} else {
 				oParams[this.name] = $(this).val();
 			}
 		}
 	});
-	$(':itop-tabularfieldsselector:visible').tabularfieldsselector('close_all_tooltips');
 	$('#export-form').hide();
 	$('#export-feedback').show();
 	oParams.operation = 'export_build';
@@ -445,8 +443,7 @@ function ExportStartExport() {
 	if ($(':input[name=query_mode]:checked').length > 0) {
 		if (sQueryMode == 'oql') {
 			oParams.expression = $('#export-form :input[name=expression]').val();
-		}
-		else {
+		} else {
 			oParams.query = $('#export-form :input[name=query]').val();
 		}
 	}

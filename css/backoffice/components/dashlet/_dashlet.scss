@@ -21,3 +21,9 @@ $ibo-dashlet--elements-spacing-y: 24px !default;
 .ibo-dashlet--is-inline{
 	width: $ibo-dashlet--width--is-inline;
 }
+.ibo-details > .ibo-prop--apply {
+  display: table-column;
+}
+.ibo-details{
+  margin-top: 5px;
+}

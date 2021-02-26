@@ -369,20 +369,36 @@ abstract class BulkExport
 			utils::PopArchiveMode();
 		}
 	}
-	
+
 	public function EnumFormParts()
 	{
 		return array();
 	}
-	
+
+	/**
+	 * @deprecated since 3.0 replaced by GetFormPart
+	 */
 	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
+		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
 	}
-	
+
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
+	{
+	}
+
 	public function DisplayUsage(Page $oP)
 	{
-		
+
 	}
+
 	public function ReadParameters()
 	{
 		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));

@@ -18,6 +18,8 @@ abstract class AbstractInput extends UIBlock
 	protected $sName;
 	/** @var string */
 	protected $sValue;
+	/**@var string */
+	protected $sPlaceholder;
 
 	public function GetName(): string
 	{
@@ -52,4 +54,25 @@ abstract class AbstractInput extends UIBlock
 
 		return $this;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetPlaceholder(): ?string
+	{
+		return $this->sPlaceholder;
+	}
+
+	/**
+	 * @param string $sPlaceholder
+	 *
+	 * @return $this
+	 */
+	public function SetPlaceholder(string $sPlaceholder)
+	{
+		$this->sPlaceholder = $sPlaceholder;
+
+		return $this;
+	}
+
 }

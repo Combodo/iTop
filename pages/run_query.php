@@ -180,7 +180,7 @@ try
 	//--- Query textarea
 	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
 	$oQueryForm->AddSubBlock($oQueryTitle);
-	$oQueryTextArea = new TextArea(utils::EscapeHtml($sExpression), 'expression', 120, 8);
+	$oQueryTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->SetName('expression');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 

@@ -36,10 +36,10 @@ function ExportStartExport() {
 }
 
 function ExportError(sMessage) {
-    sDataState = 'error';
-    $('#export-feedback').hide();
-    $('#export-text-result').show();
-    $('#export-error').html(sMessage);
+	sDataState = 'error';
+	$('#export-feedback').addClass('ibo-is-hidden');
+	$('#export-text-result').removeClass('ibo-is-hidden');
+	$('#export-error').html(sMessage);
 }
 
 function ExportRun(data) {
@@ -51,9 +51,9 @@ function ExportRun(data) {
             oParams = {};
             oParams.token = data.token;
             if (sDataState == 'cancelled') {
-                oParams.operation = 'export_cancel';
-                $('#export-cancel').hide();
-                $('#export-close').show();
+	            oParams.operation = 'export_cancel';
+	            $('#export-cancel').addClass('ibo-is-hidden');
+	            $('#export-close').removeClass('ibo-is-hidden');
             }
             else {
                 oParams.operation = 'export_build_portal';
@@ -65,20 +65,19 @@ function ExportRun(data) {
                 'json');
             break;
 
-        case 'done':
-            sDataState = 'done';
-            $('#export-cancel').hide();
-            $('#export-close').show();
-            $('.progress').progressbar({value: data.percentage});
-            sMessage = '<a href="' + GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php?operation=export_download&token=' + data.token + '" target="_blank">' + data.message + '</a>';
-            $('.export-message').html(sMessage);
-            if (data.text_result != undefined) {
-                if (data.mime_type == 'text/html') {
-                    $('#export-content').parent().html(data.text_result);
-                    $('#export-text-result').show();
-                }
-                else {
-                    if ($('#export-text-result').closest('ui-dialog').length == 0) {
+	    case 'done':
+		    sDataState = 'done';
+		    $('#export-cancel').addClass('ibo-is-hidden');
+		    $('#export-close').removeClass('ibo-is-hidden');
+		    $('.progress').progressbar({value: data.percentage});
+		    sMessage = '<a href="'+GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=export_download&token='+data.token+'" target="_blank">'+data.message+'</a>';
+		    $('.export-message').html(sMessage);
+		    if (data.text_result != undefined) {
+			    if (data.mime_type == 'text/html') {
+				    $('#export-content').parent().html(data.text_result);
+				    $('#export-text-result').show();
+			    } else {
+				    if ($('#export-text-result').closest('ui-dialog').length == 0) {
                         // not inside a dialog box, adjust the height... approximately
                         var jPane = $('#export-text-result').closest('.ui-layout-content');
                         var iTotalHeight = jPane.height();
@@ -89,20 +88,20 @@ function ExportRun(data) {
                         });
                         $('#export-content').height(iTotalHeight - 80);
                     }
-                    $('#export-content').val(data.text_result);
-                    $('#export-text-result').show();
+				    $('#export-content').val(data.text_result);
+				    $('#export-text-result').removeClass('ibo-is-hidden');
                 }
             }
             break;
 
-        case 'error':
-            sDataState = 'error';
-            $('#export-feedback').hide();
-            $('#export-text-result').show();
-            $('#export-error').html(data.message);
-            $('#export-cancel').hide();
-            $('#export-close').show();
-            break;
+	    case 'error':
+		    sDataState = 'error';
+		    $('#export-feedback').addClass('ibo-is-hidden');
+		    $('#export-text-result').removeClass('ibo-is-hidden');
+		    $('#export-error').html(data.message);
+		    $('#export-cancel').addClass('ibo-is-hidden');
+		    $('#export-close').removeClass('ibo-is-hidden');
+		    break;
 
         default:
     }

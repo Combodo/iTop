@@ -832,7 +832,7 @@ class WebPage implements Page
 	{
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 
-		$sHtml = "<div class=\"details\">\n";
+		$sHtml = "<div class=\"ibo-details\">\n";
 		foreach ($aFields as $aAttrib)
 		{
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';

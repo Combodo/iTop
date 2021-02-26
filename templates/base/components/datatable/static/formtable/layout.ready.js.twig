@@ -9,7 +9,7 @@ var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_
     search: false,
     dom: "t",
 });
-
-
-//table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}.columns.adjust().draw();
-//$(".dataTables_scrollBody thead").hide();
+if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
+{
+    table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}.columns.adjust().draw();
+}

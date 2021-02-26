@@ -94,4 +94,24 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		return new InputWithLabel($sLabel, $oInput, $sId);
 	}
 
+	/**
+	 * If you need to have a real field with a label, you might use a {@link Field} component instead
+	 *
+	 * @param string $sName
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select
+	 */
+	public static function MakeForSelect(string $sName, ?string $sId = null): Select
+	{
+		$oInput = new Select($sId);
+		$oInput->SetName($sName);
+
+		if (is_null($sId)) {
+			$sId = $oInput->GetId();
+		}
+
+		return $oInput;
+	}
+
 }

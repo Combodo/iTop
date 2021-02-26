@@ -4,6 +4,7 @@
  */
 
 $ibo-column--min-width: 300px !default;
+$ibo-mini-column--min-width: 30px !default;
 $ibo-column--padding-x: abs($ibo-multi-column--margin-x) !default;
 $ibo-column--padding-y: 0 !default;
 
@@ -16,7 +17,19 @@ $ibo-column--margin-bottom--is-last-element: 48px !default;
   padding: $ibo-column--padding-y $ibo-column--padding-x;
   flex-basis: 10%;
 
-  &:not(:last-child){
+  &:not(:last-child) &:not(.ibo-without-margin) {
+    margin-bottom: $ibo-column--margin-bottom--is-last-element;
+  }
+}
+
+.ibo-mini-column {
+  min-width: $ibo-mini-column--min-width;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: $ibo-column--padding-y $ibo-column--padding-x;
+  flex-basis: 10%;
+
+  &:not(:last-child) {
     margin-bottom: $ibo-column--margin-bottom--is-last-element;
   }
 }

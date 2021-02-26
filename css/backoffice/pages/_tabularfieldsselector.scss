@@ -1,0 +1,35 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-table-preview {
+  margin-top: 20px;
+
+  th {
+    padding: 5px;
+    border-width: 1px 1px 0;
+    border-style: groove groove none;
+    background: $ibo-body-background-color;
+  }
+
+  td {
+    padding-right: 5px;
+    padding-left: 5px;
+    border-width: 0 1px;
+    border-style: none groove;
+  }
+
+  tr:last-child td {
+    border-bottom-width: 1px;
+    border-bottom-style: groove;
+  }
+}
+
+.ibo-preview-header {
+  margin-bottom: 5px;
+}
+
+#form_part_interactive_fields_xlsx, #form_part_interactive_fields_csv, #form_part_interactive_fields_pdf {
+  margin-top: $ibo-panel--spacing-top;
+}

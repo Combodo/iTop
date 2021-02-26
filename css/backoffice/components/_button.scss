@@ -8,15 +8,18 @@ $ibo-button--box-shadow-top: inset 0px 2px 0px !default;
 
 $ibo-button--label--margin-left: 4px !default;
 
+$ibo-button--vertical-align--margin-bottom: 4px !default;
+$ibo-button--vertical-align--margin-top: 4px !default;
+
 $ibo-button-colors: (
-		'regular': (
-				/* Semantics */
-				'neutral': (
-						'': (
-								$ibo-color-secondary-100,
-								$ibo-color-grey-900,
-								$ibo-button--box-shadow-bottom $ibo-color-secondary-300,
-						),
+        'regular': (
+          /* Semantics */
+                'neutral': (
+                        '': (
+                                $ibo-color-secondary-100,
+                                $ibo-color-grey-900,
+                                $ibo-button--box-shadow-bottom $ibo-color-secondary-300,
+                        ),
 						':hover': (
 								$ibo-color-secondary-200,
 								$ibo-color-grey-900,
@@ -399,13 +402,18 @@ $ibo-button-colors: (
 		margin-left: $ibo-button--sibling-spacing;
 	}
 
-	&.ibo-action-button {
-		float: right;
-	}
+  &.ibo-action-button {
+    float: right;
+  }
 }
 
 /* Only when a button has both an icon and a label */
 .ibo-button--icon + .ibo-button--label {
-	margin-left: $ibo-button--label--margin-left;
+  margin-left: $ibo-button--label--margin-left;
+}
+
+.ibo-button--vertical-align {
+  margin-top: $ibo-button--vertical-align--margin-top;
+  margin-bottom: $ibo-button--vertical-align--margin-bottom;
 }
 

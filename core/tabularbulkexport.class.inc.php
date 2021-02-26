@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Bulk export: Tabular export: abstract base class for all "tabular" exports.
@@ -23,7 +24,6 @@
  * @copyright   Copyright (C) 2015 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 abstract class TabularBulkExport extends BulkExport
 {
 	public function EnumFormParts()
@@ -31,23 +31,30 @@ abstract class TabularBulkExport extends BulkExport
 		return array_merge(parent::EnumFormParts(), array('tabular_fields' => array('fields')));
 	}
 
-	public function DisplayFormPart(WebPage $oP, $sPartId)
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
 	{
-		switch($sPartId)
-		{
+		switch ($sPartId) {
 			case 'tabular_fields':
 				$sFields = utils::ReadParam('fields', '', true, 'raw_data');
 				$sSuggestedFields = utils::ReadParam('suggested_fields', null, true, 'raw_data');
-				if (($sSuggestedFields !== null) && ($sSuggestedFields !== ''))
-				{
+				if (($sSuggestedFields !== null) && ($sSuggestedFields !== '')) {
 					$aSuggestedFields = explode(',', $sSuggestedFields);
 					$sFields = implode(',', $this->SuggestFields($aSuggestedFields));
 				}
 				$oP->add('<input id="tabular_fields" type="hidden" size="50" name="fields" value="'.htmlentities($sFields, ENT_QUOTES, 'UTF-8').'"></input>');
+
+				//TODO 3.0 test
+				return null;
 				break;
-					
+
 			default:
-				return parent::DisplayFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
 
@@ -272,7 +279,6 @@ abstract class TabularBulkExport extends BulkExport
 			}
 		}
 
-		$oP->add('<div id="'.$sWidgetId.'"></div>');
 		$JSAllFields = json_encode($aAllFieldsByAlias);
 
 		// First, fetch only the ids - the rest will be fetched by an object reload
@@ -321,10 +327,14 @@ abstract class TabularBulkExport extends BulkExport
 		);
 		$sJSLabels = json_encode($aLabels);
 		$oP->add_ready_script(
-<<<EOF
+			<<<EOF
 $('#$sWidgetId').tabularfieldsselector({fields: $JSAllFields, value_holder: '#tabular_fields', advanced_holder: '#tabular_advanced', sample_data: $sJSSampleData, total_count: $iCount, preview_limit: $iPreviewLimit, labels: $sJSLabels });
 EOF
 		);
+		$oUIContentBlock = UIContentBlockUIBlockFactory::MakeStandard($sWidgetId);
+		$oUIContentBlock->AddCSSClass('ibo-tabularbulkexport');
+
+		return $oUIContentBlock;
 	}
 
 	static public function SortOnLabel($aItem1, $aItem2)

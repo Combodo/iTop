@@ -81,6 +81,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	.ui-dialog-content {
 		position: relative;
 		padding: 16px $ibo-vendors-jqueryui--ui-dialog--padding-x;
+    overflow: auto;
 	}
 	.ui-dialog-buttonpane {
 		margin-top: auto;

@@ -6,6 +6,11 @@
         {% if oUIBlock.GetAction() %}
             action="{{ oUIBlock.GetAction() }}"
         {% endif %}
+        {% if oUIBlock.GetDataAttributes() %}
+            {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                data-{{ sName }}="{{ sValue }}"
+            {% endfor %}
+        {% endif %}
 >
     {% apply spaceless %}
         {% block iboContentBlockContainer %}

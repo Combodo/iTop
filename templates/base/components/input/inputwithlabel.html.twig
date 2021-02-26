@@ -1,4 +1,10 @@
 {% block iboInputLabel %}
-	<label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() }}</label>
-	{{ render_block(oUIBlock.GetInput()) }}
+    {% if oUIBlock.IsLabelBefore() %}
+        <label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() |raw }}</label>
+        {{ render_block(oUIBlock.GetInput()) }}
+    {% else %}
+        {{ render_block(oUIBlock.GetInput()) }}
+        <label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() |raw }}</label>
+    {% endif %}
 {% endblock %}
+

@@ -17,7 +17,18 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
+if (!defined('__DIR__')) {
+	define('__DIR__', dirname(__FILE__));
+}
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/nicewebpage.class.inc.php');
@@ -127,10 +138,32 @@ function Usage(Page $oP)
 
 function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
 {
-	$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:ScopeDefinition').'</legend>');
-	$oP->add('<form id="export-form" action="'.$sAction.'" method="post">');
-	$oP->add('<input type="hidden" name="interactive" value="1">');
-	$oP->add('<table style="width:100%" class="export_parameters">');
+	$oForm = FormUIBlockFactory::MakeStandard('form');
+	$oForm->SetAction($sAction);
+	$oP->AddSubBlock($oForm);
+
+	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
+
+	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
+	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
+	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
+	$oFieldQuery->AddSubBlock($oTextArea);
+	$oForm->AddSubBlock($oFieldQuery);
+
+	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
+	$oSelect = InputUIBlockFactory::MakeForSelect("select_phrasebook");
+	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:SelectOne'), false));
+
+	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
+	$oSearch->UpdateContextFromUser();
+	$oQueries = new DBObjectSet($oSearch);
+	while ($oQuery = $oQueries->Fetch()) {
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8'), false));
+	}
+	$oFieldPhraseBook->AddSubBlock($oSelect);
+	$oForm->AddSubBlock($oFieldPhraseBook);
+
+	/*oP->add('<table style="width:100%" class="export_parameters">');
 	$sExpressionHint = empty($sExceptionMessage) ? '' : '<tr><td colspan="2">'.htmlentities($sExceptionMessage, ENT_QUOTES, 'UTF-8').'</td></tr>';
 	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label></span></td>');
 	$oP->add('<td><textarea style="width:100%" cols="70" rows="8" name="expression" id="textarea_oql" placeholder="'.Dict::S('Core:BulkExportQueryPlaceholder').'">'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'</textarea></td></tr>');
@@ -139,24 +172,20 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oP->add('<td><select name="query" id="select_phrasebook">');
 	$oP->add('<option value="">'.Dict::S('UI:SelectOne').'</option>');
 	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
-    $oSearch->UpdateContextFromUser();
+	$oSearch->UpdateContextFromUser();
 	$oQueries = new DBObjectSet($oSearch);
-	while ($oQuery = $oQueries->Fetch())
-	{
+	while ($oQuery = $oQueries->Fetch()) {
 		$oP->add('<option value="'.$oQuery->GetKey().'">'.htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8').'</option>');
 	}
-	$oP->add('</select></td></tr>');	
-	$oP->add('<tr><td colspan="2" style="text-align:right"><button type="submit" id="next-btn">'.Dict::S('UI:Button:Next').'</button></td></tr>');
-	$oP->add('</table>');
-	$oP->add('</form>');
-	$oP->add('</fieldset>');
+	$oP->add('</select></td></tr>');*/
+	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
 	$sJSEmptyOQL = json_encode(Dict::S('Core:BulkExportMessageEmptyOQL'));
 	$sJSEmptyQueryId = json_encode(Dict::S('Core:BulkExportMessageEmptyPhrasebookEntry'));
-	
+
 	$oP->add_ready_script(
-<<<EOF
+		<<<EOF
 var colWidth = 0;
 $('td.column-label').each(function() {
 	var jLabel = $(this).find('span');
@@ -203,7 +232,7 @@ function DisplayForm(WebPage $oP, $sAction = '', $sExpression = '', $sQueryId = 
 	$oP->add_script(DateTimeFormat::GetJSSQLToCustomFormat());
 	$sJSDefaultDateTimeFormat = json_encode((string)AttributeDateTime::GetFormat());
 	$oP->add_script(
-<<<EOF
+		<<<EOF
 function FormatDatesInPreview(sRadioSelector, sPreviewSelector)
 {
 	if ($('#'+sRadioSelector+'_date_time_format_default').prop('checked'))
@@ -230,102 +259,106 @@ EOF
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-	$oP->add('<form id="export-form" action="'.$sAction.'" method="post" data-state="not-yet-started">');
+
+	$oForm = FormUIBlockFactory::MakeStandard("export-form");
+	$oForm->SetAction($sAction);
+	$oForm->AddDataAttribute("state", "not-yet-started");
+	$oP->AddSubBlock($oForm);
+
 	$bExpressionIsValid = true;
 	$sExpressionError = '';
-	if (($sExpression === null) && ($sQueryId === null))
-	{
-		$bExpressionIsValid = false;	
-	}
-	else if ($sExpression !== '')
-	{
-		try
-		{
+	if (($sExpression === null) && ($sQueryId === null)) {
+		$bExpressionIsValid = false;
+	} else if ($sExpression !== '') {
+		try {
 			$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 			$oExportSearch->UpdateContextFromUser();
 		}
-		catch(OQLException $e)
-		{
+		catch (OQLException $e) {
 			$bExpressionIsValid = false;
 			$sExpressionError = $e->getMessage();
 		}
 	}
-	
-	if (!$bExpressionIsValid)
-	{
+
+	if (!$bExpressionIsValid) {
 		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError);
+
 		return;
 	}
-	
-	if ($sExpression !== '')
-	{
-		$oP->add('<input type="hidden" name="expression" value="'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'">');
+
+	if ($sExpression !== '') {
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", htmlentities($sExpression, ENT_QUOTES, 'UTF-8')));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
-        $oExportSearch->UpdateContextFromUser();
-	}
-	else
-	{
+		$oExportSearch->UpdateContextFromUser();
+	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
-        $oExportSearch->UpdateContextFromUser();
-		$oP->add('<input type="hidden" name="query" value="'.htmlentities($sQueryId, ENT_QUOTES, 'UTF-8').'">');
+		$oExportSearch->UpdateContextFromUser();
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", htmlentities($sQueryId, ENT_QUOTES, 'UTF-8')));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();
-	if ($sFormat == null)
-	{
+	if ($sFormat == null) {
 		// No specific format chosen
 		$sDefaultFormat = utils::ReadParam('format', 'xlsx');
-		$oP->add('<p>'.Dict::S('Core:BulkExport:ExportFormatPrompt').' <select name="format" id="format_selector">');
+
+
+		$oSelect = InputUIBlockFactory::MakeForSelectWithLabel("format", Dict::S('Core:BulkExport:ExportFormatPrompt'), "format_selector");
+		$oSelect->SetBeforeInput(true);
+		$oForm->AddSubBlock($oSelect);
+
 		$aSupportedFormats = BulkExport::FindSupportedFormats();
 		asort($aSupportedFormats);
-		foreach($aSupportedFormats as $sFormatCode => $sLabel)
-		{
-			$sSelected = ($sFormatCode == $sDefaultFormat) ? 'selected' : '';
-			$oP->add('<option value="'.$sFormatCode.'" '.$sSelected.'>'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
+		foreach ($aSupportedFormats as $sFormatCode => $sLabel) {
+			$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sFormatCode, htmlentities($sLabel, ENT_QUOTES, 'UTF-8'), ($sFormatCode == $sDefaultFormat)));
 			$oExporter = BulkExport::FindExporter($sFormatCode);
 			$oExporter->SetObjectList($oExportSearch);
 			$aParts = $oExporter->EnumFormParts();
-			foreach($aParts as $sPartId => $void)
-			{
+			foreach ($aParts as $sPartId => $void) {
 				$aAllFormParts[$sPartId] = $oExporter;
 			}
 			$aFormPartsByFormat[$sFormatCode] = array_keys($aParts);
 		}
-		$oP->add('</select></p>');
-	}
-	else 
-	{
+
+	} else {
 		// One specific format was chosen
-		$oP->add('<input type="hidden" name="format" value="'.htmlentities($sFormat, ENT_QUOTES, 'UTF-8').'">');
-		
+		$oSelect = InputUIBlockFactory::MakeForHidden("format", htmlentities($sFormat, ENT_QUOTES, 'UTF-8'));
+		$oForm->AddSubBlock($oSelect);
+
 		$oExporter = BulkExport::FindExporter($sFormat, $oExportSearch);
 		$aParts = $oExporter->EnumFormParts();
-		foreach($aParts as $sPartId => $void)
-		{
+		foreach ($aParts as $sPartId => $void) {
 			$aAllFormParts[$sPartId] = $oExporter;
 		}
 		$aFormPartsByFormat[$sFormat] = array_keys($aAllFormParts);
 	}
-	foreach($aAllFormParts as $sPartId => $oExport)
-	{
-		$oP->add('<div class="form_part" id="form_part_'.$sPartId.'">');
-		$oExport->DisplayFormPart($oP, $sPartId);
-		$oP->add('</div>');
+	foreach ($aAllFormParts as $sPartId => $oExport) {
+		$UIContentBlock = UIContentBlockUIBlockFactory::MakeStandard('form_part_'.$sPartId)->AddCSSClass('form_part');
+		$oForm->AddSubBlock($UIContentBlock);
+		$UIContentBlock->AddSubBlock($oExport->GetFormPart($oP, $sPartId));
 	}
-	$oP->add('</form>');
-	$oP->add('<div id="export-feedback" style="display:none;"><p class="export-message" style="text-align:center;">'.Dict::S('ExcelExport:PreparingExport').'</p><div class="export-progress-bar" style="max-width:30em; margin-left:auto;margin-right:auto;"><div class="export-progress-message" style="text-align:center;"></div></div></div>');
-	$oP->add('<button type="button" id="export-btn">'.Dict::S('UI:Button:Export').'</button>');
-	$oP->add('<div id="export_text_result" style="display:none;">');
-	$oP->add('<div>'.Dict::S('Core:BulkExport:ExportResult').'</div>');
-	$oP->add('<textarea id="export_content" style="width:100%;min-height:15em;"></textarea>');
-	$oP->add('</div>');
-	
+	//end of form
+	$oBlockExport = UIContentBlockUIBlockFactory::MakeStandard("export-feedback")->SetIsHidden(true);
+	$oBlockExport->AddSubBlock(new Html('<p class="export-message" style="text-align:center;">'.Dict::S('ExcelExport:PreparingExport').'</p>'));
+	$oBlockExport->AddSubBlock(new Html('<div class="export-progress-bar" style="max-width:30em; margin-left:auto;margin-right:auto;"><div class="export-progress-message" style="text-align:center;"></div></div>'));
+	$oP->AddSubBlock($oBlockExport);
+	if ($sFormat == null) {//if it's global export
+		$oP->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction('export', Dict::S('UI:Button:Export'), 'export', false, 'export-btn'));
+	}
+	$oBlockResult = UIContentBlockUIBlockFactory::MakeStandard("export-export_text_result")->SetIsHidden(true);
+	$oBlockResult->AddSubBlock(new Html(Dict::S('Core:BulkExport:ExportResult')));
+
+	$oTextArea = new TextArea('export_content', '', 'export_content');
+	$oTextArea->AddCSSClass('ibo-input-text-area--export');
+	$oBlockResult->AddSubBlock($oTextArea);
+	$oP->AddSubBlock($oBlockResult);
+
 	$sJSParts = json_encode($aFormPartsByFormat);
 	$oP->add_ready_script(
-<<<EOF
+		<<<EOF
 window.aFormParts = $sJSParts;
 $('#format_selector').on('change init', function() {
+console.warn('yo'+$(this).val());
 	ExportToggleFormat($(this).val());
 }).trigger('init');
 		
@@ -343,7 +376,7 @@ ExportInitButton('#export-btn');
 
 EOF
 	);
-	
+
 }
 
 function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
@@ -355,7 +388,7 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
 		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
 		$oP->add_ready_script(
-<<<EOF
+			<<<EOF
 		$('#interactive_export_dlg').dialog({
 			autoOpen: true,
 			modal: true,
@@ -372,40 +405,28 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 		setTimeout(function() { $('#interactive_export_dlg').dialog('option', { position: { my: "center", at: "center", of: window }}); $('#export-btn').hide(); ExportInitButton('#export-dlg-submit'); }, 100);
 EOF
 		);
-	}
-	else
-	{
+	} else {
 		$oP = new iTopWebPage('iTop Export');
 		$oP->SetBreadCrumbEntry('ui-tool-export', Dict::S('Menu:ExportMenu'), Dict::S('Menu:ExportMenu+'), '', 'fas fa-file-export', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 	}
-	
-	if ($sExpression === null)
-	{
+
+	if ($sExpression === null) {
 		// No expression supplied, let's check if phrasebook entry is given
-		if ($sQueryId !== null)
-		{
+		if ($sQueryId !== null) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
-            $oSearch->UpdateContextFromUser();
+			$oSearch->UpdateContextFromUser();
 			$oQueries = new DBObjectSet($oSearch);
-			if ($oQueries->Count() > 0)
-			{
+			if ($oQueries->Count() > 0) {
 				$oQuery = $oQueries->Fetch();
 				$sExpression = $oQuery->Get('oql');
-			}
-			else
-			{
+			} else {
 				ReportErrorAndExit("Invalid query phrasebook identifier: '$sQueryId'");
 			}
-		}
-		else
-		{
-			if (utils::IsModeCLI())
-			{
+		} else {
+			if (utils::IsModeCLI()) {
 				Usage($oP);
 				ReportErrorAndExit("No expression or query phrasebook identifier supplied.");
-			}
-			else
-			{
+			} else {
 				// form to enter an OQL query or pick a query phrasebook identifier
 				DisplayForm($oP, utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php', $sExpression, $sQueryId, $sFormat);
 				$oP->output();
@@ -414,29 +435,22 @@ EOF
 		}
 	}
 
-	
-	if ($sFormat !== null)
-	{
+
+	if ($sFormat !== null) {
 		$oExporter = BulkExport::FindExporter($sFormat);
-		if ($oExporter === null)
-		{
+		if ($oExporter === null) {
 			$aSupportedFormats = BulkExport::FindSupportedFormats();
 			ReportErrorAndExit("Invalid output format: '$sFormat'. The supported formats are: ".implode(', ', array_keys($aSupportedFormats)));
-		}
-		else
-		{
+		} else {
 			DisplayForm($oP, utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php', $sExpression, $sQueryId, $sFormat);
 		}
-	}
-	else
-	{
+	} else {
 		DisplayForm($oP, utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php', $sExpression, $sQueryId, $sFormat);
 	}
-	if ($sMode == 'dialog')
-	{
+	if ($sMode == 'dialog') {
 		$oP->add('</div>');
 	}
-	$oP->output();	
+	$oP->output();
 }
 
 /**
@@ -448,54 +462,42 @@ EOF
  */
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
-	$oExporter  = null;
+	$oExporter = null;
 
-	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
-	{
+	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 		ReportErrorAndExit("The user account is not authorized to access the archives");
 	}
 
-	if (($sExpression === null) && ($sQueryId === null))
-	{
+	if (($sExpression === null) && ($sQueryId === null)) {
 		ReportErrorAndUsage("Missing parameter. The parameter 'expression' or 'query' must be specified.");
 	}
-	
+
 	// Either $sExpression or $sQueryId must be specified
-	if ($sExpression === null)
-	{
+	if ($sExpression === null) {
 		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
-        $oSearch->UpdateContextFromUser();
-        $oQueries = new DBObjectSet($oSearch);
-		if ($oQueries->Count() > 0)
-		{
+		$oSearch->UpdateContextFromUser();
+		$oQueries = new DBObjectSet($oSearch);
+		if ($oQueries->Count() > 0) {
 			$oQuery = $oQueries->Fetch();
 			$sExpression = $oQuery->Get('oql');
-		}
-		else
-		{
+		} else {
 			ReportErrorAndExit("Invalid query phrasebook identifier: '$sQueryId'");
 		}
 	}
-	if ($sFormat === null)
-	{
+	if ($sFormat === null) {
 		ReportErrorAndUsage("Missing parameter 'format'.");
 	}
-	
+
 	// Check if the supplied query is valid (and all the parameters are supplied
-	try
-	{
+	try {
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
-        $oSearch->UpdateContextFromUser();
+		$oSearch->UpdateContextFromUser();
 		$aArgs = array();
-		foreach($oSearch->GetQueryParams() as $sParam => $foo)
-		{
+		foreach ($oSearch->GetQueryParams() as $sParam => $foo) {
 			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
-			if (!is_null($value))
-			{
+			if (!is_null($value)) {
 				$aArgs[$sParam] = $value;
-			}
-			else
-			{
+			} else {
 				throw new MissingQueryArgument("Missing parameter '--arg_$sParam'");
 			}
 		}
@@ -524,12 +526,12 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 		$oSearch = null;
 		ReportErrorAndExit($e->getMessage());
 	}
-	
+
 	$oExporter->SetFormat($sFormat);
 	$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
 	$oExporter->SetObjectList($oSearch);
 	$oExporter->ReadParameters();
-	
+
 	return $oExporter;
 }
 
@@ -543,7 +545,7 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 		$exportResult .= $oExporter->GetNextChunk($aStatus);
 	}
 	while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
-	
+
 	if ($aStatus['code'] == 'error')
 	{
 		$oExporter->Cleanup();
@@ -570,83 +572,64 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 // Command Line mode
 //
 /////////////////////////////////////////////////////////////////////////////
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('iTop - Export'));
 
-	try
-	{
+	try {
 		// Do this before loging, in order to allow setting user credentials from within the file
 		utils::UseParamFile();
 	}
-	catch(Exception $e)
-	{
+	catch (Exception $e) {
 		echo "Error: ".$e->GetMessage()."<br/>\n";
 		exit(EXIT_CODE_FATAL);
 	}
-	
+
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data');
-	if ($sAuthUser == null)
-	{
+	if ($sAuthUser == null) {
 		ReportErrorAndUsage("Missing parameter '--auth_user'");
 	}
-	if ($sAuthPwd == null)
-	{
+	if ($sAuthPwd == null) {
 		ReportErrorAndUsage("Missing parameter '--auth_pwd'");
 	}
-	
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		ReportErrorAndExit("Access restricted or wrong credentials for user '$sAuthUser'");
 	}
-	
+
 	$sExpression = utils::ReadParam('expression', null, true /* Allow CLI */, 'raw_data');
 	$sQueryId = utils::ReadParam('query', null, true /* Allow CLI */, 'raw_data');
 	$bLocalize = (utils::ReadParam('no_localize', 0) != 1);
-	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
-	{
+	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 		ReportErrorAndExit("The user account is not authorized to access the archives");
 	}
 
-	if (($sExpression == null) && ($sQueryId == null))
-	{
+	if (($sExpression == null) && ($sQueryId == null)) {
 		ReportErrorAndUsage("Missing parameter. At least one of '--expression' or '--query' must be specified.");
 	}
-	
-	if ($sExpression === null)
-	{
+
+	if ($sExpression === null) {
 		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
-        $oSearch->UpdateContextFromUser();
+		$oSearch->UpdateContextFromUser();
 		$oQueries = new DBObjectSet($oSearch);
-		if ($oQueries->Count() > 0)
-		{
+		if ($oQueries->Count() > 0) {
 			$oQuery = $oQueries->Fetch();
 			$sExpression = $oQuery->Get('oql');
-		}
-		else
-		{
+		} else {
 			ReportErrorAndExit("Invalid query phrasebook identifier: '$sQueryId'");
-		}		
+		}
 	}
-	try
-	{
+	try {
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
-        $oSearch->UpdateContextFromUser();
+		$oSearch->UpdateContextFromUser();
 		$aArgs = array();
-		foreach($oSearch->GetQueryParams() as $sParam => $foo)
-		{
+		foreach ($oSearch->GetQueryParams() as $sParam => $foo) {
 			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
-			if (!is_null($value))
-			{
+			if (!is_null($value)) {
 				$aArgs[$sParam] = $value;
-			}
-			else
-			{
+			} else {
 				throw new MissingQueryArgument("Missing parameter '--arg_$sParam'");
 			}
 		}
@@ -659,21 +642,21 @@ if (utils::IsModeCLI())
 			$aSupportedFormats = BulkExport::FindSupportedFormats();
 			ReportErrorAndExit("Invalid output format: '$sFormat'. The supported formats are: ".implode(', ', array_keys($aSupportedFormats)));
 		}
-		
+
 		$oExporter->SetFormat($sFormat);
 		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
 		$oExporter->SetObjectList($oSearch);
 		$oExporter->ReadParameters();
-		
+
 		$exportResult = $oExporter->GetHeader();
 		$aStatus = array();
-		
+
 		do
 		{
 			$exportResult .= $oExporter->GetNextChunk($aStatus);
 		}
 		while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
-		
+
 		if ($aStatus['code'] == 'error')
 		{
 			ReportErrorAndExit("Export failed: '{$aStatus['message']}'");
@@ -684,7 +667,7 @@ if (utils::IsModeCLI())
 			echo $exportResult;
 		}
 		$oExporter->Cleanup();
-		
+
 	}
 	catch(MissingQueryArgument $e)
 	{
@@ -698,7 +681,7 @@ if (utils::IsModeCLI())
 	{
 		ReportErrorAndExit($e->getMessage());
 	}
-	
+
 	exit;
 }
 
@@ -711,7 +694,7 @@ if (utils::IsModeCLI())
 try
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	
+
 	// Main parameters
 	$sExpression = utils::ReadParam('expression', null, true /* Allow CLI */, 'raw_data');
 	$sQueryId = utils::ReadParam('query', null, true /* Allow CLI */, 'raw_data');
@@ -723,26 +706,21 @@ try
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
-	
-	if ($bInteractive)
-	{
+
+	if ($bInteractive) {
 		InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode);
-	}
-	else 
-	{
+	} else {
 		$oExporter = CheckParameters($sExpression, $sQueryId, $sFormat);
 		$sMimeType = $oExporter->GetMimeType();
-		if ($sMimeType == 'text/html')
-		{
+		if ($sMimeType == 'text/html') {
 			// Note: Using NiceWebPage only for HTML export as it includes JS scripts & files, which makes no sense in other export formats. More over, it breaks Excel spreadsheet import.
-			if($oExporter instanceof HTMLBulkExport) {
+			if ($oExporter instanceof HTMLBulkExport) {
 				$oP = new NiceWebPage('iTop export');
 				$oP->add_xframe_options();
 				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 				$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
-			}
-			else {
+			} else {
 				$oP = new WebPage('iTop export');
 				$oP->add_xframe_options();
 				$oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
