@@ -20,6 +20,24 @@
 /**
  * Simple helper class for keeping track of the context inside the call stack
  *
+ * Beware:
+ * As the destructor removes the last context, don't use the same variable if you want to keep your context.
+ *      $oCtx = new ContextTag("Tag1");
+ *      $oCtx = new ContextTag("Tag2");  // Bad the destructor will remove "Tag2"
+ *      $oCtx = new ContextTag("Tag3");  // Bad the destructor will remove "Tag3"
+ *
+ * Instead, use separate variables:
+ *      $oCtx1 = new ContextTag("Tag1");
+ *      $oCtx2 = new ContextTag("Tag2");
+ *      $oCtx3 = new ContextTag("Tag3");
+ *
+ * And don't forget that any destructor (of $oCtx1, $oCtx2 or $oCtx3) will remove the LAST added tag ("Tag3" in our example)
+ *
+ * If you want to declare permanent contexts (request lifetime) you should use:
+ *      ContextTag::AddContext("Tag1");
+ *      ContextTag::AddContext("Tag2");
+ *      ContextTag::AddContext("Tag3");
+ *
  * To check (anywhere in the code) if a particular context tag is present
  * in the call stack simply do:
  *
