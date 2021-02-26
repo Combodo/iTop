@@ -252,6 +252,7 @@ class ManageBrickController extends BrickController
 		$oExporter->SetObjectList($oSearch);
 		$oExporter->SetFormat($sFormat);
 		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+		$oExporter->SetLocalizeOutput(true);
 		$oExporter->SetFields($sFields);
 
 		$aData = array(
