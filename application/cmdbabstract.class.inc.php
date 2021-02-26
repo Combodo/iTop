@@ -2418,7 +2418,7 @@ JS
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 
-		// Note: In 2.8, remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
+		//TODO 3.0 remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}
 
