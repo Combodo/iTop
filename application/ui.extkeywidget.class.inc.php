@@ -68,11 +68,9 @@ class UIExtKeyWidget
 	protected $sTargetClass;
 	protected $sFilter;
 	protected $sAttCode;
-	//@deprecated
 	protected $bSearchMode;
 
-	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
-	static public function DisplayFromAttCode(
+	public static function DisplayFromAttCode(
 		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
 		$aArgs = [],
 		$bSearchMode = false
