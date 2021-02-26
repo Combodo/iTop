@@ -98,8 +98,7 @@ $ibo-panel-colors: (
 		}
 
 		.ibo-panel--title-title-subtitle {
-			@extend %ibo-font-ral-nor-250;
-			color: $ibo-panel--subtitle--color;
+			@extend .ibo-panel--subtitle;
 
 			a.summary {
 				@extend %ibo-font-ral-nor-250;
@@ -107,6 +106,11 @@ $ibo-panel-colors: (
 			}
 		}
 	}
+}
+
+.ibo-panel--subtitle {
+    @extend %ibo-font-ral-nor-250;
+    color: $ibo-panel--subtitle--color;
 }
 
 .ibo-panel--body {

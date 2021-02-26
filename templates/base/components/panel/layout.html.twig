@@ -7,6 +7,9 @@
                 <div class="ibo-panel--header-left">
                     {% block iboPanelHeaderLeft %}
                         <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
+                        {% if oUIBlock.GetSubTitle() is not null %}
+                            <div class="ibo-panel--subtitle">{% block iboPanelSubTitle %}{{ oUIBlock.GetSubTitle()|raw }}{% endblock %}</div>
+                        {% endif %}
                     {% endblock %}
                 </div>
                 <div class="ibo-panel--header-right">

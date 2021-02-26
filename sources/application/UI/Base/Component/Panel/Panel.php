@@ -89,6 +89,8 @@ class Panel extends UIContentBlock
 	protected $sTitle;
 	/** @var string $sColor */
 	protected $sColor;
+	/** @var string $sSubTitle */
+	protected $sSubTitle;
 
 	/**
 	 * Panel constructor.
@@ -144,6 +146,26 @@ class Panel extends UIContentBlock
 	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetSubTitle()
+	{
+		return $this->sSubTitle;
+	}
+
+	/**
+	 * @param string $sSubTitle
+	 *
+	 * @return $this
+	 */
+	public function SetSubTitle(string $sSubTitle)
+	{
+		$this->sSubTitle = $sSubTitle;
 
 		return $this;
 	}
