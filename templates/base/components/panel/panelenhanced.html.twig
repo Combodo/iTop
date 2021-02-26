@@ -9,7 +9,7 @@
     <div class="ibo-panel--title-title">
         <div class="ibo-panel--title-title-title">{{ oUIBlock.GetTitle() }}</div>
         <div class="ibo-panel--title-title-subtitle">
-            {% for oSubBlock in oUIBlock.GetSubTitle().GetSubBlocks() %}
+            {% for oSubBlock in oUIBlock.GetSubTitleBlock().GetSubBlocks() %}
                 {{ render_block(oSubBlock, {aPage: aPage}) }}
             {% endfor %}
         </div>

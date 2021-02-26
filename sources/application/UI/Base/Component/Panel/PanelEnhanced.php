@@ -16,7 +16,7 @@ class PanelEnhanced extends Panel
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/panelenhanced';
 
 	/** @var UIContentBlock */
-	protected $sSubTitle;
+	protected $oSubTitleBlock;
 	/** @var string */
 	protected $sIconUrl;
 
@@ -29,26 +29,26 @@ class PanelEnhanced extends Panel
 	public function __construct(string $sTitle, string $sIconUrl)
 	{
 		parent::__construct($sTitle);
-		$this->sSubTitle = new UIContentBlock();
+		$this->oSubTitleBlock = new UIContentBlock();
 		$this->sIconUrl = $sIconUrl;
 	}
 
 	/**
 	 * @return UIContentBlock
 	 */
-	public function GetSubTitle(): UIContentBlock
+	public function GetSubTitleBlock(): UIContentBlock
 	{
-		return $this->sSubTitle;
+		return $this->oSubTitleBlock;
 	}
 
 	/**
-	 * @param UIContentBlock $sSubTitle
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock $oSubTitleBlock
 	 *
 	 * @return PanelEnhanced
 	 */
-	public function SetSubTitle(UIContentBlock $sSubTitle): PanelEnhanced
+	public function SetSubTitleBlock(UIContentBlock $oSubTitleBlock): PanelEnhanced
 	{
-		$this->sSubTitle = $sSubTitle;
+		$this->oSubTitleBlock = $oSubTitleBlock;
 		return $this;
 	}
 

@@ -2056,7 +2056,7 @@ class DashletHeaderDynamic extends Dashlet
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 
-		$oSubTitle = $oPanel->GetSubTitle();
+		$oSubTitle = $oPanel->GetSubTitleBlock();
 		$oSet = new DBObjectSet($oFilter);
 		$iCount = $oSet->Count();
 		$oAppContext = new ApplicationContext();
