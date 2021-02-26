@@ -1030,6 +1030,7 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
 			$sJSExtraParams = json_encode($aExtraParams);
 			$aParams = array();
 			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
@@ -1105,11 +1106,9 @@ EOF
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oKPI = new ExecutionKPI();
-			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
-			if (!is_null($oDashboard))
-			{
-				if (!empty($sReloadURL))
-				{
+			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
+			if (!is_null($oDashboard)) {
+				if (!empty($sReloadURL)) {
 					$oDashboard->SetReloadURL($sReloadURL);
 				}
 				$oDashboard->RenderEditor($oPage, $aExtraParams);

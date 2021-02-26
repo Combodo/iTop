@@ -893,11 +893,53 @@ class RuntimeDashboard extends Dashboard
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
 			$oDashboard->SetDefinitionFile($sDashboardFile);
-		}
-		else
-		{
+		} else {
 			$oDashboard = null;
 		}
+
+		return $oDashboard;
+	}
+
+	/**
+	 * @param string $sDashboardFile file name relative to the current module folder
+	 * @param string $sDashBoardId code of the dashboard either menu_id or <class>__<attcode>
+	 *
+	 * @return null|RuntimeDashboard
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
+	public static function GetDashboardToEdit($sDashboardFile, $sDashBoardId)
+	{
+		$bCustomized = false;
+
+		// Search for an eventual user defined dashboard
+		$oUDSearch = new DBObjectSearch('UserDashboard');
+		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oUDSearch->AddCondition('menu_code', $sDashBoardId, '=');
+		$oUDSet = new DBObjectSet($oUDSearch);
+		if ($oUDSet->Count() > 0) {
+			// Assuming there is at most one couple {user, menu}!
+			$oUserDashboard = $oUDSet->Fetch();
+			$sDashboardDefinition = $oUserDashboard->Get('contents');
+			$bCustomized = true;
+		} else {
+			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+		}
+
+
+		if ($sDashboardDefinition !== false) {
+			$oDashboard = new RuntimeDashboard($sDashBoardId);
+			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->SetCustomFlag($bCustomized);
+			$oDashboard->SetDefinitionFile($sDashboardFile);
+		} else {
+			$oDashboard = null;
+		}
+
 		return $oDashboard;
 	}
 
@@ -907,8 +949,7 @@ class RuntimeDashboard extends Dashboard
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class']))
-		{
+		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
 		}
