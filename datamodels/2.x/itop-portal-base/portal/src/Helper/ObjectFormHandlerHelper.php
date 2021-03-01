@@ -291,7 +291,7 @@ class ObjectFormHandlerHelper
 			$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
 			if (empty($sFormManagerClass) || empty($sFormManagerData))
 			{
-				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 

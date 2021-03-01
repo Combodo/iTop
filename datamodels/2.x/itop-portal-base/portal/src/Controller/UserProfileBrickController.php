@@ -194,7 +194,7 @@ class UserProfileBrickController extends BrickController
 				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 				if ($sFormManagerClass === null || $sFormManagerData === null)
 				{
-					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
 						'Parameters formmanager_class and formmanager_data must be defined.');
 				}
@@ -278,9 +278,8 @@ class UserProfileBrickController extends BrickController
 			{
 				$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
 				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
-				if ($sFormManagerClass === null || $sFormManagerData === null)
-				{
-					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+				if ($sFormManagerClass === null || $sFormManagerData === null) {
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
 						'Parameters formmanager_class and formmanager_data must be defined.');
 				}
