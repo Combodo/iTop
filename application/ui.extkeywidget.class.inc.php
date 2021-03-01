@@ -310,25 +310,9 @@ EOF
 EOF
 			);
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
 			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\"><i class=\"fas fa-times\"></i></div>";
-
-
 		}
-		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
-		{
-			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
-			$oPage->add_ready_script(
-				<<<JS
-			if ($('#ac_tree_{$this->iId}').length == 0)
-			{
-				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
-			}		
-JS
-			);
-		}
-		if ($bCreate && $bExtensions)
-		{
+		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div>";
@@ -340,6 +324,20 @@ JS
 		}
 JS
 			);
+		}
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
+			$oPage->add_ready_script(
+				<<<JS
+			if ($('#ac_tree_{$this->iId}').length == 0)
+			{
+				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
+			}		
+JS
+			);
+		}
+		if ($oAllowedValues->CountExceeds($iMaxComboLength)) {
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
 		}
 		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "</div>";
