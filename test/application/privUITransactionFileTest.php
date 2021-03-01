@@ -39,7 +39,7 @@ class privUITransactionFileTest extends ItopTestCase
 	 */
 	public function testCleanupOldTransactions($iCleanableCreated, $iPreservableCreated, $sCleanablePrefix, $sPreservablePrefix)
 	{
-//		MetaModel::GetConfig()->Set('transactions_gc_threshold', 100);
+		MetaModel::GetConfig()->Set('transactions_gc_threshold', 100);
 
 		$iBaseLimit = time() - 24*3600; //24h
 
