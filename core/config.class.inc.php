@@ -1065,6 +1065,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'transactions_gc_threshold' => array(
+			'type' => 'integer',
+			'description' => 'probability in percent for the garbage collector to be triggered (100 mean always)',
+			'default' => 10, // added in itop 2.7.4, before the GC was always called
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_transactions' => array(
 			'type' => 'bool',
 			'description' => 'Whether or not to enable the debug log for the transactions.',

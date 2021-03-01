@@ -299,6 +299,14 @@ class privUITransactionFile
 	 */
 	protected static function CleanupOldTransactions($sTransactionDir = null)
 	{
+		$iThreshold = (int) MetaModel::GetConfig()->Get('transactions_gc_threshold');
+		$iThreshold = min(100, $iThreshold);
+		$iThreshold = max(1, $iThreshold);
+		if ((100 != $iThreshold) && (rand(1, 100) > $iThreshold)) {
+			return;
+		}
+
+		clearstatcache();
 		$iLimit = time() - 24*3600;
 		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : APPROOT.'data/transactions/*';
 		$aTransactions = glob($sPattern);
