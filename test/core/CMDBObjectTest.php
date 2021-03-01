@@ -35,7 +35,7 @@ class CMDBObjectTest extends ItopDataTestCase
 		//-- new object with only track info
 		$sTrackInfo = 'PHPUnit test';
 		CMDBObject::SetTrackInfo($sTrackInfo);
-		/** @var \DocumentNote $oTestObject */
+		/** @var \DocumentWeb $oTestObject */
 		$oTestObject = MetaModel::NewObject('DocumentWeb');
 		$oTestObject->Set('name', 'PHPUnit test');
 		$oTestObject->Set('org_id', 1);
