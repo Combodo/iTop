@@ -108,6 +108,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES = 'dropdown_multiple_choices';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_AUTOCOMPLETE = 'autocomplete';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
 
 	/**
 	 * @var string DEFAULT_OBJECT_MODE
@@ -2092,7 +2094,7 @@ EOF
 					break;
 
 				case 'LinkedSet':
-					$sInputType = ''; // TODO drop down VS autocomplete ?
+					$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
 					if ($oAttDef->IsIndirect()) {
 						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
 							$oAttDef->DuplicatesAllowed());
