@@ -197,10 +197,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			hasFocus = 0;
 		}).click(
 			function () {
-				if (hasFocus++ > 1)
-				{
-					$('#label_'+me.id).autocomplete("search");
-				}
+				hasFocus++;
+				$('#label_'+me.id).autocomplete("search");
 			});
 		var iPaddingRight = 	$('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
 		$('#'+this.id).parent().find('.ibo-input-select').css('padding-right',iPaddingRight);

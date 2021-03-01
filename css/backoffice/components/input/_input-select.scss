@@ -1,3 +1,8 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-input-select--value--min-midth: 50px;
 
 $ibo-input-select-autocomplete--value--min-midth: 150px;
@@ -80,21 +85,29 @@ $ibo-input-select--action-button--padding-left: 5px !default;
 	color: $ibo-input-select-wrapper--after--color;
 	pointer-events: none;
 }
-.ibo-input-select-wrapper--with-buttons{
-  position:relative;
-  display:flex;
-  >.selectize-control{
+.ibo-input-select-wrapper--with-buttons {
+  position: relative;
+  display: flex;
+
+  > .selectize-control {
 
   }
+
+  &:hover .ibo-input-select--action-buttons {
+    opacity: 1.0;
+  }
 }
-.ibo-input-select-container{
-display: flex;
+
+.ibo-input-select-container {
+  display: flex;
 }
-.ibo-input-select-wrapper--with-buttons::after{
+
+.ibo-input-select-wrapper--with-buttons::after {
   position: static;
   content: "\f0d7";
   font-family: "Font Awesome 5 Free";
   font-weight: 600;
+  cursor: pointer;
 
   height: $ibo-input-select-wrapper--after--height;
   margin-left: $ibo-input-select-wrapper--after--margin-left;
@@ -118,9 +131,17 @@ display: flex;
   color: $ibo-input-select--action-button--color;
   padding: $ibo-input-select--action-button--padding-y $ibo-input-select--action-button--padding-x;
   text-align: right;
-  bottom:0;
-  top:0;
-  right:0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+
+  opacity: 0.0;
+  -webkit-transition: all 2300ms ease-in-out;
+  -moz-transition: all 200ms ease-in-out;
+  -ms-transition: all 200ms ease-in-out;
+  -o-transition: all 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
+
 }
 
 .ibo-input-select--action-button{
@@ -147,3 +168,24 @@ display: flex;
   position: absolute;
   width: 1px;
 }
+
+#stuff {
+  opacity: 0.0;
+  -webkit-transition: all 500ms ease-in-out;
+  -moz-transition: all 500ms ease-in-out;
+  -ms-transition: all 500ms ease-in-out;
+  -o-transition: all 500ms ease-in-out;
+  transition: all 500ms ease-in-out;
+}
+
+#hover {
+  width: 80px;
+  height: 20px;
+  background-color: green;
+  margin-bottom: 15px;
+}
+
+#hover:hover + #stuff {
+  opacity: 1.0;
+}
+
