@@ -20,7 +20,8 @@
 // Activity panel
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
-	'UI:Layout:ActivityPanel:SizeToggler:Collapse:Tooltip' => 'Reduce',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
@@ -45,4 +46,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet',
+
+	// Closed cover
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel',
 ));

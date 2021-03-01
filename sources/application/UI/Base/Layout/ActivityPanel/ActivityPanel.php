@@ -59,8 +59,8 @@ class ActivityPanel extends UIBlock
 	/** @var \DBObject $oObject The object for which the activity panel is for */
 	protected $oObject;
 	/**
-	 * @var string $sObjectMode Display mode of $oObject (create, edit, view, ...)
 	 * @see \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @var string $sObjectMode Display mode of $oObject (create, edit, view, ...)
 	 */
 	protected $sObjectMode;
 	/** @var null|string $sTransactionId Only when $sObjectMode is set to \cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW */
@@ -196,6 +196,34 @@ class ActivityPanel extends UIBlock
 	public function GetObjectMode(): string
 	{
 		return $this->sObjectMode;
+	}
+
+	/**
+	 * @return bool True if it should be expanded, false otherwise. Based on the user pref. or reduced by default.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function IsExpanded(): bool
+	{
+		$bDefault = false;
+		$aStates = appUserPreferences::GetPref('activity_panel.is_expanded', []);
+
+		return $aStates[$this->GetObjectClass().'::'.$this->GetObjectMode()] ?? $bDefault;
+	}
+
+	/**
+	 * @return bool True if it should be closed, false otherwise. Based on the user pref. or closed by default if the object has no case log.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function IsClosed(): bool
+	{
+		$bDefault = !$this->HasCaseLogTabs();
+		$aStates = appUserPreferences::GetPref('activity_panel.is_closed', []);
+
+		return $aStates[$this->GetObjectClass().'::'.$this->GetObjectMode()] ?? $bDefault;
 	}
 
 	/**
@@ -665,6 +693,15 @@ class ActivityPanel extends UIBlock
 	 * @throws \Exception
 	 */
 	public function GetLockEndpointForJSWidget(): string
+	{
+		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+	}
+
+	/**
+	 * @return string The endpoint for the state (expanded, closed, ...) changes to be saved
+	 * @throws \Exception
+	 */
+	public function GetSaveStateEndpoint(): string
 	{
 		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 	}

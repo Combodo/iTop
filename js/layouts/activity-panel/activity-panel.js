@@ -33,10 +33,12 @@ $(function()
 					lock_watcher_period: 30,        // Period (in seconds) between lock status update, uses the "activity_panel.lock_watcher_period" config. param.
 					lock_endpoint: null,
 					show_multiple_entries_submit_confirmation: true,
+					save_state_endpoint: null,
 				},
 			css_classes:
 				{
 					is_expanded: 'ibo-is-expanded',
+					is_reduced: 'ibo-is-reduced',
 					is_opened: 'ibo-is-opened',
 					is_closed: 'ibo-is-closed',
 					is_active: 'ibo-is-active',
@@ -47,7 +49,11 @@ $(function()
 				},
 			js_selectors:
 				{
-					panel_size_toggler: '[data-role="ibo-activity-panel--size-toggler"]',
+					panel_togglers: '[data-role="ibo-activity-panel--togglers"]',
+					panel_size_expand: '[data-role="ibo-activity-panel--expand-icon"]',
+					panel_size_reduce: '[data-role="ibo-activity-panel--reduce-icon"]',
+					panel_size_close: '[data-role="ibo-activity-panel--close-icon"]',
+					panel_size_open: '[data-role="ibo-activity-panel--closed-cover"]',
 					tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 					tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 					tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
@@ -126,100 +132,109 @@ $(function()
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
-			_destroy: function()
-			{
+			_destroy: function () {
 				this.element.removeClass('ibo-activity-panel');
 			},
-			_bindEvents: function()
-			{
+			_bindEvents: function () {
 				const me = this;
 				const oBodyElem = $('body');
 
 				// Tabs title
-				// - Click on the panel collapse/expand toggler
-				this.element.find(this.js_selectors.panel_size_toggler).on('click', function(oEvent){
-					me._onPanelSizeTogglerClick(oEvent);
+				// - Click on the panel reduce/expand togglers
+				this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).on('click', function (oEvent) {
+					me._onPanelSizeIconClick(oEvent);
+				});
+				// - Click on the panel close/open togglers
+				this.element.find(this.js_selectors.panel_size_close+', '+this.js_selectors.panel_size_open).on('click', function (oEvent) {
+					me._onPanelDisplayIconClick(oEvent);
 				});
 				// - Click on a tab title
-				this.element.find(this.js_selectors.tab_title).on('click', function(oEvent){
+				this.element.find(this.js_selectors.tab_title).on('click', function (oEvent) {
 					me._onTabTitleClick(oEvent, $(this));
 				});
 
 				// Tabs toolbar
 				// - Change on a filter
-				this.element.find(this.js_selectors.activity_filter).on('change', function(){
+				this.element.find(this.js_selectors.activity_filter).on('change', function () {
 					me._onFilterChange($(this));
 				});
 				// - Click on a filter options toggler
-				this.element.find(this.js_selectors.activity_filter_options_toggler).on('click', function(oEvent){
+				this.element.find(this.js_selectors.activity_filter_options_toggler).on('click', function (oEvent) {
 					me._onFilterOptionsTogglerClick(oEvent, $(this));
 				})
 				// - Change on a filter option
-				this.element.find(this.js_selectors.activity_filter_option_input).on('change', function(){
+				this.element.find(this.js_selectors.activity_filter_option_input).on('change', function () {
 					me._onFilterOptionChange($(this));
 				});
 				// - Click on open all case log messages
-				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function(){
+				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function () {
 					me._onCaseLogOpenAllClick($(this));
 				});
 				// - Click on close all case log messages
-				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function(){
+				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function () {
 					me._onCaseLogCloseAllClick($(this));
 				});
 
 				// Entry form
 				// - Click on the compose button
-				this.element.find(this.js_selectors.compose_button).on('click', function(oEvent){
+				this.element.find(this.js_selectors.compose_button).on('click', function (oEvent) {
 					me._onComposeButtonClick(oEvent);
 				});
 				// - Draft value ongoing
-				this.element.on('draft.caselog_entry_form.itop', function(oEvent, oData){
+				this.element.on('draft.caselog_entry_form.itop', function (oEvent, oData) {
 					me._onDraftEntryForm(oData.attribute_code);
 				});
 				// - Empty value
-				this.element.on('emptied.caselog_entry_form.itop', function(oEvent, oData){
+				this.element.on('emptied.caselog_entry_form.itop', function (oEvent, oData) {
 					me._onEmptyEntryForm(oData.attribute_code);
 				});
 				// - Entry form cancelled
-				this.element.on('cancelled_form.caselog_entry_form.itop', function(){
+				this.element.on('cancelled_form.caselog_entry_form.itop', function () {
 					me._onCancelledEntryForm();
 				});
 				// - Entry form submission request
-				this.element.on('request_submission.caselog_entry_form.itop', function(){
+				this.element.on('request_submission.caselog_entry_form.itop', function () {
 					me._onRequestSubmission();
 				});
 
 				// Entries
 				// - Click on a closed case log message
-				this.element.find(this.js_selectors.entry_group).on('click', '.'+this.css_classes.is_closed + ' ' + this.js_selectors.entry_main_information, function(oEvent){
+				this.element.find(this.js_selectors.entry_group).on('click', '.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
 					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
-				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function(oEvent){
+				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function (oEvent) {
 					me._onEditsLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
 
 				// Mostly for outside clicks that should close elements
-				oBodyElem.on('click', function(oEvent){
+				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
 				});
 				// Mostly for hotkeys
-				oBodyElem.on('keyup', function(oEvent){
+				oBodyElem.on('keyup', function (oEvent) {
 					me._onBodyKeyUp(oEvent);
 				});
 			},
 
 			// Events callbacks
-			_onPanelSizeTogglerClick: function(oEvent)
-			{
+			_onPanelSizeIconClick: function (oEvent) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
 				// Toggle menu
 				this.element.toggleClass(this.css_classes.is_expanded);
+				this._SaveStatePreferences();
 			},
-			_onTabTitleClick: function(oEvent, oTabTitleElem)
-			{
+			_onPanelDisplayIconClick: function (oEvent) {
+				// Avoid anchor glitch
+				oEvent.preventDefault();
+
+				// Toggle menu
+				this.element.toggleClass(this.css_classes.is_closed);
+				this._SaveStatePreferences();
+			},
+			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
@@ -396,10 +411,9 @@ $(function()
 			 * @param oEvent {Object} The jQuery event
 			 * @private
 			 */
-			_onBodyKeyUp: function(oEvent)
-			{
+			_onBodyKeyUp: function (oEvent) {
 				// On "Esc" key
-				if(oEvent.key === 'Escape') {
+				if (oEvent.key === 'Escape') {
 					// Hide all filters's options
 					this._HideAllFiltersOptions();
 				}
@@ -407,13 +421,32 @@ $(function()
 
 			// Methods
 			// - Helpers on host object
-			_GetHostObjectClass: function()
-			{
+			_GetHostObjectClass: function () {
 				return this.element.attr('data-object-class');
 			},
-			_GetHostObjectID: function()
-			{
+			_GetHostObjectID: function () {
 				return this.element.attr('data-object-id');
+			},
+			_GetHostObjectMode: function () {
+				return this.element.attr('data-object-mode');
+			},
+			/**
+			 * Save to the user pref. the expanded and closed states the host object class / mode
+			 *
+			 * @return {void}
+			 * @private
+			 */
+			_SaveStatePreferences: function () {
+				$.post(
+					this.options.save_state_endpoint,
+					{
+						'operation': 'save_activity_panel_state',
+						'object_class': this._GetHostObjectClass(),
+						'object_mode': this._GetHostObjectMode(),
+						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
+						'is_closed': this.element.hasClass(this.css_classes.is_closed),
+					}
+				);
 			},
 
 			// - Helpers on dates
@@ -421,11 +454,10 @@ $(function()
 			 * Reformat date times to be relative (only if they are not too far in the past)
 			 * @private
 			 */
-			_ReformatDateTimes: function()
-			{
+			_ReformatDateTimes: function () {
 				const me = this;
 
-				this.element.find(this.js_selectors.entry_datetime).each(function(){
+				this.element.find(this.js_selectors.entry_datetime).each(function () {
 					const oEntryDateTime = moment($(this).attr('data-formatted-datetime'), me.options.datetime_format);
 					const oNowDateTime = moment();
 

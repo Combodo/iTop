@@ -18,6 +18,7 @@ use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use DBObjectSearch;
 use DBObjectSet;
@@ -375,6 +376,27 @@ class AjaxRenderController
 		$bRet = $oSettings->ResetToDefault($bResetAll);
 
 		return $bRet;
+	}
+
+	/**
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public static function SaveActivityPanelState(): void
+	{
+		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$sObjectMode = utils::ReadPostedParam('object_mode');
+		$bIsExpanded = utils::ReadPostedParam('is_expanded');
+		$bIsClosed = utils::ReadPostedParam('is_closed');
+
+		if (false === empty($bIsExpanded)) {
+			ActivityPanelHelper::SaveExpandedStateForClass($sObjectClass, $sObjectMode, ('true' === $bIsExpanded));
+		}
+
+		if (false === empty($bIsClosed)) {
+			ActivityPanelHelper::SaveClosedStateForClass($sObjectClass, $sObjectMode, ('true' === $bIsClosed));
+		}
 	}
 
 	/**

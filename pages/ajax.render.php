@@ -2752,14 +2752,32 @@ EOF
 				$aRenderRes = $oRenderer->Render($aRequestedFields);
 
 				$aResult['form']['updated_fields'] = $aRenderRes;
-			} catch (Exception $e)
-			{
+			}
+			catch (Exception $e) {
 				$aResult['error'] = $e->getMessage();
 			}
 			$oPage->add(json_encode($aResult));
 			break;
 
 		// Activity panel
+		/** @internal */
+		case 'save_activity_panel_state':
+			$oPage->SetContentType('application/json');
+			try {
+				$oAjaxRenderController::SaveActivityPanelState();
+				$aResult = [
+					'success' => true,
+				];
+			}
+			catch (Exception $oException) {
+				$aResult = [
+					'success' => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->add(json_encode($aResult));
+			break;
+
 		case 'add_caselog_entries':
 			$oPage->SetContentType('application/json');
 			try {

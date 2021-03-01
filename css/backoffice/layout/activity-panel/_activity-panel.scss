@@ -20,6 +20,7 @@
 $ibo-activity-panel--width: 480px !default;
 /* TODO: This should be changed when responsive breakpoints are defined and used */
 $ibo-activity-panel--is-expanded--width: 60vw !default;
+$ibo-activity-panel--is-closed--width: 32px !default;
 $ibo-activity-panel--height: 100% !default;
 $ibo-activity-panel--padding-x: 16px !default;
 $ibo-activity-panel--padding-y: 0 !default;
@@ -27,8 +28,9 @@ $ibo-activity-panel--padding-y: 0 !default;
 /* - Header */
 $ibo-activity-panel--header--background-color: $ibo-color-grey-100 !default;
 
-$ibo-activity-panel--size-toggler--color: $ibo-color-grey-600 !default;
-$ibo-activity-panel--size-toggler--on-hover--color: $ibo-color-grey-800 !default;
+$ibo-activity-panel--togglers--color: $ibo-color-grey-600 !default;
+$ibo-activity-panel--togglers--on-hover--color: $ibo-color-grey-800 !default;
+$ibo-activity-panel--togglers--elements-spacing: 0.75rem !default;
 
 /* - Tabs togglers*/
 $ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
@@ -104,26 +106,45 @@ $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 $ibo-activity-panel--entry-forms-confirmation-explanation--spacing: 16px !default;
 $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem !default;
 
+$ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
+$ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
+
 /* Whole layout */
-.ibo-activity-panel{
-	width: $ibo-activity-panel--width;
-	height: $ibo-activity-panel--height;
-	transition: width 0.2s ease-in-out;
-	display: flex;
-	flex-direction: column;
+.ibo-activity-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: $ibo-activity-panel--width;
+  height: $ibo-activity-panel--height;
+  transition: width 0.2s ease-in-out;
 
-	&.ibo-is-expanded{
-		width: $ibo-activity-panel--is-expanded--width;
+  &.ibo-is-expanded {
+    width: $ibo-activity-panel--is-expanded--width;
 
-		.ibo-activity-panel--expand-icon{
-			display: none;
-		}
-	}
-	&:not(.ibo-is-expanded){
-		.ibo-activity-panel--collapse-icon{
-			display: none;
-		}
-	}
+    .ibo-activity-panel--expand-icon {
+      display: none;
+    }
+  }
+
+  &:not(.ibo-is-expanded) {
+    .ibo-activity-panel--reduce-icon {
+      display: none;
+    }
+  }
+
+  &.ibo-is-closed {
+    width: $ibo-activity-panel--is-closed--width;
+
+    .ibo-activity-panel--header,
+    .ibo-activity-panel--body,
+    .ibo-activity-panel--add-caselog-entry-button {
+      display: none;
+    }
+
+    .ibo-activity-panel--closed-cover {
+      display: inherit;
+    }
+  }
 }
 
 /* Header */
@@ -136,18 +157,23 @@ $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem 
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
-/* Size toggler */
-.ibo-activity-panel--size-toggler{
-	position: absolute;
-	right: $ibo-activity-panel--padding-x;
-	top: 0;
-	bottom: 0;
-	@extend %ibo-fully-centered-content;
-	color: $ibo-activity-panel--size-toggler--color;
 
-	&:hover{
-		color: $ibo-activity-panel--size-toggler--on-hover--color;
-	}
+/* Size/display togglers */
+.ibo-activity-panel--togglers {
+  position: absolute;
+  right: $ibo-activity-panel--padding-x;
+  top: 0;
+  bottom: 0;
+  @extend %ibo-fully-centered-content;
+  color: $ibo-activity-panel--togglers--color;
+
+  &:hover {
+    color: $ibo-activity-panel--togglers--on-hover--color;
+  }
+
+  > *:not(:first-child) {
+    margin-left: $ibo-activity-panel--togglers--elements-spacing;
+  }
 }
 
 /* Tabs togglers */
@@ -378,4 +404,30 @@ $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem 
 }
 .ibo-activity-panel--entry-forms-confirmation-preference-input{
   margin-right: $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing;
+}
+
+
+/* Closed cover */
+.ibo-activity-panel--closed-cover {
+  display: none;
+  position: absolute;
+  z-index: 2; // Above the compose button and all
+  // padding-top: 64px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @extend %ibo-fully-centered-content;
+  // align-items: flex-start;
+  background-color: $ibo-activity-panel--closed-cover--background-color;
+  cursor: pointer;
+}
+
+.ibo-activity-panel--closed-content-container {
+  transform: rotateZ(-90deg);
+  white-space: nowrap;
+}
+
+.ibo-activity-panel--open-icon {
+  margin-left: $ibo-activity-panel--open-icon--margin-left;
 }

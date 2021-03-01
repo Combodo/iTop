@@ -238,6 +238,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityEntry\\TransitionEntry' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityEntry/TransitionEntry.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanel' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanel.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelFactory' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelFactory.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelHelper' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelHelper.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelPrint' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelPrint.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryFormFactory\\CaseLogEntryFormFactory' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/CaseLogEntryForm/CaseLogEntryFormFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryForm\\CaseLogEntryForm' => $baseDir . '/sources/application/UI/Base/Layout/ActivityPanel/CaseLogEntryForm/CaseLogEntryForm.php',

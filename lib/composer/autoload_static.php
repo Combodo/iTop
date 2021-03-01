@@ -468,6 +468,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityEntry\\TransitionEntry' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityEntry/TransitionEntry.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanel' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanel.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelHelper' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelHelper.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\ActivityPanelPrint' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/ActivityPanelPrint.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryFormFactory\\CaseLogEntryFormFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/CaseLogEntryForm/CaseLogEntryFormFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryForm\\CaseLogEntryForm' => __DIR__ . '/../..' . '/sources/application/UI/Base/Layout/ActivityPanel/CaseLogEntryForm/CaseLogEntryForm.php',
