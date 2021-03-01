@@ -2188,7 +2188,6 @@ EOF
 					break;
 
 				case 'ExtKey':
-					$sInputType = ''; // TODO
 					/** @var \AttributeExternalKey $oAttDef */
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
@@ -2450,6 +2449,16 @@ JS
 		$oPage->add_dict_entry('UI:ValueMustBeSet');
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
+
+		// N°3750 refresh container data-input-type attribute if in an Ajax context
+		// indeed in such a case we're only returning the field value content and not the parent container, so we need to update it !
+		if (WebPage::IsAjaxPage($oPage)) {
+			$sHTMLValue .= <<<HTML
+<script>
+$("[data-input-id='$iId']").data("input-type", "$sInputType");
+</script>
+HTML;
+		}
 
 		//TODO 3.0 remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";

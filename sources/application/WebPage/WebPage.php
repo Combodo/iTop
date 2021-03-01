@@ -1492,4 +1492,8 @@ EOD
 		return $this->sTemplateRelPath;
 	}
 
+	public static function IsAjaxPage(WebPage $oPage)
+	{
+		return ($oPage instanceof AjaxPage);
+	}
 }
