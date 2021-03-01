@@ -297,11 +297,11 @@ class privUITransactionFile
 	 * Cleanup old transactions which have been pending since more than 24 hours
 	 * Use filemtime instead of filectime since filectime may be affected by operations on the directory (like changing the access rights)
 	 */
-	protected static function CleanupOldTransactions()
+	protected static function CleanupOldTransactions($sTransactionDir = null)
 	{
 		$iLimit = time() - 24*3600;
-		clearstatcache();
-		$aTransactions = glob(APPROOT.'data/transactions/*-*');
+		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : APPROOT.'data/transactions/*';
+		$aTransactions = glob($sPattern);
 		foreach($aTransactions as $sFileName)
 		{
 			if (filemtime($sFileName) < $iLimit)
