@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
@@ -173,29 +160,22 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\" tabindex=0>";
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
-		if($this->bSearchMode)
-		{
+		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
 			$sWizHelperJSON = "''";
 			$sJSSearchMode = 'true';
-		}
-		else
-		{
-			if (isset($aArgs['wizHelper']))
-			{
+		} else {
+			if (isset($aArgs['wizHelper'])) {
 				$sWizHelper = $aArgs['wizHelper'];
-			}
-			else
-			{
+			} else {
 				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 			}
 			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
 			$sJSSearchMode = 'false';
 		}
-		if (is_null($oAllowedValues))
-		{
+		if (is_null($oAllowedValues)) {
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -204,8 +184,7 @@ class UIExtKeyWidget
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength))
-		{
+		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
 			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
@@ -264,7 +243,7 @@ class UIExtKeyWidget
 				array_push($aOptions, $aOption);
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
-			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"></select>";
+			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=0></select>";
 			$sJsonOptions = json_encode($aOptions);
 			$oPage->add_ready_script(
 				<<<EOF
@@ -312,7 +291,6 @@ EOF
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 
 			// another hidden input to store & pass the object's Id
@@ -454,7 +432,6 @@ JS
 	}
 
 	/**
-	 * @deprecated Use DisplayBob
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 *
 	 * @param \WebPage $oPage
