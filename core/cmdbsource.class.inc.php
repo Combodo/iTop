@@ -1264,7 +1264,11 @@ class CMDBSource
 		$sDataType = isset($aMatches[1]) ? $aMatches[1] : '';
 
 		if (strcasecmp($sDataType, 'ENUM') === 0){
-			return self::GetEnumOptions($sDataType, $sCompleteFieldType);
+			try{
+				return self::GetEnumOptions($sDataType, $sCompleteFieldType);
+			}catch(CoreException $e){
+				//do nothing ; especially do not block setup.
+			}
 		}
 
 		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
