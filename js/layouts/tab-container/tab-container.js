@@ -1,19 +1,6 @@
 /*
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 $(function()
@@ -164,10 +151,7 @@ $(function()
 
 	            //Datatable are not displayed correctly when hidden
 	            $(oUI.newPanel).find('.dataTables_scrollBody > .ibo-datatable').each(function () {
-		            if ($('#'+this.id).find('thead').is(':visible')) {
-			            $('#'+this.id).DataTable().columns.adjust().draw();
-			            $('#'+this.id).find('thead').hide();
-		            }
+		            $('#'+this.id).DataTable().columns.adjust().draw();
 	            });
 
 	            // Get the index of this tab.

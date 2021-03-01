@@ -1,6 +1,6 @@
 <?php
-/**
- * @copyright   Copyright (C) 2010-2020 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -111,7 +111,21 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aExtraParams['sRefreshAction'] = $oDataTable->GetJSRefresh()[0];
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 		} else {
-			$oBlockMenu = new UIContentBlock();
+			$bToolkitMenu = true;
+			if (isset($aExtraParams['toolkit_menu'])) {
+				$bToolkitMenu = (bool)$aExtraParams['toolkit_menu'];
+			}
+			if (UserRights::IsPortalUser() || $oPage->IsPrintableVersion()) {
+				// Portal users have a limited access to data, for now they can only see what's configured for them
+				$bToolkitMenu = false;
+			}
+			if ($bToolkitMenu) {
+				$aExtraParams['selection_mode'] = true;
+				$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
+				$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
+			} else {
+				$oBlockMenu = new UIContentBlock();
+			}
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
@@ -320,7 +334,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'class_alias' => $sClassAlias,
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
-								'attribute_label' => Dict::S('Class:'.$sClassName),
+								'attribute_label' => MetaModel::GetName($sClassName),
 								'render' => $sDisplayFunction,
 							];
 
@@ -328,7 +342,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
-						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
+						$sAttLabel = $oAttDef->GetLabel();
 						$aColumnDefinition[] = [
 							'description' => $oAttDef->GetOrderByHint(),
 							'object_class' => $sClassName,
