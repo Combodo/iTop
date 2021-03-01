@@ -207,7 +207,6 @@ class UIExtKeyWidget
 			{
 				$bAddingValue=true;
 			}
-			$bAutoSelectValue=false;
 			while($oObj = $oAllowedValues->Fetch())
 			{
 				$aOption=[];
@@ -220,14 +219,12 @@ class UIExtKeyWidget
 					$sDisplayValue=$oObj->GetName();
 					if($value != $oObj->GetKey())
 					{
-						$bAutoSelectValue=true;
 						$value=$oObj->GetKey();
 					}
 				}
 				else {
 					if ((is_array($value) && in_array($oObj->GetKey(), $value)) || ($value == $oObj->GetKey())) {
-						$sDisplayValue = $oObj->GetKey();
-						//	$sHTMLValue.="<div class='item' data-value='".$oObj->GetKey)."'>".$oObj->GetName()."</div>";
+						$sDisplayValue = $oObj->GetName();
 					}
 				}
 				if ($oObj->IsObsolete()) {
@@ -249,25 +246,12 @@ class UIExtKeyWidget
 				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
-		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$sDisplayValue');
+		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$value');
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
 			);
-			if($bAutoSelectValue)
-			{
-				$oPage->add_ready_script(
-					<<<EOF
-$('#$this->iId > option').val('{$value}');
-$('#$this->iId > option').html('{$sDisplayValue}');
-$('#field_$this->iId').find('.ibo-input-select').append('<div data-value="{$value}">{$sDisplayValue}</div>');
-$('#$this->iId > .ibo-input-select').val('{$value}');
-$('#$this->iId > .ibo-input-select').html('{$sDisplayValue}');
-$('#$this->iId').attr('data-validate','dependencies');
-EOF
-				);
-			}
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
 		}
 		else
