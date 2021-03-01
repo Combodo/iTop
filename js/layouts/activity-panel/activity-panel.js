@@ -129,6 +129,8 @@ $(function()
 
 				// TODO 3.0.0: Modify PopoverMenu so we can pass it the ID of the block triggering the open/close
 				//$(this.element).find(this.js_selectors.send_choices_picker).popover_menu({toggler: this.js_selectors.send_button});
+
+				this.element.trigger('ready.activity_panel.itop');
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here

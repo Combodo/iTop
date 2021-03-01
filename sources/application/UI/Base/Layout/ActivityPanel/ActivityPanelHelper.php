@@ -32,6 +32,7 @@ class ActivityPanelHelper
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	public static function SaveExpandedStateForClass(string $sObjectClass, string $sObjectMode, bool $bIsExpanded): void
 	{
@@ -58,6 +59,7 @@ class ActivityPanelHelper
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	public static function SaveClosedStateForClass(string $sObjectClass, string $sObjectMode, bool $bIsClosed)
 	{

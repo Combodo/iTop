@@ -65,7 +65,9 @@
         </div>
     </div>
     {% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}
-        <a href="#" class="ibo-activity-panel--add-caselog-entry-button" data-role="ibo-activity-panel--add-caselog-entry-button"
+        <a href="#"
+           class="ibo-activity-panel--add-caselog-entry-button {% if oUIBlock.IsEntryFormOpened() %}ibo-is-hidden{% endif %}"
+           data-role="ibo-activity-panel--add-caselog-entry-button"
            data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
             <i class="fas fa-feather"></i>
         </a>

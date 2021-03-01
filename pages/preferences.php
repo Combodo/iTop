@@ -109,6 +109,11 @@ function DisplayPreferences($oP)
 	$oSecondColumn->AddSubBlock($oRichTextFieldset);
 	$oRichTextFieldset->AddSubBlock(GetRichTextToolbarExpandedFieldBlock());
 
+	// Activity panel
+	$oActivityPanelfieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:ActivityPanel:Title'), 'ibo-fieldset-for-activity-panel');
+	$oSecondColumn->AddSubBlock($oActivityPanelfieldset);
+	$oActivityPanelfieldset->AddSubBlock(GetActivityPanelEntryFormOpenedFieldBlock());
+
 	// Misc. options
 	$oMiscOptionsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteOtherSettings'), 'ibo-fieldset-for-misc-options');
 	$oSecondColumn->AddSubBlock($oMiscOptionsFieldset);
@@ -507,6 +512,32 @@ function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
  * @throws \MySQLException
  * @since 3.0.0
  */
+function GetActivityPanelEntryFormOpenedFieldBlock(): iUIBlock
+{
+	$bOpened = appUserPreferences::GetPref('activity_panel.is_entry_form_opened', false);
+	$sCheckedForHtmlAttribute = $bOpened ? 'checked="checked"' : '';
+
+	$sLabel = Dict::S('UI:Preferences:ActivityPanel:EntryFormOpened');
+	$sLabelDescription = Dict::S('UI:Preferences:ActivityPanel:EntryFormOpened+');
+	$sHtml = <<<HTML
+<p>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="activity_panel_entry_form_opened" value="1" {$sCheckedForHtmlAttribute}>
+	</label>
+</p>
+HTML;
+
+	return new Html($sHtml);
+}
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @since 3.0.0
+ */
 function GetObsoleteDataFieldBlock(): iUIBlock
 {
 	$bShow = utils::IsArchiveMode() || appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));
@@ -517,8 +548,10 @@ function GetObsoleteDataFieldBlock(): iUIBlock
 	$sLabelDescription = Dict::S('UI:Favorites:ShowObsoleteData+');
 	$sHtml = <<<HTML
 <p>
-	<input type="checkbox" id="show_obsolete_data" name="show_obsolete_data" value="1"{$sSelectedForHtmlAttribute}{$sDisabledForHtmlAttribute}>
-	<label for="show_obsolete_data" title="{$sLabelDescription}">{$sLabel}</label>
+	<label data-tooltip-content="{$sLabelDescription}">
+		<span>{$sLabel}</span>
+		<input type="checkbox" name="show_obsolete_data" value="1"{$sSelectedForHtmlAttribute}{$sDisabledForHtmlAttribute}>
+	</label>
 </p>
 HTML;
 
@@ -601,6 +634,10 @@ try {
 				$aRichTextConfig = json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
 				$aRichTextConfig['toolbarStartupExpanded'] = $bToolbarExpanded;
 				appUserPreferences::SetPref('richtext_config', json_encode($aRichTextConfig));
+
+				// Activity panel
+				$bActivityPanelEntryFormOpened = (bool)utils::ReadParam('activity_panel_entry_form_opened', 0);
+				appUserPreferences::SetPref('activity_panel.is_entry_form_opened', $bActivityPanelEntryFormOpened);
 
 				// Misc.
 				// - Obsolete data

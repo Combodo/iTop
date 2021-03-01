@@ -667,8 +667,21 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * @uses $bHasStates
+	 * @return bool True if the entry form shouldbe opened by default, false otherwise. Based on the user pref. or false by default.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function IsEntryFormOpened(): bool
+	{
+		$bDefault = false;
+
+		return appUserPreferences::GetPref('activity_panel.is_entry_form_opened', $bDefault);
+	}
+
+	/**
 	 * @return bool
+	 * @uses $bHasStates
 	 */
 	public function HasStates(): bool
 	{

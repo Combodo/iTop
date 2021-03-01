@@ -67,19 +67,16 @@ $(function() {
 				}
 
 				this._UpdateState();
-				if(this._IsSubmitAutonomous())
-				{
-					this._HideEntryForm();
+				if (this._IsSubmitAutonomous()) {
 					this._ShowMainActions();
-				}
-				else
-				{
+				} else {
 					this._AddBridgeInput();
-					this._ShowEntryForm();
 					this._HideMainActions();
 				}
 
 				this._bindEvents();
+
+				this.element.trigger('ready.caselog_entry_form.itop');
 			},
 			_bindEvents: function() {
 				let me = this;
@@ -271,10 +268,10 @@ $(function() {
 			},
 			// - Main actions
 			_ShowMainActions: function() {
-				this.element.find(this.js_selectors.main_actions).show();
+				this.element.find(this.js_selectors.main_actions).removeClass(this.css_classes.is_hidden);
 			},
 			_HideMainActions: function() {
-				this.element.find(this.js_selectors.main_actions).hide();
+				this.element.find(this.js_selectors.main_actions).addClass(this.css_classes.is_hidden);
 			},
 			_UpdateState: function() {
 				this._UpdateEditingVisualHint();
