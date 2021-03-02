@@ -59,7 +59,10 @@ class WebPage implements Page
 	protected $a_scripts;
 	/** @var array Scripts to be executed when the DOM is ready (typical JQuery use), right before "ready scripts" */
 	protected $a_init_scripts;
-	/** @var array Scripts to be executed when the DOM is ready, with a slight delay, after the "init scripts" */
+	/**
+	 * @see GetReadyScripts getter that adds custom script at the end
+	 * @var array Scripts to be executed when the DOM is ready, with a slight delay, after the "init scripts"
+	 */
 	protected $a_ready_scripts;
 	/** @var array Scripts linked (externals) to the page through URIs */
 	protected $a_linked_scripts;
@@ -519,10 +522,52 @@ class WebPage implements Page
 	}
 
 	/**
+	 * @return array all the script added, plus a last one to know when ready scripts are done processing
+	 * @since 3.0.0 N°3750 method creation
+	 * @uses self::a_ready_scripts
+	 * @uses self::GetReadyScriptsStartedTrigger
+	 * @uses self::GetReadyScriptsFinishedTrigger
+	 */
+	protected function GetReadyScripts(): array
+	{
+		$aReadyScripts = $this->a_ready_scripts;
+
+		$sReadyStartedTriggerScript = $this->GetReadyScriptsStartedTrigger();
+		if (!empty($sReadyStartedTriggerScript)) {
+			array_unshift($aReadyScripts, $sReadyStartedTriggerScript);
+		}
+
+		$sReadyFinishedTriggerScript = $this->GetReadyScriptsFinishedTrigger();
+		if (!empty($sReadyFinishedTriggerScript)) {
+			$aReadyScripts[] = $sReadyFinishedTriggerScript;
+		}
+
+		return $aReadyScripts;
+	}
+
+	/**
+	 * @return ?string script to execute before all ready scripts
+	 * @since 3.0.0 N°3750 method creation
+	 */
+	protected function GetReadyScriptsStartedTrigger(): ?string
+	{
+		return null;
+	}
+
+	/**
+	 * @return ?string script to execute after all ready scripts are done processing
+	 * @since 3.0.0 N°3750 method creation
+	 */
+	protected function GetReadyScriptsFinishedTrigger(): ?string
+	{
+		return null;
+	}
+
+	/**
 	 * Empty all base linked scripts for the page
 	 *
-	 * @uses \WebPage::$a_linked_scripts
 	 * @return void
+	 * @uses \WebPage::$a_linked_scripts
 	 * @since 3.0.0
 	 */
 	protected function EmptyLinkedScripts(): void
@@ -1041,7 +1086,7 @@ class WebPage implements Page
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
-			'aJsInlineOnDomReady' => $this->a_ready_scripts,
+			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit' => $this->a_init_scripts,
 
 			// TODO 3.0.0: TEMP, used while developing, remove it.

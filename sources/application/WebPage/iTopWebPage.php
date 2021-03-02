@@ -925,7 +925,7 @@ HTML;
 				'aCssInline' => $this->a_styles,
 				'aJsFiles' => $this->a_linked_scripts,
 				'aJsInlineOnInit' => $this->a_init_scripts,
-				'aJsInlineOnDomReady' => $this->a_ready_scripts,
+				'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 				'aJsInlineLive' => $this->a_scripts,
 				// TODO 3.0.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
@@ -1244,9 +1244,8 @@ EOF
 	 */
 	protected function OutputPrintable(): BlockPrintHeader
 	{
-		$oBlock= new BlockPrintHeader();
+		$oBlock = new BlockPrintHeader();
+
 		return $oBlock;
 	}
-
-
 }

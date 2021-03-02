@@ -179,7 +179,7 @@ EOF
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
-			'aJsInlineOnDomReady' => $this->a_ready_scripts,
+			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit' => $this->a_init_scripts,
 			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
 			// TODO 3.0.0: TEMP, used while developping, remove it.
