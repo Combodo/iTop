@@ -1,22 +1,7 @@
 <?php
-/**
- * Copyright (C) 2010-2018 Combodo SARL
- *
- * This file is part of iTop.
- *
- *  iTop is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -187,16 +172,15 @@ class SearchForm
 		if ($bAutoSubmit === true) {
 			$aCSSClasses[] = 'no_auto_submit';
 		}
-		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [],Panel::ENUM_COLOR_CYAN, $sSearchFormId);
+		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
-		$sHtml = "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
-		if (!$bShowObsoleteData)
-		{
+		$sHtml = "";
+		if (!$bShowObsoleteData) {
 			$sHtml .= "<span class=\"pull-right\">";
-			$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
+			$sHtml .= "<span class=\"sfobs_hint pull-right\">".Dict::S('UI:Search:Obsolescence:DisabledHint')."</span>";
 		}
-		if($bAutoSubmit === false) {
+		if ($bAutoSubmit === false) {
 			$sHtml .= "<br class='clearboth' />";
 			$sHtml .= "<span class=\"sft_hint pull-right\">".Dict::S('UI:Search:AutoSubmit:DisabledHint')."</span>";
 			$sHtml .= "</span>";
