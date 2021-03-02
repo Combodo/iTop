@@ -22,12 +22,14 @@ class Title extends UIBlock
 	/** @inheritDoc */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/title/layout';
 
-	/** @var string Icon should cover all the space, best for icons with filled background */
-	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';
+	/** @var string Icon should be contained (boxed) in the medallion, best for icons with transparent background and some margin around */
+	public const ENUM_ICON_COVER_METHOD_CONTAIN = 'contain';
 	/** @var string Icon should be a litte zoomed out to cover almost all space, best for icons with transparent background and no margin around (eg. class icons) */
 	public const ENUM_ICON_COVER_METHOD_ZOOMOUT = 'zoomout';
+	/** @var string Icon should cover all the space, best for icons with filled background */
+	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';
 	/** @var string */
-	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_COVER;
+	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_CONTAIN;
 
 	/** @var string */
 	protected $sTitle;
