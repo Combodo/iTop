@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -4838,35 +4839,28 @@ EOF
 
 		foreach($aObjects as $oObj)
 		{
-			if ($bPreview)
-			{
+			if ($bPreview) {
 				$oObj->CheckToDelete($oDeletionPlan);
-			}
-			else
-			{
+			} else {
 				$oObj->DBDelete($oDeletionPlan);
 			}
 		}
 
-		if ($bPreview)
-		{
-			if (count($aObjects) == 1)
-			{
+		if ($bPreview) {
+			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName())."</h1>\n");
+				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName());
+			} else {
+				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
+					MetaModel::GetName($sClass));
 			}
-			else
-			{
-				$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
-						MetaModel::GetName($sClass))."</h1>\n");
-			}
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
+
 			// Explain what should be done
 			//
 			$aDisplayData = array();
-			foreach($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
-			{
-				foreach($aDeletes as $iId => $aData)
-				{
+			foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes) {
+				foreach ($aDeletes as $iId => $aData) {
 					$oToDelete = $aData['to_delete'];
 					$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
 					if (array_key_exists('issue', $aData))
@@ -4988,20 +4982,17 @@ EOF
 				$oP->add($oAppContext->GetForForm());
 				$oP->add("</form>\n");
 			}
-			else
-			{
-				if (count($aObjects) == 1)
-				{
+			else {
+				if (count($aObjects) == 1) {
 					$oObj = $aObjects[0];
-					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink()).'</h1>');
+					$sSubtitle = Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink());
+				} else {
+					$sSubtitle = Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
+						MetaModel::GetName($sClass));
 				}
-				else
-				{
-					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
-							MetaModel::GetName($sClass)).'</h1>');
-				}
-				foreach($aObjects as $oObj)
-				{
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sSubtitle));
+
+				foreach ($aObjects as $oObj) {
 					$aKeys[] = $oObj->GetKey();
 				}
 				$oFilter = new DBObjectSearch($sClass);
@@ -5011,7 +5002,7 @@ EOF
 				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
 				$oP->add("</div>\n");
 				$oP->add("<form method=\"post\">\n");
-				foreach($aContextData as $sKey => $value)
+				foreach ($aContextData as $sKey => $value)
 				{
 					$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
 				}
@@ -5035,23 +5026,19 @@ EOF
 		{
 			// Execute the deletion
 			//
-			if (count($aObjects) == 1)
-			{
+			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$oP->add("<h1>".Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName())."</h1>\n");
+				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName());
+			} else {
+				$sTitle = Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass));
 			}
-			else
-			{
-				$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects),
-						MetaModel::GetName($sClass))."</h1>\n");
-			}
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
+
 			// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
-			if ($oDeletionPlan->FoundSecurityIssue())
-			{
+			if ($oDeletionPlan->FoundSecurityIssue()) {
 				throw new CoreException(Dict::S('UI:Error:NotEnoughRightsToDelete'));
 			}
-			if ($oDeletionPlan->FoundManualOperation())
-			{
+			if ($oDeletionPlan->FoundManualOperation()) {
 				throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseManualOpNeeded'));
 			}
 			if ($oDeletionPlan->FoundManualDelete())
@@ -5101,23 +5088,26 @@ EOF
 
 			// Report automatic jobs
 			//
-			if ($oDeletionPlan->GetTargetCount() > 0)
-			{
-				if (count($aObjects) == 1)
-				{
+			if ($oDeletionPlan->GetTargetCount() > 0) {
+				if (count($aObjects) == 1) {
 					$oObj = $aObjects[0];
-					$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Object', $oObj->GetName()));
+					$sSubtitle = Dict::Format('UI:Delete:CleaningUpRefencesTo_Object', $oObj->GetName());
+				} else {
+					$sSubtitle = Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects),
+						MetaModel::GetName($sClass));
 				}
-				else
-				{
-					$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects),
-						MetaModel::GetName($sClass)));
-				}
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sSubtitle));
+
 				$aDisplayConfig = array();
 				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
 				$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
-				$oP->table($aDisplayConfig, $aDisplayData);
+
+				$oResultsPanel = PanelUIBlockFactory::MakeForInformation('');
+				$oP->AddUiBlock($oResultsPanel);
+				$oResultsPanel->AddSubBlock(
+					DataTableUIBlockFactory::MakeForStaticData('', $aDisplayConfig, $aDisplayData)
+				);
 			}
 		}
 	}

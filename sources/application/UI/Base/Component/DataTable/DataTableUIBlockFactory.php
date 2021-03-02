@@ -772,8 +772,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $aOptions;
 	}
 
-	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [],
-		string $sFilter = "")
+	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "")
 	{
 		$oBlock = new UIContentBlock();
 		$oTitle = TitleUIBlockFactory::MakeNeutral($sTitle, 3);
