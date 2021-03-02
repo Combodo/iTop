@@ -1,0 +1,5 @@
+{% if oUIBlock.isCollapsible() %}
+    $('#{{ oUIBlock.GetId() }}').find('[data-role="ibo-panel--collapsible-toggler"]').on('click', function(){
+        $('#{{ oUIBlock.GetId() }}').toggleClass('ibo-is-opened');
+    });
+{% endif %}

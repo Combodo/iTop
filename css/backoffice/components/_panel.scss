@@ -35,6 +35,10 @@ $ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
 $ibo-panel--body--border-size: 1px !default;
 $ibo-panel--body--border-color: $ibo-color-grey-400 !default;
 
+$ibo-panel--collapsible-toggler--margin-right: 8px !default;
+$ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
+$ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
+
 $ibo-panel-colors: (
 		'primary': $ibo-color-primary-600,
 		'secondary': $ibo-color-secondary-600,
@@ -82,7 +86,8 @@ $ibo-panel-colors: (
 }
 
 .ibo-panel--title {
-	color: $ibo-panel--title--color;
+  display: inline-block;
+  color: $ibo-panel--title--color;
 	@extend %ibo-font-ral-med-250;
 	flex-grow: 1;
 
@@ -122,4 +127,32 @@ $ibo-panel-colors: (
 	overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
 	@extend %ibo-font-ral-nor-200;
+}
+
+.ibo-panel--collapsible-toggler{
+  display: inline-block;
+  margin-right: $ibo-panel--collapsible-toggler--margin-right;
+  font-size: $ibo-panel--collapsible-toggler--font-size;
+  color: $ibo-panel--collapsible-toggler--color;
+  cursor: pointer;
+}
+
+.ibo-panel--collapsible-toggler--opened{
+  display: block;
+}
+
+.ibo-panel--collapsible-toggler--closed{
+  display: none;
+}
+
+.ibo-panel:not(.ibo-is-opened) {
+  .ibo-panel--collapsible-toggler--closed{
+    display: block;
+  }
+  .ibo-panel--collapsible-toggler--opened{
+    display: none;
+  }
+  .ibo-panel--body{
+    display: none;
+  }
 }

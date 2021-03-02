@@ -1,10 +1,14 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
-    <div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" {% block iboPanelMetaData %}{% endblock %}>
+    <div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %} ibo-is-opened" {% block iboPanelMetaData %}{% endblock %}>
         <div class="ibo-panel--header">
             {% block iboPanelHeader %}
                 <div class="ibo-panel--header-left">
+                    {% if oUIBlock.isCollapsible() %}<div class="ibo-panel--collapsible-toggler" data-role="ibo-panel--collapsible-toggler">
+                        <i class="fas fa-caret-right ibo-panel--collapsible-toggler--closed"></i>
+                        <i class="fas fa-caret-down ibo-panel--collapsible-toggler--opened"></i>
+                    </div>{% endif %}
                     {% block iboPanelHeaderLeft %}
                         <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
                         {% if oUIBlock.GetSubTitle() is not null %}

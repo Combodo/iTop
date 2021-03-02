@@ -40,6 +40,7 @@ class Panel extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-panel';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/panel/layout';
 
 	// Specific constants
 	/** @var string ENUM_COLOR_PRIMARY */
@@ -91,6 +92,8 @@ class Panel extends UIContentBlock
 	protected $sColor;
 	/** @var string $sSubTitle */
 	protected $sSubTitle;
+	/** @var bool $bIsCollapsible */
+	protected $bIsCollapsible;
 
 	/**
 	 * Panel constructor.
@@ -108,6 +111,7 @@ class Panel extends UIContentBlock
 		$this->sColor = $sColor;
 		$this->SetMainBlocks([]);
 		$this->SetToolBlocks([]);
+		$this->bIsCollapsible = false;
 	}
 
 	/**
@@ -169,6 +173,27 @@ class Panel extends UIContentBlock
 
 		return $this;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isIsCollapsible(): bool
+	{
+		return $this->bIsCollapsible;
+	}
+
+	/**
+	 * @param bool $bIsCollapsible
+	 *
+	 * @return $this
+	 */
+	public function SetIsCollapsible(bool $bIsCollapsible)
+	{
+		$this->bIsCollapsible = $bIsCollapsible;
+		return $this;
+	}
+	
+	
 
 	//----------------------
 	// Specific content area
