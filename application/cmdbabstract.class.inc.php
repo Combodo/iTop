@@ -2452,7 +2452,7 @@ JS
 
 		// N°3750 refresh container data-input-type attribute if in an Ajax context
 		// indeed in such a case we're only returning the field value content and not the parent container, so we need to update it !
-		if (WebPage::IsAjaxPage($oPage)) {
+		if (utils::IsXmlHttpRequest()) {
 			$sHTMLValue .= <<<HTML
 <script>
 $("[data-input-id='$iId']").data("input-type", "$sInputType");

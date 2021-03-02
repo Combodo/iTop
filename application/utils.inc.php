@@ -189,14 +189,24 @@ class utils
 	{
 		$sSAPIName = php_sapi_name();
 		$sCleanName = strtolower(trim($sSAPIName));
-		if ($sCleanName == 'cli')
-		{
+		if ($sCleanName == 'cli') {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return bool true if we're in an XHR query
+	 * @see \Symfony\Component\HttpFoundation\Request::IsXmlHttpRequest
+	 */
+	public static function IsXmlHttpRequest()
+	{
+		$sXhrHeaderName = 'X-Requested-With';
+		$sXhrHeaderIndexName = 'HTTP_'.str_replace('-', '_', strtoupper($sXhrHeaderName));
+		$sXhrHeader = $_SERVER[$sXhrHeaderIndexName] ?? null;
+
+		return ('XMLHttpRequest' === $sXhrHeader);
 	}
 
 	protected static $bPageMode = null;
