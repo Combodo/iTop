@@ -669,7 +669,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVExport:LostChars' => 'Problème d\'encodage',
 	'UI:CSVExport:LostChars+' => 'Le fichier téléchargé sera encodé en %1$s. iTop a détecté des caractères incompatible avec ce format. Ces caractères seront soit remplacés par des caractères de substitution (par exemple: \'é\' transformé en \'e\'), soit perdus. Vous pouvez utiliser le copier/coller depuis votre navigateur web, ou bien contacter votre administrateur pour que l\'encodage corresponde mieux à votre besoin (Cf. paramètre \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => 'iTop - Audit de la CMDB',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT. ' - Audit de la CMDB',
 	'UI:Audit:InteractiveAudit' => 'Audit Interactif',
 	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',
