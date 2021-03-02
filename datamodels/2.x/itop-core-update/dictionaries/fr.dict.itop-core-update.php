@@ -75,6 +75,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'L\'application peut être mise à jour',
     'iTopUpdate:UI:CanCoreUpdate:No' => 'L\'application ne peut pas être mise à jour : %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Attention : la mise à jour de l\'application peut échouer : %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Vous devez utiliser la page <a href="%1$s">d\'installation</a> pour mettre à jour l\'application.<br />Des fichiers modifiés ont été détectés, une mise à jour partielle ne peut pas être effectuée.',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Prêt pour l\\installation',

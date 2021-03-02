@@ -37,7 +37,8 @@ class AjaxController extends Controller
 			}
 			else
 			{
-				$aParams['sMessage'] = Dict::Format("iTopUpdate:UI:CanCoreUpdate:{$sCanUpdateCore}", $sMessage);
+				$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
+				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink);
 			}
 		} catch (FileNotExistException $e)
 		{

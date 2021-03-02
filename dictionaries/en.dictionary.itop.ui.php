@@ -465,6 +465,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Error: objects have already been deleted!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'You are not allowed to perform a bulk delete of objects of class %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'You are not allowed to delete objects of class %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'You are not allowed to perform a bulk update of objects of class %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
@@ -473,7 +474,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
-	'UI:Error:InvalidToken' => 'Error: the requested operation have already been performed (CSRF token not found)',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)',
 
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',

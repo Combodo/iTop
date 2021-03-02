@@ -39,7 +39,7 @@
 
         {% EndUIFieldSet %}
 
-        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:SelectUpdateFile'|dict_s} %}
+        {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:SelectUpdateFile'|dict_s, 'sId':'form-update-outer'} %}
             {% UIForm Standard {} %}
                 {% UIInput ForHidden {'sName':'operation', 'sValue':'ConfirmUpdate'} %}
                 {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}

@@ -18,6 +18,9 @@ $.ajax({
         if (data.bStatus) {
             oRequirements.addClass("ibo-is-success");
         } else {
+            $("#check-update").prop("disabled", true);
+            $("#file").prop("disabled", true);
+            $('#form-update-outer').slideUp(600);
             oRequirements.addClass("ibo-is-failure");
         }
     }

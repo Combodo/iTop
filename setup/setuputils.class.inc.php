@@ -618,7 +618,7 @@ class SetupUtils
 			if (!is_file($sGraphvizPath) || !is_executable($sGraphvizPath)) {
 				//N°3412 avoid shell injection
 				$aResult = [];
-				$aResult[] =  new CheckResult(CheckResult::ERROR,
+				$aResult[] =  new CheckResult(CheckResult::WARNING,
 					self::GetStringForJsonEncode("$sGraphvizPath could not be executed: Please make sure it is installed and in the path", 'Graphviz could not be executed')
 				);
 				return $aResult;

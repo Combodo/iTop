@@ -58,7 +58,7 @@ class SetupUtilsTest extends ItopTestCase
 		return [
 			"bash injection" => [
 				"touch /tmp/toto",
-				self::ERROR,
+				self::WARNING,
 				"could not be executed: Please make sure it is installed and in the path",
 			],
 			"command ok" => [

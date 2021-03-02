@@ -175,7 +175,7 @@ abstract class FormManager
 			),
 		);
 
-		$aData = $this->CheckTransaction($aData);
+		$this->CheckTransaction($aData);
 
 		return $aData;
 	}
@@ -183,11 +183,9 @@ abstract class FormManager
 	/**
 	 * @param array $aData
 	 *
-	 * @return array
-	 *
 	 * @since 2.7.4 3.0.0 N°3430
 	 */
-	public function CheckTransaction($aData)
+	public function CheckTransaction(&$aData)
 	{
 		$isTransactionValid = \utils::IsTransactionValid($this->oForm->GetTransactionId(), false); //The transaction token is kept in order to preserve BC with ajax forms (the second call would fail if the token is deleted). (The GC will take care of cleaning the token for us later on)
 		if (!$isTransactionValid) {
@@ -196,8 +194,6 @@ abstract class FormManager
 			];
 			$aData['valid'] = false;
 		}
-
-		return $aData;
 	}
 
 	/**
