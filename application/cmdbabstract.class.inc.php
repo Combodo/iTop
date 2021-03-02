@@ -376,24 +376,24 @@ EOF
 					$sTaskUrl = $aMasterSources[$oCreatorTask->GetKey()]['url'];
 					if (!$bCanBeDeletedByUser)
 					{
-						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source',
-								$sTaskUrl)."</p>";
+						$sTip = "<div>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source',
+								$sTaskUrl)."</div>";
 					}
 					else
 					{
-						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sTaskUrl)."</p>";
+						$sTip = "<div>".Dict::Format('Core:Synchro:TheObjectWasCreatedBy_Source', $sTaskUrl)."</div>";
 					}
 					if ($bCanBeDeletedByTask)
 					{
-						$sTip .= "<p>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sTaskUrl)."</p>";
+						$sTip .= "<div>".Dict::Format('Core:Synchro:TheObjectCanBeDeletedBy_Source', $sTaskUrl)."</div>";
 					}
 				}
 				else
 				{
-					$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
+					$sTip = "<div>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</div>";
 				}
 
-				$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
+				$sTip .= "<div><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></div>";
 				foreach($aMasterSources as $aStruct)
 				{
 					// Formatting last synchro date
@@ -403,34 +403,27 @@ EOF
 
 					$oDataSource = $aStruct['datasource'];
 					$sLink = $aStruct['url'];
-					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true,
-							'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
-					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$sLastSynchro."</p>";
+					$sTip .= "<div>".$oDataSource->GetIcon(true, '')."$sLink</div>";
+					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<div>'.$sLastSynchro."</div>";
 				}
-				$sTip = utils::HtmlEntities($sTip);
-				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
+				$sLabel = Dict::S('Tag:Synchronized');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[] = '<div class="tag" id="'.$sSynchroTagId.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true"><span class="object-synchronized fas fa-lock fa-1x"></span>'.$sLabel.'</div>';
+				$aIcons[$sSynchroTagId] = ['title' => $sTip, 'cssClasses' => 'ibo-title--object-tags--synchronized', 'iconCssClasses' => 'fas fa-lock', 'label' => $sLabel];
 			}
 		}
 
+			$sLabel = Dict::S('Tag:Archived');
+			$sTitle = Dict::S('Tag:Archived+');
+			$aIcons['archive'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--archived', 'iconCssClasses' => 'fas fa-archive', 'label' => $sLabel];
 		if ($this->IsArchived()) {
-			$sLabel = htmlentities(Dict::S('Tag:Archived'), ENT_QUOTES, 'UTF-8');
-			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fas fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		} elseif ($this->IsObsolete()) {
-			$sLabel = htmlentities(Dict::S('Tag:Obsolete'), ENT_QUOTES, 'UTF-8');
-			$sTitle = htmlentities(Dict::S('Tag:Obsolete+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+
 		}
+			$sLabel = Dict::S('Tag:Obsolete');
+			$sTitle = Dict::S('Tag:Obsolete+');
+			$aIcons['obsolete'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--obsolete', 'iconCssClasses' => 'ibo- fas fa-eye-slash', 'label' => $sLabel];
 
-//		if (count($aIcons) > 0) {
-//			$sTags = '<div class="tags">'.implode('&nbsp;', $aIcons).'</div>';
-//		} else {
-//			$sTags = '';
-//		}
-
-		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this, $aIcons));
 	}
 
 	/**

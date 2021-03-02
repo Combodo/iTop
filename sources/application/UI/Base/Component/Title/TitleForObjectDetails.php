@@ -19,6 +19,7 @@ class TitleForObjectDetails extends Title
 	protected $sStatusCode;
 	protected $sStatusLabel;
 	protected $sStatusColor;
+	protected $aTags;
 
 	public function __construct(string $sClassName, string $sObjectName, ?string $sId = null)
 	{
@@ -28,6 +29,7 @@ class TitleForObjectDetails extends Title
 		$this->sStatusCode = null;
 		$this->sStatusLabel = null;
 		$this->sStatusColor = null;
+		$this->aTags = [];
 	}
 
 	/**
@@ -69,4 +71,26 @@ class TitleForObjectDetails extends Title
 	{
 		return $this->sStatusColor;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function GetTags(): array
+	{
+		return $this->aTags;
+	}
+
+	/**
+	 * @param array $aTags
+	 * 
+	 * @return $this
+	 */
+	public function SetTags(array $aTags)
+	{
+		$this->aTags = $aTags;
+		return $this;
+	}
+		
+
+	
 }

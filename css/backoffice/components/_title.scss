@@ -19,6 +19,17 @@ $ibo-title--status-dot--size: 10px !default;
 $ibo-title--status-dot--spacing: 8px !default;
 $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
 
+$ibo-title--object-tags--margin-left: 12px !default;
+$ibo-title--object-tags--color: $ibo-color-grey-900 !default;
+
+$ibo-title--object-tags--icon--margin-right: 6px !default;
+$ibo-title--object-tags--icon--color: $ibo-color-grey-700 !default;
+
+$ibo-title--object-tags--separator-dot--background-color: $ibo-color-grey-800 !default;
+$ibo-title--object-tags--separator-dot--diameter: 5px !default;
+$ibo-title--object-tags--separator-dot--margin-right: 12px !default;
+$ibo-title--object-tags--separator-dot--border-radius: $ibo-border-radius-full !default;
+
 .ibo-title {
   @extend %ibo-baseline-centered-content;
 
@@ -58,6 +69,7 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
   margin-bottom: 2px;
   @extend %ibo-baseline-centered-content;
   @extend %ibo-font-ral-nor-150;
+  flex-wrap: wrap;
 }
 
 .ibo-title--status {
@@ -121,4 +133,23 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
 	border: 3px solid ;
 	margin:0;
 	padding:0;
+}
+
+.ibo-title--object-tags {
+  margin-left: $ibo-title--object-tags--margin-left;
+  color: $ibo-title--object-tags--color;
+}
+.ibo-title--object-tags > i {
+  margin-right: $ibo-title--object-tags--icon--margin-right;
+  color: $ibo-title--object-tags--icon--color;
+}
+.ibo-title--object-tags ~ .ibo-title--object-tags::before,  .ibo-title--object-class ~ .ibo-title--object-tags::before{
+  content: " ";
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: $ibo-title--object-tags--separator-dot--margin-right;
+  width: $ibo-title--object-tags--separator-dot--diameter;
+  height: $ibo-title--object-tags--separator-dot--diameter;
+  border-radius: $ibo-title--object-tags--separator-dot--border-radius;
+  background-color: $ibo-title--object-tags--separator-dot--background-color;
 }

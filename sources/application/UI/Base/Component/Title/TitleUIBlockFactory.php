@@ -34,7 +34,7 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 		return $oTitle;
 	}
 
-	public static function MakeForObjectDetails(DBObject $oObject, ?string $sId = null)
+	public static function MakeForObjectDetails(DBObject $oObject, array $aIcons = [], ?string $sId = null)
 	{
 		// TODO 3.0.0: Refactor all of this
 		$sObjClass = get_class($oObject);
@@ -77,6 +77,7 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 				$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
 			}
 		}
+		$oTitle->SetTags($aIcons);
 
 		return $oTitle;
 	}
