@@ -1268,6 +1268,7 @@ class CMDBSource
 				return self::GetEnumOptions($sDataType, $sCompleteFieldType);
 			}catch(CoreException $e){
 				//do nothing ; especially do not block setup.
+				IssueLog::Warning("enum was not parsed properly: $sCompleteFieldType. it should not happen during setup.");
 			}
 		}
 
