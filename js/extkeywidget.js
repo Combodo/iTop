@@ -112,52 +112,48 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	{
 		var hasFocus = 0;
 		var cache = {};
+		$('#label_'+me.id).data('selected_value', $('#label_'+me.id).val());
 		$('#label_'+me.id).autocomplete({
-			source: function (request, response) {
-				term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+				source: function (request, response) {
+					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
 
-				if (term in cache)
-				{
-					response(cache[term]);
-					return;
-				}
-				if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120)
-				{
-					//we have already all the possibility in cache
-					var data = [];
-					$.each(cache[this.previous], function (key, value) {
-						if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0)
-						{
-							data.push(value);
-						}
-					});
-					cache[term] = data;
-					response(data);
-				}
-				else
-				{
-					$.post({
-						url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-						dataType: "json",
-						data: {
-							q: request.term,
-							operation: 'ac_extkey',
-							sTargetClass: me.sTargetClass,
-							sFilter: me.sFilter,
-							bSearchMode: me.bSearchMode,
-							sOutputFormat: 'json',
-							json: function () {
-								return sWizHelperJSON;
+					if (term in cache) {
+						response(cache[term]);
+						return;
+					}
+					if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120) {
+						//we have already all the possibility in cache
+						var data = [];
+						$.each(cache[this.previous], function (key, value) {
+							if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0) {
+								data.push(value);
 							}
-						},
-						success: function (data) {
-							cache[term] = data;
-							response(data);
-						}
-					});
+						});
+						cache[term] = data;
+						response(data);
+					} else {
+						$.post({
+							url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+							dataType: "json",
+							data: {
+								q: request.term,
+								operation: 'ac_extkey',
+								sTargetClass: me.sTargetClass,
+								sFilter: me.sFilter,
+								bSearchMode: me.bSearchMode,
+								sOutputFormat: 'json',
+								json: function () {
+									return sWizHelperJSON;
+								}
+							},
+							success: function (data) {
+								cache[term] = data;
+								response(data);
+							}
+						});
 
-				}
-			},
+					}
+				},
 			autoFocus: true,
 			minLength: iMinChars,
 			focus: function (event, ui) {
@@ -166,6 +162,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			select: function (event, ui) {
 				$('#'+me.id).val(ui.item.value);
 				$('#label_'+me.id).val(ui.item.label);
+				$('#label_'+me.id).data('selected_value', ui.item.label);
 				$('#'+me.id).trigger('validate');
 				$('#'+me.id).trigger('extkeychange');
 				$('#'+me.id).trigger('change');
@@ -195,6 +192,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			hasFocus++;
 		}).blur(function () {
 			hasFocus = 0;
+			if ($('#label_'+me.id).val().length == 0) {
+				eval('oACWidget_'+me.id).Clear();
+			} else {
+				$('#label_'+me.id).val($('#label_'+me.id).data('selected_value'));
+			}
 		}).click(
 			function () {
 				hasFocus++;
@@ -434,6 +436,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.Clear = function () {
 		$('#'+me.id).val('');
 		$('#label_'+me.id).val('');
+		$('#label_'+me.id).data('selected_value', '');
 		$('#'+me.id).trigger('validate');
 		$('#'+me.id).trigger('extkeychange');
 		$('#'+me.id).trigger('change');
