@@ -514,7 +514,12 @@ function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
  */
 function GetActivityPanelEntryFormOpenedFieldBlock(): iUIBlock
 {
-	$bOpened = appUserPreferences::GetPref('activity_panel.is_entry_form_opened', false);
+	// First check if user has a pref.
+	$bOpened = appUserPreferences::GetPref('activity_panel.is_entry_form_opened', null);
+	if (null === $bOpened) {
+		// Otherwise get the default config. param.
+		$bOpened = MetaModel::GetConfig()->Get('activity_panel.entry_form_opened_by_default');
+	}
 	$sCheckedForHtmlAttribute = $bOpened ? 'checked="checked"' : '';
 
 	$sLabel = Dict::S('UI:Preferences:ActivityPanel:EntryFormOpened');

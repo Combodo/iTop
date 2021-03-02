@@ -667,16 +667,21 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * @return bool True if the entry form shouldbe opened by default, false otherwise. Based on the user pref. or false by default.
+	 * @return bool True if the entry form shouldbe opened by default, false otherwise. Based on the user pref. or the config. param. by default.
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
 	public function IsEntryFormOpened(): bool
 	{
-		$bDefault = false;
+		// First check if user has a pref.
+		$bValue = appUserPreferences::GetPref('activity_panel.is_entry_form_opened', null);
+		if (null === $bValue) {
+			// Otherwise get the default config. param.
+			$bValue = MetaModel::GetConfig()->Get('activity_panel.entry_form_opened_by_default');
+		}
 
-		return appUserPreferences::GetPref('activity_panel.is_entry_form_opened', $bDefault);
+		return $bValue;
 	}
 
 	/**

@@ -1215,7 +1215,7 @@ class Config
 		],
 		'activity_panel.show_author_name_below_entries' => [
 			'type' => 'bool',
-			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry',
+			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry.',
 			'default' => false,
 			'value' => '',
 			'source_of_value' => '',
@@ -1228,6 +1228,14 @@ class Config
 			'value' => 30,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
+		],
+		'activity_panel.entry_form_opened_by_default' => [
+			'type' => 'bool',
+			'description' => 'Whether or not the new entry form will be automatically opened when viewing an object.',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
 		],
 		'obsolescence.show_obsolete_data' => [
 			'type' => 'bool',
