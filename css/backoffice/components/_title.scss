@@ -4,6 +4,8 @@
  */
 
 $ibo-title--text-color: $ibo-color-grey-900 !default;
+$ibo-title--padding-y: 12px !default;
+$ibo-title--padding-x: 0 !default;
 
 $ibo-title--medallion--size: 90px !default;
 $ibo-title--medallion--background-color: $ibo-color-grey-100 !default;
@@ -21,6 +23,7 @@ $ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
   @extend %ibo-baseline-centered-content;
 
   color: $ibo-title--text-color;
+  padding: $ibo-title--padding-y $ibo-title--padding-x;
 }
 
 .ibo-title--medallion {
