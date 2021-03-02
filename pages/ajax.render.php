@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Controller\AjaxRenderController;
@@ -1956,11 +1943,12 @@ EOF
 			break;
 
 		case 'xlsx_download':
+			$oPage = new DownloadPage();
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 			$oPage->SetContentDisposition('attachment', 'export.xlsx');
 			$sFileContent = ExcelExporter::GetExcelFileFromToken($sToken);
-			$oPage->add($sFileContent);
+			$oPage->SetContent($sFileContent);
 			ExcelExporter::CleanupFromToken($sToken);
 			break;
 
@@ -2336,19 +2324,17 @@ EOF
 
 		case 'export_download':
 			$token = utils::ReadParam('token', null);
-			if ($token !== null)
-			{
+			if ($token !== null) {
 				$oExporter = BulkExport::FindExporterFromToken($token);
-				if ($oExporter)
-				{
+				if ($oExporter) {
 					$sMimeType = $oExporter->GetMimeType();
-					if (substr($sMimeType, 0, 5) == 'text/')
-					{
+					if (substr($sMimeType, 0, 5) == 'text/') {
 						$sMimeType .= ';charset='.strtolower($oExporter->GetCharacterSet());
 					}
+					$oPage = new DownloadPage();
 					$oPage->SetContentType($sMimeType);
 					$oPage->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());
-					$oPage->add(file_get_contents($oExporter->GetTmpFilePath()));
+					$oPage->SetContent(file_get_contents($oExporter->GetTmpFilePath()));
 				}
 			}
 			break;

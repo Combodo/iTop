@@ -415,6 +415,7 @@ return array(
     'DisplayableNode' => $baseDir . '/core/displayablegraph.class.inc.php',
     'DisplayableRedundancyNode' => $baseDir . '/core/displayablegraph.class.inc.php',
     'DivisionByZeroError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
+    'DownloadPage' => $baseDir . '/sources/application/WebPage/DownloadPage.php',
     'EMail' => $baseDir . '/core/email.class.inc.php',
     'Error' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/Error.php',
     'ErrorPage' => $baseDir . '/sources/application/WebPage/ErrorPage.php',

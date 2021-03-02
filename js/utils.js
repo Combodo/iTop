@@ -1,3 +1,8 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 // Some general purpose JS functions for the iTop application
 
 /**
@@ -12,8 +17,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 		try {
 			aAjaxRequest = aTruncatedLists[divId];
 			aAjaxRequest.abort();
-		}
-		catch (e) {
+		} catch (e) {
 			// Do nothing special, just continue
 			console.log('Uh,uh, exception !');
 		}
@@ -33,8 +37,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 					if (checkbox) {
 						// There is a checkbox in the first column, don't make it sortable
 						table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
-					}
-					else {
+					} else {
 						// There is NO checkbox in the first column, all columns are considered sortable
 						table.tablesorter({widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager"), totalRows: 97, filter: sSerializedFilter, extra_params: sExtraParams}); // sortable and zebra tables
 					}
@@ -80,8 +83,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 		if (bIsDataTable) {
 			oDataTable.DataTable().clearPipeline();
 			oDataTable.DataTable().ajax.reload(null, false);
-		}
-		else {
+		} else {
 			$('#'+divId).block();
 
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
@@ -130,13 +132,10 @@ function UpdateFileName(id, sNewFileName) {
 	$('#'+id).val(sNewFileName);
 	$('#'+id).trigger('validate');
 	$('#name_'+id).text(sNewFileName);
-	if(sNewFileName=='')
-	{
+	if(sNewFileName=='') {
 		$('#do_remove_'+id).val('1');
 		$('#remove_attr_' + id).hide();
-	}
-	else
-	{
+	} else {
 		$('#do_remove_'+id).val('0');
 		$('#remove_attr_' + id).show();
 	}
@@ -175,24 +174,19 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 	oMap.currentId = divId;
 	oMap._table_id_ = sTableId;
 	oMap.action = sAction;
-	if(sExtraParams['selection_mode'])
-	{
+	if(sExtraParams['selection_mode']) {
 		oMap.selection_mode = sExtraParams['selection_mode'];
 	}
-	if(sExtraParams['result_list_outer_selector'])
-	{
+	if(sExtraParams['result_list_outer_selector']) {
 		oMap.result_list_outer_selector = sExtraParams['result_list_outer_selector'];
 	}
-	if(sExtraParams['cssCount'])
-	{
+	if(sExtraParams['cssCount']) {
 		oMap.css_count = sExtraParams['cssCount'];
 		$(sExtraParams['cssCount']).val(0).trigger('change');
 	}
-	if(sExtraParams['table_inner_id'])
-	{
+	if(sExtraParams['table_inner_id']) {
 		oMap.table_inner_id = sExtraParams['table_inner_id'];
-	}
-	else{
+	} else{
 		oMap.table_inner_id = sTableId;
 	}
 
@@ -216,8 +210,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 	sPreviousValue = undefined;
 	try {
 		sPreviousValue = oUserPreferences[sPreferenceCode];
-	}
-	catch (err) {
+	} catch (err) {
 		sPreviousValue = undefined;
 	}
 	oUserPreferences[sPreferenceCode] = sPrefValue;
@@ -286,8 +279,7 @@ function ToggleField(value, field_id) {
 		$('#'+field_id).prop('disabled', false);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
 		$('#'+field_id+' :input').prop('disabled', false);
-	}
-	else {
+	} else {
 		$('#'+field_id).prop('disabled', true);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
 		$('#'+field_id+' :input').prop('disabled', true);
@@ -303,8 +295,7 @@ function ToggleField(value, field_id) {
 function BlockField(field_id, bBlocked) {
 	if (bBlocked) {
 		$('#'+field_id).block({message: ' ** disabled ** ', enableValidation : true});
-	}
-	else {
+	} else {
 		$('#'+field_id).unblock();
 	}
 }
@@ -319,8 +310,7 @@ function ToggleDurationField(field_id) {
 		for (var i = 0; i < aSubFields.length; i++) {
 			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', true);
 		}
-	}
-	else {
+	} else {
 		for (var i = 0; i < aSubFields.length; i++) {
 			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', false);
 		}
@@ -338,7 +328,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 			ToggleField(bCheck, sFieldId);
 
 			// Cascade propagation
-            $('#enable_'+sFieldId).trigger('change');
+			$('#enable_'+sFieldId).trigger('change');
 		}
 	}
 }
@@ -350,8 +340,7 @@ function FixTableSorter(table) {
 		if (checkbox) {
 			// There is a checkbox in the first column, don't make it sort-able
 			table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}); // sort-able and zebra tables
-		}
-		else {
+		} else {
 			// There is NO checkbox in the first column, all columns are considered sort-able
 			table.tablesorter({widgets: ['myZebra', 'truncatedList']}); // sort-able and zebra tables
 		}
@@ -435,8 +424,8 @@ function ExportStartExport() {
 			}
 		}
 	});
-	$('#export-form').hide();
-	$('#export-feedback').show();
+	$('#export-form').addClass('ibo-is-hidden');
+	$('#export-feedback').removeClass('ibo-is-hidden');
 	oParams.operation = 'export_build';
 	oParams.format = $('#export-form :input[name=format]').val();
 	var sQueryMode = $(':input[name=query_mode]:checked').val();
@@ -446,16 +435,14 @@ function ExportStartExport() {
 		} else {
 			oParams.query = $('#export-form :input[name=query]').val();
 		}
-	}
-	else {
+	} else {
 		oParams.expression = $('#export-form :input[name=expression]').val();
 		oParams.query = $('#export-form :input[name=query]').val();
 	}
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
 			if (data == null) {
 				ExportError('Export failed (no data provided), please contact your administrator');
-			}
-			else {
+			} else {
 				ExportRun(data);
 			}
 		}, 'json')
@@ -481,8 +468,7 @@ function ExportRun(data) {
 			var sDataState = $('#export-form').attr('data-state');
 			if (sDataState == 'cancelled') {
 				oParams.operation = 'export_cancel';
-			}
-			else {
+			} else {
 				oParams.operation = 'export_build';
 			}
 
@@ -505,8 +491,7 @@ function ExportRun(data) {
 					$('#export_text_result').show();
 					//$('#export_text_result .listResults').tableHover();
 					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
-				}
-				else {
+				} else {
 					if ($('#export_text_result').closest('ui-dialog').length == 0) {
 						// not inside a dialog box, adjust the height... approximately
 						var jPane = $('#export_text_result').closest('.ui-layout-content');
@@ -552,8 +537,7 @@ function ExportInitButton(sSelector) {
 				}
 				if ($(this).hasClass('ui-button')) {
 					$(this).button('option', 'label', Dict.S('UI:Button:Cancel'));
-				}
-				else {
+				} else {
 					$(this).html(Dict.S('UI:Button:Cancel'));
 				}
 				$('#export-form').attr('data-state', 'running');
@@ -563,8 +547,7 @@ function ExportInitButton(sSelector) {
 			case 'running':
 				if ($(this).hasClass('ui-button')) {
 					$(this).button('disable');
-				}
-				else {
+				} else {
 					$(this).prop('disabled', true);
 				}
 				$('#export-form').attr('data-state', 'cancelled');
@@ -651,20 +634,17 @@ function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0
 	const oRect = oDOMElem.getBoundingClientRect(),
 		fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
 		fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
-		efp = function (x, y)
-		{
+		efp = function (x, y) {
 			return document.elementFromPoint(x, y)
 		};
 
 	// Return false if it's not in the viewport
 	if (oRect.right < 0 || oRect.bottom < 0
-		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight)
-	{
+		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
 		return false;
 	}
 
-	if (bCompletely === true)
-	{
+	if (bCompletely === true) {
 		// Return true if ALL of its four corners are visible
 		return (
 			oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
@@ -672,8 +652,7 @@ function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0
 			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
 			&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
 		);
-	} else
-	{
+	} else {
 		// Return true if ANY of its four corners are visible
 		return (
 			oDOMElem.contains(efp(oRect.left, oRect.top))
@@ -698,8 +677,7 @@ else {
 Dict.S = function (sEntry) {
 	if (sEntry in Dict._entries) {
 		return Dict._entries[sEntry];
-	}
-	else {
+	} else {
 		return sEntry;
 	}
 };
@@ -859,8 +837,7 @@ const CombodoJSConsole = {
 	 * @returns {boolean}
 	 * @internal
 	 */
-	_Trace: function(sMessage, sLevel = 'log')
-	{
+	_Trace: function(sMessage, sLevel = 'log') {
 		// Check if browser has JS console
 		if (!window.console) {
 			return false;
@@ -879,8 +856,7 @@ const CombodoJSConsole = {
 	 * @param sMessage {string}
 	 * @constructor
 	 */
-	Log: function(sMessage)
-	{
+	Log: function(sMessage) {
 		this._Trace(sMessage, 'log');
 	},
 	/**
@@ -889,8 +865,7 @@ const CombodoJSConsole = {
 	 * @param sMessage {string}
 	 * @constructor
 	 */
-	Info: function(sMessage)
-	{
+	Info: function(sMessage) {
 		this._Trace(sMessage, 'info');
 	},
 	/**
@@ -899,8 +874,7 @@ const CombodoJSConsole = {
 	 * @param sMessage {string}
 	 * @constructor
 	 */
-	Debug: function(sMessage)
-	{
+	Debug: function(sMessage) {
 		this._Trace(sMessage, 'debug');
 	},
 	/**
@@ -909,8 +883,7 @@ const CombodoJSConsole = {
 	 * @param sMessage {string}
 	 * @constructor
 	 */
-	Warn: function(sMessage)
-	{
+	Warn: function(sMessage) {
 		this._Trace(sMessage, 'warn');
 	},
 	/**
@@ -919,8 +892,7 @@ const CombodoJSConsole = {
 	 * @param sMessage {string}
 	 * @constructor
 	 */
-	Error: function(sMessage)
-	{
+	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
 	}
 }

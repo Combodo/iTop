@@ -645,6 +645,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'DisplayableNode' => __DIR__ . '/../..' . '/core/displayablegraph.class.inc.php',
         'DisplayableRedundancyNode' => __DIR__ . '/../..' . '/core/displayablegraph.class.inc.php',
         'DivisionByZeroError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
+        'DownloadPage' => __DIR__ . '/../..' . '/sources/application/WebPage/DownloadPage.php',
         'EMail' => __DIR__ . '/../..' . '/core/email.class.inc.php',
         'Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
         'ErrorPage' => __DIR__ . '/../..' . '/sources/application/WebPage/ErrorPage.php',
