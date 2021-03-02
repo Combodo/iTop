@@ -235,7 +235,7 @@ try
 		}
 		else
 		{
-			$sTitle = Dict::S('UI:Audit:AuditError');
+			$sTitle = Dict::S('UI:Audit:AuditErrors');
 			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
@@ -258,7 +258,7 @@ try
 		break;
 						
 		case 'errors':
-		$sTitle = Dict::S('UI:Audit:AuditError');
+		$sTitle = Dict::S('UI:Audit:AuditErrors');
 		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);

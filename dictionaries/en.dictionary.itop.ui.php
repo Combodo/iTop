@@ -697,7 +697,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Audit:PercentageOk' => '% Ok',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.',
-	'UI:Audit:AuditError' => 'Audit Interactif',
+	'UI:Audit:AuditErrors' => 'Audit Errors',
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated',
