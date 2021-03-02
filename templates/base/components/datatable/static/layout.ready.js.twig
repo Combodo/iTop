@@ -31,6 +31,7 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollX: true,
     scrollCollapse: true,
     order: [],
+    autoWidth: false,
     rowId: "id",
     filter: false,
     {% if oUIBlock.GetData()|length <= iPageSize %}
