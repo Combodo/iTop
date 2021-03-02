@@ -412,16 +412,15 @@ EOF
 			}
 		}
 
+		if ($this->IsArchived()) {
 			$sLabel = Dict::S('Tag:Archived');
 			$sTitle = Dict::S('Tag:Archived+');
-			$aIcons['archive'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--archived', 'iconCssClasses' => 'fas fa-archive', 'label' => $sLabel];
-		if ($this->IsArchived()) {
+			$aIcons['archived'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--archived', 'iconCssClasses' => 'fas fa-archive', 'label' => $sLabel];
 		} elseif ($this->IsObsolete()) {
-
-		}
 			$sLabel = Dict::S('Tag:Obsolete');
 			$sTitle = Dict::S('Tag:Obsolete+');
 			$aIcons['obsolete'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--obsolete', 'iconCssClasses' => 'ibo- fas fa-eye-slash', 'label' => $sLabel];
+		}
 
 		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this, $aIcons));
 	}
