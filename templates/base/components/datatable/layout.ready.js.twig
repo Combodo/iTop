@@ -174,7 +174,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         url: "{{ oUIBlock.GetAjaxUrl() }}",
         data: {{ oUIBlock.GetJsonAjaxData() |raw }},
         method: "post",
-        pages: 5 // number of pages to cache
+        pages: 1 // number of pages to cache
     }),
     initComplete: function () {
         this.api().columns.adjust().draw();
