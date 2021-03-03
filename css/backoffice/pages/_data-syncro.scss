@@ -1,0 +1,66 @@
+$ibo-data-synchro-source--replicas-status--is-light--opacity: 0.5 !default;
+
+$ibo-data-synchro-source--replicas-table--cell--padding: 10px !default;
+$ibo-data-synchro-source--replicas-table--cell--min-width: 200px !default;
+$ibo-data-synchro-source--replicas-table--cell--arrow--min-width: 100px !default;
+
+$ibo-data-synchro-source--replicas-status--warning--margin: 0 5px 0 8px !default;
+
+$ibo-data-synchro-source--replicas-status--color: (
+        'grey': (
+                $ibo-color-grey-400,
+                $ibo-color-grey-900,
+        ),
+        'orange': (
+                $ibo-color-orange-300,
+                $ibo-color-orange-900,
+        ),
+        'bluegrey': (
+                $ibo-color-blue-grey-200,
+                $ibo-color-blue-grey-900,
+        ), 
+        'red': (
+                $ibo-color-red-300,
+                $ibo-color-red-900,
+        ), 
+        'blue': (
+                $ibo-color-blue-200,
+                $ibo-color-blue-900,
+      ),   
+      'green': (
+                $ibo-color-green-100,
+                $ibo-color-green-900,
+      ),        
+        'cyan': (
+                $ibo-color-cyan-100,
+                $ibo-color-cyan-900,
+        ),
+) !default;
+
+@each $sColor, $aAttributes in $ibo-data-synchro-source--replicas-status--color {
+  $bg-color: nth($aAttributes, 1);
+  $color: nth($aAttributes, 2);
+  .ibo-data-synchro-source--replicas-status.ibo-is-#{$sColor}{
+      color: $color;
+      background-color: $bg-color;
+  }
+}
+
+.ibo-data-synchro-source--replicas-status.ibo-is-light{
+  opacity: $ibo-data-synchro-source--replicas-status--is-light--opacity;
+  &:hover{
+    opacity: 1;
+  }
+}
+.synoptics tr td{
+  padding: $ibo-data-synchro-source--replicas-table--cell--padding;
+  min-width: $ibo-data-synchro-source--replicas-table--cell--min-width;
+  vertical-align: middle;
+  text-align: center;
+  &.arrow{
+    min-width: $ibo-data-synchro-source--replicas-table--cell--arrow--min-width;
+  }
+}
+.ibo-data-synchro-source--replicas-status--warning{
+  margin: $ibo-data-synchro-source--replicas-status--warning--margin;
+}

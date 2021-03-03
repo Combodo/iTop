@@ -421,7 +421,7 @@ class SynchroDataSource extends cmdbAbstractObject
 						$sAllWarnings).'</h2>');
 			}
 
-			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
+			$oPage->add('<table class="synoptics"><tr><td>');
 
 			// List all the log entries for the user to select
 			$oPage->add('<h2 style="line-height:55px;">'.Dict::S('Core:Synchro:History').'</h2>');
@@ -458,12 +458,6 @@ class SynchroDataSource extends cmdbAbstractObject
 		var aValues = aSynchroLog[id];
 		if (aValues == undefined) return;
 		
-		for (var sKey in aValues)
-		{
-			$('#c_'+sKey).html(aValues[sKey]);
-			var fOpacity = (aValues[sKey] == 0) ? 0.3 : 1;
-			$('#'+sKey).fadeTo("slow", fOpacity);
-		}
 		//alert('id = '+id+', lastLog='+sLastLog+', id==sLastLog: '+(id==sLastLog)+' obj_updated_errors:  '+aValues['obj_updated_errors']);
 		if ( (id == sLastLog) && (aValues['obj_new_errors'] > 0) )
 		{
@@ -522,37 +516,37 @@ JS;
 EOF
 			);
 			$sBaseOQL = 'SELECT SynchroReplica WHERE sync_source_id='.$this->GetKey()." AND status_last_error!=''";
-			$oPage->add($this->HtmlBox('repl_ignored', $aData, '#999').'<td colspan="2">&nbsp;</td>');
+			$oPage->add($this->HtmlBox('repl_ignored', $aData, 'grey').'<td colspan="2">&nbsp;</td>');
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_disappeared', $aData, '#630',
-					'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_disappeared_no_action', $aData, '#333'));
+			$oPage->add($this->HtmlBox('repl_disappeared', $aData, 'orange',
+					'rowspan="4"').'<td rowspan="4" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_disappeared_no_action', $aData, 'grey'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_deleted', $aData, '#000'));
+			$oPage->add($this->HtmlBox('obj_deleted', $aData, 'bluegrey'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, '#630'));
+			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, 'orange'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='obsolete'");
-			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"disappeared_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_existing', $aData, '#093',
-					'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $aData, '#393'));
+			$oPage->add($this->HtmlBox('repl_existing', $aData, 'green',
+					'rowspan="3"').'<td rowspan="3" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_unchanged', $aData, 'blue'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_updated', $aData, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_updated', $aData, 'green'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='modified'");
-			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"updated_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_new', $aData, '#339',
-					'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $aData, '#393'));
+			$oPage->add($this->HtmlBox('repl_new', $aData, 'cyan',
+					'rowspan="4"').'<td rowspan="4" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_new_unchanged', $aData, 'blue'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_new_updated', $aData, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_new_updated', $aData, 'green'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_created', $aData, '#339'));
+			$oPage->add($this->HtmlBox('obj_created', $aData, 'cyan'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='new'");
-			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_new_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
@@ -570,13 +564,13 @@ EOF
 		$iCount = $aData[$sId];
 		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
 		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $sCount);
-		$sOpacity = ($iCount == 0) ? 'opacity:0.3;' : '';
+		$sOpacity = ($iCount == 0) ? 'ibo-is-light' : '';
 		if (isset($aData[$sId.'_warnings']))
 		{
-			$sLabel .= " <span id=\"cw_{$sId}_warnings\"><img src=\"../images/error.png\" style=\"vertical-align:middle\"/>  (<span id=\"c_{$sId}_warnings\">".$aData[$sId.'_warnings'].'</span>)</span>';
+			$sLabel .= " <span id=\"cw_{$sId}_warnings\" class=\"ibo-data-synchro-source--replicas-status--warning\"><i class=\"fas fa-exclamation-triangle\"></i>  (<span id=\"c_{$sId}_warnings\">".$aData[$sId.'_warnings'].'</span>)</span>';
 		}
 
-		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>{$sLabel}{$sErrorLink}</td>";
+		return '<td id="'.$sId.'" class="ibo-data-synchro-source--replicas-status ibo-is-'.$sColor.' '.$sOpacity.'" '.$sHTMLAttribs.'>'.$sLabel.$sErrorLink.'</td>';
 	}
 
 	protected function ProcessLog($oLastLog)
