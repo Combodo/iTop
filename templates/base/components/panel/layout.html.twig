@@ -5,10 +5,12 @@
         <div class="ibo-panel--header">
             {% block iboPanelHeader %}
                 <div class="ibo-panel--header-left">
-                    {% if oUIBlock.isCollapsible() %}<div class="ibo-panel--collapsible-toggler" data-role="ibo-panel--collapsible-toggler">
-                        <i class="fas fa-caret-right ibo-panel--collapsible-toggler--closed"></i>
-                        <i class="fas fa-caret-down ibo-panel--collapsible-toggler--opened"></i>
-                    </div>{% endif %}
+                    {% if oUIBlock.isCollapsible() %}
+                        <div class="ibo-panel--collapsible-toggler" data-role="ibo-panel--collapsible-toggler">
+                            <i class="fas fa-caret-right ibo-panel--collapsible-toggler--closed"></i>
+                            <i class="fas fa-caret-down ibo-panel--collapsible-toggler--opened"></i>
+                        </div>
+                    {% endif %}
                     {% block iboPanelHeaderLeft %}
                         <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
                         {% if oUIBlock.GetSubTitle() is not null %}
