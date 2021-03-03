@@ -5,7 +5,7 @@
             <input id="dtbl_dlg_settings_{{ oUIBlock.GetTableId() }}" type="radio" name="settings" {% if (oUIBlock.GetOption("bUseCustomSettings") == false) %} checked {% endif %} value="defaults">
             <label for="dtbl_dlg_settings_{{ oUIBlock.GetTableId() }}">&nbsp;{{ 'UI:UseDefaultSettings'|dict_s }}</label>
         </p>
-        <div class="ibo-panel ibo-is-neutral">
+        <div class="ibo-panel ibo-is-neutral ibo-is-opened">
             <div class="ibo-panel--header">
                 <div class="ibo-panel--header-left">
                     <input id="dtbl_dlg_specific_{{ oUIBlock.GetTableId() }}" type="radio" class="specific_settings" name="settings" {% if oUIBlock.GetOption("bUseCustomSettings") %} checked {% endif %} value="specific">
@@ -25,7 +25,7 @@
                 <p> {{ 'UI:Display_X_ItemsPerPage_prefix'|dict_s }}<input type="text" size="4" name="page_size" value="{{ oUIBlock.GetOption("iPageSize") }}">{{ 'UI:Display_X_ItemsPerPage_suffix'|dict_s }}</p>
             </div>
         </div>
-        <div class="ibo-panel ibo-is-neutral">
+        <div class="ibo-panel ibo-is-neutral ibo-is-opened">
             <div class="ibo-panel--header">
                 <div class="ibo-panel--header-left">
                     <input id="dtbl_dlg_save_{{ oUIBlock.GetTableId() }}" type="checkbox" {% if oUIBlock.GetOption("sTableId") != null %}checked{% endif %} name="save_settings">
