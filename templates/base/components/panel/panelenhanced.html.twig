@@ -4,7 +4,9 @@
 
 {% block iboPanelTitle %}
     <div class="ibo-panel--title-icon">
-        <img src="{{ oUIBlock.GetIconUrl() }}" alt="{{ oUIBlock.GetTitle() }}">
+        {% if oUIBlock.GetIconUrl() != '' %}
+            <img src="{{ oUIBlock.GetIconUrl() }}" alt="{{ oUIBlock.GetTitle() }}">
+        {% endif %}
     </div>
     <div class="ibo-panel--title-title">
         <div class="ibo-panel--title-title-title">{{ oUIBlock.GetTitle() }}</div>
