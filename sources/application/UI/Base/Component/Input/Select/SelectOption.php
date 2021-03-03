@@ -20,6 +20,8 @@ class SelectOption extends UIBlock
 	protected $sLabel;
 	/** @var bool */
 	protected $bSelected;
+	/** @var bool */
+	protected $bDisabled;
 
 	/**
 	 * @return string
@@ -75,6 +77,25 @@ class SelectOption extends UIBlock
 	public function SetSelected(bool $bSelected): SelectOption
 	{
 		$this->bSelected = $bSelected;
+		return $this;
+	}	
+	
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled(): bool
+	{
+		return $this->bDisabled;
+	}
+
+	/**
+	 * @param bool $bDisabled
+	 *
+	 * @return SelectOption
+	 */
+	public function SetDisabled(bool $bDisabled): SelectOption
+	{
+		$this->bDisabled = $bDisabled;
 		return $this;
 	}
 

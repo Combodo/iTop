@@ -21,7 +21,8 @@ class SelectOptionUIBlockFactory extends AbstractUIBlockFactory
 
 		$oInput->SetValue($sValue)
 			->SetLabel($sLabel)
-			->SetSelected($bSelected);
+			->SetSelected($bSelected)
+			->SetDisabled(false);
 
 		return $oInput;
 	}
