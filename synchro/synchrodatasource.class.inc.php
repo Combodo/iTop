@@ -2816,11 +2816,11 @@ class SynchroReplica extends DBObject implements iDisplay
 			return;
 		} // Not editable
 
-		$oPage->add('<table style="vertical-align:top"><tr style="vertical-align:top"><td>');
+		$oPage->add('<div class="ibo-multi-column"><div class="ibo-column">');
 		$aDetails = array();
 		$sClass = get_class($this);
 		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
+		$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
 		$aZList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
 		foreach ($aZList as $sAttCode)
 		{
@@ -2839,14 +2839,14 @@ class SynchroReplica extends DBObject implements iDisplay
 			if (is_object($oDestObj))
 			{
 				$oPage->add('<fieldset>');
-				$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+				$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
 				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
 				$oPage->add('<fieldset>');
 			}
 		}
-		$oPage->add('</td><td>');
+		$oPage->add('</div><div class="ibo-column">');
 		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
+		$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
 		$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 
 		$sSQLTable = $oSource->GetDataTable();
@@ -2863,7 +2863,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oPage->Table($aHeaders, $aRows);
 		$oPage->add('</fieldset>');
-		$oPage->add('</td></tr></table>');
+		$oPage->add('</div></div>');
 
 	}
 
