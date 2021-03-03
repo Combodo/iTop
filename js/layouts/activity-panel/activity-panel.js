@@ -209,6 +209,14 @@ $(function()
 					me._onEditsLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
 
+				// Page exit
+				// - Show confirm dialog if draft entries (IMPORTANT: Lock is NOT released, see N°3786)
+				window.onbeforeunload = function (oEvent) {
+					if (true === me._HasDraftEntries()) {
+						return true;
+					}
+				};
+
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
@@ -353,7 +361,7 @@ $(function()
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
 				// Cancel lock if all forms empty
-				if (Object.keys(this._GetEntriesFromAllForms()).length === 0) {
+				if (false === this._HasDraftEntries()) {
 					this._CancelLock();
 				}
 			},
@@ -698,23 +706,29 @@ $(function()
 				return oEntries;
 			},
 			/**
+			 * @return {boolean} True if at least 1 of the entry form is draft (has some text in it)
+			 * @private
+			 */
+			_HasDraftEntries: function () {
+				return Object.keys(this._GetEntriesFromAllForms()).length > 0;
+			},
+			/**
 			 * Prepare the dialog for confirmation before submission when several case log entries have been edited.
 			 * @private
 			 */
-			_PrepareEntriesSubmitConfirmationDialog: function()
-			{
+			_PrepareEntriesSubmitConfirmationDialog: function () {
 				const me = this;
 
 				this.element.find(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog({
 					autoOpen: false,
 					minWidth: 400,
-					modal:true,
-					position: { my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars },
+					modal: true,
+					position: {my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars},
 					buttons: [
 						{
 							text: Dict.S('UI:Button:Cancel'),
 							class: 'ibo-is-alternative',
-							click: function() {
+							click: function () {
 								me._HideEntriesSubmitConfirmation();
 							}
 						},
