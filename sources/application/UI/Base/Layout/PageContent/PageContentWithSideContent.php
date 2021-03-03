@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 
 /**
@@ -83,6 +84,19 @@ class PageContentWithSideContent extends PageContent {
 	 */
 	public function AddSideBlock(iUIBlock $oBlock) {
 		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_SIDE, $oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add $sHtml to the side blocks
+	 *
+	 * @param string $sHtml
+	 *
+	 * @return $this
+	 */
+	public function AddSideHtml(string $sHtml) {
+		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_SIDE, new Html($sHtml));
 
 		return $this;
 	}
