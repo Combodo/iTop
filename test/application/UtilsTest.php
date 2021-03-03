@@ -168,4 +168,151 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider GetDefaultUrlAppRootProvider
+	 */
+	public function testGetDefaultUrlAppRoot($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	{
+		$_SERVER = $aServerVars;
+		utils::GetConfig()->Set('trust_proxies', $bConfTrustProxy);
+		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
+		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
+	}
+
+	public function GetDefaultUrlAppRootProvider()
+	{
+		$this->setUp();
+
+		$baseServerVar = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'X_FORWARDED_HOST' => null,
+			'SERVER_PORT' => '80',
+			'X_FORWARDED_PORT' => null,
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_PROTO' => null,
+			'HTTP_X_FORWARDED_PROTOCOL' => null,
+			'HTTPS' => null,
+		];
+
+		return [
+			'no proxy, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, []),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'no proxy, subPath, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => '/foo/index.php?baz=1',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'IIS lack REQUEST_URI' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => null,
+					'SCRIPT_NAME' => '/foo/index.php',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'no proxy, https' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com/',
+			],
+			'no proxy, https on 4443' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '4443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com:4443/',
+			],
+			'with proxy, not enabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'with proxy, enabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled - alt' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTOCOL' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, disabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+
+			'with proxy, disabled, forced, no remote addr' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, no remote addr' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'X_FORWARDED_HOST' => 'proxy.com',
+					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+		];
+	}
 }
