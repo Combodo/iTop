@@ -1349,7 +1349,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'display_menus_count' => [
+		'navigation_menu.show_menus_count' => [
 			'type' => 'bool',
 			'description' => 'Display count badges for OQL menu entries',
 			'default' => true,

@@ -1,5 +1,5 @@
 $('#{{ oUIBlock.GetId() }}').navigation_menu({
-    display_counts: {% if get_config_parameter('display_menus_count') %} true {% else %} false {% endif %},
+    display_counts: {% if get_config_parameter('navigation_menu.show_menus_count') %} true {% else %} false {% endif %},
     org_id: '{{ oUIBlock.GetOrgId() }}'
 });
 
