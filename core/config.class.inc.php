@@ -1131,6 +1131,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'navigation_menu.show_menus_count' => [
+			'type' => 'bool',
+			'description' => 'Display count badges for OQL menu entries',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'quick_create.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the quick create is enabled',
@@ -1162,16 +1170,6 @@ class Config
 			'value' => 10,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
-		],
-		'mentions.allowed_classes' => [
-			'type' => 'array',
-			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete (eg. "@" => "Person")',
-			'default' => [
-				'@' => 'Person',
-			],
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
 		],
 		'global_search.enabled' => [
 			'type' => 'bool',
@@ -1242,6 +1240,16 @@ class Config
 			'description' => 'Whether or not the new entry form will be automatically opened when viewing an object.',
 			'default' => false,
 			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		],
+		'mentions.allowed_classes' => [
+			'type' => 'array',
+			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete (eg. "@" => "Person")',
+			'default' => [
+				'@' => 'Person',
+			],
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
@@ -1346,14 +1354,6 @@ class Config
 			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
 			'default' => 'fullmoon',
 			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'navigation_menu.show_menus_count' => [
-			'type' => 'bool',
-			'description' => 'Display count badges for OQL menu entries',
-			'default' => true,
-			'value' => true,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
