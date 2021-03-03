@@ -12,8 +12,8 @@
             </span>
         {% endif %}
         <span class="ibo-title--object-class">{{ oUIBlock.GetClassName() }}</span>
-        {% for tag, tagValues in oUIBlock.GetTags() %}
-            <span id="{{ tag }}" class="ibo-title--object-tags {{ tagValues.cssClasses }}" data-tooltip-content="{{ tagValues.title }}" data-tooltip-html-enabled="true"><i class="{{ tagValues.iconCssClasses }}"></i>{{ tagValues.label }}</span>
+        {% for sTag, aTagValues in oUIBlock.GetTags() %}
+            <span id="{{ sTag }}" class="ibo-title--object-tags {{ aTagValues.css_classes }}" data-tooltip-content="{{ aTagValues.title }}" data-tooltip-html-enabled="true"><i class="{{ aTagValues.decoration_classes }}"></i>{{ aTagValues.label }}</span>
         {% endfor %}
     </div>
 {% endblock %}

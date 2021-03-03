@@ -408,18 +408,18 @@ EOF
 				}
 				$sLabel = Dict::S('Tag:Synchronized');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[$sSynchroTagId] = ['title' => $sTip, 'cssClasses' => 'ibo-title--object-tags--synchronized', 'iconCssClasses' => 'fas fa-lock', 'label' => $sLabel];
+				$aIcons[$sSynchroTagId] = ['title' => $sTip, 'css_classes' => 'ibo-title--object-tags--synchronized', 'decoration_classes' => 'fas fa-lock', 'label' => $sLabel];
 			}
 		}
 
 		if ($this->IsArchived()) {
 			$sLabel = Dict::S('Tag:Archived');
 			$sTitle = Dict::S('Tag:Archived+');
-			$aIcons['archived'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--archived', 'iconCssClasses' => 'fas fa-archive', 'label' => $sLabel];
+			$aIcons['archived'] = ['title' => $sTitle, 'css_classes' => 'ibo-title--object-tags--archived', 'decoration_classes' => 'fas fa-archive', 'label' => $sLabel];
 		} elseif ($this->IsObsolete()) {
 			$sLabel = Dict::S('Tag:Obsolete');
 			$sTitle = Dict::S('Tag:Obsolete+');
-			$aIcons['obsolete'] = ['title' => $sTitle, 'cssClasses' => 'ibo-title--object-tags--obsolete', 'iconCssClasses' => 'ibo- fas fa-eye-slash', 'label' => $sLabel];
+			$aIcons['obsolete'] = ['title' => $sTitle, 'css_classes' => 'ibo-title--object-tags--obsolete', 'decoration_classes' => 'fas fa-eye-slash', 'label' => $sLabel];
 		}
 
 		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this, $aIcons));

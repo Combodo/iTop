@@ -34,7 +34,7 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 		return $oTitle;
 	}
 
-	public static function MakeForObjectDetails(DBObject $oObject, array $aIcons = [], ?string $sId = null)
+	public static function MakeForObjectDetails(DBObject $oObject, array $aTags = [], ?string $sId = null)
 	{
 		// TODO 3.0.0: Refactor all of this
 		$sObjClass = get_class($oObject);
@@ -70,14 +70,14 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 			$sStateCode = $oObject->GetState();
 
 			// Protection against classes with no default state (in which case we don't display the status)
-			if(!empty($sStateCode)) {
+			if (!empty($sStateCode)) {
 				$sStatusAttCode = MetaModel::GetStateAttributeCode($sObjClass);
 				$sStatusLabel = $oObject->GetStateLabel();
 				$sStatusColor = UIHelper::GetColorFromStatus(get_class($oObject), $sStateCode);
 				$oTitle->SetStatus($sStatusAttCode, $sStatusLabel, $sStatusColor);
 			}
 		}
-		$oTitle->SetTags($aIcons);
+		$oTitle->SetTags($aTags);
 
 		return $oTitle;
 	}
