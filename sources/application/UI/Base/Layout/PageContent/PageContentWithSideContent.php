@@ -109,9 +109,18 @@ class PageContentWithSideContent extends PageContent {
 	 *
 	 * @return $this
 	 */
-	public function RemoveSideBlock(string $sBlockId) {
+	public function RemoveSideBlock(string $sBlockId)
+	{
 		$this->RemoveBlockFromContentArea(static::ENUM_CONTENT_AREA_SIDE, $sBlockId);
 
 		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function HasSubBlocks(): bool
+	{
+		return parent::HasSubBlocks() || !empty($this->GetSideBlocks());
 	}
 }

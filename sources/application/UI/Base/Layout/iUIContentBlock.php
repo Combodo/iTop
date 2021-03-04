@@ -65,6 +65,11 @@ interface iUIContentBlock {
 	public function GetSubBlock(string $sId): ?iUIBlock;
 
 	/**
+	 * @return bool True if there is at least 1 sub-block
+	 */
+	public function HasSubBlocks(): bool;
+
+	/**
 	 * Return an array of all the sub blocks
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]

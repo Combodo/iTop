@@ -210,12 +210,22 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	}
 
 	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
+	public function HasSubBlocks(): bool
+	{
+		return !empty($this->GetMainBlocks());
+	}
+
+	/**
 	 * Set the MAIN AREA subBlocks
 	 *
 	 * @inheritDoc
 	 * @return $this|\Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock
 	 */
-	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock {
+	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock
+	{
 		$this->SetMainBlocks($aSubBlocks);
 
 		return $this;

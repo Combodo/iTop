@@ -102,6 +102,14 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/**
 	 * @inheritDoc
 	 */
+	public function HasSubBlocks(): bool
+	{
+		return !empty($this->aSubBlocks);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function GetSubBlocks(): array
 	{
 		return $this->aSubBlocks;
