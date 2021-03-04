@@ -2448,6 +2448,8 @@ JS
 		if (utils::IsXmlHttpRequest()) {
 			$sHTMLValue .= <<<HTML
 <script>
+//TODO 3.0.0 should we keep both ?
+$("[data-input-id='$iId']").attr("data-input-type", "$sInputType");
 $("[data-input-id='$iId']").data("input-type", "$sInputType");
 </script>
 HTML;
