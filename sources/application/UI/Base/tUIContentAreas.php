@@ -131,7 +131,26 @@ trait tUIContentAreas {
 	}
 
 	/**
-	 * Add $oBlock to the $sAreaId content area.
+	 * Add all $aBlocks to the $sAreaId content area
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 * @uses static::AddBlockToContentArea()
+	 *
+	 */
+	protected function AddBlocksToContentArea(string $sAreaId, array $aBlocks)
+	{
+		foreach ($aBlocks as $oBlock) {
+			$this->AddBlockToContentArea($sAreaId, $oBlock);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add $oBlock as deferred to the $sAreaId content area.
 	 * Note that if the area doesn't exist yet, it is created. Also if a block with the same ID already exists, it will be replaced.
 	 *
 	 * @param string $sAreaId
@@ -146,6 +165,25 @@ trait tUIContentAreas {
 		}
 
 		$this->aContentAreasBlocks[$sAreaId]->AddDeferredBlock($oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add all $aBlocks as deferred to the $sAreaId content area
+	 *
+	 * @param string $sAreaId
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 * @uses static::AddDeferredBlockToContentArea()
+	 *
+	 */
+	protected function AddDeferredBlocksToContentArea(string $sAreaId, array $aBlocks)
+	{
+		foreach ($aBlocks as $oBlock) {
+			$this->AddDeferredBlockToContentArea($sAreaId, $oBlock);
+		}
 
 		return $this;
 	}

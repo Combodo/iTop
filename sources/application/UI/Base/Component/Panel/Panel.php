@@ -230,8 +230,24 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddMainBlock(iUIBlock $oBlock) {
+	public function AddMainBlock(iUIBlock $oBlock)
+	{
 		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_MAIN, $oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add all $aBlocks to the main blocks
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 * @uses static::AddBlocksToContentArea()
+	 */
+	public function AddMainBlocks(array $aBlocks)
+	{
+		$this->AddBlocksToContentArea(static::ENUM_CONTENT_AREA_MAIN, $aBlocks);
 
 		return $this;
 	}
@@ -244,7 +260,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveMainBlock(string $sBlockId) {
+	public function RemoveMainBlock(string $sBlockId)
+	{
 		$this->RemoveBlockFromContentArea(static::ENUM_CONTENT_AREA_MAIN, $sBlockId);
 
 		return $this;
@@ -281,8 +298,24 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function AddToolbarBlock(iUIBlock $oBlock) {
+	public function AddToolbarBlock(iUIBlock $oBlock)
+	{
 		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_TOOLBAR, $oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add all $aBlocks to the toolbar blocks
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aBlocks
+	 *
+	 * @return $this
+	 * @uses static::AddBlocksToContentArea()
+	 */
+	public function AddToolbarBlocks(array $aBlocks)
+	{
+		$this->AddBlocksToContentArea(static::ENUM_CONTENT_AREA_TOOLBAR, $aBlocks);
 
 		return $this;
 	}
@@ -295,7 +328,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveToolbarBlock(string $sBlockId) {
+	public function RemoveToolbarBlock(string $sBlockId)
+	{
 		$this->RemoveBlockFromContentArea(static::ENUM_CONTENT_AREA_TOOLBAR, $sBlockId);
 
 		return $this;
