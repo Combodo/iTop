@@ -167,6 +167,12 @@ class AjaxRenderController
 				}
 			}
 		}
+		if (!isset($aExtraParams['list_id'])) {
+			$sListId = utils::ReadParam('list_id', null);
+			if (!is_null($sListId)) {
+				$aExtraParams['list_id'] = $sListId;
+			}
+		}
 		$iLength = utils::ReadParam('end', 10);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
@@ -318,7 +324,9 @@ class AjaxRenderController
 			if ($sIdName != "") {
 				$aObj["id"] = $aObj[$sIdName];
 			}
-			array_push($aResult["data"], $aObj);
+			if (isset($aObj)) {
+				array_push($aResult["data"], $aObj);
+			}
 		}
 
 		return $aResult;
@@ -350,7 +358,7 @@ class AjaxRenderController
 
 		if ($bSaveAsDefaults) {
 			if ($sTableId != null) {
-				$oCurrSettings = unserialize(DataTableSettings::GetTableSettings($aClassAliases, $sTableId, true /* bOnlyTable */));
+				$oCurrSettings = DataTableSettings::GetTableSettings($aClassAliases, $sTableId, true /* bOnlyTable */);
 				if ($oCurrSettings) {
 					$oCurrSettings->ResetToDefault(false); // Reset this table to the defaults
 				}

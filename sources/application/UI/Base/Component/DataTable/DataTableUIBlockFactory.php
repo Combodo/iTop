@@ -165,7 +165,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable = new DataTable('datatable_'.$sListId);
 
 		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
-		
+
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
@@ -433,7 +433,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable = new DataTable('datatable_'.$sListId);
 		$aList = array();
 		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
-		
+
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		// Check if there is a list of aliases to limit the display to...
@@ -551,40 +551,47 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 		$aSortDatable = [];
 		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
-			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
-				if ($aData['sort'] != 'none') {
-					$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
-					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
-					$aSortDatable = [$iIndexColumn, $aData['sort']];
-				}
-				if ($aData['checked']) {
-					if ($sAttCode == '_key_') {
-						if ($bViewLink) {
+			if (isset($oCustomSettings->aColumns[$sClassAlias])) {
+				foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
+					if ($aData['sort'] != 'none') {
+						$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
+						$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
+						$aSortDatable = [$iIndexColumn, $aData['sort']];
+					}
+					if ($aData['checked']) {
+						if ($sAttCode == '_key_') {
+							if ($bViewLink) {
+								if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
+									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
+								} else {
+									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
+								}
+								$aColumnDefinition[] = [
+									'description' => $aData['label'],
+									'object_class' => $sClassName,
+									'class_alias' => $sClassAlias,
+									'attribute_code' => $sAttCode,
+									'attribute_type' => '_key_',
+									'attribute_label' => $aData['alias'],
+									"render" => $sRender,
+								];
+							}
+						} else {
+							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+							$sAttDefClass = get_class($oAttDef);
+							$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
 							$aColumnDefinition[] = [
-								'description' => $aData['label'],
+								'description' => $oAttDef->GetOrderByHint(),
 								'object_class' => $sClassName,
 								'class_alias' => $sClassAlias,
 								'attribute_code' => $sAttCode,
-								'attribute_type' => '_key_',
-								'attribute_label' => $aData['alias'],
-								"render" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
+								'attribute_type' => $sAttDefClass,
+								'attribute_label' => $sAttLabel,
+								"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
 							];
 						}
-					} else {
-						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-						$sAttDefClass = get_class($oAttDef);
-						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
-						$aColumnDefinition[] = [
-							'description' => $oAttDef->GetOrderByHint(),
-							'object_class' => $sClassName,
-							'class_alias' => $sClassAlias,
-							'attribute_code' => $sAttCode,
-							'attribute_type' => $sAttDefClass,
-							'attribute_label' => $sAttLabel,
-							"render" => $oAttDef->GetRenderForDataTable($sClassAlias),
-						];
+						$iIndexColumn++;
 					}
-					$iIndexColumn++;
 				}
 			}
 		}
@@ -645,7 +652,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
 	{
 		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
-		
+
 		$aOptions = [];
 		$sTableId = $aExtraParams["table_id"];
 		$sListId = $aExtraParams["list_id"];
@@ -695,8 +702,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							'attribute_label' => $aData['alias'],
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
+						if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
+							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
+						} else {
+							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
+						}
 						$aColumnDefinition["render"] = [
-							"display" => "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;",
+							"display" => $sDisplay,
 							"_" => $sClassAlias."/".$sAttCode,
 						];
 					} else {

@@ -51,7 +51,8 @@ class DataTable extends UIContentBlock
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->AddDeferredBlock(new DataTableConfig($this));
+		//$this->AddDeferredBlock(new DataTableConfig($this));
+		$this->AddSubBlock(new DataTableConfig($this));
 		$this->aDisplayColumns = [];
 		$this->aOptions = [];
 		$this->aResultColumns = [];

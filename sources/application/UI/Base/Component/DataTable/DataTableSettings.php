@@ -196,26 +196,27 @@ class DataTableSettings implements Serializable
      */
     static public function GetTableSettings($aClassAliases, $sTableId = null, $bOnlyOnTable = false)
     {
-        $pref = null;
-        $oSettings = new DataTableSettings($aClassAliases, $sTableId);
+	    $pref = null;
+	    $oSettings = new DataTableSettings($aClassAliases, $sTableId);
 
-        if ($sTableId != null) {
-            // An identified table, let's fetch its own settings (if any)
-            $pref = appUserPreferences::GetPref($oSettings->GetPrefsKey($sTableId), null);
-        }
+	    if ($sTableId != null) {
+		    // An identified table, let's fetch its own settings (if any)
+		    $pref = appUserPreferences::GetPref($oSettings->GetPrefsKey($sTableId), null);
+	    }
 
-        if ($pref == null) {
-            if (!$bOnlyOnTable) {
-                // Try the global preferred values for this class / set of classes
-                $pref = appUserPreferences::GetPref($oSettings->GetPrefsKey(null), null);
-            }
-            if ($pref == null) {
-                // no such settings, use the default values provided by the data model
-                return null;
-            }
-        }
+	    if ($pref == null) {
+		    if (!$bOnlyOnTable) {
+			    // Try the global preferred values for this class / set of classes
+			    $pref = appUserPreferences::GetPref($oSettings->GetPrefsKey(null), null);
+		    }
+		    if ($pref == null) {
+			    // no such settings, use the default values provided by the data model
+			    return null;
+		    }
+	    }
+	    $oSettings->unserialize($pref);
 
-        return $oSettings;
+	    return $oSettings;
     }
 
     /**

@@ -74,22 +74,20 @@ $(function()
 			$.post(this.options.sRenderUrl, oParams, function(data) {
 				// Nasty workaround to clear the pager's state for paginated lists !!!
 				// See jquery.tablesorter.pager.js / saveParams / restoreParams
-				if (window.pager_params)
-				{
+				if (window.pager_params) {
 					window.pager_params['pager'+me.options.sListId] = undefined;
 				}
 
-			//	try {
-				var parentElt = $('#'+me.options.sListId).parent().parent();
+				var parentElt = $('#'+me.options.sListId).closest('.dataTables_wrapper').parent();
 				$('#'+me.options.sListId).DataTable().destroy(true);
-				var sThead="";
-				if(me.options.sSelectMode !=""){
+				var sThead = "";
+				if (me.options.sSelectMode != "") {
 					sThead += "<th></th>";
 				}
 				var aOptions = JSON.parse(data);
-				$.each(aOptions['allColumns'], function(i, item) {
-					$.each(item, function(j, champs) {
-						if(champs.checked == 'true') {
+				$.each(aOptions['allColumns'], function (i, item) {
+					$.each(item, function (j, champs) {
+						if (champs.checked == 'true') {
 							sThead += "<th>"+champs.label+"</th>";
 						}
 					});
