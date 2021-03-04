@@ -17,6 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
@@ -33,16 +41,6 @@ function MakeClassHLink($sClass, $sContext)
 	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(MetaModel::GetClassDescription($sClass),
 			ENT_QUOTES,
 			'UTF-8')."\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sClass."</span><span class=\"parenthesis\">)</span></a>";
-}
-
-/**
- * Helper for this page -> link to a class
- */
-function MakeRelationHLink($sRelCode, $sContext)
-{
-	$sDesc = MetaModel::GetRelationDescription($sRelCode);
-
-	return "<a href=\"schema.php?operation=details_relation&relcode=$sRelCode{$sContext}\" title=\"$sDesc\">".$sRelCode."</a>";
 }
 
 /**
@@ -78,6 +76,48 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
 		$oPage->add("</ul>\n");
 	}
 }
+/**
+ * Helper for the global list and the details of a given class
+ */
+function GetSubclasses($sClass, $sContext)
+{
+	
+	$sHtml = '';
+	try{
+	$aChildClasses = MetaModel::EnumChildClasses($sClass);
+	if (count($aChildClasses) != 0)
+	{
+
+		$sHtml .= "<ul>";
+		$aOrderedClasses = array();
+		foreach ($aChildClasses as $sClassName)
+		{
+			// Skip indirect childs, they will be handled somewhere else
+			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
+			{
+				$aOrderedClasses[$sClassName] = MetaModel::GetName($sClassName);
+			}
+		}
+		// Sort on the display name
+		asort($aOrderedClasses);
+		foreach ($aOrderedClasses as $sClassName => $sDisplayName)
+		{
+			// Skip indirect childs, they will be handled somewhere else
+			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
+			{
+				$sHtml .="<li class=\"open\">".MakeClassHLink($sClassName, $sContext);
+				$sHtml .= GetSubclasses($sClassName, $sContext);
+				$sHtml .= "</li>";
+			}
+		}
+		$sHtml .= "</ul>";
+		}
+	}
+  
+	catch(Exception $e){
+	}
+	return $sHtml;
+}
 
 /**
  * Helper for the lifecycle details of a given class
@@ -100,27 +140,31 @@ function DisplayLifecycle($oPage, $sClass)
 EOF
 
 		);
-		$oPage->add("<button id=\"lifecycleOpenAll\">Open All</button> <button id=\"lifecycleCloseAll\">Close All</button>");
-		$oPage->add_ready_script(
-			<<<EOF
-			$("#lifecycleOpenAll").on('click',function(){
+		$oOpenAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Open All', '', '', false, 'lifecycleOpenAll');
+		$oOpenAllButton->SetOnClickJsCode(
+			<<<JS
 				$('#LifeCycleList').find('.expandable-hitarea').click();
 				$('#LifeCycleAttrOptList').find('.expandable-hitarea').click();
-			});	
-				
-			$("#lifecycleCloseAll").on('click',function(){
+JS
+
+		);
+		$oCloseAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Close All', '', '', false, 'lifecycleCloseAll');
+		$oCloseAllButton->SetOnClickJsCode(
+			<<<JS
 				$('#LifeCycleList').find('.collapsable-hitarea').click();
 				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').click();
-			});	
-EOF
+JS
+
 		);
+		$oPage->AddUiBlock($oOpenAllButton);
+		$oPage->AddUiBlock($oCloseAllButton);
 		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
 		$oPage->add("<ul id=\"LifeCycleList\" >\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
 			$oPage->add("<ul class=\"closed\">\n");
 			foreach (MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
@@ -153,10 +197,10 @@ EOF
 					$sActions = "";
 				}
 
-				$oPage->add("<li class=\"closed\"><span class=\"attrLabel\" title=\"code: $sStimulusCode\" style=\"color:red;font-weight:bold;\">$sStimulusLabel</span>
-								<span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStimulusCode</span><span class=\"parenthesis\">)</span> </span>
-								=&gt;
-								<span class=\"attrLabel\">$sTargetStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span> <span class=\"attrCode\">$sTargetState</span> <span class=\"parenthesis\">)</span></span> $sActions</li>\n");
+				$oPage->add("<li class=\"closed\"><span class=\"attrLabel ibo-datamodel-viewer--lifecycle--stimuli\" title=\"code: $sStimulusCode\">$sStimulusLabel</span>
+								<span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStimulusCode</span><span class=\"parenthesis\">)</span> </span>
+								<i class=\"fas fa-arrow-right ibo-datamodel-viewer--parent--spacer\"></i>
+								<span class=\"attrLabel\">$sTargetStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span> <span class=\"attrCode\">$sTargetState</span> <span class=\"parenthesis\">)</span></span> $sActions</li>\n");
 			}
 			$oPage->add("</ul></li>\n");
 		}
@@ -167,7 +211,7 @@ EOF
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
 			if (count($aStates[$sStateCode]['attribute_list']) > 0)
 			{
 				$oPage->add("<ul>\n");
@@ -206,7 +250,7 @@ EOF
 						$sOptions = "";
 					}
 
-					$oPage->add("<li class=\"closed\"><span style=\"color:purple;font-weight=bold;\">$sAttLabel</span> $sOptions</li>\n");
+					$oPage->add("<li class=\"closed\"><span class=\"ibo-datamodel-viewer--lifecycle--attribute-option\">$sAttLabel</span> $sOptions</li>\n");
 				}
 				$oPage->add("</ul></li>\n");
 			}
@@ -236,67 +280,22 @@ function DisplayTriggers($oPage, $sClass)
 /**
  * Display the list of classes from the business model
  */
-function DisplayClassesList($oPage, $sContext)
+function DisplayClassesList($oPage, $oLayout, $sContext)
 {
-	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
-	$oPage->add("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br><input type=\"text\" id=\"search-model\" autofocus=\"autofocus\"/>");
-	$oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fas fa-times-circle\"></i></div>");
-	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
-	$oPage->add_ready_script(
-		<<<JS
-	function getListClass (request, response,aListe) {
-        var results = $.ui.autocomplete.filter(aListe, request.term);               
-        var top_suggestions = $.grep(results, function (n,i) {
-                                 return (n.label.substr(0, request.term.length).toLowerCase() == request.term.toLowerCase());
-                              });
-        response($.merge(top_suggestions,results));
-    }
-	 $("#search-model").autocomplete({
-	    source: function (request, response) {
-			getListClass (request, response,autocompleteClassLabelAndCode);  
-        },
-		select: function( event, ui ) {
-		   	var preUrl = "?operation=details_class&class=";
-			var sufUrl = "&c[menu]=DataModelMenu";
-			window.location = preUrl + ui.item.value + sufUrl;
-		},
-		focus: true
-	 })
-	.autocomplete( "instance" )._renderItem = function( ul, item ) {
-		  var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
-		  var val = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-		  return $( "<li>" ).append( val ).appendTo( ul );
-	 };
-
-		$("#search-model").on('input', function() {
-			var search_result = [];
-			$("#ClassesList").find("li").each(function(){
-				if( ! ~$(this).children("a").text().toLowerCase().indexOf($("#search-model").val().toLowerCase())){
-					$(this).hide();
-				}
-				else{
-					search_result.push($(this));
-				}
-			});
-			search_result.forEach(function(e){
-				e.show();
-				e.find('ul > li').show();
-				e.parents().show();
-			});
-		});
-		$("#delDataModelSearch").on ('click', function(){
-			$("#search-model").val("");
-			$("#search-model").trigger('input');
-		});
-JS
-
-	);
+	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
+	
+	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
+	$oListSearch->SetName('aa');
 	// Get all the "root" classes for display
 	$aRootClasses = array();
 	$aClassLabelAndCodeAsJSON = [];
 	$aClassLabelAsJSON = array();
 	$aClassCodeAsJSON = array();
+
+	$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption('', "select option", true);
+	$oListSearch->AddOption($oOptionSearch->SetDisabled(true));
+
 	foreach (MetaModel::GetClasses() as $sClassName)
 	{
 		if (MetaModel::IsRootClass($sClassName))
@@ -309,6 +308,8 @@ JS
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
 
+		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", false);
+		$oListSearch->AddOption($oOptionSearch);
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
 		array_push ($aClassLabelAndCodeAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName ($sClassName)"]);
@@ -316,10 +317,35 @@ JS
 		array_push ($aClassCodeAsJSON, ["value"=>$sClassName,"label"=>"$sClassName"]);
 	}
 	usort($aClassLabelAndCodeAsJSON, "Label_sort");
-	// - Push to autocomplete
-	$oPage->add_script("autocompleteClassLabelAndCode=".json_encode($aClassLabelAndCodeAsJSON).";");
-	$oPage->add_script("autocompleteClassLabel=".json_encode($aClassLabelAsJSON).";");
-	$oPage->add_script("autocompleteClassCode=".json_encode($aClassCodeAsJSON).";");
+	$oLayout->AddSideBlock($oListSearch);
+	$oPage->add_ready_script(
+		<<<JS
+$('#ibo-datamodel-viewer--class-search').selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			    var preUrl = "?operation=details_class&class=";
+			var sufUrl = "&c[menu]=DataModelMenu";
+			console.log(value);
+			window.location = preUrl + value + sufUrl;
+    }
+});
+JS
+	);
+
+	$oLayout->AddSideHtml("<ul id=\"ibo-datamodel-viewer--classes-list--list\" class=\"treeview fileview\">\n");
+	$oPage->add_ready_script(
+		<<<JS
+	function getListClass (request, response,aListe) {
+        var results = $.ui.autocomplete.filter(aListe, request.term);               
+        var top_suggestions = $.grep(results, function (n,i) {
+                                 return (n.label.substr(0, request.term.length).toLowerCase() == request.term.toLowerCase());
+                              });
+        response($.merge(top_suggestions,results));
+    }
+
+JS
+
+	);
 
 	// Sort them alphabetically on their display name
 	asort($aClassLabelAndCodeAsJSON);
@@ -328,17 +354,17 @@ JS
 	{
 		if (MetaModel::IsRootClass($sClassName))
 		{
-			$oPage->add("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
-			DisplaySubclasses($oPage, $sClassName, $sContext);
-			$oPage->add("</li>\n");
+			$oLayout->AddSideHtml("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
+			$oLayout->AddSideHtml(GetSubclasses($sClassName, $sContext));
+			$oLayout->AddSideHtml("</li>\n");
 		}
 		elseif (MetaModel::IsStandaloneClass($sClassName))
 		{
-			$oPage->add("<li>".MakeClassHLink($sClassName, $sContext)."</li>\n");
+			$oLayout->AddSideHtml("<li>".MakeClassHLink($sClassName, $sContext)."</li>\n");
 		}
 	}
-	$oPage->add("</ul>\n");
-	$oPage->add_ready_script('$("#ClassesList").treeview();');
+	$oLayout->AddSideHtml("</ul>\n");
+	$oPage->add_ready_script('$("#ibo-datamodel-viewer--classes-list--list").treeview();');
 }
 
 function Label_sort($building_a, $building_b) {
@@ -815,7 +841,6 @@ JS
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	DisplayClassHeader($oPage, $sClass);
 	$aParentClasses = array();
 	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
 	{
@@ -823,27 +848,25 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	}
 	if (count($aParentClasses) > 0)
 	{
-		$sParents = implode(' &gt;&gt; ', $aParentClasses)." &gt;&gt; <b>$sClass</b>";
+		$sParents = implode(' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> ', $aParentClasses).' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> '. MetaModel::GetName($sClass) . '('.$sClass.')';
 	}
 	else
 	{
 		$sParents = '';
 	}
-	$oPage->p("[<a href=\"schema.php?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
+	$sClassHierarchy = ("[<a href=\"schema.php?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
 
-	if (MetaModel::HasChildrenClasses($sClass))
+	$oEnchancedPanel = PanelUIBlockFactory::MakeEnhancedNeutral(MetaModel::GetName($sClass) . ' ('.$sClass.')' , MetaModel::GetClassIcon($sClass,false));
+	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
+	$oEnchancedPanelSubtitle = $oEnchancedPanel->GetSubTitleBlock();
+	$oEnchancedPanelSubtitle->AddHtml($sClassHierarchy . ($sClassDescritpion == "" ? "" : ' - ' . $sClassDescritpion));
+	if (MetaModel::IsAbstract($sClass))
 	{
-		$oPage->add("<ul id=\"ClassHierarchy\">");
-		$oPage->add("<li class=\"closed\">".$sClass."\n");
-		DisplaySubclasses($oPage, $sClass, $sContext);
-		$oPage->add("</li>\n");
-		$oPage->add("</ul>\n");
-		$oPage->add_ready_script('$("#ClassHierarchy").treeview();');
+		$oEnchancedPanelSubtitle->AddHtml(' - <i class="fas fa-lock" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></i>');
 	}
-	$oPage->p('');
-	$oPage->add("</div>");
 
-	$oPage->AddTabContainer('details');
+	$oPage->AddUiBlock($oEnchancedPanel);
+	$oPage->AddTabContainer('details', '', $oEnchancedPanel);
 	$oPage->SetCurrentTabContainer('details');
 	// List the attributes of the object
 	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
@@ -944,7 +967,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$aDetails[] = array(
 			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'"><span class="attrLabel">'.$oAttDef->GetLabel().'</span> <span class="parenthesis">(</span><span class="attrCode">'.$oAttDef->GetCode().'</span><span class="parenthesis">)</span></span>',
 			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'"><span class="attrLabel">'.$sTypeDict.'</span> <span class="parenthesis">(</span><span class="attrCode">'.$sType.'</span><span class="parenthesis">)</span></span>',
-			'origincolor' => '<span class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></span>',
+			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
 			'values' => $sAllowedValues,
 			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
@@ -960,7 +983,17 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
 		'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
 	);
-	$oPage->table($aConfig, $aDetails);
+	
+	$oAttributesPanel = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table');
+	$sTableId = $oAttributesPanel->GetId();
+	$oPage->AddUiBlock($oAttributesPanel);
+	$oPage->add_script(
+		<<<JS
+$('#ibo-datamodel-viewer--attributes-table').on('init.dt draw.dt', function(){
+	CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-datamodel-viewer--attributes-table'), true);
+});
+JS
+	);
 	$sOrigins = json_encode(array_keys($aOrigins));
 
 	//color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
@@ -972,10 +1005,10 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 				  .interpolate(d3.interpolateHcl)
 				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
 				$.each(aOrigins,function(idx, origin){
-					$('.originColor'+origin).parent().css('background-color',aColors(aOrigins.indexOf(origin)));
+					$('.originColor'+origin).css('background-color',aColors(aOrigins.indexOf(origin)));
 				});
 				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), function(e){
-					$(e).removeClass("header").addClass("originColor");
+					$(e).removeClass("header").addClass("ibo-datamodel-viewer--origin-cell");
 				});
 
 EOF
@@ -983,10 +1016,18 @@ EOF
 
 	$oPage->SetCurrentTab('UI:Schema:RelatedClasses');
 	DisplayRelatedClassesGraph($oPage, $sClass);
-	$oPage->SetCurrentTab('UI:Schema:ChildClasses');
-
-	DisplaySubclasses($oPage, $sClass, $sContext);
-
+	
+	if (MetaModel::HasChildrenClasses($sClass))
+	{
+		$oPage->SetCurrentTab('UI:Schema:ChildClasses');
+		$oPage->add("<ul id=\"ClassHierarchy\">");
+		$oPage->add("<li class=\"closed\">".$sClass."\n");
+		DisplaySubclasses($oPage, $sClass, $sContext);
+		$oPage->add("</li>\n");
+		$oPage->add("</ul>\n");
+		$oPage->add_ready_script('$("#ClassHierarchy").treeview({collapsed: false,});');
+	}
+	
 	$oPage->SetCurrentTab('UI:Schema:LifeCycle');
 	DisplayLifecycle($oPage, $sClass);
 
@@ -998,102 +1039,13 @@ EOF
 }
 
 
-/**
- * Display the dropdown that allow to select the attributes/class display granularity
- */
-function DisplayGranularityDisplayer($oPage)
-{
-
-	$oPage->add("
-		<label id=\"displaySelectorLabel\"> <h1> ".Dict::S('UI:Schema:DisplayLabel').
-		"<select id=\"displaySelector\">
-			<option value=\"labelandcode\">".Dict::S('UI:Schema:DisplaySelector/LabelAndCode')."</option>
-			<option value=\"label\">".Dict::S('UI:Schema:DisplaySelector/Label')."</option>
-			<option value=\"code\">".Dict::S('UI:Schema:DisplaySelector/Code')."</option>
-		</select> </h1></label>
-		 <br>");
-	$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity', 'labelandcode'), ENT_QUOTES,
-		"UTF-8");
-
-//granularity displayer listener
-	$oPage->add_ready_script(
-		<<<EOF
-        var parenthesisHider = function(){
-        	if ( ($('#labelEnabler').is(':checked') && !$('#codeEnabler').is(':checked')) || ($('#codeEnabler').is(':checked') && !$('#labelEnabler').is(':checked')))
-        	{
-        		$('.parenthesis').toggle();
-        	}
-        };
-		$('#displaySelector').on(
-		'change', function(){
-			switch($(this).val()){
-				case 'labelandcode':
-					$('.attrCode').show();
-					$('.attrLabel').show();
-					$('.parenthesis').show();
-					$("#search-model").autocomplete({
-						source: function (request, response) {
-							getListClass (request, response,autocompleteClassLabelAndCode);  
-				        }});
-				break;
-				case 'label':
-					$('.attrCode').hide();
-					$('.attrLabel').show();
-					$('.parenthesis').hide();
-					$("#search-model").autocomplete({		 
-						source: function (request, response) {
-							getListClass (request, response,autocompleteClassLabel);  
-				        }});
-				break;
-				case 'code':
-					$('.attrCode').show();
-					$('.attrLabel').hide();
-					$('.parenthesis').hide();
-					$("#search-model").autocomplete({			 
-						source: function (request, response) {
-							getListClass (request, response,autocompleteClassCode);  
-				        }});
-				break;
-			}
-			SetUserPreference("datamodel_viewer_display_granularity", $('#displaySelector').val(), true);
-		});
-		$('#displaySelector').val("$sDisplayDropDownValue").trigger("change");
-EOF
-	);
-}
-
-/**
- * Display the header of the class details page
- */
-function DisplayClassHeader($oPage, $sClass)
-{
-	//scrollable class name / icon
-	$oPage->add("<div id=\"dataModelScrollableDiv\">");
-	$oPage->add("<div id=\"dataModelScrollableClassIcon\">".MetaModel::GetClassIcon($sClass)."</div>");
-	$oPage->add("<h2 id=\"dataModelScrollableClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sClass."</span><span class=\"parenthesis\">)</span></h2>");
-	$oPage->add("</div>");
-
-	//content header
-	$oPage->add("<div id=\"dataModelHeader\">");
-	DisplayGranularityDisplayer($oPage);
-	$oPage->add("<div id=\"dataModelClassIcon\">".MetaModel::GetClassIcon($sClass)."</div>");
-	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
-
-	$oPage->add("<h2 id=\"classDetailsClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sClass."</span><span class=\"parenthesis\">)</span>".($sClassDescritpion == "" ? "" : " - ".$sClassDescritpion)."</h2>\n");
-	if (MetaModel::IsAbstract($sClass))
-	{
-		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
-	}
-	//ajuste the size of title
-	$oPage->add_ready_script("$('#dataModelScrollableDiv').width($('#dataModelScrollableDiv').parent().width());");
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             MAIN BLOCK                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Display the menu on the left
+
+
 $oAppContext = new ApplicationContext();
 $sContext = $oAppContext->GetForLink();
 if (!empty($sContext))
@@ -1102,24 +1054,23 @@ if (!empty($sContext))
 }
 $operation = utils::ReadParam('operation', '');
 
+$oLayout = new PageContentWithSideContent();
+$oLayout->AddCSSClass('ibo-datamodel-viewer--side-pane');
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
+$oPage->SetContentLayout($oLayout);
+
 $oPage->no_cache();
 
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '',
 	'fas fa-book', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-$oPage->add_script(
-	<<<EOF
-	var autocompleteClassLabelAndCode = [];
-	var autocompleteClassLabel = [];
-	var autocompleteClassCode = [];
-EOF
-);
 
-$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
-$oPage->add("<div class='data-model-viewer'> ");
-DisplayClassesList($oPage, $sContext);
-$oPage->add("</div>");
-$oPage->add("<div class='data-model-viewer'>");
+$oTitle = new Title(Dict::S('UI:Schema:Title'));
+$oPage->AddUiBlock($oTitle);
+$oLayout->AddSideHtml("<div class='ibo-datamodel-viewer--classes-list'> ");
+DisplayClassesList($oPage, $oLayout, $sContext);
+$oLayout->AddSideHtml("</div>");
+$oPage->add("<div id='ibo-datamodel-viewer'>");
+$oPage->add("<div class='ibo-datamodel-viewer--details'>");
 
 switch ($operation)
 {
@@ -1128,53 +1079,12 @@ switch ($operation)
 		//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
 		if ($sClass != '')
 		{
-			$oPage->add_ready_script(
-				<<<JS
-$('#search-model').val('$sClass');
-var search_result = [];
-$("#ClassesList").find("li").each(function(){
-	if( ! ~$(this).children("a").text().toLowerCase().indexOf('$sClass'.toLowerCase())){
-		$(this).hide();
-	}
-	else{
-		search_result.push($(this));
-	}
-});
-search_result.forEach(function(e){
-	e.show();
-	e.find('ul > li').show();
-	e.parents().show();
-});
-//$('#search-model').trigger("input");
-
-JS
-			);
 			DisplayClassDetails($oPage, $sClass, $sContext);
-
 			break;
 		}
 	default:
-		DisplayGranularityDisplayer($oPage);
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
 
-// TODO 3.0.0 Replace these layout.js call 
-////split the page in 2 panels
-//$oPage->add_init_script(
-//	<<<EOF
-//		$('#dataModelSplitPane').layout({
-//			west : {size: "20%", minSize : 200,paneSize : 600},
-//			center : {
-//				onresize_end : function(){
-//					$("#dataModelScrollableDiv").width($(".ui-layout-center.data-model-viewer").width());
-//				}
-//			}
-//		});
-//		// Layout
-//EOF
-//
-//);
-
 $oPage->output();
-?>
