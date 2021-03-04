@@ -802,10 +802,6 @@ $(function()
 			}
 			var aContexts = [];
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
-			// Don't set the height on the tabs widget, only on the current tab
-			// Adjust the height of the graph to the window size
-			var sTabHeight = parseInt($(window).height() - this.element.parent().offset().top - 50);
-			this.element.closest('.ui-tabs-panel').css({ height: sTabHeight + "px" });
 
 			this.adjust_height();
 			this._close_all_tooltips();
