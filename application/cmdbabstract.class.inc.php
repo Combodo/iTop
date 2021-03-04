@@ -2446,11 +2446,13 @@ JS
 		// N°3750 refresh container data-input-type attribute if in an Ajax context
 		// indeed in such a case we're only returning the field value content and not the parent container, so we need to update it !
 		if (utils::IsXmlHttpRequest()) {
+			// We are refreshing the data attribute only with the .attr() method
+			// So any consumer that want to get this attribute value MUST use `.attr()` and not `.data()`
+			// Actually the later uses a dedicated memory (that is initialized by the DOM values on page loading)
+			// Whereas `.attr()` uses the DOM directly
 			$sHTMLValue .= <<<HTML
 <script>
-//TODO 3.0.0 should we keep both ?
 $("[data-input-id='$iId']").attr("data-input-type", "$sInputType");
-$("[data-input-id='$iId']").data("input-type", "$sInputType");
 </script>
 HTML;
 		}
