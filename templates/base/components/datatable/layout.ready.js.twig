@@ -47,6 +47,7 @@ else
     maxHeight{{ sListId }} = maxHeight{{ sListId }} -50;
 }
 
+
 var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
@@ -108,6 +109,11 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
+
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            //disable select action when there is a link
+            e.stopPropagation();
+        });
     },
     {% endif %}
     rowId: "id",
@@ -187,6 +193,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 });
 
 $('#{{ oUIBlock.GetId() }}').closest(".dataTables_scrollBody").css('max-height', maxHeight{{ sListId }}-100);
+
 
 {% if oUIBlock.GetOption("select_mode") is not empty %}
 {% if oUIBlock.GetOption("select_mode") != "single" %}

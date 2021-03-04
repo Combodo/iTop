@@ -1,0 +1,12 @@
+.ibo-block-indirect-links--edit--dialog{
+  overflow:hidden !important;
+  > form{
+  overflow: auto;
+  }
+}
+
+.ibo-block-indirect-links--edit--dialog .ibo-datatable--selection-validation-buttons-toolbar{
+    position:absolute;
+    bottom: 5px;
+    background-color:white;
+}
