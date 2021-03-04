@@ -1036,12 +1036,6 @@ HTML
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
-		$oPage->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
-HTML
-		);
-
 		// Object's details
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 
@@ -1064,10 +1058,6 @@ HTML
 		$this->DisplayBareRelations($oPage, $bEditMode);
 		// TODO 3.0.0: What to do with this?
 		//$this->DisplayBareHistory($oPage, $bEditMode);
-		$oPage->add(<<<HTML
-</div><!-- End of object-details -->
-HTML
-		);
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.

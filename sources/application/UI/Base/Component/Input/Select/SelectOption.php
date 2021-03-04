@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 
 class SelectOption extends UIBlock
 {
+	// Overloaded constants
+	public const BLOCK_CODE = 'ibo-select-option';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/select/selectoption';
 
 	/** @var string */

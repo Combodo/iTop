@@ -19,11 +19,16 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 /**
@@ -819,72 +824,56 @@ EOF
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
-			}
-			else
-			{
+			} else {
 				// Select the derived class to create
 				$sClassLabel = MetaModel::GetName($sClass);
-				$sClassIcon = MetaModel::GetClassIcon($sClass);
-				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-				$oP->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="" data-object-mode="create">
-	<div class="page_header">
-		<h1>$sClassIcon $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-				);
-				$oP->add('<form>');
-				$oP->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
+				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+				$sTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+
+				$oP->set_title($sTitle);
+				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
+					->SetIcon($sClassIconUrl);
+				$oP->AddUiBlock($oPanel);
+
+				$oClassForm = FormUIBlockFactory::MakeStandard();
+				$oPanel->AddMainBlock($oClassForm);
+
+				$oClassForm->AddSubBlock(HtmlFactory::MakeParagraph(Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel)))
+					->AddHtml($oAppContext->GetForForm())
+					->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
+					->AddSubBlock(InputUIBlockFactory::MakeForHidden('state', $sStateCode))
+					->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'new'));
+
 				$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("<input type=\"hidden\" name=\"checkSubclass\" value=\"0\">\n");
-				$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sStateCode\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"new\">\n");
-				foreach($aDefaults as $key => $value)
-				{
-					if (is_array($value))
-					{
-						foreach($value as $key2 => $value2)
-						{
-							if (is_array($value2))
-							{
-								foreach($value2 as $key3 => $value3)
-								{
-									$sValue = htmlentities($value3, ENT_QUOTES, 'UTF-8');
-									$oP->add("<input type=\"hidden\" name=\"default[$key][$key2][$key3]\" value=\"$sValue\">\n");
+				foreach ($aDefaults as $key => $value) {
+					if (is_array($value)) {
+						foreach ($value as $key2 => $value2) {
+							if (is_array($value2)) {
+								foreach ($value2 as $key3 => $value3) {
+									$sValue = utils::EscapeHtml($value3);
+									$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2][$key3]", $sValue));
 								}
-							}
-							else
-							{
-								$sValue = htmlentities($value2, ENT_QUOTES, 'UTF-8');
-								$oP->add("<input type=\"hidden\" name=\"default[$key][$key2]\" value=\"$sValue\">\n");
+							} else {
+								$sValue = utils::EscapeHtml($value2);
+								$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2]", $sValue));
 							}
 						}
-					}
-					else
-					{
-						$sValue = htmlentities($value, ENT_QUOTES, 'UTF-8');
-						$oP->add("<input type=\"hidden\" name=\"default[$key]\" value=\"$sValue\">\n");
+					} else {
+						$sValue = utils::EscapeHtml($value);
+						$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key]", $sValue));
 					}
 				}
-				$oP->add('<select name="class">');
+
+				$oSelect = InputUIBlockFactory::MakeForSelect('class');
+				$oClassForm->AddSubBlock($oSelect);
 				asort($aPossibleClasses);
-				foreach($aPossibleClasses as $sClassName => $sClassLabel)
-				{
-					$sSelected = ($sClassName == $sClass) ? 'selected' : '';
-					$oP->add("<option $sSelected value=\"$sClassName\">$sClassLabel</option>");
+				foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, ($sClassName == $sClass)));
 				}
-				$oP->add('</select>');
-				$oP->add("&nbsp; <input type=\"submit\" value=\"".Dict::S('UI:Button:Apply')."\"></p>");
-				$oP->add('</form>');
-				$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-</div><!-- End of object-details -->
-HTML
-				);
+
+				$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+				$oClassForm->AddSubBlock($oToolbar);
+				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 			}
 		break;
 	
