@@ -5,7 +5,6 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
@@ -293,14 +292,13 @@ EOF
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function add($sHtml): ?iUIBlock
+	public function add($sHtml)
 	{
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
 			$this->m_oTabs->AddToTab($this->m_oTabs->GetCurrentTabContainer(), $this->m_oTabs->GetCurrentTab(), $sHtml);
 		} else {
-			return parent::add($sHtml);
+			parent::add($sHtml);
 		}
-		return null;
 	}
 
 	/**

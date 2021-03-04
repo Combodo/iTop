@@ -202,9 +202,9 @@ class WebPage implements Page
 	/**
 	 * @inheritDoc
 	 */
-	public function add($s_html): ?iUIBlock
+	public function add($s_html)
 	{
-		return $this->oContentLayout->AddHtml($s_html);
+		$this->oContentLayout->AddHtml($s_html);
 	}
 
 	/**
@@ -1172,7 +1172,7 @@ class WebPage implements Page
 	 *
 	 * @return void
 	 */
-	public function SetContentType($sContentType)
+	public function SetContentType(string $sContentType)
 	{
 		$this->sContentType = $sContentType;
 	}

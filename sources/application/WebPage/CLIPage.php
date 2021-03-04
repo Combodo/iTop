@@ -16,8 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use \Combodo\iTop\Application\UI\Base\iUIBlock;
-
 /**
  * CLI page 
  * The page adds the content-type text/XML and the encoding into the headers
@@ -39,20 +37,17 @@ class CLIPage implements Page
 
     public function output()
     {
-        if (class_exists('DBSearch'))
-        {
-            DBSearch::RecordQueryTrace();
-        }
-        if (class_exists('ExecutionKPI'))
-        {
-            ExecutionKPI::ReportStats();
-        }
+	    if (class_exists('DBSearch')) {
+		    DBSearch::RecordQueryTrace();
+	    }
+	    if (class_exists('ExecutionKPI')) {
+		    ExecutionKPI::ReportStats();
+	    }
     }
 
-	public function add($sText): ?iUIBlock
+	public function add($sText)
 	{
 		echo $sText;
-		return null;
 	}
 
 	public function p($sText)

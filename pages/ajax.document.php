@@ -35,7 +35,7 @@ try
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
-	$oPage = new AjaxPage("");
+	$oPage = new DownloadPage("");
 
 	$operation = utils::ReadParam('operation', '');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
@@ -88,10 +88,8 @@ try
 			
 		case 'dict':
 			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
-			$oPage = new AjaxPage(""); // New page to cleanup the no_cache done above
 			$oPage->SetContentType('text/javascript');
-			$oPage->add_header('Cache-control: public, max-age=86400'); // Cache for 24 hours
-			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
+			$oPage->set_cache(86400); // Cache for 24 hours
 
 			// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 			// so we're resetting its value ! (see N°3416)

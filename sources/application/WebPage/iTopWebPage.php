@@ -1092,14 +1092,13 @@ EOF
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function add($sHtml): ?iUIBlock
+	public function add($sHtml)
 	{
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
 			$this->m_oTabs->AddToCurrentTab($sHtml);
 		} else {
-			return parent::add($sHtml);
+			parent::add($sHtml);
 		}
-		return null;
 	}
 
 	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock

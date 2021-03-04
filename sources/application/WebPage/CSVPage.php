@@ -16,8 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-use Combodo\iTop\Application\UI\Base\iUIBlock;
-
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers
@@ -56,26 +54,24 @@ class CSVPage extends WebPage
         {
             DBSearch::RecordQueryTrace();
         }
-        if (class_exists('ExecutionKPI'))
-        {
-            ExecutionKPI::ReportStats();
-        }
+	    if (class_exists('ExecutionKPI')) {
+		    ExecutionKPI::ReportStats();
+	    }
     }
 
 	public function small_p($sText)
 	{
 	}
 
-	public function add($sText): ?iUIBlock
+	public function add($sText)
 	{
 		$this->s_content .= $sText;
-		return null;
-	}	
+	}
 
 	public function p($sText)
 	{
 		$this->s_content .= $sText."\n";
-	}	
+	}
 
 	public function add_comment($sText)
 	{

@@ -1943,12 +1943,12 @@ EOF
 			break;
 
 		case 'xlsx_download':
-			$oPage = new DownloadPage();
+			$oPage = new DownloadPage('');
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 			$oPage->SetContentDisposition('attachment', 'export.xlsx');
 			$sFileContent = ExcelExporter::GetExcelFileFromToken($sToken);
-			$oPage->SetContent($sFileContent);
+			$oPage->add($sFileContent);
 			ExcelExporter::CleanupFromToken($sToken);
 			break;
 
@@ -2331,10 +2331,10 @@ EOF
 					if (substr($sMimeType, 0, 5) == 'text/') {
 						$sMimeType .= ';charset='.strtolower($oExporter->GetCharacterSet());
 					}
-					$oPage = new DownloadPage();
+					$oPage = new DownloadPage('');
 					$oPage->SetContentType($sMimeType);
 					$oPage->SetContentDisposition('attachment', $oExporter->GetDownloadFileName());
-					$oPage->SetContent(file_get_contents($oExporter->GetTmpFilePath()));
+					$oPage->add(file_get_contents($oExporter->GetTmpFilePath()));
 				}
 			}
 			break;

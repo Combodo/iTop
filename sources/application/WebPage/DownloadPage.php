@@ -5,68 +5,37 @@
  */
 
 
-class DownloadPage
+class DownloadPage extends AjaxPage
 {
-	/** @var string */
-	protected $sContentType;
-	/** @var string */
-	protected $sContentDisposition;
 	/**@var  string */
 	protected $sContent;
-	/**
-	 * @var string
-	 */
-	protected $sContentFileName;
 
-	/**
-	 * @param string $sContentType
-	 *
-	 * @return $this
-	 */
-	public function SetContentType(string $sContentType)
+	public function __construct($s_title)
 	{
-		$this->sContentType = $sContentType;
-
-		return $this;
-	}
-
-	/**
-	 * Set the content-disposition (mime type) for the page's content
-	 *
-	 * @param $sDisposition string The disposition: 'inline' or 'attachment'
-	 * @param $sFileName string The original name of the file
-	 *
-	 * @return $this
-	 */
-	public function SetContentDisposition($sDisposition, $sFileName)
-	{
-		$this->sContentDisposition = $sDisposition;
-		$this->sContentFileName = $sFileName;
-
-		return $this;
+		parent::__construct($s_title);
 	}
 
 	/**
 	 * @param string $sContent
 	 *
-	 * @return $this
 	 */
-	public function SetContent(string $sContent)
+	public function add($sContent)
 	{
 		$this->sContent = $sContent;
-
-		return $this;
 	}
 
 	public function output()
 	{
 		if (!empty($this->sContentType)) {
-			header('Content-type: '.$this->sContentType);
+			$this->add_header('Content-type: '.$this->sContentType);
 		}
 		if (!empty($this->sContentDisposition)) {
-			header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
+			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
 		}
+		foreach ($this->a_headers as $s_header) {
+			header($s_header);
+		}
+
 		echo $this->sContent;
 	}
-
 }
