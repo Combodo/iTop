@@ -274,9 +274,14 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage  $oPage
-	 * @param bool      $bEditMode
-	 * @param string    $sMode      Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 * Important: For compatibility reasons, this function still allows to manipulate the $oPage. In that case, markup will be put above the real header of the panel.
+	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param string $sMode Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 *
+	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -284,6 +289,8 @@ EOF
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @todo 3.0.0: This has to be discussed within the R&D when I come back in 10 days
+	 *
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
