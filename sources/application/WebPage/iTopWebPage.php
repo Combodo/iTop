@@ -176,7 +176,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedStylesheets();
 
 		// TODO 3.0.0: Add only what's necessary
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.treeview.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
