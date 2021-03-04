@@ -24,6 +24,8 @@ $ibo-panel--highlight--height: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
 $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 
+$ibo-panel--title-icon--max-height: 48px !default;
+$ibo-panel--title-icon--margin-right: 5px !default;
 $ibo-panel--title--color: $ibo-color-grey-900 !default;
 $ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
 
@@ -93,6 +95,10 @@ $ibo-panel-colors: (
 
 	.ibo-panel--title-icon {
 		display: inline-block;
+    > img{
+      max-height: $ibo-panel--title-icon--max-height;
+      margin-right: $ibo-panel--title-icon--margin-right;
+    }
 	}
 
 	.ibo-panel--title-title {
