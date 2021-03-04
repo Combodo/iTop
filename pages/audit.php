@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
@@ -321,9 +322,13 @@ try
 
 		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);
-
+		
+		$aAuditCategoryPanels = [];
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
+			$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
+			$oAuditCategoryPanelBlock->SetIsCollapsible(true);
+			$aResults = array();
 			try
 			{
 				$iCount = 0;
@@ -339,7 +344,6 @@ try
 						$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 					}
 				}
-				$aResults = array();
 				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 				$iCount = $oDefinitionSet->Count();
 				$oRulesFilter = new DBObjectSearch('AuditRule');
@@ -373,11 +377,14 @@ try
 						}
 						catch(Exception $e)
 						{
-							$aRow['nb_errors'] = "OQL Error"; 
-							$aRow['percent_ok'] = 'n/a';
+							$aRow['nb_errors'] = Dict::S('UI:Audit:OqlError'); 
+							$aRow['percent_ok'] = Dict::S('UI:Audit:Error:ValueNA');
 							$aRow['class'] = 'red';
 							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
-							$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
+
+							$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Rule'), $sMessage);
+							$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+							$oP->AddUiBlock($oErrorAlert);
 						}
 					}
 					$aResults[] = $aRow;
@@ -385,30 +392,22 @@ try
 				$iTotalErrors = count($aObjectsWithErrors);
 				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
 				$sClass = GetReportColor($iCount, $iTotalErrors);
+				
+				$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
+				$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
+				$oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
+				$oAuditCategoryPanelBlock->SetSubTitle(Dict::Format('UI:Audit:AuditCategory:Subtitle', $iTotalErrors, $iCount, $sOverallPercentOk));
+
 			}
 			catch(Exception $e)
 			{
-				$aRow = array();
-				$aRow['description'] = "OQL error";
-				$aRow['nb_errors'] = "n/a"; 
-				$aRow['percent_ok'] = '';
-				$aRow['class'] = 'red';				
 				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
-				$oP->p("<img src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
-				$aResults[] = $aRow;					
-
-				$sClass = 'red';
-				$iTotalErrors = 'n/a';
-				$sOverallPercentOk = '';
+				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Category'), $sMessage);
+				$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+				$oP->AddUiBlock($oErrorAlert);
+				continue;
 			}
-
-			$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
-			$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
-			$oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
 			
-			$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
-			$oAuditCategoryPanelBlock->SetIsCollapsible(true);
-			$oAuditCategoryPanelBlock->SetSubTitle(Dict::Format('UI:Audit:AuditCategory:Subtitle', $iTotalErrors, $iCount, $sOverallPercentOk));
 			$oAuditCategoryPanelBlock->SetColor($sClass);
 			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
 			$aData = [];
@@ -430,9 +429,11 @@ try
 			
 			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
-			$oP->AddUiBlock($oAuditCategoryPanelBlock);
+			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
 		}
-
+		foreach ($aAuditCategoryPanels as $oAuditCategoryPanel) {
+			$oP->AddUiBlock($oAuditCategoryPanel);
+		}
 	}
 	$oP->output();
 }
