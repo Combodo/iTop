@@ -829,7 +829,7 @@ try
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
 				$oKPI = new ExecutionKPI();
-
+				$oPage = new DownloadPage('');
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
 				$oPage->add_xframe_options('');
