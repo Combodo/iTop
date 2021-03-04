@@ -102,25 +102,23 @@ class SearchForm
 
 		if (!isset($aExtraParams['result_list_outer_selector']))
 		{
-			if (isset($aExtraParams['table_id']) )
-			{
+			if (isset($aExtraParams['table_id'])) {
 				$aExtraParams['result_list_outer_selector'] = $aExtraParams['table_id'];
-			}
-			else
-			{
+			} else {
 				$aExtraParams['result_list_outer_selector'] = "search_form_result_{$sSearchFormId}";
 			}
 		}
 
-		if (isset($aExtraParams['search_header_force_dropdown']))
-		{
+		$sContext = $oAppContext->GetForLink();
+		$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
+		$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+
+		if (isset($aExtraParams['search_header_force_dropdown'])) {
 			$sClassesCombo = $aExtraParams['search_header_force_dropdown'];
-		}
-		else
-		{
+			$sClassesCombo = str_replace('this.form.submit();', "ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)", $sClassesCombo);
+		} else {
 			$aSubClasses = MetaModel::GetSubclasses($sRootClass);
-			if (count($aSubClasses) > 0)
-			{
+			if (count($aSubClasses) > 0) {
 				$aOptions = array();
 				$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
 				foreach($aSubClasses as $sSubclassName)
@@ -132,9 +130,7 @@ class SearchForm
 				}
 				$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 				ksort($aOptions);
-				$sContext = $oAppContext->GetForLink();
-				$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
-				$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+
 				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)\">\n".implode('',
 						$aOptions)."</select>\n";
 			}
