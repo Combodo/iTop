@@ -392,7 +392,7 @@
         </fields_semantic>
         <style>
           <icon>images/team.png</icon>
-          <main_color>green</main_color>
+          <main_color>blue-grey</main_color>
           <complementary_color>white</complementary_color>
         </style>
         <reconciliation>

@@ -26,6 +26,7 @@
 				</fields_semantic>
 				<style>
 					<icon>images/incident.png</icon>
+          <main_color>red</main_color>
 				</style>
 				<reconciliation>
 					<attributes>

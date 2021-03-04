@@ -25,9 +25,9 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/user-request.png</icon>
-					<main_color>red</main_color>
-				</style>
+          <icon>images/user-request.png</icon>
+          <main_color>blue</main_color>
+        </style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ref"/>
