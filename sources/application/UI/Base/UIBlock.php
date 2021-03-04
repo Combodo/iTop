@@ -69,6 +69,9 @@ abstract class UIBlock implements iUIBlock
 	/** @var string ENUM_BLOCK_FILES_TYPE_TEMPLATE */
 	public const ENUM_BLOCK_FILES_TYPE_TEMPLATE = 'template';
 
+	/** @var array Cache for the CSS classes of a block inheritance. Key is the block class, value is an array of CSS classes */
+	private static $aBlocksInheritanceCSSClassesCache = [];
+
 	/** @var string $sId */
 	protected $sId;
 
@@ -398,6 +401,42 @@ abstract class UIBlock implements iUIBlock
 	public function GetAdditionalCSSClassesAsString(): string
 	{
 		return implode(' ', $this->GetAdditionalCSSClasses());
+	}
+
+	/**
+	 * @return string[] The identification CSS classes of the all the parent blocks of the current one
+	 */
+	public function GetBlocksInheritanceCSSClasses(): array
+	{
+		$sCurrentClass = static::class;
+
+		// Add to cache if not already there
+		if (false === array_key_exists($sCurrentClass, self::$aBlocksInheritanceCSSClassesCache)) {
+			// Start with self
+			$aCSSClasses = [static::BLOCK_CODE];
+
+			// Get class ONLY from parents that implement iUIBlock
+			foreach (class_parents(static::class) as $sParentClass) {
+				if (false === in_array(iUIBlock::class, class_implements($sParentClass))) {
+					continue;
+				}
+
+				$aCSSClasses[] = $sParentClass::BLOCK_CODE;
+			}
+
+			self::$aBlocksInheritanceCSSClassesCache[$sCurrentClass] = $aCSSClasses;
+		}
+
+		return self::$aBlocksInheritanceCSSClassesCache[$sCurrentClass];
+	}
+
+	/**
+	 * @see static::GetBlocksInheritanceCSSClasses()
+	 * @return string Same as the regular method but as a space separated string
+	 */
+	public function GetBlocksInheritanceCSSClassesAsString(): string
+	{
+		return implode(' ', $this->GetBlocksInheritanceCSSClasses());
 	}
 
 	/**

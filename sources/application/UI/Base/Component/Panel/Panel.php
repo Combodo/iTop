@@ -83,15 +83,34 @@ class Panel extends UIContentBlock
 	/** @var string ENUM_CONTENT_AREA_TOOLBAR The toolbar content area (for actions) */
 	public const ENUM_CONTENT_AREA_TOOLBAR = 'toolbar';
 
+	/** @var string Icon should be contained (boxed) in the medallion, best for icons with transparent background and some margin around */
+	public const ENUM_ICON_COVER_METHOD_CONTAIN = 'contain';
+	/** @var string Icon should be a litte zoomed out to cover almost all space, best for icons with transparent background and no margin around (eg. class icons) */
+	public const ENUM_ICON_COVER_METHOD_ZOOMOUT = 'zoomout';
+	/** @var string Icon should cover all the space, best for icons with filled background */
+	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';
+
 	/** @var string DEFAULT_COLOR */
 	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var null */
+	public const DEFAULT_ICON_URL = null;
+	/** @var string */
+	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_CONTAIN;
+	/** @var bool */
+	public const DEFAULT_ICON_AS_MEDALLION = false;
 
 	/** @var string $sTitle */
 	protected $sTitle;
+	/** @var UIContentBlock */
+	protected $oSubTitleBlock;
+	/** @var null|string $sIconUrl */
+	protected $sIconUrl;
+	/** @var string How the icon should cover its container, see static::ENUM_ICON_COVER_METHOD_XXX */
+	protected $sIconCoverMethod;
+	/** @var bool Whether the icon should be rendered as a medallion (rounded with border) or a standalone image */
+	protected $bIconAsMedallion;
 	/** @var string $sColor */
 	protected $sColor;
-	/** @var string $sSubTitle */
-	protected $sSubTitle;
 	/** @var bool $bIsCollapsible */
 	protected $bIsCollapsible;
 
@@ -107,7 +126,11 @@ class Panel extends UIContentBlock
 	{
 		parent::__construct($sId);
 		$this->sTitle = $sTitle;
+		$this->oSubTitleBlock = new UIContentBlock();
 		$this->aSubBlocks = $aSubBlocks;
+		$this->sIconUrl = static::DEFAULT_ICON_URL;
+		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
+		$this->bIconAsMedallion = static::DEFAULT_ICON_AS_MEDALLION;
 		$this->sColor = $sColor;
 		$this->SetMainBlocks([]);
 		$this->SetToolBlocks([]);
@@ -115,6 +138,16 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$sTitle
+	 * @return bool
+	 */
+	public function HasTitle(): bool
+	{
+		return !empty($this->sTitle);
+	}
+
+	/**
+	 * @see static::$sTitle
 	 * @return string
 	 */
 	public function GetTitle()
@@ -123,6 +156,8 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$sTitle
+	 *
 	 * @param string $sTitle
 	 *
 	 * @return $this
@@ -130,6 +165,61 @@ class Panel extends UIContentBlock
 	public function SetTitle(string $sTitle)
 	{
 		$this->sTitle = $sTitle;
+
+		return $this;
+	}
+
+	/**
+	 * @see static::$sIconUrl
+	 * @return bool
+	 */
+	public function HasIcon(): bool
+	{
+		return !empty($this->sIconUrl);
+	}
+
+	/**
+	 * @see static::$sIconUrl
+	 * @return null|string
+	 */
+	public function GetIconUrl(): ?string
+	{
+		return $this->sIconUrl;
+	}
+
+	/**
+	 * @see static::$sIconCoverMethod
+	 * @return string
+	 */
+	public function GetIconCoverMethod(): string
+	{
+		return $this->sIconCoverMethod;
+	}
+
+	/**
+	 * @return bool True if the icon should be displayed as a medallion (round with a border) or as-is.
+	 */
+	public function IsIconAsMedallion(): bool
+	{
+		return $this->bIconAsMedallion;
+	}
+
+	/**
+	 * @see static::$sIconUrl
+	 * @see static::$sIconCoverMethod
+	 * @see static::$bIconAsMedallion
+	 *
+	 * @param string $sIconUrl
+	 * @param string $sIconCoverMethod
+	 * @param bool $bIconAsMedallion
+	 *
+	 * @return $this
+	 */
+	public function SetIcon(string $sIconUrl, string $sIconCoverMethod = self::DEFAULT_ICON_COVER_METHOD, bool $bIconAsMedallion = self::DEFAULT_ICON_AS_MEDALLION)
+	{
+		$this->sIconUrl = $sIconUrl;
+		$this->sIconCoverMethod = $sIconCoverMethod;
+		$this->bIconAsMedallion = $bIconAsMedallion;
 
 		return $this;
 	}
@@ -155,21 +245,60 @@ class Panel extends UIContentBlock
 	}
 
 	/**
-	 * @return string
+	 * @see static::$oSubTitleBlock
+	 * @return bool
 	 */
-	public function GetSubTitle()
+	public function HasSubTitle(): bool
 	{
-		return $this->sSubTitle;
+		return $this->oSubTitleBlock->HasSubBlocks();
 	}
 
 	/**
+	 * @see static::$oSubTitleBlock
+	 * @return string
+	 */
+	public function GetSubTitleBlock()
+	{
+		return $this->oSubTitleBlock;
+	}
+
+	/**
+	 * Set the subtitle from $sSubTitle, overwritting any existing block
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
 	 * @param string $sSubTitle
 	 *
 	 * @return $this
 	 */
 	public function SetSubTitle(string $sSubTitle)
 	{
-		$this->sSubTitle = $sSubTitle;
+		$this->oSubTitleBlock->AddHtml($sSubTitle);
+
+		return $this;
+	}
+
+	/**
+	 * Add a UIBlock to the subtitle
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function AddSubTitleBlock(iUIBlock $oBlock)
+	{
+		$this->oSubTitleBlock->AddSubBlock($oBlock);
+
+		return $this;
+	}
+
+	public function AddSubTitleBlocks(array $aBlocks)
+	{
+		foreach ($aBlocks as $oBlock) {
+			$this->AddSubTitleBlock($oBlock);
+		}
 
 		return $this;
 	}
@@ -192,8 +321,7 @@ class Panel extends UIContentBlock
 		$this->bIsCollapsible = $bIsCollapsible;
 		return $this;
 	}
-	
-	
+
 
 	//----------------------
 	// Specific content area

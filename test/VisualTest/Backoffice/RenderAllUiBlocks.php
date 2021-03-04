@@ -26,10 +26,13 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 use LoginWebPage;
+use MetaModel;
 use utils;
 
 require_once '../../../approot.inc.php';
@@ -127,10 +130,12 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 $oPanelsTitle = new Html('<h2 id="title-panels">Panels examples</h2>');
 $oPage->AddUiBlock($oPanelsTitle);
+
 $aSubBlocks = [
 	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
-	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'),
+	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>'),
 ];
+$sClassIconUrl = MetaModel::GetClassIcon('Organization', false);
 
 $oPanel = PanelUIBlockFactory::MakeNeutral('Neutral panel');
 $oPanel->SetSubBlocks($aSubBlocks);
@@ -164,8 +169,70 @@ $oPanel = PanelUIBlockFactory::MakeWithBrandingSecondaryColor('Panel with brandi
 $oPanel->SetSubBlocks($aSubBlocks);
 $oPageContentLayout->AddMainBlock($oPanel);
 
+$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title only');
+$oPanel->SetSubBlocks($aSubBlocks);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('')
+	->SetSubBlocks($aSubBlocks)
+	->SetSubTitle('Panel with subtitle only');
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and subtitle')
+	->SetSubBlocks($aSubBlocks)
+	->SetSubTitle('Subtitle');
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and icon')
+	->SetSubBlocks($aSubBlocks)
+	->SetIcon($sClassIconUrl);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('')
+	->SetSubBlocks($aSubBlocks)
+	->SetSubTitle('Panel with subtitle and icon')
+	->SetIcon($sClassIconUrl);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title, subtitle and icon')
+	->SetSubBlocks($aSubBlocks)
+	->SetSubTitle('Subtitle')
+	->SetIcon($sClassIconUrl);
+$oPageContentLayout->AddMainBlock($oPanel);
+
+$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title, subtitle and icon as a medallion')
+	->SetSubBlocks($aSubBlocks)
+	->SetSubTitle('Subtitle')
+	->SetIcon($sClassIconUrl, Panel::ENUM_ICON_COVER_METHOD_ZOOMOUT, true);
+$oPageContentLayout->AddMainBlock($oPanel);
+
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+/////////
+// ObjectDetails
+/////////
+$oObjecTDetailsTitle = new Html('<h2 id="title-object-details">ObjectDetails examples</h2>');
+$oPage->AddUiBlock($oObjecTDetailsTitle);
+
+$oOrgObject = MetaModel::NewObject('Organization');
+$oOrgObject->Set('name', 'Stub, no tab container. Just to see how the header is displayed');
+$oOrgObject->Set('status', 'active');
+
+$oObjectDetails = ObjectFactory::MakeDetails($oOrgObject);
+$oPageContentLayout->AddMainBlock($oObjectDetails);
+$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
+$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+$oPage->SetCurrentTab('First');
+$oPage->add('Extra tabs icon is normal as there is no JS widget instantiated here.');
+$oPage->SetCurrentTab('Second');
+$oPage->SetCurrentTab('Third');
+$oPage->SetCurrentTab('Fourth');
+$oPage->SetCurrentTab('Fifth');
+$oPage->SetCurrentTab('Sixth');
+$oPage->SetCurrentTab('Seventh');
+$oPage->SetCurrentTabContainer();
+
+$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
 /////////
 // Collapsible Section

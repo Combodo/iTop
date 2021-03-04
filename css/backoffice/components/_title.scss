@@ -7,29 +7,12 @@ $ibo-title--text-color: $ibo-color-grey-900 !default;
 $ibo-title--padding-y: 12px !default;
 $ibo-title--padding-x: 0 !default;
 
-$ibo-title--medallion--size: 90px !default;
-$ibo-title--medallion--background-color: $ibo-color-grey-100 !default;
-$ibo-title--medallion--border: 2px solid $ibo-color-blue-grey-300 !default;
-$ibo-title--medallion--border-radius: $ibo-border-radius-full !default;
+$ibo-title--icon--size: 90px !default;
 
-$ibo-title--icon--size--must-contain: contain !default;
-$ibo-title--icon--size--must-cover: cover !default;
-$ibo-title--icon--size--must-zoomout: 66.67% !default;
+$ibo-title--icon-background--size--must-contain: contain !default;
+$ibo-title--icon-background--size--must-cover: cover !default;
+$ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 
-$ibo-title--status-dot--size: 10px !default;
-$ibo-title--status-dot--spacing: 8px !default;
-$ibo-title--status-dot--border-radius: $ibo-border-radius-full !default;
-
-$ibo-title--object-tags--margin-left: 12px !default;
-$ibo-title--object-tags--color: $ibo-color-grey-900 !default;
-
-$ibo-title--object-tags--icon--margin-right: 6px !default;
-$ibo-title--object-tags--icon--color: $ibo-color-grey-700 !default;
-
-$ibo-title--object-tags--separator-dot--background-color: $ibo-color-grey-800 !default;
-$ibo-title--object-tags--separator-dot--diameter: 5px !default;
-$ibo-title--object-tags--separator-dot--margin-right: 12px !default;
-$ibo-title--object-tags--separator-dot--border-radius: $ibo-border-radius-full !default;
 
 .ibo-title {
   @extend %ibo-baseline-centered-content;
@@ -38,37 +21,33 @@ $ibo-title--object-tags--separator-dot--border-radius: $ibo-border-radius-full !
   padding: $ibo-title--padding-y $ibo-title--padding-x;
 }
 
-.ibo-title--medallion {
+.ibo-title--icon {
   @extend %ibo-fully-centered-content;
-  width: $ibo-title--medallion--size;
-  height: $ibo-title--medallion--size;
-  min-width: $ibo-title--medallion--size;
-  min-height: $ibo-title--medallion--size;
+  width: $ibo-title--icon--size;
+  height: $ibo-title--icon--size;
+  min-width: $ibo-title--icon--size;
+  min-height: $ibo-title--icon--size;
   overflow: hidden;
-
-  background-color: $ibo-title--medallion--background-color;
-  border: $ibo-title--medallion--border;
-  border-radius: $ibo-title--medallion--border-radius;
 }
 
-.ibo-title--icon {
+.ibo-title--icon-background {
   width: 100%;
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: $ibo-title--icon--size--must-contain;
+  background-size: $ibo-title--icon-background--size--must-contain;
 }
 
-.ibo-title--icon--must-contain {
-  background-size: $ibo-title--icon--size--must-contain;
+.ibo-title--icon-background--must-contain {
+  background-size: $ibo-title--icon-background--size--must-contain;
 }
 
-.ibo-title--icon--must-cover {
-  background-size: $ibo-title--icon--size--must-cover;
+.ibo-title--icon-background--must-cover {
+  background-size: $ibo-title--icon-background--size--must-cover;
 }
 
-.ibo-title--icon--must-zoomout {
-  background-size: $ibo-title--icon--size--must-zoomout;
+.ibo-title--icon-background--must-zoomout {
+  background-size: $ibo-title--icon-background--size--must-zoomout;
 }
 
 .ibo-title--for-object-details {
@@ -83,43 +62,6 @@ $ibo-title--object-tags--separator-dot--border-radius: $ibo-border-radius-full !
   flex-wrap: wrap;
 }
 
-.ibo-title--status {
-  @extend %ibo-baseline-centered-content;
-}
-
-.ibo-title--status-dot {
-  @extend %ibo-fully-centered-content;
-
-  width: $ibo-title--status-dot--size;
-  height: $ibo-title--status-dot--size;
-  min-width: $ibo-title--status-dot--size;
-  min-height: $ibo-title--status-dot--size;
-
-  border-radius: $ibo-title--status-dot--border-radius;
-}
-
-.ibo-title--status-dot + .ibo-title--status-label {
-  margin-left: $ibo-title--status-dot--spacing;
-}
-
-.ibo-title--status + .ibo-title--object-class {
-  margin-left: 0.5rem;
-
-  &::before {
-    content: "(";
-  }
-
-  &::after {
-    content: ")";
-  }
-}
-
-@each $sType, $aColors in $ibo-lifecycle-states-colors {
-  .ibo-title--status-dot.ibo-is-state-#{$sType} {
-    color: map-get($aColors, 'secondary-color');
-    background-color: map-get($aColors, 'primary-color');
-  }
-}
 
 
 .ibo-title-for-dashlet {
@@ -144,23 +86,4 @@ $ibo-title--object-tags--separator-dot--border-radius: $ibo-border-radius-full !
 	border: 3px solid ;
 	margin:0;
 	padding:0;
-}
-
-.ibo-title--object-tags {
-  margin-left: $ibo-title--object-tags--margin-left;
-  color: $ibo-title--object-tags--color;
-}
-.ibo-title--object-tags > i {
-  margin-right: $ibo-title--object-tags--icon--margin-right;
-  color: $ibo-title--object-tags--icon--color;
-}
-.ibo-title--object-tags ~ .ibo-title--object-tags::before,  .ibo-title--object-class ~ .ibo-title--object-tags::before{
-  content: " ";
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: $ibo-title--object-tags--separator-dot--margin-right;
-  width: $ibo-title--object-tags--separator-dot--diameter;
-  height: $ibo-title--object-tags--separator-dot--diameter;
-  border-radius: $ibo-title--object-tags--separator-dot--border-radius;
-  background-color: $ibo-title--object-tags--separator-dot--background-color;
 }

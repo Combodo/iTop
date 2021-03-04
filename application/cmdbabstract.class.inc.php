@@ -27,9 +27,9 @@ use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
@@ -287,8 +287,12 @@ EOF
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
+		$aHeaderBlocks = [
+			'subtitle' => [],
+			'toolbar' => [],
+		];
+
 		// Standard Header with name, actions menu and history block
-		//
 
 		if (!$oPage->IsPrintableVersion()) {
 			// Is there a message for this object ??
@@ -309,28 +313,25 @@ EOF
 			$oPage->AddSessionMessages($sMessageKey, $aRanks, $aMessages);
 		}
 
-		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW))
-		{
+		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW)) {
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oBlock->Display($oPage, -1);
+			$aHeaderBlocks['toolbar'][] = $oBlock->GetRenderContent($oPage);
 		}
 
+		$aTags = array();
+
 		// Master data sources
-		$aIcons = array();
-		if (!$oPage->IsPrintableVersion())
-		{
+		if (!$oPage->IsPrintableVersion()) {
 			$oCreatorTask = null;
 			$bCanBeDeletedByTask = false;
 			$bCanBeDeletedByUser = true;
 			$aMasterSources = array();
 			$aSyncData = $this->GetSynchroData();
-			if (count($aSyncData) > 0)
-			{
-				foreach($aSyncData as $iSourceId => $aSourceData)
-				{
+			if (count($aSyncData) > 0) {
+				foreach ($aSyncData as $iSourceId => $aSourceData) {
 					$oDataSource = $aSourceData['source'];
 					$oReplica = reset($aSourceData['replica']); // Take the first one!
 
@@ -408,21 +409,28 @@ EOF
 				}
 				$sLabel = Dict::S('Tag:Synchronized');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[$sSynchroTagId] = ['title' => $sTip, 'css_classes' => 'ibo-title--object-tags--synchronized', 'decoration_classes' => 'fas fa-lock', 'label' => $sLabel];
+				$aTags[$sSynchroTagId] = ['title' => $sTip, 'css_classes' => 'ibo-object-details--tag--synchronized', 'decoration_classes' => 'fas fa-lock', 'label' => $sLabel];
 			}
 		}
 
 		if ($this->IsArchived()) {
 			$sLabel = Dict::S('Tag:Archived');
 			$sTitle = Dict::S('Tag:Archived+');
-			$aIcons['archived'] = ['title' => $sTitle, 'css_classes' => 'ibo-title--object-tags--archived', 'decoration_classes' => 'fas fa-archive', 'label' => $sLabel];
+			$aTags['archived'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--archived', 'decoration_classes' => 'fas fa-archive', 'label' => $sLabel];
 		} elseif ($this->IsObsolete()) {
 			$sLabel = Dict::S('Tag:Obsolete');
 			$sTitle = Dict::S('Tag:Obsolete+');
-			$aIcons['obsolete'] = ['title' => $sTitle, 'css_classes' => 'ibo-title--object-tags--obsolete', 'decoration_classes' => 'fas fa-eye-slash', 'label' => $sLabel];
+			$aTags['obsolete'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--obsolete', 'decoration_classes' => 'fas fa-eye-slash', 'label' => $sLabel];
 		}
 
-		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForObjectDetails($this, $aIcons));
+		foreach ($aTags as $sIconId => $aIconData) {
+			$aHeaderBlocks['subtitle'][] = new Html(<<<HTML
+<span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$aIconData['title']}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
+HTML
+			);
+		}
+
+		return $aHeaderBlocks;
 	}
 
 	/**
@@ -1010,8 +1018,8 @@ EOF
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool     $bEditMode
-	 * @param string   $sMode       Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 * @param bool $bEditMode Note that this parameter is no longer used in ths method, $sMode is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
+	 * @param string $sMode Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -1034,11 +1042,19 @@ EOF
 HTML
 		);
 
-		/** @var \iTopWebPage $oPage */
-		$this->DisplayBareHeader($oPage, $bEditMode, $sMode);
 		// Object's details
-		// TODO 3.0.0: Complete the factory and use it in the different methods (DisplayModifyForm, DisplayTransitionForm), see N°3518
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
+
+		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
+		/** @var \iTopWebPage $oPage */
+		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode, $sMode);
+		if (false === empty($aHeadersBlocks['subtitle'])) {
+			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
+		}
+		if (false === empty($aHeadersBlocks['toolbar'])) {
+			$oObjectDetails->AddToolbarBlocks($aHeadersBlocks['toolbar']);
+		}
+
 		$oPage->AddUiBlock($oObjectDetails);
 
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
@@ -2557,10 +2573,6 @@ HTML;
 		}
 
 		$oContentBlock = new UIContentBlock();
-		$oContentBlock->SetCSSClasses(['object-details'])
-			->AddDataAttribute('object-class', $sClass)
-			->AddDataAttribute('object-id', $iKey)
-			->AddDataAttribute('object-mode', $sMode);
 		$oPage->AddUiBlock($oContentBlock);
 
 		$oForm = new Form("form_{$this->m_iFormId}");
@@ -2586,12 +2598,7 @@ HTML;
 			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
 				$this->GetName());
 
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
-				$sClassLabel)); // Set title will take care of the encoding
-
-			$oForm->AddSubBlock(TitleUIBlockFactory::MakeForObjectDetails($this));
-
-			// TODO 3.0.0: Refactor DisplayBareHeader and call it here
+			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 		}
 
 		$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
@@ -2678,19 +2685,17 @@ JAVASCRIPT
 EOF
 		);
 
+		$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+		$oForm->AddSubBlock($oObjectDetails);
+		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oObjectDetails);
+		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oPage->SetCurrentTab('UI:PropertiesTab');
+
 		if ($sButtonsPosition != 'bottom') {
 			// top or both, display the buttons here
 			$oPage->p($sStatesSelection);
-			$oForm->AddSubBlock($oToolbarTop);
+			$oObjectDetails->AddToolbarBlock($oToolbarTop);
 		}
-
-
-		// TODO 3.0.0: Use ObjectDetails block when ready.
-		$oPanel = new Panel;
-		$oForm->AddSubBlock($oPanel);
-		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oPanel);
-		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap)) {

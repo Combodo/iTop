@@ -65,9 +65,10 @@ class PanelEnhanced extends Panel
 	 *
 	 * @return PanelEnhanced
 	 */
-	public function SetIconUrl(string $sIconUrl): PanelEnhanced
+	public function SetIcon(string $sIconUrl): PanelEnhanced
 	{
 		$this->sIconUrl = $sIconUrl;
+
 		return $this;
 	}
 

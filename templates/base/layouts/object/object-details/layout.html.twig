@@ -8,15 +8,13 @@
     data-object-mode="{{ oUIBlock.GetObjectMode() }}"
 {% endblock %}
 
-{% block iboPanelHeaderLeft %}
-    <div class="ibo-object-details--medallion">
-        {% block iboObjectDetailsMedallion %}
-        {% endblock %}
-    </div>
-    <div>
-        {{ parent() }}
-        <div class="ibo-object-details--status" data-role="ibo-object-details--status"></div>
-    </div>
+{% block iboPanelSubTitle %}
+    {% if oUIBlock.GetStatusLabel() is not empty %}
+        <span class="ibo-object-details--status" data-status-code="{{ oUIBlock.GetStatusCode() }}">
+            <span class="ibo-object-details--status-dot ibo-is-state-{{ oUIBlock.GetStatusColor() }}"></span>
+            <span class="ibo-object-details--status-label">{{ oUIBlock.GetStatusLabel() }}</span>
+        </span>
+    {% endif %}
+    <span class="ibo-object-details--object-class">{{ oUIBlock.GetClassName() }}</span>
+    {{ parent() }}
 {% endblock %}
-
-{% block iboPanelTitle %}{{ oUIBlock.GetTitle() }}{% endblock %}

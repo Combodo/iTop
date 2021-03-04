@@ -1,14 +1,14 @@
 {% apply spaceless %}
     <div id="{{ oUIBlock.GetId() }}" class="ibo-title {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}">
         {% if oUIBlock.HasIcon() %}
-            <div {% if oUIBlock.IsMedallion %}class="ibo-title--medallion"{% endif %}>
-                <div class="ibo-title--icon ibo-title--icon--must-{{ oUIBlock.GetIconCoverMethod() }}" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+            <div class="ibo-title--icon">
+                <div class="ibo-title--icon-background ibo-title--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
             </div>
         {% endif %}
         <div class="ibo-title--content">
             {% block iboPageTitleText %}
                 <h{{ oUIBlock.GetLevel() }} class="ibo-title--text title is-size-{{ oUIBlock.GetLevel() + 2 }}">
-                    {{ oUIBlock.GetTitle()|raw }}
+                    {{ oUIBlock.GetTitle() }}
                 </h{{ oUIBlock.GetLevel() }}>
             {% endblock %}
         </div>

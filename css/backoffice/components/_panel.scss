@@ -19,15 +19,28 @@
 /* SCSS variables */
 $ibo-panel--spacing-top: 24px !default;
 
+$ibo-panel--header--margin-bottom: 4px !default;
+
+$ibo-panel--icon--size: 48px !default;
+$ibo-panel--icon--spacing: 16px !default;
+$ibo-panel--icon--size-as-medallion: 72px !default;
+$ibo-panel--icon--spacing--as-medallion: 16px !default;
+$ibo-panel--icon--bottom--as-medallion: -24px !default;
+$ibo-panel--icon--background-color--as-medallion: $ibo-color-grey-100 !default;
+$ibo-panel--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
+$ibo-panel--icon--border-radius--as-medallion: $ibo-border-radius-full !default;
+
+$ibo-panel--icon-background--size--must-contain: contain !default;
+$ibo-panel--icon-background--size--must-cover: cover !default;
+$ibo-panel--icon-background--size--must-zoomout: 66.67% !default;
+
+$ibo-panel--title--color: $ibo-color-grey-900 !default;
+$ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
+
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
 $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
-
-$ibo-panel--title-icon--max-height: 48px !default;
-$ibo-panel--title-icon--margin-right: 5px !default;
-$ibo-panel--title--color: $ibo-color-grey-900 !default;
-$ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
 
 $ibo-panel--body--background-color: $ibo-color-white-100 !default;
 $ibo-panel--body--padding-bottom: 24px !default;
@@ -81,47 +94,114 @@ $ibo-panel-colors: (
 	margin-top: $ibo-panel--spacing-top;
 }
 
+.ibo-panel {
+  &.ibo-has-icon {
+    .ibo-panel--titles {
+      padding-left: $ibo-panel--icon--spacing;
+    }
+
+    &.ibo-has-medallion-icon {
+      .ibo-panel--header-left {
+        position: relative;
+        z-index: 1;
+        margin-left: $ibo-panel--icon--spacing--as-medallion;
+      }
+
+      .ibo-panel--icon {
+        position: absolute;
+        bottom: $ibo-panel--icon--bottom--as-medallion;
+        left: 0;
+        overflow: hidden;
+        width: $ibo-panel--icon--size-as-medallion;
+        height: $ibo-panel--icon--size-as-medallion;
+        min-width: $ibo-panel--icon--size-as-medallion;
+        min-height: $ibo-panel--icon--size-as-medallion;
+        background-color: $ibo-panel--icon--background-color--as-medallion;
+        border: $ibo-panel--icon--border--as-medallion;
+        border-radius: $ibo-panel--icon--border-radius--as-medallion;
+      }
+
+      .ibo-panel--titles {
+        padding-left: calc(#{$ibo-panel--icon--size-as-medallion} + #{$ibo-panel--icon--spacing--as-medallion});
+      }
+    }
+  }
+}
+
 .ibo-panel--header {
-	display: flex;
-	justify-content: space-between;
-	align-items: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: $ibo-panel--header--margin-bottom;
+}
+
+.ibo-panel--header-left {
+  @extend %ibo-fully-centered-content;
+  justify-content: left;
+}
+
+.ibo-panel--icon {
+  @extend %ibo-fully-centered-content;
+  width: $ibo-panel--icon--size;
+  height: $ibo-panel--icon--size;
+  min-width: $ibo-panel--icon--size;
+  min-height: $ibo-panel--icon--size;
+}
+
+
+.ibo-panel--icon-background {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: $ibo-panel--icon-background--size--must-contain;
+}
+
+.ibo-panel--icon-background--must-contain {
+  background-size: $ibo-panel--icon-background--size--must-contain;
+}
+
+.ibo-panel--icon-background--must-cover {
+  background-size: $ibo-panel--icon-background--size--must-cover;
+}
+
+.ibo-panel--icon-background--must-zoomout {
+  background-size: $ibo-panel--icon-background--size--must-zoomout;
 }
 
 .ibo-panel--title {
   display: inline-block;
   color: $ibo-panel--title--color;
-	@extend %ibo-font-ral-med-250;
-	flex-grow: 1;
+  @extend %ibo-font-ral-med-250;
+  flex-grow: 1;
 
-	.ibo-panel--title-icon {
-		display: inline-block;
-    > img{
-      max-height: $ibo-panel--title-icon--max-height;
-      margin-right: $ibo-panel--title-icon--margin-right;
+  // TODO 3.0.0: Refactor this as it used by the enhanced panel which should be removed
+  .ibo-panel--title-icon {
+    display: inline-block;
+  }
+
+  .ibo-panel--title-title {
+    display: inline-block;
+    @extend %ibo-font-ral-med-250;
+
+    .ibo-panel--title-title-title {
     }
-	}
 
-	.ibo-panel--title-title {
-		display: inline-block;
-		@extend %ibo-font-ral-med-250;
+    .ibo-panel--title-title-subtitle {
+      @extend .ibo-panel--subtitle;
 
-		.ibo-panel--title-title-title {
-		}
-
-		.ibo-panel--title-title-subtitle {
-			@extend .ibo-panel--subtitle;
-
-			a.summary {
-				@extend %ibo-font-ral-nor-250;
-				color: $ibo-panel--subtitle--color;
-			}
-		}
-	}
+      a.summary {
+        @extend %ibo-font-ral-nor-250;
+        color: $ibo-panel--subtitle--color;
+      }
+    }
+  }
 }
 
 .ibo-panel--subtitle {
-    @extend %ibo-font-ral-nor-250;
-    color: $ibo-panel--subtitle--color;
+  display: flex;
+  @extend %ibo-font-ral-med-250;
+  color: $ibo-panel--subtitle--color;
 }
 
 .ibo-panel--body {

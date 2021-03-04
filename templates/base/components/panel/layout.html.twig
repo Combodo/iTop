@@ -1,7 +1,9 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
-    <div id="{{ oUIBlock.GetId() }}" class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %} ibo-is-opened" {% block iboPanelMetaData %}{% endblock %}>
+    <div id="{{ oUIBlock.GetId() }}"
+         class="ibo-panel ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %} {% if oUIBlock.IsIconAsMedallion() %}ibo-has-medallion-icon{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} ibo-is-opened"
+            {% block iboPanelMetaData %}{% endblock %}>
         <div class="ibo-panel--header">
             {% block iboPanelHeader %}
                 <div class="ibo-panel--header-left">
@@ -12,9 +14,24 @@
                         </div>
                     {% endif %}
                     {% block iboPanelHeaderLeft %}
-                        <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle()|raw }}{% endblock %}</div>
-                        {% if oUIBlock.GetSubTitle() is not null %}
-                            <div class="ibo-panel--subtitle">{% block iboPanelSubTitle %}{{ oUIBlock.GetSubTitle()|raw }}{% endblock %}</div>
+                        {% if oUIBlock.HasIcon() %}
+                            <div class="ibo-panel--icon">
+                                {% block iboPanelIcon %}
+                                    <div class="ibo-panel--icon-background ibo-panel--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+                                {% endblock %}
+                            </div>
+                        {% endif %}
+                        {% if oUIBlock.HasTitle() or oUIBlock.HasSubTitle() %}
+                            <div class="ibo-panel--titles">
+                                {% block iboPanelTitles %}
+                                    {% if oUIBlock.HasTitle() %}
+                                        <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle() }}{% endblock %}</div>
+                                    {% endif %}
+                                    {% if oUIBlock.HasSubTitle() %}
+                                        <div class="ibo-panel--subtitle">{% block iboPanelSubTitle %}{{ render_block(oUIBlock.GetSubTitleBlock()) }}{% endblock %}</div>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
                         {% endif %}
                     {% endblock %}
                 </div>

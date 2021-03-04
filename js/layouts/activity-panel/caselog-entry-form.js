@@ -209,8 +209,7 @@ $(function() {
 				const oActivityPanelElem = this.element.closest(this.js_selectors.activity_panel);
 				const sHostObjClass = oActivityPanelElem.attr('data-object-class');
 				const sHostObjId = oActivityPanelElem.attr('data-object-id');
-				// TODO 3.0.0: This might need to be updated when object details are refactored and in a real block
-				const oGeneralFormElem = $('.object-details[data-object-class="'+sHostObjClass+'"][data-object-id="'+sHostObjId+'"] > form');
+				const oGeneralFormElem = $('.ibo-object-details[data-object-class="'+sHostObjClass+'"][data-object-id="'+sHostObjId+'"]').closest('form');
 
 				// Protection in case this is called with non editable general form
 				if (oGeneralFormElem.length === 0) {
