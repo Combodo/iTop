@@ -10,11 +10,6 @@ class DownloadPage extends AjaxPage
 	/**@var  string */
 	protected $sContent;
 
-	public function __construct($s_title)
-	{
-		parent::__construct($s_title);
-	}
-
 	/**
 	 * @param string $sContent
 	 *
