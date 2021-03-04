@@ -392,7 +392,7 @@ $(function()
 				}
 			});
 			
-			this.element.height(maxHeight - 13);
+			this.element.height(maxHeight - 8);
 			this.oPaper.setSize(this.element.width(), this.element.height());
 		},
 		auto_scale: function()
