@@ -46,7 +46,10 @@ $(function()
 			additional_contexts: [],
 			context_key: ''
 		},
-	
+		css_classes:
+		{
+			has_focus: 'ibo-has-focus'
+		},
 		// the constructor
 		_create: function()
 		{
@@ -85,8 +88,17 @@ $(function()
 			}
 			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
 			$('#dh_flash').bind('toggle_complete', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
-			this.element.bind('mousewheel', function(event, delta, deltaX, deltaY) {
+			this.element.on('mousewheel', function(event, delta, deltaX, deltaY) {
 			    return me._on_mousewheel(event, delta, deltaX, deltaY);
+			});
+			$(document).on('click', function (e) {
+				if ($(e.target).closest(me.element).length === 0) {
+					me.element.removeClass(me.css_classes.has_focus);
+				}
+				else
+				{
+					me.element.addClass(me.css_classes.has_focus);
+				}
 			});
 			if (this.options.source_url != null)
 			{
@@ -677,9 +689,12 @@ $(function()
 		},
 		_on_mousewheel: function(event, delta, deltaX, deltaY)
 		{
-			var fStep = 0.25*delta;
-			var sId = this.element.attr('id');
-			$('#'+sId+'_zoom').slider('value', fStep + $('#'+sId+'_zoom').slider('value'));
+			if(this.element.hasClass(this.css_classes.has_focus))
+			{
+				var fStep = 0.25*delta;
+				var sId = this.element.attr('id');
+				$('#'+sId+'_zoom').slider('value', fStep + $('#'+sId+'_zoom').slider('value'));
+			}
 		},
 		_on_resize: function()
 		{
