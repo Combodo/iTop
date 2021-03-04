@@ -174,28 +174,6 @@ $ibo-panel-colors: (
   color: $ibo-panel--title--color;
   @extend %ibo-font-ral-med-250;
   flex-grow: 1;
-
-  // TODO 3.0.0: Refactor this as it used by the enhanced panel which should be removed
-  .ibo-panel--title-icon {
-    display: inline-block;
-  }
-
-  .ibo-panel--title-title {
-    display: inline-block;
-    @extend %ibo-font-ral-med-250;
-
-    .ibo-panel--title-title-title {
-    }
-
-    .ibo-panel--title-title-subtitle {
-      @extend .ibo-panel--subtitle;
-
-      a.summary {
-        @extend %ibo-font-ral-nor-250;
-        color: $ibo-panel--subtitle--color;
-      }
-    }
-  }
 }
 
 .ibo-panel--subtitle {

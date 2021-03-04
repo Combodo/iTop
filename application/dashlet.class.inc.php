@@ -2021,7 +2021,7 @@ class DashletHeaderDynamic extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		$sIconPath = $oIconSelect->MakeFileUrl($sIcon);
 
 		$aValues = $this->GetValues();
 		if (count($aValues) > 0) {
@@ -2043,8 +2043,6 @@ class DashletHeaderDynamic extends Dashlet
 			);
 		}
 
-		$oPanel = PanelUIBlockFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
-
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
 		} elseif (isset($aExtraParams['this->class'])) {
@@ -2055,7 +2053,10 @@ class DashletHeaderDynamic extends Dashlet
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$sClass = $oFilter->GetClass();
-		PanelUIBlockFactory::SetClassColor($sClass, $oPanel);
+
+		$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S(str_replace('_', ':', $sTitle)))
+			->SetIcon($sIconPath)
+			->SetColorFromClass($sClass);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));

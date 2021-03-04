@@ -36,7 +36,7 @@ $ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
 
 .ibo-datamodel-viewer--details{
   flex-grow: 1;
-  .ibo-panel--title .ibo-panel--title-title .ibo-panel--title-title-subtitle{
+  .ibo-panel--subtitle{
     @extend %ibo-font-ral-nor-150;
   }
 }

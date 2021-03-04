@@ -25,6 +25,8 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
+use MetaModel;
+use ormStyle;
 
 /**
  * Class Panel
@@ -92,6 +94,8 @@ class Panel extends UIContentBlock
 
 	/** @var string DEFAULT_COLOR */
 	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var string Default color for a panel displaying info about a datamodel class */
+	public const DEFAULT_COLOR_FOR_CLASS = self::ENUM_COLOR_BLUE;
 	/** @var null */
 	public const DEFAULT_ICON_URL = null;
 	/** @var string */
@@ -240,6 +244,44 @@ class Panel extends UIContentBlock
 	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
+
+		return $this;
+	}
+
+	/**
+	 * Set the panel's color from an ormStyle directly.
+	 *
+	 * Use cases:
+	 * - Display information about a datamodel class
+	 * - Display information about a particular enum value (linked objects)
+	 *
+	 * @param \ormStyle $oStyle
+	 *
+	 * @return $this
+	 */
+	public function SetColorFromOrmStyle(ormStyle $oStyle)
+	{
+		$sColor = empty($oStyle->GetMainColor()) ? static::DEFAULT_COLOR : $oStyle->GetMainColor();
+		$this->SetColor($sColor);
+
+		return $this;
+	}
+
+	/**
+	 * Set the panel's color to the one corresponding to the $sClass datamodel class
+	 *
+	 * @param string $sClass
+	 *
+	 * @return $this
+	 */
+	public function SetColorFromClass(string $sClass)
+	{
+		$oStyle = MetaModel::GetClassStyle($sClass);
+		if (empty($oStyle)) {
+			$this->SetColor(static::DEFAULT_COLOR_FOR_CLASS);
+		} else {
+			$this->SetColorFromOrmStyle($oStyle);
+		}
 
 		return $this;
 	}

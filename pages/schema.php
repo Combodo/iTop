@@ -846,27 +846,24 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	{
 		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext);
 	}
-	if (count($aParentClasses) > 0)
-	{
-		$sParents = implode(' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> ', $aParentClasses).' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> '. MetaModel::GetName($sClass) . '('.$sClass.')';
-	}
-	else
-	{
+	if (count($aParentClasses) > 0) {
+		$sParents = implode(' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> ', $aParentClasses).' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> '.MetaModel::GetName($sClass).'('.$sClass.')';
+	} else {
 		$sParents = '';
 	}
 	$sClassHierarchy = ("[<a href=\"schema.php?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
 
-	$oEnchancedPanel = PanelUIBlockFactory::MakeEnhancedNeutral(MetaModel::GetName($sClass) . ' ('.$sClass.')' , MetaModel::GetClassIcon($sClass,false));
+	$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetName($sClass).' ('.$sClass.')')
+		->SetIcon(MetaModel::GetClassIcon($sClass, false));
 	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
-	$oEnchancedPanelSubtitle = $oEnchancedPanel->GetSubTitleBlock();
-	$oEnchancedPanelSubtitle->AddHtml($sClassHierarchy . ($sClassDescritpion == "" ? "" : ' - ' . $sClassDescritpion));
-	if (MetaModel::IsAbstract($sClass))
-	{
+	$oEnchancedPanelSubtitle = $oPanel->GetSubTitleBlock();
+	$oEnchancedPanelSubtitle->AddHtml($sClassHierarchy.($sClassDescritpion == "" ? "" : ' - '.$sClassDescritpion));
+	if (MetaModel::IsAbstract($sClass)) {
 		$oEnchancedPanelSubtitle->AddHtml(' - <i class="fas fa-lock" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></i>');
 	}
 
-	$oPage->AddUiBlock($oEnchancedPanel);
-	$oPage->AddTabContainer('details', '', $oEnchancedPanel);
+	$oPage->AddUiBlock($oPanel);
+	$oPage->AddTabContainer('details', '', $oPanel);
 	$oPage->SetCurrentTabContainer('details');
 	// List the attributes of the object
 	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);

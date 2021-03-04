@@ -171,24 +171,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForClass(string $sClass, string $sTitle)
 	{
 		$oPanel = new Panel($sTitle);
-		self::SetClassColor($sClass, $oPanel);
-
-		return $oPanel;
-	}
-
-	/**
-	 * Make a basis Panel component
-	 *
-	 * @param string $sTitle
-	 * @param String $sIconUrl
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
-	 */
-	public static function MakeEnhancedNeutral(string $sTitle, string $sIconUrl)
-	{
-		$oPanel = new PanelEnhanced($sTitle, $sIconUrl);
-		// TODO 3.0.0: Change this to class color when done
-		$oPanel->SetColor(Panel::ENUM_COLOR_BLUE);
+		$oPanel->SetColorFromClass($sClass);
 
 		return $oPanel;
 	}
