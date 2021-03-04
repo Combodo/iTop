@@ -61,7 +61,9 @@ class ObjectDetails extends Panel
 		$this->sObjectName = $oObject->GetRawName();
 		$this->sObjectMode = $sMode;
 
-		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
+		$oStyle = MetaModel::GetClassStyle($this->sClassName);
+		$sPanelColor = empty($oStyle->GetMainColor()) ? static::DEFAULT_COLOR : $oStyle->GetMainColor();
+		parent::__construct($this->sObjectName, [], $sPanelColor, $sId);
 
 		$this->ComputeIconUrl($oObject);
 		$this->ComputeState($oObject);
