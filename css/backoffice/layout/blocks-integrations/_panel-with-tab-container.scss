@@ -12,19 +12,50 @@
 $ibo-panel-with-tab-container--padding-top: -1 * ($ibo-panel--body--padding-top - $ibo-panel--highlight--height) !default;
 $ibo-panel-with-tab-container--margin-x: -1 * $ibo-panel--body--padding-x !default;
 
+// Note: We use the child ">" selector to ensure this applies only the child tab container, not another one that would be nested
 .ibo-panel {
 	> .ibo-panel--body {
 		> .ibo-tab-container {
-			margin-top: $ibo-panel-with-tab-container--padding-top;
+      margin-top: $ibo-panel-with-tab-container--padding-top;
       margin-left: $ibo-panel-with-tab-container--margin-x;
       margin-right: $ibo-panel-with-tab-container--margin-x;
-			height: 80vh;
+      height: 80vh;
 
-			> .ibo-tab-container--tab-container-list{
-				height: 100%;
-				overflow-y: auto;
+      > .ibo-tab-container--tab-container-list {
+        height: 100%;
+        overflow-y: auto;
         flex-grow: 1;
-			}
-		}
+      }
+
+      &.ibo-is-vertical {
+        display: flex;
+        flex-direction: row;
+
+        > .ibo-tab-container--tabs-list {
+          padding-top: 50px;
+          flex-direction: column;
+          height: auto;
+          padding-left: unset;
+          margin-right: unset;
+          min-width: calc(32px + 90px + 32px);
+
+          > .ibo-tab-container--tab-header {
+            height: 50px;
+            width: 100%;
+            justify-content: left;
+
+            > .ibo-tab-container--tab-toggler {
+              width: 100%;
+              justify-content: left;
+            }
+          }
+        }
+
+        > .ibo-tab-container--tab-container {
+          flex-grow: 1;
+          margin-left: unset;
+        }
+      }
+    }
 	}
 }
