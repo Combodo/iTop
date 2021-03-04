@@ -847,7 +847,7 @@ class utils
 	 *
 	 * @since 2.7.4 $bForceTrustProxy param added
 	 */
-    public static function GetDefaultUrlAppRoot($bForceTrustProxy = false)
+	public static function GetDefaultUrlAppRoot($bForceTrustProxy = false)
 	{
 		$sAbsoluteUrl = self::GetCurrentAbsoluteUrl($bForceTrustProxy, true);
 
