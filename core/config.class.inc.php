@@ -763,12 +763,12 @@ class Config
 		],
 		'buttons_position' => [
 			'type' => 'string',
-			'description' => 'Position of the forms buttons: bottom | top | both',
+			'description' => 'Deprecated since 3.0.0, buttons are now always on top of the form.',
 			// examples... not used
 			'default' => 'both',
 			'value' => 'both',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		],
 		'shortcut_actions' => [
 			'type' => 'string',

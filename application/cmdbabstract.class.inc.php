@@ -2629,10 +2629,6 @@ HTML;
 			}
 		}
 
-		// TODO 3.0.0: Remove config param and related code below when rework is done and UX approved
-		//$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		$sButtonsPosition = 'top';
-
 		$sStatesSelection = '';
 		if (!isset($aExtraParams['custom_operation']) && $this->IsNew())
 		{
@@ -2688,11 +2684,8 @@ EOF
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
-		if ($sButtonsPosition != 'bottom') {
-			// top or both, display the buttons here
-			$oPage->p($sStatesSelection);
-			$oObjectDetails->AddToolbarBlock($oToolbarTop);
-		}
+		$oPage->p($sStatesSelection);
+		$oObjectDetails->AddToolbarBlock($oToolbarTop);
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap)) {
@@ -2719,15 +2712,6 @@ EOF
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 		}
 		$oPage->add($oAppContext->GetForForm());
-		if ($sButtonsPosition != 'top') {
-			// bottom or both: display the buttons here
-			$oPage->p($sStatesSelection);
-			$oToolbarBottom = ToolbarUIBlockFactory::MakeStandard();
-			foreach ($oToolbarTop->GetSubBlocks() as $oButton) {
-				$oToolbarBottom->AddSubBlock($oButton);
-			}
-			$oForm->AddSubBlock($oToolbarBottom);
-		}
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
@@ -3052,13 +3036,6 @@ HTML
 			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
 		}
 
-		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		// Display object detail above if buttons must be displayed on the bottom
-		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties) {
-			// bottom: Displays the ticket details BEFORE the actions
-			$this->DisplayDetails($oPage, false, $sMode);
-		}
-
 		$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
 		$oPage->AddUiBlock($oFormContainer);
 		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
@@ -3095,13 +3072,6 @@ HTML
 </div>
 HTML
 		);
-
-		// Display object detail below if buttons must be displayed on the top
-		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
-		{
-			// bottom or both: Displays the ticket details AFTER the actions
-			$this->DisplayDetails($oPage, false, $sMode);
-		}
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
