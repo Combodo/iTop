@@ -4,11 +4,8 @@
  */
 
 $ibo-toolbar--button-margin-top: 16px !default;
-$ibo-toolbar--margin: 6px 0 !default;
 
 .ibo-toolbar {
-  margin: $ibo-toolbar--margin;
-
   &.ibo-toolbar--action {
     position: relative;
   }
@@ -16,11 +13,6 @@ $ibo-toolbar--margin: 6px 0 !default;
   &.ibo-toolbar--button {
     @extend %ibo-vertically-centered-content;
     margin-top: $ibo-toolbar--button-margin-top;
-  }
-
-  &.ibo-toolbar-top{
-    padding-left: calc(90px + 64px);
-    text-align: right;
   }
 }
 
