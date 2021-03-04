@@ -1143,7 +1143,7 @@ EOF
 							}
 						}
 					}
-					elseif (strcasecmp(CMDBSource::GetFieldType($sTable, $sColName), $sColumnDef) != 0)
+					elseif (!CMDBSource::IsSameFieldTypes(CMDBSource::GetFieldSpec($sTable, $sColName), $sColumnDef))
 					{
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
