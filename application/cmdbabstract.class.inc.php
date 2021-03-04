@@ -927,7 +927,7 @@ EOF
 										// Attribute description
 										$sDescription = $oAttDef->GetDescription();
 										$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
 
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -944,7 +944,7 @@ EOF
 									// Attribute description
 									$sDescription = $oAttDef->GetDescription();
 									$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
 
 									$val = array(
 										'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -3222,7 +3222,7 @@ EOF
 			// - Attribute description
 			$sDescription = $oAttDef->GetDescription();
 			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
 
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
