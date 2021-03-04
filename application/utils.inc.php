@@ -199,6 +199,8 @@ class utils
 	/**
 	 * @return bool true if we're in an XHR query
 	 * @see \Symfony\Component\HttpFoundation\Request::IsXmlHttpRequest
+	 *
+	 * @since 3.0.0 N°3750 method creation
 	 */
 	public static function IsXmlHttpRequest()
 	{
