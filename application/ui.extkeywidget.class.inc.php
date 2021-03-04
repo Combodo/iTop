@@ -275,6 +275,7 @@ EOF
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
 			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 
 			// another hidden input to store & pass the object's Id
