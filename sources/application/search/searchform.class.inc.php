@@ -17,6 +17,7 @@ use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
@@ -64,44 +65,33 @@ class SearchForm
 		}
 
 		// Simple search form
-		if (isset($aExtraParams['currentId']))
-		{
+		if (isset($aExtraParams['currentId'])) {
 			$sSearchFormId = 'sf_'.$aExtraParams['currentId'];
-		}
-		else
-		{
+		} else {
 			$iSearchFormId = utils::GetUniqueId();
 			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
 			$oUiBlock->AddHtml("<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">");
 			$aListParams['currentId'] = "$iSearchFormId";
 		}
 		// Check if the current class has some sub-classes
-		if (isset($aExtraParams['baseClass']))
-		{
+		if (isset($aExtraParams['baseClass'])) {
 			$sRootClass = $aExtraParams['baseClass'];
-		}
-		else
-		{
+		} else {
 			$sRootClass = $sClassName;
 		}
 		//should the search be opened on load?
-		if (isset($aExtraParams['open']))
-		{
+		if (isset($aExtraParams['open'])) {
 			$bOpen = $aExtraParams['open'];
-		}
-		else
-		{
+		} else {
 			$bOpen = true;
 		}
 
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
-		if (!empty($sJson))
-		{
+		if (!empty($sJson)) {
 			$aListParams['json'] = json_decode($sJson, true);
 		}
 
-		if (!isset($aExtraParams['result_list_outer_selector']))
-		{
+		if (!isset($aExtraParams['result_list_outer_selector'])) {
 			if (isset($aExtraParams['table_id'])) {
 				$aExtraParams['result_list_outer_selector'] = $aExtraParams['table_id'];
 			} else {
@@ -115,16 +105,13 @@ class SearchForm
 
 		if (isset($aExtraParams['search_header_force_dropdown'])) {
 			$sClassesCombo = $aExtraParams['search_header_force_dropdown'];
-			$sClassesCombo = str_replace('this.form.submit();', "ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)", $sClassesCombo);
 		} else {
 			$aSubClasses = MetaModel::GetSubclasses($sRootClass);
 			if (count($aSubClasses) > 0) {
 				$aOptions = array();
 				$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
-				foreach($aSubClasses as $sSubclassName)
-				{
-					if (UserRights::IsActionAllowed($sSubclassName, UR_ACTION_READ))
-					{
+				foreach ($aSubClasses as $sSubclassName) {
+					if (UserRights::IsActionAllowed($sSubclassName, UR_ACTION_READ)) {
 						$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
 					}
 				}
@@ -149,10 +136,8 @@ class SearchForm
 		else
 		{
 			$mSubmitParam = utils::GetConfig()->Get('high_cardinality_classes');
-			if (is_array($mSubmitParam))
-			{
-				if (in_array($sClassName, $mSubmitParam))
-				{
+			if (is_array($mSubmitParam)) {
+				if (in_array($sClassName, $mSubmitParam)) {
 					$bAutoSubmit = false;
 				}
 			}
@@ -162,15 +147,18 @@ class SearchForm
 
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		$aCSSClasses = ["ibo-search-form"];
-		if ($bOpen == 'true') {
+		if ($bOpen != 'true') {
 			$aCSSClasses[] = 'closed';
 		}
-		if ($bAutoSubmit === true) {
+		if ($bAutoSubmit != true) {
 			$aCSSClasses[] = 'no_auto_submit';
 		}
+		$oForm = FormUIBlockFactory::MakeStandard();
+		$oForm->AddSubBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
+
 		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
-			->AddTitleBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
+			->AddTitleBlock($oForm);
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
 		$sHtml = "";
 		if (!$bShowObsoleteData) {

@@ -196,7 +196,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			oDiv.append(data);
 			oDiv.unblock();
 			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
-			oDiv.find('form').triggerHandler('itop.search.form.reloaded');
+			oDiv.find('form.search_form_handler').triggerHandler('itop.search.form.reloaded');
 		}
 	);
 }
