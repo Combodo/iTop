@@ -908,8 +908,7 @@ JS
 			$sClassAlias = $oSet->GetFilter()->GetClassAlias();
 			if (isset($aConsts[$sClassAlias]))
 			{
-				foreach($aConsts[$sClassAlias] as $sAttCode => $value)
-				{
+				foreach($aConsts[$sClassAlias] as $sAttCode => $value) {
 					$oNewObj->Set($sAttCode, $value);
 				}
 			}
@@ -918,42 +917,30 @@ JS
 		// 3rd - set values from the page argument 'default'
 		$oNewObj->UpdateObjectFromArg('default');
 
-		$sDialogTitle = '';
 		$sClassLabel = MetaModel::GetName($this->sTargetClass);
-		$sClassIcon = MetaModel::GetClassIcon($this->sTargetClass);
-		$sObjClass = get_class($oNewObj);
-		$sObjKey = $oNewObj->GetKey();
-		$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+		$sHeaderTitleEscaped = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', $sClassLabel));
+
 		$oPage->add(<<<HTML
-<div id="ac_create_{$this->iId}">
-	<!-- Beginning of object-details -->
-	<div class="object-details" data-object-class="$sObjClass" data-object-id="$sObjKey" data-object-mode="create">
-		<!-- Beginning of wizContainer -->
-		<div class="wizContainer" style="vertical-align:top;">
-			<div id="dcr_{$this->iId}">
-				<h1>$sClassIcon&nbsp;$sHeaderTitle</h1>
+<div id="ac_create_{$this->iId}" title="{$sHeaderTitleEscaped}">
+	<div id="dcr_{$this->iId}">
 HTML
 		);
 		$aFieldsFlags = array();
 		$aFieldsComments = array();
-		foreach(MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef)
-		{
-			if (($oAttDef instanceof AttributeBlob) || (false))
-			{
+		foreach (MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef) {
+			if (($oAttDef instanceof AttributeBlob) || (false)) {
 				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
 				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.htmlentities(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
-	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
+		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
 		$oPage->add(<<<HTML
-			</div>
-		</div><!-- End of wizContainer -->
-	</div><!-- End of object-details -->
+	</div>
 </div>
 HTML
 		);
-//		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+
+		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});\n");
 		$oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
 		$oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);");
 	}
