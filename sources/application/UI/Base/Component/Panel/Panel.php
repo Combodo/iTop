@@ -27,6 +27,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tUIContentAreas;
 use MetaModel;
 use ormStyle;
+use utils;
 
 /**
  * Class Panel
@@ -103,8 +104,8 @@ class Panel extends UIContentBlock
 	/** @var bool */
 	public const DEFAULT_ICON_AS_MEDALLION = false;
 
-	/** @var string $sTitle */
-	protected $sTitle;
+	/** @var UIContentBlock $oTitleBlock */
+	protected $oTitleBlock;
 	/** @var UIContentBlock */
 	protected $oSubTitleBlock;
 	/** @var null|string $sIconUrl */
@@ -129,7 +130,13 @@ class Panel extends UIContentBlock
 	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->sTitle = $sTitle;
+
+		if (empty($sTitle)) {
+			$this->oTitleBlock = new UIContentBlock();
+		} else {
+			$this->SetTitle($sTitle);
+		}
+
 		$this->oSubTitleBlock = new UIContentBlock();
 		$this->aSubBlocks = $aSubBlocks;
 		$this->sIconUrl = static::DEFAULT_ICON_URL;
@@ -142,25 +149,41 @@ class Panel extends UIContentBlock
 	}
 
 	/**
-	 * @see static::$sTitle
+	 * @see static::$oTitleBlock
 	 * @return bool
 	 */
 	public function HasTitle(): bool
 	{
-		return !empty($this->sTitle);
+		return $this->oTitleBlock->HasSubBlocks();
 	}
 
 	/**
-	 * @see static::$sTitle
+	 * @see static::$oTitleBlock
 	 * @return string
 	 */
-	public function GetTitle()
+	public function GetTitleBlock()
 	{
-		return $this->sTitle;
+		return $this->oTitleBlock;
 	}
 
 	/**
-	 * @see static::$sTitle
+	 * Set the title from the $oBlock, replacing any existing content
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function SetTitleBlock(iUIBlock $oBlock)
+	{
+		$this->oSubTitleBlock = $oBlock;
+
+		return $this;
+	}
+
+	/**
+	 * Helper to set the title from a simple text ($sTitle), replacing any existnig block
+	 *
+	 * @see static::$oTitleBlock
 	 *
 	 * @param string $sTitle
 	 *
@@ -168,7 +191,42 @@ class Panel extends UIContentBlock
 	 */
 	public function SetTitle(string $sTitle)
 	{
-		$this->sTitle = $sTitle;
+		$this->oTitleBlock = new UIContentBlock();
+		$this->oTitleBlock->AddHtml(utils::EscapeHtml($sTitle));
+
+		return $this;
+	}
+
+	/**
+	 * Add a UIBlock to the title
+	 *
+	 * @see static::$oTitleBlock
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function AddTitleBlock(iUIBlock $oBlock)
+	{
+		$this->oTitleBlock->AddSubBlock($oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add all $aBlocks to the title
+	 *
+	 * @see static::$oTitleBlock
+	 *
+	 * @param array $aBlocks
+	 *
+	 * @return $this
+	 */
+	public function AddTitleBlocks(array $aBlocks)
+	{
+		foreach ($aBlocks as $oBlock) {
+			$this->AddTitleBlock($oBlock);
+		}
 
 		return $this;
 	}
@@ -218,7 +276,8 @@ class Panel extends UIContentBlock
 	 */
 	public function SetSubTitle(string $sSubTitle)
 	{
-		$this->oSubTitleBlock->AddHtml($sSubTitle);
+		$this->oSubTitleBlock = new UIContentBlock();
+		$this->oSubTitleBlock->AddHtml(utils::EscapeHtml($sSubTitle));
 
 		return $this;
 	}

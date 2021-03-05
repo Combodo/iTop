@@ -25,7 +25,7 @@
                             <div class="ibo-panel--titles">
                                 {% block iboPanelTitles %}
                                     {% if oUIBlock.HasTitle() %}
-                                        <div class="ibo-panel--title">{% block iboPanelTitle %}{{ oUIBlock.GetTitle() |raw }}{% endblock %}</div>
+                                        <div class="ibo-panel--title">{% block iboPanelTitle %}{{ render_block(oUIBlock.GetTitleBlock()) }}{% endblock %}</div>
                                     {% endif %}
                                     {% if oUIBlock.HasSubTitle() %}
                                         <div class="ibo-panel--subtitle">{% block iboPanelSubTitle %}{{ render_block(oUIBlock.GetSubTitleBlock()) }}{% endblock %}</div>
