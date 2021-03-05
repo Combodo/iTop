@@ -28,21 +28,24 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
 /* Parent block overloads (!= than blocks integrations */
 .ibo-object-details {
   &.ibo-has-icon.ibo-has-medallion-icon {
-    .ibo-panel--header-left {
-      margin-left: $ibo-object-details--icon--spacing--as-medallion;
-      padding-left: $ibo-object-details--icon--size;
-    }
+    // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
+    > .ibo-panel--header {
+      .ibo-panel--header-left {
+        margin-left: $ibo-object-details--icon--spacing--as-medallion;
+        padding-left: $ibo-object-details--icon--size;
 
-    .ibo-panel--icon {
-      bottom: calc(-1 * #{$ibo-object-details--icon--size} / 2 + #{$ibo-object-details--icon--bottom--as-medallion});
-      width: $ibo-object-details--icon--size;
-      height: $ibo-object-details--icon--size;
-      min-width: $ibo-object-details--icon--size;
-      min-height: $ibo-object-details--icon--size;
-    }
+        .ibo-panel--icon {
+          bottom: calc(-1 * #{$ibo-object-details--icon--size} / 2 + #{$ibo-object-details--icon--bottom--as-medallion});
+          width: $ibo-object-details--icon--size;
+          height: $ibo-object-details--icon--size;
+          min-width: $ibo-object-details--icon--size;
+          min-height: $ibo-object-details--icon--size;
+        }
 
-    .ibo-panel--titles {
-      padding-left: $ibo-object-details--icon--spacing--as-medallion;
+        .ibo-panel--titles {
+          padding-left: $ibo-object-details--icon--spacing--as-medallion;
+        }
+      }
     }
   }
 
