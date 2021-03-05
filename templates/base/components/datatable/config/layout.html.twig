@@ -41,8 +41,8 @@
         </div>
         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
             <div class=" ui-dialog-buttonset">
-                <button type="button" class="ibo-button ibo-is-regular ibo-is-secondary " onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
-                <button type="submit" class="ibo-button ibo-is-regular ibo-is-primary" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').DataTableSettings('onDlgOk'); ">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
+                <button type="button" class="ibo-button ibo-is-alternative ibo-is-neutral action cancel" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').dialog('close')">&nbsp;{{ 'UI:Button:Cancel'|dict_s }}</button>
+                <button type="submit" class="ibo-button ibo-is-regular ibo-is-primary action" onclick="$('#datatable_dlg_{{ oUIBlock.GetTableId() }}').DataTableSettings('onDlgOk'); ">&nbsp;{{ 'UI:Button:Ok'|dict_s }}</button>
             </div>
         </div>
     </form>

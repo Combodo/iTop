@@ -659,13 +659,19 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
 
-		if ($sSelectMode != ""){
+		$sSortCol = utils::ReadParam('sort_col', '', false, 'raw_data');
+		$sSortOrder = utils::ReadParam('sort_order', '', false, 'raw_data');
+		$sOrder = [];
+		if ($sSortCol != "") {
+			$sOrder[] = [$sSortCol, $sSortOrder];
+		}
+		if ($sSelectMode != "") {
 			$aColumnDefinition["width"] = "auto";
 			$aColumnDefinition["searchable"] = false;
 			$aColumnDefinition["sortable"] = false;
 			if ($sSelectMode != "single") {
-				$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable('".$sTableId."',this.checked,'".$sListId."');\" class=\"checkAll\" id=\"field_".$sTableId."_check_all\" name=\"field_".$sTableId."_check_all\" title=\"".Dict::S('UI:SearchValue:CheckAll' )." / ".Dict::S('UI:SearchValue:UncheckAll')."\" /></span>";
-			} else{
+				$aColumnDefinition["title"] = "<span class=\"row_input\"><input type=\"checkbox\" onclick=\"checkAllDataTable('".$sTableId."',this.checked,'".$sListId."');\" class=\"checkAll\" id=\"field_".$sTableId."_check_all\" name=\"field_".$sTableId."_check_all\" title=\"".Dict::S('UI:SearchValue:CheckAll')." / ".Dict::S('UI:SearchValue:UncheckAll')."\" /></span>";
+			} else {
 				$aColumnDefinition["title"] = "";
 			}
 			$aColumnDefinition["type"] = "html";
@@ -749,7 +755,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		]);
 
 
-		$aOptions =array_merge ($aOptions, [
+		$aOptions = array_merge($aOptions, [
 			"language" =>
 				[
 					"processing" => Dict::Format('UI:Datatables:Language:Processing'),
@@ -764,17 +770,19 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						"first" => "<<",
 						"previous" => "<",
 						"next" => ">",
-						"last" => ">>"
+						"last" => ">>",
 					],
 					"aria" => [
 						"sortAscending" => Dict::Format('UI:Datatables:Language:Sort:Ascending'),
-						"sortDescending" => Dict::Format('UI:Datatables:Language:Sort:Descending')
+						"sortDescending" => Dict::Format('UI:Datatables:Language:Sort:Descending'),
 					],
 				],
 			"lengthMenu" => Dict::Format('Portal:Datatables:Language:DisplayLength:All'),
 			"dom" => "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
-			"ordering"=>true,
-			"order" => [],
+			"scrollX" => true,
+			"scrollCollapse" => true,
+			"ordering" => true,
+			"order" => $sOrder,
 			"filter" => false,
 			"processing" => true,
 			"serverSide" => true,

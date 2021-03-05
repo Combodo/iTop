@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -1514,32 +1501,37 @@ JS
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
 		$oPage->add_ready_script(
-<<<JS
+			<<<JS
 $('#dashlet_creation_dlg').dialog({
 	width: 600,
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: function() {
-		var oForm = $(this).find('form');
-		var sFormId = oForm.attr('id');
-		var oParams = null;
-		var aErrors = ValidateForm(sFormId, false);
-		if (aErrors.length == 0)
-		{
-			oParams = ReadFormParams(sFormId);
-		}
-		oParams.operation = 'add_dashlet';
-		var me = $(this);
-		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
-			me.dialog( "close" );
-			me.remove();
-			$('body').append(data);
-		});
-	} },
-	{ text: "$sCancelButtonLabel", click: function() {
+	{ text: "$sCancelButtonLabel", 
+	  click: function() {
 		$(this).dialog( "close" ); $(this).remove();
-	} },
+		} ,
+		'class': 'ibo-button ibo-is-alternative ibo-is-neutral action cancel'
+	},
+	{ text: "$sOkButtonLabel", 
+	  click: function() {
+			var oForm = $(this).find('form');
+			var sFormId = oForm.attr('id');
+			var oParams = null;
+			var aErrors = ValidateForm(sFormId, false);
+			if (aErrors.length == 0)
+			{
+				oParams = ReadFormParams(sFormId);
+			}
+			oParams.operation = 'add_dashlet';
+			var me = $(this);
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+				me.dialog( "close" );
+				me.remove();
+				$('body').append(data);
+			});
+		},
+		'class': 'ibo-button ibo-is-regular ibo-is-primary action' }
 	],
 	close: function() { $(this).remove(); }
 });

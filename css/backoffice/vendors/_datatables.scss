@@ -167,3 +167,53 @@ $ibo-vendors-datatables--focus--border-color: $ibo-color-primary-600 !default;
     @extend %ibo-font-ral-med-100;
   }
 }
+
+
+.sort_order {
+  display: inline-flex;
+  width: 16px;
+  height: 12px;
+}
+
+.sort_none {
+  padding-right: 5px;
+
+  &:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
+    text-align: right;
+    content: '\f0dc';
+    color: $ibo-color-blue-grey-500;
+    float: right;
+  }
+}
+
+.sort_asc {
+  padding-right: 5px;
+
+  &:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
+    text-align: right;
+    content: '\f0d8';
+    color: $ibo-color-blue-grey-500;
+    float: right;
+  }
+}
+
+.sort_desc {
+  padding-right: 5px;
+
+  &:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
+    text-align: right;
+    content: '\f0d7';
+    color: $ibo-color-blue-grey-500;
+    float: right;
+  }
+}
+
+.sort_hidden {
+  display: none;
+}

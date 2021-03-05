@@ -371,10 +371,10 @@ EOF
 function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 {
 	if ($sMode == 'dialog') {
-		$oP = new AjaxPage();
-		$oP->add('<div id="interactive_export_dlg">');
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
 		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
+		$oP = new AjaxPage($sJSTitle);
+		$oP->add('<div id="interactive_export_dlg">');
 		$oP->add_ready_script(
 			<<<EOF
 		$('#interactive_export_dlg').dialog({
