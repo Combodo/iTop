@@ -57,25 +57,29 @@
 										{{ sJsInlineOnDomReady|raw }}
 										{% endfor %}
 									}
-								});
-					};
-					fLoadScript{{ sId }}();
-				} else {
-					{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-					{{ sJsInlineOnDomReady|raw }}
-					{% endfor %}
-				}
-			</script>
-		{% endblock %}
-	{% else %}
-		{% block iboPageJsInlineOnDomReady %}
-			{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-				<script type="text/javascript">
-					{{ sJsInlineOnDomReady|raw }}
-				</script>
-			{% endfor %}
-		{% endblock %}
-	{% endif %}
+                                });
+                    };
+                    fLoadScript{{ sId }}();
+                } else
+                {
+                    {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                    {{ sJsInlineOnDomReady|raw }}
+                    {% endfor %}
+                }
+            </script>
+        {% endblock %}
+    {% endif %}
+
+    {% block iboPageJsInlineOnDomReady %}
+        {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+            <script type="text/javascript">
+            {{ sJsInlineOnDomReady|raw }}
+            </script>
+        {% endfor %}
+        <script type="application/javascript">
+        CombodoTooltip.InitAllNonInstantiatedTooltips($('body'));
+        </script>
+    {% endblock %}
 
     {% if aDeferredBlocks is not empty %}
         {# TODO 3.0.0 #}
