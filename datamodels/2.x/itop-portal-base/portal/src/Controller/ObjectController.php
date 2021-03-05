@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttachmentPlugIn;
 use AttributeEnum;
 use AttributeFinalClass;
 use AttributeFriendlyName;
