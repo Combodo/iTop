@@ -93,9 +93,9 @@ class SelectOption extends UIBlock
 	/**
 	 * @param bool $bDisabled
 	 *
-	 * @return SelectOption
+	 * @return $this
 	 */
-	public function SetDisabled(bool $bDisabled): SelectOption
+	public function SetDisabled(bool $bDisabled)
 	{
 		$this->bDisabled = $bDisabled;
 		return $this;
