@@ -649,33 +649,28 @@ abstract class LogAPI
 	 * @return string one of the LEVEL_* const value
 	 * @uses \LogAPI::LEVEL_DEFAULT
 	 */
-	private static function GetMinLogLevel($sChannel)
+	protected static function GetMinLogLevel($sChannel)
 	{
-		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
-		if (!$oConfig instanceof Config)
-		{
+		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig : \MetaModel::GetConfig();
+		if (!$oConfig instanceof Config) {
 			return static::LEVEL_DEFAULT;
 		}
 
 		$sLogLevelMin = $oConfig->Get('log_level_min');
 
-		if (empty($sLogLevelMin))
-		{
+		if (empty($sLogLevelMin)) {
 			return static::LEVEL_DEFAULT;
 		}
 
-		if (!is_array($sLogLevelMin))
-		{
+		if (!is_array($sLogLevelMin)) {
 			return $sLogLevelMin;
 		}
 
-		if (isset($sLogLevelMin[$sChannel]))
-		{
+		if (isset($sLogLevelMin[$sChannel])) {
 			return $sLogLevelMin[$sChannel];
 		}
 
-		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT]))
-		{
+		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT])) {
 			return $sLogLevelMin[$sChannel];
 		}
 
@@ -765,10 +760,53 @@ class DeadLockLog extends LogAPI
 }
 
 
+/**
+ * @since 3.0.0 N°3731
+ */
+class DeprecatedCallsLog extends LogAPI
+{
+	public const CHANNEL_PHP = 'deprecated-php';
+	public const CHANNEL_FILE = 'deprecated-file';
+	public const CHANNEL_DEFAULT = self::CHANNEL_PHP;
+
+	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
+
+	/** @var \FileLog we want our own instance ! */
+	protected static $m_oFileLog = null;
+
+	public static function Enable($sTargetFile = null): void
+	{
+		if (empty($sTargetFile)) {
+			$sTargetFile = APPROOT.'log/deprecated-calls.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+
+	protected static function GetMinLogLevel($sChannel): string
+	{
+		if (utils::IsDevelopmentEnvironment()) {
+			return static::LEVEL_OK;
+		}
+
+		return parent::GetMinLogLevel($sChannel);
+	}
+
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	{
+		if ((static::LEVEL_ERROR === $sLevel) && utils::IsDevelopmentEnvironment()) {
+			trigger_error($sMessage);
+		}
+
+		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+	}
+}
+
+
 class LogFileRotationProcess implements iScheduledProcess
 {
 	/**
 	 * Cannot get this list from anywhere as log file name is provided by the caller using LogAPI::Enable
+	 *
 	 * @var string[]
 	 */
 	const LOGFILES_TO_ROTATE = array(
