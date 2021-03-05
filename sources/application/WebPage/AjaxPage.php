@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
@@ -48,7 +49,12 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
-		$this->AddUiBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
+		if (is_null($oParentBlock)) {
+			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');
+			$this->AddUiBlock($oParentBlock);
+		}
+
+		$oParentBlock->AddSubBlock($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
 	/**
@@ -80,9 +86,9 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null)
+	public function AddAjaxTab($sTabCode, $sUrl, $bCache = true, $sTabTitle = null, $sPlaceholder = null)
 	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle));
+		$this->add($this->m_oTabs->AddAjaxTab($sTabCode, $sUrl, $bCache, $sTabTitle, $sPlaceholder));
 	}
 
 	/**
@@ -299,6 +305,21 @@ EOF
 		} else {
 			parent::add($sHtml);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddUiBlock(?iUIBlock $oBlock): ?iUIBlock
+	{
+		if (is_null($oBlock)) {
+			return null;
+		}
+		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
+			return $this->m_oTabs->AddUIBlockToCurrentTab($oBlock);
+		}
+
+		return parent::AddUiBlock($oBlock);
 	}
 
 	/**
