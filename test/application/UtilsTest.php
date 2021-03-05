@@ -186,9 +186,9 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		$baseServerVar = [
 			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
 			'SERVER_NAME' => 'example.com',
-			'X_FORWARDED_HOST' => null,
+			'HTTP_X_FORWARDED_HOST' => null,
 			'SERVER_PORT' => '80',
-			'X_FORWARDED_PORT' => null,
+			'HTTP_X_FORWARDED_PORT' => null,
 			'REQUEST_URI' => '/index.php?baz=1',
 			'SCRIPT_NAME' => '/index.php',
 			'SCRIPT_FILENAME' => APPROOT.'index.php',
@@ -244,8 +244,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bForceTrustProxy' => false,
 				'bConfTrustProxy' => false,
 				'aServerVars' => array_merge($baseServerVar, [
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'http://example.com/',
@@ -254,8 +254,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bForceTrustProxy' => false,
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
@@ -264,8 +264,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bForceTrustProxy' => false,
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTOCOL' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
@@ -274,8 +274,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bForceTrustProxy' => true,
 				'bConfTrustProxy' => false,
 				'aServerVars' => array_merge($baseServerVar, [
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
@@ -284,8 +284,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bForceTrustProxy' => true,
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
@@ -296,8 +296,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bConfTrustProxy' => false,
 				'aServerVars' => array_merge($baseServerVar, [
 					'REMOTE_ADDR' => null,
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
@@ -307,8 +307,8 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [
 					'REMOTE_ADDR' => null,
-					'X_FORWARDED_HOST' => 'proxy.com',
-					'X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
 					'HTTP_X_FORWARDED_PROTO' => 'https',
 				]),
 				'sExpectedAppRootUrl' => 'http://example.com/',
