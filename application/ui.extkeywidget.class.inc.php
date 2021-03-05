@@ -240,7 +240,7 @@ class UIExtKeyWidget
 				array_push($aOptions, $aOption);
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
-			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=0></select>";
+			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
 			$sJsonOptions = json_encode($aOptions);
 			$oPage->add_ready_script(
 				<<<EOF
@@ -295,12 +295,12 @@ EOF
 EOF
 			);
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\"><i class=\"fas fa-times\"></i></div>";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."''><i class=\"fas fa-times\"></i></div>";
 		}
 		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
 
-			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div>";
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\" data-tooltip-content='".Dict::S('UI:Button:Create')."''><i class=\"fas fa-plus\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
@@ -311,7 +311,7 @@ JS
 			);
 		}
 		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
-			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div>";
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."''><i class=\"fas fa-sitemap\"></i></div>";
 			$oPage->add_ready_script(
 				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
@@ -322,7 +322,7 @@ JS
 			);
 		}
 		if ($oAllowedValues->CountExceeds($iMaxComboLength)) {
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div>";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."''><i class=\"fas fa-search\"></i></div>";
 		}
 		$sHTMLValue .= "</div>";
 		$sHTMLValue .= "</div>";
