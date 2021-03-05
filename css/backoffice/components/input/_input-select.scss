@@ -28,28 +28,31 @@ $ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
 $ibo-input-select--action-button--padding-x: 2px !default;
 $ibo-input-select--action-button--padding-y: 0px !default;
 
-$ibo-input-select--action-button--padding-left: 5px !default;
+$ibo-input-select--action-button--padding-left: 6px !default;
+$ibo-input-select--action-button--padding-right: 2px !default;
 
-.ibo-input-select{
-	appearance: none;
-	display: inline-block;
+.ibo-input-select {
+  appearance: none;
+  display: inline-block;
   min-width: $ibo-input-select--value--min-midth;
-	&.ibo-input-selectize{
-    padding-right:0;
-    padding-left:0;
+
+  &.ibo-input-selectize {
+    padding-right: 0;
+    padding-left: 0;
     min-width: $ibo-input-select-selectize--value--min-midth !important;
-		input{
+
+    input {
       border-width: 0px;
       border-color: white;
-      padding-left:$ibo-input--padding-x;
-		}
-		>[data-value]
-		{
-			height: $ibo-input-select-selectize--value--height;
-			line-height: $ibo-input-select-selectize--value--line-height;
-      padding-left:$ibo-input--padding-x;
-		}
-	}
+      padding-left: $ibo-input--padding-x;
+    }
+
+    > [data-value] {
+      height: $ibo-input-select-selectize--value--height;
+      line-height: $ibo-input-select-selectize--value--line-height;
+      padding-left: $ibo-input--padding-x;
+    }
+  }
 }
 .ibo-input-select-autocomplete{
   min-width: $ibo-input-select-autocomplete--value--min-midth !important;
@@ -144,9 +147,10 @@ $ibo-input-select--action-button--padding-left: 5px !default;
 
 }
 
-.ibo-input-select--action-button{
+.ibo-input-select--action-button {
   padding-left: $ibo-input-select--action-button--padding-left;
-  float:right;
+  padding-right: $ibo-input-select--action-button--padding-right;
+  float: right;
 }
 
 .selectize-dropdown{
