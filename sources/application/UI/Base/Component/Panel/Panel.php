@@ -174,6 +174,74 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$oSubTitleBlock
+	 * @return bool
+	 */
+	public function HasSubTitle(): bool
+	{
+		return $this->oSubTitleBlock->HasSubBlocks();
+	}
+
+	/**
+	 * @see static::$oSubTitleBlock
+	 * @return string
+	 */
+	public function GetSubTitleBlock()
+	{
+		return $this->oSubTitleBlock;
+	}
+
+	/**
+	 * Helper to set the subtitle from a simple text ($sSubTitle), replacing any existing block
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
+	 * @param string $sSubTitle
+	 *
+	 * @return $this
+	 */
+	public function SetSubTitle(string $sSubTitle)
+	{
+		$this->oSubTitleBlock->AddHtml($sSubTitle);
+
+		return $this;
+	}
+
+	/**
+	 * Add a UIBlock to the subtitle
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function AddSubTitleBlock(iUIBlock $oBlock)
+	{
+		$this->oSubTitleBlock->AddSubBlock($oBlock);
+
+		return $this;
+	}
+
+	/**
+	 * Add all $aBlocks to the subtitle
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
+	 * @param array $aBlocks
+	 *
+	 * @return $this
+	 */
+	public function AddSubTitleBlocks(array $aBlocks)
+	{
+		foreach ($aBlocks as $oBlock) {
+			$this->AddSubTitleBlock($oBlock);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * @see static::$sIconUrl
 	 * @return bool
 	 */
@@ -281,65 +349,6 @@ class Panel extends UIContentBlock
 			$this->SetColor(static::DEFAULT_COLOR_FOR_CLASS);
 		} else {
 			$this->SetColorFromOrmStyle($oStyle);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @see static::$oSubTitleBlock
-	 * @return bool
-	 */
-	public function HasSubTitle(): bool
-	{
-		return $this->oSubTitleBlock->HasSubBlocks();
-	}
-
-	/**
-	 * @see static::$oSubTitleBlock
-	 * @return string
-	 */
-	public function GetSubTitleBlock()
-	{
-		return $this->oSubTitleBlock;
-	}
-
-	/**
-	 * Set the subtitle from $sSubTitle, overwritting any existing block
-	 *
-	 * @see static::$oSubTitleBlock
-	 *
-	 * @param string $sSubTitle
-	 *
-	 * @return $this
-	 */
-	public function SetSubTitle(string $sSubTitle)
-	{
-		$this->oSubTitleBlock->AddHtml($sSubTitle);
-
-		return $this;
-	}
-
-	/**
-	 * Add a UIBlock to the subtitle
-	 *
-	 * @see static::$oSubTitleBlock
-	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
-	 *
-	 * @return $this
-	 */
-	public function AddSubTitleBlock(iUIBlock $oBlock)
-	{
-		$this->oSubTitleBlock->AddSubBlock($oBlock);
-
-		return $this;
-	}
-
-	public function AddSubTitleBlocks(array $aBlocks)
-	{
-		foreach ($aBlocks as $oBlock) {
-			$this->AddSubTitleBlock($oBlock);
 		}
 
 		return $this;
