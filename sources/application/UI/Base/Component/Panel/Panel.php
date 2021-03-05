@@ -432,7 +432,7 @@ class Panel extends UIContentBlock
 	/**
 	 * @return bool
 	 */
-	public function isIsCollapsible(): bool
+	public function IsCollapsible(): bool
 	{
 		return $this->bIsCollapsible;
 	}
