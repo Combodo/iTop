@@ -104,9 +104,9 @@ class Panel extends UIContentBlock
 	/** @var bool */
 	public const DEFAULT_ICON_AS_MEDALLION = false;
 
-	/** @var UIContentBlock $oTitleBlock */
+	/** @var iUIContentBlock $oTitleBlock */
 	protected $oTitleBlock;
-	/** @var UIContentBlock */
+	/** @var iUIContentBlock */
 	protected $oSubTitleBlock;
 	/** @var null|string $sIconUrl */
 	protected $sIconUrl;
@@ -159,7 +159,7 @@ class Panel extends UIContentBlock
 
 	/**
 	 * @see static::$oTitleBlock
-	 * @return string
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock
 	 */
 	public function GetTitleBlock()
 	{
@@ -169,11 +169,11 @@ class Panel extends UIContentBlock
 	/**
 	 * Set the title from the $oBlock, replacing any existing content
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock $oBlock
 	 *
 	 * @return $this
 	 */
-	public function SetTitleBlock(iUIBlock $oBlock)
+	public function SetTitleBlock(iUIContentBlock $oBlock)
 	{
 		$this->oSubTitleBlock = $oBlock;
 
@@ -218,7 +218,7 @@ class Panel extends UIContentBlock
 	 *
 	 * @see static::$oTitleBlock
 	 *
-	 * @param array $aBlocks
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aBlocks
 	 *
 	 * @return $this
 	 */
@@ -242,7 +242,7 @@ class Panel extends UIContentBlock
 
 	/**
 	 * @see static::$oSubTitleBlock
-	 * @return string
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock
 	 */
 	public function GetSubTitleBlock()
 	{
@@ -254,11 +254,11 @@ class Panel extends UIContentBlock
 	 *
 	 * @see static::$oSubTitleBlock
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock $oBlock
 	 *
 	 * @return $this
 	 */
-	public function SetSubTitleBlock(iUIBlock $oBlock)
+	public function SetSubTitleBlock(iUIContentBlock $oBlock)
 	{
 		$this->oSubTitleBlock = $oBlock;
 
@@ -303,7 +303,7 @@ class Panel extends UIContentBlock
 	 *
 	 * @see static::$oSubTitleBlock
 	 *
-	 * @param array $aBlocks
+	 * @param iUIBlock[] $aBlocks
 	 *
 	 * @return $this
 	 */
