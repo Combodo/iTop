@@ -51,7 +51,15 @@ class DOMFormatException extends Exception
  */ 
 class MFCompiler
 {
-	const DATA_PRECOMPILED_FOLDER = 'data' . DIRECTORY_SEPARATOR . 'precompiled_styles' . DIRECTORY_SEPARATOR;
+	const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
+
+	/**
+	 * Path to the "use symlinks" file
+	 * If this file is present, then we will compile to symlink !
+	 *
+	 * @var string
+	 */
+	public const USE_SYMBOLIC_LINKS_FILE_PATH = APPROOT.'data/.compilation-symlinks';
 
 	/** @var \ThemeHandlerService */
 	protected static $oThemeHandlerService;
@@ -93,54 +101,81 @@ class MFCompiler
 
 	protected function DumpLog($oPage)
 	{
-		foreach ($this->aLog as $sText)
-		{
+		foreach ($this->aLog as $sText) {
 			$oPage->p($sText);
 		}
 	}
-	
+
 	public function GetLog()
 	{
 		return $this->aLog;
 	}
-	
+
+	/**
+	 * @return bool
+	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 * @since 3.0.0
+	 */
+	public static function HasUseSymlinksFile(): bool
+	{
+		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
+	}
+
+	/**
+	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 * @since 3.0.0 method creation
+	 */
+	public static function ToggleUseSymlinksFile(bool $bUseSymbolicLinks): void
+	{
+		$bHasUseSymlinksFile = static::HasUseSymlinksFile();
+
+		if ($bUseSymbolicLinks) {
+			if ($bHasUseSymlinksFile) {
+				return;
+			}
+
+			touch(static::USE_SYMBOLIC_LINKS_FILE_PATH);
+
+			return;
+		}
+
+		if (!$bHasUseSymlinksFile) {
+			return;
+		}
+		unlink(static::USE_SYMBOLIC_LINKS_FILE_PATH);
+	}
 
 	/**
 	 * Compile the data model into PHP files and data structures
+	 *
 	 * @param string $sTargetDir The target directory where to put the resulting files
 	 * @param Page $oP For some output...
 	 * @param bool $bUseSymbolicLinks
 	 * @param bool $bSkipTempDir
-	 * @throws Exception
+	 *
 	 * @return void
+	 * @throws Exception
 	 */
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false, $bSkipTempDir = false)
 	{
 		$sFinalTargetDir = $sTargetDir;
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
 		$sConfigFilePath = utils::GetConfigFilePath($this->sEnvironment);
-		if (is_file($sConfigFilePath))
-		{
+		if (is_file($sConfigFilePath)) {
 			$oConfig = new Config($sConfigFilePath);
-		}
-		else
-		{
+		} else {
 			$oConfig = null;
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-		{
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
-		if ($bUseSymbolicLinks || $bSkipTempDir)
-		{
+		if ($bUseSymbolicLinks || $bSkipTempDir) {
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
 			SetupUtils::rrmdir($sFinalTargetDir);
 			SetupUtils::builddir($sFinalTargetDir); // Here is the directory
-		}
-		else
-		{
+		} else {
 			// Create a temporary directory
 			// Once the compilation is 100% successful, then move the results into the target directory
 			$sTempTargetDir = tempnam(SetupUtils::GetTmpDir(), 'itop-');
@@ -226,17 +261,14 @@ class MFCompiler
 		// The bullet proof implementation would be to compile in a separate directory as it has been done with the dictionaries... that's another story
 		$aModules = $this->oFactory->GetLoadedModules();
 		$sUserRightsModule = '';
-		foreach($aModules as $foo => $oModule)
-		{
-			if ($oModule->GetName() == 'itop-profiles-itil')
-			{
+		foreach ($aModules as $foo => $oModule) {
+			if ($oModule->GetName() == 'itop-profiles-itil') {
 				$sUserRightsModule = 'itop-profiles-itil';
 				break;
 			}
 		}
 		$oUserRightsNode = $this->oFactory->GetNodes('user_rights')->item(0);
-		if ($oUserRightsNode && ($sUserRightsModule == ''))
-		{
+		if ($oUserRightsNode && ($sUserRightsModule == '')) {
 			// Legacy algorithm (itop <= 2.0.3)
 			$sUserRightsModule = $oUserRightsNode->getAttribute('_created_in');
 		}
@@ -245,13 +277,12 @@ class MFCompiler
 		// List root classes
 		//
 		$this->aRootClasses = array();
-		foreach ($this->oFactory->ListRootClasses() as $oClass)
-		{
+		foreach ($this->oFactory->ListRootClasses() as $oClass) {
 			$this->Log("Root class (with child classes): ".$oClass->getAttribute('id'));
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
 		}
-		
-		$this->LoadSnippets();	
+
+		$this->LoadSnippets();
 
 		// Compile, module by module
 		//
@@ -264,33 +295,25 @@ class MFCompiler
 		$this->WriteStaticOnlyHtaccess($sTempTargetDir);
 		$this->WriteStaticOnlyWebConfig($sTempTargetDir);
 
-		foreach($aModules as $foo => $oModule)
-		{
+		static::ToggleUseSymlinksFile($bUseSymbolicLinks);
+
+		foreach ($aModules as $foo => $oModule) {
 			$sModuleName = $oModule->GetName();
 			$sModuleVersion = $oModule->GetVersion();
 
 			$sModuleRootDir = $oModule->GetRootDir();
-			if ($sModuleRootDir != '')
-			{
+			if ($sModuleRootDir != '') {
 				$sModuleRootDir = realpath($sModuleRootDir);
 				$sRelativeDir = basename($sModuleRootDir);
-				if ($bUseSymbolicLinks)
-				{
+				if ($bUseSymbolicLinks) {
 					$sRealRelativeDir = substr($sModuleRootDir, $iStart);
-				}
-				else
-				{
+				} else {
 					$sRealRelativeDir = $sRelFinalTargetDir.'/'.$sRelativeDir;
 				}
 
 				// Push the other module files
 				SetupUtils::copydir($sModuleRootDir, $sTempTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
-
-
-
-			}
-			else
-			{
+			} else {
 				$sRelativeDir = $sModuleName;
 				$sRealRelativeDir = $sModuleName;
 			}

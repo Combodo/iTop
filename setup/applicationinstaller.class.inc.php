@@ -284,7 +284,8 @@ class ApplicationInstaller
 							SetupLog::Info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
 						}
 					}
-					if (utils::IsDevelopmentEnvironment()) {
+
+					if (MFCompiler::HasUseSymlinksFile()) {
 						$bUseSymbolicLinks = true;
 					}
 
