@@ -168,8 +168,9 @@ class SearchForm
 		if ($bAutoSubmit === true) {
 			$aCSSClasses[] = 'no_auto_submit';
 		}
-		$oUiSearchBlock = new Panel(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo), [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
-		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
+		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
+			->AddTitleBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
 		$sHtml = "";
 		if (!$bShowObsoleteData) {
