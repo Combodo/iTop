@@ -5212,7 +5212,7 @@ class AttributeEnum extends AttributeString
 				$sHostClass = $this->GetHostClass();
 				$sSQLTableName = MetaModel::DBGetTable($sHostClass, $this->GetCode());
 			}
-			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB()));
+			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB($sSQLTableName)));
 		}
 
 		if (count($aValues) > 0)
@@ -5266,7 +5266,6 @@ class AttributeEnum extends AttributeString
 					$aValues[] = $aRow['value'];
 				}
 			}
-			IssueLog::Debug('Actual values for '.$sHostClass.'::'.$this->GetCode().': '.print_r($aValues, true));
 		}
 		catch(MySQLException $e)
 		{
