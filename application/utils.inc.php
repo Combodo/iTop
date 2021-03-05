@@ -783,6 +783,8 @@ class utils
 	}
 
 	/**
+	 * @return bool The boolean value of the conf. "trust_proxies" (except if there is no REMOTE_ADDR int his case, it return false)
+	 *
 	 * @since 2.7.4
 	 */
 	public static function IsProxyTrusted()
@@ -865,6 +867,9 @@ class utils
 	 *
 	 * @see utils::GetAbsoluteUrlAppRoot
 	 *
+	 * @param bool $bForceTrustProxy
+	 * @param bool $bTrimQueryString
+	 *
 	 * @return string
 	 *
 	 * @since 2.7.4
@@ -898,6 +903,8 @@ class utils
 	}
 
 	/**
+	 * @param bool $bForceTrustProxy
+	 *
 	 * @return string
 	 *
 	 * @since 2.7.4
@@ -916,6 +923,9 @@ class utils
 	}
 
 	/**
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return int|mixed
 	 * @since 2.7.4
 	 */
 	public static function GetServerPort($bForceTrustProxy = false)
@@ -995,15 +1005,17 @@ class utils
 	/**
 	 * Helper to handle the variety of HTTP servers
 	 * See N°286 (fixed in [896]), and N°634 (this fix)
-	 * 	 
+	 *
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
 	 * Others might leave it unset (no array entry)
 	 *
+	 * @param bool $bForceTrustProxy
+	 *
 	 * @return bool
 	 *
 	 * @since 2.7.4 reverse proxies handling
-	 */	 	
+	 */
 	public static function IsConnectionSecure($bForceTrustProxy = false)
 	{
 		$bSecured = false;
