@@ -64,7 +64,7 @@
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/contract.png</icon>
+          <icon>../../images/icons/icons8-contract.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -410,7 +410,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <style>
-          <icon>images/contract.png</icon>
+          <icon>../../images/icons/icons8-contract.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -584,7 +584,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <style>
-          <icon>images/contract.png</icon>
+          <icon>../../images/icons/icons8-contract.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -927,7 +927,7 @@ public function PrefillSearchForm(&$aContextParam)
           <image_attribute>icon</image_attribute>
         </fields_semantic>
         <style>
-          <icon>images/service.png</icon>
+          <icon>../../images/icons/icons8-service.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1015,7 +1015,7 @@ public function PrefillSearchForm(&$aContextParam)
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/service.png</icon>
+          <icon>../../images/icons/icons8-service.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1375,7 +1375,7 @@ public function PrefillSearchForm(&$aContextParam)
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/service.png</icon>
+          <icon>../../images/icons/icons8-service</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1539,7 +1539,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <style>
-          <icon>images/sla.png</icon>
+          <icon>../../images/icons/icons8-adjust.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1680,7 +1680,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <style>
-          <icon>images/slt.png</icon>
+          <icon>../../images/icons/icons8-time-limit.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -2223,7 +2223,7 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <style>
-          <icon>images/service.png</icon>
+          <icon>../../images/icons/icons8-service.svg</icon>
         </style>
         <reconciliation>
           <attributes>

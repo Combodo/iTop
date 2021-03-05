@@ -25,7 +25,7 @@
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/building.png</icon>
+          <icon>../../images/icons/icons8-organization.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -206,7 +206,7 @@
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/location.png</icon>
+          <icon>../../images/icons/icons8-map-marker.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -391,7 +391,7 @@
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/team.png</icon>
+          <icon>../../images/icons/icons8-customer.svg</icon>
           <main_color>blue-grey</main_color>
           <complementary_color>white</complementary_color>
         </style>
@@ -583,7 +583,7 @@
           <image_attribute>picture</image_attribute>
         </fields_semantic>
         <style>
-          <icon>images/person.png</icon>
+          <icon>../../images/icons/icons8-person-female.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -902,7 +902,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/team.png</icon>
+          <icon>../../images/icons/icons8-team.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1172,7 +1172,7 @@
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-documents.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1329,7 +1329,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-file.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1540,7 +1540,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-cloud-file.svg</icon>
         </style>
         <reconciliation>
           <attributes>

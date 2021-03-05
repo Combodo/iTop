@@ -763,7 +763,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/nas.png</icon>
+          <icon>../../images/icons/icons8-nas.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1011,7 +1011,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/tape.png</icon>
+          <icon>../../images/icons/icons8-cassette.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1324,7 +1324,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/volume.png</icon>
+          <icon>../../images/icons/icons8-hdd.svg</icon>
         </style>
         <reconciliation>
           <attributes>

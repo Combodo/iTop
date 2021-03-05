@@ -16,7 +16,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/mobile-phone.png</icon>
+          <icon>../../images/icons/icons8-phone.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -170,7 +170,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/phone.png</icon>
+          <icon>../../images/icons/icons8-telephone.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -323,7 +323,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/mobile-phone.png</icon>
+          <icon>../../images/icons/icons8-mobile.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -499,7 +499,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/ipphone.png</icon>
+          <icon>../../images/icons/icons8-office-phone.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -652,7 +652,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/tablet.png</icon>
+          <icon>../../images/icons/icons8-smartphone-tablet.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -802,7 +802,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/laptop.png</icon>
+          <icon>../../images/icons/icons8-laptop.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1058,7 +1058,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/printer.png</icon>
+          <icon>../../images/icons/icons8-print.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1244,7 +1244,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/peripherals.png</icon>
+          <icon>../../images/icons/icons8-electronics.svg</icon>
         </style>
         <reconciliation>
           <attributes>

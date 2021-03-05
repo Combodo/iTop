@@ -16,7 +16,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/rack.png</icon>
+          <icon>../../images/icons/icons8-rack.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -391,7 +391,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/power-connection.png</icon>
+          <icon>../../images/icons/icons8-electrical.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -559,7 +559,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/power-connection.png</icon>
+          <icon>../../images/icons/icons8-power-plant.svg</icon>
         </style>
         <reconciliation>
           <attributes>

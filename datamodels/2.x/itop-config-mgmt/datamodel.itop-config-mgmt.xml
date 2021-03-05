@@ -16,7 +16,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/server.png</icon>
+					<icon>../../images/icons/icons8-server.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -268,7 +268,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/server.png</icon>
+					<icon>../../images/icons/icons8-server.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -515,7 +515,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/server.png</icon>
+					<icon>../../images/icons/icons8-server.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -683,7 +683,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/server.png</icon>
+					<icon>../../images/icons/icons8-server.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1244,7 +1244,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/server.png</icon>
+					<icon>../../images/icons/icons8-server.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1549,7 +1549,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/solution.png</icon>
+					<icon>../../images/icons/icons8-application-window.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1709,7 +1709,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/business-process.png</icon>
+					<icon>../../images/icons/icons8-process-improvement.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -1839,7 +1839,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/application.png</icon>
+					<icon>../../images/icons/icons8-software.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2164,7 +2164,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/database.png</icon>
+					<icon>../../images/icons/icons8-database.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2422,7 +2422,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/application.png</icon>
+					<icon>../../images/icons/icons8-desktop.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2873,7 +2873,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/webapp.png</icon>
+					<icon>../../images/icons/icons8-web.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3168,7 +3168,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/patch.png</icon>
+					<icon>../../images/icons/icons8-bandage.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3256,7 +3256,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/patch.png</icon>
+					<icon>../../images/icons/icons8-bandage.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3345,7 +3345,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/patch.png</icon>
+					<icon>../../images/icons/icons8-bandage.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3434,7 +3434,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/licence.png</icon>
+					<icon>../../images/icons/icons8-licence.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3620,7 +3620,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/licence.png</icon>
+					<icon>../../images/icons/icons8-licence.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3759,7 +3759,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/licence.png</icon>
+					<icon>../../images/icons/icons8-software-licence.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -6156,7 +6156,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/group.png</icon>
+					<icon>../../images/icons/icons8-department.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>

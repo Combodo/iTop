@@ -546,7 +546,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/virtualmachine.png</icon>
+          <icon>../../images/icons/icons8-virtual-machine.svg</icon>
         </style>
         <reconciliation>
           <attributes>
