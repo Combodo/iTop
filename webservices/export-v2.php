@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -24,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 if (!defined('__DIR__')) {
@@ -138,6 +126,7 @@ function Usage(Page $oP)
 
 function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
 {
+	$oP->AddSubBlock(TitleUIBlockFactory::MakeForPage(Dict::S('Core:BulkExport:ScopeDefinition')));
 	$oForm = FormUIBlockFactory::MakeStandard('form');
 	$oForm->SetAction($sAction);
 	$oP->AddSubBlock($oForm);
@@ -151,7 +140,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oForm->AddSubBlock($oFieldQuery);
 
 	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
-	$oSelect = InputUIBlockFactory::MakeForSelect("select_phrasebook");
+	$oSelect = InputUIBlockFactory::MakeForSelect('query', "select_phrasebook");
 	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:SelectOne'), false));
 
 	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
@@ -381,9 +370,8 @@ EOF
 
 function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 {
-	if ($sMode == 'dialog')
-	{
-		$oP = new ajax_page('');
+	if ($sMode == 'dialog') {
+		$oP = new AjaxPage();
 		$oP->add('<div id="interactive_export_dlg">');
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
 		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
@@ -726,19 +714,16 @@ try
 				$oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
-		}
-		else
-		{
-			$oP = new ajax_page('iTop export');
+		} else {
+			$oP = new AjaxPage('iTop export');
 			$oP->SetContentType($oExporter->GetMimeType());
 		}
 		DoExport($oP, $oExporter, false);
 		$oP->output();
 	}
 }
-catch (BulkExportMissingParameterException $e)
-{
-	$oP = new ajax_page('iTop Export');
+catch (BulkExportMissingParameterException $e) {
+	$oP = new AjaxPage('iTop Export');
 	$oP->add($e->getMessage());
 	Usage($oP);
 	$oP->output();
