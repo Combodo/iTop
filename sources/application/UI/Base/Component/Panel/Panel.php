@@ -192,6 +192,22 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * Set the subtitle from the $oBlock, replacing any existing content
+	 *
+	 * @see static::$oSubTitleBlock
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function SetSubTitleBlock(iUIBlock $oBlock)
+	{
+		$this->oSubTitleBlock = $oBlock;
+
+		return $this;
+	}
+
+	/**
 	 * Helper to set the subtitle from a simple text ($sSubTitle), replacing any existing block
 	 *
 	 * @see static::$oSubTitleBlock
