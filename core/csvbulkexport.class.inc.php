@@ -1,20 +1,9 @@
 <?php
-// Copyright (C) 2015-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -201,7 +190,7 @@ class CSVBulkExport extends TabularBulkExport
 				$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 				$sDefaultEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
 				foreach ($aPossibleEncodings as $sIconvCode => $sDisplayName) {
-					$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption('$sIconvCode', $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
+					$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sIconvCode, $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
 				}
 				//markup
 				$oFieldSetMarkup = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
