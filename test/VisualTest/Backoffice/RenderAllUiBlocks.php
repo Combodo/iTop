@@ -88,6 +88,9 @@ $oAlertNonClosable = AlertUIBlockFactory::MakeNeutral('Alert not closable, not c
 	->SetIsClosable(false)
 	->SetIsCollapsible(false);
 $oPageContentLayout->AddMainBlock($oAlertNonClosable);
+$oAlertCollapsibleNotClosable = AlertUIBlockFactory::MakeNeutral('Alert collapsible but nos closable', $sContent)
+	->SetIsClosable(false);
+$oPageContentLayout->AddMainBlock($oAlertCollapsibleNotClosable);
 $oAlertSaveCollapsibleState = AlertUIBlockFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
 	->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
 $oPageContentLayout->AddMainBlock($oAlertSaveCollapsibleState);
