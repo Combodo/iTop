@@ -58,6 +58,10 @@ class StaticTable extends UIContentBlock
 	private $aExtraParams;
 	/*@var string $sUrlForRefresh*/
 	private $sFilter;
+	/** @var array $aOptions 
+	 * List of specific options for display datatable
+	 */
+	private $aOptions;
 
 	public function __construct(string $sId = null, array $aContainerCSSClasses = [], array $aExtraParams = [])
 	{
@@ -65,6 +69,7 @@ class StaticTable extends UIContentBlock
 		$this->aColumns = [];
 		$this->aData = [];
 		$this->aExtraParams = $aExtraParams;
+		$this->aOptions = [];
 	}
 
 	/**
@@ -121,5 +126,35 @@ class StaticTable extends UIContentBlock
 						$('#".$this->sId."').DataTable().clear();
 	                    $('#".$this->sId."').dataTable().fnAddData(data);
 					});";
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function GetOption(string $sOption)
+	{
+		if (isset($this->aOptions[$sOption])) {
+			return $this->aOptions[$sOption];
+		}
+		return null;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetOptions(): array
+	{
+		return $this->aOptions;
+	}
+
+	/**
+	 * @param array $aOptions
+	 * 
+	 * @return $this
+	 */
+	public function SetOptions($aOptions)
+	{
+		$this->aOptions = $aOptions;
+		return $this;
 	}
 }

@@ -1,10 +1,10 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{% if oUIBlock.GetOptions() is not empty %}
-{% set iPageSize = oUIBlock.GetOptions()["iPageSize"] %}
+{% if oUIBlock.GetOption("iPageSize") is not empty %}
+    {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
-{% set iPageSize = 10 %}
+    {% set iPageSize = 10 %}
 {% endif %}
 
 $('#{{ oUIBlock.GetId() }}').DataTable({
@@ -34,6 +34,9 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     autoWidth: false,
     rowId: "id",
     filter: false,
+    {% if oUIBlock.GetOption("pageLength") is not empty %}
+    pageLength: {{ oUIBlock.GetOptions()["pageLength"] }},
+    {% endif %}
     {% if oUIBlock.GetData()|length <= iPageSize %}
     paging: false,
     {% endif %}
