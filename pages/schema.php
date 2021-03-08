@@ -981,9 +981,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
 	);
 	
-	$oAttributesPanel = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table');
-	$sTableId = $oAttributesPanel->GetId();
-	$oPage->AddUiBlock($oAttributesPanel);
+	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", array('pageLength' => -1));
+	$oPage->AddUiBlock($oAttributesTable);
 	$oPage->add_script(
 		<<<JS
 $('#ibo-datamodel-viewer--attributes-table').on('init.dt draw.dt', function(){
