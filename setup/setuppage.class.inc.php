@@ -168,7 +168,7 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated since 3.0.0 use SetupLog::Error
+	 * @deprecated 3.0.0 use SetupLog::Error
 	 */
 	public static function log_error($sText)
 	{
@@ -176,7 +176,7 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated since 3.0.0 use SetupLog::Warning
+	 * @deprecated 3.0.0 use SetupLog::Warning
 	 */
 	public static function log_warning($sText)
 	{
@@ -184,7 +184,7 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated since 3.0.0 use SetupLog::Info
+	 * @deprecated 3.0.0 use SetupLog::Info
 	 */
 	public static function log_info($sText)
 	{
@@ -192,7 +192,7 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * deprecated since 3.0.0 use SetupLog::Ok
+	 * deprecated 3.0.0 use SetupLog::Ok
 	 */
 	public static function log_ok($sText)
 	{
@@ -200,7 +200,7 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated since 3.0.0 use SetupLog::Ok
+	 * @deprecated 3.0.0 use SetupLog::Ok
 	 */
 	public static function log($sText)
 	{
