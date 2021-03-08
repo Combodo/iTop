@@ -7,7 +7,9 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
-use Exception;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
+use Dict;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -128,15 +130,37 @@ class TwigHelper
 				$sPath = utils::LocalPath($e->getSourceContext()->getPath()).' ('.$e->getLine().') - ';
 			}
 			$sMessage = $sPath.$e->getMessage();
+
 			if (strpos($e->getMessage(), 'Unable to find template') === false) {
 				IssueLog::Error($sMessage);
-				// Todo 3.0 Less violent message
-				throw new Exception($sMessage);
-			} elseif ($bLogMissingFile) {
+
+				return static::GenerateEndUserError(Dict::S('UI:Error:TemplateRendering'), $sMessage);
+			}
+
+			if ($bLogMissingFile) {
 				IssueLog::Debug($sMessage);
 			}
 		}
 
 		return '';
+	}
+
+	/**
+	 * @param string $sTitle
+	 * @param string $sMessage
+	 *
+	 * @return string error panel markup
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected static function GenerateEndUserError(string $sTitle, string $sMessage): string
+	{
+		$oAlert = AlertUIBlockFactory::MakeForFailure($sTitle, $sMessage)
+			->SetIsClosable(false)
+			->SetIsCollapsible(false); // not rendering JS so...
+
+		return BlockRenderer::RenderBlockTemplates($oAlert);
 	}
 }

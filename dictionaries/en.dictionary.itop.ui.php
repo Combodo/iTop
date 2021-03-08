@@ -460,6 +460,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)',
+	'UI:Error:TemplateRendering' => 'Cannot render template',
 
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
