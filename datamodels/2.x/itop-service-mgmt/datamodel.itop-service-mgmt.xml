@@ -1674,7 +1674,7 @@ public function PrefillSearchForm(&$aContextParam)
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/slt.png</icon>
+					<icon>../../images/icons/icons8-time-limit.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
