@@ -722,7 +722,7 @@ class LoginWebPage extends NiceWebPage
 
 	public static function HTTPReload()
 	{
-		$sOriginURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$sOriginURL = utils::GetCurrentAbsoluteUrl();
 		if (!utils::StartsWith($sOriginURL, utils::GetAbsoluteUrlAppRoot()))
 		{
 			// If the found URL does not start with the configured AppRoot URL

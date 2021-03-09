@@ -623,7 +623,7 @@ class ApplicationInstaller
 		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
 		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 		//$aCompilerLog = $oMFCompiler->GetLog();
-		//SetupPage::log_info(implode("\n", $aCompilerLog));
+		//SetupLog::Info(implode("\n", $aCompilerLog));
 		SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
 
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
@@ -727,10 +727,15 @@ class ApplicationInstaller
 				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
 				if ($iOrphanCount > 0)
 				{
-					SetupLog::Info("Removing the orphan records...");
-					$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
-					CMDBSource::Query($sCleanup);
-					SetupLog::Info("Cleanup completed successfully.");
+					if ($iOrphanCount > 100000)
+					{
+						SetupLog::Info("There are too much useless records ($iOrphanCount) in {$sDBPrefix}priv_change. Cleanup cannot be done during setup.");
+					} else {
+						SetupLog::Info("Removing the orphan records...");
+						$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
+						CMDBSource::Query($sCleanup);
+						SetupLog::Info("Cleanup completed successfully.");
+					}
 				}
 				else
 				{

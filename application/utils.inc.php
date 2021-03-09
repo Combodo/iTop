@@ -860,16 +860,34 @@ class utils
 		//		}
 	}
 
+	/**
+	 * @return bool The boolean value of the conf. "trust_proxies" (except if there is no REMOTE_ADDR int his case, it return false)
+	 *
+	 * @since 2.7.4
+	 */
+	public static function IsProxyTrusted()
+	{
+		if (empty($_SERVER['REMOTE_ADDR'])) {
+			return false;
+		}
+
+		$bTrustProxies = (bool) self::GetConfig()->Get('trust_proxies');
+
+		return $bTrustProxies;
+	}
+
     /**
      * Returns the absolute URL to the application root path
      *
-     * @param bool $bTrustProxy
+     * @param bool $bForceTrustProxy
      *
      * @return string The absolute URL to the application root, without the first slash
      *
      * @throws \Exception
+     *
+     * @since 2.7.4 $bForceTrustProxy param added
      */
-	public static function GetAbsoluteUrlAppRoot($bTrustProxy=false)
+	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
 		static $sUrl = null;
 		if ($sUrl === null)
@@ -877,7 +895,7 @@ class utils
 			$sUrl = self::GetConfig()->Get('app_root_url');
 			if ($sUrl == '')
 			{
-				$sUrl = self::GetDefaultUrlAppRoot($bTrustProxy);
+				$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
 			}
 			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
@@ -901,33 +919,116 @@ class utils
 	 * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the
 	 * app_root_url conf parameter is not defined.
 	 *
-	 * @param bool $bTrustProxy
-	 * 
+	 * @param bool $bForceTrustProxy
+	 *
 	 * @return string
 	 *
 	 * @throws \Exception
-     */
-    public static function GetDefaultUrlAppRoot($bTrustProxy=false)
+	 *
+	 * @since 2.7.4 $bForceTrustProxy param added
+	 */
+	public static function GetDefaultUrlAppRoot($bForceTrustProxy = false)
+	{
+		$sAbsoluteUrl = self::GetCurrentAbsoluteUrl($bForceTrustProxy, true);
+
+		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
+		$sAppRoot       = realpath(APPROOT);
+
+		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
+	}
+
+
+	/**
+	 * Build the current absolute URL from the server's variables.
+	 *
+	 * For almost every usage, you should use the more secure utils::GetAbsoluteUrlAppRoot() : instead of reading the current uri, it provide you the configured application's root URL (this is done during the setup and chn be changed in the configuration file)
+	 *
+	 * @see utils::GetAbsoluteUrlAppRoot
+	 *
+	 * @param bool $bForceTrustProxy
+	 * @param bool $bTrimQueryString
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetCurrentAbsoluteUrl($bForceTrustProxy = false, $bTrimQueryString = false)
 	{
 		// Build an absolute URL to this page on this server/port
-		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = self::IsConnectionSecure($bTrustProxy) ? 'https' : 'http';
-		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
-		if ($sProtocol == 'http')
-		{
+		$sServerName = self::GetServerName($bForceTrustProxy);
+		$bIsSecure = self::IsConnectionSecure($bForceTrustProxy);
+		$sProtocol = $bIsSecure ? 'https' : 'http';
+		$iPort = self::GetServerPort($bForceTrustProxy);
+		if ($bIsSecure) {
+			$sPort = ($iPort == 443) ? '' : ':'.$iPort;
+		} else {
 			$sPort = ($iPort == 80) ? '' : ':'.$iPort;
 		}
-		else
-		{
-			$sPort = ($iPort == 443) ? '' : ':'.$iPort;
+
+		$sPath = self::GetRequestUri($bForceTrustProxy);
+
+		if ($bTrimQueryString) {
+			// remove all the parameters from the query string
+			$iQuestionMarkPos = strpos($sPath, '?');
+			if ($iQuestionMarkPos !== false) {
+				$sPath = substr($sPath, 0, $iQuestionMarkPos);
+			}
 		}
+
+		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
+
+		return $sAbsoluteUrl;
+	}
+
+	/**
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetServerName($bForceTrustProxy = false)
+	{
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+
+		if ($bTrustProxy) {
+			$sServerName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $sServerName;
+		}
+
+		return $sServerName;
+	}
+
+	/**
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return int|mixed
+	 * @since 2.7.4
+	 */
+	public static function GetServerPort($bForceTrustProxy = false)
+	{
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		$sServerPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+
+		if ($bTrustProxy) {
+			$sServerPort = isset($_SERVER['HTTP_X_FORWARDED_PORT']) ? $_SERVER['HTTP_X_FORWARDED_PORT'] : $sServerPort;
+		}
+
+		return $sServerPort;
+	}
+
+	/**
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetRequestUri()
+	{
 		// $_SERVER['REQUEST_URI'] is empty when running on IIS
 		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
-		if (!empty($_SERVER['REQUEST_URI']))
-		{
-			$sPath = $_SERVER['REQUEST_URI'];
-		}
-		else
+		if (empty($_SERVER['REQUEST_URI']))
 		{
 			$sPath = $_SERVER['SCRIPT_NAME'];
 			if (!empty($_SERVER['QUERY_STRING']))
@@ -938,18 +1039,7 @@ class utils
 		}
 		$sPath = $_SERVER['REQUEST_URI'];
 
-		// remove all the parameters from the query string
-		$iQuestionMarkPos = strpos($sPath, '?');
-		if ($iQuestionMarkPos !== false)
-		{
-			$sPath = substr($sPath, 0, $iQuestionMarkPos);
-		}
-		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
-
-		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
-		$sAppRoot       = realpath(APPROOT);
-
-		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
+		return $sPath;
 	}
 
 	/**
@@ -1015,28 +1105,32 @@ class utils
 	/**
 	 * Helper to handle the variety of HTTP servers
 	 * See N°286 (fixed in [896]), and N°634 (this fix)
-	 * 	 
+	 *
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
-	 * Others might leave it unset (no array entry)	 
+	 * Others might leave it unset (no array entry)
 	 *
-	 * @param bool $bTrustProxy
+	 * @param bool $bForceTrustProxy
 	 *
 	 * @return bool
-	 */	 	
-	public static function IsConnectionSecure($bTrustProxy=false)
+	 *
+	 * @since 2.7.4 reverse proxies handling
+	 */
+	public static function IsConnectionSecure($bForceTrustProxy = false)
 	{
 		$bSecured = false;
 
-		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $bTrustProxy)
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		if ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
 		{
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 		}
-		elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && $bTrustProxy)
+		elseif ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']))
 		{
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
 		}
-		elseif (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']))
+		elseif ((!empty($_SERVER['HTTPS'])) && (strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$bSecured = (strcasecmp($_SERVER['HTTPS'], 'off') !== 0);
 		}
@@ -2550,10 +2644,10 @@ class utils
 	public static function GetCkeditorPref()
 	{
 		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-		
+
 		$aDefaultConf = array(
 			'language'=> $sLanguage,
-			'contentsLanguage' => $sLanguage, 
+			'contentsLanguage' => $sLanguage,
 			'extraPlugins' => 'disabler,codesnippet,mentions',
 		);
 
@@ -2587,10 +2681,10 @@ HTML;
 				];
 			}
 		}
-		
+
 		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
 
-		
+
 		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
 
@@ -2601,4 +2695,5 @@ HTML;
 	public static function IsWindowsEnvironment(){
 		return (substr(PHP_OS,0,3) === 'WIN');
 	}
+
 }
