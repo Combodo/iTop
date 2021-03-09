@@ -81,6 +81,30 @@ if (!class_exists('AttachmentInstaller'))
 		}
 
 		/**
+		 * @param string $sTableName
+		 * @param int $iBulkSize
+		 *
+		 * @return array
+		 * @throws \CoreException
+		 * @throws \MySQLException
+		 * @throws \MySQLHasGoneAwayException
+		 */
+		public static function GetOrphanAttachmentIds($sTableName, $iBulkSize){
+			$sSqlQuery = <<<SQL
+SELECT id as attachment_id FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL) LIMIT {$iBulkSize};
+SQL;
+			/** @var \mysqli_result $oQueryResult */
+			$oQueryResult = CMDBSource::Query($sSqlQuery);
+
+			$aIds = [];
+			while($aRow = $oQueryResult->fetch_array()){
+				$aIds[] = $aRow['attachment_id'];
+			}
+
+			return $aIds;
+		}
+
+		/**
 		 * Handler called before creating or upgrading the database schema
 		 * @param $oConfiguration Config The new configuration of the application
 		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
@@ -97,10 +121,32 @@ if (!class_exists('AttachmentInstaller'))
 				$iCount = CMDBSource::QueryToScalar($sCountQuery);
 				if ($iCount > 0)
 				{
-					SetupPage::log_info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted."); 
-					$sRepairQuery = "DELETE FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL)";
-					$iRet = CMDBSource::Query($sRepairQuery); // Throws an exception in case of error
-					SetupPage::log_info("Cleanup of orphan attachments successfully completed.");
+					SetupPage::log_info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted.");
+
+					$iBulkSize = 100;
+					$iMaxDuration = 5;
+					$iDeletedCount = 0;
+					$fStartTime = microtime(true);
+					$aIds = self::GetOrphanAttachmentIds($sTableName, $iBulkSize);
+
+					while (count($aIds) !== 0) {
+						$sCleanupQuery = sprintf("DELETE FROM `$sTableName` WHERE `id` IN (%s)", implode(",", $aIds));
+						CMDBSource::Query($sCleanupQuery); // Throws an exception in case of error
+
+						$iDeletedCount += count($aIds);
+						$fElapsed = microtime(true) - $fStartTime;
+
+						if ($fElapsed > $iMaxDuration){
+							SetupPage::log_info(sprintf("Cleanup of orphan attachments interrupted after %.3f s. $iDeletedCount records were deleted among $iCount.", $fElapsed));
+							break;
+						}
+
+						$aIds = self::GetOrphanAttachmentIds($sTableName, $iBulkSize);
+					}
+
+					if (count($aIds) === 0){
+						SetupPage::log_info("Cleanup of orphan attachments successfully completed.");
+					}
 				}
 				else
 				{
@@ -108,7 +154,7 @@ if (!class_exists('AttachmentInstaller'))
 				}
 			}
 		}
-		
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application
@@ -123,6 +169,7 @@ if (!class_exists('AttachmentInstaller'))
 			// Prerequisite: change null into 0 (workaround to the fact that we cannot use IS NULL in OQL)
 			SetupPage::log_info("Initializing attachment/item_org_id - null to zero"); 
 			$sTableName = MetaModel::DBGetTable('Attachment');
+
 			$sRepair = "UPDATE `$sTableName` SET `item_org_id` = 0 WHERE `item_org_id` IS NULL";
 			CMDBSource::Query($sRepair);
 
@@ -132,7 +179,13 @@ if (!class_exists('AttachmentInstaller'))
 			$iUpdated = 0;
 			while ($oAttachment = $oSet->Fetch())
 			{
+				if ($oAttachment->Get('item_id') == 0) {
+					//do not treat orphan attachment
+					continue;
+				}
+
 				$oContainer = MetaModel::GetObject($oAttachment->Get('item_class'), $oAttachment->Get('item_id'), false /* must be found */, true /* allow all data */);
+
 				if ($oContainer)
 				{
 					$oAttachment->SetItem($oContainer, true /*updateonchange*/);
