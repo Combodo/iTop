@@ -33,6 +33,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:AttributeLinkedSet' => 'Tablica obiektów',
 	'Core:AttributeLinkedSet+' => 'Wszelkiego rodzaju obiekty tej samej klasy lub podklasy',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikaty w polu \'%1$s\' : %2$s',
+
 	'Core:AttributeDashboard' => 'Pulpit',
 	'Core:AttributeDashboard+' => '',
 
@@ -237,7 +239,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChangeOp' => 'Operacje zmian',
-	'Class:CMDBChangeOp+' => 'Śledzenie operacji zmian',
+	'Class:CMDBChangeOp+' => 'Zmiana dokonana przez osobę na jednym obiekcie w jednostce czasu',
 	'Class:CMDBChangeOp/Attribute:change' => 'zmiana',
 	'Class:CMDBChangeOp/Attribute:change+' => 'zmiana',
 	'Class:CMDBChangeOp/Attribute:date' => 'data',
@@ -245,11 +247,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'użytkownik',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'kto dokonał zmiany',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'klasa obiektu',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'klasa obiektu',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'klasa obiektu, którego dotyczy zmiana',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'id obiektu',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'identyfikator obiektu',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'identyfikator obiektu, którego dotyczy zmiana',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Podklasa CMDBChangeOp',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Nazwa finalna klasy',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Nazwa finalna klasy gdzie dokonano zmiany',
 ));
 
 //
@@ -298,12 +300,16 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Change:ObjectCreated' => 'Utworzono obiekt',
 	'Change:ObjectDeleted' => 'Obiekt usunięty',
 	'Change:ObjectModified' => 'Obiekt zmodyfikowany',
+	'Change:TwoAttributesChanged' => 'Zmodyfikowano %1$s i %2$s',
+	'Change:ThreeAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i 1 inny',
+	'Change:FourOrMoreAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i %3$s inne',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmianiono na %2$s (poprzednia wartość: %3$s)',
 	'Change:AttName_SetTo' => '%1$s zmieniono na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s dołączone do %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s zmodyfikowano, poprzednia wartość: %2$s',
 	'Change:AttName_Changed' => '%1$s zmodyfikowano',
 	'Change:AttName_EntryAdded' => '%1$s zmodyfikowano, dodano nowy wpis: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Zmieniono z %2$s na %1$s',
 	'Change:LinkSet:Added' => 'dodano %1$s',
 	'Change:LinkSet:Removed' => 'usunięto %1$s',
 	'Change:LinkSet:Modified' => 'zmodyfikowano %1$s',
@@ -345,7 +351,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Event/Attribute:userinfo' => 'Informacje użytkownika',
 	'Class:Event/Attribute:userinfo+' => 'identyfikacja użytkownika wykonującego czynność, która wywołała to zdarzenie',
 	'Class:Event/Attribute:finalclass' => 'Podklasa zdarzenia',
-	'Class:Event/Attribute:finalclass+' => 'Nazwa finalnej klasy',
+	'Class:Event/Attribute:finalclass+' => 'Nazwa finalnej klasy: określa rodzaj zdarzenia, które miało miejsce',
 ));
 
 //
@@ -474,7 +480,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action/Attribute:description' => 'Opis',
 	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => 'W użytkowaniu czy ?',
+	'Class:Action/Attribute:status+' => 'Ten stan steruje działaniem',
 	'Class:Action/Attribute:status/Value:test' => 'Testowane',
 	'Class:Action/Attribute:status/Value:test+' => 'Testowane',
 	'Class:Action/Attribute:status/Value:enabled' => 'W użytkowaniu',
@@ -503,12 +509,20 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ActionEmail' => 'Powiadomienie e-mail',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'Ten status decyduje o tym, kto zostanie powiadomiony: tylko odbiorca testowy, wszyscy (Do, DW i UDW) lub nikt',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Powiadomiony zostanie tylko odbiorca testowy',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Wszystkie e-maile "Do", "DW" i "UDW" są powiadamiane',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'Powiadomienie e-mail nie zostanie wysłane',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Odbiorca testowy',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Miejsce docelowe w przypadku, gdy status jest ustawiony na "Test"',
 	'Class:ActionEmail/Attribute:from' => 'Z',
 	'Class:ActionEmail/Attribute:from+' => 'Zostanie wysłany do nagłówka wiadomości e-mail',
-	'Class:ActionEmail/Attribute:reply_to' => 'Odpowiedzieć do',
+	'Class:ActionEmail/Attribute:from_label' => 'Z (etykieta)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Wyświetlana nazwa nadawcy zostanie wysłana do nagłówka wiadomości e-mail',
+	'Class:ActionEmail/Attribute:reply_to' => 'Odpowiedź do',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Zostanie wysłany do nagłówka wiadomości e-mail',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Odpowiedź do (etykieta)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Odpowiedź do zostanie wysłana do nagłówka wiadomości e-mail',
 	'Class:ActionEmail/Attribute:to' => 'Do',
 	'Class:ActionEmail/Attribute:to+' => 'Miejsce docelowe wiadomości e-mail',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -626,6 +640,15 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObjectUpdate+' => 'Wyzwalanie przy aktualizacji obiektu [klasy potomnej] danej klasy',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Pola docelowe',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:TriggerOnObjectMention' => 'Wyzwalacz (przy wzmiance o obiekcie)',
+	'Class:TriggerOnObjectMention+' => 'Wyzwalanie przy wzmiance (@xxx) o obiekcie [klasy potomnej] danej klasy w atrybucie dziennika',
 ));
 
 //
@@ -1045,4 +1068,52 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Klasa docelowa',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Pozostałe próby',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Ostatni kod błędu',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Ostatni błąd',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Ostatnia próba',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:AbstractResource' => 'Zasób abstrakcyjny',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:ResourceAdminMenu' => 'Zasób Menu administratora',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:ResourceRunQueriesMenu' => 'Zasób Menu zapytań uruchamiania',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Class:ResourceSystemMenu' => 'Zasób Menu systemowe',
+	'Class:ResourceSystemMenu+' => '',
+));
+
+

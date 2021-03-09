@@ -1,24 +1,7 @@
 <?php
-/**
- * Localized data
- *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+/*
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 
@@ -88,6 +71,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Query/Attribute:name+' => 'Identyfikacja zapytania',
 	'Class:Query/Attribute:description' => 'Opis',
 	'Class:Query/Attribute:description+' => 'Długi opis zapytania (cel, zastosowanie itp.)',
+	'Class:Query/Attribute:is_template' => 'Szablon dla pól OQL',
+	'Class:Query/Attribute:is_template+' => 'Może służyć jako źródło OQL odbiorcy w powiadomieniach',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Tak',
+	'Class:Query/Attribute:is_template/Value:no' => 'Nie',
 	'Class:QueryOQL/Attribute:fields' => 'Pola',
 	'Class:QueryOQL/Attribute:fields+' => 'Rozdzielana przecinkami lista atrybutów (lub alias.attribute) do wyeksportowania',
 	'Class:QueryOQL' => 'Zapytanie OQL',
@@ -392,12 +379,15 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Button:Logoff' => 'Wyloguj',
 	'UI:Button:GlobalSearch' => 'Szukaj',
 	'UI:Button:Search' => ' Szukaj ',
+	'UI:Button:Clear' => ' Wyczyść ',
+	'UI:Button:SearchInHIerarchy' => ' Szukaj w hierarchii ',
 	'UI:Button:Query' => ' Zapytanie ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Zapisz',
 	'UI:Button:Cancel' => 'Anuluj',
 	'UI:Button:Close' => 'Zamknij',
 	'UI:Button:Apply' => 'Zastosuj',
+	'UI:Button:Send' => 'Wyślij',
 	'UI:Button:Back' => ' << Wstecz ',
 	'UI:Button:Restart' => ' |<< Restart ',
 	'UI:Button:Next' => ' Następny >> ',
@@ -425,6 +415,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Button:Wait' => 'Proszę czekać, trwa aktualizowanie pól',
 	'UI:Treeview:CollapseAll' => 'Zwiń wszystkie',
 	'UI:Treeview:ExpandAll' => 'Rozwiń wszystkie',
+	'UI:UserPref:DoNotShowAgain' => 'Nie pokazuj ponownie',
+	'UI:InputFile:NoFileSelected' => 'Nie wybrano pliku',
+	'UI:InputFile:SelectFile' => 'Wybierz plik',
 
 	'UI:SearchToggle' => 'Szukaj',
 	'UI:ClickToCreateNew' => 'Utwórz %1$s',
@@ -457,6 +450,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Błąd: obiekty zostały już usunięte!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Nie możesz zbiorczo usuwać obiektów klasy %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Nie możesz usuwać obiektów klasy %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'Nie możesz przeglądać obiektów klasy %1$s',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Nie możesz przeprowadzić zbiorczej aktualizacji obiektów klasy %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Błąd: obiekt został już sklonowany!',
 	'UI:Error:ObjectAlreadyCreated' => 'Błąd: obiekt został już utworzony!',
@@ -465,6 +459,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Error:InvalidDashboard' => 'Błąd: nieprawidłowy pulpit nawigacyjny',
 	'UI:Error:MaintenanceMode' => 'Aplikacja jest obecnie w trakcie konserwacji',
 	'UI:Error:MaintenanceTitle' => 'Konserwacja',
+	'UI:Error:InvalidToken' => 'Błąd: żądana operacja została już wykonana (nie znaleziono tokena CSRF)',
 
 	'UI:GroupBy:Count' => 'Licznik',
 	'UI:GroupBy:Count+' => 'Liczba elementów',
@@ -686,8 +681,18 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Audit:HeaderNbObjects' => '# Obiekty',
 	'UI:Audit:HeaderNbErrors' => '# Błędy',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'Błąd OQL',
+	'UI:Audit:Error:ValueNA' => 'n/d',
+	'UI:Audit:ErrorIn_Rule' => 'Błąd w regule',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'Błąd OQL w regule %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Błąd w kategorii',
 	'UI:Audit:ErrorIn_Category_Reason' => 'Błąd OQL w kategorii %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Błędy audytu',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Obiekty poddane audytowi',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Obiekty z błędami',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Obiekty sprawdzone',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s błędów z %2$s - %3$s%%',
+
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Wykonywanie zapytań OQL',
 	'UI:RunQuery:QueryExamples' => 'Przykłady zapytań',
@@ -703,7 +708,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Rozwinięte OQL do przeliczenia',
 	'UI:RunQuery:ResultSQLCount' => 'Wynikowy kod SQL do przeliczenia',
 	'UI:RunQuery:ResultSQL' => 'Wynikowy SQL',
-	'UI:RunQuery:Error' => 'Wystąpił błąd podczas wykonywania zapytania: %1$s',
+	'UI:RunQuery:Error' => 'Wystąpił błąd podczas wykonywania zapytania',
 	'UI:Query:UrlForExcel' => 'Adres URL do użycia w kwerendach web MS-Excel',
 	'UI:Query:UrlV1' => 'Lista pól pozostała nieokreślona. Strona <em>export-V2.php</em> nie może zostać wywołana bez tych informacji. Dlatego sugerowany poniżej adres URL wskazuje na starszą stronę: <em>export.php</em>. Ta starsza wersja eksportu ma następujące ograniczenie: lista eksportowanych pól może się różnić w zależności od formatu wyjściowego i modelu danych '.ITOP_APPLICATION_SHORT.'. <br/> Jeśli chcesz zagwarantować, że lista eksportowanych kolumn pozostanie stabilna w dłuższej perspektywie, musisz określić wartość dla atrybutu "Pola" i użyć strony <em>export-V2.php</em >.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schemat obiektów',
@@ -773,6 +778,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Schema:Attribute/Filter' => 'Filtr~~',
 	'UI:Schema:DefaultNullValue' => 'Domyślnie pusty (null) : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Wpisz pierwsze 3 znaki...',
+	'UI:Edit:SearchQuery' => 'Wybierz wstępnie zdefiniowane zapytanie',
 	'UI:Edit:TestQuery' => 'Zapytanie testowe',
 	'UI:Combo:SelectValue' => '--- wybierz wartość ---',
 	'UI:Label:SelectedObjects' => 'Wybrane obiekty: ',
@@ -863,7 +869,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:FatalErrorMessage' => 'Błąd krytyczny, '.ITOP_APPLICATION_SHORT.' nie może kontynuować.',
 	'UI:Error_Details' => 'Błąd: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => ITOP_APPLICATION_SHORT.' zarządzanie użytkownikami - projekcje klas',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' zarządzanie użytkownikami - projekcje profili',
 	'UI:UserManagement:Class' => 'Klasa',
 	'UI:UserManagement:Class+' => 'Klasa obiektów',
@@ -872,8 +877,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:UserManagement:AnyObject' => '* dowolny *',
 	'UI:UserManagement:User' => 'Użytkownik',
 	'UI:UserManagement:User+' => 'Użytkownik zaangażowany w projekcję',
-	'UI:UserManagement:Profile' => 'Profil',
-	'UI:UserManagement:Profile+' => 'Profil, w którym określono projekcję',
 	'UI:UserManagement:Action:Read' => 'Czytanie',
 	'UI:UserManagement:Action:Read+' => 'Odczytaj / wyświetl obiekty',
 	'UI:UserManagement:Action:Modify' => 'Zmienianie',
@@ -913,7 +916,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:ChangeManagementMenu:Title' => 'Przegląd zmian',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Zmiany według typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Zmiany według statusu',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Zmiany według grup roboczych',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Zmiany jeszcze nie przypisane',
 
 	'UI:ConfigurationManagementMenu' => 'Zarządzanie konfiguracją',
@@ -963,7 +965,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 	'Menu:NotificationsMenu' => 'Powiadomienia', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Konfiguracja powiadomień', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfiguracja <span class="hilite">Powiadomienia</span>',
+	'UI:NotificationsMenu:Title' => 'Konfiguracja Powiadomienia',
 	'UI:NotificationsMenu:Help' => 'Pomoc',
 	'UI:NotificationsMenu:HelpContent' => '<p>W '.ITOP_APPLICATION_SHORT.' powiadomienia są w pełni konfigurowalne. Opierają się na dwóch zestawach obiektów: <i> wyzwalaczach i działaniach </i>.</p>
 <p><i><b>Wyzwalacze</b></i> określają, kiedy powiadomienie zostanie wykonane. W ramach programu istnieją różne wyzwalacze '.ITOP_APPLICATION_SHORT.', ale inne mogą zostać wprowadzone przez rozszerzenia:
@@ -1152,7 +1154,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:FavoriteLanguage' => 'Język interfejsu użytkownika',
 	'UI:Favorites:SelectYourLanguage' => 'Wybierz preferowany język',
 	'UI:FavoriteOtherSettings' => 'Inne ustawienia',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Domyślna długość list:  %1$s pozycji na stronę',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Domyślna długość:  %1$s pozycji na stronę',
 	'UI:Favorites:ShowObsoleteData' => 'Pokaż wycofane dane',
 	'UI:Favorites:ShowObsoleteData+' => 'Pokaż wycofane dane w wynikach wyszukiwania i listach elementów do wybrania',
 	'UI:NavigateAwayConfirmationMessage' => 'Wszelkie modyfikacje zostaną odrzucone.',
@@ -1177,7 +1179,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:ColumnsAndSortOrder' => 'Kolumny i porządek sortowania:',
 	'UI:UseDefaultSettings' => 'Użyj ustawień domyślnych',
 	'UI:UseSpecificSettings' => 'Użyj następujących ustawień:',
-	'UI:Display_X_ItemsPerPage' => 'Pokaż %1$s pozycji na stronę',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Pokaż',
+	'UI:Display_X_ItemsPerPage_suffix' => 'pozycji na stronę',
 	'UI:UseSavetheSettings' => 'Zapisz ustawienia',
 	'UI:OnlyForThisList' => 'Tylko dla tej listy',
 	'UI:ForAllLists' => 'Domyślnie dla wszystkich list',
@@ -1190,8 +1193,9 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:OQL:UnknownClassAndFix' => 'Nieznana klasa "%1$s". Możesz spróbować "%2$s" w zamian.',
 	'UI:OQL:UnknownClassNoFix' => 'Nieznana klasa "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Edytuj stronę...',
-	'UI:Dashboard:Revert' => 'Przywróć oryginalną wersję...',
+	'UI:Dashboard:EditCustom' => 'Edytuj własną wersję...',
+	'UI:Dashboard:CreateCustom' => 'Utwórz wersję...',
+	'UI:Dashboard:DeleteCustom' => 'Usuń własną wersję...',
 	'UI:Dashboard:RevertConfirm' => 'Wszystkie zmiany wprowadzone w oryginalnej wersji zostaną utracone. Potwierdź, że chcesz to zrobić.',
 	'UI:ExportDashBoard' => 'Eksportuj do pliku',
 	'UI:ImportDashBoard' => 'Importuj z pliku...',
@@ -1431,6 +1435,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Obiekt jest zablokowany, ponieważ jest obecnie modyfikowany przez %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Obiekt jest obecnie modyfikowany przez %1$s. Twoje modyfikacje nie mogą zostać przesłane, ponieważ zostałyby nadpisane.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'Obiekt jest obecnie modyfikowany przez %1$s. Będziesz mógł przesłać swoje modyfikacje, gdy zostanie on zwolniony.',
 	'UI:CurrentObjectLockExpired' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła. Nie możesz już przesłać swojej modyfikacji, ponieważ inni użytkownicy mogą teraz modyfikować ten obiekt.',
 	'UI:ConcurrentLockKilled' => 'Usunięto blokadę uniemożliwiającą modyfikacje bieżącego obiektu.',
@@ -1448,6 +1453,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:ToggleFullScreen' => 'Przełącz Maksymalizuj / Minimalizuj',
 	'UI:Button:ResetImage' => 'Odzyskaj poprzedni obraz',
 	'UI:Button:RemoveImage' => 'Usuń obraz',
+	'UI:Button:UploadImage' => 'Prześlij obraz z dysku',
 	'UI:UploadNotSupportedInThisMode' => 'Modyfikacja obrazów lub plików nie jest obsługiwana w tym trybie.',
 
 	'UI:Button:RemoveDocument' => 'Usuń dokument',
@@ -1559,6 +1565,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Wyfiltrowane',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtr według %1$s',
+
+	'UI:StateChanged' => 'Stan zmieniony',
 ));
 
 //
@@ -1594,4 +1602,44 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:ResetCache' => 'Zresetuj pamięć podręczną',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Wyświetl wiadomości od %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Wyświetlaj do %1$s wiadomiości w %2$s menu.',
+));
+
+
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'Menu:DataSources' => 'Źródła danych synchronizacji',
+	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji',
+	'Menu:WelcomeMenu' => 'Witaj',
+	'Menu:WelcomeMenu+' => 'Witaj w iTop',
+	'Menu:WelcomeMenuPage' => 'Witaj',
+	'Menu:WelcomeMenuPage+' => 'Witaj w iTop',
+	'Menu:AdminTools' => 'Administracja',
+	'Menu:AdminTools+' => 'Narzędzia administracyjne',
+	'Menu:AdminTools?' => 'Narzędzia dostępne tylko dla użytkowników posiadających profil administratora',
+	'Menu:DataModelMenu' => 'Model danych',
+	'Menu:DataModelMenu+' => 'Omówienie modelu danych',
+	'Menu:ExportMenu' => 'Eksport',
+	'Menu:ExportMenu+' => 'Eksportuj wyniki dowolnego zapytania w formacie HTML, CSV lub XML',
+	'Menu:NotificationsMenu' => 'Powiadomienia',
+	'Menu:NotificationsMenu+' => 'Konfiguracja powiadomień',
+	'Menu:AuditCategories' => 'Kategorie audytu',
+	'Menu:AuditCategories+' => 'Kategorie audytu',
+	'Menu:Notifications:Title' => 'Kategorie audytu',
+	'Menu:RunQueriesMenu' => 'Zapytania',
+	'Menu:RunQueriesMenu+' => 'Uruchom dowolne zapytanie',
+	'Menu:QueryMenu' => 'Słownik zapytań',
+	'Menu:QueryMenu+' => 'Słownik zapytań',
+	'Menu:UniversalSearchMenu' => 'Wyszukiwanie uniwersalne',
+	'Menu:UniversalSearchMenu+' => 'Wyszukiwanie wszystkiego...',
+	'Menu:UserManagementMenu' => 'Zarządzanie użytkownikami',
+	'Menu:UserManagementMenu+' => 'UZarządzanie użytkownikami',
+	'Menu:ProfilesMenu' => 'Profile',
+	'Menu:ProfilesMenu+' => 'Profile',
+	'Menu:ProfilesMenu:Title' => 'Profile',
+	'Menu:UserAccountsMenu' => 'Konta użytkowników',
+	'Menu:UserAccountsMenu+' => 'Konta użytkowników',
+	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
+	'Menu:MyShortcuts' => 'Moje skróty',
+	'Menu:UserManagement' => 'Zarządzanie użytkownikami',
+	'Menu:Queries' => 'Zapytania',
+	'Menu:ConfigurationTools' => 'Konfiguracja',
 ));
