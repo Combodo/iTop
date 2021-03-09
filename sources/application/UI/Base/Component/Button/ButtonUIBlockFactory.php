@@ -45,7 +45,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a basis Button component for any purpose
 	 *
 	 * @param string $sLabel
-	 * @param string $sName See Button::$sName
+	 * @param string $sName See {@link Button::$sName}
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button

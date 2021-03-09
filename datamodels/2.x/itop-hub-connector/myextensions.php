@@ -1,21 +1,14 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -32,67 +25,75 @@ $oAppContext = new ApplicationContext();
 $oPage = new iTopWebPage(Dict::S('iTopHub:InstalledExtensions'));
 $oPage->SetBreadCrumbEntry('ui-hub-myextensions', Dict::S('Menu:iTopHub:MyExtensions'), Dict::S('Menu:iTopHub:MyExtensions+'), '', 'fas fa-puzzle-piece', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-function DisplayExtensionInfo(Webpage $oPage, iTopExtension $oExtension)
+
+function GetExtensionInfoComponent(iTopExtension $oExtension): UIBlock
 {
-	$oPage->add('<li>');
-	if ($oExtension->sInstalledVersion == '') {
-		$oPage->add('<b>'.$oExtension->sLabel.'</b> '.Dict::Format('UI:About:Extension_Version', $oExtension->sVersion).' <span class="extension-source">'.Dict::S('iTopHub:ExtensionNotInstalled').'</span>');
-	} else {
-		$oPage->add('<b>'.$oExtension->sLabel.'</b> '.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion));
+	$sExtensionDescription = Dict::Format('UI:About:Extension_Version', $oExtension->sVersion);
+	if (!empty($oExtension->sLabel)) {
+		$sExtensionDescription .= '<br><i>'.$oExtension->sDescription.'</i>';
 	}
-	$oPage->add('<p style="margin-top: 0.25em;">'.$oExtension->sDescription.'</p>');
-	$oPage->add('</li>');
+
+	return AlertUIBlockFactory::MakeForInformation($oExtension->sLabel, $sExtensionDescription)
+		->SetIsClosable(false)
+		->SetIsCollapsible(true)
+		->SetOpenedByDefault(false);
 }
 
-// Main program
+
 try {
 	$oExtensionsMap = new iTopExtensionsMap();
 	$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
-	$oPage->add('<h1>'.Dict::S('iTopHub:InstalledExtensions').'</h1>');
+	$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('iTopHub:InstalledExtensions')));
 
-	$oPage->add('<fieldset>');
-	$oPage->add('<legend>'.Dict::S('iTopHub:ExtensionCategory:Remote').'</legend>');
-	$oPage->p(Dict::S('iTopHub:ExtensionCategory:Remote+'));
-	$oPage->add('<ul style="margin: 0;">');
-	$iCount = 0;
-	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
-		if ($oExtension->sSource == iTopExtension::SOURCE_REMOTE) {
-			$iCount++;
-			DisplayExtensionInfo($oPage, $oExtension);
-		}
-	}
-	$oPage->add('</ul>');
-	if ($iCount == 0) {
-		$oPage->p(Dict::S('iTopHub:NoExtensionInThisCategory'));
-	}
-	$oPage->add('</fieldset>');
+
+	//--- add extension button START
 	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'browse_extensions'));
-	$oPage->add('<p style="text-align:center;"><button onclick="window.location.href=\''.$sUrl.'\'">'.Dict::S('iTopHub:GetMoreExtensions').'</button></p>');
+	$oInstallExtButton = ButtonUIBlockFactory::MakeNeutral(Dict::S('iTopHub:GetMoreExtensions'), 'install-extensions-button')
+		->SetOnClickJsCode("window.location.href='$sUrl'");
+	$oPage->AddSubBlock($oInstallExtButton);
+	//--- add extension button END
 
-	// Display the section about "manually deployed" extensions, only if there are some already
-	$iCount = 0;
-	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
-		if ($oExtension->sSource == iTopExtension::SOURCE_MANUAL) {
-			$iCount++;
+
+	/**------------------------------------------------------------------------------------------------------
+	 * Remotely deployed ext
+	 */
+	$oFieldsetRemote = FieldSetUIBlockFactory::MakeStandard(Dict::S('iTopHub:ExtensionCategory:Remote'));
+	$oPage->AddUiBlock($oFieldsetRemote);
+	$oFieldsetRemote->AddHtml(Dict::S('iTopHub:ExtensionCategory:Remote+'));
+
+	$aRemotelyDeployedExt = array_filter($oExtensionsMap->GetAllExtensions(), static function ($oExtension) {
+		return ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
+	});
+	$iRemotelyDeployedExtCount = count($aRemotelyDeployedExt);
+
+	if ($iRemotelyDeployedExtCount === 0) {
+		$oFieldsetRemote->AddHtml('<p>'.Dict::S('iTopHub:NoExtensionInThisCategory').'</p>');
+	} else {
+		foreach ($aRemotelyDeployedExt as $oExtension) {
+			$oFieldsetRemote->AddSubBlock(GetExtensionInfoComponent($oExtension));
 		}
 	}
 
-	if ($iCount > 0) {
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('iTopHub:ExtensionCategory:Manual').'</legend>');
-		$oPage->p(Dict::Format('iTopHub:ExtensionCategory:Manual+', '<span title="'.(APPROOT.'extensions').'" id="extension-dir-path">"extensions"</span>'));
-		$oPage->add('<ul style="margin: 0;">');
-		$iCount = 0;
-		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
-			if ($oExtension->sSource == iTopExtension::SOURCE_MANUAL) {
-				DisplayExtensionInfo($oPage, $oExtension);
-			}
+
+	/**------------------------------------------------------------------------------------------------------
+	 * Manually deployed ext
+	 * Only if there are some !
+	 */
+	$aManuallyDeployedExt = array_filter($oExtensionsMap->GetAllExtensions(), static function ($oExtension) {
+		return ($oExtension->sSource === iTopExtension::SOURCE_MANUAL);
+	});
+	$iManuallyDeployedExtCount = count($aManuallyDeployedExt);
+
+	if ($iManuallyDeployedExtCount > 0) {
+		$oFieldsetManual = FieldSetUIBlockFactory::MakeStandard(Dict::S('iTopHub:ExtensionCategory:Manual'));
+		$oPage->AddUiBlock($oFieldsetManual);
+		$oFieldsetManual->AddHtml(Dict::Format('iTopHub:ExtensionCategory:Manual+', '<span title="'.(APPROOT.'extensions').'" id="extension-dir-path">"extensions"</span>'));
+		foreach ($aManuallyDeployedExt as $oExtension) {
+			$oFieldsetManual->AddSubBlock(GetExtensionInfoComponent($oExtension));
 		}
-		$oPage->add('</ul>');
 	}
 
-	$oPage->add('</fieldset>');
 	$sExtensionsDirTooltip = json_encode(APPROOT.'extensions');
 	$oPage->add_style(
 		<<<CSS
