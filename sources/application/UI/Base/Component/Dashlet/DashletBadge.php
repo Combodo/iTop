@@ -44,10 +44,14 @@ class DashletBadge extends DashletContainer
 	 * @param string $sHyperlink
 	 * @param string $iCount
 	 * @param string $sClassLabel
-	 * @param string $sCreateActionUrl
-	 * @param string $sCreateActionLabel
+	 * @param string|null $sCreateActionUrl
+	 * @param string|null $sCreateActionLabel
+	 * @param array $aRefreshParams
 	 */
-	public function __construct(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, string $sCreateActionUrl = '', string $sCreateActionLabel = '', array $aRefreshParams)
+	public function __construct(
+		string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, ?string $sCreateActionUrl = '',
+		?string $sCreateActionLabel = '', array $aRefreshParams = []
+	)
 	{
 		parent::__construct();
 
@@ -64,17 +68,17 @@ class DashletBadge extends DashletContainer
 	/**
 	 * @return string
 	 */
-	public function GetCreateActionUrl(): string
+	public function GetCreateActionUrl(): ?string
 	{
 		return $this->sCreateActionUrl;
 	}
 
 	/**
-	 * @param string $sCreateActionUrl
+	 * @param string|null $sCreateActionUrl
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetCreateActionUrl(string $sCreateActionUrl): DashletBadge
+	public function SetCreateActionUrl(?string $sCreateActionUrl): DashletBadge
 	{
 		$this->sCreateActionUrl = $sCreateActionUrl;
 
@@ -84,17 +88,17 @@ class DashletBadge extends DashletContainer
 	/**
 	 * @return string
 	 */
-	public function GetCreateActionLabel(): string
+	public function GetCreateActionLabel(): ?string
 	{
 		return $this->sCreateActionLabel;
 	}
 
 	/**
-	 * @param string $sCreateActionLabel
+	 * @param string|null $sCreateActionLabel
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetCreateActionLabel(string $sCreateActionLabel): DashletBadge
+	public function SetCreateActionLabel(?string $sCreateActionLabel): DashletBadge
 	{
 		$this->sCreateActionLabel = $sCreateActionLabel;
 
