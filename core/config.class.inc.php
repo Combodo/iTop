@@ -1373,9 +1373,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-	);
-
-
+	];
 
 	public function IsProperty($sPropCode)
 	{
