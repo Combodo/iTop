@@ -124,7 +124,7 @@ SQL;
 					SetupPage::log_info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted.");
 
 					$iBulkSize = 100;
-					$iMaxDuration = 5;
+					$iMaxDuration = 30;
 					$iDeletedCount = 0;
 					$fStartTime = microtime(true);
 					$aIds = self::GetOrphanAttachmentIds($sTableName, $iBulkSize);
