@@ -179,7 +179,7 @@ SQL;
 			$iUpdated = 0;
 			while ($oAttachment = $oSet->Fetch())
 			{
-				if ($oAttachment->Get('item_id') == 0) {
+				if (empty($oAttachment->Get('item_class'))) {
 					//do not treat orphan attachment
 					continue;
 				}
