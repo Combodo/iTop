@@ -239,14 +239,14 @@ EOF
 	protected function GetReadyScriptsStartedTrigger(): ?string
 	{
 		return <<<JS
-$("body").data("ready-scripts", "start");
+$("body").attr("data-ready-scripts", "start");
 JS;
 	}
 
 	protected function GetReadyScriptsFinishedTrigger(): ?string
 	{
 		return <<<JS
-$("body").data("ready-scripts", "done");
+$("body").attr("data-ready-scripts", "done");
 JS;
 	}
 }
