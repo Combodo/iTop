@@ -134,9 +134,9 @@ class BlockRenderer
 	 * Return the raw output of the JS template
 	 *
 	 * @param string $sType javascript type only one of the following :
-	 *   * {@link iUiBlock::ENUM_JS_TYPE_ON_INIT}
-	 *   * {@link iUiBlock::ENUM_JS_TYPE_ON_READY}
-	 *   * {@link iUiBlock::ENUM_JS_TYPE_LIVE}
+	 *   * {@see iUiBlock::ENUM_JS_TYPE_ON_INIT}
+	 *   * {@see iUiBlock::ENUM_JS_TYPE_ON_READY}
+	 *   * {@see iUiBlock::ENUM_JS_TYPE_LIVE}
 	 *
 	 * @return string
 	 * @throws \Twig\Error\RuntimeError
