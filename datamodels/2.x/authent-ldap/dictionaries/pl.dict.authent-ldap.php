@@ -38,6 +38,4 @@
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLDAP' => 'Użytkownik LDAP',
 	'Class:UserLDAP+' => 'Użytkownik uwierzytelniony przez LDAP',
-	'Class:UserLDAP/Attribute:password' => 'Hasło',
-	'Class:UserLDAP/Attribute:password+' => 'ciąg uwierzytelniania użytkownika',
 ));
