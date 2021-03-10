@@ -48,14 +48,18 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
   align-items: center;
   flex-wrap: wrap;
   .toolkit_menu.graph{
-    >ul ul {
-      z-index: 1;
-      position: absolute;
-      display:none;
-      @extend .ibo-popover-menu;
-        li{
+    >ul >li {
+      position: relative;
+        ul {
+        z-index: 1;
+        position: absolute;
+        display: none;
+        @extend .ibo-popover-menu;
+  
+        li {
           @extend .ibo-popover-menu--item
         }
+      }
     }
   }
 }
