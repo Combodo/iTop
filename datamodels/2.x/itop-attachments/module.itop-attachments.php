@@ -81,6 +81,7 @@ if (!class_exists('AttachmentInstaller'))
 		}
 
 		/**
+		 * @since 2.7.4 N°3788
 		 * @param string $sTableName
 		 * @param int $iBulkSize
 		 *
