@@ -60,7 +60,6 @@ try {
 	 */
 	$oFieldsetRemote = FieldSetUIBlockFactory::MakeStandard(Dict::S('iTopHub:ExtensionCategory:Remote'));
 	$oPage->AddUiBlock($oFieldsetRemote);
-	$oFieldsetRemote->AddHtml(Dict::S('iTopHub:ExtensionCategory:Remote+'));
 
 	$aRemotelyDeployedExt = array_filter($oExtensionsMap->GetAllExtensions(), static function ($oExtension) {
 		return ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
@@ -68,8 +67,13 @@ try {
 	$iRemotelyDeployedExtCount = count($aRemotelyDeployedExt);
 
 	if ($iRemotelyDeployedExtCount === 0) {
-		$oFieldsetRemote->AddHtml('<p>'.Dict::S('iTopHub:NoExtensionInThisCategory').'</p>');
+		$oFieldsetRemote->AddSubBlock(
+			AlertUIBlockFactory::MakeForWarning(Dict::S('iTopHub:NoExtensionInThisCategory'), Dict::S('iTopHub:NoExtensionInThisCategory+'))
+				->SetIsClosable(false)
+				->SetIsCollapsible(false)
+		);
 	} else {
+		$oFieldsetRemote->AddHtml('<p>'.Dict::S('iTopHub:ExtensionCategory:Remote+').'</p>');
 		foreach ($aRemotelyDeployedExt as $oExtension) {
 			$oFieldsetRemote->AddSubBlock(GetExtensionInfoComponent($oExtension));
 		}

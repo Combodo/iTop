@@ -54,7 +54,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopHub:ExtensionCategory:Manual+' => 'Die folgenden Erweiterungen wurden installiert, indem sie manuell in das Verzeichnis %1$s kopiert wurden:',
 	'iTopHub:ExtensionCategory:Remote' => 'Erweiterungen vom iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Die folgenden Erweiterungen wurden über den iTop Hub installiert:',
-	'iTopHub:NoExtensionInThisCategory' => 'Es gibt keine Erweiterungen dieser Kategorie<br/><br/>Gehe zum iTop Hub, um Erweiterungen zu finden, die dir helfen dein iTop so zu erweitern, dass es zu deinen Bedürfnissen passt.',
+	'iTopHub:NoExtensionInThisCategory' => 'Es gibt keine Erweiterungen dieser Kategorie',
+	'iTopHub:NoExtensionInThisCategory+' => 'Gehe zum iTop Hub, um Erweiterungen zu finden, die dir helfen dein iTop so zu erweitern, dass es zu deinen Bedürfnissen passt !',
 	'iTopHub:ExtensionNotInstalled' => 'Nicht installiert',
 	'iTopHub:GetMoreExtensions' => 'Erweiterungen vom iTop Hub beziehen ...',
 

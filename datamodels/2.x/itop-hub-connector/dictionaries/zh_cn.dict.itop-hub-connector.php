@@ -54,7 +54,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:ExtensionCategory:Manual+' => '下列已安装的扩展是手动将文件放置到 %1$s 目录的:',
 	'iTopHub:ExtensionCategory:Remote' => '从iTop Hub 安装的扩展',
 	'iTopHub:ExtensionCategory:Remote+' => '下列已安装的扩展是来自iTop Hub:',
-	'iTopHub:NoExtensionInThisCategory' => '尚未安装扩展.<br/><br/>浏览iTop Hub ,去寻找符合您要求的扩展.',
+	'iTopHub:NoExtensionInThisCategory' => '尚未安装扩展',
+	'iTopHub:NoExtensionInThisCategory+' => '浏览iTop Hub ,去寻找符合您要求的扩展.',
 	'iTopHub:ExtensionNotInstalled' => '未安装',
 	'iTopHub:GetMoreExtensions' => '从iTop Hub 获取扩展...',
 

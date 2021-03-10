@@ -39,7 +39,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:ExtensionCategory:Manual+' => 'Les extensions ci-dessous ont été déployées en les copiant manuellement dans le répertoire %1$s d\'iTop:',
 	'iTopHub:ExtensionCategory:Remote' => 'Extensions déployées depuis iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Les extensions ci-dessous ont été déployées depuis iTop Hub:',
-	'iTopHub:NoExtensionInThisCategory' => 'Il n\'y a pas d\'extension dans cette catégorie<br/><br>Avec iTop Hub trouvez en quelques clics les extensions qui vous permettront de construire un iTop sur mesure qui se conforme à vos processus.',
+	'iTopHub:NoExtensionInThisCategory' => 'Il n\'y a pas d\'extension dans cette catégorie',
+	'iTopHub:NoExtensionInThisCategory+' => 'Avec iTop Hub trouvez en quelques clics les extensions qui vous permettront de construire un iTop sur mesure qui se conforme à vos processus !',
 	'iTopHub:ExtensionNotInstalled' => 'Non installée',
 	'iTopHub:GetMoreExtensions' => 'Obtenir des extensions depuis iTop Hub...',
 

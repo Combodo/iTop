@@ -54,7 +54,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'iTopHub:ExtensionCategory:Manual+' => 'The following extensions have been deployed by copying them manually in the %1$s directory of iTop:~~',
 	'iTopHub:ExtensionCategory:Remote' => 'Extensions deployed from iTop Hub~~',
 	'iTopHub:ExtensionCategory:Remote+' => 'The following extensions have been deployed from iTop Hub:~~',
-	'iTopHub:NoExtensionInThisCategory' => 'There is no extension in this category.<br/><br/>Browse iTop Hub to find the extensions that will help you customize and adapt iTop to your processes.~~',
+	'iTopHub:NoExtensionInThisCategory' => 'There is no extension in this category~~',
+	'iTopHub:NoExtensionInThisCategory+' => 'Browse iTop Hub to find the extensions that will help you customize and adapt iTop to your processes !~~',
 	'iTopHub:ExtensionNotInstalled' => 'Not installed~~',
 	'iTopHub:GetMoreExtensions' => 'Get extensions from iTop Hub...~~',
 

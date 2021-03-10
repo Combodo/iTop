@@ -55,7 +55,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:ExtensionCategory:Manual+' => 'Deze extensies werden geïnstalleerd door ze manueel in de map %1$s te plaatsen:',
 	'iTopHub:ExtensionCategory:Remote' => 'Extensies geïnstalleerd via iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Deze extensies werden geïnstalleerd via de iTop Hub:',
-	'iTopHub:NoExtensionInThisCategory' => 'Er is geen extensie in deze categorie.<br/><br/>Blader op iTop Hub en ontdek welke extensies te vinden die je helpen om iTop aan te passen aan jouw manier van werken.',
+	'iTopHub:NoExtensionInThisCategory' => 'Er is geen extensie in deze categorie',
+	'iTopHub:NoExtensionInThisCategory+' => 'Blader op iTop Hub en ontdek welke extensies te vinden die je helpen om iTop aan te passen aan jouw manier van werken !',
 	'iTopHub:ExtensionNotInstalled' => 'Niet geïnstalleerd',
 	'iTopHub:GetMoreExtensions' => 'Extensies zoeken op iTop Hub...',
 
