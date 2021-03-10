@@ -320,9 +320,18 @@ try {
 			$oPage->add('<div id="hub_launch_image">');
 			$oPage->add(file_get_contents(__DIR__.'/images/rocket.svg'));
 			$oPage->add('</div>');
-			$oPage->add('<h1><img src="'.$sLogoUrl.'"><span>'.$sTitle.'</span></h1>');
+			$oPage->add('<h1 class="ibo-title--text title is-size-3"><img src="'.$sLogoUrl.'"><span>'.$sTitle.'</span></h1>');
 			$oPage->add($sText);
-			$oPage->add('<p><button type="button" id="CancelBtn" title="Go back to iTop"><img src="'.$sCloseUrl.'"><span>'.Dict::S('iTopHub:CloseBtn').'</span></button><span class="horiz-spacer"> </span><button class="positive" type="button" id="GoToHubBtn" title="'.Dict::S('iTopHub:GoBtn:Tooltip').'"><span>'.Dict::S('iTopHub:GoBtn').'</span><img src="'.$sArrowUrl.'"></button></p>');
+			$sButtonLabelClose = Dict::S('iTopHub:CloseBtn');
+			$sButtonLabelGo = Dict::S('iTopHub:GoBtn');
+			$oPage->add(<<<HTML
+<p>
+<button type="button" class="ibo-button" id="CancelBtn" title="Go back to iTop"><img src="$sCloseUrl"><span class="ibo-button--label">$sButtonLabelClose</span></button>
+<span class="horiz-spacer"></span>
+<button type="button" class="ibo-button positive" id="GoToHubBtn" title="Dict::S('iTopHub:GoBtn:Tooltip')"><span class="ibo-button--label">$sButtonLabelGo</span><img src="$sArrowUrl"></button>
+</p>
+HTML
+			);
 			$sFormTarget = appUserPreferences::GetPref('itophub_open_in_new_window', 1) ? 'target="_blank"' : '';
 			$oPage->add('<form '.$sFormTarget.' id="hub_launch_form" action="'.$sHubUrl.'" method="post">');
 			$oPage->add('<input type="hidden" name="json" value="'.htmlentities(json_encode($aDataToPost), ENT_QUOTES, 'UTF-8').'">');
@@ -332,7 +341,7 @@ try {
 
 			// Beware the combination auto-submit and open in new window (cf above) is blocked by (some) browsers (namely Chrome)
 			$sAutoSubmitChecked = appUserPreferences::GetPref('itophub_auto_submit', 0) == 1 ? 'checked' : '';
-			$oPage->add('<input type="checkbox" class="userpref" id="itophub_auto_submit" '.$sAutoSubmitChecked.'><label for="itophub_auto_submit">'.Dict::S('iTopHub:AutoSubmit').'</label></p>');
+			$oPage->add('<label><input type="checkbox" class="userpref" id="itophub_auto_submit" '.$sAutoSubmitChecked.'>&nbsp;'.Dict::S('iTopHub:AutoSubmit').'</label></p>');
 			$oPage->add('</form>');
 			$oPage->add('<div style="clear:both"></div>');
 			$oPage->add('</div>');
