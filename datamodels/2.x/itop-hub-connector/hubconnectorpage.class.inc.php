@@ -1,26 +1,25 @@
 <?php
 require_once(APPROOT."/application/user.preferences.class.inc.php");
+
 class HubConnectorPage extends NiceWebPage
 {
-    public function __construct($sTitle)
-    {
-	    parent::__construct($sTitle);
+	public function __construct($sTitle)
+	{
+		parent::__construct($sTitle);
 
-	    $this->no_cache();
-	    $this->add_xframe_options();
+		$this->no_cache();
+		$this->add_xframe_options();
 
-	    $sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
-	    $sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
+		$sImagesDir = utils::GetAbsoluteUrlAppRoot().'images';
+		$sModuleImagesDir = utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/images';
 
-	    $sUserPrefs = appUserPreferences::GetAsJSON();
-	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-	    $this->add_script(
-		    <<<EOF
+		$sUserPrefs = appUserPreferences::GetAsJSON();
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+		$this->add_script(<<<JS
 		var oUserPreferences = $sUserPrefs;
-EOF
-        );
-        $this->add_style(
-<<<EOF
+JS
+		);
+		$this->add_style(<<<CSS
 body {
     background-color: #FFFFFF;
     color: rgba(0, 0, 0, 0.87);
@@ -113,8 +112,7 @@ div#integrity_issues {
 div#integrity_issues .query {
 	font-size: smaller;
 }
-            
-EOF
-            );
-    }
+CSS
+		);
+	}
 }
