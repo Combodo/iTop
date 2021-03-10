@@ -8,6 +8,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 require_once('../approot.inc.php');
@@ -47,12 +48,6 @@ try {
 	$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('iTopHub:InstalledExtensions')));
 
 
-	//--- add extension button START
-	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'browse_extensions'));
-	$oInstallExtButton = ButtonUIBlockFactory::MakeNeutral(Dict::S('iTopHub:GetMoreExtensions'), 'install-extensions-button')
-		->SetOnClickJsCode("window.location.href='$sUrl'");
-	$oPage->AddSubBlock($oInstallExtButton);
-	//--- add extension button END
 
 
 	/**------------------------------------------------------------------------------------------------------
@@ -79,6 +74,17 @@ try {
 		}
 	}
 
+	/**------------------------------------------------------------------------------------------------------
+	 * Hub button
+	 */
+	$oHubButtonContainer = UIContentBlockUIBlockFactory::MakeStandard()
+		->AddCSSClass('hub-button');
+	$oPage->AddSubBlock($oHubButtonContainer);
+	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'browse_extensions'));
+	$oHubButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('iTopHub:GetMoreExtensions'), 'install-extensions-button')
+		->SetOnClickJsCode("window.location.href='$sUrl'");
+	$oHubButtonContainer->AddSubBlock($oHubButton);
+
 
 	/**------------------------------------------------------------------------------------------------------
 	 * Manually deployed ext
@@ -101,6 +107,12 @@ try {
 	$sExtensionsDirTooltip = json_encode(APPROOT.'extensions');
 	$oPage->add_style(
 		<<<CSS
+.hub-button {
+	width: 100%;
+	margin: 2rem;
+	text-align: center;
+}
+
 #extension-dir-path {
 	display: inline-block;
 	border-bottom: 1px #999 dashed;
