@@ -460,6 +460,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Error:MaintenanceMode' => 'Aplikacja jest obecnie w trakcie konserwacji',
 	'UI:Error:MaintenanceTitle' => 'Konserwacja',
 	'UI:Error:InvalidToken' => 'Błąd: żądana operacja została już wykonana (nie znaleziono tokena CSRF)',
+	'UI:Error:TemplateRendering' => 'Błąd renderowania szablonu',
 
 	'UI:GroupBy:Count' => 'Licznik',
 	'UI:GroupBy:Count+' => 'Liczba elementów',
