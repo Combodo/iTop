@@ -37,6 +37,7 @@ Albo przesłałeś pusty plik,
 lub zapytaj administratora iTop, czy dysk serwera iTop jest pełny.',
 	'Attachments:Render:Icons' => 'Wyświetlaj jako ikony',
 	'Attachments:Render:Table' => 'Wyświetl jako listę',
+	'UI:Attachments:DropYourFileHint' => 'Upuść pliki w dowolnym miejscu w tym obszarze',
 ));
 
 //
