@@ -82,7 +82,8 @@ try {
 	$oPage->AddSubBlock($oHubButtonContainer);
 	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'browse_extensions'));
 	$oHubButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('iTopHub:GetMoreExtensions'), 'install-extensions-button')
-		->SetOnClickJsCode("window.location.href='$sUrl'");
+		->SetOnClickJsCode("window.location.href='$sUrl'")
+		->SetIconClass('fa-fw fc fc-itophub-icon fc-1-5x');
 	$oHubButtonContainer->AddSubBlock($oHubButton);
 
 
