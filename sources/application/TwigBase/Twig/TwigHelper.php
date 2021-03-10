@@ -150,10 +150,12 @@ class TwigHelper
 	 * @param string $sMessage
 	 *
 	 * @return string error panel markup
+	 *
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @since 3.0.0 N°3522 method creation
 	 */
 	protected static function GenerateEndUserError(string $sTitle, string $sMessage): string
 	{
