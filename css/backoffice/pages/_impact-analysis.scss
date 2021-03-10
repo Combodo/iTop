@@ -5,7 +5,7 @@ $ibo-impact-analysis--graph-zoom-plus-minus--margin-x: 0.5em !default;
 
 $ibo-simple-graph--margin-top: 10px !default;
 $ibo-simple-graph--border-radius: 5px !default;
-$ibo-simple-graph--hover--border-color: 10px !default;
+$ibo-simple-graph--hover--border-color: $ibo-color-grey-800 !default;
 $ibo-simple-graph--grouping-threshold-additional-context--container--margin-right: 0.3em !default;
 $ibo-simple-graph--grouping-threshold-additional-context--content--margin-right: 1em !default;
 
