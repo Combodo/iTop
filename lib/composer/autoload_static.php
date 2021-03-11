@@ -696,6 +696,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ItopCounter' => __DIR__ . '/../..' . '/core/counter.class.inc.php',
         'JSButtonItem' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'JSPopupMenuItem' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'JsonPage' => __DIR__ . '/../..' . '/sources/application/WebPage/JsonPage.php',
         'KeyValueStore' => __DIR__ . '/../..' . '/core/counter.class.inc.php',
         'ListExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'ListOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',

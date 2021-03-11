@@ -508,30 +508,14 @@ try
 		// ui.linkswidget
 		case 'doAddObjects':
 			$oPage->SetContentType('text/html');
-			$sAttCode = utils::ReadParam('sAttCode', '');
-			$iInputId = utils::ReadParam('iInputId', '');
-			$sSuffix = utils::ReadParam('sSuffix', '');
-			$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
-			$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
-			$sJson = utils::ReadParam('json', '', false, 'raw_data');
-			$iMaxAddedId = utils::ReadParam('max_added_id');
-			$oWizardHelper = WizardHelper::FromJSON($sJson);
-			/** @var \DBObject $oObj */
-			$oObj = $oWizardHelper->GetTargetObject();
-			$oKPI = new ExecutionKPI();
-			$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
-			if ($sFilter != '')
-			{
-				$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-			}
-			else
-			{
-				$oFullSetFilter = new DBObjectSearch($sRemoteClass);
-			}
-			$oWidget->DoAddObjects($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
-			$oKPI->ComputeAndReport('Data write');
+			$sResult = AjaxRenderController::DoAddObjects($oPage, $sClass, $sFilter);
 			break;
 
+		// ui.linkswidget
+		case 'doAddIndirectLinks':
+			$oPage = new JsonPage('');
+			$sResult = AjaxRenderController::DoAddIndirectLinks($oPage, $sClass, $sFilter);
+			break;
 		////////////////////////////////////////////////////////////
 		/// WizardHelper : see the corresponding PHP class, and JS class
 

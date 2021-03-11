@@ -1,6 +1,6 @@
 <?php
-/**
- * @copyright   Copyright (C) 2010-2020 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,10 +15,8 @@ use BulkExport;
 use BulkExportException;
 use CMDBObjectSet;
 use CMDBSource;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use DBObjectSearch;
 use DBObjectSet;
@@ -28,9 +26,12 @@ use Exception;
 use ExecutionKPI;
 use Expression;
 use InlineImage;
+use JsonPage;
 use MetaModel;
 use ScalarExpression;
+use UILinksWidget;
 use utils;
+use WizardHelper;
 
 class AjaxRenderController
 {
@@ -625,6 +626,16 @@ class AjaxRenderController
 		return $aResult;
 	}
 
+	/**
+	 * @param string $sFilter
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public static function RefreshCount(string $sFilter): array
 	{
 		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
@@ -637,5 +648,65 @@ class AjaxRenderController
 		return $aResult;
 	}
 
+	/**
+	 * @param string $sFilter
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public static function DoAddObjects(AjaxPage $oPage, string $sClass, string $sFilter)
+	{
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$sSuffix = utils::ReadParam('sSuffix', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
+		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$iMaxAddedId = utils::ReadParam('max_added_id');
+		$oWizardHelper = WizardHelper::FromJSON($sJson);
+		/** @var \DBObject $oObj */
+		$oObj = $oWizardHelper->GetTargetObject();
+		$oKPI = new ExecutionKPI();
+		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
+		if ($sFilter != '') {
+			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		} else {
+			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
+		}
+		$oWidget->DoAddObjects($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
+		$oKPI->ComputeAndReport('Data write');
+	}
 
+	/**
+	 * @param string $sFilter
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public static function DoAddIndirectLinks(JsonPage $oPage, string $sClass, string $sFilter)
+	{
+		$sAttCode = utils::ReadParam('sAttCode', '');
+		$iInputId = utils::ReadParam('iInputId', '');
+		$sSuffix = utils::ReadParam('sSuffix', '');
+		$sRemoteClass = utils::ReadParam('sRemoteClass', $sClass, false, 'class');
+		$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
+		$sJson = utils::ReadParam('json', '', false, 'raw_data');
+		$iMaxAddedId = utils::ReadParam('max_added_id');
+		$oWizardHelper = WizardHelper::FromJSON($sJson);
+		/** @var \DBObject $oObj */
+		$oObj = $oWizardHelper->GetTargetObject();
+		$oKPI = new ExecutionKPI();
+		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
+		if ($sFilter != '') {
+			$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
+		} else {
+			$oFullSetFilter = new DBObjectSearch($sRemoteClass);
+		}
+		$oWidget->DoAddIndirectLinks($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
+		$oKPI->ComputeAndReport('Data write');
+	}
 }

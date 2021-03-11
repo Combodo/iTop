@@ -1,26 +1,6 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Class UILinksWidget
- *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -563,18 +543,44 @@ JS
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
 
 		$iAdditionId = $iMaxAddedId + 1;
-		foreach($aLinkedObjectIds as $iObjectId)
-		{
+		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
-			if (is_object($oLinkedObj))
-			{
+			if (is_object($oLinkedObj)) {
 				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
+			} else {
+				$oP->p(Dict::Format('UI:Error:Object_Class_Id_NotFound', $this->m_sLinkedClass, $iObjectId));
 			}
-			else
-			{
+		}
+	}
+
+	/**
+	 * @param WebPage $oP
+	 * @param int $iMaxAddedId
+	 * @param $oFullSetFilter
+	 * @param DBObject $oCurrentObj
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function DoAddIndirectLinks(JsonPage $oP, $iMaxAddedId, $oFullSetFilter, $oCurrentObj)
+	{
+		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
+
+		$iAdditionId = $iMaxAddedId + 1;
+		foreach ($aLinkedObjectIds as $iObjectId) {
+			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
+			if (is_object($oLinkedObj)) {
+				$aRow = $this->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$aData = [];
+				foreach ($aRow as $item) {
+					$aData[] = $item;
+				}
+				$oP->AddData($aData);
+				$iAdditionId++;
+			} else {
 				$oP->p(Dict::Format('UI:Error:Object_Class_Id_NotFound', $this->m_sLinkedClass, $iObjectId));
 			}
 		}

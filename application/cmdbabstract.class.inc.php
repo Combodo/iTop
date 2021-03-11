@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Search\SearchForm;
@@ -2450,13 +2437,8 @@ JS
 			// So any consumer that want to get this attribute value MUST use `.attr()` and not `.data()`
 			// Actually the later uses a dedicated memory (that is initialized by the DOM values on page loading)
 			// Whereas `.attr()` uses the DOM directly
-			$sHTMLValue .= <<<HTML
-<script>
-$("[data-input-id='$iId']").attr("data-input-type", "$sInputType");
-</script>
-HTML;
+			$oPage->add_init_script('$("[data-input-id=\''.$iId.'\']").attr("data-input-type", "'.$sInputType.'");');
 		}
-
 		//TODO 3.0 remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}

@@ -466,6 +466,7 @@ return array(
     'ItopCounter' => $baseDir . '/core/counter.class.inc.php',
     'JSButtonItem' => $baseDir . '/application/applicationextension.inc.php',
     'JSPopupMenuItem' => $baseDir . '/application/applicationextension.inc.php',
+    'JsonPage' => $baseDir . '/sources/application/WebPage/JsonPage.php',
     'KeyValueStore' => $baseDir . '/core/counter.class.inc.php',
     'ListExpression' => $baseDir . '/core/oql/expression.class.inc.php',
     'ListOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
