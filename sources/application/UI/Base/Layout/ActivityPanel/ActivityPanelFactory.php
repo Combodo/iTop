@@ -29,6 +29,7 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
+use IssueLog;
 use MetaModel;
 
 /**
@@ -112,7 +113,8 @@ class ActivityPanelFactory
 			try {
 				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
 			}
-			catch (Exception $e) {
+			catch (Exception $oException) {
+				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp: '.$oException->getMessage());
 				continue;
 			}
 			// If same CMDBChange and mergeable edits entry from the same author, we merge them
