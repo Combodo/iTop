@@ -7,9 +7,7 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Renderer\BlockRenderer;
-use Dict;
+use CoreTemplateException;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -116,53 +114,37 @@ class TwigHelper
 	 * @param bool $bLogMissingFile
 	 *
 	 * @return string
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 * @throws \Exception
+	 * @throws \CoreTemplateException
 	 */
 	public static function RenderTemplate(Environment $oTwig, array $aParams, string $sName, string $sTemplateFileExtension = self::DEFAULT_FILE_TYPE, bool $bLogMissingFile = true): string
 	{
 		try {
 			return $oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
-		} catch (Error $e) {
-			$sPath = '';
-			if ($e->getSourceContext()) {
-				$sPath = utils::LocalPath($e->getSourceContext()->getPath()).' ('.$e->getLine().') - ';
+		}
+		catch (Error $oTwigException) {
+			$oTwigPreviousException = $oTwigException->getPrevious();
+			if (!is_null(($oTwigPreviousException)) && ($oTwigPreviousException instanceof CoreTemplateException)) {
+				// handles recursive calls : if we're here, an exception was already raised in a child template !
+				throw $oTwigPreviousException;
 			}
-			$sMessage = $sPath.$e->getMessage();
 
-			if (strpos($e->getMessage(), 'Unable to find template') === false) {
-				IssueLog::Error($sMessage);
+			$sPath = '';
+			if ($oTwigException->getSourceContext()) {
+				$sPath = utils::LocalPath($oTwigException->getSourceContext()->getPath()).' ('.$oTwigException->getLine().') - ';
+			}
 
-				return static::GenerateEndUserError(Dict::S('UI:Error:TemplateRendering'), $sMessage);
+			if (strpos($oTwigException->getMessage(), 'Unable to find template') === false) {
+				//TODO handle ajax ??
+				// this will trigger error page, and will log to error.log !
+				throw new CoreTemplateException($oTwigException, $sPath);
 			}
 
 			if ($bLogMissingFile) {
-				IssueLog::Debug($sMessage);
+				$sLogMessageMissingFile = "Twig : missing file '$sPath' : ".$oTwigException->getMessage();
+				IssueLog::Debug($sLogMessageMissingFile);
 			}
 		}
 
 		return '';
-	}
-
-	/**
-	 * @param string $sTitle
-	 * @param string $sMessage
-	 *
-	 * @return string error panel markup
-	 *
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 * @since 3.0.0 N°3522 method creation
-	 */
-	protected static function GenerateEndUserError(string $sTitle, string $sMessage): string
-	{
-		$oAlert = AlertUIBlockFactory::MakeForFailure($sTitle, $sMessage)
-			->SetIsClosable(false)
-			->SetIsCollapsible(false); // not rendering JS so...
-
-		return BlockRenderer::RenderBlockTemplates($oAlert);
 	}
 }

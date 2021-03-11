@@ -456,7 +456,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
-	'UI:Error:TemplateRendering' => 'Impossible de rendre le template',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',

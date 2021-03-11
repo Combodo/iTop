@@ -345,6 +345,7 @@ return array(
     'CoreOqlMultipleResultsForbiddenException' => $baseDir . '/application/exceptions/oql/CoreOqlMultipleResultsForbiddenException.php',
     'CorePortalInvalidActionRuleException' => $baseDir . '/application/exceptions/CorePortalInvalidActionRuleException.php',
     'CoreServices' => $baseDir . '/core/restservices.class.inc.php',
+    'CoreTemplateException' => $baseDir . '/application/exceptions/CoreTemplateException.php',
     'CoreUnexpectedValue' => $baseDir . '/application/exceptions/CoreUnexpectedValue.php',
     'CoreWarning' => $baseDir . '/application/exceptions/CoreWarning.php',
     'CryptEngine' => $baseDir . '/core/simplecrypt.class.inc.php',

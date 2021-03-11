@@ -575,6 +575,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'CoreOqlMultipleResultsForbiddenException' => __DIR__ . '/../..' . '/application/exceptions/oql/CoreOqlMultipleResultsForbiddenException.php',
         'CorePortalInvalidActionRuleException' => __DIR__ . '/../..' . '/application/exceptions/CorePortalInvalidActionRuleException.php',
         'CoreServices' => __DIR__ . '/../..' . '/core/restservices.class.inc.php',
+        'CoreTemplateException' => __DIR__ . '/../..' . '/application/exceptions/CoreTemplateException.php',
         'CoreUnexpectedValue' => __DIR__ . '/../..' . '/application/exceptions/CoreUnexpectedValue.php',
         'CoreWarning' => __DIR__ . '/../..' . '/application/exceptions/CoreWarning.php',
         'CryptEngine' => __DIR__ . '/../..' . '/core/simplecrypt.class.inc.php',
