@@ -240,14 +240,69 @@ class UserRightsTest extends ItopDataTestCase
 			'User Portal ModuleInstallation' => array(2 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
 
 			/* Configuration manager (2 = UR_ACTION_MODIFY) */
-			'Configuration manager FunctionalCI' => array(3 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
-			'Configuration manager UserRequest' => array(3 , array('class' => 'UserRequest', 'action' => 2, 'res' => false)),
-			'Configuration manager URP_UserProfile' => array(3 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => false)),
-			'Configuration manager UserLocal' => array(3 , array('class' => 'UserLocal', 'action' => 2, 'res' => false)),
-			'Configuration manager ModuleInstallation' => array(3 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
+			'Configuration manager FunctionalCI' => array(3, array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
+			'Configuration manager UserRequest' => array(3, array('class' => 'UserRequest', 'action' => 2, 'res' => false)),
+			'Configuration manager URP_UserProfile' => array(3, array('class' => 'URP_UserProfile', 'action' => 2, 'res' => false)),
+			'Configuration manager UserLocal' => array(3, array('class' => 'UserLocal', 'action' => 2, 'res' => false)),
+			'Configuration manager ModuleInstallation' => array(3, array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
 		);
 
 		return $aClassActionResult;
 	}
 
+	/**
+	 * @dataProvider GetUserInitialsProvider
+	 *
+	 * @param string $sLogin
+	 * @param string $sExceptedInitials
+	 *
+	 * @throws \OQLException
+	 */
+	public function testGetUserInitials(string $sLogin, string $sExceptedInitials)
+	{
+		$sTestedInitials = UserRights::GetUserInitials($sLogin);
+		$this->assertEquals($sTestedInitials, $sExceptedInitials, "Initials for '$sLogin' don't match. Got '$sTestedInitials', expected '$sExceptedInitials'.");
+	}
+
+	public function GetUserInitialsProvider()
+	{
+		return [
+			'One word, upper case letter' => [
+				'Carrie',
+				'C',
+			],
+			'One word, lower case letter' => [
+				'carrie',
+				'C',
+			],
+			'Application name' => [
+				'iTop',
+				'I',
+			],
+			'Several words, upper case letters' => [
+				'Carrie Ann Moss',
+				'CAM',
+			],
+			'Several words, mixed case letters' => [
+				'My name My name',
+				'MM',
+			],
+			'Several words, upper case letters, two first hyphened' => [
+				'Lily-Rose Depp',
+				'LRD',
+			],
+			'Several words, mixed case letters, two first hyphened' => [
+				'Lily-rose Depp',
+				'LD',
+			],
+			'Several words, upper case letetrs, two last hypened' => [
+				'Jada Pinkett-Smith',
+				'JPS',
+			],
+			'Several words, mixed case letters, two last hyphened' => [
+				'Jada Pinkett-smith',
+				'JP',
+			],
+		];
+	}
 }

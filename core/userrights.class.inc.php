@@ -1274,14 +1274,17 @@ class UserRights
 		if (is_null($oUser))
 		{
 			$sInitials = '';
-			$aLoginParts = explode(' ', $sLogin);
-			foreach($aLoginParts as $sLoginPart)
-			{
+			// - Capitalize the first letter no matter what
+			$sReworkedLogin = ucfirst($sLogin);
+			// - Replace dashes with spaces to interpret all parts of the login
+			$sReworkedLogin = str_replace('-', ' ', $sReworkedLogin);
+			// - Explode login to check parts individually
+			$aLoginParts = explode(' ', $sReworkedLogin);
+			foreach ($aLoginParts as $sLoginPart) {
 				// Keep only upper case first letters
 				// eg. "My first name My last name" => "MM"
 				// eg. "Carrie Anne Moss" => "CAM"
-				if(preg_match('/^\p{Lu}/u', $sLoginPart) > 0)
-				{
+				if (preg_match('/^\p{Lu}/u', $sLoginPart) > 0) {
 					$sInitials .= mb_substr($sLoginPart, 0, 1);
 				}
 			}
