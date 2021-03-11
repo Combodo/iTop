@@ -82,20 +82,18 @@ class ActivityPanelFactory
 			// Retrieve case logs entries
 			/** @var \ormCaseLog $oCaseLog */
 			$oCaseLog = $oObject->Get($sCaseLogAttCode);
-			foreach($oCaseLog->GetAsArray() as $aOrmEntry)
-			{
+			foreach ($oCaseLog->GetAsArray() as $aOrmEntry) {
 				$oCaseLogEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $aOrmEntry);
 				$oActivityPanel->AddEntry($oCaseLogEntry);
 			}
 		}
 
-		// Retrieve history changes (including case logs entries)
+		// Retrieve history changes (excluding case logs entries)
 		// - Prepare query to retrieve changes
-		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key');
+		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key AND finalclass NOT IN (:excluded_optypes)');
 		// Note: We can't order by date (only) as something multiple CMDBChangeOp rows are inserted at the same time (eg. Delivery model of the "Demo" Organization in the sample data).
 		// As the DB returns rows "chronologically", we get the older first and it messes with the processing. Ordering by the ID is way much simpler and less DB CPU consuming.
-		$oChangesSet = new DBObjectSet($oChangesSearch, ['id' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId]);
-		// Note: This limit will include case log changes which will be skipped, but still we count them as they are displayed anyway by the case log attributes themselves
+		$oChangesSet = new DBObjectSet($oChangesSearch, ['id' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId, 'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog']]);
 		$oChangesSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
 
 		// Prepare previous values to group edits within a same CMDBChange
@@ -103,8 +101,8 @@ class ActivityPanelFactory
 		$oPreviousEditsEntry = null;
 
 		/** @var \CMDBChangeOp $oChangeOp */
-		while($oChangeOp = $oChangesSet->Fetch()) {
-			// Skip case log changes as they are handled directly from the attributes themselves
+		while ($oChangeOp = $oChangesSet->Fetch()) {
+			// Skip case log changes as they are handled directly from the attributes themselves (most of them should have been excluded by the OQL above, but some derivated classes could still be retrieved)
 			if ($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog) {
 				continue;
 			}
@@ -113,7 +111,8 @@ class ActivityPanelFactory
 			$iChangeId = $oChangeOp->Get('change');
 			try {
 				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				continue;
 			}
 			// If same CMDBChange and mergeable edits entry from the same author, we merge them
