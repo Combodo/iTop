@@ -276,7 +276,7 @@ EOF
 
 			// the input for the auto-complete
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
-			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\" placeholder='...'/>";
 
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -295,7 +295,7 @@ EOF
 EOF
 			);
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."''><i class=\"fas fa-times\"></i></div>";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."''><i class=\"fas fa-times\"></i></div>";
 		}
 		if ($bCreate && $bExtensions) {
 			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';

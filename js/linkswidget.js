@@ -1,19 +1,6 @@
 /*
- * Copyright (C) 2010-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -157,7 +144,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		});
 		me.UpdateSizes(null, null);
 
-		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
+		$("#fs_sf_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
 
 		return false; // Don't submit the form, stay in the current page !
 	};
@@ -213,41 +200,30 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			theMap['filter'] = $(':input[name=filter]', context).val();
 			theMap['extra_params'] = $(':input[name=extra_params]', context).val();
 		}
-//		else
-//		{
 		// Normal table, retrieve all the checked check-boxes
 		$(':checked[name^=selectObject]', context).each(
 			function (i) {
-				if ((this.name != '') && ((this.type != 'checkbox') || (this.checked)))
-				{
+				if ((this.name != '') && ((this.type != 'checkbox') || (this.checked))) {
 					arrayExpr = /\[\]$/;
-					if (arrayExpr.test(this.name))
-					{
+					if (arrayExpr.test(this.name)) {
 						// Array
-						if (theMap[this.name] == undefined)
-						{
+						if (theMap[this.name] == undefined) {
 							theMap[this.name] = [];
 						}
 						theMap[this.name].push(this.value);
-					}
-					else
-					{
+					} else {
 						theMap[this.name] = this.value;
 					}
 				}
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
-//		}
 
-		theMap['operation'] = 'doAddObjects';
+		theMap['operation'] = 'doAddIndirectLinks';
 		theMap['max_added_id'] = this.iMaxAddedId;
-		if (me.oWizardHelper == null)
-		{
+		if (me.oWizardHelper == null) {
 			theMap['json'] = '';
-		}
-		else
-		{
+		} else {
 			// Not inside a "search form", updating a real object
 			me.oWizardHelper.UpdateWizard();
 			theMap['json'] = me.oWizardHelper.ToJSON();
@@ -256,19 +232,25 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		// Run the query and display the results
 		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap,
 			function (data) {
-				if (data != '')
-				{
-					$('#datatable_'+me.id+' .dataTables_empty').hide();
-					$('#linkedset_'+me.id+' .listResults tbody').append(data);
+				if (data != '') {
+					$.each(data.data, function (idx, row) {
+						$('#datatable_'+me.id).DataTable().row.add(row).draw();
+					});
 
+
+					$.each(data.scripts, function (idx, script) {
+						$.globalEval(script);
+					});
 					$('#linkedset_'+me.id+' .listResults').trigger('update').trigger("applyWidgets"); // table is already sortable, just refresh it
 					$('#linkedset_'+me.id+' :input').each(function () {
 						$(this).trigger('validate', '');
 					}); // Validate newly added form fields...
+					$('#datatable_'+me.id).DataTable().columns.adjust().draw();
+					//$('#datatable_team_list').DataTable().columns.adjust().draw();
 					$('#busy_'+me.iInputId).html('');
 				}
 			},
-			'html'
+			'json'
 		);
 		$('#dlg_'+me.id).dialog('close');
 		return false;
