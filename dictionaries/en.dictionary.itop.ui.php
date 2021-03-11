@@ -380,7 +380,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:GlobalSearch' => 'Search',
 	'UI:Button:Search' => ' Search ',
 	'UI:Button:Clear' => ' Clear ',
-	'UI:Button:SearchInHIerarchy' => ' Search in hierachy ',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Save',
