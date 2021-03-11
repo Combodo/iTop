@@ -755,34 +755,23 @@ HTML
 		}
 
 		/** @var \iApplicationUIExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
 			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
 
 		$oPage->SetCurrentTab('');
-		
+
 		// Look for any trigger that considers this object as "In Scope"
 		// If any trigger has been found then display a tab with notifications
 		//
-		$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
-		$aTriggers = array();
-		while ($oTrigger = $oTriggerSet->Fetch())
-		{
-			if ($oTrigger->IsInScope($this))
-			{
-				$aTriggers[] = $oTrigger->GetKey();
-			}
-		}
-		if (count($aTriggers) > 0)
-		{
+		$aTriggers = $this->GetRelatedTriggersIDs();
+		if (count($aTriggers) > 0) {
 			$iId = $this->GetKey();
 			$aParams = array('triggers' => $aTriggers, 'id' => $iId);
 			$aNotifSearches = array();
 			$iNotifsCount = 0;
 			$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
-			foreach($aNotificationClasses as $sNotifClass)
-			{
+			foreach ($aNotificationClasses as $sNotifClass) {
 				$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
 				$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
 				$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
@@ -792,16 +781,35 @@ HTML
 			$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
 			$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
-			foreach($aNotificationClasses as $sNotifClass)
-			{
+			foreach($aNotificationClasses as $sNotifClass) {
 				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
 				$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-blocklist--medallion');
 				$oPage->AddUiBlock($oClassIcon);
-				
+
 				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
 				$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
 			}
 		}
+	}
+
+	/**
+	 * @return string[] IDs of the triggers that consider this object as "In Scope"
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public function GetRelatedTriggersIDs(): array
+	{
+		$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
+		$aTriggers = [];
+		while ($oTrigger = $oTriggerSet->Fetch()) {
+			if ($oTrigger->IsInScope($this)) {
+				$aTriggers[] = $oTrigger->GetKey();
+			}
+		}
+
+		return $aTriggers;
 	}
 
 	/**

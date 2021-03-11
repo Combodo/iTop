@@ -23,6 +23,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
 use AttributeDateTime;
 use CMDBChangeOp;
 use DateTime;
+use DBObject;
+use EventNotification;
 use Exception;
 use MetaModel;
 use ReflectionClass;
@@ -47,11 +49,10 @@ class ActivityEntryFactory
 	 */
 	public static function MakeFromCmdbChangeOp(CMDBChangeOp $oChangeOp)
 	{
-		$sFactoryFqcn = static::GetCmdbChangeOpFactoryClass($oChangeOp);
+		$sFactoryFqcn = static::GetFactoryClass($oChangeOp, 'CMDBChangeOp');
 
 		// If no factory found, throw an exception as the developer most likely forgot to create it
-		if(empty($sFactoryFqcn))
-		{
+		if (empty($sFactoryFqcn)) {
 			throw new Exception('No factory found for '.get_class($oChangeOp).', did you forgot to create one?');
 		}
 
@@ -89,36 +90,57 @@ class ActivityEntryFactory
 	}
 
 	/**
-	 * Return the FQCN of the best fitted factory for the $oChangeOp. If none found, null will be returned.
+	 * Make an ActivityEntry entry (for ActivityPanel) based on the $oEvent
 	 *
-	 * @param \CMDBChangeOp $oChangeOp
+	 * @param \EventNotification $oEvent
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry
+	 * @throws \ReflectionException
+	 */
+	public static function MakeFromEventNotification(EventNotification $oEvent)
+	{
+		$sFactoryFqcn = static::GetFactoryClass($oEvent, 'EventNotification');
+
+		// If no factory found, throw an exception as the developer most likely forgot to create it
+		if (empty($sFactoryFqcn)) {
+			throw new Exception('No factory found for '.get_class($oEvent).', did you forgot to create one?');
+		}
+
+		/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\NotificationEntry $oEntry */
+		/** @noinspection PhpUndefinedMethodInspection Call static method from the $sFactoryFqcn class */
+		$oEntry = $sFactoryFqcn::MakeFromEventNotification($oEvent);
+
+		return $oEntry;
+	}
+
+	/**
+	 * Return the FQCN of the best fitted factory for the $oObject / $sObjectType tuple. If none found, null will be returned.
+	 *
+	 * @param \DBObject $oObject
 	 *
 	 * @return string|null
 	 * @throws \ReflectionException
 	 */
-	protected static function GetCmdbChangeOpFactoryClass(CMDBChangeOp $oChangeOp)
+	protected static function GetFactoryClass(DBObject $oObject, string $sObjectType)
 	{
 		// Classes to search a factory for
-		$aClassesTree = [get_class($oChangeOp)];
+		$aClassesTree = [get_class($oObject)];
 
 		// Add parent classes to tree if not a root class
-		$aParentClasses = class_parents($oChangeOp);
-		if(is_array($aParentClasses))
-		{
+		$aParentClasses = class_parents($oObject);
+		if (is_array($aParentClasses)) {
 			$aClassesTree = array_merge($aClassesTree, array_values($aParentClasses));
 		}
 
 		$sFactoryFqcn = null;
-		foreach($aClassesTree as $sClass)
-		{
-			// Warning: This will replace all occurrences of 'CMDBChangeOp' which can be an issue on classes using this
+		foreach ($aClassesTree as $sClass) {
+			// Warning: This will replace all occurrences of $sObjectType (eg. 'CMDBChangeOp', 'EventNotification', ...) which can be an issue on classes using this
 			// We used the case sensitive search to limit this issue.
 			$sSimplifiedClass = (new ReflectionClass($sClass))->getShortName();
-			$sFactoryFqcnToTry = __NAMESPACE__ . '\\CMDBChangeOp\\' . $sSimplifiedClass . 'Factory';
+			$sFactoryFqcnToTry = __NAMESPACE__.'\\'.$sObjectType.'\\'.$sSimplifiedClass.'Factory';
 
 			// Stop at the first factory found
-			if(class_exists($sFactoryFqcnToTry))
-			{
+			if (class_exists($sFactoryFqcnToTry)) {
 				$sFactoryFqcn = $sFactoryFqcnToTry;
 				break;
 			}

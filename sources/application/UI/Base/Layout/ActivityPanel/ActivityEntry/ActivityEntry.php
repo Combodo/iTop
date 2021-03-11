@@ -24,6 +24,7 @@ use AttributeDateTime;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DateTime;
 use UserRights;
+use utils;
 
 /**
  * Class ActivityEntry
@@ -46,6 +47,8 @@ class ActivityEntry extends UIBlock
 	public const DEFAULT_TYPE = 'generic';
 	/** @var string DEFAULT_DECORATION_CLASSES */
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-mortar-pestle';
+	/** @var string Relative URL (from the app. root) to the default author picture URL */
+	public const DEFAULT_AUTHOR_PICTURE_REL_URL = 'images/icons/icons8-music-robot.svg';
 
 	/** @var string $sType Type of entry, used for filtering (eg. case log, edits, transition, ...) */
 	protected $sType;
@@ -209,17 +212,20 @@ class ActivityEntry extends UIBlock
 
 		// Set friendlyname to whatever we have in case $sAuthorLogin is not a valid login (deleted user, cron, ...)
 		$iAuthorId = UserRights::GetUserId($this->sAuthorLogin);
-		if(empty($iAuthorId) === true)
-		{
+		// - Friendlyname
+		if (true === empty($iAuthorId)) {
 			$this->sAuthorFriendlyname = $this->sAuthorLogin;
-		}
-		else
-		{
-			// TODO 3.0.0: Check that this does not return '' when author is the CRON or an extension.
+		} else {
 			$this->sAuthorFriendlyname = UserRights::GetUserFriendlyName($this->sAuthorLogin);
 		}
+		// - Initials
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);
+		// - Picture
 		$this->sAuthorPictureAbsUrl = UserRights::GetContactPictureAbsUrl($this->sAuthorLogin, false);
+		if ((null === $this->sAuthorPictureAbsUrl) && (ITOP_APPLICATION_SHORT === $this->sAuthorLogin)) {
+			$this->sAuthorPictureAbsUrl = utils::GetAbsoluteUrlAppRoot().static::DEFAULT_AUTHOR_PICTURE_REL_URL;
+		}
+
 		$this->bIsFromCurrentUser = UserRights::GetUserId($this->sAuthorLogin) === UserRights::GetUserId();
 
 		return $this;

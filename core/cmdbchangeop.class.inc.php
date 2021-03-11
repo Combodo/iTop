@@ -39,7 +39,7 @@
 interface iCMDBChangeOp
 {
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * Describe (as an HTML string) the modifications corresponding to this change
 	 *
 	 * @return string
 	 */

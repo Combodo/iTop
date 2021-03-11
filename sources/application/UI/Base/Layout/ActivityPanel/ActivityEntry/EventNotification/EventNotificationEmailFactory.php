@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
@@ -16,15 +17,20 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "navigation-menu";
-@import "top-bar";
-@import "content";
-@import "tab-container/tab-container";
-@import "tab-container/tab";
-@import "multi-column/multi-column";
-@import "multi-column/column";
-@import "dashboard/all";
-@import "wizard-container/wizard-container";
-@import "object/object-details";
-@import "activity-panel/all";
-@import "blocks-integrations/all";
+namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EventNotification;
+
+
+/**
+ * Class EventNotificationEmailFactory
+ *
+ * Factory for EventNotificationEmail events
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EventNotification
+ * @since 3.0.0
+ */
+class EventNotificationEmailFactory extends EventNotificationFactory
+{
+	/** @inheritDoc */
+	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-envelope';
+}

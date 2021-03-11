@@ -45,10 +45,10 @@ class ActivityPanelFactory
 	/**
 	 * Make an activity panel for an object details layout, meaning that it should contain the case logs and the activity.
 	 *
-	 * @param \DBObject $oObject
-	 * @param string    $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
-	 *
 	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 *
+	 * @param \DBObject $oObject
+	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel
 	 * @throws \ArchivedObjectException
@@ -124,13 +124,40 @@ class ActivityPanelFactory
 				$oActivityPanel->AddEntry($oEntry);
 
 				// Set previous edits entry
-				if($oEntry instanceof EditsEntry)
-				{
+				if ($oEntry instanceof EditsEntry) {
 					$oPreviousEditsEntry = $oEntry;
 				}
 			}
 
 			$iPreviousChangeId = $iChangeId;
+		}
+		unset($oChangesSet);
+
+		// Retrieving notification events for cmdbAbstractObject only
+		if ($oObject instanceof cmdbAbstractObject) {
+			$aRelatedTriggersIDs = $oObject->GetRelatedTriggersIDs();
+
+			// Protection for classes which have no related trigger
+			if (false === empty($aRelatedTriggersIDs)) {
+				// - Prepare query to retrieve events
+				$oNotifEventsSearch = DBObjectSearch::FromOQL('SELECT EN FROM EventNotification AS EN JOIN Action AS A ON EN.action_id = A.id WHERE EN.trigger_id IN (:triggers_ids) AND EN.object_id = :object_id');
+				$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $iObjId]);
+				$oNotifEventsSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
+
+				/** @var \EventNotification $oNotifEvent */
+				while ($oNotifEvent = $oNotifEventsSet->Fetch()) {
+					try {
+						$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
+					}
+					catch (Exception $oException) {
+						IssueLog::Debug(static::class.': Could not create entry from EventNotification: '.$oException->getMessage());
+						continue;
+					}
+
+					$oActivityPanel->AddEntry($oEntry);
+				}
+				unset($oNotifEventsSet);
+			}
 		}
 
 		return $oActivityPanel;

@@ -82,6 +82,8 @@ $(function()
 					entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
 					edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
 					edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
+					notification_entry_long_description: '[data-role="ibo-notification-entry--long-description"]',
+					notification_entry_long_description_toggler: '[data-role="ibo-notification-entry--long-description-toggler"]',
 				},
 			enums: {
 				tab_types: {
@@ -206,7 +208,11 @@ $(function()
 				});
 				// - Click on an edits entry's long description toggler
 				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function (oEvent) {
-					me._onEditsLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
+					me._onEntryLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				// - Click on an notification entry's long description toggler
+				this.element.find(this.js_selectors.notification_entry_long_description_toggler).on('click', function (oEvent) {
+					me._onEntryLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
 
 				// Page exit
@@ -390,12 +396,10 @@ $(function()
 					this._SendEntriesToServer();
 				}
 			},
-			_onCaseLogClosedMessageClick: function(oEntryElem)
-			{
+			_onCaseLogClosedMessageClick: function (oEntryElem) {
 				this._OpenMessage(oEntryElem);
 			},
-			_onEditsLongDescriptionTogglerClick: function(oEvent, oEntryElem)
-			{
+			_onEntryLongDescriptionTogglerClick: function (oEvent, oEntryElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
