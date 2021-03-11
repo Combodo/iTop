@@ -1917,82 +1917,43 @@ EOF
 	DisplayWelcomePopup($oP);
 	$oP->output();	
 }
-catch(CoreException $e)
-{
-	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	if ($e instanceof SecurityException)
-	{
-		$oP->add("<h1>".Dict::S('UI:SystemIntrusion')."</h1>\n");
+catch (Exception $e) {
+	$oErrorPage = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
+	if ($e instanceof SecurityException) {
+		$oErrorPage->add("<h1>".Dict::S('UI:SystemIntrusion')."</h1>\n");
+	} else {
+		$oErrorPage->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	}
-	else
-	{
-		$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-	}	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
-	$oP->output();
+	$sErrorDetails = ($e instanceof CoreException) ? $e->getHtmlDesc() : $e->getMessage();
+	$oErrorPage->error(Dict::Format('UI:Error_Details', $sErrorDetails));
+	$oErrorPage->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
-			try
-			{
+	$sErrorStackTrace = ($e instanceof CoreException) ? $e->getFullStackTraceAsString() : $e->getTraceAsString();
+	if (MetaModel::IsLogEnabledIssue()) {
+		if (MetaModel::IsValidClass('EventIssue')) {
+			try {
 				$oLog = new EventIssue();
-	
+
 				$oLog->Set('message', $e->getMessage());
 				$oLog->Set('userinfo', '');
-				$oLog->Set('issue', $e->GetIssue());
+				$sIssue = ($e instanceof CoreException) ? $e->GetIssue() : 'PHP Exception';
+				$oLog->Set('issue', $sIssue);
 				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $e->getFullStackTraceAsString());
-				$oLog->Set('data', $e->getContextData());
+				$oLog->Set('callstack', $sErrorStackTrace);
+				$aData = ($e instanceof CoreException) ? $e->getContextData() : [];
+				$oLog->Set('data', $aData);
 				$oLog->DBInsertNoReload();
 			}
-			catch(Exception $e)
-			{
+			catch (Exception $e) {
 				IssueLog::Error("Failed to log issue into the DB");
 			}
 		}
-
-		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getFullStackTraceAsString());
 	}
 
-	// For debugging only
-	//throw $e;
+	$sOperationToLog = $operation ?? 'N/A';
+	IssueLog::Debug('UI.php operation='.$sOperationToLog.', error='.$e->getMessage()."\n".$sErrorStackTrace, 'console');
 }
-catch(Exception $e)
-{
-	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
-	$oP->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
-			try
-			{
-				$oLog = new EventIssue();
-	
-				$oLog->Set('message', $e->getMessage());
-				$oLog->Set('userinfo', '');
-				$oLog->Set('issue', 'PHP Exception');
-				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $e->getTrace());
-				$oLog->Set('data', array());
-				$oLog->DBInsertNoReload();
-			}
-			catch(Exception $e)
-			{
-				IssueLog::Error("Failed to log issue into the DB");
-			}
-		}
-
-		IssueLog::Error($e->getMessage());
-	}
-}
 
 class UI
 {

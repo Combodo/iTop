@@ -10,6 +10,9 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
  */
 
 
+/**
+ * @since 2.7.1 N°2641 class creation
+ */
 class ErrorPage extends NiceWebPage
 {
 	public function __construct($sTitle)
