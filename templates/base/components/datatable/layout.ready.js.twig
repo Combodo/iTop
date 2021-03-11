@@ -189,6 +189,9 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             this.parent().find('.dataTables_paginate').hide();
             this.parent().find('.dataTables_length').hide();
         }
+        this.find('.ibo-dataTables--processing').remove();
+        this.find('tbody').unblock();
+        this.find('thead').unblock();
     }
 });
 
@@ -329,7 +332,6 @@ $aOptions = {
     iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
-    //oExtraParams
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
     oData: {{ oUIBlock.GetJsonAjaxData() |raw }},
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},

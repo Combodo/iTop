@@ -1,11 +1,16 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 //
 // Pipelining function for DataTables. To be used to the `ajax` option of DataTables
 //
 var numberCachePages = 5;
 
-$.fn.dataTable.pipeline = function ( opts ) {
+$.fn.dataTable.pipeline = function (opts) {
 	// Configuration options
-	var conf = $.extend( {
+	var conf = $.extend({
 		pages: numberCachePages,     // number of pages to cache
 		url: '',      // script url
 		data: null,   // function or object with parameters to send to the server
@@ -21,6 +26,26 @@ $.fn.dataTable.pipeline = function ( opts ) {
 	var	draw_number = 1;
 
 	return function ( request, drawCallback, settings ) {
+		let message = Dict.S('UI:Datatables:Language:Processing');
+		if (this.find('tbody').find('td').length == 0) {
+			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
+			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
+		}
+
+		this.find('tbody').block({
+			message: message,
+			css: {
+				border: '0px ',
+				top: '20px',
+			}
+		});
+		this.find('thead').block({
+			message: message,
+			css: {
+				border: '0px ',
+				top: '20px',
+			}
+		});
 		var ajax = false;
 		var requestStart = request.start;
 		var drawStart = request.start;
@@ -87,8 +112,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 				if ( d ) {
 					$.extend( request, d );
 				}
-			}
-			else if ( $.isPlainObject( conf.data ) ) {
+			} else if ( $.isPlainObject( conf.data ) ) {
 				// As an object, the data given extends the default
 				$.extend( request, conf.data );
 			}
@@ -110,8 +134,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 					drawCallback(json);
 				}
 			} );
-		}
-		else {
+		} else {
 			json = $.extend( true, {}, cacheLastJson );
 			json.draw = request.draw; // Update the echo for each response
 			json.data.splice( 0, requestStart-cacheLower );
