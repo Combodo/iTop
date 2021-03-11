@@ -30,22 +30,33 @@ $.fn.dataTable.pipeline = function (opts) {
 		if (this.find('tbody').find('td').length == 0) {
 			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
 			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
+			this.find('tbody').block({
+				message: message,
+				css: {
+					border: '0px '
+				}
+			});
+			this.find('thead').block({
+				message: '',
+				css: {
+					border: '0px '
+				}
+			});
+		} else {
+			this.find('tbody').block({
+				message: '',
+				css: {
+					border: '0px '
+				}
+			});
+			this.find('thead').block({
+				message: message,
+				css: {
+					border: '0px ',
+					top: '20px',
+				}
+			});
 		}
-
-		this.find('tbody').block({
-			message: message,
-			css: {
-				border: '0px ',
-				top: '20px',
-			}
-		});
-		this.find('thead').block({
-			message: message,
-			css: {
-				border: '0px ',
-				top: '20px',
-			}
-		});
 		var ajax = false;
 		var requestStart = request.start;
 		var drawStart = request.start;

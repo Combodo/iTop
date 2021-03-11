@@ -108,7 +108,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	{
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
-			$aExtraParams['sRefreshAction'] = $oDataTable->GetJSRefresh()[0];
+			$aExtraParams['sRefreshAction'] = $oDataTable->GetJSRefresh();
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 		} else {
 			$bToolkitMenu = true;
@@ -386,12 +386,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
 		}
 
+		$aOptions['processing'] = true;
 		$aOptions['sTableId'] = $sTableId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
 		$aOptions['sListId'] = $sListId;
 		$aOptions['oClassAliases'] = json_encode($aClassAliases);
-		if (isset($aExtraParams['selected_rows']) && !empty($aExtraParams['selected_rows'])){
+		if (isset($aExtraParams['selected_rows']) && !empty($aExtraParams['selected_rows'])) {
 			$aOptions['sSelectedRows'] = json_encode($aExtraParams['selected_rows']);
 		} else {
 			$aOptions['sSelectedRows'] = '[]';
