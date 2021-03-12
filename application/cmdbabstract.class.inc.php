@@ -1999,9 +1999,9 @@ JS
                         });
 EOF
 					);
-					break;
+				break;
 
-				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions?
+				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions or maybe *transition forms* as a caselog can be MUST_PROMPT?
 				case 'CaseLog':
 					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
