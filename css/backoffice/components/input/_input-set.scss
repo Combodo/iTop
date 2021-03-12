@@ -1,0 +1,103 @@
+$ibo-input-set--padding-x: 8px !default;
+$ibo-input-set--padding-y: 5px !default;
+
+$ibo-input-set--input--height: 100% !default;
+
+$ibo-input-set--remove--padding-top: 0.15em !default;
+$ibo-input-set--remove--border-left: none !default;
+
+$ibo-input-set--has-items--after--right: 8px !default;
+$ibo-input-set--has-items--after--top: 5px !default;
+
+$ibo-input-set--item--siblings-spacing: 3px !default;
+$ibo-input-set--item--margin-y: 2px !default;
+$ibo-input-set--item--padding-x: 6px !default;
+$ibo-input-set--item--padding-y: 4px !default;
+$ibo-input-set--item--max-width: 120px !default;
+$ibo-input-set--item--background-color: $ibo-color-white-100 !default;
+$ibo-input-set--item--border: none !default;
+$ibo-input-set--item--border-radius: $ibo-border-radius-300 !default;
+$ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(241, 241, 241, 0.7) !default;
+
+
+.ibo-input-set {
+  > input {
+    height: $ibo-input-set--input--height;
+  }
+
+  .item[data-value] > .remove {
+    font-size: 18px;
+    padding-top: $ibo-input-set--remove--padding-top;
+    border-left: $ibo-input-set--remove--border-left;
+  }
+
+  &.has-items::after {
+    content: "\f067";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
+    font-size: 10px;
+
+    position: absolute;
+
+    right: $ibo-input-set--has-items--after--right;
+    top: $ibo-input-set--has-items--after--top;
+  }
+}
+
+/* CSS rules from the old style, retrieved almost as is. Do not change the classes names in the markup without second thought as they are used by the portal as well */
+/* - Item style, always the same in read-only or edition */
+%ibo-input-set--item {
+  display: inline-block;
+  margin-top: $ibo-input-set--item--margin-y;
+  margin-right: 0;
+  margin-bottom: $ibo-input-set--item--margin-y;
+  padding: $ibo-input-set--item--padding-y $ibo-input-set--item--padding-x;
+  max-width: $ibo-input-set--item--max-width;
+
+  background: $ibo-input-set--item--background-color none;
+  border: $ibo-input-set--item--border;
+  border-radius: $ibo-input-set--item--border-radius;
+  box-shadow: $ibo-input-set--item--box-shadow;
+
+  color: $ibo-color-grey-900;
+  text-shadow: none;
+  @extend %ibo-text-truncated-with-ellipsis;
+
+  &:not(:first-child) {
+    margin-left: $ibo-input-set--item--siblings-spacing;
+  }
+}
+
+/* - Read-only */
+.attribute-set {
+  .attribute-set-item {
+    @extend %ibo-input-set--item;
+  }
+
+  &.history-added {
+    .attribute-set-item {
+      font-weight: bold;
+    }
+  }
+
+  &.history-removed {
+    .attribute-set-item {
+      text-decoration: line-through;
+      font-style: italic;
+    }
+  }
+}
+
+/* - Edition */
+/* Note: The selector is "precise" on purpose as it needs to override the one from selectize. */
+.selectize-control.multi {
+  .selectize-input {
+    &.ibo-input-set {
+      padding: $ibo-input-set--padding-y $ibo-input-set--padding-x;
+
+      .attribute-set-item {
+        @extend %ibo-input-set--item;
+      }
+    }
+  }
+}

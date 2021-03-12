@@ -2566,15 +2566,15 @@
 									}
 
 									.selectize-input {
-										padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
-										border: 1px solid #ABABAB;
-										border-radius: 0;
+                    padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
+                    border: 1px solid #ABABAB;
+                    border-radius: 0;
 
-										.attribute-set-item.partial-code {
-											color: transparentize($gray-darker, 0.4);
-											background-color: lighten($gray-lighter, 5%);
-										}
-									}
+                    //.attribute-set-item.partial-code {
+                    //	color: transparentize($gray-darker, 0.4);
+                    //	background-color: lighten($gray-lighter, 5%);
+                    //}
+                  }
 								}
 							}
 						}
@@ -3772,87 +3772,87 @@
 			text-overflow: ellipsis;
 
 			> img {
-				max-width: 80px;
-				max-height: 45px;
-				margin-right: 10px;
-			}
-		}
-	}
+        max-width: 80px;
+        max-height: 45px;
+        margin-right: 10px;
+      }
+    }
+  }
 
-	//////////////////////
-	// Set attribute //
-	// - Readonly (object viewing, objects list)
-	.attribute {
-		&.attribute-set {
-			.attribute-set-item {
-				&:last-of-type::after {
-					content: "";
-					margin-right: 0;
-				}
-			}
+  //////////////////////
+  // Set attribute //
+  // - Readonly (object viewing, objects list)
+  //.attribute {
+  //	&.attribute-set {
+  //		.attribute-set-item {
+  //			&:last-of-type::after {
+  //				content: "";
+  //				margin-right: 0;
+  //			}
+  //		}
+  //
+  //		&.history-added {
+  //			.attribute-set-item {
+  //				font-weight: bold;
+  //			}
+  //		}
+  //
+  //		&.history-removed {
+  //			.attribute-set-item {
+  //				text-decoration: line-through;
+  //				font-style: italic;
+  //			}
+  //		}
+  //	}
+  //}
 
-			&.history-added {
-				.attribute-set-item {
-					font-weight: bold;
-				}
-			}
+  // - Edit is always styled like the selectize items, see below.
+  //%attribute-set-item-edition {
+  //	display: inline;
+  //	margin-right: 3px;
+  //	margin-bottom: 3px;
+  //	padding: 4px 6px;
+  //	max-width: 120px;
+  //
+  //	background: #fdfdfd none;
+  //	border-radius: 2px;
+  //	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(241, 241, 241, 0.7);
+  //
+  //	color: $gray-darker;
+  //	text-shadow: none;
+  //	vertical-align: middle;
+  //	overflow-x: hidden;
+  //	text-overflow: ellipsis;
+  //	white-space: nowrap;
+  //
+  //	&::after {
+  //		content: "";
+  //		margin-right: 0;
+  //	}
+  //}
+  //
+  //.attribute-edit .attribute-set .attribute-set-item {
+  //	@extend %attribute-set-item-edition;
+  //}
 
-			&.history-removed {
-				.attribute-set-item {
-					text-decoration: line-through;
-					font-style: italic;
-				}
-			}
-		}
-	}
+  //////////////////////
+  // Set attribute //
+  // Always styled like the selectize items, see below.
+  //.attribute-set {
+  //	.attribute-set-item {
+  //		@extend %attribute-set-item-edition;
+  //	}
+  //}
 
-	// - Edit is always styled like the selectize items, see below.
-	%attribute-set-item-edition {
-		display: inline;
-		margin-right: 3px;
-		margin-bottom: 3px;
-		padding: 4px 6px;
-		max-width: 120px;
-
-		background: #fdfdfd none;
-		border-radius: 2px;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(241, 241, 241, 0.7);
-
-		color: $gray-darker;
-		text-shadow: none;
-		vertical-align: middle;
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-
-		&::after {
-			content: "";
-			margin-right: 0;
-		}
-	}
-
-	.attribute-edit .attribute-set .attribute-set-item {
-		@extend %attribute-set-item-edition;
-	}
-
-	//////////////////////
-	// Set attribute //
-	// Always styled like the selectize items, see below.
-	.attribute-set {
-		.attribute-set-item {
-			@extend %attribute-set-item-edition;
-		}
-	}
-
-	//////////////////////
-	// Selectize widget //
-	//
-	.selectize-control,
-	.selectize-control.multi {
-		> .selectize-input {
-			//&.has-items:after {
-			//	content: "+";
-			//	display: inline-block;
+  //////////////////////
+  // Selectize widget //
+  //
+  .selectize-control,
+  .selectize-control.multi {
+    > .selectize-input {
+      //&.has-items:after {
+      //	content: "+";
+      //	display: inline-block;
 			//	font-size: 17px;
 			//	font-weight: bold;
 			//	color: $gray-darker;

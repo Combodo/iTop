@@ -150,7 +150,7 @@ $.widget('itop.set_widget',
 				options: this.possibleValues,
 				create: false,
 				placeholder: Dict.S("Core:AttributeSet:placeholder"),
-				inputClass: 'selectize-input ibo-input ibo-input-tagset ibo-input-selectize',
+				inputClass: 'selectize-input ibo-input ibo-input-set ibo-input-selectize',
 				onInitialize: function () {
 					var selectizeWidget = this;
 					setWidget._onInitialize(selectizeWidget);
@@ -269,6 +269,8 @@ $.widget('itop.set_widget',
 				console.debug("tagAdd");
 			}
 			this.setItemsCodesStatus[setItemCode] = this.STATUS_ADDED;
+
+			$item.addClass(this.ITEM_CSS_CLASS);
 
 			if (this._isCodeInPartialValues(setItemCode)) {
 				this._partialCodeRemove(setItemCode);
