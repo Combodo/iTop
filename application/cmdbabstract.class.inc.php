@@ -2099,28 +2099,33 @@ EOF
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
 					$oDocument = $value; // Value is an ormDocument object
+
 					$sFileName = '';
 					if (is_object($oDocument)) {
 						$sFileName = $oDocument->GetFileName();
 					}
-					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-					$sHTMLValue = "<div class=\"field_input_zone field_input_document\">\n";
-					$sHTMLValue .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
-					$sHTMLValue .= "<input type=\"hidden\" id=\"do_remove_{$iId}\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]\" value=\"0\"/>\n";
+					$sFileNameForHtml = utils::EscapeHtml($sFileName);
 
-					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName,
-							ENT_QUOTES, 'UTF-8')."\"/>\n";
-					$sHTMLValue .= "<span id=\"name_$iInputId\"' >".htmlentities($sFileName, ENT_QUOTES,
-							'UTF-8')."</span>&#160;&#160;";
-					$sHTMLValue .= "<div title=\"".htmlentities(Dict::S('UI:Button:RemoveDocument'), ENT_QUOTES, 'UTF-8')."\" id=\"remove_attr_$iId\" class=\"button\" onClick=\"$('#file_$iId').val('');UpdateFileName('$iId', '');\" style=\"display: contents;\">";
-					$sHTMLValue .= "<div class=\"ui-icon ui-icon-trash\"></div></div>";
-					$sHTMLValue .= "</div>";
-					$sHTMLValue .= "<br/>\n";
-					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
-					$sHTMLValue .= "</div>\n";
-					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
+					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+					$sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
+
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_document">
+	<input type="hidden" name="MAX_FILE_SIZE" value="{$iMaxFileSize}" />
+	<input type="hidden" id="do_remove_{$iId}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]" value="0"/>
+	<input name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]" type="hidden" id="{$iId}" value="{$sFileNameForHtml}"/>
+	<span id="name_{$iInputId}" >{$sFileNameForHtml}</span>&#160;&#160;
+	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger ibo-is-hidden" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
+		<span class="fas fa-trash"></span>
+	</button>
+</div>
+<br/>
+<input title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]" type="file" id="file_{$iId}" onChange="UpdateFileName('{$iId}', this.value)"/>
+{$sValidationSpan}{$sReloadSpan}
+HTML;
+
 					if ($sFileName == '') {
-						$oPage->add_ready_script("$('#remove_attr_{$iId}').hide();");
+						$oPage->add_ready_script("$('#remove_attr_{$iId}').addClass('ibo-is-hidden');");
 					}
 					break;
 

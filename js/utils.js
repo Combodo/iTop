@@ -134,10 +134,10 @@ function UpdateFileName(id, sNewFileName) {
 	$('#name_'+id).text(sNewFileName);
 	if(sNewFileName=='') {
 		$('#do_remove_'+id).val('1');
-		$('#remove_attr_' + id).hide();
+		$('#remove_attr_'+id).addClass('ibo-is-hidden');
 	} else {
 		$('#do_remove_'+id).val('0');
-		$('#remove_attr_' + id).show();
+		$('#remove_attr_'+id).removeClass('ibo-is-hidden');
 	}
 
 	return true;
