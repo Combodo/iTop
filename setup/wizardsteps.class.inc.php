@@ -1172,7 +1172,7 @@ $("#use-symbolic-links").on("click", function() {
 	var $this = $(this),
 		bUseSymbolicLinks = $this.prop("checked");
 	if (!bUseSymbolicLinks){
-		if (!window.confirm("This will disable symbolic links generation permanently, are you sure ?")) {
+		if (!window.confirm("This will disable symbolic links generation.\nYou'll need the toolkit to restore it.\n\nAre you sure ?")) {
 			$this.prop("checked", true);
 			return;
 		}
