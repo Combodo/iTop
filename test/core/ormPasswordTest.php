@@ -1,14 +1,14 @@
 <?php
 /*!
- * @copyright   Copyright (C) 2010-2020 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Utils;
 use ormPassword;
+use Utils;
 
 /**
  * Tests of the ormPassword class

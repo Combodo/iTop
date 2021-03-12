@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  * This file is part of iTop.
  * iTop is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,14 +16,14 @@
 namespace Combodo\iTop\Test\UnitTest\Synchro;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
-use DBObjectSearch;
 use Exception;
 use MetaModel;
 use SynchroDataSource;
-use utils;
 use UserLocal;
+use utils;
 
 
 class DataSynchroTest extends ItopDataTestCase
