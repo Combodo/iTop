@@ -75,7 +75,7 @@ class UIBlockExtension extends AbstractExtension
 			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
 
 			foreach ($aClassMap as $sPHPClass) {
-				if (strpos($sPHPClass, 'UIBlockFactory')) {
+				if (strpos($sPHPClass, 'UIBlockFactory') !== false) {
 					try {
 						$oRefClass = new ReflectionClass($sPHPClass);
 						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
