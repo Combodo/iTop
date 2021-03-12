@@ -114,7 +114,7 @@ class ActivityPanelFactory
 				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
 			}
 			catch (Exception $oException) {
-				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp: '.$oException->getMessage());
+				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp #'.$oChangeOp->GetKey().' related to '.$oChangeOp->Get('objclass').'::'.$oChangeOp->Get('objkey').': '.$oException->getMessage());
 				continue;
 			}
 			// If same CMDBChange and mergeable edits entry from the same author, we merge them
@@ -150,7 +150,7 @@ class ActivityPanelFactory
 						$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
 					}
 					catch (Exception $oException) {
-						IssueLog::Debug(static::class.': Could not create entry from EventNotification: '.$oException->getMessage());
+						IssueLog::Debug(static::class.': Could not create entry from EventNotification #'.$oNotifEvent->GetKey().' related to trigger "'.$oNotifEvent->Get('trigger_id_friendlyname').'" / action "'.$oNotifEvent->Get('action_id_friendlyname').'" / object #'.$oNotifEvent->Get('object_id').': '.$oException->getMessage());
 						continue;
 					}
 
