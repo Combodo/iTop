@@ -791,7 +791,43 @@ class DeprecatedCallsLog extends LogAPI
 		return parent::GetMinLogLevel($sChannel);
 	}
 
-	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	public static function ErrorFile(?string $sAdditionalMessage = null): void
+	{
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+		$sCallerFile = $aStack[0]['file'];
+
+		$sMessage = $sCallerFile;
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Error($sMessage, static::CHANNEL_FILE);
+	}
+
+	/**
+	 * @param string|null $sAdditionalMessage
+	 *
+	 * @uses \debug_backtrace()
+	 * @link https://www.php.net/debug_backtrace
+	 */
+	public static function ErrorPhp(?string $sAdditionalMessage = null): void
+	{
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+		$sCallerObject = $aStack[1]['class'];
+		$sCallerMethod = $aStack[1]['function'];
+		$sCallerLine = $aStack[1]['line'];
+
+		$sMessage = "{$sCallerObject}::{$sCallerMethod} L{$sCallerLine}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Error($sMessage, static::CHANNEL_PHP);
+	}
+
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
 		if ((static::LEVEL_ERROR === $sLevel) && utils::IsDevelopmentEnvironment()) {
 			trigger_error($sMessage);
