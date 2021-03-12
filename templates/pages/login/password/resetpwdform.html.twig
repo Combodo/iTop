@@ -26,16 +26,16 @@
 							<div id="login-input">
 								<div>
 									<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
-									<input type="password" id="new_pwd" name="new_pwd" value="">
-								</div>
-								<div>
-									<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
-									<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="">
-								</div>
-							</div>
-							<div id="login-submit">
-								<div>
-									<input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}">
+                                    <input type="password" id="new_pwd" class="ibo-input" name="new_pwd" value="">
+                                </div>
+                                <div>
+                                    <label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
+                                    <input type="password" id="retype_new_pwd" class="ibo-input" name="retype_new_pwd" value="">
+                                </div>
+                            </div>
+                            <div id="login-submit">
+                                <div>
+                                    <input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}">
 								</div>
 							</div>
 					</div>

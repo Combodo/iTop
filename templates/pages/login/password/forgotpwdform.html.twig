@@ -8,27 +8,27 @@
 		<div id="login-title">
 			<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
 			<p>{{ 'UI:Login:ForgotPwdForm+'|dict_s }}</p>
-			{% if bFailedToReset %}
-				<p class="hilite">{{ 'UI:Login:ResetPwdFailed'|dict_format(sFailureReason) }}</p>
-			{% endif %}
-		</div>
-		<div id="login-form">
-			<form method="post">
-				<div id="login-form-content">
-					<div id="login-input">
-						<div>
-							<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}:</label>
-							<input id="user" type="text" name="auth_user" value="{{ sAuthUser }}">
-						</div>
-					</div>
-					<div id="login-submit" class="forgotpwd-submit">
-						<div>
-							<input type="submit" value="{{ 'UI:Login:ResetPassword'|dict_s }}">
-							<input class="login-submit-secondary" type="button" onClick="window.close();" value="{{ 'UI:Button:Cancel'|dict_s }}">
-						</div>
-					</div>
-				</div>
-				<input type="hidden" name="loginop" value="forgot_pwd_go">
+            {% if bFailedToReset %}
+                <p class="hilite">{{ 'UI:Login:ResetPwdFailed'|dict_format(sFailureReason) }}</p>
+            {% endif %}
+        </div>
+        <div id="login-form">
+            <form method="post">
+                <div id="login-form-content">
+                    <div id="login-input">
+                        <div>
+                            <label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}:</label>
+                            <input id="user" class="ibo-input" type="text" name="auth_user" value="{{ sAuthUser }}">
+                        </div>
+                    </div>
+                    <div id="login-submit" class="forgotpwd-submit">
+                        <div>
+                            <input type="submit" value="{{ 'UI:Login:ResetPassword'|dict_s }}">
+                            <input class="login-submit-secondary" type="button" onClick="window.close();" value="{{ 'UI:Button:Cancel'|dict_s }}">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="loginop" value="forgot_pwd_go">
 			</form>
 		</div>
 	</div>

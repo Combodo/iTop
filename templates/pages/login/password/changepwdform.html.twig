@@ -21,21 +21,21 @@
 				    {% block old_password %}
 					<div>
 						<label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="old_pwd" name="old_pwd" value="">
-					</div>
-					{% endblock %}
+                        <input type="password" id="old_pwd" class="ibo-input" name="old_pwd" value="">
+                    </div>
+                    {% endblock %}
 					{% block new_password %}
 					<div>
 						<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="new_pwd" name="new_pwd" value="">
-						<span class="message"></span>
-					</div>
-					<div>
-						<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
-						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="">
-						<span class="message"></span>
-					</div>
-					{% endblock %}
+                        <input type="password" id="new_pwd" class="ibo-input" name="new_pwd" value="">
+                        <span class="message"></span>
+                    </div>
+                        <div>
+                            <label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
+                            <input type="password" id="retype_new_pwd" class="ibo-input" name="retype_new_pwd" value="">
+                            <span class="message"></span>
+                        </div>
+                    {% endblock %}
 				</div>
 				<div id="login-submit" class="changepwd-submit">
 					<div>
