@@ -78,6 +78,10 @@ class WebPage implements Page
 	 * @since 3.0.0
 	 */
 	public const DEFAULT_SESSION_MESSAGE_SEVERITY = self::ENUM_SESSION_MESSAGE_SEVERITY_INFO;
+	/**
+	 * @var string Rel. path to the template to use for the rendering. File name must be without the extension.
+	 * @since 3.0.0
+	 */
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
 	protected $s_title;
