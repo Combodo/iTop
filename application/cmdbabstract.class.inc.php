@@ -4048,7 +4048,7 @@ HTML;
 			{
 				$iMsgNb++;
 				$sMessageId = "$sMessageIdPrefix-$iMsgNb"; // each message must have its own messageId !
-				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'info', 0);
+				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'warning', 0);
 			}
 		}
 	}
