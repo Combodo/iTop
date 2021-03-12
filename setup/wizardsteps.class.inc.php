@@ -1162,7 +1162,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 EOF
 		);
 
-		if (MFCompiler::HasUseSymlinksFile()) {
+		if (MFCompiler::IsUseSymbolicLinksFlagPresent()) {
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend>Dev parameters</legend>');
 			$oPage->p('<input id="use-symbolic-links" type="checkbox" checked><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');

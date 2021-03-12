@@ -116,18 +116,20 @@ class MFCompiler
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
 	 * @since 3.0.0
 	 */
-	public static function HasUseSymlinksFile(): bool
+	public static function IsUseSymbolicLinksFlagPresent(): bool
 	{
 		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
 	}
 
 	/**
-	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 * @param bool $bUseSymbolicLinks
+	 *
 	 * @since 3.0.0 method creation
+	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
 	 */
-	public static function ToggleUseSymlinksFile(bool $bUseSymbolicLinks): void
+	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bHasUseSymlinksFile = static::HasUseSymlinksFile();
+		$bHasUseSymlinksFile = static::IsUseSymbolicLinksFlagPresent();
 
 		if ($bUseSymbolicLinks) {
 			if ($bHasUseSymlinksFile) {
@@ -295,7 +297,7 @@ class MFCompiler
 		$this->WriteStaticOnlyHtaccess($sTempTargetDir);
 		$this->WriteStaticOnlyWebConfig($sTempTargetDir);
 
-		static::ToggleUseSymlinksFile($bUseSymbolicLinks);
+		static::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
 
 		foreach ($aModules as $foo => $oModule) {
 			$sModuleName = $oModule->GetName();

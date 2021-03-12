@@ -285,7 +285,7 @@ class ApplicationInstaller
 						}
 					}
 
-					if (MFCompiler::HasUseSymlinksFile()) {
+					if (MFCompiler::IsUseSymbolicLinksFlagPresent()) {
 						$bUseSymbolicLinks = true;
 					}
 

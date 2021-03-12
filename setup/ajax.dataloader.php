@@ -179,7 +179,7 @@ try
 		case 'toggle_use_symbolic_links':
 			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
 			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
-			MFCompiler::ToggleUseSymlinksFile($bUseSymbolicLinks);
+			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
 			echo "toggle useSymbolicLInks file : $bUseSymbolicLinks";
 			break;
 
