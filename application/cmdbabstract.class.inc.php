@@ -232,26 +232,25 @@ EOF
 	 * last plugin to set the message for a given message id) In practice, standard messages are recorded at the end
 	 * but they will not overwrite existing messages
 	 *
+	 * @see SetSessionMessageFromInstance() to call from within an instance
+	 *
 	 * @param string $sClass The class of the object (must be the final class)
 	 * @param int $iKey The identifier of the object
 	 * @param string $sMessageId Your id or one of the well-known ids: 'create', 'update' and 'apply_stimulus'
 	 * @param string $sMessage The HTML message (must be correctly escaped)
-	 * @param string $sSeverity Any of the following: ok, info, error.
+	 * @param string $sSeverity Any of the \WebPage::ENUM_SESSION_MESSAGE_SEVERITY_XXX constants
 	 * @param float $fRank Ordering of the message: smallest displayed first (can be negative)
 	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)
 	 *
-	 * @see SetSessionMessageFromInstance() to call from within an instance
+	 * @return void
 	 */
-	public static function SetSessionMessage(
-		$sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false
-	) {
+	public static function SetSessionMessage($sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
+	{
 		$sMessageKey = $sClass.'::'.$iKey;
-		if (!isset($_SESSION['obj_messages'][$sMessageKey]))
-		{
+		if (!isset($_SESSION['obj_messages'][$sMessageKey])) {
 			$_SESSION['obj_messages'][$sMessageKey] = array();
 		}
-		if (!$bMustNotExist || !array_key_exists($sMessageId, $_SESSION['obj_messages'][$sMessageKey]))
-		{
+		if (!$bMustNotExist || !array_key_exists($sMessageId, $_SESSION['obj_messages'][$sMessageKey])) {
 			$_SESSION['obj_messages'][$sMessageKey][$sMessageId] = array(
 				'rank' => $fRank,
 				'severity' => $sSeverity,

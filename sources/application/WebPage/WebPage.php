@@ -50,6 +50,34 @@ class WebPage implements Page
 	 * @since 2.7.0 N°2529
 	 */
 	const PAGES_CHARSET = 'utf-8';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SESSION_MESSAGE_SEVERITY_INFO = 'INFO';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SESSION_MESSAGE_SEVERITY_OK = 'ok';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SESSION_MESSAGE_SEVERITY_WARNING = 'warning';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
+
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const DEFAULT_SESSION_MESSAGE_SEVERITY = self::ENUM_SESSION_MESSAGE_SEVERITY_INFO;
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
 	protected $s_title;
@@ -90,7 +118,6 @@ class WebPage implements Page
 	/** @var iUIContentBlock $oContentLayout */
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
-
 
 
 	/**
@@ -150,16 +177,16 @@ class WebPage implements Page
 					$aReadMessages[] = $aMessageData['message'];
 					$aRanks[] = $aMessageData['rank'];
 					switch ($aMessageData['severity']) {
-						case 'ok':
+						case static::ENUM_SESSION_MESSAGE_SEVERITY_OK:
 							$aMessages[] = AlertUIBlockFactory::MakeForSuccess('', $aMessageData['message']);
 							break;
-						case 'warning':
+						case static::ENUM_SESSION_MESSAGE_SEVERITY_WARNING:
 							$aMessages[] = AlertUIBlockFactory::MakeForWarning('', $aMessageData['message']);
 							break;
-						case 'error':
+						case static::ENUM_SESSION_MESSAGE_SEVERITY_ERROR:
 							$aMessages[] = AlertUIBlockFactory::MakeForDanger('', $aMessageData['message']);
 							break;
-						case 'info':
+						case static::ENUM_SESSION_MESSAGE_SEVERITY_INFO:
 						default:
 							$aMessages[] = AlertUIBlockFactory::MakeForInformation('', $aMessageData['message']);
 							break;
