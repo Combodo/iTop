@@ -292,40 +292,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 JS
 		);
 
-		// TODO 3.0.0: This is for tag sets, refactor the attribute markup so it contains the necessary
-		// TODO 3.0.0: data-tooltip-* attributes to activate the tooltips automatically (see /js/pages/backoffice/toolbox.js)
-		// Attribute set tooltip on items
-		$this->add_ready_script(
-			<<<JS
-	$('.attribute-set-item').each(function(){
-		// Encoding only title as the content is already sanitized by the HTML attribute.
-        var sLabel = $('<div/>').text($(this).attr('data-label')).html();
-		var sDescription = $(this).attr('data-description');
-		
-		var oContent = {};
-		
-		// Make nice tooltip if item has a description, otherwise just make a title attribute so the truncated label can be read.
-		if(sDescription !== '')
-		{
-			oContent.title = { text: sLabel };
-			oContent.text = sDescription;
-	    }
-	    else
-	    {
-	    	oContent.text = sLabel;
-	    }
-	    
-	    $(this).qtip({
-	       content: oContent,
-	       show: { delay: 300, when: 'mouseover' },
-	       hide: { delay: 140, when: 'mouseout', fixed: true },
-	       style: { name: 'dark', tip: 'bottomLeft' },
-	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
-	    });
-	});
-JS
-		);
-
 		// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
 		// Make image attributes zoomable
 		$this->add_ready_script(
@@ -493,8 +459,6 @@ JS
 		}
 JS
 		);
-
-
 	}
 
 

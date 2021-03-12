@@ -3523,7 +3523,9 @@ class AttributeClassState extends AttributeString
 				$aValues = MetaModel::EnumStates($sChildClass);
 				if (in_array($sValue, $aValues))
 				{
-					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')'.'" data-description="">'.$sValue.'</span>';
+					$sLabelForHtmlAttribute = utils::EscapeHtml($sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')');
+					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sValue.'</span>';
+
 					return $sHTML;
 				}
 			}
@@ -10207,25 +10209,37 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		if (empty($aValues)) {return '';}
 		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
-		foreach($aValues as $sValue)
-		{
+		foreach($aValues as $sValue) {
 			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
 			$sAttCode = $this->GetCode();
-			$sLabel = utils::HtmlEntities($this->GetValueLabel($sValue));
-			$sDescription = utils::HtmlEntities($this->GetValueDescription($sValue));
+			$sLabel = utils::EscapeHtml($this->GetValueLabel($sValue));
+			$sDescription = utils::EscapeHtml($this->GetValueDescription($sValue));
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 			$sFilter = rawurlencode($oFilter->serialize());
 			$sLink = '';
-			if ($bWithLink && $this->bDisplayLink)
-			{
+			if ($bWithLink && $this->bDisplayLink) {
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 				$sLink = ' href="'.$sUrl.'"';
 			}
-			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.
-				'" data-description="'.$sDescription.'">'.$sLabel.'</a>';
+
+			// Prepare tooltip
+			if (empty($sDescription)) {
+				$sTooltipContent = $sLabel;
+				$sTooltipHtmlEnabled = 'false';
+			} else {
+				$sTooltipContent = <<<HTML
+<h4>$sLabel</h4>
+<br>
+<div>$sDescription</div>
+HTML;
+				$sTooltipHtmlEnabled = 'true';
+			}
+			$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+
+			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.'" data-description="'.$sDescription.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabel.'</a>';
 		}
 		$sHtml .= '</span>';
 
@@ -10758,16 +10772,15 @@ class AttributeClassAttCodeSet extends AttributeSet
 						$sAttClass = $sClass;
 
 						// Look for the first class (current or children) that have this attcode
-						foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
-						{
-							if(MetaModel::IsValidAttCode($sChildClass, $sAttCode))
-							{
+						foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+							if (MetaModel::IsValidAttCode($sChildClass, $sAttCode)) {
 								$sAttClass = $sChildClass;
 								break;
 							}
 						}
 
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
+						$sLabelForHtmlAttribute = MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)";
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values
@@ -10952,17 +10965,15 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		}
 		if (is_array($value))
 		{
-			if (!empty($oHostObject) && $bLocalize)
-			{
+			if (!empty($oHostObject) && $bLocalize) {
 				$aArgs['this'] = $oHostObject;
 				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
 
 				$aLocalizedValues = array();
-				foreach($value as $sAttCode)
-				{
-					if (isset($aAllowedAttributes[$sAttCode]))
-					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$aAllowedAttributes[$sAttCode].'" data-description="">'.$sAttCode.'</span>';
+				foreach ($value as $sAttCode) {
+					if (isset($aAllowedAttributes[$sAttCode])) {
+						$sLabelForHtmlAttribute = $aAllowedAttributes[$sAttCode];
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					}
 				}
 				$value = $aLocalizedValues;
@@ -11499,15 +11510,27 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
-				if ($bWithLink && $this->bDisplayLink)
-				{
+				if ($bWithLink && $this->bDisplayLink) {
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 					$sLink = ' href="'.$sUrl.'"';
 				}
 
-				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
-						ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES,
-						'UTF-8').'">'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'</a>';
+				$sLabelForHtml = utils::EscapeHtml($sTagLabel);
+				$sDescriptionForHtml = utils::EscapeHtml($sTagDescription);
+				if (empty($sTagDescription)) {
+					$sTooltipContent = $sTagLabel;
+					$sTooltipHtmlEnabled = 'false';
+				} else {
+					$sTooltipContent = <<<HTML
+<h4>$sTagLabel</h4>
+<br>
+<div>$sTagDescription</div>
+HTML;
+					$sTooltipHtmlEnabled = 'true';
+				}
+				$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+
+				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
 			}
 			else
 			{
