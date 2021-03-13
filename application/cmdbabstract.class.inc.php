@@ -1897,7 +1897,10 @@ HTML
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
+
 					$sEditValue = $oAttDef->GetEditValue($value);
+					$sEditValueForHtml = utils::EscapeHtml($sEditValue);
+					$sFullscreenLabelForHtml = utils::EscapeHtml(Dict::S('UI:ToggleFullScreen'));
 
 					$aStyles = array();
 					$sStyle = '';
@@ -1980,9 +1983,16 @@ JS
 						$sAdditionalStuff = '';
 					}
 					// Ok, the text area is drawn here
-					$sHTMLValue = "$sAdditionalStuff<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
-							ENT_QUOTES, 'UTF-8')."</textarea></div>{$sValidationSpan}{$sReloadSpan}";
-
+					$sHTMLValue = <<<HTML
+{$sAdditionalStuff}
+<div class="field_input_zone field_input_text">
+	<div class="f_i_text_header">
+		<span class="fullscreen_button" title="{$sFullscreenLabelForHtml}"></span>
+	</div>
+	<textarea class="" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
+</div>
+{$sValidationSpan}{$sReloadSpan}
+HTML;
 					$oPage->add_ready_script(
 						<<<EOF
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
@@ -2362,10 +2372,12 @@ EOF
 					else
 					{
 						$sInputType = self::ENUM_INPUT_TYPE_SINGLE_INPUT;
-						$sTip = '';
+						$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
+						$sTip = '';
 						if (!empty($sDisplayValue)) {
-							$sTip = ' data-tooltip-content="'.utils::HtmlEntities($sDisplayValue).'"';
+							$sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
 							$oPage->add_ready_script(
 								<<<EOF
 								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
@@ -2387,8 +2399,13 @@ EOF
 							);
 						}
 
-						$sHTMLValue = '<div class="field_input_zone ibo-input-wrapper ibo-input-string-wrapper" data-validation="untouched"><input class="ibo-input ibo-input-string" title="'.$sHelpText.'" type="text" maxlength="'.$iFieldSize.'" name="attr_'.$sFieldPrefix.$sAttCode.$sNameSuffix.'" value="'.htmlentities($sDisplayValue,
-								ENT_QUOTES, 'UTF-8').'" id="'.$iId.'"'.$sTip.' /></div>'.$sValidationSpan.$sReloadSpan;
+
+						$sHTMLValue = <<<HTML
+<div class="field_input_zone ibo-input-wrapper ibo-input-string-wrapper" data-validation="untouched">
+	<input class="ibo-input ibo-input-string" title="{$sHelpText}" type="text" maxlength="{$iFieldSize}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" {$sTip} />
+</div>
+{$sValidationSpan}{$sReloadSpan}
+HTML;
 						$aEventsList[] = 'keyup';
 						$aEventsList[] = 'change';
 
