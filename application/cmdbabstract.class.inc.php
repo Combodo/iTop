@@ -1985,11 +1985,11 @@ JS
 					// Ok, the text area is drawn here
 					$sHTMLValue = <<<HTML
 {$sAdditionalStuff}
-<div class="field_input_zone field_input_text">
+<div class="field_input_zone field_input_text ibo-input-wrapper ibo-input-text-wrapper" data-validation="untouched">
 	<div class="f_i_text_header">
 		<span class="fullscreen_button" title="{$sFullscreenLabelForHtml}"></span>
 	</div>
-	<textarea class="" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
+	<textarea class="ibo-input ibo-input-text" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;

@@ -1,0 +1,13 @@
+$ibo-input-text--min-height: 12rem !default;
+$ibo-input-text--padding-x: 12px !default;
+$ibo-input-text--padding-y: 10px !default;
+
+.ibo-input-text {
+  min-height: $ibo-input-text--min-height;
+  padding: $ibo-input-text--padding-y $ibo-input-text--padding-x;
+}
+
+.ibo-input-text--export {
+  width: 100%;
+  min-height: 15em;
+}

@@ -338,7 +338,7 @@ EOF
 	$oBlockResult->AddSubBlock(new Html(Dict::S('Core:BulkExport:ExportResult')));
 
 	$oTextArea = new TextArea('export_content', '', 'export_content');
-	$oTextArea->AddCSSClass('ibo-input-text-area--export');
+	$oTextArea->AddCSSClass('ibo-input-text--export');
 	$oBlockResult->AddSubBlock($oTextArea);
 	$oP->AddSubBlock($oBlockResult);
 

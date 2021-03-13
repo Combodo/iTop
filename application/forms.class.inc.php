@@ -1054,7 +1054,7 @@ class DesignerLongTextField extends DesignerTextField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
-		$this->aCSSClasses[] = 'ibo-input-text-area';
+		$this->aCSSClasses[] = 'ibo-input-text';
 	}
 
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
