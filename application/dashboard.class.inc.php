@@ -429,11 +429,11 @@ abstract class Dashboard
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
 		// menu to pick a layout and edit other properties of the dashboard
-		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard--properties--title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard-editor--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard-editor--properties-title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div class="ibo-dashboard--properties--subtitle" data-role="ibo-dashboard--properties--subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
-		$oPage->add('<div id="select_layout" class="ibo-dashboard--properties--layout-list" data-role="ibo-dashboard--properties--layout-list">');
+		$oPage->add('<div class="ibo-dashboard-editor--properties-subtitle" data-role="ibo-dashboard-editor--properties-subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
+		$oPage->add('<div id="select_layout" class="ibo-dashboard-editor--layout-list" data-role="ibo-dashboard-editor--layout-list">');
 		foreach (get_declared_classes() as $sLayoutClass) {
 			if (is_subclass_of($sLayoutClass, 'DashboardLayout')) {
 				$oReflection = new ReflectionClass($sLayoutClass);
@@ -569,7 +569,7 @@ JS
 		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list" data-role="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
 		foreach ($aAvailableDashlets as $sDashletClass => $aInfo) {
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashlet--icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashlet--icon" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 

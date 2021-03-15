@@ -1,43 +1,43 @@
-$ibo-dashboard-editor--pane-padding: 16px 30px 16px 15px !default;
+$ibo-dashboard-editor--pane--padding: 16px 30px 16px 15px !default;
 
-$ibo-dashlet--icon--height: 34px !default;
-$ibo-dashlet--icon--width: $ibo-dashlet--icon--height !default;
-$ibo-dashlet--icon--margin: 2px 5px !default;
+$ibo-dashboard-editor--available-dashlet-icon--height: 34px !default;
+$ibo-dashboard-editor--available-dashlet-icon--width: $ibo-dashboard-editor--available-dashlet-icon--height !default;
+$ibo-dashboard-editor--available-dashlet-icon--margin: 2px 5px !default;
 
-$ibo-dashboard--properties--title--padding-bottom: 2rem !default;
+$ibo-dashboard-editor--properties-title--padding-bottom: 2rem !default;
 
-$ibo-dashboard--properties--layout-list--padding-bottom: 12px !default;
+$ibo-dashboard-editor--layout-list--padding-bottom: 12px !default;
 
-$ibo-dashboard--properties--layout-list--button--margin: 0 15px 0 5px !default;
+$ibo-dashboard-editor--layout-list--button--margin: 0 15px 0 5px !default;
 
 $ibo-dashboard-editor--padding: 0 !default;
 
 $ibo-dashboard-editor--dashboard--border-right: solid 1px $ibo-color-grey-200 !default;
 $ibo-dashboard-editor--dashboard--padding: 16px 15px 16px 30px !default;
 
-$ibo-dashlet--delete--top: 7px !default;
-$ibo-dashlet--delete--right: 9px !default;
-$ibo-dashlet--delete--padding: 2px 6px !default;
-$ibo-dashlet--delete--z-index: 21 !default;
+$ibo-dashboard-editor--delete-dashlet-icon--top: 7px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--right: 9px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--padding: 2px 6px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 
 
 .ibo-dashboard-editor--pane{
 	flex-grow: 1;
-	padding: $ibo-dashboard-editor--pane-padding;
+	padding: $ibo-dashboard-editor--pane--padding;
 	overflow: auto;
 }
 
-.ibo-dashlet--icon{
+.ibo-dashboard-editor--available-dashlet-icon{
 	display: inline-block; 
-	height: $ibo-dashlet--icon--height; 
-	width: $ibo-dashlet--icon--width; 
-	margin: $ibo-dashlet--icon--margin;
+	height: $ibo-dashboard-editor--available-dashlet-icon--height;
+	width: $ibo-dashboard-editor--available-dashlet-icon--width;
+	margin: $ibo-dashboard-editor--available-dashlet-icon--margin;
 	cursor: grab;
 	&:active{
 		cursor: move;
 	}
 }
-.ibo-dashboard--properties,
+.ibo-dashboard-editor--properties,
 .ibo-dashboard--available-dashlets,
 .ibo-dashlet--properties{
 	display: flex;
@@ -54,25 +54,25 @@ $ibo-dashlet--delete--z-index: 21 !default;
 		}
 	}
 }
-.ibo-dashboard--properties--title{
-	padding-bottom: $ibo-dashboard--properties--title--padding-bottom;
+.ibo-dashboard-editor--properties-title{
+	padding-bottom: $ibo-dashboard-editor--properties-title--padding-bottom;
 	@extend %ibo-font-ral-med-250;
 }
-.ibo-dashboard--properties--subtitle,
+.ibo-dashboard-editor--properties-subtitle,
 .ibo-dashboard--available-dashlet--title,
 .ibo-dashlet--properties--title{
 	@extend .ibo-fieldset-legend;
 	@extend %ibo-font-ral-med-150;
 }
 
-.ibo-dashboard--properties--layout-list {
+.ibo-dashboard-editor--layout-list {
 	display: flex;
 	justify-content: center;
-	padding-bottom: $ibo-dashboard--properties--layout-list--padding-bottom;
+	padding-bottom: $ibo-dashboard-editor--layout-list--padding-bottom;
 	> .ui-button {
 		display: inline-block;
 		height: auto;
-		margin: $ibo-dashboard--properties--layout-list--button--margin;
+		margin: $ibo-dashboard-editor--layout-list--button--margin;
 	}
 }
 .ibo-dashboard--available-dashlets--list{
@@ -92,12 +92,12 @@ $ibo-dashlet--delete--z-index: 21 !default;
 		padding: $ibo-dashboard-editor--dashboard--padding;
 	}
 }
-.ibo-dashlet--delete{
+.ibo-dashboard-editor--delete-dashlet-icon{
 	position: absolute;
-	top: $ibo-dashlet--delete--top;
-	right: $ibo-dashlet--delete--right;
-	padding: $ibo-dashlet--delete--padding;
-	z-index: $ibo-dashlet--delete--z-index;
+	top: $ibo-dashboard-editor--delete-dashlet-icon--top;
+	right: $ibo-dashboard-editor--delete-dashlet-icon--right;
+	padding: $ibo-dashboard-editor--delete-dashlet-icon--padding;
+	z-index: $ibo-dashboard-editor--delete-dashlet-icon--z-index;
 	@extend .ibo-button;
 	@extend .ibo-is-alternative;
 	@extend .ibo-is-danger;

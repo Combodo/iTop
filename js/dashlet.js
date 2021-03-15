@@ -28,18 +28,17 @@ $(function()
 		// to call when the contents are changed
 		_update: function()
 		{
-			var me = this; 
+			var me = this;
 
-			this.closeBox = $('<div class="ibo-dashlet--delete close-box"/>').append('<i class="fas fa-trash ibo-button--icon"></i>');
+			this.closeBox = $('<div class="ibo-dashboard-editor--delete-dashlet-icon close-box"/>').append('<i class="fas fa-trash ibo-button--icon"></i>');
 			this.closeBox
-				.on('click', function() { me._remove_dashlet(); })
+				.on('click', function () {
+					me._remove_dashlet();
+				})
 				.prependTo(this.element);
-			if (this.element.hasClass('dashlet-selected'))
-			{
+			if (this.element.hasClass('dashlet-selected')) {
 				this.closeBox.show();
-			}
-			else
-			{
+			} else {
 				this.closeBox.hide();
 			}
 
