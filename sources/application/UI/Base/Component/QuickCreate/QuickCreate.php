@@ -123,6 +123,7 @@ class QuickCreate extends UIBlock
 
 	/**
 	 * Return the $aClasses array of DM classes minus the classes that should not be proposed in the autocomplete:
+	 * - not derivating from cmdbAbstractObject
 	 * - n:n classes
 	 *
 	 * @param array $aClasses
@@ -134,6 +135,11 @@ class QuickCreate extends UIBlock
 		$aFilteredClasses = [];
 
 		foreach ($aClasses as $sClassName => $sClassLabel){
+			// Skip not derivating from cmdbAbstractObject
+			if(false === is_a($sClassName, '\cmdbAbstractObject', true)) {
+				continue;
+			}
+
 			// Skip n:n classes
 			if(MetaModel::IsLinkClass($sClassName)) {
 				continue;
