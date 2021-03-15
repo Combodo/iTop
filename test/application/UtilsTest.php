@@ -168,6 +168,63 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		);
 	}
 
+	public function GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider() {
+		$this->setUp();
+
+		$baseServerVar = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'HTTP_X_FORWARDED_HOST' => null,
+			'SERVER_PORT' => '80',
+			'HTTP_X_FORWARDED_PORT' => null,
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_PROTO' => null,
+			'HTTP_X_FORWARDED_PROTOCOL' => null,
+			'HTTPS' => null,
+		];
+
+		return [
+			'ForceTrustProxy disabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, []),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'ForceTrustProxy enabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, []),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider
+	 */
+	public function testGetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirst($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	{
+		$_SERVER = $aServerVars;
+		utils::GetConfig()->Set('trust_proxies', $bConfTrustProxy);
+		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
+		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
+		$sPersistedExpectedAppRootUrl = $sAppRootUrl;
+
+		$sAppRootUrl = utils::GetDefaultUrlAppRoot(!$bForceTrustProxy);
+		if ($bForceTrustProxy){
+			$this->assertNotEquals($sExpectedAppRootUrl, $sAppRootUrl);
+		} else {
+			$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
+			$sPersistedExpectedAppRootUrl = $sAppRootUrl;
+		}
+
+		$this->assertEquals($sPersistedExpectedAppRootUrl, utils::GetDefaultUrlAppRoot($bForceTrustProxy));
+	}
+
+
 	/**
 	 * @dataProvider GetDefaultUrlAppRootProvider
 	 */
@@ -250,7 +307,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				]),
 				'sExpectedAppRootUrl' => 'http://example.com/',
 			],
-			'with proxy, enabled' => [
+			'with proxy, enabled HTTP_X_FORWARDED_PROTO' => [
 				'bForceTrustProxy' => false,
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [
@@ -260,7 +317,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				]),
 				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
 			],
-			'with proxy, enabled - alt' => [
+			'with proxy, enabled - alt HTTP_X_FORWARDED_PROTO COL' => [
 				'bForceTrustProxy' => false,
 				'bConfTrustProxy' => true,
 				'aServerVars' => array_merge($baseServerVar, [

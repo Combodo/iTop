@@ -812,7 +812,7 @@ class utils
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
 		static $sUrl = null;
-		if ($sUrl === null)
+		if ($sUrl === null || $bForceTrustProxy)
 		{
 			$sUrl = self::GetConfig()->Get('app_root_url');
 			if ($sUrl == '')
