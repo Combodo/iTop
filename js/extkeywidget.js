@@ -186,11 +186,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				.appendTo(ul);
 		};
 
-		$('#label_'+me.id).focus(function () {
+		$('#label_'+me.id).on('focus', function () {
 			// track whether the field has focus, we shouldn't process any
 			// results if the field no longer has focus
 			hasFocus++;
-		}).blur(function () {
+		}).on('blur', function () {
 			hasFocus = 0;
 			if ($('#label_'+me.id).val().length == 0) {
 				eval('oACWidget_'+me.id).Clear();
