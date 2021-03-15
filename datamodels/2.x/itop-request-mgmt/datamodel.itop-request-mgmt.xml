@@ -1787,16 +1787,22 @@
                                         <item id="sla_tto_over">
                                             <rank>20</rank>
                                         </item>
-                                        <item id="sla_ttr_passed">
-                                            <rank>30</rank>
-                                        </item>
-                                        <item id="sla_ttr_over">
-                                            <rank>40</rank>
-                                        </item>
+                                      <item id="sla_ttr_passed">
+                                        <rank>30</rank>
+                                      </item>
+                                      <item id="sla_ttr_over">
+                                        <rank>40</rank>
+                                      </item>
                                     </items>
                                 </item>
                             </items>
                         </item>
+                      <item id="public_log">
+                        <rank>100</rank>
+                      </item>
+                      <item id="private_log">
+                        <rank>110</rank>
+                      </item>
                     </items>
                 </details>
                 <search>
