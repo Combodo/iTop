@@ -231,7 +231,7 @@ $('form').each(function () {
 });
 $('#btn_back').click(function() { $('#wiz_form').data('back', true); });
 
-$('#wiz_form').submit(function() {
+$('#wiz_form').on('submit', function() {
 	if ($(this).data('back'))
 	{
 		return CanMoveBackward();

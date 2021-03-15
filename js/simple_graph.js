@@ -654,7 +654,7 @@ $(function()
 			var me = this;
 			if (sOperation == 'attachment')
 			{
-				$('#GraphExportDlg'+this.element.attr('id')+' form').submit(function() { return me._on_export_as_attachment(); });
+				$('#GraphExportDlg'+this.element.attr('id')+' form').on('submit', function() { return me._on_export_as_attachment(); });
 			}
 			$('#GraphExportDlg'+this.element.attr('id')).dialog({
 				width: 'auto',

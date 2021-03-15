@@ -292,7 +292,7 @@ editor.commands.addCommand({
 
 
 var editorForm = EditorUtils.getEditorForm(editor);
-editorForm.submit(function() {
+editorForm.on('submit', function() {
 	EditorUtils.saveEditorDisplay(editor);
 });
 

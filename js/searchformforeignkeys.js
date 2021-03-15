@@ -60,7 +60,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 			$('#dlg_'+me.id).remove();
 		});
 
-		$('#'+this.iInputId).closest('form').submit(function() {
+		$('#'+this.iInputId).closest('form').on('submit', function() {
 			return me.OnFormSubmit();
 		});
 	};

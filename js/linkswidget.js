@@ -38,7 +38,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		oInput.bind('update_value', function () {
 			$(this).val(me.GetUpdatedValue());
 		});
-		oInput.closest('form').submit(function () {
+		oInput.closest('form').on('submit', function () {
 			return me.OnFormSubmit();
 		});
 	};
