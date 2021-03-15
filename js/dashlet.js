@@ -55,7 +55,7 @@ $(function()
 		{
 			this.element
 			.removeClass('itop-dashlet')
-			.unbind('click.itop-dashlet');
+			.off('click.itop-dashlet');
 			
 			this.closeBox.remove();			
 		},

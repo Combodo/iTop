@@ -35,8 +35,8 @@
  * \cmdbAbstractObject::GetFormElementForField and $aEventsList var)
  * <pre><code>
  *   $('#2_name')
- *      .unbind('change.dependencies')
- *      .bind('change.dependencies', function(evt, sFormId) {
+ *      .off('change.dependencies')
+ *      .on('change.dependencies', function(evt, sFormId) {
  *          return oWizardHelper.UpdateDependentFields(['friendlyname']);
  *      }
  *   );

@@ -27,7 +27,7 @@ $(function()
 
 			this.element
 				.addClass( "itop-property-field ibo-field" )
-				.bind('apply_changes.itop-property-field', function(){me._do_apply();} );
+				.on('apply_changes.itop-property-field', function(){me._do_apply();} );
 				
 			this.bModified = false;
 			
@@ -35,11 +35,11 @@ $(function()
 			{
 				// In case there is an hidden input having the same id (somewhere else in the page), the change event does not occur unless the input loses the focus
 				// To reduce the impact, let's handle keyup as well
-				$('#'+this.options.field_id, this.element).bind('change.itop-property-field keyup.itop-property-field', function() { me._on_change(); });
+				$('#'+this.options.field_id, this.element).on('change.itop-property-field keyup.itop-property-field', function() { me._on_change(); });
 				this.value = this._get_field_value();
 			}
-			this.element.find(".prop_apply").bind('click.itop-property-field', function() { me._do_apply(); });
-			this.element.find(".prop_cancel").bind('click.itop-property-field', function() { me._do_cancel(); });
+			this.element.find(".prop_apply").on('click.itop-property-field', function() { me._do_apply(); });
+			this.element.find(".prop_cancel").on('click.itop-property-field', function() { me._do_cancel(); });
 			
 			this._refresh();
 		},
@@ -337,11 +337,11 @@ $(function()
 			this.element
 				.addClass( "itop-selector-property-field" );
 			
-			$('#'+this.options.field_id).bind('reverted init', function() {
+			$('#'+this.options.field_id).on('reverted init', function() {
 					me._update_subform();
 				}).trigger('init'); // initial refresh
 			
-			this.element.bind('subitem_changed', function() {
+			this.element.on('subitem_changed', function() {
 				me._on_subitem_changed();
 			});
 		},

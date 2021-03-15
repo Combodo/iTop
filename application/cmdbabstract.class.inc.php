@@ -1866,10 +1866,10 @@ HTML
 					$sInputType = self::ENUM_INPUT_TYPE_MULTIPLE_INPUTS;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'change';
-					$oPage->add_ready_script("$('#{$iId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_h').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-					$oPage->add_ready_script("$('#{$iId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_d').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_h').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_m').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_s').on('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
 					$aVal = AttributeDuration::SplitDuration($value);
 					$sDays = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
@@ -1879,7 +1879,7 @@ HTML
 							'UTF-8')."\"/>";
 					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
 							$sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
-					$oPage->add_ready_script("$('#{$iId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
 
 				case 'Password':
@@ -2046,7 +2046,7 @@ EOF
 					}
 					$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value->GetModifiedEntry('html')) : 'undefined';
 
-					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
+					$oPage->add_ready_script("$('#$iId').on('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );"); // Custom validation function
 
 					// Replace the text area with CKEditor
 					// To change the default settings of the editor,
@@ -2062,7 +2062,7 @@ EOF
 
 					$oPage->add_ready_script(
 <<<EOF
-$('#$iId').bind('update', function(evt){
+$('#$iId').on('update', function(evt){
 	BlockField('cke_$iId', $('#$iId').attr('disabled'));
 	//Delayed execution - ckeditor must be properly initialized before setting readonly
 	var retryCount = 0;
@@ -2231,7 +2231,7 @@ HTML;
 					$sHTMLValue .= '<td>'.$sValidationSpan.$sReloadSpan.'</td>';
 					$sHTMLValue .= '</tr>';
 					$sHTMLValue .= '</table>';
-					$oPage->add_ready_script("$('#$iId :input').bind('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
+					$oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
 					break;
 
 				case 'CustomFields':
@@ -2278,12 +2278,12 @@ $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
 $('#{$iId}_console_form').console_form_handler('alignColumns');
 $('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
 // field_change must be processed to refresh the hidden value at anytime
-$('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+$('#{$iId}_console_form').on('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
 // Initialize the hidden value with current state
 // update_value is triggered when preparing the wizard helper object for ajax calls
-$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+$('#{$iId}').on('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
 // validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
-$('#{$iId}').bind('validate', function(evt, sFormId) {
+$('#{$iId}').on('validate', function(evt, sFormId) {
     $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
     return ValidateCustomFields('$iId', sFormId); // Custom validation function
 });
@@ -2380,7 +2380,7 @@ EOF
 							$sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
 							$oPage->add_ready_script(
 								<<<EOF
-								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
+								$('#{$iId}').on('keyup', function(evt, sFormId){ 
 									var sVal = $('#{$iId}').val();
 									var oTippy = this._tippy;
 									
@@ -2423,7 +2423,7 @@ HTML;
 				$sEventList = implode(' ', $aEventsList);
 				$oPage->add_ready_script(<<<JS
 $('#$sFieldToValidateId')
-	.bind('$sEventList',  
+	.on('$sEventList',  
 		function(evt, sFormId) {
 			// Bind to a custom event: validate
 			return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue);
@@ -4493,7 +4493,7 @@ HTML
 				{
 					// When 'enabling' a field, all its prerequisites must be enabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
-					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
+					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
 				}
 				$aDependents = MetaModel::GetDependentAttributes($sClass,
 					$sAttCode); // List of attributes that are needed for the current one
@@ -4501,7 +4501,7 @@ HTML
 				{
 					// When 'disabling' a field, all its dependent fields must be disabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
-					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
+					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
 				}
 				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 				{
@@ -4638,8 +4638,8 @@ HTML
 			$oP->add_ready_script($sReadyScript);
 			$oP->add_ready_script(
 				<<<EOF
-$('.wizContainer button.cancel').unbind('click');
-$('.wizContainer button.cancel').click( function() { window.location.href = '$sCancelUrl'; } );
+$('.wizContainer button.cancel').off('click');
+$('.wizContainer button.cancel').on('click',  function() { window.location.href = '$sCancelUrl'; } );
 EOF
 			);
 

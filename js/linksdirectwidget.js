@@ -186,7 +186,7 @@ $(function()
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onCreateRow(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
 				
 				me.oDlg.dialog({
 					title: me.options.labels['creation_title'],
@@ -232,8 +232,8 @@ $(function()
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onSearchToAdd(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
-				me.oDlg.find('button.ok').unbind('click').click( function() { me._onDoAdd(); } );
+				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.ok').off('click').on('click',  function() { me._onDoAdd(); } );
 				$('#SearchFormToAdd_'+me.id).resize(function() { me._onSearchDlgUpdateSize(); });
 				
 				me.oDlg.dialog({
@@ -427,7 +427,7 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data){
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onCreateRow(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
 				me._updateDlgPosition();				
 			});
 		},

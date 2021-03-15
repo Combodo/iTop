@@ -531,7 +531,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				$('#ac_create_'+me.id).dialog('open');
 				$('#ac_create_'+me.id).dialog("option", "close", me.OnCloseCreateObject);
 				// Modify the action of the cancel button
-				$('#ac_create_'+me.id+' button.cancel').unbind('click').click(me.CloseCreateObject);
+				$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
 				me.ajax_request = null;
 				// Adjust the dialog's size to fit into the screen
 				if ($('#ac_create_'+me.id).width() > ($(window).width()-40))

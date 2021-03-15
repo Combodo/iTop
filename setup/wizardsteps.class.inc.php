@@ -2458,7 +2458,7 @@ EOF
 	$("#wiz_form").data("installation_status", "completed");
 	$('#progress').progression( {Current:100, Maximum: 100} );
 	WizardUpdateButtons();
-	$("#btn_next").unbind("click.install");
+	$("#btn_next").off("click.install");
 	$("#btn_next").click();
 EOF
 			);

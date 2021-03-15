@@ -1016,10 +1016,10 @@ class DesignerTextField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', $(this).closest('form').attr('id'), $sForbiddenValues); } );
+$('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1080,10 +1080,10 @@ class DesignerLongTextField extends DesignerTextField
 		{
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
+$('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1131,10 +1131,10 @@ class DesignerIntegerField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateInteger('$sId', $sMandatory,  $(this).closest('form').attr('id'), $sMin, $sMax); } );
+$('#$sId').on('change keyup validate', function() { ValidateInteger('$sId', $sMandatory,  $(this).closest('form').attr('id'), $sMin, $sMax); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1295,7 +1295,7 @@ class DesignerComboField extends DesignerFormField
 			}
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '',  $(this).closest('form').attr('id'), null, null); } );
+$('#$sId').on('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '',  $(this).closest('form').attr('id'), null, null); } );
 EOF
 			);
 		}
@@ -1736,7 +1736,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		{
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
+$('#$sId').on('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
 EOF
 			);
 		}

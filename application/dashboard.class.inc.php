@@ -493,7 +493,7 @@ abstract class Dashboard
 		},
 	});
 
-	$('#event_bus').bind('dashlet-selected', function(event, data){
+	$('#event_bus').on('dashlet-selected', function(event, data){
 		var sDashletId = data.dashlet_id;
 		var sPropId = 'dashlet_properties_'+sDashletId;
 		$('.dashlet_properties').each(function() {

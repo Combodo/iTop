@@ -356,8 +356,8 @@ class NavigationMenu extends UIBlock
 					<<<JS
 $sPageJS
 $sPageReadyJS
-$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').bind('extkeychange', function() { $('[data-role="ibo-navigation-menu--silo-selection--form"]').submit(); } )
-$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').click( function() { if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { $(this).val(''); } } );
+$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { $('[data-role="ibo-navigation-menu--silo-selection--form"]').submit(); } )
+$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').on('click', function() { if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { $(this).val(''); } } );
 JS;
 		}
 	}

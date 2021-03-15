@@ -247,8 +247,8 @@ class UIExtKeyWidget
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$value');
-		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
+		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
 			);
@@ -561,8 +561,8 @@ EOF
 						<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
-		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
+		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange') } );
 
 EOF
 					);
@@ -687,7 +687,7 @@ HTML
 		$sDialogTitle = addslashes($sTitle);
 		$oPage->add_ready_script(<<<JS
 		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
-		$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
+		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
 JS
 		);
@@ -883,7 +883,7 @@ JS
         $oPage->add('</div></div></div>');
         $oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
         $oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
+        $oPage->add_ready_script("$('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
 
 	/**

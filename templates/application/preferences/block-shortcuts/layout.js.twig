@@ -3,7 +3,7 @@
 {% apply spaceless %}
 
 var selectionCount{{ oUIBlock.sIdShortcuts }} = $('#{{ oUIBlock.sIdShortcuts }} [name="selectionCount"]');
-selectionCount{{ oUIBlock.sIdShortcuts }}.bind('change',function()
+selectionCount{{ oUIBlock.sIdShortcuts }}.on('change',function()
 				{
 					let iCountSelected = selectionCount{{ oUIBlock.sIdShortcuts }}.val();
 					if (iCountSelected == 0)
@@ -27,7 +27,7 @@ selectionCount{{ oUIBlock.sIdShortcuts }}.bind('change',function()
 $('#shortcut_btn_rename').prop('disabled', true);
 $('#shortcut_btn_delete').prop('disabled', true);
 
-$('#shortcut_btn_rename').bind('click', function() {
+$('#shortcut_btn_rename').on('click', function() {
 	var oParams = getMultipleSelectionParams('{{ oUIBlock.sIdShortcuts }}')
 	oParams.operation = 'shortcut_rename_dlg';
 
@@ -36,7 +36,7 @@ $('#shortcut_btn_rename').bind('click', function() {
 	});
 	return false;
 });
-$('#shortcut_btn_delete').bind('click', function() {
+$('#shortcut_btn_delete').on('click', function() {
 	if (confirm('{{'UI:ShortcutDelete:Confirm' |dict_s }}'))
 	{
 		var oParams = getMultipleSelectionParams('{{ oUIBlock.sIdShortcuts }}')

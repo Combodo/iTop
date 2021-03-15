@@ -37,7 +37,7 @@ $(function()
 
 			this.element
 				.addClass('itop-dashboard')
-				.bind('add_dashlet.itop_dashboard', function(event, oParams){
+				.on('add_dashlet.itop_dashboard', function(event, oParams){
 					me.add_dashlet(oParams);
 				});
 
@@ -62,7 +62,7 @@ $(function()
 				.removeClass('itop-dashboard');
 
 			this.ajax_div.remove();
-			$(document).unbind('keyup.dashboard_editor');
+			$(document).off('keyup.dashboard_editor');
 		},
 		// _setOptions is called with a hash of all options that are changing
 		_setOptions: function () {
@@ -235,7 +235,7 @@ $(function()
 
 			this.element
 			.addClass('itop-runtimedashboard')
-			.bind('mark_as_modified.itop-dashboard', function(){me.mark_as_modified();} );
+			.on('mark_as_modified.itop-dashboard', function(){me.mark_as_modified();} );
 
 			this.bModified = false;
 		},

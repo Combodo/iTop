@@ -101,7 +101,7 @@ function ShortcutRenameOK()
 	});
 }
 
-$('#shortcut_rename_dlg form').bind('submit', function() { return false; });
+$('#shortcut_rename_dlg form').on('submit', function() { return false; });
 
 $('#shortcut_rename_dlg').dialog({
 	width: 400,
@@ -315,7 +315,7 @@ function ShortcutCreationOK()
 	});
 }
 
-$('#shortcut_creation_dlg form').bind('submit', function() { ShortcutCreationOK(); return false; });
+$('#shortcut_creation_dlg form').on('submit', function() { ShortcutCreationOK(); return false; });
 
 $('#shortcut_creation_dlg').dialog({
 	width: 400,

@@ -344,8 +344,8 @@ $(function () {
 				this.element
 					.removeClass('itop-tabularfieldsselector');
 
-				this.element.parent().unbind('activate');
-				this.element.parent().unbind('validate');
+				this.element.parent().off('activate');
+				this.element.parent().off('validate');
 			},
 			// _setOptions is called with a hash of all options that are changing
 			_setOptions: function () {
