@@ -208,7 +208,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function testGetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirst($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
 	{
 		$_SERVER = $aServerVars;
-		utils::GetConfig()->Set('trust_proxies', $bConfTrustProxy);
+		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
 		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
 		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
 		$sPersistedExpectedAppRootUrl = $sAppRootUrl;
@@ -231,7 +231,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function testGetDefaultUrlAppRoot($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
 	{
 		$_SERVER = $aServerVars;
-		utils::GetConfig()->Set('trust_proxies', $bConfTrustProxy);
+		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
 		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
 		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
 	}

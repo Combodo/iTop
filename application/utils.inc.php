@@ -783,7 +783,7 @@ class utils
 	}
 
 	/**
-	 * @return bool The boolean value of the conf. "trust_proxies" (except if there is no REMOTE_ADDR int his case, it return false)
+	 * @return bool The boolean value of the conf. "behind_reverse_proxy" (except if there is no REMOTE_ADDR int his case, it return false)
 	 *
 	 * @since 2.7.4
 	 */
@@ -793,7 +793,7 @@ class utils
 			return false;
 		}
 
-		$bTrustProxies = (bool) self::GetConfig()->Get('trust_proxies');
+		$bTrustProxies = (bool) self::GetConfig()->Get('behind_reverse_proxy');
 
 		return $bTrustProxies;
 	}
