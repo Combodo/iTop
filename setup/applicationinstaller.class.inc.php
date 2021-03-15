@@ -727,6 +727,7 @@ class ApplicationInstaller
 				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0*$iOrphanCount)/$iTotalCount))."%)");
 				if ($iOrphanCount > 0)
 				{
+					//N°3793
 					if ($iOrphanCount > 100000)
 					{
 						SetupLog::Info("There are too much useless records ($iOrphanCount) in {$sDBPrefix}priv_change. Cleanup cannot be done during setup.");

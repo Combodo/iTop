@@ -152,7 +152,7 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot(true).'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);

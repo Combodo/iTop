@@ -1365,13 +1365,13 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'trust_proxies' => [
+		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
-			'show_in_conf_sample' => false,
+			'show_in_conf_sample' => true,
 		],
 	];
 
