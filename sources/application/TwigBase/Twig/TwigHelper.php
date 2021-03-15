@@ -7,6 +7,8 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
 use IssueLog;
 use Twig\Environment;
@@ -134,9 +136,19 @@ class TwigHelper
 			}
 
 			if (strpos($oTwigException->getMessage(), 'Unable to find template') === false) {
-				//TODO handle ajax ??
-				// this will trigger error page, and will log to error.log !
-				throw new CoreTemplateException($oTwigException, $sPath);
+				if (utils::IsXmlHttpRequest()) {
+					// Ajax : just return the error message as part of the DOM
+					$oAlert = AlertUIBlockFactory::MakeForFailure($sPath, $oTwigException->getMessage())
+						->SetIsClosable(false)
+						->SetIsCollapsible(false); // not rendering JS so...
+
+					IssueLog::Error($sPath.$oTwigException->getMessage());
+
+					return BlockRenderer::RenderBlockTemplates($oAlert);
+				} else {
+					// this will trigger error page, and will log to error.log !
+					throw new CoreTemplateException($oTwigException, $sPath);
+				}
 			}
 
 			if ($bLogMissingFile) {
