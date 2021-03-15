@@ -201,7 +201,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			function () {
 				hasFocus++;
 				$('#label_'+me.id).autocomplete("search");
-			}).keyup(function () {
+			}).on('keyup',function () {
 			if ($('#label_'+me.id).val().length == 0) {
 				if (!$('#label_'+me.id).parent().find('.ibo-input-select--action-button--clear').hasClass('ibo-is-hidden')) {
 					$('#label_'+me.id).parent().find('.ibo-input-select--action-button--clear').addClass('ibo-is-hidden');
