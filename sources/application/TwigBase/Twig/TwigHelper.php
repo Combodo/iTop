@@ -142,7 +142,10 @@ class TwigHelper
 						->SetIsClosable(false)
 						->SetIsCollapsible(false); // not rendering JS so...
 
-					IssueLog::Error($sPath.$oTwigException->getMessage());
+					IssueLog::Error('Error occurred on TWIG rendering', null, [
+						'twig_path' => $sPath,
+						'twig_exception_message' => $oTwigException->getMessage(),
+					]);
 
 					return BlockRenderer::RenderBlockTemplates($oAlert);
 				} else {
