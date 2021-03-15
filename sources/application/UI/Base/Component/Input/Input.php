@@ -21,6 +21,9 @@ class Input extends AbstractInput
 	public const INPUT_HIDDEN = 'hidden';
 
 	protected $bIsChecked = false;
+	
+	protected $bIsDisabled = false;
+	protected $bIsReadonly = false;
 
 	/** @var string */
 	protected $sType;
@@ -59,5 +62,43 @@ class Input extends AbstractInput
 	public function IsChecked()
 	{
 		return $this->bIsChecked;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled()
+	{
+		return $this->bIsDisabled;
+	}
+
+	/**
+	 * @param bool $bIsDisabled
+	 *
+	 * @return $this
+	 */
+	public function SetIsDisabled(bool $bIsDisabled)
+	{
+		$this->bIsDisabled = $bIsDisabled;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsReadonly()
+	{
+		return $this->bIsReadonly;
+	}
+
+	/**
+	 * @param bool $bIsReadonly
+	 *
+	 * @return $this
+	 */
+	public function SetIsReadonly(bool $bIsReadonly)
+	{
+		$this->bIsReadonly = $bIsReadonly;
+		return $this;
 	}
 }
