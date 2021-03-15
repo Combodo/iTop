@@ -168,60 +168,64 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		);
 	}
 
-	public function GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider() {
+	public function GetAbsoluteUrlAppRootPersistency() {
 		$this->setUp();
-
-		$baseServerVar = [
-			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
-			'SERVER_NAME' => 'example.com',
-			'HTTP_X_FORWARDED_HOST' => null,
-			'SERVER_PORT' => '80',
-			'HTTP_X_FORWARDED_PORT' => null,
-			'REQUEST_URI' => '/index.php?baz=1',
-			'SCRIPT_NAME' => '/index.php',
-			'SCRIPT_FILENAME' => APPROOT.'index.php',
-			'QUERY_STRING' => 'baz=1',
-			'HTTP_X_FORWARDED_PROTO' => null,
-			'HTTP_X_FORWARDED_PROTOCOL' => null,
-			'HTTPS' => null,
-		];
 
 		return [
 			'ForceTrustProxy disabled' => [
 				'bForceTrustProxy' => false,
-				'bConfTrustProxy' => false,
-				'aServerVars' => array_merge($baseServerVar, []),
-				'sExpectedAppRootUrl' => 'http://example.com/',
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
 			],
 			'ForceTrustProxy enabled' => [
-				'bForceTrustProxy' => false,
-				'bConfTrustProxy' => true,
-				'aServerVars' => array_merge($baseServerVar, []),
-				'sExpectedAppRootUrl' => 'http://example.com/',
+				'bForceTrustProxy' => true,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'sExpectedAppRootUrl3' => 'http://example.com/',
 			],
 		];
 	}
 
 	/**
-	 * @dataProvider GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider
+	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
-	public function testGetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirst($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	public function testGetAbsoluteUrlAppRootPersistency($bForceTrustProxy,$sExpectedAppRootUrl1, $sExpectedAppRootUrl2, $sExpectedAppRootUrl3)
 	{
-		$_SERVER = $aServerVars;
-		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
-		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
-		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
-		$sPersistedExpectedAppRootUrl = $sAppRootUrl;
+		utils::GetConfig()->Set('behind_reverse_proxy', true);
+		utils::GetConfig()->Set('app_root_url', '');
 
-		$sAppRootUrl = utils::GetDefaultUrlAppRoot(!$bForceTrustProxy);
-		if ($bForceTrustProxy){
-			$this->assertNotEquals($sExpectedAppRootUrl, $sAppRootUrl);
-		} else {
-			$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
-			$sPersistedExpectedAppRootUrl = $sAppRootUrl;
-		}
+		//should match http://example.com/
+		$aServer1 = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'SERVER_PORT' => '80',
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_PROTOCOL' => null,
+			'HTTP_X_FORWARDED_HOST' => null,
+			'HTTP_X_FORWARDED_PORT' => null,
+			'HTTP_X_FORWARDED_PROTO' => null,
+			'HTTPS' => null,
+		];
 
-		$this->assertEquals($sPersistedExpectedAppRootUrl, utils::GetDefaultUrlAppRoot($bForceTrustProxy));
+		//should match https://proxy.com:4443/
+		$aServer2 = array_merge($aServer1, [
+			'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+			'HTTP_X_FORWARDED_PORT' => '4443',
+			'HTTP_X_FORWARDED_PROTO' => 'https',
+		]);
+
+		$_SERVER = $aServer1;
+		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy));
+
+		$_SERVER = $aServer2;
+		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot(!$bForceTrustProxy));
+
+		$_SERVER = $aServer1;
+		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy));
 	}
 
 
