@@ -98,13 +98,13 @@ $(function () {
 					$(this).parent().parent().width(maxWidth).css({display: 'inline-block'});
 				});
 
-				$('#'+this.sId+' .tfs_checkbox_multi').click(function () {
+				$('#'+this.sId+' .tfs_checkbox_multi').on('click', function () {
 					me._on_multi_click($(this).val(), this.checked);
 				});
-				$('#'+this.sId+' .check_all').click(function () {
+				$('#'+this.sId+' .check_all').on('click', function () {
 					me._on_check_all($(this).closest('.ibo-panel'), true);
 				});
-				$('#'+this.sId+' .uncheck_all').click(function () {
+				$('#'+this.sId+' .uncheck_all').on('click', function () {
 					me._on_check_all($(this).closest('.ibo-panel'), false);
 				});
 
@@ -273,7 +273,7 @@ $(function () {
 							me._on_drag_columns(table);
 						}, dragHandle: '.drag-handle'
 					});
-					$('#'+this.sId+' .ibo-table-preview table .export-field-close').click(function (event) {
+					$('#'+this.sId+' .ibo-table-preview table .export-field-close').on('click', function (event) {
 						me._on_remove_column($(this).attr('data-attcode'));
 						event.preventDefault();
 						return false;

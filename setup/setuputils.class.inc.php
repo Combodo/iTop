@@ -1089,11 +1089,11 @@ JS
 		}
 		$oPage->add_ready_script(
 			<<<'JS'
-$("tbody.collapsable-options>tr>th>label").click(function() {
+$("tbody.collapsable-options>tr>th>label").on('click', function() {
 	var $tbody = $(this).closest("tbody");
 	toggleCollapsableOptions($tbody);
 });
-$("#db_tls_enabled").click(function() {
+$("#db_tls_enabled").on('click', function() {
 	var bTlsEnabled = $("#db_tls_enabled").is(":checked");
 	$("#db_tls_ca").prop("disabled", !bTlsEnabled);
 });

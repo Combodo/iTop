@@ -1190,7 +1190,7 @@ EOF
 
 		$oPage->add_ready_script(
 <<<EOF
-	$('#select_layout input').click( function() {
+	$('#select_layout input').on('click', function() {
 		var sLayoutClass = $(this).val();
 		$('.itop-dashboard').runtimedashboard('option', {layout_class: sLayoutClass});
 	} );

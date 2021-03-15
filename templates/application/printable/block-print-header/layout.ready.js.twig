@@ -12,7 +12,7 @@ sHiddeableChapters += '</ul>';
 
 $('#hiddeable_chapters').html(sHiddeableChapters);
 
-$('.hideable-chapter').click(function(){
+$('.hideable-chapter').on('click', function(){
 	var sChapterId = $(this).attr('chapter-id');
 	$('#'+sChapterId).toggle();
 	$(this).toggleClass('strikethrough');
@@ -25,7 +25,7 @@ $('fieldset').each(function() {
 	$(this).wrapInner('<span></span>').prepend(jLegend);
 });
 
-$('legend').css('cursor', 'pointer').click(function(){
+$('legend').css('cursor', 'pointer').on('click', function(){
 	$(this).parent('fieldset').toggleClass('not-printable strikethrough');
 });
 

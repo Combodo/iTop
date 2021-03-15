@@ -22,13 +22,12 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
+use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Renderer\FieldRenderer;
 use DateTimeFormat;
 use Dict;
 use InlineImage;
-use UserRights;
 use utils;
-use Combodo\iTop\Form\Field\TextAreaField;
-use Combodo\iTop\Renderer\FieldRenderer;
 
 /**
  * Class ConsoleSimpleFieldRenderer

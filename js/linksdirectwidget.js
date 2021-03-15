@@ -86,16 +86,16 @@ $(function()
 			}
 			
 			this.element.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
-			this.oButtons['delete'].click(function() {
+			this.oButtons['delete'].on('click', function() {
 				$('.selectList'+me.id+':checked', me.element).each( function() { me._deleteRow($(this)); });
 			});
-			this.oButtons['create'].click(function() {
+			this.oButtons['create'].on('click', function() {
 				me._createRow();
 			});
-			this.oButtons['remove'].click(function() {
+			this.oButtons['remove'].on('click', function() {
 				$('.selectList'+me.id+':checked', me.element).each( function() { me._removeRow($(this)); });
 			});
-			this.oButtons['add'].click(function() {
+			this.oButtons['add'].on('click', function() {
 				me._selectToAdd();
 			});
 						

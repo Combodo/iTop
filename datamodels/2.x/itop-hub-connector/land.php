@@ -270,7 +270,7 @@ function DoInstall(WebPage $oPage)
     $sWidgetParams = json_encode($aWidgetParams);
     
     $oPage->add_ready_script("$('#hub_installation_widget').hub_installation($sWidgetParams);");
-    $oPage->add_ready_script("$('#hub_start_installation').click(function() { $('#hub_installation_widget').hub_installation('start_installation');} );");
+    $oPage->add_ready_script("$('#hub_start_installation').on('click', function() { $('#hub_installation_widget').hub_installation('start_installation');} );");
     $oPage->add_ready_script("$('#hub_installation_widget').hub_installation('check_before_backup');");
     $oPage->add('<div id="debug"></div>');
 }

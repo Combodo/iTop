@@ -272,7 +272,7 @@ JS
 							});
 						}
 						// Remove button handler
-						$('#display_attachment_'+data.result.att_id+' :button').click(function(oEvent){
+						$('#display_attachment_'+data.result.att_id+' :button').on('click', function(oEvent){
 							oEvent.preventDefault();
 							RemoveAttachment(data.result.att_id);
 						});
@@ -320,7 +320,7 @@ JS
 				});
 			});
 			// Remove button handler
-			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').click(function(oEvent){
+			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').on('click', function(oEvent){
 				oEvent.preventDefault();
 				RemoveAttachment($(this).closest('.attachment').find(':input[name="attachments[]"]').val());
 			});

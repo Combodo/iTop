@@ -1936,7 +1936,7 @@ HTML
 oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQueryLbl', true, null, null, true, true, 'oql');
 // noinspection JSAnnotator
 oACWidget_{$iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>Use the search form above to search for objects to be added.</p></div>";
-$("#$sPredefinedBtnId").click(function () {
+$("#$sPredefinedBtnId").on('click', function () {
 	oACWidget_{$iId}.Search();
 });
 
@@ -1970,7 +1970,7 @@ JS
 						);
 						$oTestQueryButton->AddCSSClass('ibo-action-button');
 						$oPage->add_ready_script(<<<JS
-$("#$sTestResId").click(function () {
+$("#$sTestResId").on('click', function () {
 	var sQueryRaw = $("#$iId").val(),
 		sQueryEncoded = encodeURI(sQueryRaw);
 	window.open('$sBaseUrl' + sQueryEncoded, '_blank');
@@ -2713,7 +2713,7 @@ EOF
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
-		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
+		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').on('click', function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
 
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);

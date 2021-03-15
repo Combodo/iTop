@@ -203,7 +203,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
-				$('#fr_'+me.id+' input:radio').click(function() { me.UpdateButtons(); });
+				$('#fr_'+me.id+' input:radio').on('click', function() { me.UpdateButtons(); });
 				me.UpdateButtons();
 				me.ajax_request = null;
 				$('#count_'+me.id).change(function(){

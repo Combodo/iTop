@@ -143,7 +143,7 @@ class SetupPage extends NiceWebPage
 			$this->p("<li>$sItem</li>\n");
 		}
 		$this->p('</ul>');
-		$this->add_ready_script("$('#{$sId}').click( function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
+		$this->add_ready_script("$('#{$sId}').on('click', function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
 		if (!$bOpen)
 		{
 			$this->add_ready_script("$('#{$sId}').toggleClass('open'); $('#{$sId}_list').toggle();\n");

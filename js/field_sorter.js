@@ -28,10 +28,10 @@ $(function()
 			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
 			columnWithButtons = $('<div class="ibo-mini-column"></div>');
 			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append('<br>').append(this.movedown_btn));
-			this.moveup_btn.click(function () {
+			this.moveup_btn.on('click', function () {
 				me._moveUp();
 			});
-			this.movedown_btn.click(function () {
+			this.movedown_btn.on('click', function () {
 				me._moveDown();
 			});
 		},
@@ -78,9 +78,9 @@ $(function()
 							}
 						}
 						var field = $('<li name="' + k + '" alias="' + f.alias + '" code="' + f.code + '"><input type="checkbox"' + sChecked + sDisabled + '/>&nbsp;' + f.label + sSortOrder + '</li>');
-						field.click(function() { me._selectItem(this); });
-						field.find('input').click(function() { me._checkboxClicked(this); } );
-						field.find('span').click(function() { me._sortOrderClicked(this); } );
+						field.on('click', function() { me._selectItem(this); });
+						field.find('input').on('click', function() { me._checkboxClicked(this); } );
+						field.find('span').on('click', function() { me._sortOrderClicked(this); } );
 						this.element.append(field);
 					}
 				}

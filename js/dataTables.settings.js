@@ -31,8 +31,8 @@ $(function()
 			var me = this;
 			var bViewLink = (this.options.sViewLink == 'true');
 			$('#sfl_'+me.options.sListId).fieldsorter({hasKeyColumn: bViewLink, labels: this.options.oLabels, fields: this.options.oColumns, onChange: function() { me._onSpecificSettings(); } });
-			$('#datatable_dlg_'+me.options.sListId).find('input[name=page_size]').click(function() { me._onSpecificSettings(); });
-			$('#datatable_dlg_'+me.options.sListId).find('input[name=save_settings]').click(function() { me._updateSaveScope(); });
+			$('#datatable_dlg_'+me.options.sListId).find('input[name=page_size]').on('click', function() { me._onSpecificSettings(); });
+			$('#datatable_dlg_'+me.options.sListId).find('input[name=save_settings]').on('click', function() { me._updateSaveScope(); });
 			this.element.find('.itop_popup > ul li').popupmenu();
 			this._updateSaveScope();
 			this._saveDlgState();

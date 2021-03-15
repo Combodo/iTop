@@ -1291,7 +1291,7 @@ $('#about_box').dialog({
 	title: '$sDialogTitle',
 	close: function() { $(this).remove(); }
 });
-$("#collapse_support_details").click(function() {
+$("#collapse_support_details").on('click', function() {
 	$("#support_details").slideToggle('normal');
 	$("#collapse_support_details").toggleClass('open');
 });
@@ -1382,7 +1382,7 @@ EOF
 				$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
 				$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 				$oPage->add_ready_script(<<<JS
-$("#toggle_$index").click( function() { 
+$("#toggle_$index").on('click', function() { 
 	$(this).toggleClass('open');
 	$("#license_$index").slideToggle("normal"); 
 });

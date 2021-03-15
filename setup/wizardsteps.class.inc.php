@@ -633,7 +633,7 @@ HTML
 
 			$oPage->add_ready_script(
 <<<EOF
-	$("#changes_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
+	$("#changes_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 	$('input[name=upgrade_type]').bind('click change', function() { WizardUpdateButtons(); });
 EOF
 			);
@@ -726,7 +726,7 @@ EOF
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
 			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
-			$oPage->add_ready_script('$("#toggle_'.$index.'").click( function() { $("#license_'.$index.'").toggle(); } );');
+			$oPage->add_ready_script('$("#toggle_'.$index.'").on('click', function() { $("#license_'.$index.'").toggle(); } );');
             $index++;
 		}
 		$oPage->add('</ul>');
@@ -1012,7 +1012,7 @@ class WizStepMiscParams extends WizardStep
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
 		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val()}); } ).trigger('init');
-		$('#btn_next').click(function() {
+		$('#btn_next').on('click', function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
 			{
@@ -1151,7 +1151,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
 		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val() }); } ).trigger('init');
-		$('#btn_next').click(function() {
+		$('#btn_next').on('click', function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
 			{
@@ -2318,7 +2318,7 @@ CSS
 		$oPage->add_ready_script(
 			<<<JS
 	$("#params_summary div").addClass('closed');
-	$("#params_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
+	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 	$("#btn_next").bind("click.install", function(event) {
 			$('#summary').hide();
 			$('#installation_progress').show();

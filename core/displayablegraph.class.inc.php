@@ -1464,7 +1464,7 @@ EOF
 		);
 		$oP->add_ready_script(
 <<<EOF
-	$("#dh_flash > .sf_title").click( function() {
+	$("#dh_flash > .sf_title").on('click', function() {
 		$("#dh_flash").toggleClass('closed');
 	});
     $('#ReloadMovieBtn').button().button('disable');

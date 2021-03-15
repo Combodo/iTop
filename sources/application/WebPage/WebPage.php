@@ -1442,7 +1442,7 @@ if (bIsSectionOpenedInitially) {
 	$("#Collapse_"+iSectionId).toggle();
 }
 
-$("#LnkCollapse_"+iSectionId).click(function(e) {
+$("#LnkCollapse_"+iSectionId).on('click', function(e) {
 	localStorage.setItem(sSectionStateStorageKey, !($("#Collapse_"+iSectionId).is(":visible")));
 	$("#LnkCollapse_"+iSectionId).toggleClass("open");
 	$("#Collapse_"+iSectionId).slideToggle("normal");

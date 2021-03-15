@@ -355,7 +355,7 @@ JS
 	} );
 	
 	// Shortcut menu actions
-	$('.actions_button a').click( function() {
+	$('.actions_button a').on('click', function() {
 		aMatches = /#(.*)$/.exec(window.location.href);
 		if (aMatches != null)
 		{
@@ -388,7 +388,7 @@ JS
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
 	
-	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
+	$('.caselog_header').on('click', function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 	
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');

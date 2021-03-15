@@ -197,7 +197,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			} else {
 				$('#label_'+me.id).val($('#label_'+me.id).data('selected_value'));
 			}
-		}).click(
+		}).on('click',
 			function () {
 				hasFocus++;
 				$('#label_'+me.id).autocomplete("search");
@@ -371,7 +371,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$(sSearchAreaId).html(data);
-				$('#fr_'+me.id+' input:radio').click(function () {
+				$('#fr_'+me.id+' input:radio').on('click', function () {
 					me.UpdateButtons();
 				});
 				me.UpdateButtons();

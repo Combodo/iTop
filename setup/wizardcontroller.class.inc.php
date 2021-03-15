@@ -229,7 +229,7 @@ $('form').each(function () {
 		width: 0
 	}));
 });
-$('#btn_back').click(function() { $('#wiz_form').data('back', true); });
+$('#btn_back').on('click', function() { $('#wiz_form').data('back', true); });
 
 $('#wiz_form').on('submit', function() {
 	if ($(this).data('back'))

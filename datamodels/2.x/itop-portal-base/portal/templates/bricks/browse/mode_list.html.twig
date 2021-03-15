@@ -351,7 +351,7 @@
 			});
 			
 			// Auto collapse item actions popup
-			$('body').click(function(){
+			$('body').on('click', function(){
 				$('table .item-action-wrapper.collapse.in').collapse('hide');
 			});
 		});
