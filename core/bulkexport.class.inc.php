@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -45,7 +45,7 @@ class BulkExportMissingParameterException extends BulkExportException
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -130,7 +130,7 @@ class BulkExportResultGC implements iBackgroundProcess
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

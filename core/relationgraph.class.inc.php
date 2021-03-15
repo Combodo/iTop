@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2018 Combodo SARL
+// Copyright (C) 2015-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
- * @copyright   Copyright (C) 2015-2018 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  */

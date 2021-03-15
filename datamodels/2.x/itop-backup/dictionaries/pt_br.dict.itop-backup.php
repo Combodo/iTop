@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2018 Combodo
+ * @copyright   Copyright (C) 2021 Combodo
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(

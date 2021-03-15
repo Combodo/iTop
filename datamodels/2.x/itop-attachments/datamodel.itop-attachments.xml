@@ -12,7 +12,7 @@
  * Configuration: the list of classes for which the "Attachments" tab is visible is defined via the module's 'allowed_classes'
  * configuration parameter. By default the tab is active for all kind of Tickets.
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>addon,bizmodel</category>

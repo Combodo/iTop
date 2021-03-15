@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * or the "bad" ones. The core audit engines computes the complement to the definition
  * set when needed to obtain either the valid objects, or the ones with an error
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

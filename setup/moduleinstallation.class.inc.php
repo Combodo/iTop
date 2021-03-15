@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * Persistent class ModuleInstallation to record the installed modules
  * Log of module installations
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -62,7 +62,7 @@ class ModuleInstallation extends cmdbAbstractObject
  * Persistent class ExtensionInstallation to record the installed extensions
  * Log of extensions installations
  *
- * @copyright   Copyright (C) 2017 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,7 @@
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * The standardized result of any pass/fail check performed by the setup
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CheckResult {
@@ -87,7 +87,7 @@ class CheckResult {
 /**
  * All of the functions/utilities needed by both the setup wizard and the installation process
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SetupUtils

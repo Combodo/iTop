@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * ormDocument
  * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

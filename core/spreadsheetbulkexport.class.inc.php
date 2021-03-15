@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 /**
  * Bulk export: "spreadsheet" export: a simplified HTML export in which the date/time columns are split in two column: date AND time
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SpreadsheetBulkExport extends TabularBulkExport

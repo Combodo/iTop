@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 * @author Benjamin Planque <benjamin.planque@combodo.com>
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2017 Combodo SARL
+* @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *
 */

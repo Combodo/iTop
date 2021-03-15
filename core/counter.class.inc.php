@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -200,7 +200,7 @@ final class ItopCounter
 /**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

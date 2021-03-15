@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2016 Combodo SARL
+// Copyright (C) 2014-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Monitor the backup
  *
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

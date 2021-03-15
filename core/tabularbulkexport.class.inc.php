@@ -11,7 +11,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
  * Bulk export: Tabular export: abstract base class for all "tabular" exports.
  * Provides the user interface for selecting the column to be exported
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class TabularBulkExport extends BulkExport

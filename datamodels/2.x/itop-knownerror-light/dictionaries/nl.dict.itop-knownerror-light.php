@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2019 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  *
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 // Dictionnay conventions

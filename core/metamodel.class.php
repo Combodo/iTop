@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -38,7 +38,7 @@ require_once APPROOT.'application/loginurl.class.inc.php';
 /**
  * Metamodel
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

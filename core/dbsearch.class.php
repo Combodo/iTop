@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -51,7 +51,7 @@ else
  *     * do not provide a type-hint for function parameters defined in the modules
  *     * leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *

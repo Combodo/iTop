@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Hirofumi Kosaka <kosaka@rworks.jp>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(

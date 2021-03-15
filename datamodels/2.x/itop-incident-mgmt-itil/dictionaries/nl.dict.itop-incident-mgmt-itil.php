@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2018 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @author      Thomas Casteleyn <info@super-visions.com>
  * @author 		Jeffrey Bostoen (2018, 2019)

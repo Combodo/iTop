@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Combodo\iTop\Renderer\BlockRenderer;
 /**
  * Special kind of Graph for producing some nice output
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

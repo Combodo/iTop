@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 /**
  * Bulk export: CSV export
  *
- * @copyright   Copyright (C) 2015-2016 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CSVBulkExport extends TabularBulkExport

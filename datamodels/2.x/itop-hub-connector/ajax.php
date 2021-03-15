@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2017 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 // This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 /**
  * Handles various ajax requests - called through pages/exec.php
  *
- * @copyright Copyright (C) 2010-2017 Combodo SARL
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ require_once(APPROOT.'setup/setuppage.class.inc.php');
  * Class ModuleInstaller
  * Defines the API to implement module specific actions during the setup 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

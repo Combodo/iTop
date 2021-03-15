@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
+// Copyright (C) 2015-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
  * Please refer to DBSearch's documentation
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *

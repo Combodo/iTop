@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -78,7 +78,7 @@ class ExpressionCache
 			{
 				$content = <<<EOF
 <?php
-// Copyright (c) 2010-2019 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 // Generated Expression Cache file for $sLang
 
 class $sCacheClass

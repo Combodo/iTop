@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2017-2018 Combodo SARL
+// Copyright (C) 2017-2021 Combodo SARL
 //
 // This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * iTop Hub Launch Page
  * Collect the information to be posted to iTopHub
  *
- * @copyright Copyright (c) 2017-2018 Combodo SARL
+ * @copyright Copyright (c) 2017-2021 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@
  * which choice is configured via the parameter 'transaction_storage'
  *  
  * @package     iTop
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

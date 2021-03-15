@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
 /**
  * OQL syntax analyzer, to be used prior to run the lexical analyzer
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

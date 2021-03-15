@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,7 +24,7 @@ require_once('dbobjectiterator.php');
  * The value for an attribute representing a set of links between the host object and "remote" objects
  *
  * @package     iTopORM
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

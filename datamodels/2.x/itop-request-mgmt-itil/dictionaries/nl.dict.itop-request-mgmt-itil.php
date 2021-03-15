@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * @author Hipska (2018, 2019)
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
