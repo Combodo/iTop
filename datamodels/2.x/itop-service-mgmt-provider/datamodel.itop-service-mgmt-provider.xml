@@ -2505,6 +2505,12 @@ public function PrefillSearchForm(&$aContextParam)
       <oql>SELECT ProviderContract</oql>
       <do_search>1</do_search>
     </menu>
+    <menu id="ServiceFamily" xsi:type="OQLMenuNode" _delta="define">
+      <rank>2.5</rank>
+      <parent>ServiceManagement</parent>
+      <oql>SELECT ServiceFamily</oql>
+      <do_search>1</do_search>
+    </menu>
     <menu id="Service" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ServiceManagement</parent>
