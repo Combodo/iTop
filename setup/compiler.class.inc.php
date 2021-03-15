@@ -2896,6 +2896,8 @@ EOF;
 			{
 				SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
 				copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
+			}else {
+				SetupLog::Info("No theme '$sThemeId' compilation was required during setup.");
 			}
 		}
 		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
