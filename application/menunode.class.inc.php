@@ -1462,15 +1462,14 @@ class DashboardMenuNode extends MenuNode
 		if ($oDashboard != null)
 		{
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
-			$oPage->add('<div class="ibo-dashboard" id="'.$sDivId.'">');
+			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
 			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
 
 			$bEdit = utils::ReadParam('edit', false);
-			if ($bEdit)
-			{
+			if ($bEdit) {
 				$sId = addslashes($this->sMenuId);
 				$oPage->add_ready_script("EditDashboard('$sId');");
 			}

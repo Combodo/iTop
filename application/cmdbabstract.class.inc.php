@@ -506,14 +506,13 @@ HTML
 
 		// Load the dashboard
 		$oDashboard = $oAttDef->GetDashboard();
-		if (is_null($oDashboard))
-		{
+		if (is_null($oDashboard)) {
 			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
 		}
 
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
-		$oPage->add('<div class="ibo-dashboard" id="'.$sDivId.'">');
+		$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 		$aExtraParams = array(
 			'query_params' => $this->ToArgsForQuery(),
 			'dashboard_div_id' => $sDivId,

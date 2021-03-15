@@ -432,19 +432,16 @@ abstract class Dashboard
 		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard--properties--title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div class="ibo-dashboard--properties--subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
-		$oPage->add('<div id="select_layout" class="ibo-dashboard--properties--layout-list">');
-		foreach( get_declared_classes() as $sLayoutClass)
-		{
-			if (is_subclass_of($sLayoutClass, 'DashboardLayout'))
-			{
+		$oPage->add('<div class="ibo-dashboard--properties--subtitle" data-role="ibo-dashboard--properties--subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
+		$oPage->add('<div id="select_layout" class="ibo-dashboard--properties--layout-list" data-role="ibo-dashboard--properties--layout-list">');
+		foreach (get_declared_classes() as $sLayoutClass) {
+			if (is_subclass_of($sLayoutClass, 'DashboardLayout')) {
 				$oReflection = new ReflectionClass($sLayoutClass);
-				if (!$oReflection->isAbstract())
-				{
+				if (!$oReflection->isAbstract()) {
 					$aCallSpec = array($sLayoutClass, 'GetInfo');
 					$aInfo = call_user_func($aCallSpec);
 					$sChecked = ($this->sLayoutClass == $sLayoutClass) ? 'checked' : '';
-					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" class="ibo-dashboard--properties--icon"/></label>'); // title="" on either the img or the label does nothing !
+					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" class="ibo-dashboard--properties--icon" data-role="ibo-dashboard--properties--icon"/></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
 		}
@@ -569,11 +566,10 @@ JS
 		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--available-dashlets"><div class="ui-widget-header ui-corner-all ibo-dashboard--available-dashlet--title">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list">');
+		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list" data-role="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
-		foreach($aAvailableDashlets as $sDashletClass => $aInfo)
-		{
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashlet--icon dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+		foreach ($aAvailableDashlets as $sDashletClass => $aInfo) {
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashlet--icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashlet--icon" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
@@ -1229,30 +1225,27 @@ EOF
 	 */
 	public function RenderEditor($oPage, $aExtraParams = array())
 	{
-		if (isset($aExtraParams['this->class']))
-		{
+		if (isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
-		}
-		else
-		{
+		} else {
 			$aRenderParams = $aExtraParams;
 		}
 		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
 		$sJSExtraParams = json_encode($aExtraParams);
-		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor">');
+		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor" data-role="ibo-dashboard-editor">');
 		$oPage->add('<div class="ui-layout-center">');
 		$this->SetCustomFlag(true);
 		$this->Render($oPage, true, $aRenderParams);
 		$oPage->add('</div>');
-		$oPage->add('<div class="ui-layout-east ibo-dashboard-editor--pane">');
+		$oPage->add('<div class="ui-layout-east ibo-dashboard-editor--pane" data-role="ibo-dashboard-editor--pane">');
 		$this->RenderProperties($oPage, $aExtraParams);
 		$this->RenderDashletsSelection($oPage);
 		$this->RenderDashletsProperties($oPage, $aExtraParams);
 		$oPage->add('</div>');
 		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
-		
+
 		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');

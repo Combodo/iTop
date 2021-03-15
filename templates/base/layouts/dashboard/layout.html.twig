@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {# Dashboard Layout #}
 {% apply spaceless %}
-    <div class="ibo-dashboard--grid">
+    <div class="ibo-dashboard--grid" data-role="ibo-dashboard--grid">
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
