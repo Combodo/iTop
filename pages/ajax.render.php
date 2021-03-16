@@ -2738,7 +2738,7 @@ EOF
 		case 'activity_panel_save_state':
 			$oPage = new JsonPage();
 			try {
-				ActivityPanelController::SaveActivityPanelState();
+				ActivityPanelController::SaveState();
 				$aResult = [
 					'success' => true,
 				];

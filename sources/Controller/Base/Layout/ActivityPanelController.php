@@ -22,7 +22,7 @@ class ActivityPanelController
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public static function SaveActivityPanelState(): void
+	public static function SaveState(): void
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectMode = utils::ReadPostedParam('object_mode');
