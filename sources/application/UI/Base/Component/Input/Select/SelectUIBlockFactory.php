@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -28,6 +28,27 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 		$oInput->SetName($sName);
 
 		return $oInput;
+	}
+
+	/**
+	 * If you need to have a real field with a label, you might use a {@link Field} component instead
+	 *
+	 * @param string $sName
+	 * @param string $sLabel
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
+	 */
+	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
+	{
+		$oInput = new Select($sId);
+		$oInput->SetName($sName);
+
+		if (is_null($sId)) {
+			$sId = $oInput->GetId();
+		}
+
+		return new InputWithLabel($sLabel, $oInput, $sId);
 	}
 
 }

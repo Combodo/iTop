@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -10,7 +10,6 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 
 class InputUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -72,46 +71,4 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 
 		return new InputWithLabel($sLabel, $oInput, $sId);
 	}
-
-	/**
-	 * If you need to have a real field with a label, you might use a {@link Field} component instead
-	 *
-	 * @param string $sName
-	 * @param string $sLabel
-	 * @param string|null $sId
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
-	 */
-	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
-	{
-		$oInput = new Select($sId);
-		$oInput->SetName($sName);
-
-		if (is_null($sId)) {
-			$sId = $oInput->GetId();
-		}
-
-		return new InputWithLabel($sLabel, $oInput, $sId);
-	}
-
-	/**
-	 * If you need to have a real field with a label, you might use a {@link Field} component instead
-	 *
-	 * @param string $sName
-	 * @param string|null $sId
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select
-	 */
-	public static function MakeForSelect(string $sName, ?string $sId = null): Select
-	{
-		$oInput = new Select($sId);
-		$oInput->SetName($sName);
-
-		if (is_null($sId)) {
-			$sId = $oInput->GetId();
-		}
-
-		return $oInput;
-	}
-
 }

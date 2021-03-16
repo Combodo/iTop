@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -140,7 +141,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oForm->AddSubBlock($oFieldQuery);
 
 	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
-	$oSelect = InputUIBlockFactory::MakeForSelect('query', "select_phrasebook");
+	$oSelect = SelectUIBlockFactory::MakeForSelect('query', "select_phrasebook");
 	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:SelectOne'), false));
 
 	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
@@ -292,7 +293,7 @@ EOF
 		$sDefaultFormat = utils::ReadParam('format', 'xlsx');
 
 
-		$oSelect = InputUIBlockFactory::MakeForSelectWithLabel("format", Dict::S('Core:BulkExport:ExportFormatPrompt'), "format_selector");
+		$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("format", Dict::S('Core:BulkExport:ExportFormatPrompt'), "format_selector");
 		$oSelect->SetBeforeInput(true);
 		$oForm->AddSubBlock($oSelect);
 

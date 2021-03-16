@@ -1,24 +1,14 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
@@ -65,7 +55,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$oMulticolumn->AddSubBlock($oFieldSetFormat);
 
 				//page format
-				$oSelectFormat = InputUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
+				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
 				$oSelectFormat->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
@@ -76,7 +66,8 @@ class PDFBulkExport extends HTMLBulkExport
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
-				$oSelectOrientation = InputUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageOrientation'));
+				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_size",
+					Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oSelectOrientation->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 

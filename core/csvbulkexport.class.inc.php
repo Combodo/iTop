@@ -8,6 +8,7 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
@@ -163,7 +164,7 @@ class CSVBulkExport extends TabularBulkExport
 				$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.htmlentities($sOtherQualifier, ENT_QUOTES, 'UTF-8').'"/>';
 
 				foreach ($aQualifiers as $sVal => $sLabel) {
-					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
+					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text-qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
@@ -183,7 +184,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oFieldSetLocalization->AddSubBlock($oCheckBox);
 				$oFieldSetLocalization->AddSubBlock(new Html('</br>'));
 
-				$oSelect = InputUIBlockFactory::MakeForSelectWithLabel("charset", Dict::S('UI:CSVImport:Encoding'));
+				$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("charset", Dict::S('UI:CSVImport:Encoding'));
 				$oSelect->SetBeforeInput(true);
 				$oFieldSetLocalization->AddSubBlock($oSelect);
 

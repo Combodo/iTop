@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -23,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -394,7 +382,7 @@ function GetLanguageFieldBlock(): iUIBlock
 	}
 	ksort($aSortedLanguages);
 
-	$oSelect = InputUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
 	$oSelectInput = $oSelect->GetInput();
 	foreach ($aSortedLanguages as $sCode) {
@@ -437,7 +425,7 @@ function GetTabsLayoutFieldBlock(): iUIBlock
 		'horizontal',
 		'vertical',
 	];
-	$oSelect = InputUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Preferences:Tabs:Layout:Label'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Preferences:Tabs:Layout:Label'));
 	foreach ($aOptionsValues as $sValue) {
 		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
@@ -465,7 +453,7 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 		'true' => 'Scrollable',
 		'false' => 'Classic',
 	];
-	$oSelect = InputUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Preferences:Tabs:Scrollable:Label'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Preferences:Tabs:Scrollable:Label'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
 		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
@@ -493,7 +481,7 @@ function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
 		'true' => 'Expanded',
 		'false' => 'Collapsed',
 	];
-	$oSelect = InputUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
 		$oSelect->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
