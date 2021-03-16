@@ -1171,8 +1171,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape',
-	'UI:Toggle:StandardDashboard' => 'Standard',
-	'UI:Toggle:CustomDashboard' => 'Custom',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard',
 
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',

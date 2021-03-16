@@ -1021,20 +1021,21 @@ EOF
 	 */
 	protected function RenderSelector(WebPage $oPage, $aAjaxParams = array())
 	{
+		if (!$this->HasCustomDashboard()) {
+			return;
+		}
 		$sId = $this->GetId();
 		$sDivId = utils::Sanitize($sId, '', 'element_identifier');
 		$sExtraParams = json_encode($aAjaxParams);
 
-		$sSelectorHtml = '<div class="ibo-top-bar--toolbar-dashboard-selector">';
-		if ($this->HasCustomDashboard()) {
-			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
-			$sStandard = Dict::S('UI:Toggle:StandardDashboard');
-			$sSelectorHtml .= '<div class="selector-label">'.$sStandard.'</div>';
-			$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider round"></span></label></input></label>';
-			$sCustom = Dict::S('UI:Toggle:CustomDashboard');
-			$sSelectorHtml .= '<div class="selector-label">'.$sCustom.'</div>';
-		}
+		$sSwitchToStandard = Dict::S('UI:Toggle:SwitchToStandardDashboard');
+		$sSwitchToCustom = Dict::S('UI:Toggle:SwitchToCustomDashboard');
+		$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
+
+		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-top-bar--toolbar-dashboard-selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
+		$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider"></span></label></input></label>';
 		$sSelectorHtml .= '</div>';
+
 		$sFile = addslashes($this->GetDefinitionFile());
 		$sReloadURL = $this->GetReloadURL();
 
@@ -1043,19 +1044,26 @@ EOF
 			$oToolbar->AddHtml($sSelectorHtml);
 
 			$oPage->add_script(
-				<<<EOF
+				<<<JS
 			function ToggleDashboardSelector$sDivId()
 			{
-				$('.ibo-dashboard#$sDivId').block();
+			    var dashboard = $('.ibo-dashboard#$sDivId')
+				dashboard.block();
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
 				   function(data) {
-					 $('.ibo-dashboard#$sDivId').html(data);
-					 $('.ibo-dashboard#$sDivId').unblock();
+					 dashboard.html(data);
+					 dashboard.unblock();
+					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
+					 	$('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToStandard');
+					 } else {
+					    $('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToCustom');
+					 }
+					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent());
 					}
 				 );
 			}
-EOF
+JS
 			);
 		} else {
 			$sSelectorHtml = addslashes($sSelectorHtml);

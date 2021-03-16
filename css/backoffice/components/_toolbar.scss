@@ -6,6 +6,9 @@
 $ibo-toolbar--button-margin-top: 16px !default;
 
 .ibo-toolbar {
+  display: flex;
+  align-items: center;
+
   &.ibo-toolbar--action {
     position: relative;
   }

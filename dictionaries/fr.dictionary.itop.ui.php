@@ -1154,8 +1154,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:PrintResolution:A4Landscape' => 'A4 Paysage',
 	'UI:PrintResolution:LetterPortrait' => 'US Letter Portrait',
 	'UI:PrintResolution:LetterLandscape' => 'US Letter Paysage',
-	'UI:Toggle:StandardDashboard' => 'Standard',
-	'UI:Toggle:CustomDashboard' => 'Modifié',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Basculer sur le tableau de bord standard',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Basculer sur le tableau de bord modifié',
 
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',
