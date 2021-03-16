@@ -34,6 +34,8 @@ $(function()
 					lock_endpoint: null,
 					show_multiple_entries_submit_confirmation: true,
 					save_state_endpoint: null,
+					last_loaded_entries_ids: {},
+					load_more_entries_endpoint: null,
 				},
 			css_classes:
 				{
@@ -84,6 +86,9 @@ $(function()
 					edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
 					notification_entry_long_description: '[data-role="ibo-notification-entry--long-description"]',
 					notification_entry_long_description_toggler: '[data-role="ibo-notification-entry--long-description-toggler"]',
+					load_more_entries_container: '[data-role="ibo-activity-panel--load-more-entries-container"]',
+					load_more_entries: '[data-role="ibo-activity-panel--load-more-entries"]',
+					load_more_entries_icon: '[data-role="ibo-activity-panel--load-more-entries-icon"]',
 				},
 			enums: {
 				tab_types: {
@@ -203,16 +208,20 @@ $(function()
 
 				// Entries
 				// - Click on a closed case log message
-				this.element.find(this.js_selectors.entry_group).on('click', '.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
+				this.element.on('click', this.js_selectors.entry+'.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
 					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
-				this.element.find(this.js_selectors.edits_entry_long_description_toggler).on('click', function (oEvent) {
+				this.element.on('click', this.js_selectors.edits_entry_long_description_toggler, function (oEvent) {
 					me._onEntryLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an notification entry's long description toggler
-				this.element.find(this.js_selectors.notification_entry_long_description_toggler).on('click', function (oEvent) {
+				this.element.on('click', this.js_selectors.notification_entry_long_description_toggler, function (oEvent) {
 					me._onEntryLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				// - Click on load more entries button
+				this.element.find(this.js_selectors.load_more_entries).on('click', function (oEvent) {
+					me._onLoadMoreEntriesButtonClick(oEvent);
 				});
 
 				// Page exit
@@ -344,6 +353,16 @@ $(function()
 					// If only 1 editbale case log, open this one
 					// Else, open a popover menu to choose one
 				}
+			},
+			/**
+			 * @param oEvent {Object}
+			 * @return {void}
+			 * @private
+			 */
+			_onLoadMoreEntriesButtonClick: function (oEvent) {
+				oEvent.preventDefault();
+
+				this._LoadMoreEntries();
 			},
 			/**
 			 * Indicate that there is a draft entry and will request lock on the object
@@ -820,7 +839,7 @@ $(function()
 
 						// Update the feed
 						for (let sCaseLogAttCode in oData.data.entries) {
-							me._AddEntry(sCaseLogAttCode, oData.data.entries[sCaseLogAttCode]);
+							me._AddEntry(oData.data.entries[sCaseLogAttCode], 'start');
 						}
 						me._ApplyEntriesFilters();
 
@@ -1168,20 +1187,88 @@ $(function()
 				});
 			},
 			/**
-			 * Add an entry represented by its oData to the case log with the sCaseLogAttCode
+			 * Load the next entries and append them to the current ones
 			 *
-			 * @param sCaseLogAttCode {string}
+			 * IMPORTANT: For now the logic is naive, the entries come from 3 different sources : case logs, CMDB change ops and notifications.
+			 * We load all the case logs and notifications entries, but only the 'max_history_length' first from the CMDB change ops.
+			 *
+			 * When we load the remaining history entries (CMDB change ops) and append them to the activity panel, some of them should actually
+			 * be placed between already present entries (case logs, notifications) to keep the chronological order. This is a known limitation
+			 * and might be worked on in a future version.
+			 *
+			 * @private
+			 * @return {void}
+			 */
+			_LoadMoreEntries: function () {
+				const me = this;
+
+				// Change icon to spinning
+				this.element.find(this.js_selectors.load_more_entries_icon)
+					.removeClass('fas fa-angle-double-down')
+					.addClass('fas fa-sync-alt fa-spin');
+
+				// Send XHR request
+				let oParams = {
+					operation: 'activity_panel_load_more_entries',
+					object_class: this._GetHostObjectClass(),
+					object_id: this._GetHostObjectID(),
+					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
+				};
+				$.post(
+					this.options.load_more_entries_endpoint,
+					oParams,
+					'json'
+					)
+					.fail(function (oXHR, sStatus, sErroThrown) {
+						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
+						alert(sErrorThrown);
+					})
+					.done(function (oData) {
+						if (false === oData.data.success) {
+							// TODO 3.0.0: Same comment as the fail() callback
+							alert(oData.data.error_message);
+							return false;
+						}
+
+						// Update the feed
+						for (let oEntry of oData.data.entries) {
+							me._AddEntry(oEntry, 'end');
+						}
+						me._ApplyEntriesFilters();
+
+						// Check if more entries to load
+						// - Update metadata
+						me.options.last_loaded_entries_ids = oData.data.last_loaded_entries_ids;
+						// - Update button state
+						if (Object.keys(me.options.last_loaded_entries_ids).length === 0) {
+							me.element.find(me.js_selectors.load_more_entries).addClass(me.css_classes.is_hidden);
+						}
+					})
+					.always(function () {
+						// Change icon back to original (whether it should be displayed or not will be handle by thes other callbacks)
+						// - fail => keep displayed for retry
+						// - done => display only if more entries to load
+						me.element.find(me.js_selectors.load_more_entries_icon)
+							.removeClass('fas fa-sync-alt fa-spin')
+							.addClass('fas fa-angle-double-down');
+					});
+			},
+			/**
+			 * Add an entry represented by its oData to the feed
+			 *
 			 * @param oData {Object} Structured data of the entry: {html_rendering: <HTML_DATA>}
+			 * @param sPosition {string} Whether the entry should be added at the 'start' or 'end' of the feed
 			 * @private
 			 */
-			_AddEntry: function (sCaseLogAttCode, oData) {
+			_AddEntry: function (oData, sPosition = 'start') {
 				// Info about the new entry
 				const oNewEntryElem = $(oData.html_rendering);
 				const sNewEntryAuthorLogin = oNewEntryElem.attr('data-entry-author-login');
 				const sNewEntryOrigin = oNewEntryElem.attr('data-entry-group-origin');
 
 				// Info about the last entry group to see the entry to add should be in this one or a new one
-				const oLastEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first');
+				const sEntryGroupPosition = (sPosition === 'start') ? 'first' : 'last';
+				const oLastEntryGroupElem = this.element.find(this.js_selectors.entry_group+':'+sEntryGroupPosition);
 				const sLastEntryAuthorLogin = oLastEntryGroupElem.length > 0 ? oLastEntryGroupElem.attr('data-entry-author-login') : null;
 				const sLastEntryOrigin = oLastEntryGroupElem.length > 0 ? oLastEntryGroupElem.attr('data-entry-group-origin') : null;
 
@@ -1189,9 +1276,12 @@ $(function()
 				if ((sLastEntryAuthorLogin === sNewEntryAuthorLogin) && (sLastEntryOrigin && sNewEntryOrigin)) {
 					oTargetEntryGroup = oLastEntryGroupElem;
 				} else {
-					oTargetEntryGroup = this._CreateEntryGroup(sNewEntryAuthorLogin, sNewEntryOrigin);
+					oTargetEntryGroup = this._CreateEntryGroup(sNewEntryAuthorLogin, sNewEntryOrigin, sPosition);
 				}
+
+				const sInsertFunction = (sPosition === 'start') ? 'prepend' : 'append';
 				oTargetEntryGroup.prepend(oNewEntryElem);
+
 				this._ReformatDateTimes();
 			},
 			/**
@@ -1199,20 +1289,26 @@ $(function()
 			 *
 			 * @param sAuthorLogin {string}
 			 * @param sOrigin {string}
+			 * @param sPosition {string} Whether the entry group should be added at the start or the end of the feed
 			 * @returns {Object} jQuery object representing the created entry group
 			 * @private
 			 */
-			_CreateEntryGroup: function (sAuthorLogin, sOrigin) {
+			_CreateEntryGroup: function (sAuthorLogin, sOrigin, sPosition = 'start') {
 				// Note: When using the ActivityPanel, there should always be at least one entry group already, the one from the object creation
 				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first')
 					.clone()
 					.attr('data-entry-author-login', sAuthorLogin)
 					.attr('data-entry-group-origin', sOrigin)
 					.addClass(this.css_classes.is_current_user)
-					.html('')
-					.prependTo(this.element.find(this.js_selectors.body));
+					.html('');
+
+				if ('start' === sPosition) {
+					oEntryGroupElem.prependTo(this.element.find(this.js_selectors.body));
+				} else {
+					oEntryGroupElem.insertBefore(this.element.find(this.js_selectors.load_more_entries_container));
+				}
 
 				return oEntryGroupElem;
-			},
+			}
 		});
 });

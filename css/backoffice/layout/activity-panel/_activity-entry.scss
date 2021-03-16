@@ -58,6 +58,11 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
 $ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
 
+$ibo-activity-panel--load-more-entries--size: 32px !default;
+$ibo-activity-panel--load-more-entries--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--load-more-entries--background-color: $ibo-activity-entry--main-information--background-color !default;
+$ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !default;
+
 /* Entry group */
 .ibo-activity-panel--entry-group{
 	&:not(:last-child){
@@ -228,4 +233,18 @@ $ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
     margin-left: $ibo-activity-entry--author-name--sibling-spacing;
     margin-right: $ibo-activity-entry--author-name--sibling-spacing;
   }
+}
+
+.ibo-activity-panel--load-more-entries-container {
+  @extend %ibo-fully-centered-content;
+}
+
+.ibo-activity-panel--load-more-entries {
+  width: $ibo-activity-panel--load-more-entries--size;
+  height: $ibo-activity-panel--load-more-entries--size;
+  border-radius: $ibo-activity-panel--load-more-entries--border-radius;
+  background-color: $ibo-activity-panel--load-more-entries--background-color;
+  border: $ibo-activity-panel--load-more-entries--border;
+  @extend %ibo-fully-centered-content;
+  @extend %ibo-hyperlink-inherited-colors;
 }

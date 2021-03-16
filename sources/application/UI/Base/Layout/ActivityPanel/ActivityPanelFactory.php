@@ -21,9 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 
 use cmdbAbstractObject;
-use CMDBChangeOpSetAttributeCaseLog;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryFormFactory\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
@@ -61,7 +59,7 @@ class ActivityPanelFactory
 	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
 	{
 		$sObjClass = get_class($oObject);
-		$iObjId = $oObject->GetKey();
+		$sObjId = $oObject->GetKey();
 
 		if ($sMode == cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT) {
 			$oActivityPanel = new ActivityPanelPrint($oObject, [], ActivityPanel::BLOCK_CODE);
@@ -90,48 +88,19 @@ class ActivityPanelFactory
 		}
 
 		// Retrieve history changes (excluding case logs entries)
-		// - Prepare query to retrieve changes
-		$oChangesSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOp WHERE objclass = :obj_class AND objkey = :obj_key AND finalclass NOT IN (:excluded_optypes)');
-		// Note: We can't order by date (only) as something multiple CMDBChangeOp rows are inserted at the same time (eg. Delivery model of the "Demo" Organization in the sample data).
-		// As the DB returns rows "chronologically", we get the older first and it messes with the processing. Ordering by the ID is way much simpler and less DB CPU consuming.
-		$oChangesSet = new DBObjectSet($oChangesSearch, ['id' => false], ['obj_class' => $sObjClass, 'obj_key' => $iObjId, 'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog']]);
-		$oChangesSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
+		$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjClass, $sObjId);
 
-		// Prepare previous values to group edits within a same CMDBChange
-		$iPreviousChangeId = 0;
-		$oPreviousEditsEntry = null;
-
-		/** @var \CMDBChangeOp $oChangeOp */
-		while ($oChangeOp = $oChangesSet->Fetch()) {
-			// Skip case log changes as they are handled directly from the attributes themselves (most of them should have been excluded by the OQL above, but some derivated classes could still be retrieved)
-			if ($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog) {
-				continue;
-			}
-
-			// Make entry from CMDBChangeOp
-			$iChangeId = $oChangeOp->Get('change');
-			try {
-				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
-			}
-			catch (Exception $oException) {
-				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp #'.$oChangeOp->GetKey().' related to '.$oChangeOp->Get('objclass').'::'.$oChangeOp->Get('objkey').': '.$oException->getMessage());
-				continue;
-			}
-			// If same CMDBChange and mergeable edits entry from the same author, we merge them
-			if (($iChangeId == $iPreviousChangeId) && ($oPreviousEditsEntry instanceof EditsEntry) && ($oEntry instanceof EditsEntry) && ($oPreviousEditsEntry->GetAuthorLogin() === $oEntry->GetAuthorLogin())) {
-				$oPreviousEditsEntry->Merge($oEntry);
-			} else {
-				$oActivityPanel->AddEntry($oEntry);
-
-				// Set previous edits entry
-				if ($oEntry instanceof EditsEntry) {
-					$oPreviousEditsEntry = $oEntry;
-				}
-			}
-
-			$iPreviousChangeId = $iChangeId;
+		// - Set metadata for pagination
+		if (true === $aChangesData['more_entries_to_load']) {
+			$oActivityPanel->SetHasMoreEntriesToLoad(true);
+			$oActivityPanel->SetLastEntryId('cmdbchangeop', $aChangesData['last_loaded_entry_id']);
 		}
-		unset($oChangesSet);
+
+		// - Add history entries
+		/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry $oEntry */
+		foreach ($aChangesData['entries'] as $oEntry) {
+			$oActivityPanel->AddEntry($oEntry);
+		}
 
 		// Retrieving notification events for cmdbAbstractObject only
 		if ($oObject instanceof cmdbAbstractObject) {
@@ -141,7 +110,7 @@ class ActivityPanelFactory
 			if (false === empty($aRelatedTriggersIDs)) {
 				// - Prepare query to retrieve events
 				$oNotifEventsSearch = DBObjectSearch::FromOQL('SELECT EN FROM EventNotification AS EN JOIN Action AS A ON EN.action_id = A.id WHERE EN.trigger_id IN (:triggers_ids) AND EN.object_id = :object_id');
-				$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $iObjId]);
+				$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $sObjId]);
 				$oNotifEventsSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
 
 				/** @var \EventNotification $oNotifEvent */

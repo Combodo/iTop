@@ -2767,6 +2767,24 @@ EOF
 			$oPage->SetData($aResult);
 			break;
 
+		/** @internal */
+		case 'activity_panel_load_more_entries':
+			$oPage = new JsonPage();
+			try {
+				$aResult = ActivityPanelController::LoadMoreEntries();
+			}
+			catch (Exception $oException) {
+				$aResult = [
+					'success' => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->SetData($aResult);
+			break;
+
+		//--------------------------------
+		// Navigation menu
+		//--------------------------------
 		case 'get_menus_count':
 
 			$oAjaxRenderController->GetMenusCount($oPage);

@@ -71,9 +71,13 @@ class ActivityPanel extends UIBlock
 	protected $aEntries;
 	/** @var bool $bAreEntriesSorted True if the entries have been sorted by date */
 	protected $bAreEntriesSorted;
+	/** @var bool True if there are more entries to load asynchroniously */
+	protected $bHasMoreEntriesToLoad;
+	/** @var array IDs of the last loaded entries of each type, makes it easier to load the next entries asynchronioulsy */
+	protected $aLastLoadedEntriesIds;
 	/**
-	 * @var bool True if the host object has states (but not necessary a lifecycle)
 	 * @see MetaModel::HasStateAttributeCode()
+	 * @var bool True if the host object has states (but not necessary a lifecycle)
 	 */
 	protected $bHasStates;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
@@ -101,6 +105,8 @@ class ActivityPanel extends UIBlock
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
 		$this->bAreEntriesSorted = false;
+		$this->bHasMoreEntriesToLoad = false;
+		$this->aLastLoadedEntriesIds = [];
 		$this->ComputedShowMultipleEntriesSubmitConfirmation();
 	}
 
@@ -454,6 +460,52 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @see static::$bHasMoreEntriesToLoad
+	 *
+	 * @param bool $bHasMoreEntriesToLoad
+	 *
+	 * @return $this
+	 */
+	public function SetHasMoreEntriesToLoad(bool $bHasMoreEntriesToLoad)
+	{
+		$this->bHasMoreEntriesToLoad = $bHasMoreEntriesToLoad;
+
+		return $this;
+	}
+
+	/**
+	 * @see static::$bHasMoreEntriesToLoad
+	 * @return bool
+	 */
+	public function HasMoreEntriesToLoad(): bool
+	{
+		return $this->bHasMoreEntriesToLoad;
+	}
+
+	/**
+	 * @param string $sEntryType Type of entry (eg. cmdbchangeop, caselog, notification)
+	 * @param string $sEntryId ID of the last loaded entry
+	 *
+	 * @return $this
+	 * @uses static::$aLastLoadedEntriesIds
+	 */
+	public function SetLastEntryId(string $sEntryType, string $sEntryId)
+	{
+		$this->aLastLoadedEntriesIds[$sEntryType] = $sEntryId;
+
+		return $this;
+	}
+
+	/**
+	 * @return array Hash array of the last loaded entries
+	 * @uses static::$aLastLoadedEntriesIds
+	 */
+	public function GetLastEntryIds(): array
+	{
+		return $this->aLastLoadedEntriesIds;
+	}
+
+	/**
 	 * Return all the case log tabs metadata, not their entries
 	 *
 	 * @return array
@@ -710,7 +762,7 @@ class ActivityPanel extends UIBlock
 	 * @return string The endpoint for all "lock" related operations
 	 * @throws \Exception
 	 */
-	public function GetLockEndpointForJSWidget(): string
+	public function GetLockEndpoint(): string
 	{
 		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 	}
@@ -720,6 +772,15 @@ class ActivityPanel extends UIBlock
 	 * @throws \Exception
 	 */
 	public function GetSaveStateEndpoint(): string
+	{
+		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+	}
+
+	/**
+	 * @return string The endpoint to load the remaining entries
+	 * @throws \Exception
+	 */
+	public function GetLoadMoreEntriesEndpoint(): string
 	{
 		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 	}

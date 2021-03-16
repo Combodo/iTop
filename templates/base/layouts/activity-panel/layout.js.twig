@@ -4,7 +4,9 @@ $('#{{ oUIBlock.GetId() }}').activity_panel({
     {% if oUIBlock.HasTransactionId() %}transaction_id: {{ oUIBlock.GetTransactionId()|var_export }},{% endif %}
     lock_enabled: {{ oUIBlock.IsLockEnabled()|var_export }},
     lock_watcher_period: {{ get_config_parameter('activity_panel.lock_watcher_period') }},
-    lock_endpoint: {{ oUIBlock.GetLockEndpointForJSWidget()|var_export|raw }},
+    lock_endpoint: {{ oUIBlock.GetLockEndpoint()|var_export|raw }},
     show_multiple_entries_submit_confirmation: {{ oUIBlock.GetShowMultipleEntriesSubmitConfirmation()|var_export }},
-    save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }}
+    save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }},
+    last_loaded_entries_ids: {{ oUIBlock.GetLastEntryIds()|json_encode|raw }},
+    load_more_entries_endpoint: {{ oUIBlock.GetLoadMoreEntriesEndpoint()|var_export|raw }},
 });

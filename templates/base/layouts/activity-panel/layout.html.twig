@@ -77,6 +77,13 @@
             {% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
                 {{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
             {% endfor %}
+            {% if oUIBlock.HasMoreEntriesToLoad() %}
+                <div class="ibo-activity-panel--load-more-entries-container" data-role="ibo-activity-panel--load-more-entries-container">
+                    <a href="#" class="ibo-activity-panel--load-more-entries" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
+                        <span class="ibo-activity-panel--load-more-entries-icon fas fa-fw fa-angle-double-down" data-role="ibo-activity-panel--load-more-entries-icon"></span>
+                    </a>
+                </div>
+            {% endif %}
         {% else %}
             <div class="ibo-activity-panel--body--placeholder">
                 <div class="ibo-activity-panel--body--placeholder-image ibo-svg-illustration--container">

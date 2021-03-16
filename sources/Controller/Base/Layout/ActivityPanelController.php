@@ -46,10 +46,10 @@ class ActivityPanelController
 	 *  'success' => true,
 	 *  'entries' => [
 	 *      '<ATT_CODE_1>' => [
-	 *          html_rendering => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
+	 *          'html_rendering' => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
 	 *      ],
 	 *      '<ATT_CODE_2>' => [
-	 *          html_rendering => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
+	 *          'html_rendering' => '<HTML_RENDERING_TO_BE_APPEND_IN_FRONT_END>',
 	 *      ],
 	 *      ...
 	 *  ],
@@ -112,6 +112,61 @@ class ActivityPanelController
 
 		// Finalize inline images
 		InlineImage::FinalizeInlineImages($oObject);
+
+		return $aResults;
+	}
+
+	/**
+	 * Load next entries chunk
+	 *
+	 * @return array Entries already rendered and metadata for pagination
+	 * [
+	 *  'success' => true,
+	 *  'entries' => [
+	 *      ['html_rendering' => '<HTML_RENDERING>'],
+	 *      ['html_rendering' => '<HTML_RENDERING>'],
+	 *      ...
+	 *  ],
+	 *  'last_loaded_entries_ids' => [
+	 *      'cmdbchangeop' => <LAST_ENTRY_ID>,
+	 *  ],
+	 * ]
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	public static function LoadMoreEntries(): array
+	{
+		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$sObjectId = utils::ReadPostedParam('object_id', 0);
+		$aLastLoadedEntriesIds = utils::ReadPostedParam('last_loaded_entries_ids', [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+		$aResults = [
+			'success' => true,
+			'entries' => [],
+			'last_loaded_entries_ids' => [],
+		];
+
+		// CMDBChangeOp entries
+		if (array_key_exists('cmdbchangeop', $aLastLoadedEntriesIds)) {
+			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjectClass, $sObjectId, $aLastLoadedEntriesIds['cmdbchangeop']);
+
+			if (true === $aChangesData['more_entries_to_load']) {
+				$aResults['last_loaded_entries_ids']['cmdbchangeop'] = $aChangesData['last_loaded_entry_id'];
+			}
+
+			/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry $oEntryBlock */
+			foreach ($aChangesData['entries'] as $oEntryBlock) {
+				$sEntryAsHtml = BlockRenderer::RenderBlockTemplates($oEntryBlock);
+				$aResults['entries'][] = [
+					'html_rendering' => $sEntryAsHtml,
+				];
+			}
+		}
 
 		return $aResults;
 	}
