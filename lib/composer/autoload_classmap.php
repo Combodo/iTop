@@ -282,6 +282,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Printable\\BlockPrintHeader\\BlockPrintHeader' => $baseDir . '/sources/application/UI/Printable/BlockPrintHeader/BlockPrintHeader.php',
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
+    'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\Form\\Field\\BlobField' => $baseDir . '/sources/Form/Field/BlobField.php',

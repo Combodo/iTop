@@ -512,6 +512,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Printable\\BlockPrintHeader\\BlockPrintHeader' => __DIR__ . '/../..' . '/sources/application/UI/Printable/BlockPrintHeader/BlockPrintHeader.php',
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
+        'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\Form\\Field\\BlobField' => __DIR__ . '/../..' . '/sources/Form/Field/BlobField.php',

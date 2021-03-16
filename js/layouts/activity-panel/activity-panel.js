@@ -454,7 +454,7 @@ $(function()
 				$.post(
 					this.options.save_state_endpoint,
 					{
-						'operation': 'save_activity_panel_state',
+						'operation': 'activity_panel_save_state',
 						'object_class': this._GetHostObjectClass(),
 						'object_mode': this._GetHostObjectMode(),
 						'is_expanded': this.element.hasClass(this.css_classes.is_expanded),
@@ -791,7 +791,7 @@ $(function()
 
 				// Prepare parameters
 				let oParams = {
-					operation: 'add_caselog_entries',
+					operation: 'activity_panel_add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
@@ -812,15 +812,15 @@ $(function()
 						alert(sErrorThrown);
 					})
 					.done(function (oData) {
-						if (false === oData.success) {
+						if (false === oData.data.success) {
 							// TODO 3.0.0: Same comment as the fail() callback
-							alert(oData.error_message);
+							alert(oData.data.error_message);
 							return false;
 						}
 
 						// Update the feed
-						for (let sCaseLogAttCode in oData.entries) {
-							me._AddEntry(sCaseLogAttCode, oData.entries[sCaseLogAttCode]);
+						for (let sCaseLogAttCode in oData.data.entries) {
+							me._AddEntry(sCaseLogAttCode, oData.data.entries[sCaseLogAttCode]);
 						}
 						me._ApplyEntriesFilters();
 

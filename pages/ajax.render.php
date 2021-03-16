@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Controller\AjaxRenderController;
+use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -2730,12 +2731,14 @@ EOF
 			$oPage->add(json_encode($aResult));
 			break;
 
+		//--------------------------------
 		// Activity panel
+		//--------------------------------
 		/** @internal */
-		case 'save_activity_panel_state':
-			$oPage->SetContentType('application/json');
+		case 'activity_panel_save_state':
+			$oPage = new JsonPage();
 			try {
-				$oAjaxRenderController::SaveActivityPanelState();
+				ActivityPanelController::SaveActivityPanelState();
 				$aResult = [
 					'success' => true,
 				];
@@ -2746,13 +2749,14 @@ EOF
 					'error_message' => $oException->getMessage(),
 				];
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
-		case 'add_caselog_entries':
-			$oPage->SetContentType('application/json');
+		/** @internal */
+		case 'activity_panel_add_caselog_entries':
+			$oPage = new JsonPage();
 			try {
-				$aResult = AjaxRenderController::AddCaseLogsEntries();
+				$aResult = ActivityPanelController::AddCaseLogsEntries();
 			}
 			catch (Exception $oException) {
 				$aResult = [
@@ -2760,12 +2764,12 @@ EOF
 					'error_message' => $oException->getMessage(),
 				];
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'get_menus_count':
 
-		$oAjaxRenderController->GetMenusCount($oPage);
+			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
 		default:
