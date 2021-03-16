@@ -514,7 +514,7 @@ try
 
 		// ui.linkswidget
 		case 'doAddIndirectLinks':
-			$oPage = new JsonPage('');
+			$oPage = new JsonPage();
 			AjaxRenderController::DoAddIndirectLinks($oPage, $sClass, $sFilter);
 			break;
 		////////////////////////////////////////////////////////////

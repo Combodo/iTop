@@ -9,6 +9,14 @@ class JsonPage extends WebPage
 	protected $aData = [];
 
 	/**
+	 * JsonPage constructor.
+	 */
+	public function __construct()
+	{
+		parent::__construct('');
+	}
+
+	/**
 	 * @return array
 	 */
 	public function GetData(): array
